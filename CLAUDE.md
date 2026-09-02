@@ -22,6 +22,7 @@ apart.
 | [Layered Plugin Stack](https://claude.ai/code/artifact/591deaa8-c29a-4159-8146-dcbbfba46f81) | How plugins couple: the four layers, dependency vs bridge vs surface, enabling a combination per repository. |
 | [The Rename Wave](https://claude.ai/code/artifact/aea8acf9-5335-4000-8e0f-450653349a90) | Naming and the host split: `flow-`, `fleet-`, `phase-`, `automation-`, and what belongs in the `delivery` plugin. |
 | [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19) | Annotations as a second fenced block in the chapter, their lifecycle, and what the app layer on top may not own. |
+| [devbook Retrieval](https://claude.ai/code/artifact/a50fc1f6-413d-4767-aad8-45be44c85107) | How knowledge is retrieved: the canon is walked, never searched; semantic search belongs over the `_inbox` intake only, as a capability that may be absent. |
 
 Name the artifact you validated against when reporting the change.
 
@@ -105,8 +106,9 @@ event names are camelCase (`sessionStart`, `preToolUse`). Both files are authore
 
 `.devbook/` holds this repository's own knowledge as addressed chapters — `domain/` (the
 vocabulary), `arc42/` (structure and decisions), `tech/`, `design/`, `ai/`. Load the chapters a
-task names, not the folder. Every chapter carries a fenced `meta` block; write it in the same
-change as the content, and never hand-edit a generated `_meta/` file.
+task names, not the folder, and reach the rest by walking `related` and `depends-on` from it —
+the folders are walked, never searched. Every chapter carries a fenced `meta` block; write it
+in the same change as the content, and never hand-edit a generated `_meta/` file.
 
 ## Writing
 

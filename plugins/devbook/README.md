@@ -217,6 +217,15 @@ these skills exist.
 Every glob is scoped to the knowledge folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
+### The `ext` namespace
+
+A plugin layered on top of devbook keeps its own per-chapter state under
+`ext.<plugin>.<key>`. The generator carries those keys through untouched and
+unvalidated, and emits them as one `ext` object per node — so an extension can
+remember something about a chapter without a devbook schema change, a contract
+bump, and a migration in every consuming repository. See
+`knowledge-chapter-metadata.instructions.md`.
+
 ### Extension: `knowledge-canvas`
 
 Renders the knowledge graph as an interactive canvas — chapters as nodes,

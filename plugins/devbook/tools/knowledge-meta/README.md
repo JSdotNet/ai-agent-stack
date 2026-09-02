@@ -204,6 +204,12 @@ are always emitted as a list, so a consumer never has to branch on shape. `effor
 string, so a viewer can total or threshold it directly; a value that is not a
 non-negative integer is left off the node and reported as a lint error instead.
 
+Everything a block writes under `ext.<plugin>.<key>` is gathered into one `ext`
+object on the node, keys and values verbatim. The generator validates none of it
+and produces no edge from it — the namespace belongs to whichever plugin is
+layered on top of devbook, so a consumer either owns those keys or leaves them
+alone.
+
 `date` rides along as the authored `YYYY-MM-DD` string. `number` is emitted as a
 number on **file** nodes only, resolved from the `number` field or the filename,
 so an ADR node knows it is ADR 7 without the consumer parsing paths. `index`

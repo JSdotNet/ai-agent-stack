@@ -102,6 +102,26 @@ const TYPE_BY_FOLDER = {
 // generator sync, but it lints as a warning and is not documented any more.
 const LEGACY_TYPE_FIELD_BY_FOLDER = { tech: "kind" };
 
+// The extension namespace. A plugin layered on top of devbook — devbook-
+// collaboration is the first — persists its own state on a chapter under `ext`,
+// and this schema deliberately says nothing about what it holds: the generator
+// carries every `ext` key through untouched, validates none of it, and produces
+// no edges from it. That is the whole point. Without it, every extension would
+// force a devbook schema bump and a migration in every consuming repository.
+//
+// The block grammar is flat single-line scalars, so the namespace is spelled
+// with dotted keys — `ext.<plugin>.<key>: <value>` — rather than by nesting.
+// Namespacing by the owning plugin is a convention this file states and does
+// not enforce; enforcing it would be validating the one field that must not be
+// validated.
+const EXT_FIELD = "ext";
+const EXT_PREFIX = "ext.";
+
+/** Whether a metadata key belongs to the opaque extension namespace. */
+export function isExtensionField(key) {
+    return key === EXT_FIELD || key.startsWith(EXT_PREFIX);
+}
+
 // Fields every folder's chapter/file block may carry, plus folder-specific
 // extras layered in below.
 const COMMON_OPTIONAL_FIELDS = ["type", "related", "issue", "effort", "roadmap", "date", "tests"];
@@ -996,6 +1016,7 @@ export function validateDocument(relPath, markdown) {
         }
 
         for (const [key, value] of Object.entries(chapter.meta)) {
+            if (isExtensionField(key)) continue; // opaque by contract — never validated
             if (key === "status") continue; // recognized, and fully reported above
             if (key in REMOVED_FIELDS) continue; // already reported above
             if (!optionalFields.has(key)) {

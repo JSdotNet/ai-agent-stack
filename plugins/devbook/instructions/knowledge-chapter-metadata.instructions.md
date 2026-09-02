@@ -292,6 +292,31 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   while leaving it in the reference graph. Omit the field for an ordinary listed
   document, which is nearly every file.
 
+- **ext** (optional) — the extension namespace: state owned by a plugin layered
+  on top of devbook, not by devbook itself. Keys are dotted and namespaced by
+  their owner, `ext.<plugin>.<key>`, because the block grammar is flat:
+
+  ```text
+  ext.devbook-collaboration.review: awaiting-domain
+  ext.devbook-collaboration.reviewer: @jsdotnet
+  ```
+
+  The generator carries every `ext.*` key through **untouched and unvalidated**
+  and produces no graph edge from any of them — it has no opinion on what the
+  values mean, and gathers them under one `ext` key on the node so a consumer
+  can hand the block back to its owner. Nothing about them is checked, including
+  the omit-when-empty rule that governs every other field.
+
+  That is deliberate: without it, an extension that needs to remember one fact
+  about a chapter would force a devbook schema change, a contract bump, and a
+  migration in every consuming repository. Namespace by the owning plugin so two
+  extensions never collide — this file states that convention and the tooling
+  does not enforce it, because enforcing it would mean validating the one field
+  that must stay opaque.
+
+  Never move a devbook field into `ext` to dodge a rule, and never read another
+  plugin's `ext` keys as if they were schema.
+
 `number` and `index` are file-level only because they place the *document* in
 its directory. A chapter's position is already its position in the document.
 
@@ -475,7 +500,8 @@ chapter.
 - Do not invent additional top-level fields without updating either this
   file (for a universal field) or the relevant folder's instructions file
   (for a folder-specific field) first — the derived index tooling depends on a
-  fixed schema.
+  fixed schema. State owned by a plugin on top of devbook is the exception, and
+  goes under `ext.<plugin>.<key>` instead of becoming a new field.
 - Optional fields are included only when they carry a value. Empty list-valued
   fields (`related: []`, `depends-on: []`, `roadmap: []`) and null values
   (`issue: null`, `effort: null`) are omitted rather than written out. The same

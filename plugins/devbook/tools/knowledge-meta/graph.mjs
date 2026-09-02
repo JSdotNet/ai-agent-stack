@@ -22,6 +22,7 @@ import {
     documentNumber,
     escapeSequenceIssues,
     testIssues,
+    isExtensionField,
 } from "./metadata.mjs";
 
 /** Every knowledge folder this convention recognizes. A repository adopts any subset. */
@@ -119,6 +120,15 @@ function applyMeta(node, meta, folder) {
         const refs = asList(meta[field]);
         if (refs.length) node[field] = refs;
     }
+    // Everything under `ext` belongs to a plugin layered on top of devbook and
+    // is carried through verbatim: same keys, same values, gathered under one
+    // node key so a consumer can hand the block to its owner without having to
+    // know what is in it. No edge is produced, and no value is inspected.
+    const ext = {};
+    for (const [key, value] of Object.entries(meta)) {
+        if (isExtensionField(key)) ext[key] = value;
+    }
+    if (Object.keys(ext).length) node.ext = ext;
 }
 
 /**

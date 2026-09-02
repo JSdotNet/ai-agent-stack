@@ -28,13 +28,29 @@ import {
 
 /** Every knowledge folder this convention recognizes. A repository adopts any subset. */
 export const KNOWLEDGE_FOLDERS = [".arc42", ".domain", ".tech", ".design", ".ai"];
-// Shared by both artifacts, because they ship as one release. Version 5 is
+// The repo-visible contract: one number covering the metadata schema a
+// repository authors and the derived artifacts a consumer reads. It moves only
+// when something repo-visible changes shape, which is why a plugin release
+// usually leaves it alone — and why the migration ledger keys off it.
+//
+// Version 6 removes `.backlog` from the recognized folders and with it the
+// `implements` reference field, and adds two things on top of 5: the shared
+// `approved` rung with its `approved-by`/`approved-at` record, and the opaque
+// `ext` namespace an L1 plugin persists its own state in. Only the removal is
+// breaking, and it ships as migration `006-drop-backlog`. Version 5 was
 // additive over 4: `status` may now be resolved from the folder's resting value
 // rather than read off the block, and both artifacts gained an optional
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const SCHEMA_VERSION = 5;
+export const CONTRACT_VERSION = 6;
+
+// What the derived artifacts stamp themselves with. The same number under the
+// name a consumer of `graph.json` / `index.json` reads it by: the schema those
+// files follow *is* the contract, so keeping two counters would only let them
+// drift. A contract bump with no migration folder is normal and harmless —
+// presence of a migration decides whether one runs, never the version number.
+export const SCHEMA_VERSION = CONTRACT_VERSION;
 export const REPO_SCOPE = ".";
 export const GENERATOR = ".github/tools/knowledge-meta/build.mjs";
 

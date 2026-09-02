@@ -280,6 +280,50 @@ for technologies that do not appear in package manifests.
   context rather than baseline context, `meta` blocks are mandatory on every
   chapter, and `_meta/` is never hand-edited.
 
+### Migrations
+
+`migrations/` holds one folder per breaking change, `<contractVersion>-<slug>/`:
+
+```text
+migrations/
+└── 006-drop-backlog/
+    ├── MIGRATION.md   what, why, what breaks, appliesTo
+    └── migrate.mjs    idempotent; --check exits 1 while work remains
+```
+
+Rules that keep a ledger trustworthy:
+
+- The id is immutable once released. Never rewrite a shipped migration — add a
+  new one.
+- A migration is idempotent by rule: the second run changes nothing.
+- `--check` is mandatory. CI calls it, and so does `devbook-check`; it is what
+  makes a plan worth reading before anything is written.
+- `appliesTo` names adopted folders. A repository that never adopted one records
+  *not-applicable*, and adopting it later re-evaluates the migration rather than
+  silently skipping it.
+- A content change is scripted, never written up as a note. "Delete every
+  `order:` line" is a five-line script or an unbounded manual chore in every
+  consuming repository.
+
+Presence in the ledger decides whether a migration runs — never a comparison of
+version numbers. That is what makes re-running safe, and why a contract bump
+that ships no migration is normal.
+
+### `contractVersion`
+
+One number, currently **6**, covering the metadata schema a repository authors
+and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
+`index.json` is the same number under the name those files stamp themselves
+with. It moves only when something repo-visible changes shape, so most plugin
+releases leave it alone: plugin semver moves for prose and new skills,
+`contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
+`tools/knowledge-meta/graph.mjs`.
+
+Version 6 removes `.backlog` and the `implements` field (breaking — migration
+`006-drop-backlog`), and adds the shared `approved` rung with `approved-by` /
+`approved-at`, and the `ext` namespace. Both additions are additive: a corpus
+written against 5 stays valid.
+
 ## 0.15.0: `status` optional at rest
 
 **A behaviour change in three folders, and a sweep worth doing.** `status` is no

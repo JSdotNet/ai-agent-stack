@@ -1,5 +1,6 @@
 {
   "name": "jsdotnet",
+  "description": "The jsdotnet plugin marketplace: the devbook knowledge convention and the delivery flow, as agents, skills, instruction files, and hooks authored once and read by both Claude Code and GitHub Copilot.",
   "owner": {
     "name": "Job Schepers",
     "url": "https://github.com/JSdotNet"
@@ -8,7 +9,7 @@
     {
       "name": "devbook",
       "source": "./plugins/devbook",
-      "description": "Repository knowledge-folder convention for .arc42, .domain, .tech, .design, .backlog, and .ai: parseable chapter metadata, runnable test-case links, AI adoption tracked per development-flow stage, derived _meta indexes, a reference-graph canvas, per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> skills between chapters and code, and enforcement tooling.",
+      "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling.",
       "version": "1.0.0"
     }
   ]

@@ -55,12 +55,16 @@ plugin, so the same server has two possible tool prefixes depending on how it wa
 ## Node
 
 ```meta
-status: candidate
+status: adopted
 type: runtime
+date: 2026-09-03
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-Needed only by an MCP server or a command hook that a plugin ships. Nothing in this repository
-requires it yet, so no version is pinned.
+What a plugin's executable parts run on: the `devbook` generator and its test suites, its
+migration scripts, and the command hook that emits session-start context. All of it is
+dependency-free ESM against `node:` built-ins, so there is no package manifest anywhere in this
+repository and no version is pinned — CI runs whatever its runner ships.
 
 ## PowerShell
 

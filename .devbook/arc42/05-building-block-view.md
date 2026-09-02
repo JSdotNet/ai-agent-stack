@@ -34,9 +34,15 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `skills/`, `instructions/`, `resources/` | both |
 | `hooks/hooks.json` | Claude Code |
 | `hooks.json` | Copilot |
+| `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own.
+
+The last row is the part no host reads. A plugin that installs something into a repository
+carries it as inert payload — templates, generators, migration scripts — and its own
+`<component>-sync` is what puts it there and records it in the
+[stamp](../domain/plugin-authoring/naming.md#stamp).
 
 ## Asset Kinds
 

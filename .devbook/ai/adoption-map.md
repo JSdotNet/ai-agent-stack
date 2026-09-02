@@ -30,9 +30,9 @@ related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 ```
 
 Task categories route to a `flow-<category>` skill that runs the category end to end. Still
-`trial` here: the routing is inherited from the plugins this repository will serve, those
-plugins still ship the earlier `orch-*` spelling, and this repository has no flow skills of its
-own yet.
+`trial` here: the routing is inherited from the plugins this repository serves, and the first
+of them to land — `devbook` — carries five folder-writing skills still spelled `orch-*`. They
+become `flow-*` in the release that moves them into `devbook-flows`.
 
 ## Plugin Evaluation
 

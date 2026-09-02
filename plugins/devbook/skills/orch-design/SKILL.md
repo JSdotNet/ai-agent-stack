@@ -112,7 +112,7 @@ the existing `.design/` contents, and continue.
 - Regenerate the derived index when the repository ships the generator:
   `node .github/tools/knowledge-meta/build.mjs --scope .design`, and confirm it
   reports no broken references. If it reports problems, hand off to
-  `knowledge-base-validate`.
+  `devbook-check`.
 - Summarize changed files/chapters for the user.
 
 **Agents:** `ux-design:ux-designer`

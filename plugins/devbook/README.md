@@ -35,25 +35,31 @@ Adoption is partial by design — a repository may take only `.domain` and
 
 ## Features
 
-### Skill: `knowledge-base-init`
+### Skill: `devbook-sync`
 
-Scaffolds the convention into a repository: creates the chosen folders, installs
-the generator to `.github/tools/knowledge-meta/`, installs the CI workflow and
-the two refresh paths, offers repository routing policy, and generates the
-first indexes.
+Reconciles a repository with the installed devbook release, in six phases:
+detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
+plugin upgrade, a change in which folders are adopted, and an outstanding
+migration are one idempotent operation — the stamp at
+`.github/ai-agent-stack.json` says which. The protocol is in
+`assets/reconcile-protocol.md`.
 
-**Trigger keywords:** `knowledge base`, `knowledge folders`, `scaffold .arc42`,
-`scaffold .domain`, `set up .tech`, `set up .design`, `knowledge-meta`,
-`adopt knowledge convention`
+**Trigger keywords:** `devbook sync`, `set up devbook`, `adopt the knowledge
+folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
+`upgrade devbook`, `run devbook migrations`
 
-### Skill: `knowledge-base-validate`
+### Skill: `devbook-check`
 
-Runs the check and repairs what it reports — broken references, missing or
-malformed `meta` blocks, fields the schema no longer defines, stale committed
-indexes.
+The check-only half of the same protocol: writes nothing, and asks the same
+three questions. Does the authored Markdown satisfy the schema, is the migration
+ledger current, does the stamp still describe what is on disk. Then repairs what
+it reports — broken references, missing or malformed `meta` blocks, fields the
+schema no longer defines, stale committed indexes — and hands the rest back to
+`devbook-sync`, which owns every write.
 
-**Trigger keywords:** `knowledge-meta failed`, `broken reference`, `stale _meta`,
-`validate knowledge folders`, `knowledge base check`, `build.mjs --check`
+**Trigger keywords:** `devbook check`, `knowledge-meta failed`,
+`broken reference`, `stale _meta`, `validate knowledge folders`,
+`build.mjs --check`
 
 ### Skill: `knowledge-tech-update`
 
@@ -268,7 +274,8 @@ for technologies that do not appear in package manifests.
 
 | File | Purpose |
 |------|---------|
-| `assets/workflows/knowledge-meta.yml` | CI workflow template installed by the init skill: fails on broken references, warns on drifted indexes |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook-sync` and `devbook-check`: the stamp devbook writes into `.github/ai-agent-stack.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/workflows/knowledge-meta.yml` | CI workflow template materialized by `devbook-sync`: fails on broken references, warns on drifted indexes |
 | `assets/workflows/knowledge-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-KnowledgeIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
@@ -439,7 +446,7 @@ Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
 other folder does. To adopt: re-sync `.github/tools/knowledge-meta/` from this
-plugin, run `knowledge-base-init` (or create the folder by hand), add `.ai/**`
+plugin, run `devbook-sync` (or create the folder by hand), add `.ai/**`
 to the CI workflow's `paths` filters, and route edits through `orch-ai`.
 
 ## 0.11.0: invariants as a table
@@ -683,11 +690,11 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    node .github/tools/knowledge-meta/build.mjs --check
    ```
 
-   Run `knowledge-base-validate` for anything still reported.
+   Run `devbook-check` for anything still reported.
 
 ## Folder structure
 
-After running `knowledge-base-init`, a repository that adopted everything has:
+After running `devbook-sync`, a repository that adopted everything has:
 
 ```
 .arc42/

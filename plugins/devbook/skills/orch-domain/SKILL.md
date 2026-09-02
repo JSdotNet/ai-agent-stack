@@ -105,7 +105,7 @@ the existing `.domain/` contents, and continue.
 - Regenerate the derived index when the repository ships the generator:
   `node .github/tools/knowledge-meta/build.mjs --scope .domain`, and confirm it
   reports no broken references. If it reports problems, hand off to
-  `knowledge-base-validate`.
+  `devbook-check`.
 - Summarize changed files/chapters for the user.
 
 **Agents:** `domain-design:domain-architect`

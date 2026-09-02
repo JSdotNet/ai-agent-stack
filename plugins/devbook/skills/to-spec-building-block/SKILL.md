@@ -42,7 +42,7 @@ here.
 - **Level depth.** How far down to decompose. Default to level 1 (containers)
   and level 2 (the blocks inside the containers that carry real responsibility).
 
-If `.arc42/` does not exist, stop and run `knowledge-base-init` for the `.arc42`
+If `.arc42/` does not exist, stop and run `devbook-sync` for the `.arc42`
 adoption path. Create the file only if the chapter will have real content — the
 folder rules forbid scaffolding empty placeholders.
 

@@ -49,7 +49,7 @@ here.
 - **Authoritative design source.** Whether the repository has one, and whether
   it is reachable right now.
 
-If `.design/` does not exist, stop and run `knowledge-base-init` for the
+If `.design/` does not exist, stop and run `devbook-sync` for the
 `.design` adoption path. If the authoritative design source exists but cannot be
 reached, say so, keep the affected chapters at `status: draft`, and note the gap
 in the chapter itself — the folder rules require exactly that.

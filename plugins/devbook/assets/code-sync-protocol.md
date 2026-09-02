@@ -341,7 +341,7 @@ Scope is the folder that changed — `.domain`, `.arc42`, or `.design`. Run
 `build.mjs` with no `--scope` when the pass touched more than one folder.
 
 If `--check` reports unresolved references, a schema violation, or a
-stale committed index, fix the source Markdown; run `knowledge-base-validate`
+stale committed index, fix the source Markdown; run `devbook-check`
 for anything that does not resolve from the message alone. Never hand-edit a
 file under `_meta/`.
 

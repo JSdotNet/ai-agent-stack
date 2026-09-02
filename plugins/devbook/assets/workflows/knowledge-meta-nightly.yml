@@ -1,7 +1,7 @@
 name: Knowledge metadata nightly refresh
 
 # Reconciles the committed _meta indexes with the Markdown on the default
-# branch. Installed by the `knowledge-base-init` skill.
+# branch. Installed by the `devbook-sync` skill.
 #
 # The pull-request check (knowledge-meta.yml) only *warns* when an index has
 # drifted, because forcing every knowledge pull request to regenerate the

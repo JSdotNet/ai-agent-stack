@@ -21,7 +21,7 @@ chapter by hand.
 - Target `.tech` scope. Default to every `.tech` layer that exists.
 - Optional focus, such as backend packages, frontend packages, tooling, deployment, or all.
 
-If the repository has no `.tech/` folder, stop and run `knowledge-base-init` first for the
+If the repository has no `.tech/` folder, stop and run `devbook-sync` first for the
 `.tech` adoption path.
 
 ## Deterministic package inventories
@@ -92,7 +92,7 @@ chapters and generated `_meta/*.json` indexes.
    ```
 
    If either command reports unresolved references, schema violations, or stale generated
-   indexes, fix the source Markdown or run `knowledge-base-validate`.
+   indexes, fix the source Markdown or run `devbook-check`.
 
 ## Output expectations
 

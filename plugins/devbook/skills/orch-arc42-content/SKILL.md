@@ -90,7 +90,7 @@ from the request and the repository contents, and continue.
 - Regenerate the derived index when the repository ships the generator:
   `node .github/tools/knowledge-meta/build.mjs --scope .arc42`, and confirm it
   reports no broken references. If it reports problems, hand off to
-  `knowledge-base-validate`.
+  `devbook-check`.
 - Summarize changed chapters/sections for the user.
 
 **Agents:** `architecture:architect`

@@ -52,7 +52,7 @@ here.
   closes the gap.
 - **Repository root.** Default to the current working directory.
 
-If the repository has no `.domain/` folder, stop and run `knowledge-base-init`
+If the repository has no `.domain/` folder, stop and run `devbook-sync`
 first for the `.domain` adoption path. If the bounded context folder does not
 exist, stop — this skill does not create one. A context's `domain.md`,
 `features.md`, `model.md`, `dependencies.md`, and `naming.md` are created

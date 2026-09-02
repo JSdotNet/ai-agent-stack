@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     On-demand wrapper around `.github/tools/knowledge-meta/build.mjs`, installed
-    by the `knowledge-base-init` skill.
+    by the `devbook-sync` skill.
 
     Refreshing the indexes is deliberate, not automatic. The pull-request check
     only warns when they have drifted, because making every knowledge pull
@@ -93,7 +93,7 @@ $repoRoot = Resolve-RepositoryRoot -Requested $Root
 $generator = Join-Path $repoRoot '.github/tools/knowledge-meta/build.mjs'
 
 if (-not (Test-Path -LiteralPath $generator -PathType Leaf)) {
-    throw "Generator not found at '$generator'. Install it with the knowledge-base-init skill."
+    throw "Generator not found at '$generator'. Install it with the devbook-sync skill."
 }
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
     throw 'Node.js is required to run the knowledge-meta generator, and `node` is not on PATH.'

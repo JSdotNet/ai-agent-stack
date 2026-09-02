@@ -80,7 +80,7 @@ the existing `.tech/` contents, and continue.
 - Regenerate the derived index when the repository ships the generator:
   `node .github/tools/knowledge-meta/build.mjs --scope .tech`, and confirm it
   reports no broken references. If it reports problems, hand off to
-  `knowledge-base-validate`.
+  `devbook-check`.
 - Update the layer table and "Open questions" section when layers or open
   choices change.
 - Verify with the `knowledge-graph` canvas scoped to `.tech`, and with the

@@ -2,7 +2,7 @@ name: Knowledge metadata
 
 # Enforces the knowledge-folder convention: every metadata reference must
 # resolve and every `meta` block must match the schema. Installed by the
-# `knowledge-base-init` skill.
+# `devbook-sync` skill.
 #
 # Staleness of the committed _meta indexes is reported but does not fail the
 # run — forcing every knowledge pull request to carry a regenerated index is

@@ -98,7 +98,7 @@ Otherwise none.
 - Regenerate the derived index when the repository ships the generator:
   `node .github/tools/knowledge-meta/build.mjs --scope .ai`, and confirm it
   reports no broken references. If it reports problems, hand off to
-  `knowledge-base-validate`.
+  `devbook-check`.
 - Confirm every `depends-on` resolves to an existing `.tech` or `.ai` chapter,
   and that no `.tech` chapter was made to point back at `.ai` — that link is
   one-way.

@@ -87,6 +87,9 @@ the existing `.design/` contents, and continue.
   `active` is the resting value and is written by **omitting the field**; a
   settled chapter is left with an empty `meta` fence, which stays — it is what
   makes the heading addressable.
+- Never write `status: approved`, `approved-by`, or `approved-at`. That rung is
+  the approval gate's to write and a person's to decide; an authoring skill that
+  sets it approves its own work.
 - Keep `related` entries pointing at valid `<path>#<heading-slug>` or `<path>`
   targets, and omit empty optional fields per the omit-when-empty rule.
 - If a chapter heading or file was renamed or moved, update every `related`

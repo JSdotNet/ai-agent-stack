@@ -74,6 +74,9 @@ from the request and the repository contents, and continue.
   `related` for cross-references). `active` is the resting value and is written
   by **omitting the field**; a settled chapter with no relations is left with an
   empty `meta` fence, which stays — it is what makes the heading addressable.
+- Never write `status: approved`, `approved-by`, or `approved-at`. That rung is
+  the approval gate's to write and a person's to decide; an authoring skill that
+  sets it approves its own work.
 - If a chapter heading or file was renamed or moved, update every `related`
   entry elsewhere that references its old `<path>#<heading-slug>` or
   `<path>`.

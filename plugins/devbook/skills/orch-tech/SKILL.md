@@ -64,6 +64,9 @@ the existing `.tech/` contents, and continue.
   `related`, `issue`, `effort`, `roadmap` optional and omitted when empty.
 - Set `status` from this folder's ladder: `candidate`, `trial`, `adopted`,
   `hold`, `retired`.
+- Never write `status: approved`, `approved-by`, or `approved-at`. That rung is
+  the approval gate's to write and a person's to decide; an authoring skill that
+  sets it approves its own work.
 - Ensure every `depends-on` entry resolves to an existing `.tech` chapter; use
   `related` for `.arc42`/`.domain`/`.design` links instead.
 - Update the file-level metadata block on every touched file.

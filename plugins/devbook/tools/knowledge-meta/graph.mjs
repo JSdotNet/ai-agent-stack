@@ -22,6 +22,7 @@ import {
     documentNumber,
     escapeSequenceIssues,
     testIssues,
+    approvalIssues,
     isExtensionField,
 } from "./metadata.mjs";
 
@@ -49,7 +50,15 @@ const REFERENCE_FIELDS = {
 // `type` on a node is already the structural discriminator
 // (`file`/`chapter`/`heading`/`external`). `.tech` nodes have always carried
 // `kind`; the field is simply populated for every folder now.
-const ATTRIBUTE_FIELDS = ["version", "issue", "aliases", "alternatives", "date"];
+const ATTRIBUTE_FIELDS = [
+    "version",
+    "issue",
+    "aliases",
+    "alternatives",
+    "date",
+    "approved-by",
+    "approved-at",
+];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,
 // and which are always emitted as a list so a consumer reading graph.json never
@@ -207,6 +216,14 @@ export async function buildGraph(repoRoot) {
             });
         }
 
+        for (const issue of approvalIssues(fileMeta)) {
+            problems.push({
+                severity: issue.severity,
+                path: relPath,
+                message: `${relPath} ${issue.message}`,
+            });
+        }
+
         for (const issue of removedFieldIssues(fileMeta)) {
             problems.push({
                 severity: issue.severity,
@@ -288,6 +305,14 @@ export async function buildGraph(repoRoot) {
             }
 
             for (const issue of testIssues(chapter.meta)) {
+                problems.push({
+                    severity: issue.severity,
+                    path: relPath,
+                    message: `${id} ${issue.message}`,
+                });
+            }
+
+            for (const issue of approvalIssues(chapter.meta)) {
                 problems.push({
                     severity: issue.severity,
                     path: relPath,

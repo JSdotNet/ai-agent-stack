@@ -118,6 +118,12 @@ Maturity of the technology **in this project**, on a tech-radar-style ladder:
 
 Early in a project most entries are legitimately `candidate`.
 
+On top of this ladder sits the shared `approved` rung, defined once in
+`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+recorded with `approved-by` and `approved-at`. It rates the chapter, not the
+technology — a chapter can be approved while what it describes is still
+`trial`, which is why the rung is stated rather than rested at.
+
 **`status` is required on every `.tech` block, with no resting value to omit** —
 unlike `.domain`, `.arc42`, and `.design`, where an absent status means settled
 content. Here the value is a *rating*, and being stated is its entire purpose: a

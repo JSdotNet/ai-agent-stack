@@ -38,13 +38,15 @@ rules, and the change-brief contract — none of which are repeated here.
 - **Repository root.** Default to the current working directory.
 
 The status gate applies with `.design`'s ladder: `draft`, `active`,
-`deprecated`. There is no `proposed`. A `draft` chapter needs confirmation
+`deprecated`, plus the shared `approved` rung. There is no `proposed`. A `draft` chapter needs confirmation
 before a brief; a `deprecated` one is not built.
 
 ## Chapter status gate
 
 Check `status` before doing anything else, per the protocol's status rules:
 
+- `approved` — proceed. A person has approved this chapter; that is what the
+  rung is for.
 - `active` — proceed.
 - `draft` — stop and confirm. State what the chapter claims and that it is not
   yet agreed, then ask whether to build it as written or settle the chapter

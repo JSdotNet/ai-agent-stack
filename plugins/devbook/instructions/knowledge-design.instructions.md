@@ -110,6 +110,11 @@ Allowed `status` values in `.design`:
 | `active` | Agreed and binding for implementation. **Resting value — omit the field.** |
 | `deprecated` | Superseded; kept for history, must not be followed. |
 
+On top of this ladder sits the shared `approved` rung, defined once in
+`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+recorded with `approved-by` and `approved-at`. It is written explicitly, never
+rested at, and comes off the moment the content changes.
+
 `status` is therefore **optional** here. State it only while a chapter is
 `draft` or `deprecated`; an agreed, binding guideline says so by leaving the
 field out. A design system is almost entirely agreed and binding — that is what

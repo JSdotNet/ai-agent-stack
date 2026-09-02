@@ -5,16 +5,33 @@
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
 // tiny hand-written reader instead of pulling in a YAML dependency.
 
+// The approval gate's rung, sitting on top of every folder's own ladder. A
+// chapter reaches it when a person has approved the content — the decision the
+// flow layer's gate makes before a chapter becomes work. It is deliberately one
+// rung shared by every folder rather than a per-folder word: what is being
+// approved is the chapter, and the ladder underneath it says what kind of thing
+// the chapter is.
+//
+// It is never a resting value. A chapter states `approved` while the approval
+// stands, and drops back to its ordinary rung the moment the content changes —
+// an approval is of what was read, not of the heading.
+const APPROVED_STATUS = "approved";
+
 const STATUS_BY_FOLDER = {
-    domain: ["draft", "proposed", "active", "deprecated"],
-    arc42: ["draft", "proposed", "active", "deprecated"],
-    tech: ["candidate", "trial", "adopted", "hold", "retired"],
-    design: ["draft", "active", "deprecated"],
+    domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
+    arc42: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS],
+    tech: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
+    design: ["draft", "active", "deprecated", APPROVED_STATUS],
     // `.ai` deliberately reuses `.tech`'s ladder: a reader learns one
     // adoption vocabulary. What is on the ladder differs — `.tech` rates a
     // technology, `.ai` rates a way of working with one.
-    ai: ["candidate", "trial", "adopted", "hold", "retired"],
+    ai: ["candidate", "trial", "adopted", "hold", "retired", APPROVED_STATUS],
 };
+
+// Who approved, and on what day. The gate writes both; they exist so the
+// decision travels with the content and lands in the git history, rather than
+// living in flow configuration or in someone's memory.
+const APPROVAL_FIELDS = ["approved-by", "approved-at"];
 
 // The value a folder's content settles on, which is therefore *omitted* rather
 // than written. A folder listed here makes `status` optional: absence means the
@@ -124,7 +141,16 @@ export function isExtensionField(key) {
 
 // Fields every folder's chapter/file block may carry, plus folder-specific
 // extras layered in below.
-const COMMON_OPTIONAL_FIELDS = ["type", "related", "issue", "effort", "roadmap", "date", "tests"];
+const COMMON_OPTIONAL_FIELDS = [
+    "type",
+    "related",
+    "issue",
+    "effort",
+    "roadmap",
+    "date",
+    "tests",
+    ...APPROVAL_FIELDS,
+];
 
 // `roadmap` entries are lowercase kebab-case tag slugs, not chapter references.
 const ROADMAP_TAG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -827,6 +853,58 @@ export function outlineFieldIssues(relPath, meta, level) {
 }
 
 /**
+ * Lint the approval record: `status: approved` plus `approved-by` and
+ * `approved-at`.
+ *
+ * Exported so the graph build reports it too. The point of putting an approval
+ * in the chapter is that the decision is auditable — a rung with nobody's name
+ * on it, or a name with no rung, is the one shape that defeats that.
+ */
+export function approvalIssues(meta) {
+    if (!meta) return [];
+    const issues = [];
+    const approved = meta.status === APPROVED_STATUS;
+
+    for (const field of APPROVAL_FIELDS) {
+        const raw = meta[field];
+        if (raw == null) continue;
+        if (Array.isArray(raw) || String(raw).trim() === "") {
+            issues.push({
+                severity: "error",
+                message: `has \`${field}\` set to an empty or list value — it records one approver and one day.`,
+            });
+            continue;
+        }
+        if (!approved) {
+            issues.push({
+                severity: "warning",
+                message: `carries \`${field}\` without \`status: ${APPROVED_STATUS}\`. Either the approval is current, and the status says so, or it has lapsed and the record comes out with it.`,
+            });
+        }
+    }
+
+    if (meta["approved-at"] != null && !DATE_PATTERN.test(String(meta["approved-at"]))) {
+        issues.push({
+            severity: "error",
+            message: `has \`approved-at\` "${meta["approved-at"]}" — an approval date is a single calendar day in \`YYYY-MM-DD\` form.`,
+        });
+    }
+
+    if (approved) {
+        for (const field of APPROVAL_FIELDS) {
+            if (meta[field] == null) {
+                issues.push({
+                    severity: "warning",
+                    message: `states \`status: ${APPROVED_STATUS}\` without \`${field}\`. An approval nobody signed and dated is not a record of a decision.`,
+                });
+            }
+        }
+    }
+
+    return issues;
+}
+
+/**
  * Fields this block carries that the schema used to define and no longer does.
  *
  * Exported so the graph build reports them the same way it reports `typeIssues`
@@ -1000,6 +1078,12 @@ export function validateDocument(relPath, markdown) {
         // `tests` names the test cases that assert what this chapter claims,
         // as `<level>:<runner>:<selector>` identifiers a runner can resolve.
         for (const issue of testIssues(chapter.meta)) {
+            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
+        // The approval gate writes into the chapter, so the chapter is where
+        // the record is checked.
+        for (const issue of approvalIssues(chapter.meta)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 

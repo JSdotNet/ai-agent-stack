@@ -304,6 +304,12 @@ jobs, and only one of them has a resting value.
 | `.domain`, `.arc42`, `.design` | editorial maturity — how settled the writing is | `active`, omitted |
 | `.tech`, `.ai` | a *rating* on an adoption ladder | none; an unrated technology is not a `candidate` one, and a radar built from omissions renders blank |
 
+On top of every one of those ladders sits one shared rung, `approved`, with
+`approved-by` and `approved-at` beside it. That is the approval gate's decision,
+kept in the chapter so it travels with the content and lands in the git history
+rather than in flow configuration. It is always written, never rested at, and
+comes off in the same change that alters what was approved.
+
 Two rules make the difference safe:
 
 - **The `meta` fence stays even when the block ends up empty.** `.arc42` and

@@ -85,6 +85,10 @@ instructions.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. Architecture documentation describes a
   standing decision/structure, not a task, so there is no `done`.
+- On top of that ladder sits the shared `approved` rung, defined once in
+  `knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+  recorded with `approved-by` and `approved-at`. It is written explicitly, never
+  rested at, and comes off the moment the content changes.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`). A standing structure

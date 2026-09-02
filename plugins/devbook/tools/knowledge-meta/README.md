@@ -204,6 +204,10 @@ are always emitted as a list, so a consumer never has to branch on shape. `effor
 string, so a viewer can total or threshold it directly; a value that is not a
 non-negative integer is left off the node and reported as a lint error instead.
 
+`approved-by` and `approved-at` ride along as authored strings on any node whose
+`status` is the shared `approved` rung. The generator reports an approval with no
+signature and a signature with no approval, but never invents either.
+
 Everything a block writes under `ext.<plugin>.<key>` is gathered into one `ext`
 object on the node, keys and values verbatim. The generator validates none of it
 and produces no edge from it — the namespace belongs to whichever plugin is

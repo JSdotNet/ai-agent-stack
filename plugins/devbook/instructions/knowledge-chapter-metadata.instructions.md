@@ -194,6 +194,28 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   Spell the absence by leaving the field out, never as `status: null` — same
   discipline as `issue: null`, and the reason is the same.
 
+
+  On top of every folder's own ladder sits one shared rung, `approved`: a person
+  has read this chapter and approved it. It is the decision the approval gate
+  makes before a chapter becomes work, recorded in the chapter so it travels
+  with the content and lands in the git history like any other change — not in
+  flow configuration, and not in someone's memory.
+
+  `approved` is never a resting value and is never omitted to mean itself. A
+  chapter states it while the approval stands and drops back to its ordinary
+  rung the moment the content changes: an approval is of what was read, not of
+  the heading. The rung is one word in every folder because what is approved is
+  the chapter; the ladder underneath says what kind of thing the chapter is.
+- **approved-by** (optional) — who approved this chapter: a person, a handle, or
+  a team. One value, not a list.
+- **approved-at** (optional) — the day they approved it, in `YYYY-MM-DD` form.
+
+  Write both whenever `status: approved` is written, and delete both in the same
+  change that drops the rung. An approval nobody signed and dated is reported, as
+  is an approval record left behind on a chapter no longer claiming the rung —
+  either the approval is current and the status says so, or it has lapsed and
+  the record comes out with it.
+
   The allowed values are folder-specific; see the `status` section
   in `knowledge-domain.instructions.md`,
   `knowledge-arc42.instructions.md`,

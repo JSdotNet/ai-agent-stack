@@ -27,8 +27,8 @@ chapter.
 
 - **No `type` field.** `.design` defines no value set; setting `type` is
   reported as a warning.
-- **`status` is only `draft`, `active`, or `deprecated`.** There is no
-  `proposed`.
+- **`status` is only `draft`, `active`, or `deprecated`**, plus the shared
+  `approved` rung every folder carries. There is no `proposed`.
 - **Guideline level only.** Wireframes, user flows, prototypes, and screenshots
   are not stored in `.design`.
 - **No dependency changes.** `component-libraries.md` records a recommendation
@@ -138,7 +138,8 @@ chapter as accepted practice.
 6. **Draft the chapter.** Write to the template in
    `knowledge-design.instructions.md`. The heading carries the bare name; the
    `meta` block carries `status` and no `type` — `.design` defines no `type`
-   value set, and its `status` ladder is only `draft`, `active`, `deprecated`. A
+   value set, and its `status` ladder is only `draft`, `active`, `deprecated`
+   plus the shared `approved` rung. A
    new chapter starts at `status: draft`; an existing chapter's `status` is left
    untouched. Include optional fields only where they have a value.
 
@@ -199,7 +200,8 @@ chapter as accepted practice.
   recommendation; dependency changes go through the package-update workflow and
   are recorded in `.tech`.
 - Do not set a `type` field, and do not use `proposed` — `.design` has only
-  `draft`, `active`, `deprecated`.
+  `draft`, `active`, `deprecated`, plus the shared `approved` rung, which a
+  capture pass never writes.
 - Do not store a wireframe, prototype, screenshot, or user flow in `.design`.
 - Do not record a pointer-only interaction as acceptable because the code does
   it.

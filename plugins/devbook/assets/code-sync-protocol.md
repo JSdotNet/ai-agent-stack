@@ -224,6 +224,8 @@ So:
 **Build must not build from unsettled knowledge without confirmation.** A
 chapter at `draft` or `proposed` has not been agreed:
 
+- `approved` — proceed. The approval gate's rung: a person read this chapter and
+  approved it, with `approved-by` and `approved-at` recording who and when.
 - `active` — proceed. This is the agreed model, and building it is the point.
 - `draft` or `proposed` — stop and confirm before emitting a brief. Say what the
   chapter currently claims, that it is not yet agreed, and ask whether to build
@@ -232,7 +234,14 @@ chapter at `draft` or `proposed` has not been agreed:
 - `deprecated` — do not build. Report it and stop.
 
 In `.design`, the ladder is only `draft`, `active`, `deprecated`; the `draft`
-rule above applies unchanged and there is no `proposed`.
+rule above applies unchanged and there is no `proposed`. The `approved` rung is
+shared by every folder and sits on top of each one's ladder.
+
+**Neither direction writes the `approved` rung.** Capture never sets it: finding
+code is not a person approving a chapter, and the same rule that forbids
+promoting to `active` forbids this more strongly. Build never sets it either —
+it reads the rung and stops or proceeds. Only the approval gate, and the person
+answering it, writes `approved`, `approved-by`, and `approved-at`.
 
 ## Spec-side writes route through orchestration
 

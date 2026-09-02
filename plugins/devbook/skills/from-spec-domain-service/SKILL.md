@@ -38,6 +38,8 @@ rules, and the change-brief contract — none of which are repeated here.
 
 Check `status` before doing anything else, per the protocol's status rules:
 
+- `approved` — proceed. A person has approved this chapter; that is what the
+  rung is for.
 - `active` — proceed.
 - `draft` or `proposed` — stop and confirm. State what the chapter claims and
   that it is not yet agreed, then ask whether to build it as written or settle

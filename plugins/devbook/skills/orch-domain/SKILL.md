@@ -77,6 +77,9 @@ the existing `.domain/` contents, and continue.
   `deprecated` (no `done`). `active` is the resting value and is written by
   **omitting the field** — remove the line when a chapter settles, and never
   write `status: active`.
+- Never write `status: approved`, `approved-by`, or `approved-at`. That rung is
+  the approval gate's to write and a person's to decide; an authoring skill that
+  sets it approves its own work.
 - Set `type` from this folder's value sets in
   `knowledge-domain.instructions.md`, and confirm the heading carries the name
   only — no `Aggregate:`, `Feature:`, `Sub-feature:`, or `Term:` prefix, and no

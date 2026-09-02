@@ -148,6 +148,11 @@ learns one adoption vocabulary and applies it in both folders:
 | `hold` | Kept, but no longer expanded; avoid new usage. |
 | `retired` | No longer used. Kept because knowing what we stopped doing, and why, is the most useful record in this folder. |
 
+On top of this ladder sits the shared `approved` rung, defined once in
+`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+recorded with `approved-by` and `approved-at`. It is written explicitly and
+comes off the moment the content changes.
+
 **`status` is required on every `.ai` block, with no resting value to omit** —
 for the same reason as `.tech`, whose ladder this is: the value is a rating, and
 a usage nobody has rated is not thereby `candidate`. It is *not* the editorial

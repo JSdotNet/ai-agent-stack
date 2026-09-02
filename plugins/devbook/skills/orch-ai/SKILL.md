@@ -81,6 +81,9 @@ Otherwise none.
   `roadmap`, `date`, `tests` optional and omitted when empty.
 - Set `status` from this folder's ladder: `candidate`, `trial`, `adopted`,
   `hold`, `retired`. A demotion is a normal, valuable edit — never soften one.
+- Never write `status: approved`, `approved-by`, or `approved-at`. That rung is
+  the approval gate's to write and a person's to decide; an authoring skill that
+  sets it approves its own work.
 - Omit `stage` in a stage file; set it on `concepts.md` chapters.
 - Retire rather than delete: a usage that was dropped keeps its chapter, with
   `status: retired` and a sentence on why.

@@ -128,6 +128,10 @@ instructions.
   `deprecated` in this folder. Domain knowledge describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
   means "this is the current model", `deprecated` means superseded.
+- On top of that ladder sits the shared `approved` rung, defined once in
+  `knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+  recorded with `approved-by` and `approved-at`. It is written explicitly, never
+  rested at, and comes off the moment the content changes.
 - **`active` is this folder's resting value, so it is written by omitting the
   field.** State `status` only while the chapter is in transition (`draft`,
   `proposed`) or carries a standing warning (`deprecated`); drop the line when

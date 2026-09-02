@@ -1,4 +1,4 @@
-// Exercises escapeSequenceIssues against the corruption seen in JSdotNet/Backlog
+// Exercises escapeSequenceIssues against the corruption seen in a real knowledge corpus
 // plus the legitimate uses that must NOT be flagged.
 import { escapeSequenceIssues } from "./metadata.mjs";
 

@@ -1,11 +1,11 @@
 ---
-applyTo: ".domain/**,.arc42/**,.backlog/**,.tech/**,.design/**,.ai/**"
-description: Common per-chapter and per-file metadata convention for .domain, .arc42, .backlog, .tech, .design, and .ai, so tooling can parse status, dependencies, and cross-references.
+applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**"
+description: Common per-chapter and per-file metadata convention for .domain, .arc42, .tech, .design, and .ai, so tooling can parse status, dependencies, and cross-references.
 ---
 
 # Chapter and file metadata
 
-`.domain`, `.arc42`, `.backlog`, `.tech`, `.design`, and `.ai` are intended to be read by a
+`.domain`, `.arc42`, `.tech`, `.design`, and `.ai` are intended to be read by a
 visualization and indexing tooling, not just by humans. To make that
 possible, every **chapter** in these folders carries a small, parseable
 metadata block directly under its heading, in a fenced `meta` (YAML) code
@@ -24,7 +24,6 @@ already treat as an addressable unit:
 - `.domain/<context>/naming.md` — each `Term` chapter.
 - `.arc42/<nn>-<name>.md` — the file's top-level chapter, and any ## section
   inside it that is independently trackable.
-- `.backlog/<concern-type>-<concern-slug>.md` — each Item and Sub-item.
 - `.tech/<layer>.md` — each `## <Technology Name>` chapter (one graph node per
   chapter).
 - `.design/<name>.md` — the file's top-level chapter, and every `##` chapter
@@ -55,15 +54,15 @@ Prose for this chapter starts here.
 
 `type` is the only universally required field, and only in the three folders
 that define a value set for it (`.domain`, `.tech`, `.ai`). `status` is
-required per folder: mandatory in `.tech`, `.ai`, and `.backlog`, optional in
+required per folder: mandatory in `.tech` and `.ai`, optional in
 `.domain`, `.arc42`, and `.design`, where leaving it out means the content is
 at rest — see the `status` entry under **Fields**. Optional fields (`related`,
 `issue`, `effort`, `roadmap`, and folder-specific fields such as `depends-on`)
 are included only when they have a value; empty collections and null values are
 omitted rather than written out.
 
-**The `meta` fence stays even when the block ends up empty.** In `.arc42`,
-`.backlog`, and `.design` there is no `type` field, so a resting chapter with no
+**The `meta` fence stays even when the block ends up empty.** In `.arc42` and
+`.design` there is no `type` field, so a resting chapter with no
 relations has nothing left to write:
 
 ```markdown
@@ -106,7 +105,7 @@ correct, with `type: shared-value-objects`.
 ## File-level metadata block
 
 In addition to per-chapter blocks, every file in `.domain`, `.arc42`,
-`.backlog`, `.tech`, `.design`, and `.ai` carries one file-level metadata block
+`.tech`, `.design`, and `.ai` carries one file-level metadata block
 describing the document as a whole. This gives the tooling a
 status/relations rollup for the
 file itself, distinct from the status of any individual chapter inside it —
@@ -133,8 +132,8 @@ The file-level block uses the same fields as a chapter block (`status` required
 or optional by folder, exactly as above; `type` required where the folder
 defines a file-level value set; `related`, `issue`, `effort`, and `roadmap`
 optional) and the same omit-when-empty rule. Folder-specific fields defined for chapters
-(`depends-on`, `implements`, `aliases`, `feature-flag`, `version`,
-`alternatives`) are chapter-scoped and are not used at file level — a file's
+(`depends-on`, `aliases`, `feature-flag`, `version`, `alternatives`) are
+chapter-scoped and are not used at file level — a file's
 overall relationships are expressed through `related` only.
 
 In `.arc42`, the file's top-level chapter heading (e.g. `# 01. Introduction
@@ -144,7 +143,7 @@ these files that same block also serves as the file-level block, since an
 duplicate block is added.
 
 Some folders define additional relation fields beyond `related` (e.g.
-`depends-on`, `implements`) — see that folder's own instructions file for
+`depends-on`) — see that folder's own instructions file for
 which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
 reference field: in `.domain`, `aliases` (defined in
@@ -173,12 +172,11 @@ way but without a heading slug: `<path>`, e.g.
 `related` entry points at a file as a whole rather than one of its chapters.
 
 Use the `<path>#<heading-slug>` (chapter) or `<path>` (file) form as the
-entries in `related` and in any folder-specific relation field (`depends-on`,
-`implements`, etc.).
+entries in `related` and in any folder-specific relation field (`depends-on`).
 
 ### Fields
 
-- **status** (required in `.tech`, `.ai`, `.backlog`; optional in `.domain`,
+- **status** (required in `.tech`, `.ai`; optional in `.domain`,
   `.arc42`, `.design`) — lifecycle state of this chapter's or file's
   content.
 
@@ -192,7 +190,6 @@ entries in `related` and in any folder-specific relation field (`depends-on`,
   |---|---|---|
   | `.domain`, `.arc42`, `.design` | optional | `active` — settled content |
   | `.tech`, `.ai` | **required** | nothing; the value is a *rating* on an adoption ladder, and an unrated technology is not the same as a `candidate` one |
-  | `.backlog` | **required** | nothing; every value is a real work state, and an item with no status is untracked, not `done` |
 
   Spell the absence by leaving the field out, never as `status: null` — same
   discipline as `issue: null`, and the reason is the same.
@@ -200,7 +197,6 @@ entries in `related` and in any folder-specific relation field (`depends-on`,
   The allowed values are folder-specific; see the `status` section
   in `knowledge-domain.instructions.md`,
   `knowledge-arc42.instructions.md`,
-  `knowledge-backlog.instructions.md`,
   `knowledge-tech.instructions.md`,
   `knowledge-design.instructions.md`, or
   `knowledge-ai.instructions.md` for the value set
@@ -223,9 +219,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`,
   | `.tech` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `.ai` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
-  `.arc42`, `.backlog`, and `.design` deliberately define **no** value set. Their
-  only kind distinction — chapter vs section, item vs sub-item — is already
-  carried by heading level, so a `type` field there would restate the document
+  `.arc42` and `.design` deliberately define **no** value set. Their only kind
+  distinction — chapter vs section — is already carried by heading level, so a `type` field there would restate the document
   structure rather than add anything. Omit it in those folders, per the same
   omit-when-empty discipline that governs the optional fields; setting it is
   reported as a warning.
@@ -235,8 +230,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`,
   warning — rename it to `type`.
 - **related** (optional) — list of `<path>#<heading-slug>` or `<path>`
   references this chapter or file points to for context, without a hard
-  dependency (e.g. a backlog item linking to the domain aggregate it
-  changes, or an arc42 section linking to a domain feature it realizes).
+  dependency (e.g. a `.design` component linking to the domain feature it
+  serves, or an arc42 section linking to a domain feature it realizes).
   This is the general-purpose cross-folder tag mechanism, available in every
   folder. Omit the field entirely when there are no references.
 - **issue** (optional) — URL (or `owner/repo#number`
@@ -300,9 +295,9 @@ entries in `related` and in any folder-specific relation field (`depends-on`,
 `number` and `index` are file-level only because they place the *document* in
 its directory. A chapter's position is already its position in the document.
 
-Folder-specific fields (e.g. `depends-on` on features/backlog/tech/ai chapters,
-`feature-flag` on domain feature chapters, `implements` on backlog chapters,
-`version`/`alternatives` on tech chapters, `stage` on ai chapters) are
+Folder-specific fields (e.g. `depends-on` on feature/tech/ai chapters,
+`feature-flag` on domain feature chapters, `version`/`alternatives` on tech
+chapters, `stage` on ai chapters) are
 documented in that folder's
 own instructions file, not here — this file only defines the fields common
 to every folder.
@@ -406,7 +401,7 @@ command to `TEST_RUNNERS` in `.github/tools/knowledge-meta/metadata.mjs`.
   not been linked. The absence deliberately carries no claim, and `tests` is not
   a coverage metric.
 - A file-level `tests` field covers the document as a whole — the suite for a
-  bounded context, the acceptance suite for a backlog item. Chapter entries are
+  bounded context, the acceptance suite for a feature. Chapter entries are
   the per-chapter detail. Neither implies the other, and neither has to contain
   the other.
 - Delete an entry in the same change that deletes or renames the test it names. A
@@ -416,14 +411,14 @@ command to `TEST_RUNNERS` in `.github/tools/knowledge-meta/metadata.mjs`.
   test asserts nothing, and linking it makes a chapter look covered when it is
   not.
 
-A delivered backlog item, and a domain aggregate whose invariants are pinned,
+A delivered feature, and a domain aggregate whose invariants are pinned,
 therefore read:
 
 ```markdown
 ## Guest Checkout
 
 \`\`\`meta
-status: done
+type: feature
 effort: 5
 tests: [integration:dotnet:Ordering.Api.Tests.GuestCheckoutTests, e2e:playwright:tests/e2e/checkout.spec.ts#Guest checkout completes]
 \`\`\`
@@ -513,7 +508,7 @@ Per directory, `_meta/index.json` is generated like this:
    | `.tech/` | `technology-graph.md` |
    | `.design/` | `README.md` |
    | `.ai/` | `adoption-map.md` |
-   | `.arc42/`, `.backlog/` | none — declare `index: root` if the directory has one |
+   | `.arc42/` | none — declare `index: root` if the directory has one |
 
    A directory the convention covers but whose root document is missing is
    reported as a warning. `index: root` overrides the convention, and two of
@@ -536,7 +531,7 @@ Per directory, `_meta/index.json` is generated like this:
    `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by
-   filename**, which is what the flat `.backlog` concerns want.
+   filename.**
 
 `index: exclude` drops a document from the outline entirely. It stays a node in
 `graph.json`, because it is still real content that other chapters may
@@ -570,7 +565,6 @@ _meta/index.json          # reading outline, all adopted folders
 .arc42/_meta/graph.json   # .arc42 only
 .arc42/_meta/index.json
 .domain/_meta/…
-.backlog/_meta/…
 .tech/_meta/…
 .design/_meta/…
 .ai/_meta/…

@@ -1,6 +1,6 @@
 ---
 name: knowledge-base-validate
-description: 'Validate and repair the .arc42/.domain/.tech/.design/.backlog/.ai knowledge folders — resolve broken metadata references, remove fields the schema no longer defines, add missing meta blocks, and refresh drifted _meta indexes. Use when: the knowledge-meta check fails, CI warns about drifted indexes, references do not resolve. Triggers on: "knowledge-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "knowledge base check", "build.mjs --check".'
+description: 'Validate and repair the .arc42/.domain/.tech/.design/.ai knowledge folders — resolve broken metadata references, remove fields the schema no longer defines, add missing meta blocks, and refresh drifted _meta indexes. Use when: the knowledge-meta check fails, CI warns about drifted indexes, references do not resolve. Triggers on: "knowledge-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "knowledge base check", "build.mjs --check".'
 ---
 
 # Knowledge base validate
@@ -46,7 +46,7 @@ missing or malformed `meta` blocks, and drifted committed `_meta/` indexes.
    | `index` or `number` on a chapter block | Both place the document in its directory, so they belong on the file-level block | Move the field to the file-level block, or drop it if the chapter needed neither |
    | No entry point | A directory the convention covers is missing its root document, or has excluded it | Create the expected file, or mark the right one `index: root` |
    | Unknown status or type | A value outside the allowed ladder or value set | Use one of the values listed in the folder's own instruction file |
-   | Missing `status` | A `.tech`, `.ai`, or `.backlog` block with no `status` — those folders rate or track, so absence states nothing | Add `status` from the folder's ladder. In `.domain`, `.arc42`, and `.design` an absent `status` is correct and means the resting value `active` |
+   | Missing `status` | A `.tech` or `.ai` block with no `status` — those folders rate, so absence states nothing | Add `status` from the folder's ladder. In `.domain`, `.arc42`, and `.design` an absent `status` is correct and means the resting value `active` |
    | Resting `status` stated explicitly | A `.domain`, `.arc42`, or `.design` block writes `status: active`, which is what an absent field already says (warning) | Delete the line. If the block is then empty, keep the empty `meta` fence — it is what makes the heading an addressable chapter |
    | Missing `type` | A `.domain`, `.tech`, or `.ai` block with no `type`, or a heading still carrying a kind prefix | Add `type` from the folder's value set and strip the prefix from the heading |
    | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `knowledge-chapter-metadata.instructions.md`. A link to another chapter belongs in `related` |

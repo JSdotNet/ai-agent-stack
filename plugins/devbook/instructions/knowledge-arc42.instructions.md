@@ -27,7 +27,6 @@ deployable unit.
 - `.domain` describes *what the domain is* (bounded contexts, aggregates,
   ubiquitous language). `.arc42` describes *how the system is built and runs*
   (containers, deployment, quality attributes, decisions).
-- `.backlog` tracks *what work is planned or in progress*.
 - `.design` describes *how the product looks and behaves for the user* (UX
   principles, design tokens, interaction and accessibility rules). Channel and
   stack facts stay in `.arc42`; `.design` links to them.

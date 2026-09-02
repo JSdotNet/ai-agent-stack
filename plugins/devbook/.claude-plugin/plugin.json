@@ -1,7 +1,7 @@
 {
   "name": "devbook",
   "version": "1.0.0",
-  "description": "Repository knowledge-folder convention for .arc42, .domain, .tech, .design, .backlog, and .ai: parseable chapter metadata, runnable test-case links, AI adoption tracked per development-flow stage, derived _meta indexes, a reference-graph canvas, per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> skills between chapters and code, and enforcement tooling.",
+  "description": "Repository knowledge-folder convention for .arc42, .domain, .tech, .design, and .ai: parseable chapter metadata, runnable test-case links, AI adoption tracked per development-flow stage, derived _meta indexes, a reference-graph canvas, per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> skills between chapters and code, and enforcement tooling.",
   "author": {
     "name": "Job Schepers"
   },
@@ -14,7 +14,6 @@
     "domain",
     "ddd",
     "architecture",
-    "backlog",
     "design",
     "technology-graph",
     "ai-adoption",

@@ -1,7 +1,7 @@
 # Knowledge metadata tooling
 
 Derives machine-readable indexes from the `meta` blocks embedded in
-`.arc42/`, `.domain/`, `.backlog/`, `.tech/`, `.design/`, and `.ai/`:
+`.arc42/`, `.domain/`, `.tech/`, `.design/`, and `.ai/`:
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
@@ -73,7 +73,6 @@ Two artifacts per adopted scope, each co-located with what it describes:
 | `_meta/graph.json`, `_meta/index.json` | repository-wide rollup across all adopted knowledge folders |
 | `.arc42/_meta/*.json` | `.arc42` only |
 | `.domain/_meta/*.json` | `.domain` only |
-| `.backlog/_meta/*.json` | `.backlog` only |
 | `.tech/_meta/*.json` | `.tech` only |
 | `.design/_meta/*.json` | `.design` only |
 | `.ai/_meta/*.json` | `.ai` only |
@@ -152,7 +151,7 @@ The authored field is called `type` in Markdown but lands on the node as
 `kind`, because `type` was already the structural discriminator and renaming it
 would break every existing consumer. `.tech` nodes have always carried `kind`;
 the unification means every folder that defines a value set now populates it —
-`.domain`, `.tech`, and `.ai`. Nodes in `.arc42`, `.backlog`, and `.design`
+`.domain`, `.tech`, and `.ai`. Nodes in `.arc42` and `.design`
 carry no `kind`, because those folders deliberately define no value set.
 
 ### Node types
@@ -178,7 +177,7 @@ already slugifies to the kind:
 |---|---|---|---|
 | `.domain/order-management/domain.md` | `Order Management` | `domain` | `Order Management (domain)` |
 | `.domain/order-management/features.md` | `Order Management` | `features` | `Order Management (features)` |
-| `.domain/context-map.md` | `Backlog` | `context-map` | `Backlog (context-map)` |
+| `.domain/context-map.md` | `Order Platform` | `context-map` | `Order Platform (context-map)` |
 | `.domain/context-map.md` | `Context Map` | `context-map` | `Context Map` |
 | `.arc42/01-introduction-and-goals.md` | `01. Introduction and Goals` | none | `01. Introduction and Goals` |
 
@@ -196,7 +195,6 @@ fallback does not render as `Context Map (context-map)`.
 | `contains` | Document structure (file → chapter, chapter → sub-chapter). |
 | `depends-on` | The `depends-on` metadata field. |
 | `related` | The `related` metadata field. |
-| `implements` | The `implements` metadata field (`.backlog`). |
 
 `aliases` (`.domain`), `alternatives` (`.tech`), `feature-flag` (`.domain`),
 `stage` (`.ai`), and `roadmap` and `tests` (every folder) are plain-string
@@ -247,7 +245,7 @@ each expects, without building a command.
 
 | Problem | Severity |
 |---|---|
-| A `related` / `depends-on` / `implements` reference that resolves to nothing inside a knowledge folder | error |
+| A `related` / `depends-on` reference that resolves to nothing inside a knowledge folder | error |
 | Two headings in one file that slugify identically | error |
 | A block missing `type` where its folder defines a value set for that level | error |
 | A `type` value outside its folder's value set | error |
@@ -356,7 +354,7 @@ distinguish "settled, and the author said so by omission" from a stated value,
 and every already-declared entry stays byte-identical to what earlier schema
 versions emitted.
 
-`.tech`, `.ai`, and `.backlog` have no resting value, so an absent status there
+`.tech` and `.ai` have no resting value, so an absent status there
 resolves to `null` and `validateDocument` reports it as an error. A `null`
 status in these artifacts means the corpus is broken, not that the content is at
 rest — do not paper over it in a viewer.

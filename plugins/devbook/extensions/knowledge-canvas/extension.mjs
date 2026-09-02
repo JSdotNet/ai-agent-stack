@@ -1,7 +1,7 @@
 // Extension: knowledge-canvas
 //
 // Tailored canvas for this repository's checked-in knowledge folders
-// (.domain/, .arc42/, .backlog/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
+// (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
 // Mermaid diagrams, and parses each chapter/file's `meta` fenced-YAML block
 // (per knowledge-chapter-metadata.instructions.md) into a
 // structured side panel plus a lightweight metadata lint.
@@ -28,7 +28,7 @@ import {
 } from "../../tools/knowledge-meta/metadata.mjs";
 
 // Repository root: the CLI launches project-scoped extensions with cwd set
-// to the git root, which is also where .domain/.arc42/.backlog/.tech/.design/.ai live.
+// to the git root, which is also where .domain/.arc42/.tech/.design/.ai live.
 const REPO_ROOT = process.cwd();
 
 // One local HTTP server + current document path per open canvas instance.
@@ -62,7 +62,7 @@ function resolveRelPath(relPath) {
     const kind = folderKindForPath(normalized);
     if (!kind) {
         throw new Error(
-            `"${relPath}" is not under .domain/, .arc42/, .backlog/, .tech/, .design/, or .ai/ — this canvas only serves those folders.`
+            `"${relPath}" is not under .domain/, .arc42/, .tech/, .design/, or .ai/ — this canvas only serves those folders.`
         );
     }
     const absolute = path.resolve(REPO_ROOT, normalized);
@@ -192,7 +192,7 @@ const session = await joinSession({
             id: "knowledge-graph",
             displayName: "Knowledge graph",
             description:
-                "Obsidian-style force-directed view of the knowledge graph derived from the `meta` blocks in .arc42/.domain/.backlog/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
+                "Obsidian-style force-directed view of the knowledge graph derived from the `meta` blocks in .arc42/.domain/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
             inputSchema: {
                 type: "object",
                 properties: {
@@ -262,14 +262,14 @@ const session = await joinSession({
             id: "knowledge-canvas",
             displayName: "Knowledge canvas",
             description:
-                "View .domain/.arc42/.backlog/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per chapter-metadata.instructions.md.",
+                "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per chapter-metadata.instructions.md.",
             inputSchema: {
                 type: "object",
                 properties: {
                     path: {
                         type: "string",
                         description:
-                            "Repo-relative path to a Markdown file under .domain/, .arc42/, .backlog/, .tech/, .design/, or .ai/ to open immediately.",
+                            "Repo-relative path to a Markdown file under .domain/, .arc42/, .tech/, .design/, or .ai/ to open immediately.",
                     },
                 },
             },
@@ -277,7 +277,7 @@ const session = await joinSession({
                 {
                     name: "set_document",
                     description:
-                        "Switch the canvas to display a different Markdown file under .domain/, .arc42/, .backlog/, .tech/, .design/, or .ai/.",
+                        "Switch the canvas to display a different Markdown file under .domain/, .arc42/, .tech/, .design/, or .ai/.",
                     inputSchema: {
                         type: "object",
                         properties: {

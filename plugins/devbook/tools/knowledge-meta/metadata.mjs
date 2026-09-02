@@ -1,14 +1,13 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
 // blocks defined in knowledge-chapter-metadata.instructions.md.
 //
-// The schema used across .domain/.arc42/.backlog/.tech/.design/.ai is intentionally small and
+// The schema used across .domain/.arc42/.tech/.design/.ai is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
 // tiny hand-written reader instead of pulling in a YAML dependency.
 
 const STATUS_BY_FOLDER = {
     domain: ["draft", "proposed", "active", "deprecated"],
     arc42: ["draft", "proposed", "active", "deprecated"],
-    backlog: ["draft", "ready", "in-progress", "done", "blocked"],
     tech: ["candidate", "trial", "adopted", "hold", "retired"],
     design: ["draft", "active", "deprecated"],
     // `.ai` deliberately reuses `.tech`'s ladder: a reader learns one
@@ -24,11 +23,10 @@ const STATUS_BY_FOLDER = {
 // Only the three editorial folders have such a value. In `.domain`, `.arc42`,
 // and `.design` `status` records how settled the writing is, and `active` — "no
 // longer in transition" — is the state most chapters sit in forever. The other
-// three folders have no resting value to omit: in `.tech` and `.ai` the value is
+// two folders have no resting value to omit: in `.tech` and `.ai` the value is
 // a *rating* whose whole purpose is to be stated, so an absent status would be
 // indistinguishable from `candidate` ("nobody has rated this") and a radar built
-// from omissions renders blank; in `.backlog` every value is a real work state,
-// and an item with no status is untracked, not `done`.
+// from omissions renders blank.
 //
 // Note what is *not* resting: `deprecated` is a standing warning and stays
 // written, as do `draft` and `proposed`, which say the content is in transition.
@@ -44,8 +42,8 @@ const RESTING_STATUS_BY_FOLDER = {
 // the name alone, so anchors are slugs of the bare name.
 //
 // A folder whose lists are empty defines no kind distinction of its own: in
-// `.arc42`, `.backlog`, and `.design` the only such distinction (chapter vs
-// section, item vs sub-item) is already carried by heading level, so inventing
+// `.arc42` and `.design` the only such distinction (chapter vs section) is
+// already carried by heading level, so inventing
 // values there would restate the document structure. `type` is omitted in those
 // folders and reported when used.
 const TYPE_BY_FOLDER = {
@@ -96,7 +94,6 @@ const TYPE_BY_FOLDER = {
         file: ["adoption-map", "stage", "concepts"],
     },
     arc42: { chapter: [], file: [] },
-    backlog: { chapter: [], file: [] },
     design: { chapter: [], file: [] },
 };
 
@@ -173,7 +170,7 @@ const TEST_RUNNERS = {
 // A `tests` entry that starts like a knowledge path is a chapter reference
 // pasted into a field that takes test identifiers. Worth its own message,
 // because the author's intent is obvious and the fix is to move it to `related`.
-const KNOWLEDGE_PATH_PREFIX = /^\.(?:domain|arc42|backlog|tech|design|ai)\//;
+const KNOWLEDGE_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
 
 // Fields that steer how this document appears in the generated outline, and so
 // describe the document's place in its directory rather than a chapter inside
@@ -214,7 +211,6 @@ const REMOVED_FIELDS = {
 const FOLDER_EXTRA_FIELDS = {
     domain: ["depends-on", "aliases", "feature-flag"],
     arc42: [],
-    backlog: ["depends-on", "implements"],
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
     ai: ["depends-on", "stage"],
@@ -225,7 +221,6 @@ export function folderKindForPath(relPath) {
     const normalized = relPath.replace(/\\/g, "/");
     if (normalized.startsWith(".domain/")) return "domain";
     if (normalized.startsWith(".arc42/")) return "arc42";
-    if (normalized.startsWith(".backlog/")) return "backlog";
     if (normalized.startsWith(".tech/")) return "tech";
     if (normalized.startsWith(".design/")) return "design";
     if (normalized.startsWith(".ai/")) return "ai";
@@ -841,7 +836,7 @@ export function validateDocument(relPath, markdown) {
     if (!kind) {
         issues.push({
             severity: "info",
-            message: `${relPath} is not under .domain/, .arc42/, .backlog/, .tech/, .design/, or .ai/ — no metadata rules apply.`,
+            message: `${relPath} is not under .domain/, .arc42/, .tech/, .design/, or .ai/ — no metadata rules apply.`,
         });
         return issues;
     }
@@ -917,7 +912,7 @@ export function validateDocument(relPath, markdown) {
 
         // `type` records what kind of thing this chapter or file is, in the
         // vocabulary its folder defines. Folders that define no vocabulary
-        // (`.arc42`, `.backlog`, `.design`) omit the field entirely.
+        // (`.arc42`, `.design`) omit the field entirely.
         const blockLevel = chapter.level === 1 ? "file" : "chapter";
         for (const issue of typeIssues(kind, blockLevel, chapter.meta)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });

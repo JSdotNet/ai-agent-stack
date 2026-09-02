@@ -90,7 +90,7 @@ the existing `.design/` contents, and continue.
 - Keep `related` entries pointing at valid `<path>#<heading-slug>` or `<path>`
   targets, and omit empty optional fields per the omit-when-empty rule.
 - If a chapter heading or file was renamed or moved, update every `related`
-  entry elsewhere (including in `.arc42/` and `.backlog/`) that references its
+  entry elsewhere (including in `.arc42/`) that references its
   old reference.
 
 **Agents:** `ux-design:ux-designer`

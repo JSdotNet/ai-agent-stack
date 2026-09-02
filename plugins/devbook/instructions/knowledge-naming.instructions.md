@@ -1,5 +1,5 @@
 ---
-applyTo: ".arc42/**,.domain/**,.backlog/**,.tech/**,.design/**,.ai/**,**/_meta/**"
+applyTo: ".arc42/**,.domain/**,.tech/**,.design/**,.ai/**,**/_meta/**"
 description: File and folder naming conventions inside knowledge folders, including dot-prefixed specification areas and underscore-prefixed tool-interpreted data.
 ---
 
@@ -21,13 +21,13 @@ underscore are always for data that needs tool interpretation.
 Use the prefix when the asset is a template, a schema, a generated artifact, or
 input consumed only by a generator or viewer. Do not use it for documents meant
 to be read as content, even if tooling also parses them — the `.domain`,
-`.arc42`, `.backlog`, `.tech`, `.design`, and `.ai` Markdown files are read by both
+`.arc42`, `.tech`, `.design`, and `.ai` Markdown files are read by both
 humans and tooling and stay unprefixed.
 
 ## Dot prefix marks specification areas
 
 Top-level knowledge areas keep the leading-dot convention and are **not**
-renamed: `.arc42/`, `.domain/`, `.backlog/`, `.tech/`, `.design/`, `.ai/`. The dot marks
+renamed: `.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`. The dot marks
 a repository-level specification area; the underscore marks tool-interpreted
 data within one. Folders with a leading dot are for specifications.
 

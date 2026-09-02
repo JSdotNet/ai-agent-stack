@@ -44,7 +44,7 @@ for (const folder of ["domain", "arc42", "design"]) {
     );
 }
 
-for (const folder of ["tech", "ai", "backlog"]) {
+for (const folder of ["tech", "ai"]) {
     check(restingStatusFor(folder) === null, `.${folder} has no resting value`);
     const absent = resolveStatus(folder, {});
     check(
@@ -127,13 +127,6 @@ const lints = [
         name: ".ai: a chapter omitting status errors",
         path: ".ai/02-build.md",
         markdown: `# 02. Build\n\n${fence("status: trial\ntype: stage\n")}\n## Agent-Driven TDD\n\n${fence("type: practice\n")}\nProse.\n`,
-        errors: 1,
-        warnings: 0,
-    },
-    {
-        name: ".backlog: an item omitting status errors",
-        path: ".backlog/architecture-observability.md",
-        markdown: `# Observability\n\n${fence("status: draft\n")}\n## Add tracing\n\n${fence("")}\nProse.\n`,
         errors: 1,
         warnings: 0,
     },

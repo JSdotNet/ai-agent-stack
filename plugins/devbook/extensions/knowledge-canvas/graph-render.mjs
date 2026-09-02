@@ -83,14 +83,12 @@ export function renderGraphPage({ scopes = ["."], scope = "." } = {}) {
 const FOLDER_COLORS = {
   ".arc42": "#0969da",
   ".domain": "#8250df",
-  ".backlog": "#1a7f37",
   ".tech": "#bc4c00",
 };
 const EXTERNAL_COLOR = "#57606a";
 const EDGE_COLORS = {
   "depends-on": "#bc4c00",
   related: "#8886",
-  implements: "#1a7f37",
   contains: "#88888833",
 };
 
@@ -201,7 +199,6 @@ async function load() {
         },
       },
       { selector: 'edge[type = "depends-on"]', style: { "line-color": EDGE_COLORS["depends-on"], "target-arrow-color": EDGE_COLORS["depends-on"], width: 1.4 } },
-      { selector: 'edge[type = "implements"]', style: { "line-color": EDGE_COLORS.implements, "target-arrow-color": EDGE_COLORS.implements } },
       { selector: 'edge[type = "contains"]', style: { "line-style": "dotted", opacity: 0.35, "target-arrow-shape": "none" } },
       { selector: ".dimmed", style: { opacity: 0.08 } },
       { selector: ".highlight", style: { "border-width": 3, "border-color": "#f0b400" } },

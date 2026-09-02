@@ -48,7 +48,7 @@ chapters carry the rationale directly.
   `.arc42` and `.tech` — `.design` links to them rather than restating them.
 - `.domain` describes *what the domain is*. `.design` does not define domain
   concepts; it uses the ubiquitous language from `.domain/<context>/naming.md`.
-- `.backlog` tracks *what work is planned*. Backlog items link to the
+- Work items link to the
   `.design` chapter they realize via `related`.
 
 ## Structure

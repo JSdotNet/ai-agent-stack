@@ -1,7 +1,7 @@
 # devbook
 
-Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.backlog` /
-`.ai` knowledge-folder convention: durable, cross-linked Markdown knowledge with
+Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.ai`
+knowledge-folder convention: durable, cross-linked Markdown knowledge with
 machine-readable `meta` blocks, derived `_meta/` indexes, a graph canvas, and a
 CI check that keeps references honest.
 
@@ -28,7 +28,6 @@ pull request and a scheduled job keeps current.
 | `.domain/` | Bounded contexts, ubiquitous language, aggregates, domain flows |
 | `.tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `.design/` | UX and visual design guidelines, tokens, design rules |
-| `.backlog/` | Durable work-item chapters |
 | `.ai/` | How the team develops with AI: usage per flow stage, concepts, adoption status |
 
 Adoption is partial by design — a repository may take only `.domain` and
@@ -84,15 +83,6 @@ with template and metadata enforcement.
 
 **Trigger keywords:** `bounded context`, `context map`, `new aggregate`,
 `domain model`, `ubiquitous language`, `domain flow`, `edit .domain`
-
-### Skill: `orch-backlog`
-
-Orchestrates `.backlog/` work-item chapters — Items and Sub-items grouped by
-concern — drafting through `to-epic` / `to-story` / `to-bug` and
-publishing through `create-github-issue` / `update-github-issue`.
-
-**Trigger keywords:** `backlog item`, `add sub-item`, `work item chapter`,
-`publish to issue`, `edit .backlog`, `concern file`
 
 ### Skill: `orch-tech`
 
@@ -187,8 +177,8 @@ a term with the discovered code name as an `alias`, which turns a one-off
 inference into a durable pairing for the next pass. The context folder itself, including
 `naming.md`, is created by `orch-domain`.
 
-`.tech` has no pair here — `knowledge-tech-update` already covers that direction
-— and neither does `.backlog`.
+`.tech` has no pair here — `knowledge-tech-update` already covers that
+direction.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all 10 skills
 reference and none repeats: counterpart resolution, the evidence rules (including
@@ -215,13 +205,12 @@ these skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `knowledge-chapter-metadata.instructions.md` | all six folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
+| `knowledge-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
 | `knowledge-domain.instructions.md` | `.domain/**` | Bounded-context structure and ubiquitous language |
 | `knowledge-arc42.instructions.md` | `.arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `knowledge-tech.instructions.md` | `.tech/**` | Technology graph, versions, maturity ladder |
 | `knowledge-design.instructions.md` | `.design/**` | Design guideline scope and token rules |
 | `knowledge-ai.instructions.md` | `.ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
-| `knowledge-backlog.instructions.md` | `.backlog/**` | Work-item chapter structure |
 | `knowledge-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
 | `knowledge-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
@@ -231,7 +220,7 @@ repositories and files that have not adopted the convention.
 ### Extension: `knowledge-canvas`
 
 Renders the knowledge graph as an interactive canvas — chapters as nodes,
-`related` / `depends-on` / `implements` as edges — using the same graph code the
+`related` / `depends-on` as edges — using the same graph code the
 generator writes, so the live view and the committed indexes never disagree. The
 node inspector lists a chapter's test links with the command that runs each one,
 which is where a "run this test" button goes.
@@ -297,20 +286,19 @@ type: aggregate
 ```
 
 `status` is written only while a chapter is in transition (`draft`, `proposed`)
-or carries a standing warning (`deprecated`). It stays **required** in `.tech`,
-`.ai`, and `.backlog`, and the asymmetry is the point: the field was doing three
-unrelated jobs, and only one of them has a resting value.
+or carries a standing warning (`deprecated`). It stays **required** in `.tech`
+and `.ai`, and the asymmetry is the point: the field was doing two unrelated
+jobs, and only one of them has a resting value.
 
 | Folder | What `status` is | Resting value |
 |---|---|---|
 | `.domain`, `.arc42`, `.design` | editorial maturity — how settled the writing is | `active`, omitted |
 | `.tech`, `.ai` | a *rating* on an adoption ladder | none; an unrated technology is not a `candidate` one, and a radar built from omissions renders blank |
-| `.backlog` | a work state | none; an item with no status is untracked, not `done` |
 
 Two rules make the difference safe:
 
-- **The `meta` fence stays even when the block ends up empty.** `.arc42`,
-  `.backlog`, and `.design` define no `type`, so a settled chapter with no
+- **The `meta` fence stays even when the block ends up empty.** `.arc42` and
+  `.design` define no `type`, so a settled chapter with no
   relations has nothing left inside its fence. The fence is what marks the
   heading as an addressable chapter — one graph node per heading that carries a
   block — so deleting it as noise drops the chapter out of `graph.json` and out
@@ -510,8 +498,7 @@ metadata and into the folder convention: each directory's root document is read
 first — `.domain/context-map.md`, a bounded context's `domain.md`,
 `.tech/technology-graph.md`, `.design/README.md` — then that folder's prescribed
 files in the sequence its instructions file documents, then anything else
-filename-sorted. `.arc42` and `.backlog` sort by filename outright, as `.arc42`
-always did. Nothing is authored per repository any more, so adding a file needs
+filename-sorted. `.arc42` sorts by filename outright, as it always did. Nothing is authored per repository any more, so adding a file needs
 no declaration and the whole class of drift between a list and its directory is
 gone. The convention is encoded once, in `DIRECTORY_CONVENTION` in
 `.github/tools/knowledge-meta/outline.mjs`.
@@ -604,7 +591,7 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    `## Shared Value Objects` and `## Shared Enums` keep their headings: those
    name a grouping, not a single thing. `.domain/context-map.md` has no context
    name to fall back to, so prefer titling it after the system the map covers
-   (`# Backlog`), with `type: context-map` carrying the kind; a plain
+   (`# Order Platform`), with `type: context-map` carrying the kind; a plain
    `# Context Map` is also accepted. If it already has a sensible title, leave
    it — this step is about stripping *kind prefixes*, and that file never had
    one.
@@ -612,7 +599,7 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    instructions file — `knowledge-domain.instructions.md` for `.domain`,
    `knowledge-tech.instructions.md` for `.tech`. File-level blocks take a
    file-level value (`domain`, `features`, `model`, …) matching the filename.
-   `.arc42`, `.backlog`, and `.design` define no value set and take no `type`.
+   `.arc42` and `.design` define no value set and take no `type`.
 3. **Promote Entity, Value Object, and Enum sub-chapters one level.** Delete
    the `### Entities`, `### Value Objects`, and `### Enums` grouping headings
    and lift their `#### <Name>` children to `### <Name>` directly under the
@@ -657,9 +644,6 @@ After running `knowledge-base-init`, a repository that adopted everything has:
 .design/
 ├── _meta/{graph.json,index.json}
 └── <guideline>.md
-.backlog/
-├── _meta/{graph.json,index.json}
-└── <item>.md
 .ai/
 ├── _meta/{graph.json,index.json}
 ├── adoption-map.md

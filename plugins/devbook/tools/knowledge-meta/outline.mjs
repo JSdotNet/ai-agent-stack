@@ -18,7 +18,7 @@
 //      anything else — an extra file, a bounded-context subdirectory, a
 //      repository-chosen `.tech` layer — filename-sorted in between.
 //   4. A directory that is neither numbered nor covered by a convention sorts
-//      by filename, which is what the flat `.backlog` concerns want.
+//      by filename.
 //
 // A document declaring `index: exclude` is left out of the outline entirely.
 //

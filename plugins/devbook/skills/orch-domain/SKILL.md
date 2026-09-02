@@ -85,7 +85,7 @@ the existing `.domain/` contents, and continue.
   `naming.md` terms as needed; omit empty optional fields per the
   omit-when-empty rule.
 - If a chapter heading or file was renamed or moved, update every `related`,
-  `depends-on`, or `implements` entry elsewhere that references its old
+  or `depends-on` entry elsewhere that references its old
   `<path>#<heading-slug>` or `<path>`.
 
 **Agents:** `domain-design:domain-architect`

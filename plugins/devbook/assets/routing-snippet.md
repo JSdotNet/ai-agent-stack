@@ -10,7 +10,7 @@ the orchestrations, agents, and MCP servers that repository actually has
 installed. Delete any knowledge folder the repository did not adopt.
 
 The plugin does ship per-folder orchestration skills — `orch-arc42-content`,
-`orch-domain`, `orch-tech`, `orch-design`, and `orch-backlog` — so a routing
+`orch-domain`, `orch-tech`, `orch-design`, and `orch-ai` — so a routing
 policy can name them directly as the entry point for each folder.
 
 ## For `.github/copilot-instructions.md`
@@ -19,7 +19,7 @@ policy can name them directly as the entry point for each folder.
 ## Guardrails
 
 - Treat checked-in knowledge folders such as `.arc42/`, `.domain/`, `.tech/`,
-  `.design/`, `.backlog/`, and `.ai/` as **task-scoped context**, not baseline
+  `.design/`, and `.ai/` as **task-scoped context**, not baseline
   context.
   Load only the relevant chapters after routing to the correct orchestration or
   specialist agent, or when the user explicitly asks for that knowledge.
@@ -43,9 +43,6 @@ policy can name them directly as the entry point for each folder.
 - Design and UX workflows may load `.design/`, and stack, dependency, or upgrade
   workflows may load `.tech/` — in both cases only the relevant file(s). Route
   edits through `orch-design` and `orch-tech`.
-- Backlog-writing and issue-writing workflows may load `.backlog/`, but should
-  load only the relevant work-item chapters. Route `.backlog/` edits through
-  `orch-backlog`.
 - Workflows about how the team works with AI — adopting a tool into the flow,
   changing a practice, reviewing adoption — may load `.ai/`, but should load
   `adoption-map.md` plus only the stage file(s) in scope. Route `.ai/` edits
@@ -61,8 +58,7 @@ policy can name them directly as the entry point for each folder.
 
 ```markdown
 Checked-in knowledge folders are **task-scoped local fallbacks**, not default
-context. Load `.arc42/`, `.domain/`, `.backlog/`, `.tech/`, `.design/`, or
-`.ai/` only
+context. Load `.arc42/`, `.domain/`, `.tech/`, `.design/`, or `.ai/` only
 when the selected orchestration or specialist agent needs that knowledge, and
 then prefer only the relevant chapter(s) over whole-folder reads.
 ```

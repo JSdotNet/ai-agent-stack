@@ -8,7 +8,7 @@ description: Structure and authoring rules for the technology knowledge folder, 
 `.tech` is the durable record of **which technologies this project itself is
 built with, and how they depend on each other** — the technology graph. It is
 complementary to `.arc42` (system architecture), `.domain` (domain model), and
-`.backlog` (work items).
+and the rest of the knowledge folders.
 
 `.tech` answers "what do we build on, at which version, with what maturity, and
 what depends on what". `.arc42` stays the place for *why* an architecture looks
@@ -155,7 +155,7 @@ Omit every optional field that has no value (no `related: []`, no
   layers use the same technology, document it in `shared.md` and point at it
   with `depends-on` from the layer chapters.
 - `depends-on` must reference an existing `.tech` chapter. Do not point it at
-  `.arc42`/`.domain`/`.backlog` — use `related` for those.
+  `.arc42`/`.domain` — use `related` for those.
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
   renamed, and regenerate the derived index in the same change:

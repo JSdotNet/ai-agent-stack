@@ -172,7 +172,6 @@ repository actually adopts, plus a repository-wide rollup:
 | `_meta/index.json` | repository-wide | ordered reading outline | same |
 | `.arc42/_meta/*.json` | `.arc42` | both of the above, scoped | same |
 | `.domain/_meta/*.json` | `.domain` | both of the above, scoped | same |
-| `.backlog/_meta/*.json` | `.backlog` | both of the above, scoped | same |
 | `.tech/_meta/*.json` | `.tech` | both of the above, scoped | same |
 | `.design/_meta/*.json` | `.design` | both of the above, scoped | same |
 | `.ai/_meta/*.json` | `.ai` | both of the above, scoped | same |

@@ -8,7 +8,7 @@ description: Structure and authoring rules for the domain knowledge folder, incl
 `.domain` is the durable, ubiquitous-language record of the domain model,
 organized by bounded context. It is the authoritative source for "what the
 domain looks like" — complementary to `.arc42` (system architecture), `.tech`
-(technology stack), `.design` (UX guidelines), and `.backlog` (work items).
+(technology stack), and `.design` (UX guidelines).
 
 ## Context-loading policy
 
@@ -156,9 +156,9 @@ instructions.
 
   `context-map.md` is the one `.domain` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
-  system or product the map covers — `# Backlog`, `# Order Platform` — with
+  system or product the map covers — `# Order Platform` — with
   `type: context-map` carrying the kind, exactly as everywhere else. The
-  generator composes its node label as `Backlog (context-map)`, so the kind
+  generator composes its node label as `Order Platform (context-map)`, so the kind
   stays visible in the graph and the label stays distinct when several
   repositories' knowledge folders are viewed together.
 

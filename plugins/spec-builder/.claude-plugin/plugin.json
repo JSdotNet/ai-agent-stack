@@ -1,0 +1,23 @@
+{
+  "name": "spec-builder",
+  "version": "0.3.0",
+  "description": "Authoring the assets a plugin is made of, through the `spec-builder` agent and its five create-* skills: agents, skills, instruction files, hooks, and the two manifests. Carries the dual-host rules that let one authored copy load in both Claude Code and Copilot, and the conciseness budgets every asset here is held to.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "github",
+    "agent",
+    "instruction",
+    "plugin",
+    "skill",
+    "markdown",
+    "workflow",
+    "github-actions"
+  ],
+  "agents": [
+    "./agents/spec-builder.agent.md"
+  ]
+}

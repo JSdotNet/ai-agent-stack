@@ -95,6 +95,12 @@
       "source": "./plugins/documentation",
       "description": "Documentation and profile artifacts through the `documentation` and `profile` agents: how-to guides, explanations, articles, proposals, ideas, and SVG infographics, plus GitHub, LinkedIn, and project profiles. Fills the `docs` role a flow consults, and is usable on its own.",
       "version": "0.4.0"
+    },
+    {
+      "name": "spec-builder",
+      "source": "./plugins/spec-builder",
+      "description": "Authoring the assets a plugin is made of, through the `spec-builder` agent and its five create-* skills: agents, skills, instruction files, hooks, and the two manifests. Carries the dual-host rules that let one authored copy load in both Claude Code and Copilot, and the conciseness budgets every asset here is held to.",
+      "version": "0.3.0"
     }
   ]
 }

@@ -500,3 +500,52 @@ point of the skill, and it is gone. Until the slot lands, `fleet` is a Claude-on
 manifest does not say so.
 
 Close this by adding the slot, not by widening the rule.
+
+## The Body Budgets Are Not What This Repository Holds Itself To
+
+```meta
+date: 2026-09-04
+status: divergence
+related: [".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
+```
+
+[CLAUDE.md](../../CLAUDE.md) states three body budgets — `SKILL.md` 40 lines,
+`*.instructions.md` 60, `*.agent.md` 80. Measured across every authored asset, after
+frontmatter:
+
+| Kind | Within budget | Smallest | Median | Largest |
+| --- | --- | --- | --- | --- |
+| `SKILL.md` | 0 of 60 | 42 | 169 | 486 |
+| `*.instructions.md` | 2 of 16 | 48 | 186 | 629 |
+| `*.agent.md` | 0 of 1 | 190 | 190 | 190 |
+
+Not one skill in the repository meets its budget, and the closest is over. A rule with zero
+compliance is not a rule being broken — it is a rule nobody is reading, and it has been
+restated in every session-start hook while every asset ignored it.
+
+Recorded rather than fixed, because the two ways to close it are both larger than the review
+that found it. Rewriting sixty skills to a quarter of their length would delete the tables,
+the worked shapes, and the decision criteria that are the reason a flow behaves the same way
+twice — `fleet-resolve-issue` runs 486 lines because an unattended worker has nobody to ask.
+Changing the numbers would be inventing a target with no more evidence behind it than the
+first one had.
+
+The rule the assets appear to be following is the one beside it, and it is the one worth
+keeping: *cut what the model already does by default, and state each rule in exactly one file*.
+That one is testable against a diff. A line count is measurable and still went unchecked from
+the first asset onward, which says the number was never the thing anyone was steering by.
+
+Two ways to close this, and whoever picks one should say so here:
+
+- Restore what the port dropped. `JSdotNet/Copilot`'s
+  `spec-builder/instructions/authoring/spec-conciseness.instructions.md`, where these three
+  numbers come from, opens its budget table with "the budget is the trigger for a disclosure
+  decision, not a hard limit" and closes it with "state the reason in the file when an asset
+  genuinely must exceed its budget". CLAUDE.md carried the numbers across and left both
+  sentences behind, which is what turned a heuristic into a rule nothing satisfies.
+- Keep the numbers as an aspiration and say in CLAUDE.md that they are unenforced, so a session
+  stops being told a thing that is false about the repository it is reading.
+
+Until then: **do not cite a body budget when reviewing a change here.** Citing an
+unenforced number is how a review spends its credibility on the one finding that will be
+ignored.

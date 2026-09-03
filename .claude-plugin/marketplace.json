@@ -71,6 +71,12 @@
       "source": "./plugins/csharp-coding",
       "description": "C# .NET implementation through the `coding` agent: test-driven development, refactoring, code review and optimization, NuGet management, Aspire wiring, OpenTelemetry, and Azure SDK patterns. Fills the `implement` and `verify` services a flow runs its code stages through, and is usable on its own.",
       "version": "0.1.0"
+    },
+    {
+      "name": "qa",
+      "source": "./plugins/qa",
+      "description": "Runtime QA validation through the `qa` and `qa-monitor` agents: run the app under Aspire, drive Playwright scenarios that record screenshot and video evidence, and keep log and trace monitoring active for the full session rather than checking once at the end. Fills the `qa` role and the `app.start` and `qa.run` services, and is usable on its own.",
+      "version": "0.2.0"
     }
   ]
 }

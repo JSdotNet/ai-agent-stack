@@ -146,7 +146,7 @@ migration and not a rewrite.
 ## Comments Are Findings Until the Fence Lands
 
 ```meta
-date: 2026-09-03
+date: 2026-09-04
 related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
 ```
 
@@ -168,9 +168,27 @@ sentence written as a list entry comes back in pieces — and one key per findin
 own line and its own diff hunk, which is what the fence design wanted from threads anyway.
 
 Consequence: a question here loses who asked it and cannot be replied to in place; the exchange
-happens in the pull request, and only the unresolved residue stays on the chapter. Close this
-when `devbook` ships the fence — the migration is one pass, since every `open-<n>` becomes one
-fence with `body` set from the line and `author` unknown.
+happens in the pull request, and only the unresolved residue stays on the chapter.
+
+**Superseded in part, 2026-09-04.** `devbook` 1.1.0 ships the fence: the schema and placement
+rule in `knowledge-annotations.instructions.md`, the parse and lint in `metadata.mjs`, the
+derived `_meta/annotations.json`, and `annotations.mjs` as the one writer. So the premise this
+decision rested on — that L0 has not built it — no longer holds, and the reason to keep findings
+in `ext` is gone with it.
+
+What is *not* done is the L1 half. `devbook-collaboration` still writes
+`ext.devbook-collaboration.open-<n>`, and until it moves, a repository with both plugins has two
+places to leave a comment. The migration is the one this decision already named: every
+`open-<n>` becomes one fence with `body` set from the line and `author` unknown, placed against
+the chapter rather than a passage, because a finding never recorded which passage it was about.
+Close this decision in the change that ships it.
+
+Two divergences from the design were taken deliberately. It says "knowledge-base is at 0.14.0;
+this is the next minor — or devbook 0.1.0, if the rename wave lands first"; the rename landed
+and the plugin was already at 1.0.0, so the next minor here is 1.1.0. And it closes with
+"nothing under `.arc42` and no plugin file changes until the direction is agreed" — the
+direction was agreed in the session that asked for the build, and this paragraph is the record
+of that.
 
 ## The Point Set Is Closed
 

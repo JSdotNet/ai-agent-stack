@@ -5,6 +5,8 @@ Derives machine-readable indexes from the `meta` blocks embedded in
 
 - **`graph.json`** — the reference graph between chapters and files.
 - **`index.json`** — the ordered reading outline of each area.
+- **`annotations.json`** — the open notes, from the `annotation` fences in the
+  chapters themselves.
 
 Markdown stays canonical; these indexes are **derived output** — never edit
 them by hand. Placement and naming follow
@@ -66,11 +68,11 @@ both halves of the contract.
 
 ## Outputs
 
-Two artifacts per adopted scope, each co-located with what it describes:
+Three artifacts per adopted scope, each co-located with what it describes:
 
 | Path | Scope |
 |---|---|
-| `_meta/graph.json`, `_meta/index.json` | repository-wide rollup across all adopted knowledge folders |
+| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted knowledge folders |
 | `.arc42/_meta/*.json` | `.arc42` only |
 | `.domain/_meta/*.json` | `.domain` only |
 | `.tech/_meta/*.json` | `.tech` only |
@@ -90,8 +92,10 @@ followed, so a scoped graph stays about its own folder.
 | `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `knowledge-chapter-metadata` instructions. Shared with the `knowledge-graph` canvas. |
 | `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `knowledge-graph` canvas, so the written indexes and the live view can never disagree. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
-| `build.mjs` | CLI wrapper: writes both artifacts per scope, prints stats, exits non-zero on errors. |
-| `escape-lint.test.mjs`, `tests-field.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint and over `tests` parsing, its run-command mapping, and its lint. |
+| `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
+| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, plus a CLI over the same four functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. |
+| `build.mjs` | CLI wrapper: writes all three artifacts per scope, prints stats, exits non-zero on errors. |
+| `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, and the four write operations. |
 
 This folder is self-contained — copy it into a repository as
 `.github/tools/knowledge-meta/` and it runs with no other files installed.
@@ -165,6 +169,12 @@ carry no `kind`, because those folders deliberately define no value set.
 
 Nodes carrying `outOfScope: true` sit outside the current scope and are
 included only because an in-scope node references them.
+
+A node carrying `openNotes` has that many unresolved annotation fences — on a
+`chapter` node its own, on a `file` node the total across the document. The
+field is omitted rather than emitted as `0`, so a viewer badges only what has
+something waiting. It is counted from the same read that builds the graph, so
+the canvas and the committed `graph.json` never disagree about it.
 
 ### File node labels
 
@@ -428,6 +438,60 @@ lists. So an area's `index.json` file count can be lower than its
 
 `_`-prefixed folders (such as `_meta/` itself) are tooling, not content, and
 are excluded from the outline.
+
+## Output shape: `annotations.json`
+
+Every annotation thread in the scope, in document order. A note is authored
+Markdown living in the chapter it is about; this is the derived half every
+reader comes off — the cross-repository inbox, the open-note count on a graph
+node, the approval gate showing the objections raised since `approved-at`.
+
+```jsonc
+{
+  "schemaVersion": 6,
+  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "scope": ".arc42",
+  "sources": [".arc42"],
+  "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
+  "problems": [],
+  "threads": [
+    {
+      "path": ".arc42/05-building-block-view.md",
+      "folder": "arc42",
+      // A thread has no id. It is addressed the way devbook addresses
+      // everything — a path plus a heading slug — with `ordinal` standing in
+      // for the id the schema deliberately does not assign.
+      "address": ".arc42/05-building-block-view.md#knowledge-meta",
+      "chapter": "knowledge-meta",
+      "chapterTitle": "Knowledge Meta",
+      "ordinal": 1,
+      "line": 23,
+      // "block" annotates the passage above it; "chapter" sits straight after
+      // the heading's meta block and annotates the whole chapter.
+      "target": "block",
+      "kind": "question",
+      "status": "resolved",
+      "author": "jobsc",
+      "date": "2026-09-02",
+      "quote": "one indexed range read",
+      "body": "Does this hold after the outline gained the roadmap rollup?",
+      "replies": [
+        { "author": "claude/orch-arc42-content", "date": "2026-09-02", "body": "No second scan." }
+      ],
+      // Opaque: validated as a mapping of namespaces, never read into.
+      "ext": { "backlog": { "entry": "8f31c2" } }
+    }
+  ]
+}
+```
+
+`quote`, `replies`, and `ext` are omitted rather than emitted empty, so a
+consumer never has to tell "no quote" from "an empty quote".
+
+A `resolved` thread is still listed. It lives for the rest of the branch so a
+reviewer sees the exchange in the pull request that raised it — the sweep is
+what removes it, not the generator. A note that never gets swept is the smell
+this index makes visible.
 
 ## Viewing
 

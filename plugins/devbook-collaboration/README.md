@@ -57,11 +57,13 @@ list entry, and the rule that none of it is chapter content — is in
 
 ## What this release does not do
 
-Comments are single-line findings in `ext`, not threads. The
+Comments are still single-line findings in `ext`, not threads — and as of
+devbook 1.1.0 that is one release out of date. The
 [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19)
 design puts a threaded `annotation` fence in devbook itself, with authors,
-replies, quoted passages, and a sweep — and that fence is an L0 feature that has
-not been built. This plugin does not build a rival one: a finding here is
-deliberately the smallest thing that survives a session, and it moves into the
-fence when devbook ships it. See
+replies, quoted passages, and a sweep, and [devbook has now shipped
+it](../devbook/instructions/knowledge-annotations.instructions.md). This plugin
+has not moved yet, so a repository with both installed has two places to leave
+a comment. The migration is one pass: every `open-<n>` becomes one fence with
+`body` set from the line and `author` unknown. See
 [the decision](../../.devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands).

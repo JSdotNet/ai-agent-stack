@@ -24,6 +24,9 @@ import {
     testIssues,
     approvalIssues,
     isExtensionField,
+    parseAnnotations,
+    resolveAnnotation,
+    annotationIssues,
 } from "./metadata.mjs";
 
 /** Every knowledge folder this convention recognizes. A repository adopts any subset. */
@@ -195,6 +198,17 @@ export async function buildGraph(repoRoot) {
         const raw = await readFile(path.join(repoRoot, relPath), "utf8");
         const { fileTitle, chapters } = parseDocument(raw);
 
+        // Open notes per chapter, counted from the same read. Carrying the
+        // count on the node is what lets the canvas badge the chapters nobody
+        // has answered — and because the canvas imports this module, the live
+        // view and the committed graph.json can never disagree about it.
+        const openNotes = new Map();
+        for (const note of parseAnnotations(raw)) {
+            if (resolveAnnotation(note.fields).status !== "open") continue;
+            const key = note.chapter?.slug ?? null;
+            openNotes.set(key, (openNotes.get(key) ?? 0) + 1);
+        }
+
         const fileMeta = chapters.find((c) => c.level === 1)?.meta ?? null;
         const fileNode = {
             id: relPath,
@@ -214,6 +228,10 @@ export async function buildGraph(repoRoot) {
         // no metadata field can supply.
         const number = documentNumber(relPath, fileMeta);
         if (number !== null) fileNode.number = number;
+        // Omitted rather than emitted as 0, so adding this did not churn every
+        // node of every existing index.
+        const fileOpenNotes = [...openNotes.values()].reduce((a, b) => a + b, 0);
+        if (fileOpenNotes) fileNode.openNotes = fileOpenNotes;
         nodes.set(fileNode.id, fileNode);
 
         for (const issue of typeIssues(folder, "file", fileMeta)) {
@@ -257,6 +275,14 @@ export async function buildGraph(repoRoot) {
         }
 
         for (const issue of escapeSequenceIssues(raw)) {
+            problems.push({
+                severity: issue.severity,
+                path: relPath,
+                message: `${relPath} ${issue.message}`,
+            });
+        }
+
+        for (const issue of annotationIssues(raw)) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,
@@ -309,6 +335,7 @@ export async function buildGraph(repoRoot) {
                 line: chapter.line,
             };
             applyMeta(node, chapter.meta, folder);
+            if (openNotes.get(chapter.slug)) node.openNotes = openNotes.get(chapter.slug);
             nodes.set(id, node);
             ancestors.push({ level: chapter.level, id });
 

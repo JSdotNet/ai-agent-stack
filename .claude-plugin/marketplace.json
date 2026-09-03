@@ -83,6 +83,12 @@
       "source": "./plugins/domain-design",
       "description": "Domain-Driven Design through the `domain-architect` agent: bounded context discovery, ubiquitous language, domain model and interaction design, context mapping, and aggregate, domain-event-flow, and subdomain diagrams. Fills the `domain` role a flow consults, and is usable on its own.",
       "version": "0.2.0"
+    },
+    {
+      "name": "ux-design",
+      "source": "./plugins/ux-design",
+      "description": "UX design through the `ux-designer` agent: wireframes, user flows, design guidelines, and UI reviews, as SVG or Mermaid artifacts and structured Markdown. Fills the `ux` role a flow consults, and is usable on its own.",
+      "version": "0.3.0"
     }
   ]
 }

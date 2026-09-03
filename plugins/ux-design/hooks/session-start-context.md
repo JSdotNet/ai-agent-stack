@@ -1,0 +1,1 @@
+For UX design artifacts, always confirm the target platform, fidelity level, and intended audience before producing wireframes, flows, or guidelines. Apply accessibility and usability principles to every artifact. Keep wireframe and flow outputs as clean SVG or Mermaid and design guidelines as structured Markdown.

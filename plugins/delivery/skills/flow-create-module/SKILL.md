@@ -61,8 +61,8 @@ specification already exists, and a full derivation when it does not.
 
 Escalate instead of continuing when the module is really a separate deployable service,
 or when it needs a new architectural decision, a new bounded context, or a cross-cutting
-redesign — recommend `flow-create-service`, `flow-adr`, `flow-architecture`, or
-`flow-blueprint` and ask the user.
+redesign — recommend `flow-create-service`, `flow-adr`, or `flow-architecture` and ask
+the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in

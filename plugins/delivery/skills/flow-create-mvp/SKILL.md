@@ -60,8 +60,7 @@ already exists, and a full derivation when it does not.
 
 Escalate instead of continuing when the product direction itself is the open question, or
 when the MVP needs a new architectural decision or a documented target architecture before
-implementation — recommend `flow-blueprint`, `flow-architecture`, or `flow-adr` and ask
-the user. Product-definition work at that level belongs there, not here.
+implementation — recommend `flow-architecture` or `flow-adr` and ask the user. Product-definition work at that level belongs there, not here.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in

@@ -5,7 +5,7 @@ description: 'Run general architecture work. Uses the arc42:arc42 agent directly
 
 # Flow: Architecture Work
 
-Execute a general architecture workflow for requests that need the architect agent but do not fit a single specialized arc42, blueprint, ADR, or TDR flow.
+Execute a general architecture workflow for requests that need the `arc42` agent but do not fit a single specialized arc42, ADR, or TDR flow. Architecture blueprints run here too, through the agent's `architecture-blueprint-generator` skill.
 
 ## Input Expectations
 

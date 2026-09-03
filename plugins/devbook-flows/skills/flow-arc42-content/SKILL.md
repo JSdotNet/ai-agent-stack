@@ -1,6 +1,6 @@
 ---
 name: flow-arc42-content
-description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh (use flow-blueprint), or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
+description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
 ---
 
 # Flow: arc42 Content Edits (`.arc42/`)
@@ -13,7 +13,7 @@ plugin skill instead when the task is one of those specific flows:
 
 - New or updated Architecture Decision Record: `flow-adr`.
 - New or updated Technical Debt Record: `flow-tdr`.
-- Full architecture blueprint generation or refresh: `flow-blueprint`.
+- Full architecture blueprint generation or refresh: `flow-architecture`.
 - Multi-section architecture initiative spanning several chapters and guideline
   retrieval: `flow-architecture` or `flow-arc42`.
 

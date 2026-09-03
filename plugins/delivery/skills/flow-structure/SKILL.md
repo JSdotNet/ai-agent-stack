@@ -1,6 +1,6 @@
 ---
 name: flow-structure
-description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-architecture, flow-blueprint, flow-adr, or flow-arc42).'
+description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-architecture, flow-adr, or flow-arc42).'
 ---
 
 # Flow: Structure Refactor
@@ -66,7 +66,7 @@ Escalate instead of continuing when the request needs a different work type:
 - Initial repository or project scaffolding routes to `flow-repo` or `flow-project`.
 - A new architectural decision routes to `flow-adr`.
 - A cross-cutting redesign or documentation-only architecture outcome routes to
-  `flow-architecture`, `flow-blueprint`, or `flow-arc42`.
+  `flow-architecture` or `flow-arc42`.
 - A new bounded context, service boundary, module, or service routes to
   `flow-create-module` or `flow-create-service`.
 

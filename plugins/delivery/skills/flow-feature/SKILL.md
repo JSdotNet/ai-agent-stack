@@ -57,8 +57,8 @@ exist, and a full derivation when they do not.
 - **Record the derived scope and assumptions** in the stage output and continue to Stage 1 unless escalation is required
 
 Escalate instead of continuing when the request needs a new architectural decision, a new
-bounded context, or a cross-cutting redesign — recommend `flow-adr`, `flow-architecture`,
-or `flow-blueprint` first and ask the user.
+bounded context, or a cross-cutting redesign — recommend `flow-adr` or
+`flow-architecture` first and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in

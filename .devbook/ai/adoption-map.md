@@ -30,7 +30,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 ```
 
 Task categories route to a `flow-<category>` skill that runs the category end to end. `delivery`
-now ships sixteen of them, so the routing this repository works under is its own rather than
+now ships fifteen of them, so the routing this repository works under is its own rather than
 inherited.
 
 Every knowledge folder now has its own flow too: `devbook-flows` ships five, so an edit to

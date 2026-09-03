@@ -61,8 +61,7 @@ specification already exists, and a full derivation when it does not.
 
 Escalate instead of continuing when the work is really a module inside an existing
 service, or when the service boundary itself is an open architectural question — recommend
-`flow-create-module`, `flow-adr`, `flow-architecture`, or `flow-blueprint` and ask the
-user.
+`flow-create-module`, `flow-adr`, or `flow-architecture` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in

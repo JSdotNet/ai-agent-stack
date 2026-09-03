@@ -86,7 +86,7 @@ derive it from the project type and the repository where it does not.
   dependencies or Stage 5 scaffolds anything
 
 Escalate instead of continuing when the project needs a documented target architecture or
-a recorded decision in its own right — recommend `flow-blueprint`, `flow-arc42`, or
+a recorded decision in its own right — recommend `flow-architecture`, `flow-arc42`, or
 `flow-adr` and ask the user.
 
 **Agents:** `arc42:arc42`

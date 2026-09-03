@@ -101,7 +101,7 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no asset here uses it any more: `delivery`
-holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
+holds fifteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
 five `flow-*`, one per adopted knowledge folder, and `fleet` holds three `fleet-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So

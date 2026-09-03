@@ -47,8 +47,8 @@ Pull Request → Work Item Update → Summary, defined once in `delivery`'s
 engine never names a skill in a layer above it.
 
 `.arc42` keeps its narrower split: a decision record, a technical debt record, a blueprint,
-or a multi-chapter initiative belongs to `flow-adr`, `flow-tdr`, `flow-blueprint`,
-`flow-architecture`, or `flow-arc42` in `delivery`, not here. `flow-arc42-content` covers
+or a multi-chapter initiative belongs to `flow-adr`, `flow-tdr`, `flow-architecture`, or
+`flow-arc42` in `delivery`, not here. `flow-arc42-content` covers
 chapter content and diagrams.
 
 `.backlog` has no flow: devbook no longer ships that folder, so the `flow-backlog` slot in

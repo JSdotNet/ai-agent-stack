@@ -213,31 +213,6 @@ flowchart TD
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-blueprint
-
-```mermaid
-flowchart TD
-    A["Scope & Guideline Retrieval"] --> B["Blueprint Drafting"]
-    B --> C["Review & Traceability"]
-    C --> D["Personal Validation"]
-    D --> E{User approves?}
-    E -->|Yes| F["Create Pull Request or Skip"]
-    E -->|No| G["Return to the relevant earlier stage"]
-    G --> A
-    F --> U["Work Item Update or Skip"]
-    U --> H["Summary"]
-```
-
-| Phase | Agents | MCP servers |
-|-------|--------|-------------|
-| Scope & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Blueprint Drafting | `arc42:arc42` | — |
-| Review & Traceability | `arc42:arc42` | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
 ## flow-adr
 
 ```mermaid

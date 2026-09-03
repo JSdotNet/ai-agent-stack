@@ -73,6 +73,11 @@ tool events and folds tool calls, sub-agent use, and token usage into the run. T
 what fills the Insight and Context panels, and what lets the hook warn when the session's
 context gauge crosses a threshold. Nothing about it asks the agent to count anything.
 
+Only `hooks/hooks.json` is authored, and there is no root `hooks.json` beside it. A hook
+that has to read an event payload and write a file is a command hook; the other host's
+hooks are prompts, and a prompt cannot measure anything. On a host without command hooks
+the run is still tracked in full — the panels simply have nothing to show.
+
 ## Evidence
 
 QA evidence paths are resolved against the git worktree root and anything resolving

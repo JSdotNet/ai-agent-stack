@@ -59,6 +59,12 @@
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records findings and the reviewer's verdict, runs the approval decision that writes devbook's own approved rung, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. An L1 extension: every fact it remembers lives under ext.devbook-collaboration in the chapter's own meta block, so it adds no field to devbook's schema and needs no devbook release of its own.",
       "version": "0.1.0"
+    },
+    {
+      "name": "architecture",
+      "source": "./plugins/architecture",
+      "description": "Architecture documentation through the `architect` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own.",
+      "version": "0.4.0"
     }
   ]
 }

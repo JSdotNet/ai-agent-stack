@@ -1,0 +1,25 @@
+{
+  "name": "architecture",
+  "description": "Architecture documentation through the `architect` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own.",
+  "version": "0.4.0",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "agent",
+    "architecture",
+    "arc42",
+    "adr",
+    "tdr",
+    "c4",
+    "c4-model",
+    "diagram",
+    "sequence-diagram",
+    "state-diagram",
+    "deployment-diagram"
+  ],
+  "agents": "agents/",
+  "skills": "skills/"
+}

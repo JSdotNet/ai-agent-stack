@@ -77,6 +77,12 @@
       "source": "./plugins/qa",
       "description": "Runtime QA validation through the `qa` and `qa-monitor` agents: run the app under Aspire, drive Playwright scenarios that record screenshot and video evidence, and keep log and trace monitoring active for the full session rather than checking once at the end. Fills the `qa` role and the `app.start` and `qa.run` services, and is usable on its own.",
       "version": "0.2.0"
+    },
+    {
+      "name": "domain-design",
+      "source": "./plugins/domain-design",
+      "description": "Domain-Driven Design through the `domain-architect` agent: bounded context discovery, ubiquitous language, domain model and interaction design, context mapping, and aggregate, domain-event-flow, and subdomain diagrams. Fills the `domain` role a flow consults, and is usable on its own.",
+      "version": "0.2.0"
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "name": "domain-design",
+  "version": "0.2.0",
+  "description": "Domain-Driven Design through the `domain-architect` agent: bounded context discovery, ubiquitous language, domain model and interaction design, context mapping, and aggregate, domain-event-flow, and subdomain diagrams. Fills the `domain` role a flow consults, and is usable on its own.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "agent",
+    "ddd",
+    "domain-driven-design",
+    "bounded-context",
+    "domain-model"
+  ],
+  "agents": [
+    "./agents/domain-architect.agent.md"
+  ]
+}

@@ -102,10 +102,19 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 | `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
 
 None declares a dependency and none names a flow, which is why each installs alone and is
-useful without the engine: the `architect` agent writes an ADR whether or not `flow-adr` is
-what asked for it. The coupling runs the other way and only by name — `delivery` and
+useful without the engine: the `arc42` agent writes an ADR whether or not `flow-adr` is what
+asked for it. The coupling runs the other way and only by name — `delivery` and
 `devbook-flows` carry 251 `plugin:asset` references into these seven, and a reference that
 resolves to nothing degrades one stage rather than failing a load.
+
+They also hold no flow control, which is what keeps that true in practice rather than only on
+paper — see [the decision](09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
+
+A plugin's name is not its role key. `arc42` fills the `architecture` role, and the two names
+differ because they answer different questions: the role is the slot a flow asks for, the
+plugin is what happens to be installed in it. `domain` and `ux` matching their keys is a
+coincidence of good names, not a rule — binding a role key to the plugin currently filling it
+would make the key un-rebindable, which is the one thing a binding must stay.
 
 `product` and `security` are the two roles nothing here fills. Both are `null` in the stack
 config template, which the vocabulary distinguishes from absent: deliberately unbound.

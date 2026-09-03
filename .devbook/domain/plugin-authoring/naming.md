@@ -261,6 +261,11 @@ Five of the seven have a provider in this marketplace; see
 [Role Plugins](../../arc42/05-building-block-view.md#role-plugins). `product` and `security`
 are `null`.
 
+The key is not the plugin's name. `arc42` fills `architecture`; `domain` and `ux` match theirs
+by coincidence. A role plugin also holds no flow control — no sequencing, no gate, no session
+spawning, no delegation — because all four belong to whatever consults it. See
+[the decision](../../arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
+
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
 verification, so it binds as the `implement` and `verify` services instead.
 

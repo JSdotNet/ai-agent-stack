@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mermaid Diagram Viewer</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #21262d;
+    background: #161b22;
+  }
+  header h1 { font-size: 0.95rem; margin: 0; font-weight: 600; flex: 1; }
+  header .crumbs { font-size: 0.75rem; color: #8b949e; }
+  button.nav {
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d;
+    border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer;
+  }
+  button.nav:disabled { opacity: 0.4; cursor: default; }
+  button.nav:hover:not(:disabled) { background: #30363d; }
+  main { flex: 1; position: relative; overflow: hidden; }
+  #stage {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    overflow: hidden; cursor: grab;
+  }
+  #stage.dragging { cursor: grabbing; }
+  #diagram { transform-origin: 0 0; transition: transform 0.05s linear; }
+  #diagram svg { max-width: none !important; }
+  #diagram .interactive-node { cursor: pointer; }
+  #diagram .interactive-node.selected > rect,
+  #diagram .interactive-node.selected > polygon,
+  #diagram .interactive-node.selected path:first-of-type {
+    stroke: #f0b429 !important;
+    stroke-width: 3px !important;
+  }
+  #empty { color: #8b949e; font-size: 0.9rem; text-align: center; }
+  #explanation {
+    position: absolute; right: 0; top: 0; bottom: 0; width: 320px;
+    background: #161b22; border-left: 1px solid #21262d; padding: 1rem;
+    overflow-y: auto; display: none; font-size: 0.85rem; line-height: 1.5;
+  }
+  #explanation.visible { display: block; }
+  #explanation h2 { font-size: 0.9rem; margin-top: 0; }
+  #hint { position: absolute; left: 1rem; bottom: 3.2rem; font-size: 0.7rem; color: #6e7681; display: none; }
+  #hint.visible { display: block; }
+  #zoom { position: absolute; left: 1rem; bottom: 1rem; display: flex; gap: 0.4rem; }
+  #error { position: absolute; left: 1rem; top: 1rem; right: 1rem; color: #f85149; font-size: 0.8rem; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<header>
+  <button class="nav" id="back" disabled>&larr; Back</button>
+  <h1 id="title">Mermaid Diagram Viewer</h1>
+  <span class="crumbs" id="crumbs"></span>
+</header>
+<main>
+  <div id="stage">
+    <div id="diagram"></div>
+    <div id="empty">Waiting for a diagram to render...</div>
+  </div>
+  <div id="explanation"><h2 id="expTitle"></h2><div id="expText"></div></div>
+  <div id="hint">Click a node for details</div>
+  <div id="zoom">
+    <button class="nav" id="zoomOut">-</button>
+    <button class="nav" id="zoomReset">Reset</button>
+    <button class="nav" id="zoomIn">+</button>
+  </div>
+  <div id="error"></div>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "loose" });
+
+  const params = new URLSearchParams(location.search);
+  const instance = params.get("instance");
+  const token = params.get("token");
+  const qs = `instance=${encodeURIComponent(instance)}&token=${encodeURIComponent(token)}`;
+
+  const diagramEl = document.getElementById("diagram");
+  const emptyEl = document.getElementById("empty");
+  const errorEl = document.getElementById("error");
+  const titleEl = document.getElementById("title");
+  const crumbsEl = document.getElementById("crumbs");
+  const backBtn = document.getElementById("back");
+  const stage = document.getElementById("stage");
+  const explanation = document.getElementById("explanation");
+  const hintEl = document.getElementById("hint");
+
+  let scale = 1, offsetX = 0, offsetY = 0, dragging = false, lastX = 0, lastY = 0, renderSeq = 0;
+  let selectedNode = null;
+
+  // Global hook so agent-authored diagrams can drive the explanation panel
+  // explicitly via Mermaid's native `click NodeId call showNodeDetails("Title","Text")`
+  // directive (works for flowchart/classDiagram/stateDiagram/sequenceDiagram nodes,
+  // which Mermaid renders with per-node ids/classes; C4 diagrams do not expose
+  // per-element ids in Mermaid's SVG output, so this hook has no effect there).
+  window.showNodeDetails = function (title, text) {
+    explanation.classList.add("visible");
+    document.getElementById("expTitle").textContent = title || "";
+    document.getElementById("expText").textContent = text || "";
+  };
+
+  // Generic click-to-inspect: works for any diagram type where Mermaid renders
+  // per-node groups (flowchart, classDiagram, stateDiagram, sequenceDiagram).
+  // Selecting a node highlights it and shows its rendered text (plus any native
+  // Mermaid tooltip set via `click NodeId "tooltip text"`) in the side panel.
+  function wireInteractivity() {
+    const svg = diagramEl.querySelector("svg");
+    if (!svg) { hintEl.classList.remove("visible"); return; }
+    const nodes = svg.querySelectorAll(".node, .classGroup, .actor, .state, .statediagram-state");
+    if (!nodes.length) { hintEl.classList.remove("visible"); return; }
+    hintEl.classList.add("visible");
+    nodes.forEach((node) => {
+      node.classList.add("interactive-node");
+      node.addEventListener("mousedown", (e) => e.stopPropagation());
+      node.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (selectedNode) selectedNode.classList.remove("selected");
+        node.classList.add("selected");
+        selectedNode = node;
+        const tooltip = node.querySelector("title")?.textContent?.trim();
+        const label = Array.from(node.querySelectorAll(".nodeLabel, .label, text"))
+          .map((el) => el.textContent.trim())
+          .filter(Boolean)
+          .join("\n");
+        const heading = label.split("\n")[0] || node.id || "Node";
+        window.showNodeDetails(heading, tooltip ? `${label}\n\n${tooltip}` : label);
+      });
+    });
+  }
+
+  function applyTransform() {
+    diagramEl.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  }
+
+  document.getElementById("zoomIn").onclick = () => { scale = Math.min(scale * 1.2, 6); applyTransform(); };
+  document.getElementById("zoomOut").onclick = () => { scale = Math.max(scale / 1.2, 0.2); applyTransform(); };
+  document.getElementById("zoomReset").onclick = () => { scale = 1; offsetX = 0; offsetY = 0; applyTransform(); };
+
+  stage.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    scale = Math.min(Math.max(scale * (e.deltaY < 0 ? 1.1 : 0.9), 0.2), 6);
+    applyTransform();
+  }, { passive: false });
+
+  stage.addEventListener("mousedown", (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; stage.classList.add("dragging"); });
+  window.addEventListener("mouseup", () => { dragging = false; stage.classList.remove("dragging"); });
+  window.addEventListener("mousemove", (e) => {
+    if (!dragging) return;
+    offsetX += e.clientX - lastX; offsetY += e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    applyTransform();
+  });
+
+  backBtn.onclick = async () => {
+    await fetch(`/mermaid/api/back?${qs}`, { method: "POST" });
+  };
+
+  async function renderView(view) {
+    titleEl.textContent = view?.title || "Mermaid Diagram Viewer";
+    crumbsEl.textContent = (view?.breadcrumbs || []).join(" \u203a ");
+    backBtn.disabled = !view || (view.historyDepth || 0) === 0;
+
+    if (view?.explanation) {
+      explanation.classList.add("visible");
+      document.getElementById("expTitle").textContent = view.explanation.title || "";
+      document.getElementById("expText").textContent = view.explanation.text || "";
+    } else {
+      explanation.classList.remove("visible");
+    }
+
+    if (!view || !view.source) {
+      emptyEl.style.display = "block";
+      diagramEl.innerHTML = "";
+      hintEl.classList.remove("visible");
+      return;
+    }
+    emptyEl.style.display = "none";
+    errorEl.textContent = "";
+    const seq = ++renderSeq;
+    try {
+      const id = `mmd-${seq}`;
+      const { svg } = await mermaid.render(id, view.source);
+      if (seq === renderSeq) {
+        diagramEl.innerHTML = svg;
+        selectedNode = null;
+        scale = 1; offsetX = 0; offsetY = 0;
+        applyTransform();
+        wireInteractivity();
+      }
+    } catch (err) {
+      errorEl.textContent = `Mermaid render error: ${err.message || err}`;
+    }
+  }
+
+  async function loadInitialState() {
+    const res = await fetch(`/mermaid/api/state?${qs}`);
+    if (res.ok) renderView(await res.json());
+  }
+
+  const es = new EventSource(`/mermaid/events?${qs}`);
+  es.addEventListener("view", (e) => renderView(JSON.parse(e.data)));
+  es.addEventListener("explanation", (e) => {
+    const exp = JSON.parse(e.data);
+    explanation.classList.add("visible");
+    document.getElementById("expTitle").textContent = exp.title || "";
+    document.getElementById("expText").textContent = exp.text || "";
+  });
+  es.addEventListener("clear", () => renderView(null));
+
+  loadInitialState();
+</script>
+</body>
+</html>

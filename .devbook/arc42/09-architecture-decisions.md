@@ -73,41 +73,42 @@ Consequence: what the generator used to lint — a missing description, an unloa
 a handoff the body never mentions — is now a review responsibility, written down in
 [CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
 
-## devbook Ships the Folder Flows
+## devbook Still Ships the Graph Canvas
 
 ```meta
 status: active
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
 The layered design puts the five folder-writing skills — one per adopted folder — in
 `devbook-flows`, an L2b bridge depending on both `devbook` and `delivery`, and the graph
-renderer in `devbook-canvas`, an L3 surface. `devbook` as ported holds all of them, still under
-the `orch-*` prefix, and the canvas as an in-plugin extension.
+renderer in `devbook-canvas`, an L3 surface. The flows have moved; the canvas has not.
 
-The canvas already carries its target name: the extension was renamed `knowledge-canvas` →
-`devbook-canvas` ahead of the move, because a name is free to change now and a package id is
-not once anything resolves it. Only its placement still diverges.
+**The flow half is closed.** `orch-domain`, `orch-tech`, `orch-design`,
+`orch-arc42-content`, and `orch-ai` are now `flow-domain`, `flow-tech`, `flow-design`,
+`flow-arc42-content`, and `flow-ai` in `devbook-flows`, which declares both dependencies and
+is demoted without either. `orch-backlog` was not carried over: `.backlog` is gone, so the
+sixth flow the design named has nothing to write. Their dashboard references became the
+surface contract, and each declares its own documentation/config tier, because the engine
+never enumerates a skill in a layer above it. `devbook` now names no flow by name: its
+converters resolve the write path — repo-native skill, folder flow, `flow-fallback`, or the
+instruction files — through one section of `assets/code-sync-protocol.md`.
 
-That placement is not free, though, and the rename is what made the cost visible. The canvas
-imports `graph.mjs`, `outline.mjs`, and `metadata.mjs` out of `tools/knowledge-meta/` by
-relative path — deliberately, so the rendered graph and the committed index are the same code —
-and those three paths are what a lift breaks. So the move is not a move plus a manifest: the
-generator modules have to become something a separate plugin can import first. `devbook` still
-imports nothing from the canvas, which is the direction that matters for L0.
+**The canvas half is not, and the reason is an import boundary rather than a rename.** The
+extension was renamed `knowledge-canvas` → `devbook-canvas` ahead of the move, because a name
+is free to change before anything resolves it. But it imports `graph.mjs`, `outline.mjs`, and
+`metadata.mjs` out of `tools/knowledge-meta/` by relative path — deliberately, so the rendered
+graph and the committed index are the same code — and those three paths are what a lift
+breaks. So that move is not a move plus a manifest: the generator modules have to become
+something a separate plugin can import first. `devbook` still imports nothing from the canvas,
+which is the direction that matters for L0.
 
-That is a knowing divergence, not an oversight. The port's brief was the schema and the two
-lifecycle skills; splitting the plugin needs `delivery` to exist first, since a bridge that
-cannot name what it bridges to is a plugin with a dangling dependency.
-
-`delivery` has since landed, so the blocker is gone and this is now simply outstanding work.
-Until it is done, `devbook` is not L0-clean and the claim that it works with only itself
-installed stays untested — the five skills that would break it are the ones that reference a
-dashboard. Closing it is one release: move the five into `devbook-flows` depending on both
-`devbook` and `delivery`, rename them `flow-*`, replace their dashboard references with the
-surface contract, and lift `devbook-canvas` into its own plugin — a rename it no longer needs,
-but an import boundary it still does.
+Consequence: `devbook` is L0-clean on the skill side and can now be installed alone, which the
+five dashboard-referencing skills previously made untrue. It still ships a surface inside its
+own folder, so the claim that a surface is never packaged with what it renders stays
+unenforced here. Close it by lifting `devbook-canvas` into its own plugin once the generator
+modules have a published shape to import.
 
 ## Flat Knowledge Folders Only
 
@@ -155,7 +156,7 @@ migration and not a rewrite.
 ```meta
 status: active
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows"]
+related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
 ```
 
 `devbook-collaboration` records a comment as one single-line finding in the chapter's

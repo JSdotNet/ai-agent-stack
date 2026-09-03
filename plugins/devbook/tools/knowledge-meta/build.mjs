@@ -6,12 +6,13 @@
 //   node .github/tools/knowledge-meta/build.mjs --scope .tech
 //   node .github/tools/knowledge-meta/build.mjs --root ../other-repo
 //
-// Writes two artifacts per scope, per the derived-artifacts convention:
+// Writes three artifacts per scope, per the derived-artifacts convention:
 //
 //   _meta/graph.json          the reference graph (repository-wide rollup)
 //   _meta/index.json          the ordered reading outline
-//   .tech/_meta/graph.json    the same pair, scoped to .tech
-//   ...one pair per knowledge folder the repository actually has
+//   _meta/annotations.json    the open-note index, from the annotation fences
+//   .tech/_meta/graph.json    the same set, scoped to .tech
+//   ...one set per knowledge folder the repository actually has
 //
 // Only folders present in the repository produce a scope, so a repository that
 // adopts just .domain and .arc42 never grows _meta folders for the rest.
@@ -30,6 +31,11 @@ import {
     REPO_SCOPE,
 } from "./graph.mjs";
 import { buildOutlineDocument, outlinePathFor } from "./outline.mjs";
+import {
+    buildAnnotationsDocument,
+    annotationsPathFor,
+    collectAnnotations,
+} from "./annotations-index.mjs";
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes("--check");
@@ -67,6 +73,7 @@ const folders = availableScopes.filter((scope) => scope !== REPO_SCOPE);
 
 // Parse the corpus once and project it per scope.
 const graph = await buildGraph(REPO_ROOT);
+const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
 
 async function emit(outPath, document, summary) {
@@ -103,6 +110,19 @@ for (const scope of scopes) {
         outlinePathFor(scope),
         outlineDocument,
         `${String(countFiles(outlineDocument.entries)).padStart(4)} files ordered`
+    );
+
+    const annotationsDocument = await buildAnnotationsDocument(
+        REPO_ROOT,
+        scope,
+        annotations,
+        folders
+    );
+    await emit(
+        annotationsPathFor(scope),
+        annotationsDocument,
+        `${String(annotationsDocument.stats.threads).padStart(4)} threads, ` +
+            `${String(annotationsDocument.stats.open).padStart(4)} open`
     );
 }
 

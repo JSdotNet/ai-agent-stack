@@ -1,7 +1,6 @@
 # Naming
 
 ```meta
-status: active
 ```
 
 The terms this repository trades in. Where a host uses a different word for the same thing, the
@@ -10,7 +9,6 @@ host's word is recorded as an alias rather than adopted.
 ## Marketplace
 
 ```meta
-status: active
 type: term
 related: [".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
 ```
@@ -23,7 +21,6 @@ user has added may not share a name. This repository's marketplace is `jsdotnet`
 ## Plugin
 
 ```meta
-status: active
 type: term
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#layer"]
 ```
@@ -37,7 +34,6 @@ live tool list, and a missing one must cost capability, not loading.
 ## Host
 
 ```meta
-status: active
 type: term
 aliases: [client]
 ```
@@ -48,7 +44,6 @@ and ignore the keys they do not recognise, which is why an asset has one authore
 ## Agent
 
 ```meta
-status: active
 type: term
 ```
 
@@ -59,7 +54,6 @@ the two hosts reads a `handoffs` key.
 ## Skill
 
 ```meta
-status: active
 type: term
 ```
 
@@ -69,7 +63,6 @@ trigger — the sentence a host matches a request against — not a summary of i
 ## Instruction File
 
 ```meta
-status: active
 type: term
 ```
 
@@ -80,7 +73,6 @@ referenced explicitly by the asset that depends on it.
 ## Hook
 
 ```meta
-status: active
 type: term
 ```
 
@@ -90,7 +82,6 @@ hook may be, so the event, not the intent, decides the form it takes.
 ## Flow Skill
 
 ```meta
-status: active
 type: term
 date: 2026-09-02
 related: [".devbook/ai/adoption-map.md#flow-skills"]
@@ -167,7 +158,6 @@ it never self-approves.
 ## Surface
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server"]
@@ -242,7 +232,6 @@ because it enabled the flows.
 ## Stamp
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config"]
@@ -262,7 +251,6 @@ that reads it, and neither touches another component's.
 ## Migration
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#stamp"]
@@ -281,7 +269,6 @@ repository.
 ## MCP Server
 
 ```meta
-status: active
 type: term
 related: [".devbook/tech/technology-graph.md#model-context-protocol"]
 ```
@@ -293,7 +280,6 @@ plugin-namespaced and the bare spelling.
 ## Layer
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
@@ -316,7 +302,6 @@ tool list and no-ops when absent, so nothing may declare one.
 ## Extension Namespace
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]

@@ -1,7 +1,6 @@
 # Introduction and Goals
 
 ```meta
-status: active
 number: 1
 related: [".devbook/domain/context-map.md#plugin-authoring"]
 ```
@@ -12,7 +11,6 @@ and hooks that do the work — as plugins served from one marketplace, `jsdotnet
 ## Quality Goals
 
 ```meta
-status: active
 ```
 
 | Goal | What it rules out |
@@ -25,7 +23,6 @@ status: active
 ## Stakeholders
 
 ```meta
-status: active
 ```
 
 The maintainer authors and releases. Anyone who adds the marketplace consumes it, on either

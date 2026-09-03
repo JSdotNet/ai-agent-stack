@@ -1,14 +1,12 @@
 # Architecture Decisions
 
 ```meta
-status: active
 number: 9
 ```
 
 ## Marketplace Named jsdotnet
 
 ```meta
-status: active
 date: 2026-09-02
 related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
 ```
@@ -25,7 +23,6 @@ marketplace, not renaming plugins.
 ## One Folder Per Plugin
 
 ```meta
-status: active
 date: 2026-09-02
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#plugin"]
 ```
@@ -47,7 +44,6 @@ missing specialist must not take every skill that names it down with it.
 ## One Authored Copy Per Asset
 
 ```meta
-status: active
 date: 2026-09-02
 related: [".devbook/tech/technology-graph.md#copilot-plugin-api"]
 ```
@@ -60,7 +56,6 @@ is restated in prose or by path.
 ## No Generated Sync Layer
 
 ```meta
-status: active
 date: 2026-09-02
 related: [".devbook/tech/technology-graph.md#powershell"]
 ```
@@ -76,7 +71,6 @@ a handoff the body never mentions — is now a review responsibility, written do
 ## devbook Ships the Folder Flows
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
@@ -112,7 +106,6 @@ but an import boundary it still does.
 ## Flat Knowledge Folders Only
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
@@ -133,7 +126,6 @@ the schema changes.
 ## approved Is a Status Rung
 
 ```meta
-status: active
 date: 2026-09-03
 ```
 
@@ -153,7 +145,6 @@ migration and not a rewrite.
 ## Comments Are Findings Until the Fence Lands
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows"]
 ```

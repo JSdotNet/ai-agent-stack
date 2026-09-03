@@ -1,14 +1,12 @@
 # Building Block View
 
 ```meta
-status: active
 number: 5
 ```
 
 ## Marketplace Root
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
 ```
 
@@ -20,7 +18,6 @@ concerned.
 ## Plugin Folder
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
@@ -84,7 +81,6 @@ ignoring it, so a typo is an error rather than a silently absent setting.
 ## Asset Kinds
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#agent"]
 ```
 

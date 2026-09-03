@@ -252,10 +252,14 @@ related: [".devbook/domain/plugin-authoring/naming.md#agent"]
 ```
 
 A specialist a flow consults by name — `architecture`, `qa`, `domain`, `ux`, `product`,
-`security` — bound to a plugin per repository and never a dependency, because one missing
-advisor must not demote every skill that names it. Every role reference states its fallback, so
-no flow is dead because a role is unbound. An explicit `null` means deliberately unbound, which
-is not the same as absent.
+`docs`, `security` — bound to a plugin per repository and never a dependency, because one
+missing advisor must not demote every skill that names it. Every role reference states its
+fallback, so no flow is dead because a role is unbound. An explicit `null` means deliberately
+unbound, which is not the same as absent.
+
+Five of the seven have a provider in this marketplace; see
+[Role Plugins](../../arc42/05-building-block-view.md#role-plugins). `product` and `security`
+are `null`.
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
 verification, so it binds as the `implement` and `verify` services instead.

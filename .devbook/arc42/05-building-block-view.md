@@ -33,6 +33,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `hooks.json` | Copilot |
 | `mcp/<server>/` | Whatever the Claude manifest's `mcpServers` points at |
 | `extensions/<name>/` | Copilot CLI |
+| `scripts/` | Whatever skill in the plugin invokes it, from the plugin root |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
 A plugin normally ships both manifests. A [host profile](#host-profile-plugins) is the one
@@ -67,10 +68,51 @@ the live view and the committed index cannot disagree. Nothing in `devbook` impo
 Those three imports are also the reason lifting the folder into its own plugin is more than a
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
+A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather
+than payload copied anywhere: `architecture` and `domain-design` each ship an identical
+`generate-diagram-svgs.ps1` that eight of their diagram skills invoke to render Mermaid beside
+the Markdown they wrote. Identical, and duplicated — the two plugins install independently and
+neither may name the other, so a shared copy would need a third plugin beneath both, which is
+more structure than one script earns.
+
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
 `<component>-sync` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
+
+## Role Plugins
+
+```meta
+date: 2026-09-04
+related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point"]
+```
+
+Seven plugins are where a specialist lives. A flow consults one by name and never depends on
+it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
+`extensions`, and a missing one costs capability rather than loading.
+
+| Plugin | Fills | Ships |
+| --- | --- | --- |
+| `architecture` | role `architecture`, service `spec` | The `architect` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
+| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fifteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
+| `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
+| `domain-design` | role `domain` | The `domain-architect` agent, context mapping, model design, three diagram generators |
+| `ux-design` | role `ux` | The `ux-designer` agent, wireframes, user flows, design guidelines, UI review |
+| `documentation` | role `docs` | The `documentation` and `profile` agents, nine artifact skills including SVG infographics |
+| `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
+
+None declares a dependency and none names a flow, which is why each installs alone and is
+useful without the engine: the `architect` agent writes an ADR whether or not `flow-adr` is
+what asked for it. The coupling runs the other way and only by name — `delivery` and
+`devbook-flows` carry 251 `plugin:asset` references into these seven, and a reference that
+resolves to nothing degrades one stage rather than failing a load.
+
+`product` and `security` are the two roles nothing here fills. Both are `null` in the stack
+config template, which the vocabulary distinguishes from absent: deliberately unbound.
+
+Implementation is not a role, so `csharp-coding` binds as two services instead. It is also the
+only entry in the table whose language is in its name, which is the honest shape — the role is
+filled per repository by whatever toolchain that repository is written in.
 
 ## Surface Plugins
 

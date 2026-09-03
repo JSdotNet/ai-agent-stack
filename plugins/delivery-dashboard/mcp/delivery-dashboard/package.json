@@ -1,0 +1,19 @@
+{
+  "name": "delivery-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "mcp-server.mjs",
+  "description": "MCP server: a run surface implementing the lifecycle, render and export capability groups — live run dashboard, Mermaid diagram viewer, and Markdown document viewer.",
+  "keywords": [
+    "mcp",
+    "surface",
+    "dashboard",
+    "runs",
+    "mermaid",
+    "markdown"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "delivery-dashboard",
+  "version": "0.1.0",
+  "description": "A run surface: the live dashboard where a run becomes visible. An MCP server implementing all three surface capability groups — lifecycle (open_dashboard, start_run, record_prompt, set_run_context, update_stage, finish_run, list_runs, get_run), render (render_diagram, render_markdown) and export (export_report) — plus a Mermaid diagram viewer and a Markdown document viewer, rendered inline as an MCP App or served on 127.0.0.1. Depends on nothing and knows nothing about what produces the runs it shows.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "surface",
+    "dashboard",
+    "runs",
+    "mcp",
+    "mermaid",
+    "markdown"
+  ]
+}

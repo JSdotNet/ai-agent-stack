@@ -15,6 +15,11 @@ person choosing it in this session.
 `knowledge-chapter-metadata.instructions.md`. The collaboration keys this skill
 clears are in `../../instructions/chapter-collaboration.instructions.md`.
 
+This file exceeds the 40-line body budget on purpose. Most of what is over is
+the confirmation before a recorded decision and the three outcomes it can take,
+which the authoring rules exempt from terseness: a fragment here is what turns
+"nobody answered" into an approval.
+
 ## Steps
 
 1. **Show the chapter itself**, not a summary of it, together with every

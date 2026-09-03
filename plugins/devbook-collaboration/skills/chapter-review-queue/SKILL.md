@@ -13,6 +13,10 @@ than one chapter, because a queue is the one thing an address cannot give you.
 
 State keys are in `../../instructions/chapter-collaboration.instructions.md`.
 
+This file exceeds the 40-line body budget on purpose: the routing table in step
+3 is one row per state a chapter can be waiting in, and a row left out is a
+chapter that never appears in the queue.
+
 ## Steps
 
 1. **Find the adopted folders.** Read `adopted` from devbook's entry in

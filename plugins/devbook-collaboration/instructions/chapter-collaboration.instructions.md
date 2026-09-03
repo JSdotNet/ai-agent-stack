@@ -50,10 +50,9 @@ has to keep straight:
 
 An agent loading a chapter for task context reads the chapter and skips every
 `ext.devbook-collaboration.*` key. A finding is an open question, not a fact
-about the domain, and a chapter someone has asked a question about has not
-thereby stopped saying what it says. Only review work — the skills in this
-plugin, and the approval gate — reads these keys, and it reads nothing else in
-the chapter as an instruction.
+about the domain, and a chapter someone has queried has not thereby stopped
+saying what it says. Only review work — the skills in this plugin, and the
+approval gate — reads these keys, and it reads nothing else as instruction.
 
 ## Approval stays devbook's
 

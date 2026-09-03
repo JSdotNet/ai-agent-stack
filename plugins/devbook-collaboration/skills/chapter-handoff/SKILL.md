@@ -14,17 +14,19 @@ ask outlives the session that made it. This is the author's half of the pass;
 State keys and their meanings are in
 `../../instructions/chapter-collaboration.instructions.md`. Read it first.
 
+This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
+four-row lookup, and a reviewer who is handed three of the four rows starts by
+asking for the fourth.
+
 ## Steps
 
 1. **Resolve the chapter.** Take a `<path>#<slug>` address, or resolve a
-   description to one. Confirm the chapter exists and carries a `meta` block; a
-   heading with no block is not addressable, and the fix is to give it one
-   before handing anything off.
+   description to one. A heading with no `meta` block is not addressable — give
+   it one before handing anything off.
 
 2. **Pick the reviewer.** Ask who, and take a handle, a name, or a role. Never
-   invent one and never default to the author. If the person naming a reviewer
-   cannot say who owes the answer, that is the thing to resolve first, not
-   something to record as `unassigned`.
+   invent one and never default to the author. If nobody can say who owes the
+   answer, resolve that first rather than recording `unassigned`.
 
 3. **Write the request** into the chapter's `meta` block:
 
@@ -48,9 +50,7 @@ State keys and their meanings are in
    | Context to load | The chapters reachable in one step through `related` and `depends-on`, by address |
    | Evidence | The chapter's `tests` entries, and any claim in it that has none |
 
-   Walk the graph for the third row; never search the folder. Chapters are
-   addressed exactly, and `related` / `depends-on` already say which ones
-   connect — see `devbook`'s own retrieval rule.
+   Walk the graph for the third row; never search the folder.
 
 5. **Report** the chapter, the reviewer, and the brief. Commit the metadata
    change with the chapter, and stop. Do not notify anyone, open an issue, or
@@ -59,8 +59,8 @@ State keys and their meanings are in
 ## Do not
 
 - Do not review the chapter here. Requesting and answering are different moves
-  by different people, and doing both in one pass is how a chapter gets approved
-  by the person who wrote it.
+  by different people; doing both in one pass is how a chapter gets approved by
+  the person who wrote it.
 - Do not write `status: approved` from this skill. Approval is
   `chapter-approve`'s, and only after a review clears.
 - Do not record the brief in the chapter. It is transient; the durable residue

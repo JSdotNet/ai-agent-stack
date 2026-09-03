@@ -175,7 +175,6 @@ fence with `body` set from the line and `author` unknown.
 ## The Point Set Is Closed
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
@@ -203,7 +202,6 @@ open one.
 ## One Config File, Two Kinds of Key
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/naming.md#stamp"]
 ```
@@ -230,7 +228,6 @@ enforces that yet beyond the rule being written down.
 ## Extension Points and Gates Live in the Surface Contract
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
@@ -255,7 +252,6 @@ where that would be recorded.
 ## A Tracker Is a Binding, Not a Phase Name
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#tracker"]
 ```
@@ -276,7 +272,6 @@ because nothing has run yet — which is the one moment this rename is free.
 ## delivery Ships No Surface
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
@@ -289,9 +284,104 @@ engine neither depends on it nor knows which one answered. Porting the server in
 would have made the engine own its own viewer, which is the coupling the contract exists to
 prevent.
 
-Consequence, and it is a real one: **installing `delivery` today gives no live run timeline at
-all.** Every run reports that no surface is bound, produces its file artifacts, and continues.
-The `flow-runner` allowlist keeps the legacy `orch-dashboard` tool patterns beside the new ones
-for one version, so an existing dashboard installation still answers. Close this by landing
-`delivery-dashboard`; the second implementation is what will prove the contract is a contract.
+Consequence: **installing `delivery` alone gives no live run timeline at all.** Every run
+reports that no surface is bound, produces its file artifacts, and continues. That is now a
+choice rather than a gap — `delivery-dashboard`, `delivery-canvas`, and `delivery-collector`
+ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
+allowlist still carries the legacy `orch-dashboard` tool patterns beside the new ones so an
+existing dashboard installation answers; drop them the release after this one.
 
+See [Three Surfaces, One Contract](#three-surfaces-one-contract) for what each of them
+answers.
+
+## Three Surfaces, One Contract
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface", ".devbook/arc42/05-building-block-view.md#surface-plugins"]
+```
+
+Three plugins implement `delivery.surface.*@1`, none depending on `delivery` or on each other:
+`delivery-dashboard` answers all three capability groups, `delivery-canvas` answers render
+only, `delivery-collector` answers lifecycle and export only.
+
+Two of the three would have been enough to ship a viewer. Three is what makes the contract a
+contract: the moment a second implementation exists, the split by operation group stops being
+a table in an instruction file and starts being the thing that decides what a run gets. A
+caller resolves each group separately, so a repository with only the collector installed
+records a run and renders nothing — and finds that out by the render names being absent, not
+by a stub answering and doing nothing.
+
+The collector is written here rather than ported, and its two absences are the point. It
+captures no telemetry, so it reports no token or cost figures at all rather than a column of
+zeroes that reads as a measurement; and `export_report` writes Markdown only, because a
+self-contained HTML report with evidence inlined is a rendering job. Asking it for another
+format still writes Markdown and says so in the result rather than failing a run over a file
+extension.
+
+Consequence: three run stores, one per plugin, each keyed by worktree path under its own
+directory. Two surfaces bound at once record the same run twice and neither knows about the
+other. That is the price of "a surface is never a dependency in either direction" — the
+alternative is a shared store, which is a coupling between implementations that are supposed
+to be swappable. Bind one lifecycle surface per repository.
+
+## A Surface Declares Only the Contract's Tool Names
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/domain/plugin-authoring/naming.md#surface"]
+```
+
+Each surface exposes exactly the tool names its capability groups name, and nothing else. The
+ported dashboard lost two tools in the move — `get_view` and `pop_view`, which the rendered
+page used to read and rewind a viewer — and the page reaches the same state over the server's
+own HTTP origin instead.
+
+An extra tool is not free the way an extra function is. It is one more name in the live tool
+list, one more thing a caller can come to depend on, and the first thing that makes one
+implementation not substitutable for another: a run that calls `pop_view` works on the
+dashboard and fails on the canvas, and nothing in the contract said it would.
+
+The same rule reaches into the run schema, in two renames the port made:
+
+- `githubIssue` became `workItem`, and the stage the report hides when it is absent matches
+  `Work Item Update` rather than `GitHub Issue Update`. A surface that only knows GitHub
+  cannot show a run tracked in Jira or in `.backlog/` chapters, which is exactly what
+  [a tracker being a binding](#a-tracker-is-a-binding-not-a-phase-name) means.
+- `approval.personalValidation` became `approval.state`. Personal Validation is one instance
+  of the gate mechanism, and a surface whose schema names it cannot record the decision of any
+  other gate a repository adds.
+
+Consequence: a run file written by the old `orch-dashboard` does not read correctly here — the
+work item and the approval decision land in fields nothing looks at. Nothing migrates them,
+because the new plugins keep their own state directories and no run has been written to one
+yet. That is the one moment these renames are free.
+
+## delivery-canvas Ships Both Transports
+
+```meta
+date: 2026-09-03
+related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+```
+
+`delivery-canvas` ships an MCP server *and* a Copilot canvas extension, from one copy of each
+viewer page under `mcp/delivery-canvas/views/`. The extension reads those files by relative
+path rather than keeping a second copy.
+
+The layered design's host-slot table reads the other way — it binds the `surface` slot to
+`delivery-dashboard (MCP)` on one host and `delivery-canvas (extensions)` on the other, which
+would make this plugin Copilot-only. The same design's combination table then lists
+*delivery + delivery-canvas* as a supported outcome: diagram and document views, run timeline
+unrendered. Only one of those can be true on the primary host. Shipping both transports keeps
+the combination reachable everywhere and costs one server file, because the viewer half of
+the dashboard's server was already written.
+
+Merging the two canvas extensions into one also fixed what the split had left broken: both
+pages fetch `/mermaid/…` and `/markdown/…`, but each extension served its page at `/` and
+routed on the first path segment, so the Back button and the state route answered 404 and the
+event stream never connected. One server, one path prefix per viewer, and the pages work
+unchanged.
+
+Consequence: the render capability has two implementations on a host that installs both this
+and the dashboard. The contract's fixed priority order — dashboard before collector before
+canvas — is what settles it, and it is now load-bearing rather than theoretical.

@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Markdown Document Preview</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #21262d;
+    background: #161b22;
+  }
+  header h1 { font-size: 0.95rem; margin: 0; font-weight: 600; flex: 1; }
+  header .crumbs { font-size: 0.75rem; color: #8b949e; }
+  button.nav {
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d;
+    border-radius: 6px; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer;
+  }
+  button.nav:disabled { opacity: 0.4; cursor: default; }
+  button.nav:hover:not(:disabled) { background: #30363d; }
+  main { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+  #doc { max-width: 860px; margin: 0 auto; line-height: 1.6; }
+  #doc h1, #doc h2, #doc h3, #doc h4 { line-height: 1.3; }
+  #doc h1 { font-size: 1.6rem; border-bottom: 1px solid #21262d; padding-bottom: 0.3rem; }
+  #doc h2 { font-size: 1.3rem; border-bottom: 1px solid #21262d; padding-bottom: 0.25rem; }
+  #doc h3 { font-size: 1.1rem; }
+  #doc code { background: #161b22; border-radius: 4px; padding: 0.1rem 0.35rem; font-size: 0.85em; }
+  #doc pre { background: #161b22; border: 1px solid #21262d; border-radius: 6px; padding: 0.9rem; overflow-x: auto; }
+  #doc pre code { background: none; padding: 0; }
+  #doc blockquote { border-left: 3px solid #30363d; margin: 0; padding: 0.2rem 1rem; color: #8b949e; }
+  #doc table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  #doc th, #doc td { border: 1px solid #30363d; padding: 0.4rem 0.6rem; text-align: left; }
+  #doc a { color: #58a6ff; }
+  #empty { color: #8b949e; font-size: 0.9rem; text-align: center; margin-top: 3rem; }
+</style>
+</head>
+<body>
+<header>
+  <button class="nav" id="back" disabled>&larr; Back</button>
+  <h1 id="title">Markdown Document Preview</h1>
+  <span class="crumbs" id="crumbs"></span>
+</header>
+<main>
+  <div id="doc"></div>
+  <div id="empty">Waiting for a document to render...</div>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const instance = params.get("instance");
+  const token = params.get("token");
+  const qs = `instance=${encodeURIComponent(instance)}&token=${encodeURIComponent(token)}`;
+
+  const docEl = document.getElementById("doc");
+  const emptyEl = document.getElementById("empty");
+  const titleEl = document.getElementById("title");
+  const crumbsEl = document.getElementById("crumbs");
+  const backBtn = document.getElementById("back");
+
+  backBtn.onclick = async () => {
+    await fetch(`/markdown/api/back?${qs}`, { method: "POST" });
+  };
+
+  // --- Minimal, dependency-free Markdown -> HTML renderer -----------------
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function renderInline(text) {
+    let s = escapeHtml(text);
+    s = s.replace(/`([^`]+)`/g, (_, code) => `<code>${code}</code>`);
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+    s = s.replace(/_([^_]+)_/g, "<em>$1</em>");
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+
+  function renderTable(lines) {
+    const rows = lines.map((l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
+    const [header, , ...body] = rows;
+    let html = "<table><thead><tr>";
+    for (const h of header) html += `<th>${renderInline(h)}</th>`;
+    html += "</tr></thead><tbody>";
+    for (const row of body) {
+      html += "<tr>";
+      for (const cell of row) html += `<td>${renderInline(cell)}</td>`;
+      html += "</tr>";
+    }
+    return html + "</tbody></table>";
+  }
+
+  function markdownToHtml(md) {
+    const lines = (md || "").replace(/\r\n/g, "\n").split("\n");
+    let html = "";
+    let i = 0;
+    let listStack = []; // 'ul' | 'ol'
+
+    function closeLists(toLevel = 0) {
+      while (listStack.length > toLevel) html += `</${listStack.pop()}>`;
+    }
+
+    while (i < lines.length) {
+      const line = lines[i];
+
+      // Fenced code block
+      const fence = line.match(/^```(\w*)\s*$/);
+      if (fence) {
+        closeLists();
+        const lang = fence[1];
+        const buf = [];
+        i++;
+        while (i < lines.length && !/^```\s*$/.test(lines[i])) { buf.push(lines[i]); i++; }
+        i++; // skip closing fence
+        html += `<pre><code class="language-${lang}">${escapeHtml(buf.join("\n"))}</code></pre>`;
+        continue;
+      }
+
+      // Table (header + separator row)
+      if (/^\|.*\|\s*$/.test(line) && lines[i + 1] && /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+        closeLists();
+        const tblLines = [line, lines[i + 1]];
+        i += 2;
+        while (i < lines.length && /^\|.*\|\s*$/.test(lines[i])) { tblLines.push(lines[i]); i++; }
+        html += renderTable(tblLines);
+        continue;
+      }
+
+      // Heading
+      const heading = line.match(/^(#{1,6})\s+(.*)$/);
+      if (heading) {
+        closeLists();
+        const level = heading[1].length;
+        html += `<h${level}>${renderInline(heading[2].trim())}</h${level}>`;
+        i++;
+        continue;
+      }
+
+      // Horizontal rule
+      if (/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+        closeLists();
+        html += "<hr/>";
+        i++;
+        continue;
+      }
+
+      // Blockquote
+      if (/^>\s?/.test(line)) {
+        closeLists();
+        const buf = [];
+        while (i < lines.length && /^>\s?/.test(lines[i])) { buf.push(lines[i].replace(/^>\s?/, "")); i++; }
+        html += `<blockquote>${markdownToHtml(buf.join("\n"))}</blockquote>`;
+        continue;
+      }
+
+      // Checklist / unordered / ordered list
+      const ordered = line.match(/^(\s*)\d+\.\s+(.*)$/);
+      const unordered = line.match(/^(\s*)[-*]\s+(.*)$/);
+      if (ordered || unordered) {
+        const tag = ordered ? "ol" : "ul";
+        if (listStack[listStack.length - 1] !== tag) {
+          closeLists();
+          html += `<${tag}>`;
+          listStack.push(tag);
+        }
+        const content = (ordered || unordered)[2];
+        const checklist = content.match(/^\[( |x|X)\]\s+(.*)$/);
+        if (checklist) {
+          const checked = checklist[1].toLowerCase() === "x";
+          html += `<li><input type="checkbox" disabled ${checked ? "checked" : ""}/> ${renderInline(checklist[2])}</li>`;
+        } else {
+          html += `<li>${renderInline(content)}</li>`;
+        }
+        i++;
+        continue;
+      }
+
+      // Blank line
+      if (/^\s*$/.test(line)) {
+        closeLists();
+        i++;
+        continue;
+      }
+
+      // Paragraph (collect contiguous non-blank lines)
+      closeLists();
+      const buf = [line];
+      i++;
+      while (i < lines.length && !/^\s*$/.test(lines[i]) && !/^(#{1,6})\s+/.test(lines[i]) && !/^```/.test(lines[i])) {
+        buf.push(lines[i]);
+        i++;
+      }
+      html += `<p>${renderInline(buf.join(" "))}</p>`;
+    }
+    closeLists();
+    return html;
+  }
+
+  async function renderView(view) {
+    titleEl.textContent = view?.title || "Markdown Document Preview";
+    crumbsEl.textContent = (view?.breadcrumbs || []).join(" \u203a ");
+    backBtn.disabled = !view || (view.historyDepth || 0) === 0;
+
+    if (!view || !view.content) {
+      emptyEl.style.display = "block";
+      docEl.innerHTML = "";
+      return;
+    }
+    emptyEl.style.display = "none";
+    docEl.innerHTML = markdownToHtml(view.content);
+  }
+
+  async function loadInitialState() {
+    const res = await fetch(`/markdown/api/state?${qs}`);
+    if (res.ok) renderView(await res.json());
+  }
+
+  const es = new EventSource(`/markdown/events?${qs}`);
+  es.addEventListener("view", (e) => renderView(JSON.parse(e.data)));
+  es.addEventListener("clear", () => renderView(null));
+
+  loadInitialState();
+</script>
+</body>
+</html>

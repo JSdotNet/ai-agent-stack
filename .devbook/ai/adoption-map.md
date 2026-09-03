@@ -37,10 +37,14 @@ Every knowledge folder now has its own flow too: `devbook-flows` ships five, so 
 `.devbook/` routes through `flow-domain`, `flow-tech`, `flow-design`, `flow-arc42-content`, or
 `flow-ai` rather than through `flow-fallback`.
 
-Still `trial` for one reason, and it is about this repository rather than the design: no
-surface plugin ships yet, so a flow run here reports no timeline and produces file artifacts
-only. Promote this to `adopted` once a change in this repository has actually been carried by
-a flow end to end.
+A flow run here can also report into a surface: `delivery-dashboard`, `delivery-canvas`, and
+`delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
+recorded file depending on which is enabled.
+
+Still `trial`, and now for the only reason left: nothing has used it. Both things that were
+missing have landed, so what is untested is the routing itself. Promote this to `adopted` once
+a change in this repository has actually been carried by a flow end to end, reporting into one
+of those surfaces.
 
 ## Plugin Evaluation
 

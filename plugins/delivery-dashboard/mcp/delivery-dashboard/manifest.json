@@ -1,0 +1,56 @@
+{
+  "manifest_version": "0.3",
+  "name": "delivery-dashboard",
+  "version": "0.1.0",
+  "description": "Live run dashboard, Mermaid diagram viewer, and Markdown document viewer, rendered inline as an MCP App.",
+  "author": {
+    "name": "Job Schepers",
+    "url": "https://github.com/JSdotNet"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "mcp-server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/mcp-server.mjs"],
+      "env": {
+        "CLAUDE_PROJECT_DIR": "${user_config.project_directory}",
+        "DELIVERY_DASHBOARD_STATE_DIR": "${user_config.state_directory}"
+      }
+    }
+  },
+  "user_config": {
+    "project_directory": {
+      "type": "directory",
+      "title": "Project directory",
+      "description": "The git worktree this dashboard reports on. QA evidence paths are resolved against it, and anything outside it is refused. Leave unset to use the server's working directory.",
+      "required": false
+    },
+    "state_directory": {
+      "type": "directory",
+      "title": "Run state directory",
+      "description": "Where run files are stored. Leave unset to use a per-project folder under your Claude configuration directory.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    { "name": "open_dashboard", "description": "Show the run dashboard for this project." },
+    { "name": "start_run", "description": "Start tracking a run and declare its stages." },
+    { "name": "record_prompt", "description": "Append a prompt to a run's prompt history." },
+    { "name": "set_run_context", "description": "Persist the change kind, the approval decision, and the handoff marker." },
+    { "name": "update_stage", "description": "Update a stage's status, output, links, QA scenarios and monitoring findings." },
+    { "name": "finish_run", "description": "Close a run with a final status and summary." },
+    { "name": "list_runs", "description": "List tracked runs." },
+    { "name": "get_run", "description": "Fetch one run in full, with insight and context summaries." },
+    { "name": "render_diagram", "description": "Render Mermaid source in the diagram viewer." },
+    { "name": "render_markdown", "description": "Render a Markdown document in the document viewer." },
+    { "name": "export_report", "description": "Write a run's report to disk as Markdown or self-contained HTML." }
+  ]
+}

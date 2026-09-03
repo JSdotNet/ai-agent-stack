@@ -50,8 +50,8 @@ Fan-out is a host capability, not a portable one. These skills launch each worke
 independent background session with the `claude` CLI, track them with `claude agents`, and run
 their resolution stages through the `Workflow` tool. A host without those cannot dispatch: the
 sweep still triages, marks the pickup pool, proposes closures, and reports what it would have
-dispatched — it simply spawns nothing. See
-[the decision](../../.devbook/arc42/09-architecture-decisions.md#fleet-names-the-cli-directly).
+dispatched — it simply spawns nothing. The degradation is visible rather than silent, but the
+parallelism is the whole point of the skill, so treat the capability as required in practice.
 
 ## Surface reporting
 

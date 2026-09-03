@@ -101,14 +101,36 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no asset here uses it any more: `delivery`
-holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, and `devbook-flows`
-holds five `flow-*`, one per adopted knowledge folder. No `fleet-*` skill exists here yet.
+holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
+five `flow-*`, one per adopted knowledge folder, and `fleet` holds three `fleet-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while
 `flow-feature` and `phase-build-test` are the procedures inside them — which is why a surface
 is `delivery-dashboard` and never `flow-dashboard`. `fleet` is its own stem, not a package
 inside `delivery`, because fan-out is a different subsystem.
+
+## Fleet Skill
+
+```meta
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+```
+
+A procedure that turns one queue into work across several sessions, each in its own worktree —
+`fleet-<what it sweeps>`. It is the exception a [flow](#flow-skill) is forbidden from being: a
+flow owns a run, a gate, and a user turn, none of which survives a session boundary, so
+fan-out is a different subsystem rather than a bigger flow.
+
+Three words carry the whole shape. A **sweep** triages a queue, claims what it picks, and
+dispatches. A **worker** is one spawned session resolving one item. A worker **parks** when its
+change cannot prove itself — committed, left in its worktree, with a brief naming what a human
+has to look at — and opens a pull request only when it can.
+
+A fleet skill owns no run and holds no gate. `fleet-resolve-issue` trades Personal Validation
+for a narrower guarantee, not for nothing: the pull request is the review surface, and a change
+that cannot demonstrate itself never reaches one.
 
 ## Extension Point
 

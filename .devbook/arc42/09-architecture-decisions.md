@@ -385,3 +385,48 @@ unchanged.
 Consequence: the render capability has two implementations on a host that installs both this
 and the dashboard. The contract's fixed priority order — dashboard before collector before
 canvas — is what settles it, and it is now load-bearing rather than theoretical.
+
+## Fan-Out Is Its Own Plugin
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+The three sweep skills ported from `claude-desktop` land in a new `fleet` plugin, an L1
+extension over `delivery`, rather than as more skills inside the engine.
+
+`delivery` states the rule they are the exception to: one item per run, and never a fan-out. A
+flow owns a run, a Personal Validation gate, and a user turn, and none of those survives being
+split across sessions mid-flow. Shipping the session-spawning mechanism inside the same plugin
+would have put it one skill reference away from every flow that must not use it; a separate
+plugin makes the reach impossible rather than discouraged.
+
+Consequence: **enabling `delivery` alone gives no fan-out at all**, and that is the intended
+resting state. A backlog is worked one issue per session through `start-session-from-issue`
+until somebody enables `fleet` on purpose. The dependency runs one way — `fleet` names
+`delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
+`fleet-*` skill, only the subsystem.
+
+## fleet Names the CLI Directly
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
+```
+
+`fleet-issue-sweep` launches each worker with `claude --bg`, tracks them with `claude agents`,
+and runs its resolution stages through the `Workflow` tool. Every other plugin here reaches a
+host capability through a bound [host slot](../domain/plugin-authoring/naming.md#host-slot) or
+resolves it from the live tool list; this one names the CLI.
+
+The slot set is closed and none of the six covers spawning an unattended session, so the
+alternative was to invent a seventh — a `session-spawn` slot with exactly one binding, written
+against a mechanism only one host has, before a second host exists to disagree with it. A slot
+generalises a divergence that has already happened twice. This one has happened once.
+
+Consequence: **on a host that cannot launch a background session, a sweep dispatches nothing.**
+It still triages, marks the pickup pool, proposes closures, and reports what it would have
+dispatched, so the degradation is visible rather than silent — but the parallelism is the whole
+point of the skill, and it is gone. Revisit this as a slot the first time a second host gains
+the capability, not before.

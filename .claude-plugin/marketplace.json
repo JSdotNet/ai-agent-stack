@@ -89,6 +89,12 @@
       "source": "./plugins/ux-design",
       "description": "UX design through the `ux-designer` agent: wireframes, user flows, design guidelines, and UI reviews, as SVG or Mermaid artifacts and structured Markdown. Fills the `ux` role a flow consults, and is usable on its own.",
       "version": "0.3.0"
+    },
+    {
+      "name": "documentation",
+      "source": "./plugins/documentation",
+      "description": "Documentation and profile artifacts through the `documentation` and `profile` agents: how-to guides, explanations, articles, proposals, ideas, and SVG infographics, plus GitHub, LinkedIn, and project profiles. Fills the `docs` role a flow consults, and is usable on its own.",
+      "version": "0.4.0"
     }
   ]
 }

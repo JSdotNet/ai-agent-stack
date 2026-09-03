@@ -94,6 +94,14 @@ substitutable for another. `delivery-dashboard` is also the only one that captur
 itself: its hooks fold tool calls, sub-agent use, and token usage into the run, so the numbers
 in its panels are measured rather than self-reported.
 
+That capture is Claude-only, and structurally so rather than by omission. It ships
+`hooks/hooks.json` and no root `hooks.json`, because the hook reads the session transcript and
+writes the run store — work a Copilot `type: prompt` hook cannot do. So the substitutability the
+table describes holds per capability group and not per host: a Copilot run bound to this plugin
+gets the same lifecycle tools and the same panels, with the telemetry figures absent rather than
+wrong. Nothing in the contract names telemetry, which is why this costs a column and not a
+group.
+
 ## Host Profile Plugins
 
 ```meta

@@ -74,23 +74,56 @@ plugin, so the same server has two possible tool prefixes depending on how it wa
 Three servers ship here, one per surface plugin, each hand-written against the stdio transport:
 newline-delimited JSON-RPC 2.0 on stdin and stdout, no SDK and no dependency.
 
+## Copilot Extension SDK
+
+```meta
+status: trial
+type: library
+date: 2026-09-04
+depends-on: [".devbook/tech/technology-graph.md#copilot-plugin-api"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
+```
+
+`@github/copilot-sdk/extension`, imported by both canvas extensions — `devbook`'s
+`devbook-canvas` and `delivery-canvas`'s own — for `joinSession` and `createCanvas`. It is the
+only third-party import anywhere in this repository, and it is not installed: the Copilot CLI
+resolves it when it opens the extension, which is why no `package.json` declares it and why
+nothing here breaks when it is absent.
+
+`trial`: nothing in this repository has opened a canvas on that host. The unverified part is
+not the import — it is whether a page written for the MCP viewer renders the same way through
+`createCanvas`, and `delivery-canvas` is deliberately built so both transports read one copy of
+each page rather than answering that question twice.
+
 ## Node
 
 ```meta
 status: adopted
 type: runtime
-date: 2026-09-03
+date: 2026-09-04
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-What a plugin's executable parts run on: the `devbook` generator and its test suites, its
-migration scripts, `delivery`'s stack-config checker and the tests behind it, the three surface
-plugins' MCP servers with their HTTP viewers, telemetry hook, and `dev/` checks, and the
-command hook each plugin uses to emit session-start context. All of it is dependency-free ESM
-against `node:` built-ins, so there is no package manifest anywhere in this repository and no
-version is pinned — CI runs whatever its runner ships.
+What a plugin's executable parts run on: the `devbook` generator with its five test suites, the
+`knowledge-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
+checker and the tests behind it, the three surface plugins' MCP servers with their HTTP viewers,
+telemetry hook, and `dev/` checks, and the command hook each plugin uses to emit session-start
+context. All of that is ESM against `node:` built-ins with no third-party dependency, which is
+why `npm install` is not a step anywhere in this repository.
 
-The surface servers are where that constraint bites hardest and still holds: an HTTP server, a
+Two things the flat claim used to get wrong, both worth stating because they are the seams
+where the constraint is negotiated rather than held:
+
+- **Three package manifests exist**, one per surface plugin, under `mcp/<server>/package.json`.
+  Each is `private`, declares `type: module` and an entry point, and carries **no
+  `dependencies`** — the manifest is there to name the server and floor the runtime at
+  `engines.node >= 18`, not to pull anything in. So a version *is* pinned, as a floor; what is
+  absent is a lockfile and an install step.
+- **The two Copilot canvas extensions are the exception to `node:`-only.** Both import
+  `@github/copilot-sdk/extension`, which their host supplies at load time — see
+  [the SDK entry](#copilot-extension-sdk). Nothing else here imports anything it does not ship.
+
+The surface servers are where the constraint bites hardest and still holds: an HTTP server, a
 server-sent event stream, a Markdown renderer, and a Mermaid page are all reachable from
 `node:http` plus a CDN script tag in the page itself.
 
@@ -116,12 +149,31 @@ depends on it being there, which is the only reason it is safe to use this early
 ## PowerShell
 
 ```meta
-status: retired
+status: adopted
 type: runtime
-date: 2026-09-02
+date: 2026-09-04
+depends-on: [".devbook/tech/technology-graph.md#node"]
 related: [".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer"]
 ```
 
-Carried the Copilot-to-Claude sync generator, which was removed the day it landed. Retired
-rather than dropped, so the next repository-level script starts from the decision that removed
-it instead of reintroducing it by accident.
+The second runtime a plugin's executable parts run on, and the only one whose script runs in a
+*consuming* repository rather than here. `devbook` ships
+`assets/build/Update-KnowledgeIndex.ps1` and `devbook-sync` installs it into `build/`
+unconditionally — one of only two payload entries with no adoption condition, the other being
+the generator it wraps, because a repository that skips GitHub Actions gets this script alone
+and manual refresh. It wraps `build.mjs` to add what the raw `node` call cannot say: which
+index files actually moved, so a refresh that changed nothing is visibly a no-op. `-Scope`
+narrows it to one folder, `-Check` validates without writing.
+
+It requires PowerShell 7, stated as `#Requires -Version 7.0` in the script itself. The
+generator README, `devbook-check`, both shipped workflows, and the pull-request check's own
+warning text all name it as the way to refresh a branch, with `node build.mjs` as the fallback
+for CI and for anywhere `pwsh` is not installed.
+
+Previously `retired`, and the entry read only as far as the repository's own tooling: the
+Copilot-to-Claude sync generator was written and dropped the same day, and the runtime was
+retired alongside it. That decision stands and this entry does not reopen it — see
+[No Generated Sync Layer](../arc42/09-architecture-decisions.md#no-generated-sync-layer).
+Retiring the *runtime* with it was the error. A repository-level generator was removed; a
+shipped payload script was not, and `retired` reads as "no longer used" to everyone downstream
+of a plugin that installs it into their repository on every sync.

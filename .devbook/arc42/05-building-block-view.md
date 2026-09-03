@@ -1,14 +1,12 @@
 # Building Block View
 
 ```meta
-status: active
 number: 5
 ```
 
 ## Marketplace Root
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
 ```
 
@@ -20,7 +18,6 @@ concerned.
 ## Plugin Folder
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
@@ -64,7 +61,6 @@ carries it as inert payload — templates, generators, migration scripts — and
 ## Asset Kinds
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#agent"]
 ```
 

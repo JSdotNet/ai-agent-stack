@@ -1,7 +1,6 @@
 # Context Map
 
 ```meta
-status: active
 index: root
 ```
 
@@ -12,7 +11,6 @@ boundary.
 ## Plugin Authoring
 
 ```meta
-status: active
 type: bounded-context
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/tech/technology-graph.md#claude-code-plugin-api"]
 ```

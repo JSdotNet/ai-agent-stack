@@ -62,7 +62,7 @@ or `flow-blueprint` first and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` only when architectural
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
 impact is suspected.
 
 ### Stage 1: Specification & Architecture Intake
@@ -71,7 +71,7 @@ impact is suspected.
 - **Capture implementation constraints** and affected integration points
 - **Define the local validation target** for the approved change
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 2: Implementation
 - **Write code following standards** and patterns

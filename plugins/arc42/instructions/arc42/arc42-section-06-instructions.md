@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/06_runtime_view.md'
+applyTo: '.arc42/06-runtime-view.md'
 description: 'Defines requirements and output standards for arc42-section-06-instructions.'
 ---
 
@@ -164,7 +164,7 @@ Steps:
 - **Availability:** <Fallback mechanisms>
 
 ---
-applyTo: 'doc/arc42/06_runtime_view.md'
+applyTo: '.arc42/06-runtime-view.md'
 description: 'Defines requirements and output standards for arc42-section-06-instructions.'
 ---
 *Based on docs.arc42.org/section-6/ and official arc42 sources*

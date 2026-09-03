@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/*.md'
+applyTo: '.arc42/*.md'
 description: 'Defines global rules and quality standards for arc42 architecture documentation.'
 ---
 

@@ -60,7 +60,7 @@ flowchart TD
 |-------|--------|-------------|
 | GitHub Folder Setup (Foundation) | `csharp-coding:coding` | `jsdotnet-guidelines-mcpserver` |
 | GitHub Actions Workflows | `csharp-coding:coding` | — |
-| Specification & Architecture Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
+| Specification & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
 | Tooling & Dependencies | `csharp-coding:coding` | `microsoft-learn` |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
@@ -90,9 +90,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| MVP Scope Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `architecture:architect` | — |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| MVP Scope Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | `arc42:arc42` | — |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
@@ -153,9 +153,9 @@ flowchart TD
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
 | Upgrade Intake & Baseline | `csharp-coding:coding` | `microsoft-learn` |
-| Plan Refinement | `architecture:architect` | `microsoft-learn` |
+| Plan Refinement | `arc42:arc42` | `microsoft-learn` |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| New Feature Adoption | `csharp-coding:coding`, `architecture:architect` | `microsoft-learn` |
+| New Feature Adoption | `csharp-coding:coding`, `arc42:arc42` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture only for adopted new functionality)* |
 | Personal Validation | — | — |
@@ -180,9 +180,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Goal & Guideline Retrieval | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Architecture Investigation | `architecture:architect` | — |
-| Drafting & Review | `architecture:architect` | — |
+| Goal & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Architecture Investigation | `arc42:arc42` | — |
+| Drafting & Review | `arc42:arc42` | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -205,9 +205,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Context & Guideline Retrieval | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Section Drafting | `architecture:architect` | — |
-| Cross-Section Review | `architecture:architect` | — |
+| Context & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Section Drafting | `arc42:arc42` | — |
+| Cross-Section Review | `arc42:arc42` | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -230,9 +230,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope & Guideline Retrieval | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Blueprint Drafting | `architecture:architect` | — |
-| Review & Traceability | `architecture:architect` | — |
+| Scope & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Blueprint Drafting | `arc42:arc42` | — |
+| Review & Traceability | `arc42:arc42` | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -255,9 +255,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Decision Context Retrieval | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| ADR Drafting | `architecture:architect` | — |
-| Traceability Review | `architecture:architect` | — |
+| Decision Context Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| ADR Drafting | `arc42:arc42` | — |
+| Traceability Review | `arc42:arc42` | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -280,9 +280,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Debt Context Retrieval | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| TDR Drafting | `architecture:architect` | — |
-| Risk & Follow-Up Review | `architecture:architect` | — |
+| Debt Context Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| TDR Drafting | `arc42:arc42` | — |
+| Risk & Follow-Up Review | `arc42:arc42` | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -307,8 +307,8 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Specification & Architecture Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Specification & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
@@ -337,7 +337,7 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
 | Bug Intake & Reproduction | `csharp-coding:coding`, `qa:qa` (runtime repro) | — |
 | Root Cause Analysis | `csharp-coding:coding` | — |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
@@ -369,9 +369,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Structure & Architecture Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Refactor Planning | `architecture:architect`, `csharp-coding:coding` | — |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Structure & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Refactor Planning | `arc42:arc42`, `csharp-coding:coding` | — |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
@@ -401,9 +401,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `architecture:architect` | — |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Specification Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | `arc42:arc42` | — |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
@@ -432,9 +432,9 @@ flowchart TD
 
 | Phase | Agents | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | `architecture:architect` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `architecture:architect` | — |
+| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Specification Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | `arc42:arc42` | — |
 | Implementation | `csharp-coding:coding` | `microsoft-learn` |
 | Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |

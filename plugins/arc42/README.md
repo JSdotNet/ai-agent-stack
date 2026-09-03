@@ -1,11 +1,12 @@
-# architecture
+# arc42
 
-Installable GitHub Copilot CLI plugin for architecture design and documentation workflows.
+Architecture documentation: arc42 sections, blueprints, ADRs, TDRs, and the diagram set
+that belongs inside them. Fills the `architecture` role and the `spec` service.
 
 ## Includes
 
 - Agents:
-  - `agents/architect.agent.md`
+  - `agents/arc42.agent.md`
 - Skills:
   - `skills/architecture-arc42-generator/SKILL.md`
   - `skills/architecture-blueprint-generator/SKILL.md`
@@ -16,8 +17,6 @@ Installable GitHub Copilot CLI plugin for architecture design and documentation 
   - `skills/state-diagram-generator/SKILL.md`
   - `skills/deployment-diagram-generator/SKILL.md`
 - Instructions:
-  - `instructions/common/agent-handoff.instructions.md`
-  - `instructions/common/agent-model-recommendation.instructions.md`
   - `instructions/blueprint/blueprint-global-instructions.md`
   - `instructions/adr/adr-global-instructions.md`
   - `instructions/tdr/tdr-global-instructions.md`
@@ -42,24 +41,30 @@ Installable GitHub Copilot CLI plugin for architecture design and documentation 
 ## Install
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/architecture
+copilot plugin install JSdotNet/ai-agent-stack:plugins/arc42
 copilot plugin list
 ```
 
 ## Reinstall After Changes
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/architecture
+copilot plugin install JSdotNet/ai-agent-stack:plugins/arc42
 ```
 
 ## Uninstall
 
 ```bash
-copilot plugin uninstall architecture
+copilot plugin uninstall arc42
 ```
 
-## Relationship To Development Plugin
+## Output
 
-- This plugin contains architecture-focused assets that were previously bundled in `plugins/development`.
-- This plugin is self-contained for architecture authoring workflows.
-- Install this plugin together with `plugins/development` only when cross-plugin handoff workflows are explicitly needed.
+Writes to the repository's `.arc42/` knowledge folder when it has one — `NN-name.md` per
+section, `.arc42/adr/` and `.arc42/tdr/` for local records — following that folder's own
+structure and metadata rules. Otherwise it asks for a path.
+
+## Relationship To Other Plugins
+
+- Self-contained: it declares no dependency and names no flow.
+- Hands off to `domain` for bounded contexts and ubiquitous language, `coding` for
+  implementation, and `ux` for design constraints that shape a section.

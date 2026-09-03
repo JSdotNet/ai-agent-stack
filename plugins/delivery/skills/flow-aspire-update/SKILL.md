@@ -70,7 +70,7 @@ baseline.
 - **Split work into execution batches** (low-risk first, high-risk last)
 - **Finalize feature-adoption plan** for new Aspire capabilities to enable
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Implementation
 - **Apply package updates in batches**
@@ -87,7 +87,7 @@ baseline.
 - **Add or update telemetry/health setup** when required by new features
 - **Record enabled features** and expected operational impact in dashboard stage output
 
-**Agents:** `csharp-coding:coding`, `architecture:architect`  
+**Agents:** `csharp-coding:coding`, `arc42:arc42`  
 **Skills Used:** `aspire`, `open-telemetry`
 
 ### Final Phases (Shared)

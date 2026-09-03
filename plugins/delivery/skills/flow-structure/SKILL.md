@@ -72,7 +72,7 @@ Escalate instead of continuing when the request needs a different work type:
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. Optionally `architecture:architect` when the layout rule
+`instructions/flow-execution-model.instructions.md`. Optionally `arc42:arc42` when the layout rule
 needs architecture interpretation.
 
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
@@ -85,7 +85,7 @@ needs architecture interpretation.
   scripts, docs, and CI path filters.
 - **Define the validation target** for the resulting structure change.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
@@ -99,7 +99,7 @@ needs architecture interpretation.
 - **Call out risks** such as generated files, case-only renames, path-sensitive tooling, or
   files that should not move.
 
-**Agents:** `architecture:architect`, `csharp-coding:coding`
+**Agents:** `arc42:arc42`, `csharp-coding:coding`
 
 ### Stage 3: Implementation
 

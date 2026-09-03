@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/02_architecture_constraints.md'
+applyTo: '.arc42/02-constraints.md'
 description: 'Defines requirements and output standards for arc42-section-02-instructions.'
 ---
 

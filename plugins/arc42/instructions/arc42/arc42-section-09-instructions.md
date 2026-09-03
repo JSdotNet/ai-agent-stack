@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/09_architecture_decisions.md'
+applyTo: '.arc42/09-architecture-decisions.md'
 description: 'Defines requirements and output standards for arc42-section-09-instructions.'
 ---
 
@@ -78,7 +78,7 @@ Simple numbered list with basic ADR structure
 - âŒ Distributed transaction challenges
 
 ---
-applyTo: 'doc/arc42/09_architecture_decisions.md'
+applyTo: '.arc42/09-architecture-decisions.md'
 description: 'Defines requirements and output standards for arc42-section-09-instructions.'
 ---
 
@@ -100,7 +100,7 @@ description: 'Defines requirements and output standards for arc42-section-09-ins
 | ADR-003 | <Title> | Superseded | 2025-03-10 |
 
 ---
-applyTo: 'doc/arc42/09_architecture_decisions.md'
+applyTo: '.arc42/09-architecture-decisions.md'
 description: 'Defines requirements and output standards for arc42-section-09-instructions.'
 ---
 

@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 
@@ -102,7 +102,7 @@ Simple alphabetically sorted table
 [If term meaning has changed, note previous meaning]
 
 ---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 
@@ -121,7 +121,7 @@ description: 'Defines requirements and output standards for arc42-section-12-ins
 **Last Updated:** YYYY-MM-DD
 
 ---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 
@@ -134,7 +134,7 @@ description: 'Defines requirements and output standards for arc42-section-12-ins
 **Related:** [Microservice](#microservice), [Authentication](#authentication)
 
 ---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 
@@ -165,7 +165,7 @@ description: 'Defines requirements and output standards for arc42-section-12-ins
 - Uptime
 
 ---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 
@@ -178,7 +178,7 @@ description: 'Defines requirements and output standards for arc42-section-12-ins
 | Checkout | Kasse | Caisse |
 
 ---
-applyTo: 'doc/arc42/12_glossary.md'
+applyTo: '.arc42/12-glossary.md'
 description: 'Defines requirements and output standards for arc42-section-12-instructions.'
 ---
 *Based on docs.arc42.org/section-12/ and official arc42 sources*

@@ -9,7 +9,7 @@ description: Defines the model-selection categories the flow-runner uses to pick
 
 - Make the `flow-runner` agent (`agents/flow-runner.agent.md`) the **single** place that
   chooses a model for every step of a `flow-*` run. Every other agent used by an
-  flow (`architecture:architect`, `csharp-coding:coding`, `qa:qa`,
+  flow (`arc42:arc42`, `csharp-coding:coding`, `qa:qa`,
   `qa:qa-monitor`, `documentation:profile`, etc.) has no
   `model` in its own frontmatter for this reason — pinning a model on the agent itself would
   create a second, conflicting source of truth. Only `flow-runner.agent.md` pins its own
@@ -76,7 +76,7 @@ whose **Typical Stages** names it.
 
 | Category | Typical Stages | Agents | Model | Rationale |
 | --- | --- | --- | --- | --- |
-| **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | `architecture:architect` | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
+| **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | `arc42:arc42` | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
 | **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | `csharp-coding:coding` | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
 | **Testing, QA & Monitoring** | Build & Test, QA Validation, runtime monitoring | `qa:qa`, `qa:qa-monitor`, `csharp-coding:coding` *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
 | **Domain Design** | Bounded-context and boundary review during service/module creation | `domain:domain` | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |

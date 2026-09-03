@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/01_introduction_and_goals.md'
+applyTo: '.arc42/01-introduction-and-goals.md'
 description: 'Defines requirements and output standards for arc42-section-01-instructions.'
 ---
 

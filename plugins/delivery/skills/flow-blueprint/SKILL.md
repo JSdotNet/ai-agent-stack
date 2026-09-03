@@ -1,6 +1,6 @@
 ---
 name: flow-blueprint
-description: 'Run architecture blueprint creation or refresh. Uses the architecture:architect agent for blueprint work and `jsdotnet-guidelines-mcpserver` to ground governed asset changes in project guidance.'
+description: 'Run architecture blueprint creation or refresh. Uses the arc42:arc42 agent for blueprint work and `jsdotnet-guidelines-mcpserver` to ground governed asset changes in project guidance.'
 ---
 
 # Flow: Architecture Blueprint
@@ -32,7 +32,7 @@ Execute a blueprint workflow with MCP-guided context gathering up front and arch
 - **Capture repository constraints** that affect governed plugin or guidance assets
 - **Stop for MCP setup** if the required guideline tools are unavailable
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
 ### Stage 2: Blueprint Drafting
@@ -41,7 +41,7 @@ Execute a blueprint workflow with MCP-guided context gathering up front and arch
 - **Capture risks, assumptions, and quality goals**
 - **Link blueprint statements** to the retrieved guidance context where relevant
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **Skills Used:** `architecture-blueprint-generator`
 
 ### Stage 3: Review & Traceability
@@ -49,7 +49,7 @@ Execute a blueprint workflow with MCP-guided context gathering up front and arch
 - **Highlight missing decisions** that should become ADRs or TDRs
 - **Prepare a review-ready blueprint** with explicit follow-up items
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Final Phases (Shared)
 

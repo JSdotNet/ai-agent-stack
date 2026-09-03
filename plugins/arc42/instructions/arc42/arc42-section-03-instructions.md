@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/03_system_scope_and_context.md'
+applyTo: '.arc42/03-context-and-scope.md'
 description: 'Defines requirements and output standards for arc42-section-03-instructions.'
 ---
 

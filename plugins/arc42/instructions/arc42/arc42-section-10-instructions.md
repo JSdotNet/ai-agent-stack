@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/10_quality_requirements.md'
+applyTo: '.arc42/10-quality-requirements.md'
 description: 'Defines requirements and output standards for arc42-section-10-instructions.'
 ---
 
@@ -165,7 +165,7 @@ Database layer, connection pooling, application services
 - **Recovery:** Full functionality restored without manual intervention
 
 ---
-applyTo: 'doc/arc42/10_quality_requirements.md'
+applyTo: '.arc42/10-quality-requirements.md'
 description: 'Defines requirements and output standards for arc42-section-10-instructions.'
 ---
 
@@ -207,7 +207,7 @@ description: 'Defines requirements and output standards for arc42-section-10-ins
 **Related Scenarios:** QS-002, QS-003
 
 ---
-applyTo: 'doc/arc42/10_quality_requirements.md'
+applyTo: '.arc42/10-quality-requirements.md'
 description: 'Defines requirements and output standards for arc42-section-10-instructions.'
 ---
 

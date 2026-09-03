@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/07_deployment_view.md'
+applyTo: '.arc42/07-deployment-view.md'
 description: 'Defines requirements and output standards for arc42-section-07-instructions.'
 ---
 
@@ -165,7 +165,7 @@ Document differences between:
 | <Database> | PostgreSQL | 5432 | Data access |
 
 ---
-applyTo: 'doc/arc42/07_deployment_view.md'
+applyTo: '.arc42/07-deployment-view.md'
 description: 'Defines requirements and output standards for arc42-section-07-instructions.'
 ---
 *Based on docs.arc42.org/section-7/ and official arc42 sources*

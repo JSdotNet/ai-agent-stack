@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/08_crosscutting_concepts.md'
+applyTo: '.arc42/08-crosscutting-concepts.md'
 description: 'Defines requirements and output standards for arc42-section-08-instructions.'
 ---
 
@@ -217,7 +217,7 @@ Centralized, structured logging across all services for observability, debugging
 - Circuit Breaker (logs circuit state changes)
 
 ---
-applyTo: 'doc/arc42/08_crosscutting_concepts.md'
+applyTo: '.arc42/08-crosscutting-concepts.md'
 description: 'Defines requirements and output standards for arc42-section-08-instructions.'
 ---
 
@@ -225,7 +225,7 @@ description: 'Defines requirements and output standards for arc42-section-08-ins
 [Repeat structure]
 
 ---
-applyTo: 'doc/arc42/08_crosscutting_concepts.md'
+applyTo: '.arc42/08-crosscutting-concepts.md'
 description: 'Defines requirements and output standards for arc42-section-08-instructions.'
 ---
 *Based on docs.arc42.org/section-8/ and official arc42 sources*

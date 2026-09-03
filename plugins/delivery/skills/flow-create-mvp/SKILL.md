@@ -65,7 +65,7 @@ the user. Product-definition work at that level belongs there, not here.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` when the target architecture
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` when the target architecture
 needs shaping.
 
 ### Stage 1: MVP Scope Intake
@@ -76,7 +76,7 @@ needs shaping.
 - **Identify dependencies** and risks
 - **Record the validation target** for the implementation run
 
-**Agents:** `architecture:architect`; `domain:domain` when the MVP defines a
+**Agents:** `arc42:arc42`; `domain:domain` when the MVP defines a
 new domain rather than extending a documented one. Keep it to the vocabulary and the context
 boundaries — full domain modeling belongs to `flow-domain`.
 
@@ -86,7 +86,7 @@ boundaries — full domain modeling belongs to `flow-domain`.
 - **Plan integration points** with external services
 - **Define the local runtime validation strategy**
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Implementation
 - **Implement core features** using TDD approach

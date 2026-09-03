@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/04_solution_strategy.md'
+applyTo: '.arc42/04-solution-strategy.md'
 description: 'Defines requirements and output standards for arc42-section-04-instructions.'
 ---
 

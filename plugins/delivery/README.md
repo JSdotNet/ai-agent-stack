@@ -73,7 +73,7 @@ categories it covers.
 
 ## What it never depends on
 
-- **Specialist plugins.** `architecture`, `qa`, `csharp-coding` and the rest are bound as
+- **Specialist plugins.** `arc42`, `qa`, `csharp-coding` and the rest are bound as
   roles per repository, never declared as dependencies — one missing specialist must not
   demote all 32 skills. The reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, or `.backlog/` chapters, whichever `delivery.tracker` names.

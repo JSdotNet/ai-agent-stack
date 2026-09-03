@@ -47,6 +47,6 @@ copilot plugin uninstall domain
 ## Relationship To Architecture Plugin
 
 - This plugin owns domain design and modelling workflows.
-- The `architecture` plugin owns arc42, blueprints, ADRs, and TDRs.
+- The `arc42` plugin owns arc42, blueprints, ADRs, and TDRs.
 - Install both when you need end-to-end coverage from domain discovery through architecture documentation.
 - Handoff from `domain` to `arc42` is supported for recording decisions as ADRs or mapping results into arc42 sections.

@@ -30,7 +30,7 @@ and never edits another component's. `components` belongs to each component's ow
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
-      "architecture": "architecture:architect",
+      "architecture": "arc42:arc42",
       "qa":           "qa:qa",
       "domain":       "domain:domain",
       "ux":           "ux:ux",
@@ -41,7 +41,7 @@ and never edits another component's. `components` belongs to each component's ow
   },
   "extensions": {
     "session.start": [ "devbook:load-context" ],
-    "spec":          "architecture:architect",
+    "spec":          "arc42:arc42",
     "implement":     "csharp-coding:coding",
     "verify":        "csharp-coding:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],

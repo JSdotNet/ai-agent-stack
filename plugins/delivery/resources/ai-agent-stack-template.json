@@ -3,7 +3,7 @@
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
-      "architecture": "architecture:architect",
+      "architecture": "arc42:arc42",
       "qa": "qa:qa",
       "domain": "domain:domain",
       "ux": "ux:ux",
@@ -14,7 +14,7 @@
   },
   "extensions": {
     "session.start": ["devbook:devbook-check"],
-    "spec": "architecture:architect",
+    "spec": "arc42:arc42",
     "implement": "csharp-coding:coding",
     "verify": "csharp-coding:coding",
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],

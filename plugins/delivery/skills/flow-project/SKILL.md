@@ -89,7 +89,7 @@ Escalate instead of continuing when the project needs a documented target archit
 a recorded decision in its own right — recommend `flow-blueprint`, `flow-arc42`, or
 `flow-adr` and ask the user.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
 ### Stage 4: Tooling & Dependencies

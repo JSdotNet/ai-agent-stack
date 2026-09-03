@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/05_building_block_view.md'
+applyTo: '.arc42/05-building-block-view.md'
 description: 'Defines requirements and output standards for arc42-section-05-instructions.'
 ---
 
@@ -232,7 +232,7 @@ Links:
 - ISSUE-123: <Description>
 
 ---
-applyTo: 'doc/arc42/05_building_block_view.md'
+applyTo: '.arc42/05-building-block-view.md'
 description: 'Defines requirements and output standards for arc42-section-05-instructions.'
 ---
 *Based on docs.arc42.org/section-5/ and official arc42 sources*

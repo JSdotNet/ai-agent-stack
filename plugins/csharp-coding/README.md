@@ -62,7 +62,7 @@ The coding agent can propose handoffs (with explicit user approval) to:
 - `security` agent — for security review findings.
 - `development-plan` agent — for full implementation planning from scratch.
 
-Install the `development` or `architecture` plugin to enable those agents.
+Install the `development` or `arc42` plugin to enable those agents.
 
 ## Install
 

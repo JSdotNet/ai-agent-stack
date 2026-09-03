@@ -66,7 +66,7 @@ user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` when the service boundary
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` when the service boundary
 needs review.
 
 ### Stage 1: Specification Intake
@@ -79,7 +79,7 @@ needs review.
   service talks to another context (anti-corruption layer, shared kernel, published language)
 - **Set acceptance criteria** and operational expectations
 
-**Agents:** `architecture:architect`; `domain:domain` when the service
+**Agents:** `arc42:arc42`; `domain:domain` when the service
 introduces, splits, or renames a bounded context. A service that sits wholly inside an
 existing context does not need the domain pass. Full domain modeling is `flow-domain`'s
 work, not this stage's — route there instead of modeling here.
@@ -90,7 +90,7 @@ work, not this stage's — route there instead of modeling here.
 - **Define configuration model** (env vars, secrets, defaults)
 - **Define health checks and observability signals**
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Implementation
 - **Create the new service project** in the existing solution/repository

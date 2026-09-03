@@ -69,7 +69,7 @@ Those three imports are also the reason lifting the folder into its own plugin i
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather
-than payload copied anywhere: `architecture` and `domain` each ship an identical
+than payload copied anywhere: `arc42` and `domain` each ship an identical
 `generate-diagram-svgs.ps1` that eight of their diagram skills invoke to render Mermaid beside
 the Markdown they wrote. Identical, and duplicated — the two plugins install independently and
 neither may name the other, so a shared copy would need a third plugin beneath both, which is
@@ -93,7 +93,7 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 
 | Plugin | Fills | Ships |
 | --- | --- | --- |
-| `architecture` | role `architecture`, service `spec` | The `architect` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
+| `arc42` | role `architecture`, service `spec` | The `arc42` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
 | `csharp-coding` | services `implement`, `verify` | The `coding` agent and fifteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
 | `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
 | `domain` | role `domain` | The `domain` agent, context mapping, model design, three diagram generators |

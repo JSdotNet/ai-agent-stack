@@ -1,5 +1,5 @@
 ﻿---
-applyTo: 'doc/arc42/11_risks_and_technical_debt.md'
+applyTo: '.arc42/11-risks-and-technical-debt.md'
 description: 'Defines requirements and output standards for arc42-section-11-instructions.'
 ---
 
@@ -113,7 +113,7 @@ Simple tables for risks and technical debt
 [Has this risk occurred before? When? How was it handled?]
 
 ---
-applyTo: 'doc/arc42/11_risks_and_technical_debt.md'
+applyTo: '.arc42/11-risks-and-technical-debt.md'
 description: 'Defines requirements and output standards for arc42-section-11-instructions.'
 ---
 
@@ -157,7 +157,7 @@ description: 'Defines requirements and output standards for arc42-section-11-ins
 **Status:** Under Observation
 
 ---
-applyTo: 'doc/arc42/11_risks_and_technical_debt.md'
+applyTo: '.arc42/11-risks-and-technical-debt.md'
 description: 'Defines requirements and output standards for arc42-section-11-instructions.'
 ---
 
@@ -204,7 +204,7 @@ description: 'Defines requirements and output standards for arc42-section-11-ins
 **Status:** Scheduled
 
 ---
-applyTo: 'doc/arc42/11_risks_and_technical_debt.md'
+applyTo: '.arc42/11-risks-and-technical-debt.md'
 description: 'Defines requirements and output standards for arc42-section-11-instructions.'
 ---
 *Based on docs.arc42.org/section-11/ and official arc42 sources*

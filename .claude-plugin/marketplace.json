@@ -61,9 +61,9 @@
       "version": "0.1.0"
     },
     {
-      "name": "architecture",
-      "source": "./plugins/architecture",
-      "description": "Architecture documentation through the `architect` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own.",
+      "name": "arc42",
+      "source": "./plugins/arc42",
+      "description": "Architecture documentation through the `arc42` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own. Holds no flow control: sequencing, approval, and delegation belong to whatever consults it.",
       "version": "0.4.0"
     },
     {

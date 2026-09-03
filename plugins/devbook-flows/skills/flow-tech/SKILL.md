@@ -51,14 +51,14 @@ the existing `.tech/` contents, and continue.
 
 ### Stage 2: Technology Reasoning
 
-- Hand off to `architecture:architect` when the change implies a real decision
+- Hand off to `arc42:arc42` when the change implies a real decision
   (new technology, replacement, or status promotion/demotion).
 - Confirm the technology belongs in exactly one layer; anything used by two or
   more layers belongs in `shared.md`.
 - If the change is a genuine architecture decision, record it as an ADR first
   (`flow-adr`) and let `.tech` record the outcome with a `related` link.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Authoring & Metadata Enforcement
 
@@ -76,7 +76,7 @@ the existing `.tech/` contents, and continue.
   `related` for `.arc42`/`.domain`/`.design` links instead.
 - Update the file-level metadata block on every touched file.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 4: Graph Sync & Review
 
@@ -92,7 +92,7 @@ the existing `.tech/` contents, and continue.
   the intentional no-meta sections of `technology-graph.md`; hand a failure to `devbook-check`.
 - Summarize changed files/chapters for the user.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Final Phases (Shared)
 

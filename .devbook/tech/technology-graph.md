@@ -30,6 +30,25 @@ Reads `.claude-plugin/marketplace.json` and `.claude-plugin/plugin.json`, scans 
 loads `hooks/hooks.json`. Registry, cache, and installed-plugin records are all keyed by
 marketplace name.
 
+## Claude Code CLI
+
+```meta
+status: trial
+type: platform
+depends-on: [".devbook/tech/technology-graph.md#claude-code-plugin-api"]
+related: [".devbook/arc42/09-architecture-decisions.md#fleet-names-the-cli-directly-for-now"]
+```
+
+The only platform here an asset *invokes* rather than is read by. `fleet` shells out to it to
+launch each worker as an independent background session (`claude --bg`) and to tell a worker
+still running from one that exited (`claude agents --json --all`), which is the mechanism the
+whole fan-out subsystem rests on.
+
+`trial`: nothing in this repository has run a sweep yet, and a background session pruned from
+the list seconds after it exits is the kind of behaviour only a real run tests. Its absence
+costs the dispatch, not the triage — see
+[the decision](../arc42/09-architecture-decisions.md#fleet-names-the-cli-directly-for-now).
+
 ## Copilot Plugin API
 
 ```meta

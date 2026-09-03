@@ -125,6 +125,34 @@ one host gains what the other has. Two are deliberately unbound on Copilot, whic
 documented engine default and not a gap. And `delivery-canvas` answers the render group only,
 so a Copilot run gets viewers and no live timeline until a lifecycle surface joins it.
 
+## Fan-Out State
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+```
+
+`fleet` is the only plugin here that keeps state **outside** every repository it acts on. A
+sweep spans sessions that cannot see each other's conversations, so the files are the whole
+coordination surface:
+
+```text
+~/.claude/issue-sweep/<sweepId>/
+  sweep.json              # the manifest: what was picked up, skipped, and proposed for closure
+  workers/<number>.json   # one result per worker, written on every outcome including failure
+  brief.md                # the report, written by the sweep once its workers finish
+```
+
+The root is overridable with `CLAUDE_ISSUE_SWEEP_DIR` and is resolved once to an absolute path,
+because a spawned worker does not inherit the dispatching session's working directory. It sits
+outside any repository so it survives worktree removal and never shows up in `git status`.
+
+Two other things carry sweep state, and neither is a file this repository owns: the
+`ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
+make a claim legible from GitHub alone, and the host's list of live background sessions, which
+is how a missing result file is told from a worker still running.
+`instructions/fleet-issue-sweep-contract.instructions.md` owns both schemas.
+
 ## Stack Config
 
 ```meta

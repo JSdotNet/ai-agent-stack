@@ -421,3 +421,64 @@ unchanged.
 Consequence: the render capability has two implementations on a host that installs both this
 and the dashboard. The contract's fixed priority order — dashboard before collector before
 canvas — is what settles it, and it is now load-bearing rather than theoretical.
+
+## Fan-Out Is Its Own Plugin
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+The three sweep skills ported from `claude-desktop` land in a new `fleet` plugin, an L1
+extension over `delivery`, rather than as more skills inside the engine.
+
+`delivery` states the rule they are the exception to: one item per run, and never a fan-out. A
+flow owns a run, a Personal Validation gate, and a user turn, and none of those survives being
+split across sessions mid-flow. Shipping the session-spawning mechanism inside the same plugin
+would have put it one skill reference away from every flow that must not use it; a separate
+plugin makes the reach impossible rather than discouraged.
+
+Consequence: **enabling `delivery` alone gives no fan-out at all**, and that is the intended
+resting state. A backlog is worked one issue per session through `start-session-from-issue`
+until somebody enables `fleet` on purpose. The dependency runs one way — `fleet` names
+`delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
+`fleet-*` skill, only the subsystem.
+
+## fleet Names the CLI Directly, For Now
+
+```meta
+date: 2026-09-03
+status: divergence
+related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
+```
+
+`fleet-issue-sweep` launches each worker with `claude --bg`, tracks them with `claude agents`,
+and runs its resolution stages through the `Workflow` tool.
+
+**This breaks a rule this repository has already written down.** A
+[host profile](../domain/plugin-authoring/naming.md#host-profile) is "the only place in the
+stack where a host's own file, path, or capability is named", and `fleet` is not one. It is
+recorded here as a divergence rather than resolved, because resolving it costs more than this
+change is allowed to spend.
+
+The fix is known and is not a redesign: a seventh slot — call it `session-spawn` — declared by
+`delivery`, bound by `claude-desktop` to the CLI, and left deliberately unbound by
+`copilot-app`. The precedent is already in the repository: Copilot leaves `repo-flow-context`
+and `model-override` unbound with documented unbound behaviour, and "a sweep that dispatches
+nothing but still triages and reports" is exactly that shape of default. What stops it landing
+here is scope: the slot set is closed and **declared by the engine**, so a seventh means a
+contract change in `delivery` plus an answer in both profiles — three plugins, a version bump,
+and a migration ledger, none of which belongs in a change whose subject is extracting a plugin.
+
+The earlier reasoning for naming the CLI outright — that a slot generalises a divergence that
+has happened twice, and this one had happened once — no longer holds. It was written before
+`copilot-app` existed. A second host is now here to disagree, which is precisely the condition
+that turns the slot from premature into overdue.
+
+Consequence: **on a host that cannot launch a background session, a sweep dispatches nothing.**
+It still triages, marks the pickup pool, proposes closures, and reports what it would have
+dispatched, so the degradation is visible rather than silent — but the parallelism is the whole
+point of the skill, and it is gone. Until the slot lands, `fleet` is a Claude-only plugin whose
+manifest does not say so.
+
+Close this by adding the slot, not by widening the rule.

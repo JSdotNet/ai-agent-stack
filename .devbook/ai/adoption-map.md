@@ -51,6 +51,23 @@ missing have landed, so what is untested is the routing itself. Promote this to 
 a change in this repository has actually been carried by a flow end to end, reporting into one
 of those surfaces.
 
+## Fan-Out
+
+```meta
+status: candidate
+stage: deliver
+related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+```
+
+`fleet` ships here, so a backlog could be swept and worked five issues at a time instead of one
+session at a time. Nothing here has done it: this repository's backlog is small enough that the
+one-issue lane has never been the constraint, and a sweep dispatches workers that open pull
+requests nobody asked for if the triage is wrong.
+
+`candidate` rather than `trial` because the honest first use is somebody else's repository. The
+thing to watch when it is tried is the park rate — a sweep that parks four of five issues is
+the design working, and reading that as a failure is how the bar gets lowered.
+
 ## Plugin Evaluation
 
 ```meta

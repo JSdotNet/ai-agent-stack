@@ -46,6 +46,8 @@ plugins/<name>/
   hooks/hooks.json                Claude hooks
   hooks.json                      Copilot hooks
   resources/
+  assets/  tools/                 payload a sync skill copies into a repository
+  migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
 ```
 
 A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`, `source`

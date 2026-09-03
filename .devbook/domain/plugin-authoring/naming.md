@@ -108,9 +108,49 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 | `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
 
-The word *orchestration* covered the first two at once, which is why it named neither well. The
-`orch-*` skills the `jsdotnet-copilot` marketplace still ships are the previous spelling of
-`flow-*`; nothing here is authored under the old prefix.
+The word *orchestration* covered the first two at once, which is why it named neither well.
+`orch-*` is the previous spelling of `flow-*`. Nothing is *authored* under the old prefix here,
+but the first plugin to land carries five of them: `devbook` was ported whole, and its
+folder-writing skills are renamed in the release that moves them out — see
+[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
+
+## Stamp
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#migration"]
+```
+
+The file a repository commits to record what a plugin has materialized into it:
+`.github/ai-agent-stack.json`. One entry per component, holding the plugin version and contract
+version it is on, which features it adopted, every file copied in with the hash it had when it
+landed, and the migration ledger.
+
+It records what the *repository* has taken on, never who installed what — that is per-user and
+would make the file wrong the moment a second person opened it. A plugin that materializes
+anything ships one `<component>-sync` that writes its own entry and one `<component>-check`
+that reads it, and neither touches another component's.
+
+## Migration
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#stamp"]
+```
+
+One breaking change to a plugin's contract, shipped as a folder — `migrations/<contractVersion>-<slug>/` —
+holding a `MIGRATION.md` and an idempotent `migrate.mjs` whose `--check` exits non-zero while
+work remains. The id is immutable once released: a shipped migration is never rewritten, only
+followed by a new one.
+
+Presence in a repository's ledger decides whether a migration runs, never a comparison of
+version numbers, which is what makes re-running one safe. A prose migration note is not a
+migration — it does not run, so it becomes an unbounded manual chore in every consuming
+repository.
 
 ## MCP Server
 

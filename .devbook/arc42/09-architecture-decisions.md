@@ -72,3 +72,68 @@ Claude manifest a file nobody was allowed to edit. Both manifests are hand-autho
 Consequence: what the generator used to lint — a missing description, an unloadable model pin,
 a handoff the body never mentions — is now a review responsibility, written down in
 [CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
+
+## devbook Ships the Folder Flows
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+The layered design puts the five folder-writing skills — one per adopted folder — in
+`devbook-flows`, an L2b bridge depending on both `devbook` and `delivery`, and the graph
+renderer in `devbook-canvas`, an L3 surface. `devbook` as ported holds all of them, still under
+the `orch-*` prefix, and the canvas as an in-plugin extension.
+
+That is a knowing divergence, not an oversight. The port's brief was the schema and the two
+lifecycle skills; splitting the plugin needs `delivery` to exist first, since a bridge that
+cannot name what it bridges to is a plugin with a dangling dependency. Carrying the skills for
+one release costs a coupling nobody can currently observe — neither of the other two plugins is
+installable yet.
+
+Consequence: `devbook` is not yet L0-clean, so the claim that it works with only itself
+installed is untested. The skills that would break it are the five that reference a dashboard.
+Close this when `delivery` lands: the same release moves the five out, renames them `flow-*`,
+and lifts the canvas into its own plugin.
+
+## Flat Knowledge Folders Only
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
+```
+
+The convention permits two layouts: five root-level dot-folders, or all five nested under one
+`.devbook/` parent with the dots dropped. A repository picks one and never mixes them.
+
+The generator understands only the flat one. `KNOWLEDGE_FOLDERS` lists `.arc42`, `.domain`,
+`.tech`, `.design`, `.ai`, and every reference in the corpus is a path starting with one of
+them, so a `.devbook/domain/…` address resolves to nothing.
+
+Consequence, and it is a sharp one: **this repository uses the nested layout, so the plugin it
+ships cannot check its own knowledge.** The chapters here are written to the convention and
+validated by reading, not by running `devbook-check` on them. Close it by teaching the folder
+resolution both prefixes — the addresses are already just repository paths, so nothing about
+the schema changes.
+
+## approved Is a Status Rung
+
+```meta
+status: active
+date: 2026-09-03
+```
+
+The approval gate's decision lives in the chapter as `status: approved`, one shared rung on top
+of each folder's own ladder, with `approved-by` and `approved-at` beside it.
+
+The design says both "a rung on top of its ordinary status ladder" and lists `approved` in the
+table of metadata fields. Only one can be built. A rung was chosen: a chapter has one lifecycle
+state, and a separate boolean field beside `status` would let a chapter claim `draft` and
+approved at once — which is exactly the ambiguity the gate exists to remove.
+
+Consequence: every other repository's schema assumes this shape, so it is a hard break to
+revisit later. Confirm it with whoever owns the gate design before this is depended on. The
+implementation is one `APPROVED_STATUS` constant appended to each ladder, so reversing it is a
+migration and not a rewrite.

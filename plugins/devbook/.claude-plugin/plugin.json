@@ -1,0 +1,26 @@
+{
+  "name": "devbook",
+  "version": "1.0.0",
+  "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "devbook",
+    "knowledge",
+    "documentation",
+    "arc42",
+    "domain",
+    "ddd",
+    "architecture",
+    "design",
+    "technology-graph",
+    "ai-adoption",
+    "metadata",
+    "convention",
+    "testing",
+    "migrations",
+    "orchestration"
+  ]
+}

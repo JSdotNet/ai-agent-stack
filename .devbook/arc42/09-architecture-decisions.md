@@ -86,6 +86,17 @@ The layered design puts the five folder-writing skills — one per adopted folde
 renderer in `devbook-canvas`, an L3 surface. `devbook` as ported holds all of them, still under
 the `orch-*` prefix, and the canvas as an in-plugin extension.
 
+The canvas already carries its target name: the extension was renamed `knowledge-canvas` →
+`devbook-canvas` ahead of the move, because a name is free to change now and a package id is
+not once anything resolves it. Only its placement still diverges.
+
+That placement is not free, though, and the rename is what made the cost visible. The canvas
+imports `graph.mjs`, `outline.mjs`, and `metadata.mjs` out of `tools/knowledge-meta/` by
+relative path — deliberately, so the rendered graph and the committed index are the same code —
+and those three paths are what a lift breaks. So the move is not a move plus a manifest: the
+generator modules have to become something a separate plugin can import first. `devbook` still
+imports nothing from the canvas, which is the direction that matters for L0.
+
 That is a knowing divergence, not an oversight. The port's brief was the schema and the two
 lifecycle skills; splitting the plugin needs `delivery` to exist first, since a bridge that
 cannot name what it bridges to is a plugin with a dangling dependency. Carrying the skills for
@@ -95,7 +106,8 @@ installable yet.
 Consequence: `devbook` is not yet L0-clean, so the claim that it works with only itself
 installed is untested. The skills that would break it are the five that reference a dashboard.
 Close this when `delivery` lands: the same release moves the five out, renames them `flow-*`,
-and lifts the canvas into its own plugin.
+and lifts `devbook-canvas` into its own plugin — a rename it no longer needs, but an import
+boundary it still does.
 
 ## Flat Knowledge Folders Only
 

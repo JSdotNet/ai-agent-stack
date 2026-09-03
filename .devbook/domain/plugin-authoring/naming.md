@@ -25,7 +25,7 @@ user has added may not share a name. This repository's marketplace is `jsdotnet`
 ```meta
 status: active
 type: term
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#layer"]
 ```
 
 One folder under `plugins/`, holding assets that belong together, installable on its own and
@@ -183,3 +183,48 @@ related: [".devbook/tech/technology-graph.md#model-context-protocol"]
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
 whichever plugin provides it, so an allowlist that names the server must carry both the
 plugin-namespaced and the bare spelling.
+
+## Layer
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+A plugin's position in the dependency order, and the only thing that decides which other
+plugins it may name. A lower layer never names a higher one.
+
+| Layer | Depends on | Example |
+| --- | --- | --- |
+| L0 foundation | Nothing. Works with only itself installed | `devbook` |
+| L1 extension | One foundation | `devbook-collaboration` |
+| L2b bridge | Two stacks at once, deliberately | `devbook-flows` |
+| L3 surface | Neither direction. Reads generated files | `devbook-canvas` |
+
+The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
+sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
+tool list and no-ops when absent, so nothing may declare one.
+
+## Extension Namespace
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]
+```
+
+The seam a higher layer stores state through without a release of the layer beneath it: a
+reserved key the lower layer carries through untouched, unvalidated, and namespaced by whoever
+owns it. In `devbook` it is `ext.<plugin>.<key>` in a chapter's `meta` block.
+
+Two rules, and they are the whole value. The owner never adds a field of its own to the schema
+beneath it, because that would trade one fact for a contract bump and a migration in every
+consuming repository. Nobody reads another plugin's keys as if they were schema — an opaque
+namespace two plugins interpret is no longer opaque.
+
+An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
+render as they always did, and mean nothing to anyone. That is what makes the seam safe to
+reserve before anything needs it.

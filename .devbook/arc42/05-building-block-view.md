@@ -38,7 +38,11 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
-files explicitly and omits `skills` and `hooks`, which that host discovers on its own.
+files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
+is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
+naming the [layer](../domain/plugin-authoring/naming.md#layer) beneath. Copilot's manifest has
+no verified equivalent, so a dependency is declared once, on the Claude side, and stated in
+prose in the plugin's README for the other host.
 
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface):
 a `copilot-extension.json` naming it, and the module that registers its canvases. No manifest

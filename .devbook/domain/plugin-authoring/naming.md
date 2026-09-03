@@ -100,9 +100,16 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
-`orch-*` was the previous spelling of `flow-*` and no asset here uses it any more: `delivery`
-holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
-five `flow-*`, one per adopted knowledge folder, and `fleet` holds three `fleet-*`.
+`orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
+`delivery` holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills,
+`devbook-flows` holds five `flow-*`, one per adopted knowledge folder, and `fleet` holds three
+`fleet-*`.
+
+A grep still finds the string, and never as a skill name. `flow-runner`'s allowlist
+keeps the `orch-dashboard` tool patterns so an existing dashboard installation still answers —
+[due to be dropped](../../arc42/09-architecture-decisions.md#delivery-ships-no-surface) the
+release after this one, and `delivery`'s README explains why it is there. The dashboard's own
+renderer names the old skills once, in a comment.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while

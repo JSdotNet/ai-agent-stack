@@ -466,7 +466,6 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 
 ```meta
 date: 2026-09-03
-status: divergence
 related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
 ```
 
@@ -505,7 +504,6 @@ Close this by adding the slot, not by widening the rule.
 
 ```meta
 date: 2026-09-04
-status: divergence
 related: [".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
 ```
 

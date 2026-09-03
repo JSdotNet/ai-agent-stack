@@ -6,8 +6,9 @@
       "architecture": "architecture:architect",
       "qa": "qa:qa",
       "domain": "domain-design:domain-architect",
-      "product": "product-owner:product-owner",
-      "ux": null,
+      "ux": "ux-design:ux-designer",
+      "docs": "documentation:documentation",
+      "product": null,
       "security": null
     }
   },

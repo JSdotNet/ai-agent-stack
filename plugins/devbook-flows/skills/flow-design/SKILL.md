@@ -1,9 +1,9 @@
 ---
-name: orch-design
-description: 'Orchestrate changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces knowledge-design.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use ux-design:ux-designer), UI implementation (use orch-feature or orch-bug), or UI dependency changes (use orch-update-packages).'
+name: flow-design
+description: 'Run changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces knowledge-design.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use ux-design:ux-designer), UI implementation (use flow-feature or flow-bug), or UI dependency changes (use flow-update-packages).'
 ---
 
-# Orchestrate Design Knowledge (`.design/`)
+# Flow: Design Knowledge (`.design/`)
 
 Route every `.design/` change through this skill instead of editing the folder
 directly, so UX guidance stays grounded in the repository's authoritative design
@@ -25,16 +25,21 @@ the existing `.design/` contents, and continue.
 - Wireframes, user flows, prototypes, and UI reviews — route those to
   `ux-design:ux-designer` directly (`ux-wireframe`, `ux-user-flow`,
   `ux-design-review`).
-- UI implementation — route to `orch-feature` / `orch-bug`, which *consult*
+- UI implementation — route to `flow-feature` / `flow-bug`, which *consult*
   `.design/`.
-- Adding or pinning UI dependencies — route to `orch-update-packages`.
+- Adding or pinning UI dependencies — route to `flow-update-packages`.
 
 ## Workflow Stages
 
-> Agent transitions require explicit user approval before switching. Cross-plugin
-> agents are recommended, not required — if `ux-design:ux-designer` is not
-> installed, perform the design step directly using the same instruction files
-> and continue.
+> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
+> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
+> transitions continue without separate user approval until Personal Validation. A role
+> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
+>
+> Model choice per stage follows `flow-model-selection.instructions.md` (category
+> defaults, overridable via personal global model selection). A category model applies
+> only where the stage is delegated with an `Agent` call; an inline stage runs on the
+> session's model.
 
 ### Stage 1: Context Loading
 
@@ -117,10 +122,17 @@ the existing `.design/` contents, and continue.
 
 **Agents:** `ux-design:ux-designer`
 
+### Final Phases (Shared)
+
+This is a documentation/config flow: after the last stage it runs the shared closing
+phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
+**Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
+plugin's flow names its own tier; the engine never names a skill above it.
+
 ## Usage Pattern
 
 ```text
-Invoke: orch-design
+Invoke: flow-design
 - Files: color-scheme.md, interaction-guidelines.md
 - Goal: refresh the palette from the design source and add the
   drag-and-drop chapter-reorder rules
@@ -136,33 +148,29 @@ Invoke: orch-design
 - Cross-references kept in sync across the changed and any dependent files.
 - Changed paths summarized for the user.
 
-## Canvas Interface
+## Surface Reporting
 
-This skill reports progress through the `orch-dashboard` canvas extension shipped
-by the `copilot-app` plugin. If the extension is not installed, skip the canvas
-calls below and continue through standard chat interaction. Follow the provider-safe
-dashboard contract in `plugins/copilot-app/instructions/orch-shared-phases.instructions.md`;
-prefer `extensionId: "plugin:copilot-app:orch-dashboard"` when opening or inspecting the
-canvas.
+This flow reports progress through whichever delivery surface is bound. Resolve it by
+pattern from the live tool list and follow the **Reporting Contract** in
+`surface-contract.instructions.md` (`delivery` plugin) for the
+`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
+Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
+the `.design/` files stay the source of truth.
 
-- Open the dashboard per the shared contract, then call `start_run` with
-  `skillId: "orch-design"` and these stages: Context Loading, Authoritative
-  Grounding, Design Authoring, Metadata & Cross-Reference Enforcement,
-  Consistency Review.
-- Before each stage, call `update_stage` with `status: "in_progress"`.
-- After each stage, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary — e.g. grounding sources
-  used, drafted design content, or metadata/consistency findings.
-- Call `finish_run` with the final status and a summary once the `.design/`
-  change is complete.
-- During **Design Authoring**, also open/update `markdown-canvas`
-  (`markdown-preview`) with the drafted guideline content, per the
-  `copilot-app` plugin's `instructions/canvas-usage.instructions.md`. Optional;
-  skip gracefully if not installed.
+- Call `start_run` with `skillId: "flow-design"` and these stages: Context Loading,
+  Authoritative Grounding, Design Authoring, Metadata & Cross-Reference Enforcement,
+  Consistency Review, Personal Validation, Create Pull Request, Work Item Update,
+  Summary.
+- During **Design Authoring**, call `render_markdown` with the drafted guideline
+  content. Optional; skip when no bound surface provides
+  `delivery.surface.render@1`.
 
 ## Reference
 
-- `knowledge-design.instructions.md`
-- `knowledge-chapter-metadata.instructions.md`
-- `assets/routing-snippet.md` — optional repository-local context-loading and
-  routing policy; this plugin ships structure rules, not routing policy.
+- `knowledge-design.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+  structure and metadata rules, shipped by the `devbook` plugin.
+- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
+  `surface-contract.instructions.md` — the shared phase, model, and surface
+  contracts, shipped by the `delivery` plugin.
+- `devbook`'s `assets/routing-snippet.md` — optional repository-local
+  context-loading and routing policy; a flow ships procedure, not routing policy.

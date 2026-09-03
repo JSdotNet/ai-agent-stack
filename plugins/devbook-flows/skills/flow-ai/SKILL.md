@@ -1,9 +1,9 @@
 ---
-name: orch-ai
-description: 'Orchestrate changes to .ai/ — the record of how this project develops with AI: which practice, agent, skill, hook, model, or guardrail is used at which stage of the development flow, the concepts underneath them, and how far adoption has got. Use for any create/update of .ai/adoption-map.md, a stage file, or concepts.md, including adding a usage, promoting or retiring an adoption status, and adding a stage. Enforces knowledge-ai.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the adoption map in sync with the stage files. DO NOT USE FOR: registering the tool itself with its version and vendor (use orch-tech), or AI shipped inside the product (use orch-arc42-content, orch-domain, or orch-tech).'
+name: flow-ai
+description: 'Run changes to .ai/ — the record of how this project develops with AI: which practice, agent, skill, hook, model, or guardrail is used at which stage of the development flow, the concepts underneath them, and how far adoption has got. Use for any create/update of .ai/adoption-map.md, a stage file, or concepts.md, including adding a usage, promoting or retiring an adoption status, and adding a stage. Enforces knowledge-ai.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the adoption map in sync with the stage files. DO NOT USE FOR: registering the tool itself with its version and vendor (use flow-tech), or AI shipped inside the product (use flow-arc42-content, flow-domain, or flow-tech).'
 ---
 
-# Orchestrate AI Knowledge (`.ai/`)
+# Flow: AI Knowledge (`.ai/`)
 
 Route every `.ai/` change through this skill instead of editing the folder
 directly, so the record of how the team works with AI stays consistent with the
@@ -29,10 +29,15 @@ the existing `.ai/` contents, and continue.
 
 ## Workflow Stages
 
-> Agent transitions require explicit user approval before switching. Cross-plugin
-> agents are recommended, not required — if the suggested agent is not installed,
-> perform the reasoning step directly using the same instruction files and
-> continue.
+> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
+> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
+> transitions continue without separate user approval until Personal Validation. A role
+> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
+>
+> Model choice per stage follows `flow-model-selection.instructions.md` (category
+> defaults, overridable via personal global model selection). A category model applies
+> only where the stage is delegated with an `Agent` call; an inline stage runs on the
+> session's model.
 
 ### Stage 1: Context Loading
 
@@ -60,7 +65,7 @@ Three questions, in this order, before anything is written:
    one per stage; one idea applied throughout is a `concept` in `concepts.md`
    carrying a `stage` list.
 3. **Is the tool registered?** If the chapter needs a `depends-on` into `.tech`
-   and the technology has no chapter there, hand off to `orch-tech` first and
+   and the technology has no chapter there, hand off to `flow-tech` first and
    come back — an unresolved `depends-on` fails the check.
 
 State the placement decision and its reasoning before authoring.
@@ -102,19 +107,24 @@ Otherwise none.
 - Confirm every `depends-on` resolves to an existing `.tech` or `.ai` chapter,
   and that no `.tech` chapter was made to point back at `.ai` — that link is
   one-way.
-- Verify with the `knowledge-graph` canvas scoped to `.ai`, and with the
-  `devbook-canvas` canvas (open the changed file; check the metadata/lint
-  panel is clean apart from the intentional no-meta sections of
-  `adoption-map.md`).
+- Confirm every touched chapter and file carries a valid `meta` block, apart from
+  the intentional no-meta sections of `adoption-map.md`; hand a failure to `devbook-check`.
 - Summarize changed files/chapters, and call out every status change explicitly
   — a promotion or demotion is the part of this change a reader cares about.
 
 **Agents:** none
 
+### Final Phases (Shared)
+
+This is a documentation/config flow: after the last stage it runs the shared closing
+phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
+**Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
+plugin's flow names its own tier; the engine never names a skill above it.
+
 ## Usage Pattern
 
 ```text
-Invoke: orch-ai
+Invoke: flow-ai
 - Files: 03-build.md, adoption-map.md
 - Goal: record agent-driven TDD as a practice at the Build stage, status trial,
   depending on the Claude Code chapter in .tech
@@ -129,34 +139,30 @@ Invoke: orch-ai
   files.
 - Changed paths and every status change summarized for the user.
 
-## Canvas Interface
+## Surface Reporting
 
-This skill reports progress through the `orch-dashboard` canvas extension shipped
-by the `copilot-app` plugin. If the extension is not installed, skip the canvas
-calls below and continue through standard chat interaction. Follow the provider-safe
-dashboard contract in `plugins/copilot-app/instructions/orch-shared-phases.instructions.md`;
-prefer `extensionId: "plugin:copilot-app:orch-dashboard"` when opening or inspecting the
-canvas.
+This flow reports progress through whichever delivery surface is bound. Resolve it by
+pattern from the live tool list and follow the **Reporting Contract** in
+`surface-contract.instructions.md` (`delivery` plugin) for the
+`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
+Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
+the `.ai/` files stay the source of truth.
 
-- Open the dashboard per the shared contract, then call `start_run` with
-  `skillId: "orch-ai"` and these stages: Context Loading, Placement & Boundary
-  Check, Authoring & Metadata Enforcement, Map Sync & Review.
-- Before each stage, call `update_stage` with `status: "in_progress"`.
-- After each stage, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary — e.g. the placement
-  decision, metadata fixes applied, or map-sync verification results.
-- Call `finish_run` with the final status and a summary once the `.ai/` change
-  is complete.
-- During **Map Sync & Review**, also open/update the `knowledge-graph` canvas
-  scoped to `.ai`, per the `copilot-app` plugin's
-  `instructions/canvas-usage.instructions.md`. Optional; skip gracefully if not
-  installed.
+- Call `start_run` with `skillId: "flow-ai"` and these stages: Context Loading,
+  Placement & Boundary Check, Authoring & Metadata Enforcement, Map Sync & Review,
+  Personal Validation, Create Pull Request, Work Item Update, Summary.
+- During **Map Sync & Review**, call `render_diagram` with the updated
+  `adoption-map.md` diagram. Optional; skip when no bound surface provides
+  `delivery.surface.render@1`.
 
 ## Reference
 
-- `knowledge-ai.instructions.md`
-- `knowledge-chapter-metadata.instructions.md`
+- `knowledge-ai.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+  structure and metadata rules, shipped by the `devbook` plugin.
 - `knowledge-tech.instructions.md` — the registry `.ai` links into with
-  `depends-on`
-- `assets/routing-snippet.md` — optional repository-local context-loading and
-  routing policy; this plugin ships structure rules, not routing policy.
+  `depends-on`.
+- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
+  `surface-contract.instructions.md` — the shared phase, model, and surface
+  contracts, shipped by the `delivery` plugin.
+- `devbook`'s `assets/routing-snippet.md` — optional repository-local
+  context-loading and routing policy; a flow ships procedure, not routing policy.

@@ -1,9 +1,9 @@
 ---
-name: orch-tech
-description: 'Orchestrate changes to .tech/ — the technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools. Use for any create/update of .tech/technology-graph.md, shared.md, or a layer file, including adding a technology, pinning a version, promoting or retiring a status, or adding a layer. Enforces knowledge-tech.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the graph diagram in sync with depends-on edges.'
+name: flow-tech
+description: 'Run changes to .tech/ — the technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools. Use for any create/update of .tech/technology-graph.md, shared.md, or a layer file, including adding a technology, pinning a version, promoting or retiring a status, or adding a layer. Enforces knowledge-tech.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the graph diagram in sync with depends-on edges.'
 ---
 
-# Orchestrate Technology Knowledge (`.tech/`)
+# Flow: Technology Knowledge (`.tech/`)
 
 Route every `.tech/` change through this skill instead of editing the folder
 directly, so the technology graph stays consistent with the architecture
@@ -25,10 +25,15 @@ the existing `.tech/` contents, and continue.
 
 ## Workflow Stages
 
-> Agent transitions require explicit user approval before switching. Cross-plugin
-> agents are recommended, not required — if `architecture:architect` is not
-> installed, perform the reasoning step directly using the same instruction files
-> and continue.
+> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
+> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
+> transitions continue without separate user approval until Personal Validation. A role
+> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
+>
+> Model choice per stage follows `flow-model-selection.instructions.md` (category
+> defaults, overridable via personal global model selection). A category model applies
+> only where the stage is delegated with an `Agent` call; an inline stage runs on the
+> session's model.
 
 ### Stage 1: Context Loading
 
@@ -51,7 +56,7 @@ the existing `.tech/` contents, and continue.
 - Confirm the technology belongs in exactly one layer; anything used by two or
   more layers belongs in `shared.md`.
 - If the change is a genuine architecture decision, record it as an ADR first
-  (`orch-adr`) and let `.tech` record the outcome with a `related` link.
+  (`flow-adr`) and let `.tech` record the outcome with a `related` link.
 
 **Agents:** `architecture:architect`
 
@@ -83,18 +88,23 @@ the existing `.tech/` contents, and continue.
   `devbook-check`.
 - Update the layer table and "Open questions" section when layers or open
   choices change.
-- Verify with the `knowledge-graph` canvas scoped to `.tech`, and with the
-  `devbook-canvas` canvas (open the changed file; check the metadata/lint
-  panel is clean apart from the intentional no-meta sections of
-  `technology-graph.md`).
+- Confirm every touched chapter and file carries a valid `meta` block, apart from
+  the intentional no-meta sections of `technology-graph.md`; hand a failure to `devbook-check`.
 - Summarize changed files/chapters for the user.
 
 **Agents:** `architecture:architect`
 
+### Final Phases (Shared)
+
+This is a documentation/config flow: after the last stage it runs the shared closing
+phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
+**Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
+plugin's flow names its own tier; the engine never names a skill above it.
+
 ## Usage Pattern
 
 ```text
-Invoke: orch-tech
+Invoke: flow-tech
 - Files: backend.md, technology-graph.md
 - Goal: promote ASP.NET Core Minimal APIs from candidate to adopted and pin the version
 ```
@@ -107,32 +117,28 @@ Invoke: orch-tech
 - All `depends-on` references resolve, and the graph diagram matches them.
 - Changed paths summarized for the user.
 
-## Canvas Interface
+## Surface Reporting
 
-This skill reports progress through the `orch-dashboard` canvas extension shipped
-by the `copilot-app` plugin. If the extension is not installed, skip the canvas
-calls below and continue through standard chat interaction. Follow the provider-safe
-dashboard contract in `plugins/copilot-app/instructions/orch-shared-phases.instructions.md`;
-prefer `extensionId: "plugin:copilot-app:orch-dashboard"` when opening or inspecting the
-canvas.
+This flow reports progress through whichever delivery surface is bound. Resolve it by
+pattern from the live tool list and follow the **Reporting Contract** in
+`surface-contract.instructions.md` (`delivery` plugin) for the
+`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
+Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
+the `.tech/` files stay the source of truth.
 
-- Open the dashboard per the shared contract, then call `start_run` with
-  `skillId: "orch-tech"` and these stages: Context Loading, Technology
-  Reasoning, Authoring & Metadata Enforcement, Graph Sync & Review.
-- Before each stage, call `update_stage` with `status: "in_progress"`.
-- After each stage, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary — e.g. reasoning outcome,
-  metadata fixes applied, or graph-sync verification results.
-- Call `finish_run` with the final status and a summary once the `.tech/`
-  change is complete.
-- During **Graph Sync & Review**, also open/update the `knowledge-graph`
-  canvas scoped to `.tech`, per the `copilot-app` plugin's
-  `instructions/canvas-usage.instructions.md`. Optional; skip gracefully if
-  not installed.
+- Call `start_run` with `skillId: "flow-tech"` and these stages: Context Loading,
+  Technology Reasoning, Authoring & Metadata Enforcement, Graph Sync & Review, Personal
+  Validation, Create Pull Request, Work Item Update, Summary.
+- During **Graph Sync & Review**, call `render_diagram` with the updated
+  `technology-graph.md` diagram. Optional; skip when no bound surface provides
+  `delivery.surface.render@1`.
 
 ## Reference
 
-- `knowledge-tech.instructions.md`
-- `knowledge-chapter-metadata.instructions.md`
-- `assets/routing-snippet.md` — optional repository-local context-loading and
-  routing policy; this plugin ships structure rules, not routing policy.
+- `knowledge-tech.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+  structure and metadata rules, shipped by the `devbook` plugin.
+- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
+  `surface-contract.instructions.md` — the shared phase, model, and surface
+  contracts, shipped by the `delivery` plugin.
+- `devbook`'s `assets/routing-snippet.md` — optional repository-local
+  context-loading and routing policy; a flow ships procedure, not routing policy.

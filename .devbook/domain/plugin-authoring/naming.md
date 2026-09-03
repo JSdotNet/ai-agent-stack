@@ -114,6 +114,26 @@ but the first plugin to land carries five of them: `devbook` was ported whole, a
 folder-writing skills are renamed in the release that moves them out — see
 [the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
 
+## Surface
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+Where work becomes visible or recorded — a canvas, a dashboard, a collector — and nothing else.
+A surface is never a dependency in either direction: the thing being rendered knows no surface
+exists, and the surface knows nothing about what produced its input. Whichever tool opens it
+resolves it at runtime from the live tool list, and absence costs a view, never a capability.
+
+One surface ships here today: `devbook-canvas`, which renders the reference graph
+`_meta/graph.json` produces. It is packaged inside the `devbook` plugin folder rather than
+alone, and imports that plugin's generator modules by relative path — no host resolves the two
+together, so this is a source coupling to undo, not a dependency to declare. See
+[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
+
 ## Stamp
 
 ```meta

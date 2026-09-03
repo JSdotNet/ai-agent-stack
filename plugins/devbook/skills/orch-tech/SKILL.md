@@ -84,7 +84,7 @@ the existing `.tech/` contents, and continue.
 - Update the layer table and "Open questions" section when layers or open
   choices change.
 - Verify with the `knowledge-graph` canvas scoped to `.tech`, and with the
-  `knowledge-canvas` canvas (open the changed file; check the metadata/lint
+  `devbook-canvas` canvas (open the changed file; check the metadata/lint
   panel is clean apart from the intentional no-meta sections of
   `technology-graph.md`).
 - Summarize changed files/chapters for the user.

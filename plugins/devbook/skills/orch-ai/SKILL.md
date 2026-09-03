@@ -103,7 +103,7 @@ Otherwise none.
   and that no `.tech` chapter was made to point back at `.ai` — that link is
   one-way.
 - Verify with the `knowledge-graph` canvas scoped to `.ai`, and with the
-  `knowledge-canvas` canvas (open the changed file; check the metadata/lint
+  `devbook-canvas` canvas (open the changed file; check the metadata/lint
   panel is clean apart from the intentional no-meta sections of
   `adoption-map.md`).
 - Summarize changed files/chapters, and call out every status change explicitly

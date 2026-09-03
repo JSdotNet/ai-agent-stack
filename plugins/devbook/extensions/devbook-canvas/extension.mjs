@@ -1,4 +1,4 @@
-// Extension: knowledge-canvas
+// Extension: devbook-canvas
 //
 // Tailored canvas for this repository's checked-in knowledge folders
 // (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
@@ -259,8 +259,8 @@ const session = await joinSession({
             },
         }),
         createCanvas({
-            id: "knowledge-canvas",
-            displayName: "Knowledge canvas",
+            id: "devbook-canvas",
+            displayName: "Devbook canvas",
             description:
                 "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per chapter-metadata.instructions.md.",
             inputSchema: {
@@ -321,7 +321,7 @@ const session = await joinSession({
                     setDocument(entry, String(requestedPath));
                 }
                 return {
-                    title: entry.state.relPath ? `Knowledge: ${entry.state.relPath}` : "Knowledge canvas",
+                    title: entry.state.relPath ? `Knowledge: ${entry.state.relPath}` : "Devbook canvas",
                     url: entry.url,
                 };
             },

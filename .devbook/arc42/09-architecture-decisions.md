@@ -86,6 +86,17 @@ The layered design puts the five folder-writing skills — one per adopted folde
 renderer in `devbook-canvas`, an L3 surface. `devbook` as ported holds all of them, still under
 the `orch-*` prefix, and the canvas as an in-plugin extension.
 
+The canvas already carries its target name: the extension was renamed `knowledge-canvas` →
+`devbook-canvas` ahead of the move, because a name is free to change now and a package id is
+not once anything resolves it. Only its placement still diverges.
+
+That placement is not free, though, and the rename is what made the cost visible. The canvas
+imports `graph.mjs`, `outline.mjs`, and `metadata.mjs` out of `tools/knowledge-meta/` by
+relative path — deliberately, so the rendered graph and the committed index are the same code —
+and those three paths are what a lift breaks. So the move is not a move plus a manifest: the
+generator modules have to become something a separate plugin can import first. `devbook` still
+imports nothing from the canvas, which is the direction that matters for L0.
+
 That is a knowing divergence, not an oversight. The port's brief was the schema and the two
 lifecycle skills; splitting the plugin needs `delivery` to exist first, since a bridge that
 cannot name what it bridges to is a plugin with a dangling dependency.
@@ -95,7 +106,8 @@ Until it is done, `devbook` is not L0-clean and the claim that it works with onl
 installed stays untested — the five skills that would break it are the ones that reference a
 dashboard. Closing it is one release: move the five into `devbook-flows` depending on both
 `devbook` and `delivery`, rename them `flow-*`, replace their dashboard references with the
-surface contract, and lift the canvas into `devbook-canvas`.
+surface contract, and lift `devbook-canvas` into its own plugin — a rename it no longer needs,
+but an import boundary it still does.
 
 ## Flat Knowledge Folders Only
 
@@ -137,6 +149,36 @@ Consequence: every other repository's schema assumes this shape, so it is a hard
 revisit later. Confirm it with whoever owns the gate design before this is depended on. The
 implementation is one `APPROVED_STATUS` constant appended to each ladder, so reversing it is a
 migration and not a rewrite.
+
+## Comments Are Findings Until the Fence Lands
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows"]
+```
+
+`devbook-collaboration` records a comment as one single-line finding in the chapter's
+`ext.devbook-collaboration.open-<n>` key. No author, no replies, no quoted passage, no thread.
+
+The design it implements has a richer answer: a second fenced `annotation` block in the chapter
+body, carrying `author`, `date`, `kind`, `quote`, and a `replies` list, anchored by position and
+swept when resolved. That block is an L0 feature — it belongs to `devbook`, and `devbook` has
+not built it. Two ways to reach it were open, and both were refused. Building the fence from
+here would put a schema element into `devbook`'s files from a plugin above it, which is the one
+thing the layering forbids. Building a threaded store inside `ext` instead would be a rival
+implementation of a mechanism already designed, with a migration owed to every repository that
+adopted it.
+
+So the third option: record the smallest thing that survives a session. A finding is one key
+because the block grammar splits a bracketed list on every comma, including inside quotes — a
+sentence written as a list entry comes back in pieces — and one key per finding gives each its
+own line and its own diff hunk, which is what the fence design wanted from threads anyway.
+
+Consequence: a question here loses who asked it and cannot be replied to in place; the exchange
+happens in the pull request, and only the unresolved residue stays on the chapter. Close this
+when `devbook` ships the fence — the migration is one pass, since every `open-<n>` becomes one
+fence with `body` set from the line and `author` unknown.
 
 ## The Point Set Is Closed
 
@@ -260,3 +302,4 @@ all.** Every run reports that no surface is bound, produces its file artifacts, 
 The `flow-runner` allowlist keeps the legacy `orch-dashboard` tool patterns beside the new ones
 for one version, so an existing dashboard installation still answers. Close this by landing
 `delivery-dashboard`; the second implementation is what will prove the contract is a contract.
+

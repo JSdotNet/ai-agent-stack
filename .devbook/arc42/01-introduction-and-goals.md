@@ -18,7 +18,7 @@ status: active
 | Goal | What it rules out |
 | --- | --- |
 | One authored copy per asset | A Claude variant and a Copilot variant of the same agent, drifting apart. |
-| Each plugin installs alone | A plugin that silently needs a sibling installed to work. |
+| Every dependency is declared | A plugin that silently needs a sibling installed to work. One that names its layer is fine; the host enforces it. |
 | An asset earns every line | Prose that restates the model default, or a rule stated in two files. |
 | A loaded asset works | A manifest or frontmatter shape one host rejects at load time. |
 

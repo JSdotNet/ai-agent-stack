@@ -25,7 +25,7 @@ user has added may not share a name. This repository's marketplace is `jsdotnet`
 ```meta
 status: active
 type: term
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#layer"]
 ```
 
 One folder under `plugins/`, holding assets that belong together, installable on its own and
@@ -170,16 +170,25 @@ it never self-approves.
 status: active
 type: term
 date: 2026-09-03
-related: [".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server"]
 ```
 
-Where a run becomes visible or recorded, and nothing else. A dashboard, a canvas, and a
-headless collector are three implementations of one capability, split by operation group —
-lifecycle, render, export — because none of them implements all three.
+Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, and a headless
+collector are three implementations of one capability, split by operation group — lifecycle,
+render, export — because none of them implements all three.
 
-A surface is resolved by pattern from the live tool list, never declared as a dependency, and
-never aware of the engine. **No surface bound is a normal outcome:** the run produces its file
-artifacts, says so once, and continues.
+A surface is never a dependency in either direction: the thing being rendered knows no surface
+exists, and the surface knows nothing about what produced its input. Whichever tool opens it
+resolves it at runtime, by pattern, from the live tool list. **Absence is a normal outcome:**
+the run produces its file artifacts, says so once, and continues — it costs a view, never a
+capability.
+
+One surface ships here today: `devbook-canvas`, which renders the reference graph
+`_meta/graph.json` produces. It is packaged inside the `devbook` plugin folder rather than
+alone, and imports that plugin's generator modules by relative path — no host resolves the two
+together, so this is a source coupling to undo, not a dependency to declare. See
+[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows). The
+`delivery` engine's own surface, `delivery-dashboard`, is not in this marketplace yet.
 
 ## Host Slot
 
@@ -280,3 +289,48 @@ related: [".devbook/tech/technology-graph.md#model-context-protocol"]
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
 whichever plugin provides it, so an allowlist that names the server must carry both the
 plugin-namespaced and the bare spelling.
+
+## Layer
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+A plugin's position in the dependency order, and the only thing that decides which other
+plugins it may name. A lower layer never names a higher one.
+
+| Layer | Depends on | Example |
+| --- | --- | --- |
+| L0 foundation | Nothing. Works with only itself installed | `devbook` |
+| L1 extension | One foundation | `devbook-collaboration` |
+| L2b bridge | Two stacks at once, deliberately | `devbook-flows` |
+| L3 surface | Neither direction. Reads generated files | `devbook-canvas` |
+
+The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
+sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
+tool list and no-ops when absent, so nothing may declare one.
+
+## Extension Namespace
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]
+```
+
+The seam a higher layer stores state through without a release of the layer beneath it: a
+reserved key the lower layer carries through untouched, unvalidated, and namespaced by whoever
+owns it. In `devbook` it is `ext.<plugin>.<key>` in a chapter's `meta` block.
+
+Two rules, and they are the whole value. The owner never adds a field of its own to the schema
+beneath it, because that would trade one fact for a contract bump and a migration in every
+consuming repository. Nobody reads another plugin's keys as if they were schema — an opaque
+namespace two plugins interpret is no longer opaque.
+
+An extension namespace is inert on its own: uninstall the owner and the keys stay parseable,
+render as they always did, and mean nothing to anyone. That is what makes the seam safe to
+reserve before anything needs it.

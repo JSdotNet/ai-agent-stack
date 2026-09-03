@@ -1,4 +1,4 @@
-// render.mjs — HTML shell served by the knowledge-canvas local server.
+// render.mjs — HTML shell served by the devbook-canvas local server.
 // Client-side rendering uses CDN-hosted `marked` (Markdown -> HTML) and
 // `mermaid` (diagram rendering) so the extension itself stays dependency-free.
 
@@ -7,7 +7,7 @@ export function renderPage() {
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Knowledge canvas</title>
+<title>Devbook canvas</title>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>

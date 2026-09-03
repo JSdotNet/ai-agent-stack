@@ -1,0 +1,54 @@
+{
+  "manifest_version": "0.3",
+  "name": "delivery-collector",
+  "version": "0.1.0",
+  "description": "Headless run recorder: tracks a run's stages, gate decisions and QA evidence on disk and exports its Markdown report. No page, no port, nothing rendered.",
+  "author": {
+    "name": "Job Schepers",
+    "url": "https://github.com/JSdotNet"
+  },
+  "server": {
+    "type": "node",
+    "entry_point": "mcp-server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/mcp-server.mjs"],
+      "env": {
+        "CLAUDE_PROJECT_DIR": "${user_config.project_directory}",
+        "DELIVERY_COLLECTOR_STATE_DIR": "${user_config.state_directory}"
+      }
+    }
+  },
+  "user_config": {
+    "project_directory": {
+      "type": "directory",
+      "title": "Project directory",
+      "description": "The git worktree this collector records for. A relative report path is resolved against it. Leave unset to use the server's working directory.",
+      "required": false
+    },
+    "state_directory": {
+      "type": "directory",
+      "title": "Run state directory",
+      "description": "Where run files and exported reports are stored. Leave unset to use a per-project folder under your Claude configuration directory.",
+      "required": false
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    { "name": "open_dashboard", "description": "Report where this surface records to. Headless: there is no URL." },
+    { "name": "start_run", "description": "Start recording a run and declare its stages." },
+    { "name": "record_prompt", "description": "Append a prompt to a run's prompt history." },
+    { "name": "set_run_context", "description": "Persist the change kind, the approval decision, and the handoff marker." },
+    { "name": "update_stage", "description": "Update a stage's status, output, links, QA scenarios and monitoring findings." },
+    { "name": "finish_run", "description": "Close a run with a final status and summary." },
+    { "name": "list_runs", "description": "List recorded runs." },
+    { "name": "get_run", "description": "Fetch one run in full." },
+    { "name": "export_report", "description": "Write a run's Markdown report to disk." }
+  ]
+}

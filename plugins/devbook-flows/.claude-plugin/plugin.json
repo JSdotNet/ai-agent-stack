@@ -1,0 +1,33 @@
+{
+  "name": "devbook-flows",
+  "version": "1.0.0",
+  "description": "The bridge between devbook and the delivery engine: five folder-specific flow-* procedures — flow-domain, flow-tech, flow-design, flow-arc42-content, flow-ai — that route a knowledge-folder change through the engine's staged phases, the Personal Validation gate, and whichever delivery surface is bound. Depends on both sides and is meaningless without either: devbook alone edits its folders directly under its instruction files, devbook plus delivery routes them through flow-fallback, and this plugin is what makes each folder its own flow.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "devbook",
+    "delivery",
+    "flow",
+    "bridge",
+    "knowledge",
+    "arc42",
+    "domain",
+    "technology-graph",
+    "design",
+    "ai-adoption"
+  ],
+  "dependencies": [
+    {
+      "name": "devbook",
+      "version": ">=1.0.0 <2.0.0",
+      "marketplace": "jsdotnet"
+    },
+    {
+      "name": "delivery",
+      "version": ">=1.0.0 <2.0.0",
+      "marketplace": "jsdotnet"
+    }
+  ]
+}

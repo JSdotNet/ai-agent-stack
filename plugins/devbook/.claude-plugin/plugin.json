@@ -1,7 +1,7 @@
 {
   "name": "devbook",
   "version": "1.0.0",
-  "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling.",
+  "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling. Usable on its own: the per-folder flow-* procedures live in the devbook-flows bridge.",
   "author": {
     "name": "Job Schepers"
   },
@@ -21,6 +21,6 @@
     "convention",
     "testing",
     "migrations",
-    "orchestration"
+    "converters"
   ]
 }

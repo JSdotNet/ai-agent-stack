@@ -66,57 +66,19 @@ schema no longer defines, stale committed indexes — and hands the rest back to
 Refreshes a repository's `.tech/` technology graph from deterministic package
 inventories for .NET and frontend dependencies, then analyzes the repository for
 non-package technologies such as runtimes, services, platforms, protocols, and
-tooling before delegating graph authoring through `orch-tech`.
+tooling before delegating graph authoring to the `.tech` write path.
 
 **Trigger keywords:** `update technology graph`, `refresh .tech`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
-### Skill: `orch-arc42-content`
+### Skills: per-folder flows — moved
 
-Orchestrates direct content edits to `.arc42/` chapters — refreshing a chapter,
-section, or diagram — with metadata enforcement and a consistency review. Defers
-decision-record and blueprint-scale work to `orch-adr`, `orch-tdr`,
-`orch-blueprint`, and `orch-architecture`.
-
-**Trigger keywords:** `update arc42 chapter`, `refresh runtime view`,
-`arc42 diagram`, `add glossary term`, `edit .arc42`, `quality requirements`
-
-### Skill: `orch-domain`
-
-Orchestrates `.domain/` changes — bounded-context model, features, model and
-flow diagrams, dependencies, and naming — through `domain-design:domain-architect`
-with template and metadata enforcement.
-
-**Trigger keywords:** `bounded context`, `context map`, `new aggregate`,
-`domain model`, `ubiquitous language`, `domain flow`, `edit .domain`
-
-### Skill: `orch-tech`
-
-Orchestrates `.tech/` technology-graph changes — adding a technology, pinning a
-version, promoting or retiring a status, adding a layer — and keeps the graph
-diagram in sync with the `depends-on` edges.
-
-**Trigger keywords:** `technology graph`, `add technology`, `pin version`,
-`promote to adopted`, `retire technology`, `edit .tech`
-
-### Skill: `orch-ai`
-
-Orchestrates `.ai/` changes — a usage recorded at a flow stage, an adoption
-status promoted or demoted, a concept, a stage added — with a placement and
-boundary check that keeps tool registration in `.tech/` and keeps the adoption
-map in sync with the stage files.
-
-**Trigger keywords:** `AI adoption`, `we now use this agent`, `add to the flow`,
-`promote to adopted`, `retire this practice`, `AI harness`, `edit .ai`
-
-### Skill: `orch-design`
-
-Orchestrates `.design/` guideline changes — principles, tokens, typography and
-layout, interaction, accessibility, component libraries — grounded in the
-repository's authoritative design source, through `ux-design:ux-designer`.
-
-**Trigger keywords:** `design tokens`, `color scheme`, `design guideline`,
-`interaction rule`, `accessibility guideline`, `component library`, `edit .design`
+The five folder-specific writing flows are no longer here. `flow-arc42-content`,
+`flow-domain`, `flow-tech`, `flow-design`, and `flow-ai` live in the
+[`devbook-flows`](../devbook-flows) bridge plugin, which depends on this plugin and on
+`delivery`. They only make sense with a flow-runner and its shared phases, and keeping
+them here made the foundation name the layer above it. With `devbook` alone, a folder edit
+follows that folder's instruction file directly.
 
 ### Skills: `to-spec-<kind>` and `from-spec-<kind>`
 
@@ -127,12 +89,13 @@ ambiguous, because an aggregate is both a chapter and a class.
 - **`to-spec-<kind>`** — something exists in the application and the
   chapter is missing, thin, or stale, so read the implementation and write the
   chapter. Source and tests are the only evidence; comments, TODOs, and disabled
-  tests are not. The write routes through the folder's own orchestration skill.
+  tests are not. The write routes per **Where the spec-side write goes** in
+  `assets/code-sync-protocol.md`.
 - **`from-spec-<kind>`** — a chapter is agreed but unbuilt, so turn it
   into a change brief (outcomes, invariants, ubiquitous language, out of scope,
   acceptance checks) plus a change category, then stop. It never edits a source
-  or test tree, and never names a code-side orchestration — which delivery flow
-  picks the brief up is the user's decision, made after reading it.
+  or test tree, and never names a code-side flow — which delivery flow picks the
+  brief up is the user's decision, made after reading it.
 
 **The `from-spec-` direction covers both from scratch and update.** The change
 category is that axis, and counterpart resolution picks between them before the
@@ -145,13 +108,13 @@ where the current behaviour lives.
 
 Five kinds, two directions each:
 
-| Kind | Target | `type` value(s) | Spec-side write |
+| Kind | Target | `type` value(s) | Spec-side target |
 |------|--------|-----------------|-----------------|
-| `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `orch-domain` |
-| `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `orch-domain` |
-| `feature` | `.domain/<context>/features.md` | `feature`, `sub-feature` | `orch-domain` |
-| `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `orch-arc42-content` |
-| `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `orch-design` |
+| `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `.domain/<context>/` |
+| `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `.domain/<context>/` |
+| `feature` | `.domain/<context>/features.md` | `feature`, `sub-feature` | `.domain/<context>/` |
+| `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `.arc42/` |
+| `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `.design/` |
 
 **The aggregate is the unit, not its parts.** One pass covers the root, every
 entity, value object, and enum it owns, the shared value-object and enum
@@ -177,11 +140,11 @@ step to document it, and keeps the screenshots as report evidence rather than
 committing them to a knowledge folder.
 
 **`naming.md` term chapters have no pair of their own.** They are written through
-`orch-domain`, and populated incrementally by the capture passes: whenever one
+the `.domain` write path, and populated incrementally by the capture passes: whenever one
 resolves a counterpart by inference rather than by an existing alias, it proposes
 a term with the discovered code name as an `alias`, which turns a one-off
 inference into a durable pairing for the next pass. The context folder itself, including
-`naming.md`, is created by `orch-domain`.
+`naming.md`, is created by the same path.
 
 `.tech` has no pair here — `knowledge-tech-update` already covers that
 direction.
@@ -199,9 +162,8 @@ signal when it does. It goes through `naming.md` `aliases`, then the `.arc42`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
-The dependency on the `orch-*` skills is one-way. A `to-spec-` skill names its
-folder's orchestration and hands over grounded input; no `orch-*` skill knows
-these skills exist.
+The dependency on the flows is one-way. A `to-spec-` skill names its folder's write
+path and hands over grounded input; no flow knows these skills exist.
 
 **Trigger keywords:** `document what we built`, `capture from code`,
 `.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
@@ -447,7 +409,7 @@ Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
 other folder does. To adopt: re-sync `.github/tools/knowledge-meta/` from this
 plugin, run `devbook-sync` (or create the folder by hand), add `.ai/**`
-to the CI workflow's `paths` filters, and route edits through `orch-ai`.
+to the CI workflow's `paths` filters, and route edits through the `.ai` write path.
 
 ## 0.11.0: invariants as a table
 

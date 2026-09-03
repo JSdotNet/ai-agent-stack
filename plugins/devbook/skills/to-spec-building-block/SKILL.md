@@ -1,6 +1,6 @@
 ---
 name: to-spec-building-block
-description: 'To-spec direction (capture), building-block kind: read the implemented module and component structure and write or refresh .arc42/05-building-block-view.md, with its decomposition levels, responsibilities, interfaces, and diagram. Use when: the building block view is missing or stale, projects were added or restructured, the decomposition diagram no longer matches the solution, document the structure we built. Reads source and project structure as evidence and routes the write through orch-arc42-content. DO NOT USE FOR: turning an agreed but unbuilt building-block chapter into work (use from-spec-building-block), or for the deployment, bounded-context, or design-component chapters around it (use the matching to-spec-* skill).'
+description: 'To-spec direction (capture), building-block kind: read the implemented module and component structure and write or refresh .arc42/05-building-block-view.md, with its decomposition levels, responsibilities, interfaces, and diagram. Use when: the building block view is missing or stale, projects were added or restructured, the decomposition diagram no longer matches the solution, document the structure we built. Reads source and project structure as evidence and routes the write through the `.arc42` flow. DO NOT USE FOR: turning an agreed but unbuilt building-block chapter into work (use from-spec-building-block), or for the deployment, bounded-context, or design-component chapters around it (use the matching to-spec-* skill).'
 ---
 
 # Capture the building block view from code
@@ -12,7 +12,7 @@ The solution has a module and component structure, and
 decomposition from before projects were split, merged, or renamed. This skill
 reads the structure, establishes the decomposition levels and each block's
 responsibility and interfaces, and routes the chapter through
-`orch-arc42-content`.
+the `.arc42` flow.
 
 This view is the second rung of counterpart resolution for every other skill in
 this family. An accurate building block view is what lets a capture or build
@@ -138,10 +138,11 @@ not copy.
    contradicts the intended layering, draw it as it is and note it — that is the
    finding.
 
-8. **Route the write through `orch-arc42-content`.** Hand over the drafted
-   content and the evidence behind each claim. `orch-arc42-content` owns
-   template conformance, the metadata blocks, and the consistency review. Do not
-   write `.arc42/` files directly.
+8. **Route the write through the `.arc42` flow.** Hand over the drafted content and the
+   evidence behind each claim. The `.arc42` flow owns template conformance, the metadata
+   blocks, and the consistency review. Do not write `.arc42/` files directly. The rung
+   that answers is resolved per **Where the spec-side write goes** in `assets/code-sync-
+   protocol.md`.
 
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
@@ -155,7 +156,7 @@ not copy.
 
 ## Output expectations
 
-- `.arc42/05-building-block-view.md` written through `orch-arc42-content`, with
+- `.arc42/05-building-block-view.md` written through the `.arc42` flow, with
   one `meta` block on the top-level chapter serving as the file-level block too.
 - Level 1 and level 2 decomposition established from what runs and what is
   depended on, not from project names.
@@ -174,7 +175,7 @@ not copy.
 
 - Do not edit source or test code. This direction only reads it.
 - Do not write `.arc42/` files directly — the write routes through
-  `orch-arc42-content`.
+  the `.arc42` flow.
 - Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
   of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
@@ -193,5 +194,5 @@ not copy.
 - Do not scaffold an empty chapter. Create the file only when it has real
   content.
 - Do not restate `.tech` package or version facts here — that is
-  `knowledge-tech-update` and `orch-tech` scope.
+  `knowledge-tech-update` and the `.tech` flow scope.
 - Do not hand-edit files under `_meta/`.

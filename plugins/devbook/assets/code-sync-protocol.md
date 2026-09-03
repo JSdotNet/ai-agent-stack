@@ -243,22 +243,23 @@ promoting to `active` forbids this more strongly. Build never sets it either —
 it reads the rung and stops or proceeds. Only the approval gate, and the person
 answering it, writes `approved`, `approved-by`, and `approved-at`.
 
-## Spec-side writes route through orchestration
+## Where the spec-side write goes
 
-A capture skill never writes a knowledge file directly. It prepares the content
-and routes the write through the folder's own orchestration skill, by name:
+A capture skill never writes a knowledge file directly. It prepares the content and hands
+the write to whatever flow covers the folder, resolved in this order:
 
-| Folder | Orchestration skill |
-|---|---|
-| `.domain` | `orch-domain` |
-| `.arc42` | `orch-arc42-content` |
-| `.design` | `orch-design` |
+1. **A repo-native `flow-*` skill** for that folder — it takes precedence over anything a
+   plugin provides.
+2. **The folder's own flow** — `flow-domain`, `flow-tech`, `flow-design`,
+   `flow-arc42-content`, `flow-ai` — present when the `devbook-flows` bridge is enabled.
+3. **`flow-fallback`**, when a flow engine is installed but no flow covers the folder.
+4. **Directly**, following that folder's `knowledge-*.instructions.md` and
+   `knowledge-chapter-metadata.instructions.md`, when no flow engine is installed at all.
 
-This is the same relationship `knowledge-tech-update` has with `orch-tech`: the
-skill produces grounded, evidence-backed input, and the orchestration owns
-template conformance, metadata blocks, and the consistency review. The
-dependency is one-way — no `orch-*` skill knows these skills exist, and none of
-them changes to accommodate this.
+Name the rung that answered, once, in the report. Whichever rung it is owns template
+conformance, metadata blocks, and the consistency review; this skill owns the evidence.
+The dependency is one-way — no flow knows these skills exist, and none of them changes to
+accommodate this. `knowledge-tech-update` has the same relationship with the `.tech` write.
 
 ## Code-side writes: the change brief
 
@@ -354,7 +355,7 @@ scope, so a run's outcome is legible without reading the prose.
 
 | Chapter | Counterpart | Resolved via | Verdict | Evidence | Action |
 |---|---|---|---|---|---|
-| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | `naming.md` alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `orch-domain` |
+| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | `naming.md` alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-domain` |
 | `.domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
 
 Column rules:

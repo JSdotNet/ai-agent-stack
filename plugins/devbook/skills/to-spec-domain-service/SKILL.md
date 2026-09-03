@@ -1,6 +1,6 @@
 ---
 name: to-spec-domain-service
-description: 'To-spec direction (capture), domain-service kind: read an implemented domain service, policy, or process manager and write or refresh its `type: domain-service` chapter in .domain/<context>/domain.md, including invocation semantics. Use when: coordinating logic exists in code with no chapter, a policy or process manager is undocumented, the chapter omits which aggregates the service coordinates, document the domain services in this context. Reads source and tests as evidence and routes the write through orch-domain. DO NOT USE FOR: turning an agreed but unbuilt domain-service chapter into work (use from-spec-domain-service), or for the aggregate, feature, or bounded-context chapters around it (use the matching to-spec-* skill).'
+description: 'To-spec direction (capture), domain-service kind: read an implemented domain service, policy, or process manager and write or refresh its `type: domain-service` chapter in .domain/<context>/domain.md, including invocation semantics. Use when: coordinating logic exists in code with no chapter, a policy or process manager is undocumented, the chapter omits which aggregates the service coordinates, document the domain services in this context. Reads source and tests as evidence and routes the write through the `.domain` flow. DO NOT USE FOR: turning an agreed but unbuilt domain-service chapter into work (use from-spec-domain-service), or for the aggregate, feature, or bounded-context chapters around it (use the matching to-spec-* skill).'
 ---
 
 # Capture a domain service from code
@@ -11,7 +11,7 @@ Behaviour that coordinates several aggregates, or that belongs to the domain but
 not to any single aggregate, is implemented — and `.domain/<context>/domain.md`
 does not record it, or records it without saying what it coordinates or how it
 is invoked. This skill reads the implementation and routes a grounded chapter
-through `orch-domain`.
+through the `.domain` flow.
 
 Process-manager and policy behaviour is captured **here**, in the relevant
 domain service chapter. This convention deliberately has no `policy.md` file and
@@ -136,10 +136,11 @@ evidence either way.
    transaction. For a process manager, say where the in-flight state lives, or
    that there is none.
 
-8. **Route the write through `orch-domain`.** Hand over the drafted content and
-   the evidence behind each claim. `orch-domain` owns template conformance, the
-   metadata blocks, and the consistency review. Do not write `.domain/` files
-   directly.
+8. **Route the write through the `.domain` flow.** Hand over the drafted content and the
+   evidence behind each claim. The `.domain` flow owns template conformance, the
+   metadata blocks, and the consistency review. Do not write `.domain/` files directly.
+   The rung that answers is resolved per **Where the spec-side write goes** in
+   `assets/code-sync-protocol.md`.
 
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
@@ -154,7 +155,7 @@ evidence either way.
 ## Output expectations
 
 - One `type: domain-service` chapter in `.domain/<context>/domain.md`, written
-  through `orch-domain`.
+  through the `.domain` flow.
 - The invocation semantics stated explicitly as one (or more) of the four,
   evidenced by registration or call sites.
 - Every coordinated aggregate and policy listed.
@@ -170,7 +171,7 @@ evidence either way.
 
 - Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
-  `orch-domain`.
+  the `.domain` flow.
 - Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
   of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An

@@ -50,7 +50,7 @@ Check `status` before doing anything else, per the protocol's status rules:
 - `active` — proceed.
 - `draft` — stop and confirm. State what the chapter claims and that it is not
   yet agreed, then ask whether to build it as written or settle the chapter
-  through `orch-design` first. `.design` has no `proposed`.
+  through the `.design` flow first. `.design` has no `proposed`.
 - `deprecated` — do not build. Report it and stop.
 
 ## Spec-to-code mapping

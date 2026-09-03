@@ -1,9 +1,9 @@
 ---
-name: orch-arc42-content
-description: 'Orchestrate direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use orch-adr), a technical debt record (use orch-tdr), a full blueprint refresh (use orch-blueprint), or a multi-chapter architecture initiative (use orch-architecture or orch-arc42).'
+name: flow-arc42-content
+description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh (use flow-blueprint), or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
 ---
 
-# Orchestrate arc42 Content Edits (`.arc42/`)
+# Flow: arc42 Content Edits (`.arc42/`)
 
 Route direct `.arc42/` chapter edits through this skill so routine content
 refreshes carry the required chapter-metadata blocks and follow the standard
@@ -11,11 +11,11 @@ chapter set, instead of being hand-edited. This skill is intentionally narrow:
 it covers editing existing chapter content and diagrams. Route to the paired
 plugin skill instead when the task is one of those specific flows:
 
-- New or updated Architecture Decision Record: `orch-adr`.
-- New or updated Technical Debt Record: `orch-tdr`.
-- Full architecture blueprint generation or refresh: `orch-blueprint`.
+- New or updated Architecture Decision Record: `flow-adr`.
+- New or updated Technical Debt Record: `flow-tdr`.
+- Full architecture blueprint generation or refresh: `flow-blueprint`.
 - Multi-section architecture initiative spanning several chapters and guideline
-  retrieval: `orch-architecture` or `orch-arc42`.
+  retrieval: `flow-architecture` or `flow-arc42`.
 
 ## Input Expectations
 
@@ -31,10 +31,15 @@ from the request and the repository contents, and continue.
 
 ## Workflow Stages
 
-> Agent transitions require explicit user approval before switching. Cross-plugin
-> agents are recommended, not required — if `architecture:architect` is not
-> installed, perform the drafting step directly using the same instruction files
-> and continue.
+> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
+> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
+> transitions continue without separate user approval until Personal Validation. A role
+> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
+>
+> Model choice per stage follows `flow-model-selection.instructions.md` (category
+> defaults, overridable via personal global model selection). A category model applies
+> only where the stage is delegated with an `Agent` call; an inline stage runs on the
+> session's model.
 
 ### Stage 1: Context Loading
 
@@ -95,10 +100,17 @@ from the request and the repository contents, and continue.
 
 **Agents:** `architecture:architect`
 
+### Final Phases (Shared)
+
+This is a documentation/config flow: after the last stage it runs the shared closing
+phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
+**Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
+plugin's flow names its own tier; the engine never names a skill above it.
+
 ## Usage Pattern
 
 ```text
-Invoke: orch-arc42-content
+Invoke: flow-arc42-content
 - Chapter: 06-runtime-view.md
 - Goal: refresh the checkout runtime sequence diagram after the refunds change
 ```
@@ -112,32 +124,28 @@ Invoke: orch-arc42-content
 - ADR/TDR content linked rather than duplicated.
 - Changed paths summarized for the user.
 
-## Canvas Interface
+## Surface Reporting
 
-This skill reports progress through the `orch-dashboard` canvas extension shipped
-by the `copilot-app` plugin. If the extension is not installed, skip the canvas
-calls below and continue through standard chat interaction. Follow the provider-safe
-dashboard contract in `plugins/copilot-app/instructions/orch-shared-phases.instructions.md`;
-prefer `extensionId: "plugin:copilot-app:orch-dashboard"` when opening or inspecting the
-canvas.
+This flow reports progress through whichever delivery surface is bound. Resolve it by
+pattern from the live tool list and follow the **Reporting Contract** in
+`surface-contract.instructions.md` (`delivery` plugin) for the
+`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
+Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
+the `.arc42/` files stay the source of truth.
 
-- Open the dashboard per the shared contract, then call `start_run` with
-  `skillId: "orch-arc42-content"` and these stages: Context Loading, Content
-  Drafting, Metadata Enforcement, Consistency Review.
-- Before each stage, call `update_stage` with `status: "in_progress"`.
-- After each stage, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary — e.g. drafted chapter
-  content, metadata fixes applied, or consistency findings.
-- Call `finish_run` with the final status and a summary once the `.arc42/`
-  chapter change is complete.
-- During **Content Drafting**, also open/update `markdown-canvas`
-  (`markdown-preview`) with the drafted chapter content, per the `copilot-app`
-  plugin's `instructions/canvas-usage.instructions.md`. Optional; skip
-  gracefully if not installed.
+- Call `start_run` with `skillId: "flow-arc42-content"` and these stages: Context
+  Loading, Content Drafting, Metadata Enforcement, Consistency Review, Personal
+  Validation, Create Pull Request, Work Item Update, Summary.
+- During **Content Drafting**, call `render_markdown` with the drafted chapter
+  content. Optional; skip when no bound surface provides
+  `delivery.surface.render@1`.
 
 ## Reference
 
-- `knowledge-arc42.instructions.md`
-- `knowledge-chapter-metadata.instructions.md`
-- `assets/routing-snippet.md` — optional repository-local context-loading and
-  routing policy; this plugin ships structure rules, not routing policy.
+- `knowledge-arc42.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+  structure and metadata rules, shipped by the `devbook` plugin.
+- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
+  `surface-contract.instructions.md` — the shared phase, model, and surface
+  contracts, shipped by the `delivery` plugin.
+- `devbook`'s `assets/routing-snippet.md` — optional repository-local
+  context-loading and routing policy; a flow ships procedure, not routing policy.

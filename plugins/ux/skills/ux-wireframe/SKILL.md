@@ -28,7 +28,7 @@ Ask for the following when not already provided:
 - **User goal** — what task is the user completing on this screen?
 - **Key elements** — what UI regions or components must appear?
 - **Design tokens / style guide** — path to project guidelines, if available
-- **Output location** — where should the SVG be saved? (default: `docs/design/wireframes/`)
+- **Output location** — where should the SVG be saved? (default: `docs/design/wireframes/`; never `.design/`, which is guideline-level only)
 
 ## Required Resources
 

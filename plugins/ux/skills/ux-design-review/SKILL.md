@@ -26,7 +26,7 @@ Ask for the following when not already provided:
 - **Design guidelines path** — path to the project style guide or design guidelines document, if available
 - **Review scope** — full review or specific concern (accessibility, visual consistency, flow clarity)?
 - **Platform** — web, mobile, or desktop?
-- **Output location** — where should the review report be saved? (default: `docs/design/reviews/`)
+- **Output location** — where should the review report be saved? (default: `docs/design/reviews/`; never `.design/`, which is guideline-level only)
 
 ## Required Resources
 

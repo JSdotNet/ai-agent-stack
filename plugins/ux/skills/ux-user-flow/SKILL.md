@@ -27,7 +27,7 @@ Ask for the following when not already provided:
 - **Starting point** — where does the flow begin?
 - **Goal** — what is the user trying to accomplish?
 - **Key decision points** — are there branching conditions or error paths to include?
-- **Output location** — where should the artifact be saved? (default: `docs/design/flows/`)
+- **Output location** — where should the artifact be saved? (default: `docs/design/flows/`; never `.design/`, which is guideline-level only)
 
 ## Required Resources
 

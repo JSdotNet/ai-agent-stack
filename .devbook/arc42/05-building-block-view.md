@@ -97,7 +97,7 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 | `csharp-coding` | services `implement`, `verify` | The `coding` agent and fifteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
 | `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
 | `domain-design` | role `domain` | The `domain-architect` agent, context mapping, model design, three diagram generators |
-| `ux-design` | role `ux` | The `ux-designer` agent, wireframes, user flows, design guidelines, UI review |
+| `ux` | role `ux` | The `ux` agent, wireframes, user flows, design guidelines, UI review |
 | `documentation` | role `docs` | The `documentation` and `profile` agents, nine artifact skills including SVG infographics |
 | `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
 

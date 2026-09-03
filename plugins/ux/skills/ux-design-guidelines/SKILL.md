@@ -27,7 +27,8 @@ Ask for the following when not already provided:
 - **Brand assets** — primary brand colours, font families, logo guidelines (if available)
 - **Platform** — web, mobile, or multi-platform?
 - **Scope** — full design system, tokens only, or specific sections to add or update?
-- **Output location** — where should the document be saved? (default: `docs/design/design-guidelines.md`)
+- **Output location** — where should the guidelines be saved? (default: the repository's
+  `.design/` knowledge folder when it has one, else `docs/design/design-guidelines.md`)
 
 ## Required Resources
 

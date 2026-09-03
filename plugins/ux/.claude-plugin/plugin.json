@@ -1,0 +1,21 @@
+{
+  "name": "ux",
+  "version": "0.3.0",
+  "description": "UX design through the `ux` agent: wireframes, user flows, design guidelines, and UI reviews, as SVG or Mermaid artifacts and structured Markdown. Fills the `ux` role a flow consults, and is usable on its own. Holds no flow control: sequencing, approval, and delegation belong to whatever consults it.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "agent",
+    "ux",
+    "design",
+    "wireframe",
+    "user-flow",
+    "design-review"
+  ],
+  "agents": [
+    "./agents/ux.agent.md"
+  ]
+}

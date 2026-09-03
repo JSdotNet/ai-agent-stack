@@ -1,18 +1,17 @@
-# ux-design
+# ux
 
 Installable GitHub Copilot CLI plugin for UX design workflows — wireframes, design guidelines, user flows, and design reviews.
 
 ## Includes
 
 - Agents:
-  - `agents/ux-designer.agent.md`
+  - `agents/ux.agent.md`
 - Skills:
   - `skills/ux-wireframe/SKILL.md`
   - `skills/ux-design-review/SKILL.md`
   - `skills/ux-design-guidelines/SKILL.md`
   - `skills/ux-user-flow/SKILL.md`
 - Instructions:
-  - `instructions/common/agent-handoff.instructions.md`
   - `instructions/ux/ux-global-instructions.md`
   - `instructions/ux/wireframe-instructions.md`
   - `instructions/ux/design-guidelines-instructions.md`
@@ -26,33 +25,33 @@ Installable GitHub Copilot CLI plugin for UX design workflows — wireframes, de
 ## Install
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/ux-design
+copilot plugin install JSdotNet/ai-agent-stack:plugins/ux
 copilot plugin list
 ```
 
 ## Reinstall After Changes
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/ux-design
+copilot plugin install JSdotNet/ai-agent-stack:plugins/ux
 ```
 
 ## Uninstall
 
 ```bash
-copilot plugin uninstall ux-design
+copilot plugin uninstall ux
 ```
 
 ## Usage
 
 ### Using the agent
 
-Activate the `ux-designer` agent for all UX design work:
+Activate the `ux` agent for all UX design work:
 
 ```
-@ux-designer Create a mid-fidelity wireframe for the checkout screen.
-@ux-designer Map the user flow for new user onboarding.
-@ux-designer Create design guidelines for our web app.
-@ux-designer Review the dashboard screen for UX issues.
+@ux Create a mid-fidelity wireframe for the checkout screen.
+@ux Map the user flow for new user onboarding.
+@ux Create design guidelines for our web app.
+@ux Review the dashboard screen for UX issues.
 ```
 
 ### Using skills directly
@@ -79,14 +78,17 @@ Invoke a specific skill to start a guided workflow:
 
 | Artifact | Default Path |
 |---|---|
+| Design guidelines | `.design/` when the repository has it, else `docs/design/` |
 | Wireframes | `docs/design/wireframes/` |
-| Design guidelines | `docs/design/design-guidelines.md` |
 | User flows | `docs/design/flows/` |
 | Design reviews | `docs/design/reviews/` |
 
+`.design/` is guideline-level only. Wireframes, flows, and reviews are artifacts produced from
+those guidelines and never live there.
+
 ## Relationship to Other Plugins
 
-- **architecture** — hand off UX decisions to the `architect` agent to record them as ADRs or incorporate UX constraints into arc42 sections.
+- **arc42** — hand off UX decisions to the `arc42` agent to record them as ADRs or incorporate UX constraints into arc42 sections.
 - **documentation** — hand off design artifacts to the `documentation` agent to wrap them in How-To guides, Explanations, or Proposals.
 
 ## Optional Enhancement — impeccable
@@ -97,4 +99,4 @@ Install the `impeccable` skill from `awesome-copilot` to get deep frontend desig
 copilot plugin install impeccable@awesome-copilot
 ```
 
-When installed, the `ux-designer` agent and the `ux-design-review` and `ux-design-guidelines` skills will automatically invoke `/impeccable` for expert UI-craft input. Without it, the plugin falls back to its built-in design principles and wireframe pattern resources. Node 18+ on your PATH is required for impeccable's optional automation scripts.
+When installed, the `ux` agent and the `ux-design-review` and `ux-design-guidelines` skills will automatically invoke `/impeccable` for expert UI-craft input. Without it, the plugin falls back to its built-in design principles and wireframe pattern resources. Node 18+ on your PATH is required for impeccable's optional automation scripts.

@@ -33,7 +33,7 @@ and never edits another component's. `components` belongs to each component's ow
       "architecture": "architecture:architect",
       "qa":           "qa:qa",
       "domain":       "domain-design:domain-architect",
-      "ux":           "ux-design:ux-designer",
+      "ux":           "ux:ux",
       "docs":         "documentation:documentation",
       "product":      null,
       "security":     null

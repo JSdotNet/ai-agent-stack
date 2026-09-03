@@ -99,15 +99,15 @@ imports nothing from the canvas, which is the direction that matters for L0.
 
 That is a knowing divergence, not an oversight. The port's brief was the schema and the two
 lifecycle skills; splitting the plugin needs `delivery` to exist first, since a bridge that
-cannot name what it bridges to is a plugin with a dangling dependency. Carrying the skills for
-one release costs a coupling nobody can currently observe — neither of the other two plugins is
-installable yet.
+cannot name what it bridges to is a plugin with a dangling dependency.
 
-Consequence: `devbook` is not yet L0-clean, so the claim that it works with only itself
-installed is untested. The skills that would break it are the five that reference a dashboard.
-Close this when `delivery` lands: the same release moves the five out, renames them `flow-*`,
-and lifts `devbook-canvas` into its own plugin — a rename it no longer needs, but an import
-boundary it still does.
+`delivery` has since landed, so the blocker is gone and this is now simply outstanding work.
+Until it is done, `devbook` is not L0-clean and the claim that it works with only itself
+installed stays untested — the five skills that would break it are the ones that reference a
+dashboard. Closing it is one release: move the five into `devbook-flows` depending on both
+`devbook` and `delivery`, rename them `flow-*`, replace their dashboard references with the
+surface contract, and lift `devbook-canvas` into its own plugin — a rename it no longer needs,
+but an import boundary it still does.
 
 ## Flat Knowledge Folders Only
 
@@ -179,3 +179,127 @@ Consequence: a question here loses who asked it and cannot be replied to in plac
 happens in the pull request, and only the unresolved residue stays on the chapter. Close this
 when `devbook` ships the fence — the migration is one pass, since every `open-<n>` becomes one
 fence with `body` set from the line and `author` unknown.
+
+## The Point Set Is Closed
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/05-building-block-view.md#stack-config"]
+```
+
+`delivery` declares eleven extension points and a repository fills them. It never adds one, and
+it never defines a stage.
+
+The line is that configuration chooses among behaviour the engine already implements. A stage
+is a prompt, not a program — "apply TDD", "escalate instead of continuing when the request
+needs a new architectural decision" — so encoding one as JSON either drops the prose, which
+makes the stage useless, or buries paragraphs in strings, which is a worse Markdown file with
+no diff readability and nowhere to say why. A per-repository stage DSL would also re-create,
+once per repository, exactly the drift that merging 27 duplicated skills into one engine just
+removed.
+
+The escape hatch is already there and is better: a repository that genuinely needs a different
+shape writes a repo-native `flow-*` skill, which takes precedence for the categories it covers
+and can still reuse `phase-*` and the service contracts.
+
+Consequence: a repository whose need is not expressible as a provider, a gate, or a policy
+switch has to write a skill, not file a feature request for a config key. If that turns out to
+be common, the answer is a new point in the closed set — added here, deliberately — never an
+open one.
+
+## One Config File, Two Kinds of Key
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/naming.md#stamp"]
+```
+
+`.github/ai-agent-stack.json` carries both the engine's four keys — `bindings`, `extensions`,
+`policy`, `gates` — and every component's `components.<name>` entry, in one committed file that
+nobody but the owner writes into.
+
+The alternative was a second file for the engine. One file wins because the two halves are read
+by the same people at the same moment: whoever decides which folders devbook adopts is
+deciding, in the same sitting, which tracker the flows post to. Two files would also give the
+repository two places to disagree with itself about what is installed.
+
+`policy` keys are closed enums or numbers with documented defaults, so an absent key means the
+engine's own choice rather than undefined, and an unknown key is rejected by name rather than
+ignored — the same discipline `claude plugin validate --strict` applies to a manifest, which is
+what makes the file safe to hand-edit. `pr.base` is the single exception to the closed-enum
+rule and is validated as a git ref instead.
+
+Consequence: two components can conflict on the file itself when both write it in one session.
+Each writes only its own key, so the conflict is textual rather than semantic, but nothing
+enforces that yet beyond the rule being written down.
+
+## Extension Points and Gates Live in the Surface Contract
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+```
+
+One instruction file — `surface-contract.instructions.md` — holds the point set, the gates
+mechanism, the stack config, the host slots, and the surface capability with its reporting
+contract. It replaces three files that came across from the two host plugins:
+`orch-dashboard-contract`, `dashboard-usage`, and `canvas-usage`.
+
+The layered design treats the surface capability and the extension points as separate concerns,
+and splitting them would honour "state each rule in exactly one file" more literally. They are
+together because they are one subject stated from one side: everything outside the engine that
+a flow talks to, and the terms on which it does. A run reads them at the same moment — once,
+before the first stage transition — so splitting would buy a second file to keep in step and no
+reduction in what any run loads.
+
+Consequence: it is the largest instruction file in the plugin and it is read early in every
+run, so a section added to it is paid for on every turn of every flow. Split it the moment a
+part of it stops being read at that same moment — the reading-order table in `flow-phases` is
+where that would be recorded.
+
+## A Tracker Is a Binding, Not a Phase Name
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#tracker"]
+```
+
+The closing phase that reports a finished run to the work item is **Work Item Update**, not
+GitHub Issue Update. The ported skills named GitHub in the phase itself, in the stage list every
+one of them passes to `start_run`, and in their prose.
+
+A phase that names one implementation cannot be bound to another. `bindings["delivery.tracker"]`
+is the whole point: GitHub issues, Jira tickets, and `.backlog/` chapters are three
+implementations of `find_item`, `read_item`, `create_item`, `comment`, `transition`, and
+`link_change`, and a repository that plans work as Markdown has been doing the third all along.
+
+Consequence: the stage name changed in 32 skills at once, so a run resumed from state written
+before this release finds a stage name that no longer matches. Nothing resumes across it,
+because nothing has run yet — which is the one moment this rename is free.
+
+## delivery Ships No Surface
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+```
+
+The MCP server that backed the run dashboard stays in `JSdotNet/Copilot` and is not ported
+here. `delivery` resolves a surface from the live tool list and no-ops when none answers.
+
+That is the design working, not a gap in it: a surface is a separate L3 plugin precisely so the
+engine neither depends on it nor knows which one answered. Porting the server into `delivery`
+would have made the engine own its own viewer, which is the coupling the contract exists to
+prevent.
+
+Consequence, and it is a real one: **installing `delivery` today gives no live run timeline at
+all.** Every run reports that no surface is bound, produces its file artifacts, and continues.
+The `flow-runner` allowlist keeps the legacy `orch-dashboard` tool patterns beside the new ones
+for one version, so an existing dashboard installation still answers. Close this by landing
+`delivery-dashboard`; the second implementation is what will prove the contract is a contract.
+

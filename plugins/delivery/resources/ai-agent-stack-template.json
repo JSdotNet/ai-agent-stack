@@ -1,0 +1,53 @@
+{
+  "$comment": "Copy the keys you need into .github/ai-agent-stack.json. Every key is optional; an absent key takes the engine's documented default. Validate with tools/stack-config/check.mjs. The contract is instructions/surface-contract.instructions.md. Never put a model or a secret in this file.",
+  "bindings": {
+    "delivery.tracker": { "provider": "github" },
+    "delivery.roles": {
+      "architecture": "architecture:architect",
+      "qa": "qa:qa",
+      "domain": "domain-design:domain-architect",
+      "product": "product-owner:product-owner",
+      "ux": null,
+      "security": null
+    }
+  },
+  "extensions": {
+    "session.start": ["devbook:devbook-check"],
+    "spec": "architecture:architect",
+    "implement": "csharp-coding:coding",
+    "verify": "csharp-coding:coding",
+    "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
+    "app.start": { "provider": "qa:qa", "host": "aspire" },
+    "qa.run": { "provider": "qa:qa" },
+    "docs.update": ["devbook:devbook-sync"],
+    "flow.end": []
+  },
+  "policy": {
+    "qa.depth": "targeted",
+    "qa.ceiling": "full",
+    "verify.retryBudget": 2,
+    "gate.reviseBudget": 3,
+    "gate.personalValidation": "required",
+    "pr.required": true,
+    "pr.base": "main",
+    "phases.documentationUpdate": true,
+    "phases.workItemUpdate": true
+  },
+  "gates": [
+    {
+      "at": "spec",
+      "when": "after",
+      "purpose": "approval",
+      "prompt": "Spec approved, or revise?",
+      "show": "artifact",
+      "unattended": "block"
+    },
+    {
+      "at": "app.start",
+      "when": "before",
+      "purpose": "resource",
+      "prompt": "Only one runtime instance runs here. OK to start?",
+      "unattended": "block"
+    }
+  ]
+}

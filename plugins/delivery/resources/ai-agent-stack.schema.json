@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/JSdotNet/ai-agent-stack/plugins/delivery/resources/ai-agent-stack.schema.json",
+  "title": "ai-agent-stack.json — delivery-owned keys",
+  "description": "The four top-level keys the delivery engine owns in .github/ai-agent-stack.json. Other components own their own entry under `components` and are not described here.",
+  "type": "object",
+  "properties": {
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery.tracker": {
+          "description": "The work-item system this repository tracks work in. null means deliberately unbound: flows run to their file artifacts and open, comment on, and transition nothing.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["provider"],
+              "properties": {
+                "provider": { "enum": ["github", "jira", "devbook"] },
+                "project": { "type": "string" },
+                "repository": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "delivery.roles": {
+          "description": "Which plugin fills each specialist role. null means deliberately unbound; an absent key means nobody has decided yet. A role is never a plugin dependency.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "architecture": { "$ref": "#/$defs/roleBinding" },
+            "qa": { "$ref": "#/$defs/roleBinding" },
+            "domain": { "$ref": "#/$defs/roleBinding" },
+            "ux": { "$ref": "#/$defs/roleBinding" },
+            "product": { "$ref": "#/$defs/roleBinding" },
+            "security": { "$ref": "#/$defs/roleBinding" },
+            "docs": { "$ref": "#/$defs/roleBinding" }
+          }
+        },
+        "delivery.slots": {
+          "description": "Host slot overrides. Normally bound by the host plugin; a repository sets one only to override that binding.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repo-instructions": { "$ref": "#/$defs/nullableString" },
+            "repo-flow-context": { "$ref": "#/$defs/nullableString" },
+            "pr-lane": { "$ref": "#/$defs/nullableString" }
+          }
+        }
+      }
+    },
+    "extensions": {
+      "description": "What runs at each flow extension point. The point set is closed and declared by the engine; a repository fills points, never invents them.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session.start": { "$ref": "#/$defs/chorePoint" },
+        "flow.start": { "$ref": "#/$defs/chorePoint" },
+        "spec": { "$ref": "#/$defs/servicePoint" },
+        "implement": { "$ref": "#/$defs/servicePoint" },
+        "verify": { "$ref": "#/$defs/servicePoint" },
+        "data.prepare": { "$ref": "#/$defs/chorePoint" },
+        "app.start": { "$ref": "#/$defs/servicePoint" },
+        "qa.run": { "$ref": "#/$defs/servicePoint" },
+        "deliver": { "$ref": "#/$defs/servicePoint" },
+        "docs.update": { "$ref": "#/$defs/chorePoint" },
+        "flow.end": { "$ref": "#/$defs/chorePoint" }
+      }
+    },
+    "policy": {
+      "description": "Closed-enum switches over behaviour the engine already implements. Every key has a documented default, so an absent key means the engine's own choice. An unknown key is rejected, not ignored.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "qa.depth": { "enum": ["full", "targeted", "startup-only", "skipped"] },
+        "qa.ceiling": { "enum": ["full", "targeted", "startup-only", "skipped"] },
+        "verify.retryBudget": { "type": "integer", "minimum": 0 },
+        "gate.reviseBudget": { "type": "integer", "minimum": 0 },
+        "gate.personalValidation": { "const": "required" },
+        "pr.required": { "type": "boolean" },
+        "pr.base": { "type": "string", "minLength": 1 },
+        "phases.documentationUpdate": { "type": "boolean" },
+        "phases.workItemUpdate": { "type": "boolean" }
+      }
+    },
+    "gates": {
+      "description": "Extra human checkpoints. Configuration may add a gate anywhere; it may never remove the mandatory Personal Validation gate or hand a gate to a plugin.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "when", "purpose"],
+        "additionalProperties": false,
+        "properties": {
+          "at": {
+            "enum": [
+              "session.start", "flow.start", "spec", "implement", "verify",
+              "data.prepare", "app.start", "qa.run", "deliver", "docs.update", "flow.end"
+            ]
+          },
+          "when": { "enum": ["before", "after"] },
+          "purpose": { "enum": ["approval", "resource", "cost", "risk", "handoff"] },
+          "prompt": { "type": "string" },
+          "show": { "enum": ["artifact", "summary", "none"], "default": "summary" },
+          "unattended": { "enum": ["block", "proceed", "skip-point"], "default": "block" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nullableString": { "type": ["string", "null"] },
+    "roleBinding": {
+      "description": "A plugin or plugin:skill id, or null for deliberately unbound.",
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9-]+(:[a-z0-9-]+)?$"
+    },
+    "providerId": {
+      "description": "plugin:skill, a bare plugin resolved through its role, or repo:<skill> for a repo-native skill.",
+      "type": "string",
+      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)$"
+    },
+    "servicePoint": {
+      "description": "Exactly one provider. A string, or an object whose `provider` names it and whose other keys are options that provider understands.",
+      "oneOf": [
+        { "$ref": "#/$defs/providerId" },
+        {
+          "type": "object",
+          "required": ["provider"],
+          "properties": { "provider": { "$ref": "#/$defs/providerId" } }
+        },
+        { "type": "null" }
+      ]
+    },
+    "chorePoint": {
+      "description": "Zero or more chores, run in declared order. `on-failure` defaults to advisory.",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/providerId" },
+          {
+            "type": "object",
+            "required": ["run"],
+            "additionalProperties": false,
+            "properties": {
+              "run": { "$ref": "#/$defs/providerId" },
+              "on-failure": { "enum": ["required", "advisory"], "default": "advisory" }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

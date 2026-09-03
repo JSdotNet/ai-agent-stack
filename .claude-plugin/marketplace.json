@@ -65,6 +65,12 @@
       "source": "./plugins/architecture",
       "description": "Architecture documentation through the `architect` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own.",
       "version": "0.4.0"
+    },
+    {
+      "name": "csharp-coding",
+      "source": "./plugins/csharp-coding",
+      "description": "C# .NET implementation through the `coding` agent: test-driven development, refactoring, code review and optimization, NuGet management, Aspire wiring, OpenTelemetry, and Azure SDK patterns. Fills the `implement` and `verify` services a flow runs its code stages through, and is usable on its own.",
+      "version": "0.1.0"
     }
   ]
 }

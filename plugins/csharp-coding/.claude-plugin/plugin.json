@@ -1,0 +1,22 @@
+{
+  "name": "csharp-coding",
+  "version": "0.1.0",
+  "description": "C# .NET implementation through the `coding` agent: test-driven development, refactoring, code review and optimization, NuGet management, Aspire wiring, OpenTelemetry, and Azure SDK patterns. Fills the `implement` and `verify` services a flow runs its code stages through, and is usable on its own.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "copilot",
+    "agent",
+    "csharp",
+    "dotnet",
+    "coding",
+    "tdd",
+    "review",
+    "optimization"
+  ],
+  "agents": [
+    "./agents/coding.agent.md"
+  ]
+}

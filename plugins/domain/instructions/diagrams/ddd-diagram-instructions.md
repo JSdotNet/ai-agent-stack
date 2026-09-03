@@ -7,7 +7,7 @@ description: Mermaid diagram conventions for DDD domain design artifacts.
 
 ## Purpose
 
-Define Mermaid diagram conventions for domain design artifacts produced by the domain architect agent.
+Define Mermaid diagram conventions for domain design artifacts produced by the `domain` agent.
 
 ## General Rules
 

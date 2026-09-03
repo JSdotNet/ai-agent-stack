@@ -79,7 +79,7 @@ needs review.
   service talks to another context (anti-corruption layer, shared kernel, published language)
 - **Set acceptance criteria** and operational expectations
 
-**Agents:** `architecture:architect`; `domain-design:domain-architect` when the service
+**Agents:** `architecture:architect`; `domain:domain` when the service
 introduces, splits, or renames a bounded context. A service that sits wholly inside an
 existing context does not need the domain pass. Full domain modeling is `flow-domain`'s
 work, not this stage's — route there instead of modeling here.

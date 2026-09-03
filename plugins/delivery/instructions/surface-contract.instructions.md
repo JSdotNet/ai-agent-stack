@@ -32,7 +32,7 @@ and never edits another component's. `components` belongs to each component's ow
     "delivery.roles": {
       "architecture": "architecture:architect",
       "qa":           "qa:qa",
-      "domain":       "domain-design:domain-architect",
+      "domain":       "domain:domain",
       "ux":           "ux:ux",
       "docs":         "documentation:documentation",
       "product":      null,

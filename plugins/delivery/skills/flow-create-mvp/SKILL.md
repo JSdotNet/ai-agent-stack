@@ -76,7 +76,7 @@ needs shaping.
 - **Identify dependencies** and risks
 - **Record the validation target** for the implementation run
 
-**Agents:** `architecture:architect`; `domain-design:domain-architect` when the MVP defines a
+**Agents:** `architecture:architect`; `domain:domain` when the MVP defines a
 new domain rather than extending a documented one. Keep it to the vocabulary and the context
 boundaries — full domain modeling belongs to `flow-domain`.
 

@@ -7,7 +7,7 @@ description: 'Run changes to .domain/ — bounded-context domain model, features
 
 Route every `.domain/` change through this skill instead of editing the folder
 directly, so bounded-context modeling stays consistent with
-`domain-design:domain-architect`'s expertise and with the knowledge-folder
+`domain:domain`'s expertise and with the knowledge-folder
 structure and metadata conventions.
 
 ## Input Expectations
@@ -51,7 +51,7 @@ the existing `.domain/` contents, and continue.
 
 ### Stage 2: Domain Modeling
 
-- Hand off to `domain-design:domain-architect` for the actual modeling
+- Hand off to `domain:domain` for the actual modeling
   decisions: aggregate boundaries, invariants, domain services, domain
   events, feature breakdown, or naming/alias resolution.
 - Record every aggregate's rules in its `### Invariants` table, one row per
@@ -66,7 +66,7 @@ the existing `.domain/` contents, and continue.
   lifecycle/process-oriented (Mermaid state/sequence diagrams) — do not mix
   the two.
 
-**Agents:** `domain-design:domain-architect`
+**Agents:** `domain:domain`
 
 ### Stage 3: Metadata & Cross-Reference Enforcement
 
@@ -96,7 +96,7 @@ the existing `.domain/` contents, and continue.
   or `depends-on` entry elsewhere that references its old
   `<path>#<heading-slug>` or `<path>`.
 
-**Agents:** `domain-design:domain-architect`
+**Agents:** `domain:domain`
 
 ### Stage 4: Consistency Review
 
@@ -113,7 +113,7 @@ the existing `.domain/` contents, and continue.
   `devbook-check`.
 - Summarize changed files/chapters for the user.
 
-**Agents:** `domain-design:domain-architect`
+**Agents:** `domain:domain`
 
 ### Final Phases (Shared)
 

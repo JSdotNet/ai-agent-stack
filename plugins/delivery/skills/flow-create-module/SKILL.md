@@ -79,7 +79,7 @@ impact is suspected.
 - **Capture acceptance criteria** and non-functional requirements
 - **Identify dependencies** and integration risks
 
-**Agents:** `architecture:architect`; `domain-design:domain-architect` when the module
+**Agents:** `architecture:architect`; `domain:domain` when the module
 introduces or crosses a bounded context. A module inside one existing context does not need
 the domain pass.
 

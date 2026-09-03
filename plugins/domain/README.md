@@ -1,11 +1,11 @@
-# domain-design
+# domain
 
 Installable GitHub Copilot CLI plugin for Domain-Driven Design workflows.
 
 ## Includes
 
 - Agents:
-  - `agents/domain-architect.agent.md`
+  - `agents/domain.agent.md`
 - Skills:
   - `skills/domain-exploration/SKILL.md`
   - `skills/context-mapping/SKILL.md`
@@ -16,8 +16,6 @@ Installable GitHub Copilot CLI plugin for Domain-Driven Design workflows.
   - `skills/domain-interaction-diagram/SKILL.md`
   - `skills/subdomain-landscape-diagram/SKILL.md`
 - Instructions:
-  - `instructions/common/agent-handoff.instructions.md`
-  - `instructions/common/agent-model-recommendation.instructions.md`
   - `instructions/ddd/ddd-global-instructions.md`
   - `instructions/ddd/strategic-design-instructions.md`
   - `instructions/ddd/tactical-design-instructions.md`
@@ -30,20 +28,20 @@ Installable GitHub Copilot CLI plugin for Domain-Driven Design workflows.
 ## Install
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/domain-design
+copilot plugin install JSdotNet/ai-agent-stack:plugins/domain
 copilot plugin list
 ```
 
 ## Reinstall After Changes
 
 ```bash
-copilot plugin install JSdotNet/Copilot:plugins/domain-design
+copilot plugin install JSdotNet/ai-agent-stack:plugins/domain
 ```
 
 ## Uninstall
 
 ```bash
-copilot plugin uninstall domain-design
+copilot plugin uninstall domain
 ```
 
 ## Relationship To Architecture Plugin
@@ -51,4 +49,4 @@ copilot plugin uninstall domain-design
 - This plugin owns domain design and modelling workflows.
 - The `architecture` plugin owns arc42, blueprints, ADRs, and TDRs.
 - Install both when you need end-to-end coverage from domain discovery through architecture documentation.
-- Handoff from `domain-architect` to `architect` is supported for recording decisions as ADRs or mapping results into arc42 sections.
+- Handoff from `domain` to `arc42` is supported for recording decisions as ADRs or mapping results into arc42 sections.

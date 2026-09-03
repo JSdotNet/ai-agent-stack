@@ -232,7 +232,7 @@ remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. See
 `knowledge-chapter-metadata.instructions.md`.
 
-### Extension: `knowledge-canvas`
+### Extension: `devbook-canvas`
 
 Renders the knowledge graph as an interactive canvas — chapters as nodes,
 `related` / `depends-on` as edges — using the same graph code the

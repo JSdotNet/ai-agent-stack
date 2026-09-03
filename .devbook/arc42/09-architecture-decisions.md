@@ -137,3 +137,33 @@ Consequence: every other repository's schema assumes this shape, so it is a hard
 revisit later. Confirm it with whoever owns the gate design before this is depended on. The
 implementation is one `APPROVED_STATUS` constant appended to each ladder, so reversing it is a
 migration and not a rewrite.
+
+## Comments Are Findings Until the Fence Lands
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows"]
+```
+
+`devbook-collaboration` records a comment as one single-line finding in the chapter's
+`ext.devbook-collaboration.open-<n>` key. No author, no replies, no quoted passage, no thread.
+
+The design it implements has a richer answer: a second fenced `annotation` block in the chapter
+body, carrying `author`, `date`, `kind`, `quote`, and a `replies` list, anchored by position and
+swept when resolved. That block is an L0 feature — it belongs to `devbook`, and `devbook` has
+not built it. Two ways to reach it were open, and both were refused. Building the fence from
+here would put a schema element into `devbook`'s files from a plugin above it, which is the one
+thing the layering forbids. Building a threaded store inside `ext` instead would be a rival
+implementation of a mechanism already designed, with a migration owed to every repository that
+adopted it.
+
+So the third option: record the smallest thing that survives a session. A finding is one key
+because the block grammar splits a bracketed list on every comma, including inside quotes — a
+sentence written as a list entry comes back in pieces — and one key per finding gives each its
+own line and its own diff hunk, which is what the fence design wanted from threads anyway.
+
+Consequence: a question here loses who asked it and cannot be replied to in place; the exchange
+happens in the pull request, and only the unresolved residue stays on the chapter. Close this
+when `devbook` ships the fence — the migration is one pass, since every `open-<n>` becomes one
+fence with `body` set from the line and `author` unknown.

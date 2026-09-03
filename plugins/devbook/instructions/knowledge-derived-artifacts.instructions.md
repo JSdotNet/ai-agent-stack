@@ -163,18 +163,23 @@ fall back to the sources rather than guess at the payload shape.
 
 ## Knowledge artifacts
 
-The knowledge-meta generator produces these, one pair per knowledge folder the
+The knowledge-meta generator produces these, one set per knowledge folder the
 repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |
 |---|---|---|---|
 | `_meta/graph.json` | repository-wide | reference graph | `.github/tools/knowledge-meta/build.mjs` |
 | `_meta/index.json` | repository-wide | ordered reading outline | same |
-| `.arc42/_meta/*.json` | `.arc42` | both of the above, scoped | same |
-| `.domain/_meta/*.json` | `.domain` | both of the above, scoped | same |
-| `.tech/_meta/*.json` | `.tech` | both of the above, scoped | same |
-| `.design/_meta/*.json` | `.design` | both of the above, scoped | same |
-| `.ai/_meta/*.json` | `.ai` | both of the above, scoped | same |
+| `_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
+| `.arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |
+| `.domain/_meta/*.json` | `.domain` | all three of the above, scoped | same |
+| `.tech/_meta/*.json` | `.tech` | all three of the above, scoped | same |
+| `.design/_meta/*.json` | `.design` | all three of the above, scoped | same |
+| `.ai/_meta/*.json` | `.ai` | all three of the above, scoped | same |
+
+`annotations.json` is derived like the other two: the notes themselves are
+authored Markdown in the chapters, so deleting this file loses nothing. Write a
+note with `annotations.mjs`, never into this index.
 
 `index.json` carries the **reading order** of an area, which a viewer uses
 instead of sorting filenames alphabetically. It is generated from the folder

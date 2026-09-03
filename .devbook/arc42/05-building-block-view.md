@@ -44,6 +44,26 @@ carries it as inert payload — templates, generators, migration scripts — and
 `<component>-sync` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
 
+## Stack Config
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+```
+
+`.github/ai-agent-stack.json` is the one file a consuming repository commits for the whole
+stack, and it holds two kinds of top-level key:
+
+| Key | Owned by | Holds |
+| --- | --- | --- |
+| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
+| `components.<name>` | that component's own sync skill | What the component materialized into the repository, and its migration ledger. |
+
+Nobody writes another owner's key. `delivery` ships the schema for its four in
+`resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
+ignoring it, so a typo is an error rather than a silently absent setting.
+
 ## Asset Kinds
 
 ```meta

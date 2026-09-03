@@ -62,7 +62,8 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 What a plugin's executable parts run on: the `devbook` generator and its test suites, its
-migration scripts, and the command hook that emits session-start context. All of it is
+migration scripts, `delivery`'s stack-config checker and the tests behind it, and the command
+hook each plugin uses to emit session-start context. All of it is
 dependency-free ESM against `node:` built-ins, so there is no package manifest anywhere in this
 repository and no version is pinned — CI runs whatever its runner ships.
 

@@ -109,10 +109,126 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
-`orch-*` is the previous spelling of `flow-*`. Nothing is *authored* under the old prefix here,
-but the first plugin to land carries five of them: `devbook` was ported whole, and its
-folder-writing skills are renamed in the release that moves them out — see
-[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
+`orch-*` is the previous spelling of `flow-*`. The `delivery` plugin holds sixteen `flow-*`,
+two `phase-*`, and seven `automation-*` skills under the settled names. Five `orch-*` remain,
+all in `devbook`, which was ported whole and renames them in the release that moves them out —
+see [the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
+No `fleet-*` skill exists here yet.
+
+A plugin takes its subsystem's stem; the things inside it are named for what they are. So
+`delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while
+`flow-feature` and `phase-build-test` are the procedures inside them — which is why a surface
+is `delivery-dashboard` and never `flow-dashboard`. `fleet` is its own stem, not a package
+inside `delivery`, because fan-out is a different subsystem.
+
+## Extension Point
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+```
+
+A named place in a flow where a repository plugs a provider in. The set is closed and declared
+by the engine: a repository picks what runs at a point, never what the points are.
+
+A point is one of two kinds, and the difference is authority, not cardinality:
+
+| Kind | Cardinality | Returns | May change the outcome |
+| --- | --- | --- | --- |
+| Service | Exactly one provider | A result the flow acts on | Yes — that is the point |
+| Chore | Zero or more, in declared order | Side effects and a report | Never |
+
+`spec`, `implement`, `verify`, `app.start`, `qa.run`, and `deliver` are services.
+`session.start`, `flow.start`, `data.prepare`, `docs.update`, and `flow.end` are chores. A
+chore may declare itself required and stop the run when it fails; it still may not rewrite a
+stage's result or stand in for a gate.
+
+## Gate
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#extension-point"]
+```
+
+A human checkpoint attached to an extension point. It presents that point's output and asks a
+question with three answers: *approve* continues, *revise* re-runs the point carrying the
+human's notes, and *decline* blocks the stage — never a silent skip.
+
+Configuration may add a gate anywhere and may never remove one or hand one to a plugin, which
+is the asymmetry that makes gates safe: adding a checkpoint can only make a flow more
+conservative. Personal Validation is the mandatory instance of the same pattern, not a second
+mechanism. An unattended run parks at a blocking gate with a handoff brief; it never waits, and
+it never self-approves.
+
+## Surface
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server"]
+```
+
+Where a run becomes visible or recorded, and nothing else. A dashboard, a canvas, and a
+headless collector are three implementations of one capability, split by operation group —
+lifecycle, render, export — because none of them implements all three.
+
+A surface is resolved by pattern from the live tool list, never declared as a dependency, and
+never aware of the engine. **No surface bound is a normal outcome:** the run produces its file
+artifacts, says so once, and continues.
+
+## Host Slot
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host"]
+```
+
+A name a shared asset reads instead of a host's own file, bound by that host's plugin:
+`repo-instructions`, `repo-flow-context`, `model-override`, `stage-delegation`, `surface`,
+`pr-lane`. A slot is bound, never branched — an asset that carries an if-this-host clause has
+not used a slot.
+
+Behavioural divergence binds as a capability rather than as a host: `stage-delegation` asks
+whether subagents exist and `pr-lane` whether the CLI is present, so neither re-diverges the
+moment one host gains a feature.
+
+## Role
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#agent"]
+```
+
+A specialist a flow consults by name — `architecture`, `qa`, `domain`, `ux`, `product`,
+`security` — bound to a plugin per repository and never a dependency, because one missing
+advisor must not demote every skill that names it. Every role reference states its fallback, so
+no flow is dead because a role is unbound. An explicit `null` means deliberately unbound, which
+is not the same as absent.
+
+Implementation is not a role. It owns a phase, carries a toolchain, and loops with
+verification, so it binds as the `implement` and `verify` services instead.
+
+## Tracker
+
+```meta
+status: active
+type: term
+date: 2026-09-03
+```
+
+The work-item system a repository tracks work in — GitHub issues, Jira tickets, or `.backlog/`
+chapters — bound per repository behind one set of operations. It is a binding and not a
+dependency for the same reason a role is: no repository should end up with Jira installed
+because it enabled the flows.
 
 ## Stamp
 
@@ -120,13 +236,14 @@ folder-writing skills are renamed in the release that moves them out — see
 status: active
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#migration"]
+related: [".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
-The file a repository commits to record what a plugin has materialized into it:
-`.github/ai-agent-stack.json`. One entry per component, holding the plugin version and contract
-version it is on, which features it adopted, every file copied in with the hash it had when it
-landed, and the migration ledger.
+A component's entry under `components` in `.github/ai-agent-stack.json`, recording what that
+plugin has materialized into the repository: the plugin version and contract version it is on,
+which features it adopted, every file copied in with the hash it had when it landed, and the
+migration ledger. The same file's other top-level keys are the engine's — see
+[Stack Config](../../arc42/05-building-block-view.md#stack-config).
 
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes

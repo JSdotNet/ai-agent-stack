@@ -29,10 +29,15 @@ stage: deliver
 related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 ```
 
-Task categories route to a `flow-<category>` skill that runs the category end to end. Still
-`trial` here: the routing is inherited from the plugins this repository serves, and the first
-of them to land — `devbook` — carries five folder-writing skills still spelled `orch-*`. They
-become `flow-*` in the release that moves them into `devbook-flows`.
+Task categories route to a `flow-<category>` skill that runs the category end to end. `delivery`
+now ships sixteen of them, so the routing this repository works under is its own rather than
+inherited.
+
+Still `trial`, for two reasons that are both about this repository rather than the design. No
+surface plugin ships yet, so a flow run here reports no timeline and produces file artifacts
+only. And `devbook` still carries five folder-writing skills spelled `orch-*`, which become
+`flow-*` in the release that moves them into `devbook-flows`. Promote this to `adopted` once a
+change in this repository has actually been carried by a flow end to end.
 
 ## Plugin Evaluation
 

@@ -1,6 +1,6 @@
 ---
 name: to-spec-design-component
-description: 'To-spec direction (capture), design-component kind: read the component library and component usage actually in the code and write or refresh the component chapters in .design/component-libraries.md, with adoption, token usage, and known gaps. Use when: a component library is in use with no chapter, the recommendation is stale, components were hand-rolled around a gap, document the component adoption we have. Reads source and manifests as evidence, defers to the authoritative design source, and routes the write through orch-design. DO NOT USE FOR: turning an agreed but unbuilt design-component chapter into work (use from-spec-design-component), or for the building-block, deployment, or feature chapters around it (use the matching to-spec-* skill).'
+description: 'To-spec direction (capture), design-component kind: read the component library and component usage actually in the code and write or refresh the component chapters in .design/component-libraries.md, with adoption, token usage, and known gaps. Use when: a component library is in use with no chapter, the recommendation is stale, components were hand-rolled around a gap, document the component adoption we have. Reads source and manifests as evidence, defers to the authoritative design source, and routes the write through the `.design` flow. DO NOT USE FOR: turning an agreed but unbuilt design-component chapter into work (use from-spec-design-component), or for the building-block, deployment, or feature chapters around it (use the matching to-spec-* skill).'
 ---
 
 # Capture component adoption from code
@@ -10,7 +10,7 @@ description: 'To-spec direction (capture), design-component kind: read the compo
 A component library is in use, and `.design/component-libraries.md` does not
 record it — or records a recommendation the product moved away from, or misses
 the components hand-rolled around a gap. This skill reads the manifests and the
-usage sites and routes a grounded chapter through `orch-design`.
+usage sites and routes a grounded chapter through the `.design` flow.
 
 **`.design` is different from the other folders in one decisive way: when the
 repository has an authoritative design source — a design-system MCP server, a
@@ -149,10 +149,11 @@ chapter as accepted practice.
    entry prescriptive and testable — token names and thresholds, not prose. Do
    not add a wireframe, a prototype, or a screenshot.
 
-8. **Route the write through `orch-design`.** Hand over the drafted content and
-   the evidence behind each claim. `orch-design` owns template conformance, the
-   metadata blocks, and the consistency review. Do not write `.design/` files
-   directly.
+8. **Route the write through the `.design` flow.** Hand over the drafted content and the
+   evidence behind each claim. The `.design` flow owns template conformance, the
+   metadata blocks, and the consistency review. Do not write `.design/` files directly.
+   The rung that answers is resolved per **Where the spec-side write goes** in
+   `assets/code-sync-protocol.md`.
 
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
@@ -167,7 +168,7 @@ chapter as accepted practice.
 ## Output expectations
 
 - Component chapters in `.design/component-libraries.md` written through
-  `orch-design`, recording observed adoption per channel.
+  the `.design` flow, recording observed adoption per channel.
 - A recommendation with rationale and, where several libraries are in play, a
   comparison table.
 - Known gaps recorded: hand-rolled components and capabilities the library
@@ -186,7 +187,7 @@ chapter as accepted practice.
 
 - Do not edit source or test code. This direction only reads it.
 - Do not write `.design/` files directly — the write routes through
-  `orch-design`.
+  the `.design` flow.
 - Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
   of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An

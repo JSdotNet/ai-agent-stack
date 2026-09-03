@@ -22,6 +22,13 @@ chapters, and the test cases that assert what it claims. A generator walks the
 corpus and writes derived indexes under `_meta/`, which CI validates on every
 pull request and a scheduled job keeps current.
 
+A chapter may also carry `annotation` fences — review notes written in the
+chapter, beside the passage they are about. Markdown stays canonical,
+annotations included, so a note inherits position as its anchor, git as its
+sync and backup, the pull request as its review, and `git blame` as its
+authorship record. A note is an open loop, not a record: resolving one means
+deleting it, and a reader loading a chapter for context skips every fence.
+
 | Folder | Holds |
 |--------|-------|
 | `.arc42/` | arc42 architecture chapters, ADRs, TDRs |
@@ -179,6 +186,7 @@ path and hands over grounded input; no flow knows these skills exist.
 | `knowledge-tech.instructions.md` | `.tech/**` | Technology graph, versions, maturity ladder |
 | `knowledge-design.instructions.md` | `.design/**` | Design guideline scope and token rules |
 | `knowledge-ai.instructions.md` | `.ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `knowledge-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `knowledge-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
 | `knowledge-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
@@ -216,6 +224,19 @@ node .github/tools/knowledge-meta/build.mjs --check    # CI: verify only
 node .github/tools/knowledge-meta/build.mjs --scope .tech
 node .github/tools/knowledge-meta/build.mjs --root ../other-repo
 ```
+
+```bash
+node .github/tools/knowledge-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#knowledge-meta
+node .github/tools/knowledge-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .github/tools/knowledge-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .github/tools/knowledge-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+```
+
+`annotations.mjs` is the only writer of an annotation fence — the CLI above and
+any in-process caller import the same four functions, so nothing else edits a
+note with a regular expression of its own. Its edits are surgical, and it never
+commits: adding a note dirties a tracked file, and that is the caller's to
+review.
 
 Output is deterministic — no timestamps — so a clean `git diff` proves the
 committed indexes are current. See `tools/knowledge-meta/README.md` for the
@@ -660,24 +681,24 @@ After running `devbook-sync`, a repository that adopted everything has:
 
 ```
 .arc42/
-├── _meta/{graph.json,index.json}
+├── _meta/{graph.json,index.json,annotations.json}
 └── <chapter>.md
 .domain/
-├── _meta/{graph.json,index.json}
+├── _meta/{graph.json,index.json,annotations.json}
 └── <bounded-context>/<chapter>.md
 .tech/
-├── _meta/{graph.json,index.json}
+├── _meta/{graph.json,index.json,annotations.json}
 ├── technology-graph.md
 └── <layer>.md
 .design/
-├── _meta/{graph.json,index.json}
+├── _meta/{graph.json,index.json,annotations.json}
 └── <guideline>.md
 .ai/
-├── _meta/{graph.json,index.json}
+├── _meta/{graph.json,index.json,annotations.json}
 ├── adoption-map.md
 ├── <nn>-<stage>.md
 └── concepts.md
-_meta/{graph.json,index.json}          # repository-wide rollup
+_meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
 build/
 └── Update-KnowledgeIndex.ps1          # on-demand index refresh
 .github/

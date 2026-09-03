@@ -61,6 +61,12 @@ compressing a lookup table costs a repair, not a sentence.
    | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `knowledge-chapter-metadata.instructions.md`. A link to another chapter belongs in `related` |
    | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.github/tools/knowledge-meta/metadata.mjs` to make it runnable |
    | Literal escape sequence in body text | A `` `r`n `` or `\n` was written instead of a line break, usually by a tool writing the file through a shell | Replace it with a real line break. Check whether a heading was glued onto the previous line and silently stopped being a heading |
+   | Annotation before the first heading | An `annotation` fence with no chapter above it | Move it under the chapter it is about. A note is addressed by chapter and ordinal, so one outside a chapter has no address |
+   | Annotation missing `author`, `date`, or `body` | The three required fields of a note | Add them. `author` is written, never inferred — a note outlives the rewrite `git blame` would have had to follow |
+   | Unknown annotation `kind` or `status` | A value outside `comment`/`question`/`suggestion`/`flag`, or outside `open`/`resolved` | Use one of the listed values; both sets are closed so a reader can sort by them |
+   | Annotation `quote` matches nothing above | The quoted phrase is not in the block the note attaches to (warning) | The passage probably moved out from under the note. Move the note to follow it, or drop the `quote`. Never resolve the attachment by the quote — position is the anchor |
+   | Annotation `ext` is not a mapping | `ext` written as a scalar or a list | Write it as `ext.<namespace>`. L0 validates the shape and never reads inside it |
+   | Unrecognized annotation field | A field outside the closed core set (warning) | Move it under `ext.<namespace>` — that is the seam an extension adds state through |
 
    Fix the **source Markdown**, never the generated JSON. Anything under `_meta/`
    is derived; see `knowledge-derived-artifacts.instructions.md`.

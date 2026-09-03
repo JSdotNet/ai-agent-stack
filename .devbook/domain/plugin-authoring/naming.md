@@ -207,10 +207,10 @@ coupling to undo, not a dependency to declare. See
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host"]
+related: [".devbook/domain/plugin-authoring/naming.md#host", ".devbook/domain/plugin-authoring/naming.md#host-profile"]
 ```
 
-A name a shared asset reads instead of a host's own file, bound by that host's plugin:
+A name a shared asset reads instead of a host's own file, bound by that host's profile:
 `repo-instructions`, `repo-flow-context`, `model-override`, `stage-delegation`, `surface`,
 `pr-lane`. A slot is bound, never branched — an asset that carries an if-this-host clause has
 not used a slot.
@@ -218,6 +218,30 @@ not used a slot.
 Behavioural divergence binds as a capability rather than as a host: `stage-delegation` asks
 whether subagents exist and `pr-lane` whether the CLI is present, so neither re-diverges the
 moment one host gains a feature.
+
+The set is closed and every slot has a documented unbound behaviour, so a profile that answers
+four of six is not broken — it has chosen the engine's default for the other two, and says so.
+
+## Host Profile
+
+```meta
+type: term
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-profile-plugins", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing"]
+```
+
+The plugin that binds one host's slots, and holds the procedures that belong to a *session*
+rather than to a run. `claude-desktop` and `copilot-app` are the two, and they are the only
+place in the stack where a host's own file, path, or capability is named.
+
+A profile is not a layer. It declares no dependency in either direction: the engine never
+learns which profile answered, and a binding nobody reads is inert, so a profile installs
+alone for its own skills. It ships only the host's manifest — a profile the other host can
+install is a profile that will mislead it.
+
+The test for whether something belongs here rather than in the engine: does it name a host's
+file, or does it cap a session? Starting the app for a developer and handing a session off do
+both. Everything else is the engine's.
 
 ## Role
 
@@ -316,7 +340,9 @@ plugins it may name. A lower layer never names a higher one.
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
 sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live
-tool list and no-ops when absent, so nothing may declare one.
+tool list and no-ops when absent, so nothing may declare one. A
+[host profile](#host-profile) is outside the order for the same reason from the other side —
+it names no plugin and no plugin names it.
 
 ## Extension Namespace
 

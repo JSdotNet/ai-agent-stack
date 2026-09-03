@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "prompt",
+        "prompt": "The copilot-app host profile binds the delivery engine's host slots for this session. A shared skill names a slot and never a host's own file; these are what the names resolve to here, and nothing else in this plugin changes how a flow runs. repo-instructions -> .github/copilot-instructions.md at the repository root, and AGENTS.md when there is none. stage-delegation -> custom agents are available, so a stage that declares a delegation hint is delegated rather than run inline. surface -> prefer delivery-canvas, resolved by pattern from the live tool list rather than by a literal tool name; it answers the render capability only, so diagrams and documents get a viewer while a run keeps no live timeline unless a lifecycle surface is also installed. No surface bound is a normal outcome that never blocks a stage. pr-lane -> the gh CLI when it is on PATH; without it, deliver produces file artifacts only. Two slots are deliberately unbound on this host and fall through to the engine's own defaults: repo-flow-context, so runtime and QA context is discovered rather than read from one declared file, and model-override, so every category takes its default model. Model choice is personal: never read a model from the repository. One skill here belongs to the host rather than to the engine — use update-open-sessions to bring every open session worktree back in step with the trunk before review or a pull request."
+      }
+    ]
+  }
+}

@@ -53,6 +53,10 @@ sweep still triages, marks the pickup pool, proposes closures, and reports what 
 dispatched — it simply spawns nothing. The degradation is visible rather than silent, but the
 parallelism is the whole point of the skill, so treat the capability as required in practice.
 
+Naming a host capability outside a host profile is a known divergence, not the intended
+end state: it belongs behind a `session-spawn` slot that `delivery` declares and each profile
+answers. Until that lands, `fleet` is effectively Claude-only and its manifest does not say so.
+
 ## Surface reporting
 
 Every skill here resolves the delivery surface by pattern from the live tool list and follows

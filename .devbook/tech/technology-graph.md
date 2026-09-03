@@ -36,7 +36,7 @@ marketplace name.
 status: trial
 type: platform
 depends-on: [".devbook/tech/technology-graph.md#claude-code-plugin-api"]
-related: [".devbook/arc42/09-architecture-decisions.md#fleet-names-the-cli-directly"]
+related: [".devbook/arc42/09-architecture-decisions.md#fleet-names-the-cli-directly-for-now"]
 ```
 
 The only platform here an asset *invokes* rather than is read by. `fleet` shells out to it to
@@ -47,7 +47,7 @@ whole fan-out subsystem rests on.
 `trial`: nothing in this repository has run a sweep yet, and a background session pruned from
 the list seconds after it exits is the kind of behaviour only a real run tests. Its absence
 costs the dispatch, not the triage — see
-[the decision](../arc42/09-architecture-decisions.md#fleet-names-the-cli-directly).
+[the decision](../arc42/09-architecture-decisions.md#fleet-names-the-cli-directly-for-now).
 
 ## Copilot Plugin API
 

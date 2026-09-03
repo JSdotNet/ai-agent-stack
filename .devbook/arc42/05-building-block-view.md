@@ -35,6 +35,10 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `extensions/<name>/` | Copilot CLI |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
+A plugin normally ships both manifests. A [host profile](#host-profile-plugins) is the one
+exception and ships only its own host's, so the other host cannot install a plugin whose every
+statement is about somewhere else.
+
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
 is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
@@ -89,6 +93,37 @@ Each declares exactly the tool names its groups name and nothing more, which is 
 substitutable for another. `delivery-dashboard` is also the only one that captures anything by
 itself: its hooks fold tool calls, sub-agent use, and token usage into the run, so the numbers
 in its panels are measured rather than self-reported.
+
+## Host Profile Plugins
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing"]
+```
+
+Two plugins are where a host's own files and capabilities are named, and nowhere else in the
+stack is. Each binds the engine's closed slot set for one host and ships the procedures that
+cap a *session* rather than a run.
+
+| Slot | `claude-desktop` | `copilot-app` |
+| --- | --- | --- |
+| `repo-instructions` | `CLAUDE.md`, else `AGENTS.md` | `.github/copilot-instructions.md`, else `AGENTS.md` |
+| `repo-flow-context` | `.claude/flow-context.md` | unbound — discovery |
+| `model-override` | `CLAUDE_FLOW_MODEL_SELECTION_PATH`, else the per-OS default | unbound — category defaults |
+| `stage-delegation` | sub-agents | custom agents |
+| `surface` | `delivery-dashboard` | `delivery-canvas` — render only |
+| `pr-lane` | the `gh` CLI when present | the `gh` CLI when present |
+| Host-owned skills | `start`, `session-handoff` | `update-open-sessions` |
+
+The bindings ship as the text a `SessionStart` hook injects, which is the one channel that
+reaches every session on both hosts. That makes the hook sidecar the authored copy and every
+table restating it — including this one — a reader's summary.
+
+Two rows are capability answers rather than host facts: `stage-delegation` asks whether
+sub-agents exist and `pr-lane` whether the CLI is on `PATH`, so neither re-diverges the moment
+one host gains what the other has. Two are deliberately unbound on Copilot, which is a
+documented engine default and not a gap. And `delivery-canvas` answers the render group only,
+so a Copilot run gets viewers and no live timeline until a lifecycle surface joins it.
 
 ## Fan-Out State
 

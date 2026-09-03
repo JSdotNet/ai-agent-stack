@@ -357,6 +357,42 @@ work item and the approval decision land in fields nothing looks at. Nothing mig
 because the new plugins keep their own state directories and no run has been written to one
 yet. That is the one moment these renames are free.
 
+## A Host Profile Depends on Nothing
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-profile-plugins"]
+```
+
+`claude-desktop` and `copilot-app` keep their names, lose the 27 skills that are now
+`delivery`'s, and declare no dependency on it. What is left is the slot bindings and the
+procedures that cap a session: `start` and `session-handoff` on one side,
+`update-open-sessions` on the other.
+
+Declaring `delivery` would have been defensible — the slots are its concept, and a profile is
+an extension of it in every sense but the mechanical one. It was refused because a hard
+dependency exists to make an *illegal* combination unreachable, and a profile installed alone
+is not illegal: it still starts your app and still hands your session off, and a binding
+nobody reads is inert rather than broken. The rule that a surface is never a dependency in
+either direction is the same rule read from the other end — the engine must not learn which
+profile answered, and the profile must not need the engine to be worth installing.
+
+Three consequences, and the second is the sharp one:
+
+- **One manifest each.** A profile ships only its own host's, so `copilot-app` has no
+  `.claude-plugin/plugin.json` and no marketplace entry — Claude cannot offer a plugin whose
+  every statement is about somewhere else. `claude-desktop` still authors a root `hooks.json`,
+  because Copilot reads that file and would otherwise fall back to `hooks/hooks.json` and run
+  commands written against `${CLAUDE_PLUGIN_ROOT}`.
+- **The two profiles are asymmetric, deliberately.** Copilot leaves `repo-flow-context` and
+  `model-override` unbound. Both have documented unbound behaviour, and inventing a
+  `~/.copilot/...` path nobody has verified would be a worse answer than the default. Bind
+  them the moment the paths are known — the closed slot set is what makes the gap visible
+  rather than silent.
+- **Nothing enforces that the two stay in step.** A slot added to the engine's set has to be
+  answered twice, and a profile that misses it falls through to the default without saying so.
+  The engine's slot table is the checklist; there is no check.
+
 ## delivery-canvas Ships Both Transports
 
 ```meta
@@ -408,25 +444,41 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 `delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
 `fleet-*` skill, only the subsystem.
 
-## fleet Names the CLI Directly
+## fleet Names the CLI Directly, For Now
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
+status: divergence
+related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
 ```
 
 `fleet-issue-sweep` launches each worker with `claude --bg`, tracks them with `claude agents`,
-and runs its resolution stages through the `Workflow` tool. Every other plugin here reaches a
-host capability through a bound [host slot](../domain/plugin-authoring/naming.md#host-slot) or
-resolves it from the live tool list; this one names the CLI.
+and runs its resolution stages through the `Workflow` tool.
 
-The slot set is closed and none of the six covers spawning an unattended session, so the
-alternative was to invent a seventh — a `session-spawn` slot with exactly one binding, written
-against a mechanism only one host has, before a second host exists to disagree with it. A slot
-generalises a divergence that has already happened twice. This one has happened once.
+**This breaks a rule this repository has already written down.** A
+[host profile](../domain/plugin-authoring/naming.md#host-profile) is "the only place in the
+stack where a host's own file, path, or capability is named", and `fleet` is not one. It is
+recorded here as a divergence rather than resolved, because resolving it costs more than this
+change is allowed to spend.
+
+The fix is known and is not a redesign: a seventh slot — call it `session-spawn` — declared by
+`delivery`, bound by `claude-desktop` to the CLI, and left deliberately unbound by
+`copilot-app`. The precedent is already in the repository: Copilot leaves `repo-flow-context`
+and `model-override` unbound with documented unbound behaviour, and "a sweep that dispatches
+nothing but still triages and reports" is exactly that shape of default. What stops it landing
+here is scope: the slot set is closed and **declared by the engine**, so a seventh means a
+contract change in `delivery` plus an answer in both profiles — three plugins, a version bump,
+and a migration ledger, none of which belongs in a change whose subject is extracting a plugin.
+
+The earlier reasoning for naming the CLI outright — that a slot generalises a divergence that
+has happened twice, and this one had happened once — no longer holds. It was written before
+`copilot-app` existed. A second host is now here to disagree, which is precisely the condition
+that turns the slot from premature into overdue.
 
 Consequence: **on a host that cannot launch a background session, a sweep dispatches nothing.**
 It still triages, marks the pickup pool, proposes closures, and reports what it would have
 dispatched, so the degradation is visible rather than silent — but the parallelism is the whole
-point of the skill, and it is gone. Revisit this as a slot the first time a second host gains
-the capability, not before.
+point of the skill, and it is gone. Until the slot lands, `fleet` is a Claude-only plugin whose
+manifest does not say so.
+
+Close this by adding the slot, not by widening the rule.

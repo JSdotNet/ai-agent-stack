@@ -170,6 +170,12 @@ carry no `kind`, because those folders deliberately define no value set.
 Nodes carrying `outOfScope: true` sit outside the current scope and are
 included only because an in-scope node references them.
 
+A node carrying `openNotes` has that many unresolved annotation fences — on a
+`chapter` node its own, on a `file` node the total across the document. The
+field is omitted rather than emitted as `0`, so a viewer badges only what has
+something waiting. It is counted from the same read that builds the graph, so
+the canvas and the committed `graph.json` never disagree about it.
+
 ### File node labels
 
 Heading text carries the name only, so all six files of a `.domain` bounded

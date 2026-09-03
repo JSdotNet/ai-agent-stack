@@ -41,6 +41,11 @@ A flow run here can also report into a surface: `delivery-dashboard`, `delivery-
 `delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
 recorded file depending on which is enabled.
 
+The slots those flows read are answered too. `claude-desktop` binds them for the host this
+repository is authored in — `CLAUDE.md` as `repo-instructions`, sub-agents as
+`stage-delegation`, `delivery-dashboard` as `surface` — so a flow run here resolves them from
+an installed profile rather than falling through to defaults.
+
 Still `trial`, and now for the only reason left: nothing has used it. Both things that were
 missing have landed, so what is untested is the routing itself. Promote this to `adopted` once
 a change in this repository has actually been carried by a flow end to end, reporting into one

@@ -357,6 +357,42 @@ work item and the approval decision land in fields nothing looks at. Nothing mig
 because the new plugins keep their own state directories and no run has been written to one
 yet. That is the one moment these renames are free.
 
+## A Host Profile Depends on Nothing
+
+```meta
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-profile-plugins"]
+```
+
+`claude-desktop` and `copilot-app` keep their names, lose the 27 skills that are now
+`delivery`'s, and declare no dependency on it. What is left is the slot bindings and the
+procedures that cap a session: `start` and `session-handoff` on one side,
+`update-open-sessions` on the other.
+
+Declaring `delivery` would have been defensible — the slots are its concept, and a profile is
+an extension of it in every sense but the mechanical one. It was refused because a hard
+dependency exists to make an *illegal* combination unreachable, and a profile installed alone
+is not illegal: it still starts your app and still hands your session off, and a binding
+nobody reads is inert rather than broken. The rule that a surface is never a dependency in
+either direction is the same rule read from the other end — the engine must not learn which
+profile answered, and the profile must not need the engine to be worth installing.
+
+Three consequences, and the second is the sharp one:
+
+- **One manifest each.** A profile ships only its own host's, so `copilot-app` has no
+  `.claude-plugin/plugin.json` and no marketplace entry — Claude cannot offer a plugin whose
+  every statement is about somewhere else. `claude-desktop` still authors a root `hooks.json`,
+  because Copilot reads that file and would otherwise fall back to `hooks/hooks.json` and run
+  commands written against `${CLAUDE_PLUGIN_ROOT}`.
+- **The two profiles are asymmetric, deliberately.** Copilot leaves `repo-flow-context` and
+  `model-override` unbound. Both have documented unbound behaviour, and inventing a
+  `~/.copilot/...` path nobody has verified would be a worse answer than the default. Bind
+  them the moment the paths are known — the closed slot set is what makes the gap visible
+  rather than silent.
+- **Nothing enforces that the two stay in step.** A slot added to the engine's set has to be
+  answered twice, and a profile that misses it falls through to the default without saying so.
+  The engine's slot table is the checklist; there is no check.
+
 ## delivery-canvas Ships Both Transports
 
 ```meta

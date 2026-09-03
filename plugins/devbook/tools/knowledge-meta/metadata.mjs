@@ -943,6 +943,11 @@ export function validateDocument(relPath, markdown) {
     for (const issue of escapeSequenceIssues(markdown)) {
         issues.push({ severity: issue.severity, message: `${relPath} ${issue.message}` });
     }
+    // Annotations are authored Markdown in the same file, so they are linted
+    // here rather than by a second pass a repository could forget to run.
+    for (const issue of annotationIssues(markdown)) {
+        issues.push({ severity: issue.severity, message: `${relPath} ${issue.message}` });
+    }
     const allowedStatus = STATUS_BY_FOLDER[kind];
     const resting = restingStatusFor(kind);
     const optionalFields = new Set([
@@ -1120,5 +1125,432 @@ export function validateDocument(relPath, markdown) {
         }
     }
 
+    return issues;
+}
+
+// ---------------------------------------------------------------------------
+// Annotations — the second fenced block
+// ---------------------------------------------------------------------------
+//
+// A note on a chapter belongs in the chapter. An annotation is the same device
+// as `meta`, one word different, placed in the body where the note belongs:
+//
+//     ```annotation
+//     author: jobsc
+//     date: 2026-09-02
+//     body: Is this still true now the outline rollup is a view?
+//     ```
+//
+// Writing a note as authored Markdown rather than as a row in the derived
+// database is what makes `devbook.db` wholly derived again — position is the
+// anchor, git is the sync and the backup, the pull request is the review, and
+// `git blame` is the authorship record. None of that has to be built.
+//
+// The block grammar is richer than `meta`'s deliberately flat one: a thread
+// needs a `body` that runs to a paragraph, an ordered `replies` list, and a
+// nested `ext` mapping. So annotations get their own small indentation-aware
+// reader below rather than bending `parseMetaBody`, which stays flat because
+// every field it carries is a scalar or a bracket list.
+
+const ANNOTATION_KINDS = ["comment", "question", "suggestion", "flag"];
+
+// Two states, and `resolved` is short-lived. An annotation is an open loop, not
+// a record: `resolved` lives for the rest of the branch so a reviewer sees the
+// exchange in the pull request that raised it, and the sweep deletes it before
+// the merge. git holds the history — the commit that removed the note, and the
+// change that answered it.
+const ANNOTATION_STATUSES = ["open", "resolved"];
+
+const ANNOTATION_DEFAULTS = { kind: "comment", status: "open" };
+
+// Closed core set. Anything a workflow above L0 wants to remember goes under
+// `ext:` in its own namespace, which is validated as a mapping and never read
+// into — the same seam the chapter's `meta` block already offers.
+const ANNOTATION_FIELDS = [
+    "kind",
+    "status",
+    "author",
+    "date",
+    "quote",
+    "body",
+    "replies",
+    "ext",
+];
+
+// `author` is written, never inferred: a note survives rewrites that `git blame`
+// does not follow, so the name has to travel inside the fence.
+const ANNOTATION_REQUIRED_FIELDS = ["author", "date", "body"];
+
+const ANNOTATION_REPLY_FIELDS = ["author", "date", "body"];
+
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function lineIndent(line) {
+    return /^ */.exec(line)[0].length;
+}
+
+function isBlankLine(line) {
+    return line.trim() === "";
+}
+
+/**
+ * Parse the body of a fenced ```annotation block into a nested object.
+ *
+ * Supports exactly the shapes the annotation schema uses: `key: scalar`, a `|`
+ * block scalar, a list of mappings (`replies`), and a nested mapping (`ext`).
+ * Anything else in the file is not part of this schema and is reported by
+ * `annotationIssues` rather than silently absorbed.
+ */
+export function parseAnnotationBody(body) {
+    const lines = body.split("\n");
+    let first = 0;
+    while (first < lines.length && isBlankLine(lines[first])) first++;
+    if (first >= lines.length) return {};
+    const [value] = parseAnnotationMapping(lines, first, lines.length, lineIndent(lines[first]));
+    return value;
+}
+
+function parseAnnotationMapping(lines, start, end, indent) {
+    const map = {};
+    let i = start;
+    while (i < end) {
+        if (isBlankLine(lines[i])) {
+            i++;
+            continue;
+        }
+        if (lineIndent(lines[i]) < indent) break;
+        const match = /^([^:\s][^:]*):[ \t]?(.*)$/.exec(lines[i].slice(indent));
+        if (!match) {
+            i++;
+            continue;
+        }
+        const key = match[1].trim();
+        const rest = match[2].trim();
+        if (rest === "|" || rest === "|-" || rest === ">") {
+            const [text, next] = parseAnnotationBlockScalar(lines, i + 1, end, indent);
+            map[key] = text;
+            i = next;
+        } else if (rest === "") {
+            const [child, next] = parseAnnotationNested(lines, i + 1, end, indent);
+            map[key] = child;
+            i = next;
+        } else {
+            map[key] = stripQuotes(rest);
+            i++;
+        }
+    }
+    return [map, i];
+}
+
+/** A `|` body: every more-indented line, dedented by the block's own indent. */
+function parseAnnotationBlockScalar(lines, start, end, parentIndent) {
+    const collected = [];
+    let i = start;
+    let blockIndent = null;
+    while (i < end) {
+        if (isBlankLine(lines[i])) {
+            collected.push("");
+            i++;
+            continue;
+        }
+        const indent = lineIndent(lines[i]);
+        if (indent <= parentIndent) break;
+        if (blockIndent === null) blockIndent = indent;
+        collected.push(lines[i].slice(Math.min(blockIndent, indent)));
+        i++;
+    }
+    while (collected.length && collected[collected.length - 1] === "") collected.pop();
+    return [collected.join("\n"), i];
+}
+
+/** What follows a bare `key:` — a list of items, or a nested mapping. */
+function parseAnnotationNested(lines, start, end, parentIndent) {
+    let i = start;
+    while (i < end && isBlankLine(lines[i])) i++;
+    if (i >= end || lineIndent(lines[i]) <= parentIndent) return [null, i];
+    const childIndent = lineIndent(lines[i]);
+    if (/^-\s/.test(lines[i].slice(childIndent))) {
+        return parseAnnotationList(lines, i, end, childIndent);
+    }
+    return parseAnnotationMapping(lines, i, end, childIndent);
+}
+
+function parseAnnotationList(lines, start, end, indent) {
+    const items = [];
+    let i = start;
+    while (i < end) {
+        if (isBlankLine(lines[i])) {
+            i++;
+            continue;
+        }
+        if (lineIndent(lines[i]) < indent) break;
+        if (!/^-\s/.test(lines[i].slice(indent))) break;
+
+        // Gather this item's lines, then re-indent its first line so the whole
+        // item parses as an ordinary mapping two columns in from the dash.
+        const itemLines = [`${" ".repeat(indent + 2)}${lines[i].slice(indent + 2)}`];
+        let j = i + 1;
+        while (j < end) {
+            if (isBlankLine(lines[j])) {
+                itemLines.push(lines[j]);
+                j++;
+                continue;
+            }
+            const childIndent = lineIndent(lines[j]);
+            if (childIndent <= indent) break;
+            itemLines.push(lines[j]);
+            j++;
+        }
+        while (itemLines.length && isBlankLine(itemLines[itemLines.length - 1])) itemLines.pop();
+
+        const head = itemLines[0].slice(indent + 2);
+        if (/^[^:\s][^:]*:/.test(head)) {
+            const [value] = parseAnnotationMapping(itemLines, 0, itemLines.length, indent + 2);
+            items.push(value);
+        } else {
+            items.push(stripQuotes(head.trim()));
+        }
+        i = j;
+    }
+    return [items, i];
+}
+
+const FENCE_PATTERN = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
+
+/**
+ * Every annotation fence in a document, in reading order.
+ *
+ * Position is the anchor. A fence annotates the block immediately above it;
+ * placed directly after a heading's `meta` block it annotates the chapter as a
+ * whole. That single rule replaces content hashes, relocation prompts, and a
+ * repository-wide orphaned view — the note is not pointing at the passage from
+ * a distance, it is in the passage's neighbourhood, so every ordinary text
+ * operation carries it along.
+ *
+ * Consecutive fences all attach to the last block that is not itself an
+ * annotation, so a passage can carry several threads without the second one
+ * claiming to annotate the first.
+ *
+ * Each entry carries `{ line, endLine, raw, fields, chapter, ordinal, target,
+ * attachedTo }`. `ordinal` is 1-based within the chapter: a tool addresses a
+ * thread as `<path>#<slug>` plus its ordinal, because devbook assigns no ids.
+ */
+export function parseAnnotations(markdown) {
+    const lines = markdown.split(/\r?\n/);
+    const annotations = [];
+    const ordinals = new Map();
+    let chapter = null;
+    let attachedTo = null;
+    let i = 0;
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        const heading = /^(#{1,6})\s+(.*)$/.exec(line);
+        if (heading) {
+            const text = heading[2].trim();
+            chapter = { level: heading[1].length, text, slug: slugify(text), line: i + 1 };
+            attachedTo = { kind: "heading", text, line: i + 1 };
+            i++;
+            continue;
+        }
+
+        const fence = FENCE_PATTERN.exec(line);
+        if (fence) {
+            const marker = fence[2];
+            const info = fence[3];
+            const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
+            const bodyLines = [];
+            let k = i + 1;
+            while (k < lines.length && !closer.test(lines[k])) {
+                bodyLines.push(lines[k]);
+                k++;
+            }
+            const raw = bodyLines.join("\n");
+            const label = info.toLowerCase();
+
+            if (label === "annotation") {
+                const key = chapter ? chapter.slug : "";
+                const ordinal = (ordinals.get(key) ?? 0) + 1;
+                ordinals.set(key, ordinal);
+                annotations.push({
+                    line: i + 1,
+                    endLine: k + 1,
+                    raw,
+                    fields: parseAnnotationBody(raw),
+                    chapter,
+                    ordinal,
+                    target: attachedTo && attachedTo.kind === "text" ? "block" : "chapter",
+                    attachedTo,
+                });
+                // `attachedTo` is deliberately not reassigned: the next fence
+                // attaches to the same passage, not to this note.
+            } else if (label === "meta") {
+                attachedTo = { kind: "meta", text: raw, line: i + 1 };
+            } else {
+                attachedTo = { kind: "text", text: raw, line: i + 1 };
+            }
+            i = k + 1;
+            continue;
+        }
+
+        if (isBlankLine(line)) {
+            i++;
+            continue;
+        }
+
+        // An ordinary run of prose, table, or list lines is one block.
+        const blockStart = i;
+        const blockLines = [];
+        while (
+            i < lines.length &&
+            !isBlankLine(lines[i]) &&
+            !FENCE_PATTERN.test(lines[i]) &&
+            !/^#{1,6}\s+/.test(lines[i])
+        ) {
+            blockLines.push(lines[i]);
+            i++;
+        }
+        attachedTo = { kind: "text", text: blockLines.join("\n"), line: blockStart + 1 };
+    }
+
+    return annotations;
+}
+
+/** A note's fields with the two defaulted ones filled in. */
+export function resolveAnnotation(fields) {
+    const stated = Object.fromEntries(
+        Object.entries(fields ?? {}).filter(([, value]) => value != null)
+    );
+    return { ...ANNOTATION_DEFAULTS, ...stated };
+}
+
+export const annotationKinds = () => [...ANNOTATION_KINDS];
+export const annotationStatuses = () => [...ANNOTATION_STATUSES];
+
+/**
+ * Lint every annotation fence in a document against the schema and the
+ * placement rule.
+ *
+ * `quote` is checked against the block the note attaches to, and a quote that
+ * matches nothing above is a *warning*, never an error: it is the tell that a
+ * passage moved out from under its note, and a person decides what to do about
+ * it. It is never used to resolve the attachment — position already did that.
+ */
+export function annotationIssues(markdown) {
+    const issues = [];
+    for (const note of parseAnnotations(markdown)) {
+        const where = `annotation at line ${note.line}`;
+        const fields = note.fields ?? {};
+
+        if (!note.chapter) {
+            issues.push({
+                severity: "error",
+                message: `${where} sits before the first heading — an annotation lives inside an addressable chapter.`,
+            });
+        }
+
+        for (const field of ANNOTATION_REQUIRED_FIELDS) {
+            const value = fields[field];
+            if (value == null || (typeof value === "string" && value.trim() === "")) {
+                issues.push({
+                    severity: "error",
+                    message: `${where} is missing required \`${field}\`.`,
+                });
+            }
+        }
+
+        if (fields.kind != null && !ANNOTATION_KINDS.includes(fields.kind)) {
+            issues.push({
+                severity: "error",
+                message: `${where} has kind "${fields.kind}", expected one of: ${ANNOTATION_KINDS.join(", ")}.`,
+            });
+        }
+
+        if (fields.status != null && !ANNOTATION_STATUSES.includes(fields.status)) {
+            issues.push({
+                severity: "error",
+                message: `${where} has status "${fields.status}", expected one of: ${ANNOTATION_STATUSES.join(", ")}.`,
+            });
+        }
+
+        if (typeof fields.date === "string" && !ISO_DATE_PATTERN.test(fields.date)) {
+            issues.push({
+                severity: "error",
+                message: `${where} has date "${fields.date}" — an annotation date is \`YYYY-MM-DD\`.`,
+            });
+        }
+
+        if (fields.quote != null) {
+            const passage = note.attachedTo?.kind === "text" ? note.attachedTo.text : "";
+            const normalize = (text) => String(text).replace(/\s+/g, " ").trim();
+            if (!normalize(passage).includes(normalize(fields.quote))) {
+                issues.push({
+                    severity: "warning",
+                    message: `${where} quotes "${fields.quote}", which matches nothing in the block above it — the passage may have moved out from under the note.`,
+                });
+            }
+        }
+
+        if (fields.replies != null) {
+            if (!Array.isArray(fields.replies)) {
+                issues.push({
+                    severity: "error",
+                    message: `${where} has \`replies\` that is not a list — one fence is one thread, and its replies are an ordered list of {author, date, body}.`,
+                });
+            } else {
+                fields.replies.forEach((reply, index) => {
+                    if (typeof reply !== "object" || reply === null || Array.isArray(reply)) {
+                        issues.push({
+                            severity: "error",
+                            message: `${where} reply ${index + 1} is not a mapping of {author, date, body}.`,
+                        });
+                        return;
+                    }
+                    for (const field of ANNOTATION_REPLY_FIELDS) {
+                        if (reply[field] == null || String(reply[field]).trim() === "") {
+                            issues.push({
+                                severity: "error",
+                                message: `${where} reply ${index + 1} is missing required \`${field}\`.`,
+                            });
+                        }
+                    }
+                    for (const key of Object.keys(reply)) {
+                        if (!ANNOTATION_REPLY_FIELDS.includes(key)) {
+                            issues.push({
+                                severity: "warning",
+                                message: `${where} reply ${index + 1} has unrecognized field \`${key}\`.`,
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        // Opaque by contract: L0 checks that `ext` is a mapping of namespaces
+        // and then never looks inside one. That is the whole reason an
+        // extension can add a field and ship on its own release cadence.
+        if (fields.ext != null) {
+            const isMapping =
+                typeof fields.ext === "object" &&
+                !Array.isArray(fields.ext) &&
+                fields.ext !== null;
+            if (!isMapping) {
+                issues.push({
+                    severity: "error",
+                    message: `${where} has \`ext\` that is not a mapping of namespaces.`,
+                });
+            }
+        }
+
+        for (const key of Object.keys(fields)) {
+            if (!ANNOTATION_FIELDS.includes(key)) {
+                issues.push({
+                    severity: "warning",
+                    message: `${where} has unrecognized field \`${key}\` — the core set is closed, and extension state goes under \`ext.<namespace>\`.`,
+                });
+            }
+        }
+    }
     return issues;
 }

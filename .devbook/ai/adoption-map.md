@@ -33,11 +33,13 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 now ships sixteen of them, so the routing this repository works under is its own rather than
 inherited.
 
-Still `trial`, for two reasons that are both about this repository rather than the design. No
-surface plugin ships yet, so a flow run here reports no timeline and produces file artifacts
-only. And `devbook` still carries five folder-writing skills spelled `orch-*`, which become
-`flow-*` in the release that moves them into `devbook-flows`. Promote this to `adopted` once a
-change in this repository has actually been carried by a flow end to end.
+Still `trial`, and for one reason now rather than two. A flow run here can report into a
+surface: `delivery-dashboard`, `delivery-canvas`, and `delivery-collector` ship beside the
+engine, so a run gets a live timeline, a viewer, or a recorded file depending on which is
+enabled. What remains is that `devbook` still carries five folder-writing skills spelled
+`orch-*`, which become `flow-*` in the release that moves them into `devbook-flows`. Promote
+this to `adopted` once a change in this repository has actually been carried by a flow end to
+end, reporting into one of those surfaces.
 
 ## Plugin Evaluation
 

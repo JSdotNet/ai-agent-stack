@@ -175,7 +175,7 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/ar
 
 Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, and a headless
 collector are three implementations of one capability, split by operation group — lifecycle,
-render, export — because none of them implements all three.
+render, export — because they do not implement the same half of it.
 
 A surface is never a dependency in either direction: the thing being rendered knows no surface
 exists, and the surface knows nothing about what produced its input. Whichever tool opens it
@@ -183,12 +183,16 @@ resolves it at runtime, by pattern, from the live tool list. **Absence is a norm
 the run produces its file artifacts, says so once, and continues — it costs a view, never a
 capability.
 
-One surface ships here today: `devbook-canvas`, which renders the reference graph
-`_meta/graph.json` produces. It is packaged inside the `devbook` plugin folder rather than
-alone, and imports that plugin's generator modules by relative path — no host resolves the two
-together, so this is a source coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows). The
-`delivery` engine's own surface, `delivery-dashboard`, is not in this marketplace yet.
+Four ship here. `delivery-dashboard` answers all three groups, `delivery-canvas` render only,
+and `delivery-collector` lifecycle and export only. Each declares exactly the tool names its
+groups name and nothing more, which is what makes one substitutable for another. See
+[the decision](../../arc42/09-architecture-decisions.md#three-surfaces-one-contract).
+
+The fourth, `devbook-canvas`, renders the reference graph `_meta/graph.json` produces. It is
+packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
+generator modules by relative path — no host resolves the two together, so this is a source
+coupling to undo, not a dependency to declare. See
+[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
 
 ## Host Slot
 

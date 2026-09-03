@@ -34,6 +34,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `skills/`, `instructions/`, `resources/` | both |
 | `hooks/hooks.json` | Claude Code |
 | `hooks.json` | Copilot |
+| `mcp/<server>/` | Whatever the Claude manifest's `mcpServers` points at |
 | `extensions/<name>/` | Copilot CLI |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
@@ -44,11 +45,19 @@ naming the [layer](../domain/plugin-authoring/naming.md#layer) beneath. Copilot'
 no verified equivalent, so a dependency is declared once, on the Claude side, and stated in
 prose in the plugin's README for the other host.
 
-An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface):
-a `copilot-extension.json` naming it, and the module that registers its canvases. No manifest
-lists it and nothing in the plugin loads it — whichever tool opens it resolves it at runtime,
-and a host without an extension mechanism never sees it. `devbook` ships one, `devbook-canvas`,
-which renders the reference graph the generator writes to `_meta/graph.json`.
+An `mcp/<server>/` folder holds a server's own tree — its entry point, its modules, its pages,
+and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
+else in the plugin has to know the folder exists. `delivery-dashboard`, `delivery-canvas`, and
+`delivery-collector` each ship exactly one.
+
+An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface)
+the other way: a `copilot-extension.json` naming it, and the module that registers its
+canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
+resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
+ships one, `devbook-canvas`, which renders the reference graph the generator writes to
+`_meta/graph.json`. `delivery-canvas` ships one too, reading its pages out of its own
+`mcp/delivery-canvas/views/` so the canvas and the MCP server cannot disagree about what a
+diagram looks like.
 
 What coupling exists runs one way and only in source: `devbook-canvas` imports the generator's
 graph, outline, and metadata modules from `tools/knowledge-meta/` by relative path, which is why
@@ -60,6 +69,29 @@ The last row is the part no host reads. A plugin that installs something into a 
 carries it as inert payload — templates, generators, migration scripts — and its own
 `<component>-sync` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
+
+## Surface Plugins
+
+```meta
+status: active
+date: 2026-09-03
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+```
+
+Three plugins are where a run becomes visible or recorded. None declares a dependency, none
+names the engine, and each is resolved at run time from the live tool list — so which one
+answers is decided by what is installed, and none answering is a normal outcome.
+
+| Plugin | lifecycle | render | export | Ships |
+| --- | --- | --- | --- | --- |
+| `delivery-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
+| `delivery-canvas` | no | yes | no | The same two viewers, as an MCP server and as Copilot canvases from one copy of each page |
+| `delivery-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
+
+Each declares exactly the tool names its groups name and nothing more, which is what makes one
+substitutable for another. `delivery-dashboard` is also the only one that captures anything by
+itself: its hooks fold tool calls, sub-agent use, and token usage into the run, so the numbers
+in its panels are measured rather than self-reported.
 
 ## Stack Config
 

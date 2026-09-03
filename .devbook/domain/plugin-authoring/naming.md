@@ -1,7 +1,6 @@
 # Naming
 
 ```meta
-status: active
 ```
 
 The terms this repository trades in. Where a host uses a different word for the same thing, the
@@ -10,7 +9,6 @@ host's word is recorded as an alias rather than adopted.
 ## Marketplace
 
 ```meta
-status: active
 type: term
 related: [".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
 ```
@@ -23,7 +21,6 @@ user has added may not share a name. This repository's marketplace is `jsdotnet`
 ## Plugin
 
 ```meta
-status: active
 type: term
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#layer"]
 ```
@@ -37,7 +34,6 @@ live tool list, and a missing one must cost capability, not loading.
 ## Host
 
 ```meta
-status: active
 type: term
 aliases: [client]
 ```
@@ -48,7 +44,6 @@ and ignore the keys they do not recognise, which is why an asset has one authore
 ## Agent
 
 ```meta
-status: active
 type: term
 ```
 
@@ -59,7 +54,6 @@ the two hosts reads a `handoffs` key.
 ## Skill
 
 ```meta
-status: active
 type: term
 ```
 
@@ -69,7 +63,6 @@ trigger — the sentence a host matches a request against — not a summary of i
 ## Instruction File
 
 ```meta
-status: active
 type: term
 ```
 
@@ -80,7 +73,6 @@ referenced explicitly by the asset that depends on it.
 ## Hook
 
 ```meta
-status: active
 type: term
 ```
 
@@ -90,7 +82,6 @@ hook may be, so the event, not the intent, decides the form it takes.
 ## Flow Skill
 
 ```meta
-status: active
 type: term
 date: 2026-09-02
 related: [".devbook/ai/adoption-map.md#flow-skills"]
@@ -109,11 +100,9 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
-`orch-*` is the previous spelling of `flow-*`. The `delivery` plugin holds sixteen `flow-*`,
-two `phase-*`, and seven `automation-*` skills under the settled names. Five `orch-*` remain,
-all in `devbook`, which was ported whole and renames them in the release that moves them out —
-see [the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
-No `fleet-*` skill exists here yet.
+`orch-*` was the previous spelling of `flow-*` and no asset here uses it any more: `delivery`
+holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, and `devbook-flows`
+holds five `flow-*`, one per adopted knowledge folder. No `fleet-*` skill exists here yet.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while
@@ -124,7 +113,6 @@ inside `delivery`, because fan-out is a different subsystem.
 ## Extension Point
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
@@ -148,7 +136,6 @@ stage's result or stand in for a gate.
 ## Gate
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#extension-point"]
@@ -167,7 +154,6 @@ it never self-approves.
 ## Surface
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server"]
@@ -192,12 +178,11 @@ The fourth, `devbook-canvas`, renders the reference graph `_meta/graph.json` pro
 packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
 generator modules by relative path — no host resolves the two together, so this is a source
 coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/09-architecture-decisions.md#devbook-ships-the-folder-flows).
+[the decision](../../arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
 ## Host Slot
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#host"]
@@ -215,7 +200,6 @@ moment one host gains a feature.
 ## Role
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#agent"]
@@ -233,7 +217,6 @@ verification, so it binds as the `implement` and `verify` services instead.
 ## Tracker
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 ```
@@ -246,7 +229,6 @@ because it enabled the flows.
 ## Stamp
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config"]
@@ -266,7 +248,6 @@ that reads it, and neither touches another component's.
 ## Migration
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#stamp"]
@@ -285,7 +266,6 @@ repository.
 ## MCP Server
 
 ```meta
-status: active
 type: term
 related: [".devbook/tech/technology-graph.md#model-context-protocol"]
 ```
@@ -297,7 +277,6 @@ plugin-namespaced and the bare spelling.
 ## Layer
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
@@ -320,7 +299,6 @@ tool list and no-ops when absent, so nothing may declare one.
 ## Extension Namespace
 
 ```meta
-status: active
 type: term
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]

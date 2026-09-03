@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "prompt",
+        "prompt": "Each devbook knowledge folder has its own flow: .domain -> flow-domain; .tech -> flow-tech; .design -> flow-design; .arc42 chapter content -> flow-arc42-content; .ai -> flow-ai. Route an edit to one of those folders through its flow rather than editing the folder directly or falling back to flow-fallback, which no longer covers a folder that has its own flow. Decision records, technical debt records, blueprints, and multi-chapter architecture initiatives stay with flow-adr, flow-tdr, flow-blueprint, flow-architecture, and flow-arc42 even when they land in .arc42. When the task is bidirectional - writing a chapter from something already implemented, or turning an agreed chapter into implementation work - start from devbook's to-spec-<kind> or from-spec-<kind> skill; to-spec-<kind> routes its write through the folder flow above, from-spec-<kind> emits a change brief and stops. These five are documentation/config flows: they run Personal Validation, Create Pull Request, Work Item Update, and Summary as their closing phases, and they report through whichever delivery surface is bound, resolved by pattern from the live tool list, with no surface bound a normal outcome that never blocks a stage. A repository may provide its own repo-native flow-* skills, and those take precedence for the folders they cover."
+      }
+    ]
+  }
+}

@@ -42,6 +42,9 @@ need is not.
 - **`flow-fallback`** has no fixed tier: it runs the code-modifying tier when its Routing
   Check determines a code-modifying change kind, and the documentation/config tier
   otherwise. It reports the resolved tier's phase names in `start_run`.
+- **A `flow-*` skill shipped by a bridge plugin declares its own tier** in its own body,
+  and reads this file and its companions by name. The engine never enumerates a skill in a
+  layer above it, so a tier is not something it can assign from here.
 - **Session Handoff belongs to no tier.** It is an interrupt, not a step: it fires whenever
   the run-level context gauge reaches the handoff threshold, at whatever stage the run has
   reached, and the run resumes on that same stage in a fresh session. See **Session

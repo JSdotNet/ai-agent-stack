@@ -33,7 +33,13 @@
     {
       "name": "devbook",
       "source": "./plugins/devbook",
-      "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships per-folder orchestration skills, bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling.",
+      "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, and an opaque ext namespace a layered plugin keeps its own state in, compiled into derived _meta indexes and a reference-graph canvas. Ships bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling. Usable on its own: the per-folder flow-* procedures live in the devbook-flows bridge.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "devbook-flows",
+      "source": "./plugins/devbook-flows",
+      "description": "The bridge between devbook and the delivery engine: five folder-specific flow-* procedures — flow-domain, flow-tech, flow-design, flow-arc42-content, flow-ai — that route a knowledge-folder change through the engine's staged phases, the Personal Validation gate, and whichever delivery surface is bound. Depends on both sides and is meaningless without either: devbook alone edits its folders directly under its instruction files, devbook plus delivery routes them through flow-fallback, and this plugin is what makes each folder its own flow.",
       "version": "1.0.0"
     },
     {

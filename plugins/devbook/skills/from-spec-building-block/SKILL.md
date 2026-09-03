@@ -45,7 +45,7 @@ Check `status` before doing anything else, per the protocol's status rules:
 - `active` — proceed.
 - `draft` or `proposed` — stop and confirm. State what the chapter claims and
   that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through `orch-arc42-content` first.
+  the chapter through the `.arc42` flow first.
 - `deprecated` — do not build. Report it and stop.
 
 ## Spec-to-code mapping
@@ -167,6 +167,6 @@ Where the change is a move or a split rather than an addition, the category is
 - Do not choose the project layout, the folder names, or the refactoring order.
   The brief states the target structure and the checks.
 - Do not brief deployment topology. No skill in this plugin covers it; route it
-  through `orch-arc42-content`.
+  through the `.arc42` flow.
 - Do not brief package or version changes. Those go through the repository
   package-update workflow and are recorded in `.tech`.

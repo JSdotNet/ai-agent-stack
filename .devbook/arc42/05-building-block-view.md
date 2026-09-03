@@ -1,14 +1,12 @@
 # Building Block View
 
 ```meta
-status: active
 number: 5
 ```
 
 ## Marketplace Root
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
 ```
 
@@ -20,7 +18,6 @@ concerned.
 ## Plugin Folder
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
@@ -41,9 +38,10 @@ One folder per plugin, holding two manifests and the assets themselves:
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
 is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
-naming the [layer](../domain/plugin-authoring/naming.md#layer) beneath. Copilot's manifest has
-no verified equivalent, so a dependency is declared once, on the Claude side, and stated in
-prose in the plugin's README for the other host.
+naming each [layer](../domain/plugin-authoring/naming.md#layer) beneath, one entry for an
+extension and two for a bridge. Copilot's manifest has no verified equivalent, so a dependency
+is declared once, on the Claude side, and stated in prose in the plugin's README for the other
+host.
 
 An `mcp/<server>/` folder holds a server's own tree — its entry point, its modules, its pages,
 and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
@@ -63,7 +61,7 @@ What coupling exists runs one way and only in source: `devbook-canvas` imports t
 graph, outline, and metadata modules from `tools/knowledge-meta/` by relative path, which is why
 the live view and the committed index cannot disagree. Nothing in `devbook` imports the canvas.
 Those three imports are also the reason lifting the folder into its own plugin is more than a
-move — see [the decision](09-architecture-decisions.md#devbook-ships-the-folder-flows).
+move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
@@ -73,7 +71,6 @@ carries it as inert payload — templates, generators, migration scripts — and
 ## Surface Plugins
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
 ```
@@ -96,7 +93,6 @@ in its panels are measured rather than self-reported.
 ## Stack Config
 
 ```meta
-status: active
 date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
 ```
@@ -116,7 +112,6 @@ ignoring it, so a typo is an error rather than a silently absent setting.
 ## Asset Kinds
 
 ```meta
-status: active
 related: [".devbook/domain/plugin-authoring/naming.md#agent"]
 ```
 

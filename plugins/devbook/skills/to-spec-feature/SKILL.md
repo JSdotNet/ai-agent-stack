@@ -1,6 +1,6 @@
 ---
 name: to-spec-feature
-description: 'To-spec direction (capture), feature kind: read a shipped capability and write or refresh its `type: feature` or `type: sub-feature` chapter in .domain/<context>/features.md, including feature-flag and depends-on. Use when: a capability ships but features.md does not list it, the feature breakdown is stale, a feature flag has no chapter, document the features we built, capture the feature by using it. Runs the application and captures screenshots of the flow as primary evidence, alongside source and tests, then routes the write through orch-domain. DO NOT USE FOR: turning an agreed but unbuilt feature chapter into work (use from-spec-feature), or for the aggregate, domain-service, or bounded-context chapters around it (use the matching to-spec-* skill).'
+description: 'To-spec direction (capture), feature kind: read a shipped capability and write or refresh its `type: feature` or `type: sub-feature` chapter in .domain/<context>/features.md, including feature-flag and depends-on. Use when: a capability ships but features.md does not list it, the feature breakdown is stale, a feature flag has no chapter, document the features we built, capture the feature by using it. Runs the application and captures screenshots of the flow as primary evidence, alongside source and tests, then routes the write through the `.domain` flow. DO NOT USE FOR: turning an agreed but unbuilt feature chapter into work (use from-spec-feature), or for the aggregate, domain-service, or bounded-context chapters around it (use the matching to-spec-* skill).'
 ---
 
 # Capture a feature from code
@@ -12,7 +12,7 @@ A capability is shipped and reachable by users, and
 sub-feature breakdown the product has since outgrown. This skill runs the
 application and uses the feature, reads the implementation and its tests, states
 the capability in business language, and routes a grounded chapter through
-`orch-domain`.
+the `.domain` flow.
 
 `features.md` is written in **business and ubiquitous language**, not
 implementation terms. The evidence comes from code, but the chapter does not
@@ -206,10 +206,11 @@ up to that point and record the rest from code and tests.
    features. Omit either field when it has no value — an empty list is not
    written out.
 
-9. **Route the write through `orch-domain`.** Hand over the drafted content and
-   the evidence behind each claim. `orch-domain` owns template conformance, the
-   metadata blocks, and the consistency review. Do not write `.domain/` files
-   directly.
+9. **Route the write through the `.domain` flow.** Hand over the drafted content and the
+   evidence behind each claim. The `.domain` flow owns template conformance, the
+   metadata blocks, and the consistency review. Do not write `.domain/` files directly.
+   The rung that answers is resolved per **Where the spec-side write goes** in
+   `assets/code-sync-protocol.md`.
 
 10. **Regenerate and validate.** After the write lands, per the protocol:
 
@@ -225,7 +226,7 @@ up to that point and record the rest from code and tests.
 
 - One `type: feature` chapter — with `type: sub-feature` `###` chapters where
   the capability has distinguishable parts — in `.domain/<context>/features.md`,
-  written through `orch-domain`.
+  written through the `.domain` flow.
 - The capability stated in business language, with no implementation nouns.
 - The application actually run and the feature actually used, with the observed
   flow recorded: the steps, their order, where it ends, and the wording the
@@ -251,7 +252,7 @@ up to that point and record the rest from code and tests.
 
 - Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
-  `orch-domain`.
+  the `.domain` flow.
 - Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
   of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An

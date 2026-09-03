@@ -1,9 +1,9 @@
 ---
-name: orch-domain
-description: 'Orchestrate changes to .domain/ — bounded-context domain model, features, model and flow diagrams, dependencies, and naming. Use for any create/update/refresh of .domain/context-map.md or a bounded context''s domain.md, features.md, model.md, flow.md, dependencies.md, or naming.md, including small refinements and new context scaffolding. Enforces knowledge-domain.instructions.md structure and templates and knowledge-chapter-metadata.instructions.md metadata blocks before saving.'
+name: flow-domain
+description: 'Run changes to .domain/ — bounded-context domain model, features, model and flow diagrams, dependencies, and naming. Use for any create/update/refresh of .domain/context-map.md or a bounded context''s domain.md, features.md, model.md, flow.md, dependencies.md, or naming.md, including small refinements and new context scaffolding. Enforces knowledge-domain.instructions.md structure and templates and knowledge-chapter-metadata.instructions.md metadata blocks before saving.'
 ---
 
-# Orchestrate Domain Knowledge (`.domain/`)
+# Flow: Domain Knowledge (`.domain/`)
 
 Route every `.domain/` change through this skill instead of editing the folder
 directly, so bounded-context modeling stays consistent with
@@ -25,10 +25,15 @@ the existing `.domain/` contents, and continue.
 
 ## Workflow Stages
 
-> Agent transitions require explicit user approval before switching. Cross-plugin
-> agents are recommended, not required — if `domain-design:domain-architect` is
-> not installed, perform the modeling step directly using the same instruction
-> files and continue.
+> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
+> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
+> transitions continue without separate user approval until Personal Validation. A role
+> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
+>
+> Model choice per stage follows `flow-model-selection.instructions.md` (category
+> defaults, overridable via personal global model selection). A category model applies
+> only where the stage is delegated with an `Agent` call; an inline stage runs on the
+> session's model.
 
 ### Stage 1: Context Loading
 
@@ -110,10 +115,17 @@ the existing `.domain/` contents, and continue.
 
 **Agents:** `domain-design:domain-architect`
 
+### Final Phases (Shared)
+
+This is a documentation/config flow: after the last stage it runs the shared closing
+phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
+**Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
+plugin's flow names its own tier; the engine never names a skill above it.
+
 ## Usage Pattern
 
 ```text
-Invoke: orch-domain
+Invoke: flow-domain
 - Context: order-management
 - Files: domain.md, features.md
 - Goal: add a new "Split Order" aggregate behavior and its feature entry
@@ -129,32 +141,28 @@ Invoke: orch-domain
   the changed and any dependent files.
 - Changed paths summarized for the user.
 
-## Canvas Interface
+## Surface Reporting
 
-This skill reports progress through the `orch-dashboard` canvas extension shipped
-by the `copilot-app` plugin. If the extension is not installed, skip the canvas
-calls below and continue through standard chat interaction. Follow the provider-safe
-dashboard contract in `plugins/copilot-app/instructions/orch-shared-phases.instructions.md`;
-prefer `extensionId: "plugin:copilot-app:orch-dashboard"` when opening or inspecting the
-canvas.
+This flow reports progress through whichever delivery surface is bound. Resolve it by
+pattern from the live tool list and follow the **Reporting Contract** in
+`surface-contract.instructions.md` (`delivery` plugin) for the
+`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
+Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
+the `.domain/` files stay the source of truth.
 
-- Open the dashboard per the shared contract, then call `start_run` with
-  `skillId: "orch-domain"` and these stages: Context Loading, Domain
-  Modeling, Metadata & Cross-Reference Enforcement, Consistency Review.
-- Before each stage, call `update_stage` with `status: "in_progress"`.
-- After each stage, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary — e.g. modeling
-  decisions, metadata fixes applied, or consistency findings.
-- Call `finish_run` with the final status and a summary once the `.domain/`
-  change is complete.
-- During **Domain Modeling**, also open/update `mermaid-diagram` with any
-  updated aggregate/context-map/event-flow diagram, per the `copilot-app`
-  plugin's `instructions/canvas-usage.instructions.md`. Optional; skip
-  gracefully if not installed.
+- Call `start_run` with `skillId: "flow-domain"` and these stages: Context Loading,
+  Domain Modeling, Metadata & Cross-Reference Enforcement, Consistency Review, Personal
+  Validation, Create Pull Request, Work Item Update, Summary.
+- During **Domain Modeling**, call `render_diagram` with any updated aggregate,
+  context-map, or domain-event-flow diagram. Optional; skip when no bound surface
+  provides `delivery.surface.render@1`.
 
 ## Reference
 
-- `knowledge-domain.instructions.md`
-- `knowledge-chapter-metadata.instructions.md`
-- `assets/routing-snippet.md` — optional repository-local context-loading and
-  routing policy; this plugin ships structure rules, not routing policy.
+- `knowledge-domain.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+  structure and metadata rules, shipped by the `devbook` plugin.
+- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
+  `surface-contract.instructions.md` — the shared phase, model, and surface
+  contracts, shipped by the `delivery` plugin.
+- `devbook`'s `assets/routing-snippet.md` — optional repository-local
+  context-loading and routing policy; a flow ships procedure, not routing policy.

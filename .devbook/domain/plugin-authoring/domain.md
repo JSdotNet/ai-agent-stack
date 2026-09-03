@@ -1,7 +1,6 @@
 # Plugin Authoring
 
 ```meta
-status: active
 index: root
 related: [".devbook/domain/context-map.md#plugin-authoring"]
 ```

@@ -1,6 +1,6 @@
 ---
 name: to-spec-aggregate
-description: 'To-spec direction (capture), aggregate kind: read an implemented aggregate whole — the root plus every entity, value object, and enum it owns, the shared value-object and enum groupings, and the domain events it raises — and write or refresh those chapters in .domain/<context>/domain.md. Use when: an aggregate exists in code but has no chapter, the chapter is a stub, sub-chapters are missing or stale, an event is raised with no chapter, the code has grown invariants the chapter never recorded, document the aggregate we built. Reads source and unit tests as evidence and routes the write through orch-domain. DO NOT USE FOR: turning an agreed but unbuilt aggregate chapter into work (use from-spec-aggregate), or for the domain-service, feature, or bounded-context chapters around it (use the matching to-spec-* skill).'
+description: 'To-spec direction (capture), aggregate kind: read an implemented aggregate whole — the root plus every entity, value object, and enum it owns, the shared value-object and enum groupings, and the domain events it raises — and write or refresh those chapters in .domain/<context>/domain.md. Use when: an aggregate exists in code but has no chapter, the chapter is a stub, sub-chapters are missing or stale, an event is raised with no chapter, the code has grown invariants the chapter never recorded, document the aggregate we built. Reads source and unit tests as evidence and routes the write through the `.domain` flow. DO NOT USE FOR: turning an agreed but unbuilt aggregate chapter into work (use from-spec-aggregate), or for the domain-service, feature, or bounded-context chapters around it (use the matching to-spec-* skill).'
 ---
 
 # Capture an aggregate from code
@@ -11,7 +11,7 @@ An aggregate is implemented and running, and `.domain/<context>/domain.md` does
 not say so — the chapter is missing, or it is a one-line stub, or it describes a
 consistency boundary and a set of invariants the code has since moved past. This
 skill reads the implementation, establishes what the aggregate actually
-guarantees, and routes grounded chapters through `orch-domain`.
+guarantees, and routes grounded chapters through the `.domain` flow.
 
 **The aggregate is captured whole, in one pass.** An aggregate is a consistency
 boundary, and its parts are only meaningful in terms of that boundary: an entity
@@ -56,7 +56,7 @@ If the repository has no `.domain/` folder, stop and run `devbook-sync`
 first for the `.domain` adoption path. If the bounded context folder does not
 exist, stop — this skill does not create one. A context's `domain.md`,
 `features.md`, `model.md`, `dependencies.md`, and `naming.md` are created
-together by `orch-domain`, and creating only `domain.md` leaves the folder
+together by the `.domain` flow, and creating only `domain.md` leaves the folder
 malformed.
 
 ## Spec-to-code mapping
@@ -263,13 +263,14 @@ service raises it.
 9. **Propose the naming entries.** Where a counterpart resolved through the
    observed-convention rung and the type has no `naming.md` term, propose one
    with the discovered code name as an `alias` and a `related` reference back to
-   its chapter. Propose it; the write still routes through `orch-domain`.
+   its chapter. Propose it; the write still routes through the `.domain` flow.
 
-10. **Route the write through `orch-domain`.** Hand over every drafted chapter,
-    the placement decisions and the evidence for them, the proposed `naming.md`
-    entries, and the evidence behind each claim. `orch-domain` owns template
-    conformance, the metadata blocks, and the consistency review. Do not write
-    `domain.md` directly.
+10. **Route the write through the `.domain` flow.** Hand over every drafted chapter, the
+    placement decisions and the evidence for them, the proposed `naming.md` entries, and
+    the evidence behind each claim. The `.domain` flow owns template conformance, the
+    metadata blocks, and the consistency review. Do not write `domain.md` directly. The
+    rung that answers is resolved per **Where the spec-side write goes** in
+    `assets/code-sync-protocol.md`.
 
 11. **Regenerate and validate.** After the write lands, per the protocol:
 
@@ -288,7 +289,7 @@ service raises it.
   owned `type: entity` / `type: value-object` / `type: enum` `###` sub-chapter,
   the shared groupings where a type has two or more users, and a
   `type: domain-event` chapter per event the root raises — all written through
-  `orch-domain`.
+  the `.domain` flow.
 - Every claim traceable to code that executes or a test that passes.
 - The consistency boundary stated explicitly, including which other aggregates
   are referenced by id only.
@@ -316,7 +317,7 @@ service raises it.
 
 - Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
-  `orch-domain`.
+  the `.domain` flow.
 - Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
   of behaviour.
 - Do not skip the unit tests. They are where the invariants and the ubiquitous

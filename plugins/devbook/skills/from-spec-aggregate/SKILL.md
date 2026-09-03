@@ -50,7 +50,7 @@ rules, and the change-brief contract — none of which are repeated here.
 - **Repository root.** Default to the current working directory.
 
 If the chapter does not exist, there is nothing to build — the request is either
-a modelling task for `orch-domain` or, if the aggregate is already in code, a
+a modelling task for the `.domain` flow or, if the aggregate is already in code, a
 `to-spec-aggregate` pass.
 
 ## Chapter status gate
@@ -62,7 +62,7 @@ Check `status` before doing anything else, per the protocol's status rules:
 - `active` — proceed.
 - `draft` or `proposed` — stop and confirm. State what the chapter claims and
   that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through `orch-domain` first.
+  the chapter through the `.domain` flow first.
 - `deprecated` — do not build. Report it and stop.
 
 Apply the gate **per chapter**, not once for the aggregate. A root at `active`
@@ -275,7 +275,7 @@ unsettled sub-chapter, and leave it out of the invariants list.
 - Do not brief a per-aggregate copy of a type the chapter placed in the shared
   grouping.
 - Do not add enum members the chapter does not name because the code seems to
-  need them. That is a modelling question for `orch-domain`.
+  need them. That is a modelling question for the `.domain` flow.
 - Do not brief publication of an event without saying which consumers must
   subscribe.
 - Do not treat adding a field to an already-published event as an addition. It

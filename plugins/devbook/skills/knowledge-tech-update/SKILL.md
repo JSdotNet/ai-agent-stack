@@ -1,6 +1,6 @@
 ---
 name: knowledge-tech-update
-description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for orch-tech and keeps package-derived facts reproducible through scripts.'
+description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through scripts.'
 ---
 
 # Knowledge technology graph update
@@ -11,9 +11,9 @@ Update a repository's `.tech/` technology graph from repeatable evidence. Packag
 facts come from deterministic scripts; non-package technologies come from targeted repository
 analysis and architecture grounding.
 
-Use this skill before or during `orch-tech` when the requested change is broad enough that
-the graph should be refreshed from the repository instead of editing one known technology
-chapter by hand.
+Use this skill before or during the `.tech` flow when the requested change is broad enough
+that the graph should be refreshed from the repository instead of editing one known
+technology chapter by hand.
 
 ## Inputs
 
@@ -80,9 +80,9 @@ chapters and generated `_meta/*.json` indexes.
    runtimes, tools, services, platforms, protocols, and formats use the closest specific type
    from `knowledge-tech.instructions.md`.
 
-5. **Author through `orch-tech`.** Route the actual `.tech/` edits through `orch-tech` unless
-   this skill is already being run as part of that orchestration. Update chapter metadata,
-   the Mermaid graph, and the layer table together.
+5. **Author through the `.tech` flow.** Route the actual `.tech/` edits through the
+   `.tech` flow unless this skill is already being run as part of that orchestration.
+   Update chapter metadata, the Mermaid graph, and the layer table together.
 
 6. **Regenerate and validate indexes.** Run:
 
@@ -97,7 +97,7 @@ chapters and generated `_meta/*.json` indexes.
 ## Output expectations
 
 - Deterministic .NET and frontend inventory JSON reviewed for package-derived facts.
-- `.tech/` chapters updated through `orch-tech` with valid metadata blocks.
+- `.tech/` chapters updated through the `.tech` flow with valid metadata blocks.
 - Non-package technologies analyzed from repository evidence and recorded only when grounded.
 - Mermaid graph edges match `depends-on` metadata.
 - `.tech/_meta/graph.json` and `.tech/_meta/index.json` regenerated when the repository ships

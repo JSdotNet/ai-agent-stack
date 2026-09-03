@@ -33,13 +33,18 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 now ships sixteen of them, so the routing this repository works under is its own rather than
 inherited.
 
-Still `trial`, and for one reason now rather than two. A flow run here can report into a
-surface: `delivery-dashboard`, `delivery-canvas`, and `delivery-collector` ship beside the
-engine, so a run gets a live timeline, a viewer, or a recorded file depending on which is
-enabled. What remains is that `devbook` still carries five folder-writing skills spelled
-`orch-*`, which become `flow-*` in the release that moves them into `devbook-flows`. Promote
-this to `adopted` once a change in this repository has actually been carried by a flow end to
-end, reporting into one of those surfaces.
+Every knowledge folder now has its own flow too: `devbook-flows` ships five, so an edit to
+`.devbook/` routes through `flow-domain`, `flow-tech`, `flow-design`, `flow-arc42-content`, or
+`flow-ai` rather than through `flow-fallback`.
+
+A flow run here can also report into a surface: `delivery-dashboard`, `delivery-canvas`, and
+`delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
+recorded file depending on which is enabled.
+
+Still `trial`, and now for the only reason left: nothing has used it. Both things that were
+missing have landed, so what is untested is the routing itself. Promote this to `adopted` once
+a change in this repository has actually been carried by a flow end to end, reporting into one
+of those surfaces.
 
 ## Plugin Evaluation
 

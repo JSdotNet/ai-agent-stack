@@ -1,6 +1,6 @@
 ---
 name: flow-arc42-content
-description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh (use flow-blueprint), or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
+description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
 ---
 
 # Flow: arc42 Content Edits (`.arc42/`)
@@ -13,7 +13,7 @@ plugin skill instead when the task is one of those specific flows:
 
 - New or updated Architecture Decision Record: `flow-adr`.
 - New or updated Technical Debt Record: `flow-tdr`.
-- Full architecture blueprint generation or refresh: `flow-blueprint`.
+- Full architecture blueprint generation or refresh: `flow-architecture`.
 - Multi-section architecture initiative spanning several chapters and guideline
   retrieval: `flow-architecture` or `flow-arc42`.
 
@@ -57,14 +57,14 @@ from the request and the repository contents, and continue.
 
 ### Stage 2: Content Drafting
 
-- Hand off to `architecture:architect` for the actual content: prefer Mermaid
+- Hand off to `arc42:arc42` for the actual content: prefer Mermaid
   diagrams over long prose for building-block and runtime views.
 - Keep the glossary aligned with the ubiquitous language defined per bounded
   context in `.domain/`, when the repository has adopted that folder.
 - Only create a chapter file when it has real content — do not scaffold
   empty placeholders.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Metadata Enforcement
 
@@ -86,7 +86,7 @@ from the request and the repository contents, and continue.
   entry elsewhere that references its old `<path>#<heading-slug>` or
   `<path>`.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 4: Consistency Review
 
@@ -98,7 +98,7 @@ from the request and the repository contents, and continue.
   `devbook-check`.
 - Summarize changed chapters/sections for the user.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Final Phases (Shared)
 

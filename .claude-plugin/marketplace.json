@@ -9,7 +9,7 @@
     {
       "name": "delivery",
       "source": "./plugins/delivery",
-      "description": "The host-neutral delivery engine: 16 flow-* staged procedures, 2 shared phases, 7 scheduled automations, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
+      "description": "The host-neutral delivery engine: 15 flow-* staged procedures, 2 shared phases, 7 scheduled automations, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
       "version": "1.0.0"
     },
     {
@@ -59,6 +59,48 @@
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Requests a review and hands a chapter to a named reviewer, reviews one against its folder's rules and its evidence, records findings and the reviewer's verdict, runs the approval decision that writes devbook's own approved rung, and sweeps the adopted folders for what is awaiting whom and which approvals have gone stale. An L1 extension: every fact it remembers lives under ext.devbook-collaboration in the chapter's own meta block, so it adds no field to devbook's schema and needs no devbook release of its own.",
       "version": "0.1.0"
+    },
+    {
+      "name": "arc42",
+      "source": "./plugins/arc42",
+      "description": "Architecture documentation through the `arc42` agent: arc42 sections, blueprints, architectural decision records, technical debt records, and C4, sequence, state-machine, and deployment diagrams. Fills the `architecture` role and the `spec` service a flow consults, and is usable on its own. Holds no flow control: sequencing, approval, and delegation belong to whatever consults it.",
+      "version": "0.4.0"
+    },
+    {
+      "name": "csharp-coding",
+      "source": "./plugins/csharp-coding",
+      "description": "C# .NET implementation through the `coding` agent: test-driven development, refactoring, code review and optimization, NuGet management, Aspire wiring, OpenTelemetry, and Azure SDK patterns. Fills the `implement` and `verify` services a flow runs its code stages through, and is usable on its own.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "qa",
+      "source": "./plugins/qa",
+      "description": "Runtime QA validation through the `qa` and `qa-monitor` agents: run the app under Aspire, drive Playwright scenarios that record screenshot and video evidence, and keep log and trace monitoring active for the full session rather than checking once at the end. Fills the `qa` role and the `app.start` and `qa.run` services, and is usable on its own.",
+      "version": "0.2.0"
+    },
+    {
+      "name": "domain",
+      "source": "./plugins/domain",
+      "description": "Domain-Driven Design through the `domain` agent: bounded context discovery, ubiquitous language, domain model and interaction design, context mapping, and aggregate, domain-event-flow, and subdomain diagrams. Fills the `domain` role a flow consults, and is usable on its own. Holds no flow control: sequencing, approval, and delegation belong to whatever consults it.",
+      "version": "0.2.0"
+    },
+    {
+      "name": "ux",
+      "source": "./plugins/ux",
+      "description": "UX design through the `ux` agent: wireframes, user flows, design guidelines, and UI reviews, as SVG or Mermaid artifacts and structured Markdown. Fills the `ux` role a flow consults, and is usable on its own. Holds no flow control: sequencing, approval, and delegation belong to whatever consults it.",
+      "version": "0.3.0"
+    },
+    {
+      "name": "documentation",
+      "source": "./plugins/documentation",
+      "description": "Documentation and profile artifacts through the `documentation` and `profile` agents: how-to guides, explanations, articles, proposals, ideas, and SVG infographics, plus GitHub, LinkedIn, and project profiles. Fills the `docs` role a flow consults, and is usable on its own.",
+      "version": "0.4.0"
+    },
+    {
+      "name": "spec-builder",
+      "source": "./plugins/spec-builder",
+      "description": "Authoring the assets a plugin is made of, through the `spec-builder` agent and its five create-* skills: agents, skills, instruction files, hooks, and the two manifests. Carries the dual-host rules that let one authored copy load in both Claude Code and Copilot, and the conciseness budgets every asset here is held to.",
+      "version": "0.3.0"
     }
   ]
 }

@@ -16,7 +16,7 @@ instead of by repository.
 
 | Kind | Members |
 |---|---|
-| `flow-*` (16) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-adr`, `flow-tdr`, `flow-arc42`, `flow-blueprint`, `flow-architecture`, `flow-fallback` |
+| `flow-*` (15) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-adr`, `flow-tdr`, `flow-arc42`, `flow-architecture`, `flow-fallback` |
 | `phase-*` (2) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-qa-validation` |
 | `automation-*` (7) | A schedulable entry point that picks its own input, then runs a flow: `automation-bug-fix`, `automation-package-update`, `automation-performance-review`, `automation-review`, `automation-week-starter`, `automation-weekly-cost-analysis`, `automation-whats-new` |
 | The pull-request lane (5) | `create-pull-request`, `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` |
@@ -73,7 +73,7 @@ categories it covers.
 
 ## What it never depends on
 
-- **Specialist plugins.** `architecture`, `qa`, `csharp-coding` and the rest are bound as
+- **Specialist plugins.** `arc42`, `qa`, `csharp-coding` and the rest are bound as
   roles per repository, never declared as dependencies — one missing specialist must not
   demote all 32 skills. The reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, or `.backlog/` chapters, whichever `delivery.tracker` names.

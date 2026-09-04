@@ -101,7 +101,7 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no asset here uses it any more: `delivery`
-holds sixteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
+holds fifteen `flow-*`, two `phase-*`, and seven `automation-*` skills, `devbook-flows` holds
 five `flow-*`, one per adopted knowledge folder, and `fleet` holds three `fleet-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
@@ -252,10 +252,19 @@ related: [".devbook/domain/plugin-authoring/naming.md#agent"]
 ```
 
 A specialist a flow consults by name — `architecture`, `qa`, `domain`, `ux`, `product`,
-`security` — bound to a plugin per repository and never a dependency, because one missing
-advisor must not demote every skill that names it. Every role reference states its fallback, so
-no flow is dead because a role is unbound. An explicit `null` means deliberately unbound, which
-is not the same as absent.
+`docs`, `security` — bound to a plugin per repository and never a dependency, because one
+missing advisor must not demote every skill that names it. Every role reference states its
+fallback, so no flow is dead because a role is unbound. An explicit `null` means deliberately
+unbound, which is not the same as absent.
+
+Five of the seven have a provider in this marketplace; see
+[Role Plugins](../../arc42/05-building-block-view.md#role-plugins). `product` and `security`
+are `null`.
+
+The key is not the plugin's name. `arc42` fills `architecture`; `domain` and `ux` match theirs
+by coincidence. A role plugin also holds no flow control — no sequencing, no gate, no session
+spawning, no delegation — because all four belong to whatever consults it. See
+[the decision](../../arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
 verification, so it binds as the `implement` and `verify` services instead.

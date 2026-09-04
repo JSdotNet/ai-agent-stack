@@ -35,7 +35,7 @@ need is not.
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
   Personal Validation → Create Pull Request → Documentation Update → Work Item Update →
   Summary**.
-- **Documentation/config flows** — `flow-adr`, `flow-tdr`, `flow-arc42`, `flow-blueprint`,
+- **Documentation/config flows** — `flow-adr`, `flow-tdr`, `flow-arc42`,
   `flow-architecture`, `flow-repo` — run: **Personal Validation → Create Pull Request →
   Work Item Update → Summary**. They produce no runnable code change, so the first two
   phases do not apply.

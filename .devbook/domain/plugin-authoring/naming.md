@@ -1,6 +1,7 @@
 # Naming
 
 ```meta
+type: naming
 ```
 
 The terms this repository trades in. Where a host uses a different word for the same thing, the

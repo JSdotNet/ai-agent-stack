@@ -2,7 +2,7 @@
 
 ```meta
 number: 1
-related: [".devbook/domain/context-map.md#plugin-authoring"]
+related: [".devbook/domain/context-map.md"]
 ```
 
 ai-agent-stack packages the devbook and delivery flow — the agents, skills, instruction files,

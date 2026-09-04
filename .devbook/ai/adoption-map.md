@@ -3,6 +3,7 @@
 ```meta
 status: adopted
 index: root
+type: adoption-map
 ```
 
 How this repository is itself built with AI. The assets it ships are the product and are
@@ -13,6 +14,7 @@ done here.
 
 ```meta
 status: adopted
+type: practice
 stage: author
 related: [".devbook/tech/technology-graph.md#claude-code-plugin-api"]
 ```
@@ -25,6 +27,7 @@ change is still being written.
 
 ```meta
 status: trial
+type: skill
 stage: deliver
 related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 ```
@@ -60,6 +63,7 @@ of those surfaces.
 
 ```meta
 status: candidate
+type: skill
 stage: deliver
 related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
 ```
@@ -77,6 +81,7 @@ the design working, and reading that as a failure is how the bar gets lowered.
 
 ```meta
 status: candidate
+type: practice
 stage: verify
 ```
 

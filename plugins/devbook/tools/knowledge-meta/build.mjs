@@ -26,8 +26,9 @@ import {
     buildGraph,
     buildGraphDocument,
     outputPathFor,
-    discoverScopes,
+    discoverLayout,
     KNOWLEDGE_FOLDERS,
+    NESTED_KNOWLEDGE_FOLDERS,
     REPO_SCOPE,
 } from "./graph.mjs";
 import { buildOutlineDocument, outlinePathFor } from "./outline.mjs";
@@ -50,12 +51,14 @@ function optionValue(name) {
 const REPO_ROOT = path.resolve(optionValue("--root") ?? process.cwd());
 const requestedScope = optionValue("--scope");
 
-const availableScopes = await discoverScopes(REPO_ROOT);
+const layout = await discoverLayout(REPO_ROOT);
+const availableScopes = layout.folders.length ? [REPO_SCOPE, ...layout.folders] : [];
 
 if (!availableScopes.length) {
     console.error(
         `No knowledge folders found under ${REPO_ROOT}. ` +
-            `Expected at least one of: ${KNOWLEDGE_FOLDERS.join(", ")}.`
+            `Expected at least one of: ${KNOWLEDGE_FOLDERS.join(", ")} ` +
+            `(flat layout), or ${NESTED_KNOWLEDGE_FOLDERS.join(", ")} (nested).`
     );
     process.exit(2);
 }
@@ -71,8 +74,10 @@ if (requestedScope && !availableScopes.includes(requestedScope)) {
 const scopes = requestedScope ? [requestedScope] : availableScopes;
 const folders = availableScopes.filter((scope) => scope !== REPO_SCOPE);
 
+console.log(`layout ${layout.layout}: ${folders.join(", ")}`);
+
 // Parse the corpus once and project it per scope.
-const graph = await buildGraph(REPO_ROOT);
+const graph = await buildGraph(REPO_ROOT, folders);
 const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
 

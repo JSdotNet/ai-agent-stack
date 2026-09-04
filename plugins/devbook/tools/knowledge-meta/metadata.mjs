@@ -15,6 +15,18 @@
 // It is never a resting value. A chapter states `approved` while the approval
 // stands, and drops back to its ordinary rung the moment the content changes —
 // an approval is of what was read, not of the heading.
+/**
+ * The five knowledge folders, by kind. A repository adopts any subset and lays
+ * them out one of two ways: flat, as five root-level dot-folders (`.arc42`), or
+ * nested, under one `.devbook/` parent whose subfolders drop the dot
+ * (`.devbook/arc42`). A repository picks one and never mixes them.
+ */
+export const KNOWLEDGE_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
+
+/** The parent folder of the nested layout, and the prefix that identifies it. */
+export const NESTED_ROOT = ".devbook";
+export const NESTED_PREFIX = `${NESTED_ROOT}/`;
+
 const APPROVED_STATUS = "approved";
 
 const STATUS_BY_FOLDER = {
@@ -66,6 +78,11 @@ const RESTING_STATUS_BY_FOLDER = {
 const TYPE_BY_FOLDER = {
     domain: {
         chapter: [
+            // `context-map.md`'s own sections: one per bounded context. The
+            // strategic view names contexts, so a chapter elsewhere can address
+            // one — `.domain/context-map.md#order-management` — the same way it
+            // addresses an aggregate.
+            "bounded-context",
             "aggregate",
             "entity",
             "value-object",
@@ -264,12 +281,20 @@ const FOLDER_EXTRA_FIELDS = {
 
 /** Determine which knowledge folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
-    const normalized = relPath.replace(/\\/g, "/");
-    if (normalized.startsWith(".domain/")) return "domain";
-    if (normalized.startsWith(".arc42/")) return "arc42";
-    if (normalized.startsWith(".tech/")) return "tech";
-    if (normalized.startsWith(".design/")) return "design";
-    if (normalized.startsWith(".ai/")) return "ai";
+    const normalized = String(relPath).replace(/\\/g, "/");
+    // Both layouts resolve to the same five kinds. Flat is five root-level
+    // dot-folders; nested is one `.devbook/` parent whose subfolders drop the
+    // dot, because the parent already carries the "hidden support directory"
+    // signal for everything inside it. Nothing else in the schema knows which
+    // layout a repository picked — an address is just a repository path.
+    const nested = normalized.startsWith(NESTED_PREFIX)
+        ? normalized.slice(NESTED_PREFIX.length)
+        : null;
+    const subject = nested ?? normalized;
+    const prefix = nested === null ? "." : "";
+    for (const name of KNOWLEDGE_FOLDER_NAMES) {
+        if (subject.startsWith(`${prefix}${name}/`)) return name;
+    }
     return null;
 }
 

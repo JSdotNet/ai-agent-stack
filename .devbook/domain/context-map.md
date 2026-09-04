@@ -2,6 +2,7 @@
 
 ```meta
 index: root
+type: context-map
 ```
 
 This repository has one bounded context. It builds authoring assets, not a running product, so

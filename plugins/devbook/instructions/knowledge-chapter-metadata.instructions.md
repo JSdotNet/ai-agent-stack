@@ -157,6 +157,32 @@ plain-string list, and in `.ai`, `stage` (defined in
 slugs. The universal `roadmap` and `tests` fields below behave the
 same way.
 
+### The two folder layouts
+
+The five folders are laid out one of two ways, and a repository picks one and
+never mixes them:
+
+| Layout | Folders |
+| --- | --- |
+| Flat | `.arc42`, `.domain`, `.tech`, `.design`, `.ai` at the repository root |
+| Nested | `.devbook/arc42`, `.devbook/domain`, `.devbook/tech`, `.devbook/design`, `.devbook/ai` |
+
+The nested subfolders **drop the leading dot**. One dot on the parent already
+signals "hidden support directory" for everything inside it — the same reason
+`.github/workflows` is not `.github/.workflows`. `.devbook/.domain` is not a
+knowledge folder and resolves to nothing.
+
+Nothing else in this convention changes with the layout. An address is the
+chapter's real repository path, so a reference reads
+`.devbook/domain/order-management/features.md#feature-checkout` under one layout
+and `.domain/order-management/features.md#feature-checkout` under the other, and
+both resolve the same way. Derived `_meta/` folders are written beside the
+chapters they index either way.
+
+A repository with both is an error, not a preference: the generator indexes both
+so nothing becomes invisible, and reports that addresses will not agree until
+one is moved.
+
 ### Chapter and file references
 
 Chapters are not given a separate stored id. A chapter is addressed by its

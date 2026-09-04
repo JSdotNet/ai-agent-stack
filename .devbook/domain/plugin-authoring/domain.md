@@ -2,6 +2,7 @@
 
 ```meta
 index: root
+type: domain
 related: [".devbook/domain/context-map.md#plugin-authoring"]
 ```
 

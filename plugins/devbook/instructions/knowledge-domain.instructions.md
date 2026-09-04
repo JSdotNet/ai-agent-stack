@@ -273,8 +273,15 @@ type: context-map
 > `.domain`'s root document. Prefer titling it after the system the map covers,
 > since the `type` above already carries the kind and the generator labels this
 > node `<System Name> (context-map)`; a plain `# Context Map` is also accepted.
-> Its `##` sections do not carry their own metadata blocks; the file-level block
-> above is the only metadata this file carries.
+> Its structural `##` sections — the four below — carry no metadata blocks; the
+> file-level block above is the only metadata they need.
+>
+> A `##` section naming **one bounded context** is the exception, and it takes
+> `type: bounded-context`. Give a context its own section and block when another
+> chapter needs to address it — `.domain/context-map.md#order-management` — which
+> is how a building block, a technology, or an arc42 chapter points at the
+> context it belongs to. A repository whose contexts are only listed in the
+> tables below needs no such sections.
 
 ## Subdomain landscape
 

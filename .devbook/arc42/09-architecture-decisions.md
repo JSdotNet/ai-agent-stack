@@ -2,7 +2,11 @@
 
 ```meta
 number: 9
+related: [".devbook/arc42/11-risks-and-technical-debt.md"]
 ```
+
+Decisions taken and defensible. A record that ends in options rather than a choice is debt,
+not a decision, and lives in [chapter 11](11-risks-and-technical-debt.md) instead.
 
 ## Marketplace Named jsdotnet
 
@@ -118,11 +122,24 @@ The generator understands only the flat one. `KNOWLEDGE_FOLDERS` lists `.arc42`,
 `.tech`, `.design`, `.ai`, and every reference in the corpus is a path starting with one of
 them, so a `.devbook/domain/…` address resolves to nothing.
 
-Consequence, and it is a sharp one: **this repository uses the nested layout, so the plugin it
-ships cannot check its own knowledge.** The chapters here are written to the convention and
-validated by reading, not by running `devbook-check` on them. Close it by teaching the folder
-resolution both prefixes — the addresses are already just repository paths, so nothing about
-the schema changes.
+**Closed, 2026-09-04, in `devbook` 1.2.0.** The fix was the one this decision named: the
+folder resolution now recognizes both prefixes. `folderKindForPath` strips an optional
+`.devbook/` and matches the five names either way, discovery probes both spellings and reports
+which layout it found, and everything downstream works off the path it is handed — so scopes,
+`_meta/` output paths, and references needed no change at all. Contract version 7, additive,
+no migration. `nested-layout.test.mjs` holds the same corpus written both ways and asserts the
+two produce the same nodes and the same edges.
+
+It cost more than the prose suggested in exactly one place: a repository containing *both*
+layouts. The generator now indexes both and raises an error saying addresses will not agree
+until one is moved, rather than silently indexing half a corpus — which is what the old code
+did to this repository, and why the gap went unnoticed.
+
+What that gap actually hid is the argument for having closed it. The first real run over
+`.devbook/` found eleven defects nothing had ever reported: two invalid `status` values, eight
+missing `type` fields, and one `type` naming a kind the schema had no word for. A convention
+that cannot check the repository that ships it will accumulate exactly that, and reading is not a
+substitute — every one of those files had been read several times.
 
 ## approved Is a Status Rung
 
@@ -507,42 +524,3 @@ resting state. A backlog is worked one issue per session through `start-session-
 until somebody enables `fleet` on purpose. The dependency runs one way — `fleet` names
 `delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
 `fleet-*` skill, only the subsystem.
-
-## fleet Names the CLI Directly, For Now
-
-```meta
-date: 2026-09-03
-status: divergence
-related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
-```
-
-`fleet-issue-sweep` launches each worker with `claude --bg`, tracks them with `claude agents`,
-and runs its resolution stages through the `Workflow` tool.
-
-**This breaks a rule this repository has already written down.** A
-[host profile](../domain/plugin-authoring/naming.md#host-profile) is "the only place in the
-stack where a host's own file, path, or capability is named", and `fleet` is not one. It is
-recorded here as a divergence rather than resolved, because resolving it costs more than this
-change is allowed to spend.
-
-The fix is known and is not a redesign: a seventh slot — call it `session-spawn` — declared by
-`delivery`, bound by `claude-desktop` to the CLI, and left deliberately unbound by
-`copilot-app`. The precedent is already in the repository: Copilot leaves `repo-flow-context`
-and `model-override` unbound with documented unbound behaviour, and "a sweep that dispatches
-nothing but still triages and reports" is exactly that shape of default. What stops it landing
-here is scope: the slot set is closed and **declared by the engine**, so a seventh means a
-contract change in `delivery` plus an answer in both profiles — three plugins, a version bump,
-and a migration ledger, none of which belongs in a change whose subject is extracting a plugin.
-
-The earlier reasoning for naming the CLI outright — that a slot generalises a divergence that
-has happened twice, and this one had happened once — no longer holds. It was written before
-`copilot-app` existed. A second host is now here to disagree, which is precisely the condition
-that turns the slot from premature into overdue.
-
-Consequence: **on a host that cannot launch a background session, a sweep dispatches nothing.**
-It still triages, marks the pickup pool, proposes closures, and reports what it would have
-dispatched, so the degradation is visible rather than silent — but the parallelism is the whole
-point of the skill, and it is gone. Until the slot lands, `fleet` is a Claude-only plugin whose
-manifest does not say so.
-
-Close this by adding the slot, not by widening the rule.

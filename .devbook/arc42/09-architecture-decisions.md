@@ -2,7 +2,11 @@
 
 ```meta
 number: 9
+related: [".devbook/arc42/11-risks-and-technical-debt.md"]
 ```
+
+Decisions taken and defensible. A record that ends in options rather than a choice is debt,
+not a decision, and lives in [chapter 11](11-risks-and-technical-debt.md) instead.
 
 ## Marketplace Named jsdotnet
 
@@ -507,99 +511,3 @@ resting state. A backlog is worked one issue per session through `start-session-
 until somebody enables `fleet` on purpose. The dependency runs one way — `fleet` names
 `delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
 `fleet-*` skill, only the subsystem.
-
-## fleet Names the CLI Directly, For Now
-
-```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
-```
-
-`fleet-issue-sweep` launches each worker with `claude --bg`, tracks them with `claude agents`,
-and runs its resolution stages through the `Workflow` tool.
-
-**This breaks a rule this repository has already written down.** A
-[host profile](../domain/plugin-authoring/naming.md#host-profile) is "the only place in the
-stack where a host's own file, path, or capability is named", and `fleet` is not one. It is
-recorded here as a divergence rather than resolved, because resolving it costs more than this
-change is allowed to spend.
-
-The fix is known and is not a redesign: a seventh slot — call it `session-spawn` — declared by
-`delivery`, bound by `claude-desktop` to the CLI, and left deliberately unbound by
-`copilot-app`. The precedent is already in the repository: Copilot leaves `repo-flow-context`
-and `model-override` unbound with documented unbound behaviour, and "a sweep that dispatches
-nothing but still triages and reports" is exactly that shape of default. What stops it landing
-here is scope: the slot set is closed and **declared by the engine**, so a seventh means a
-contract change in `delivery` plus an answer in both profiles — three plugins, a version bump,
-and a migration ledger, none of which belongs in a change whose subject is extracting a plugin.
-
-The earlier reasoning for naming the CLI outright — that a slot generalises a divergence that
-has happened twice, and this one had happened once — no longer holds. It was written before
-`copilot-app` existed. A second host is now here to disagree, which is precisely the condition
-that turns the slot from premature into overdue.
-
-Consequence: **on a host that cannot launch a background session, a sweep dispatches nothing.**
-It still triages, marks the pickup pool, proposes closures, and reports what it would have
-dispatched, so the degradation is visible rather than silent — but the parallelism is the whole
-point of the skill, and it is gone. Until the slot lands, `fleet` is a Claude-only plugin whose
-manifest does not say so.
-
-Close this by adding the slot, not by widening the rule.
-
-## The Body Budgets Are Not What This Repository Holds Itself To
-
-```meta
-date: 2026-09-04
-related: [".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
-```
-
-[CLAUDE.md](../../CLAUDE.md) states three body budgets — `SKILL.md` 40 lines,
-`*.instructions.md` 60, `*.agent.md` 80. Measured across all seventeen plugins, counting body
-lines after frontmatter:
-
-| Kind | Within budget | Smallest | Median | Largest |
-| --- | --- | --- | --- | --- |
-| `SKILL.md` | 13 of 116 | 24 | 101 | 486 |
-| `*.instructions.md` | 12 of 35 | 28 | 78 | 629 |
-| `*.agent.md` | 5 of 10 | 65 | 75 | 295 |
-
-Eleven percent of skills meet the budget, and the split between them is the finding. It is not
-a rule nobody reads — it is a rule that arrived with the ported plugins and was never adopted
-by the ones written here:
-
-| Plugin | Skills within 40 | Median |
-| --- | --- | --- |
-| `spec-builder` — ships the rule | 5 of 5 | 28 |
-| `arc42` | 4 of 8 | 35 |
-| `documentation` | 4 of 9 | 41 |
-| `delivery` | 0 of 31 | 176 |
-| `devbook` | 0 of 13 | 177 |
-| `devbook-flows` | 0 of 5 | 164 |
-| `fleet` | 0 of 3 | 397 |
-
-The plugin that *owns* the conciseness rule satisfies it exactly, at a median of 28 lines. The
-four stack-native plugins miss it by four to ten times. Whatever the budget is, it is not
-unreachable — it is unenforced past the boundary the ported assets came across.
-
-Recorded rather than fixed, because rewriting the stack-native skills to a quarter of their
-length would delete the tables, worked shapes, and decision criteria that are the reason a flow
-behaves the same way twice — `fleet-resolve-issue` runs 486 lines because an unattended worker
-has nobody to ask. That is a claim to test, though, not an excuse: `spec-builder` disproves the
-general version of it.
-
-Two ways to close this, and whoever picks one should say so here:
-
-- Restore what the port dropped. `spec-builder`'s own
-  `instructions/authoring/spec-conciseness.instructions.md` — now in this repository, where
-  these three numbers come from — opens its budget table with "the budget is the trigger for a
-  disclosure decision, not a hard limit" and closes it with "state the reason in the file when
-  an asset genuinely must exceed its budget". CLAUDE.md carried the numbers across and left
-  both sentences behind, which is what turned a heuristic into a bare threshold. Adopting the
-  disclosure rule makes every over-budget asset legal the moment it says why, and makes the
-  ones that cannot say why visible.
-- Keep the numbers as an aspiration and say in CLAUDE.md that they are unenforced, so a session
-  stops being told a thing that is false about most of the repository it is reading.
-
-Until then: **do not cite a bare body budget when reviewing a change here.** Cite the
-disclosure rule instead — an over-budget asset that never says why is the reviewable defect,
-and the line count on its own is not.

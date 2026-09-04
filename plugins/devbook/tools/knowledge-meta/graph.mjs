@@ -27,15 +27,33 @@ import {
     parseAnnotations,
     resolveAnnotation,
     annotationIssues,
+    KNOWLEDGE_FOLDER_NAMES,
+    NESTED_ROOT,
 } from "./metadata.mjs";
 
 /** Every knowledge folder this convention recognizes. A repository adopts any subset. */
-export const KNOWLEDGE_FOLDERS = [".arc42", ".domain", ".tech", ".design", ".ai"];
+export const KNOWLEDGE_FOLDERS = KNOWLEDGE_FOLDER_NAMES.map((name) => `.${name}`);
+
+/**
+ * The same five in the nested layout, under one `.devbook/` parent with the
+ * leading dot dropped. Both spellings are just repository paths — every scope,
+ * output path, and reference below works off the path it is given, so nothing
+ * downstream of discovery knows which layout it is looking at.
+ */
+export const NESTED_KNOWLEDGE_FOLDERS = KNOWLEDGE_FOLDER_NAMES.map(
+    (name) => `${NESTED_ROOT}/${name}`
+);
+
+export { KNOWLEDGE_FOLDER_NAMES, NESTED_ROOT };
 // The repo-visible contract: one number covering the metadata schema a
 // repository authors and the derived artifacts a consumer reads. It moves only
 // when something repo-visible changes shape, which is why a plugin release
 // usually leaves it alone — and why the migration ledger keys off it.
 //
+// Version 7 is additive over 6: the nested `.devbook/` layout is recognized
+// alongside the flat dot-folders, and `bounded-context` joins the `.domain`
+// chapter types so a context-map section can be addressed. Nothing that
+// validated under 6 stops validating, so there is no migration folder.
 // Version 6 removes `.backlog` from the recognized folders and with it the
 // `implements` reference field, and adds two things on top of 5: the shared
 // `approved` rung with its `approved-by`/`approved-at` record, and the opaque
@@ -46,7 +64,7 @@ export const KNOWLEDGE_FOLDERS = [".arc42", ".domain", ".tech", ".design", ".ai"
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 6;
+export const CONTRACT_VERSION = 7;
 
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those
@@ -179,7 +197,7 @@ function composeFileLabel(title, type) {
  * structural heading that something actually references. Edges: `contains`
  * from the structural hierarchy, and one per `depends-on`/`related` entry.
  */
-export async function buildGraph(repoRoot) {
+export async function buildGraph(repoRoot, folders = null) {
     const nodes = new Map();
     const edges = [];
     const problems = [];
@@ -189,8 +207,21 @@ export async function buildGraph(repoRoot) {
     // aggregate's block — so they are materialized on demand.
     const headingIndex = new Map();
 
+    const layout = folders ? null : await discoverLayout(repoRoot);
+    const scanned = folders ?? layout.folders;
+    if (layout?.mixed) {
+        problems.push({
+            severity: "error",
+            message:
+                `Both layouts are present: ${layout.flat.join(", ")} beside ` +
+                `${layout.nested.join(", ")}. A repository picks one and never mixes them. ` +
+                `Both are indexed here so nothing is invisible, but addresses will not agree ` +
+                `until one is moved.`,
+        });
+    }
+
     const files = (
-        await Promise.all(KNOWLEDGE_FOLDERS.map((folder) => collectMarkdown(repoRoot, folder)))
+        await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))
     ).flat();
 
     for (const relPath of files) {
@@ -520,9 +551,10 @@ export async function buildGraphDocument(
     repoRoot,
     scope = REPO_SCOPE,
     prebuilt = null,
-    folders = KNOWLEDGE_FOLDERS
+    folders = null
 ) {
-    const graph = prebuilt ?? (await buildGraph(repoRoot));
+    folders ??= (await discoverLayout(repoRoot)).folders;
+    const graph = prebuilt ?? (await buildGraph(repoRoot, folders));
     const { nodes, edges, problems } = projectScope(graph, scope);
     return {
         // Bumped whenever the emitted shape changes, so consumers detect drift.
@@ -543,7 +575,7 @@ export async function buildGraphDocument(
 }
 
 /** Every scope this generator knows about: the repo-wide rollup plus one per folder. */
-export const SCOPES = [REPO_SCOPE, ...KNOWLEDGE_FOLDERS];
+export const SCOPES = [REPO_SCOPE, ...KNOWLEDGE_FOLDERS, ...NESTED_KNOWLEDGE_FOLDERS];
 
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
@@ -551,15 +583,47 @@ export const SCOPES = [REPO_SCOPE, ...KNOWLEDGE_FOLDERS];
  * not use. Returns an empty array when no knowledge folder is present.
  */
 export async function discoverScopes(repoRoot) {
-    const present = [];
-    for (const folder of KNOWLEDGE_FOLDERS) {
-        try {
-            if ((await stat(path.join(repoRoot, folder))).isDirectory()) present.push(folder);
-        } catch {
-            // Folder not adopted by this repository.
+    const { folders } = await discoverLayout(repoRoot);
+    return folders.length ? [REPO_SCOPE, ...folders] : [];
+}
+
+/**
+ * Which knowledge folders this repository actually has, and in which layout.
+ *
+ * `folders` holds real repository paths, so a caller never has to know whether
+ * it is looking at `.tech` or `.devbook/tech`. Both are probed because a
+ * repository picks one layout and never mixes them — and `mixed` is how the
+ * caller learns that this one did, rather than the generator quietly indexing
+ * half a corpus.
+ */
+export async function discoverLayout(repoRoot) {
+    const flat = [];
+    const nested = [];
+    for (const name of KNOWLEDGE_FOLDER_NAMES) {
+        if (await isDirectory(path.join(repoRoot, `.${name}`))) flat.push(`.${name}`);
+        if (await isDirectory(path.join(repoRoot, NESTED_ROOT, name))) {
+            nested.push(`${NESTED_ROOT}/${name}`);
         }
     }
-    return present.length ? [REPO_SCOPE, ...present] : [];
+    const mixed = flat.length > 0 && nested.length > 0;
+    return {
+        flat,
+        nested,
+        mixed,
+        // Both are indexed even when mixed, so nothing becomes invisible while
+        // the repository is being straightened out. `mixed` is what makes it an
+        // error rather than a silent half-corpus.
+        folders: [...flat, ...nested],
+        layout: mixed ? "mixed" : nested.length ? "nested" : flat.length ? "flat" : "none",
+    };
+}
+
+async function isDirectory(absolutePath) {
+    try {
+        return (await stat(absolutePath)).isDirectory();
+    } catch {
+        return false; // Folder not adopted by this repository.
+    }
 }
 
 /** Repo-relative output path for a scope, per the derived-index convention. */

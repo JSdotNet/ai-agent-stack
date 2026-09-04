@@ -40,6 +40,13 @@ deleting it, and a reader loading a chapter for context skips every fence.
 Adoption is partial by design — a repository may take only `.domain` and
 `.arc42`, and the tooling emits scopes for the folders that actually exist.
 
+Those five sit at the repository root, or nested under one `.devbook/` parent
+with the leading dot dropped — `.devbook/arc42`, `.devbook/domain`, and so on.
+Pick one layout and never mix them; the generator recognizes both, reports which
+one it found, and treats a repository containing both as an error. Nothing else
+changes: an address is the chapter's real repository path either way, and each
+folder's `_meta/` is written beside its own chapters.
+
 ## Features
 
 ### Skill: `devbook-sync`
@@ -586,6 +593,27 @@ Worth doing on adoption: mark `.arc42/adr/README.md` and `.arc42/tdr/README.md`
 with `index: root` — neither folder has a convention root, so without it each is
 a bare numbered list — and give existing ADRs and TDRs their `date`. Both show up
 in `index.json` and on `graph.json` file nodes immediately after a regenerate.
+
+## Migrating to schema version 7
+
+Additive over 6 in both halves, so there is no migration script and nothing that
+validated under 6 stops validating.
+
+**The nested layout is recognized.** `.devbook/arc42`, `.devbook/domain`,
+`.devbook/tech`, `.devbook/design`, and `.devbook/ai` now resolve exactly as the
+root-level dot-folders do — same graph, same edges, same lint, `_meta/` written
+beside the chapters as always. Until now the generator recognized the flat
+spelling alone, so a nested repository resolved to no folder at all and silently
+indexed nothing rather than failing. A repository holding both layouts is
+reported as an error and both are still indexed, so nothing becomes invisible
+while it is straightened out.
+
+**`bounded-context` joins the `.domain` chapter types.** A `##` section of
+`context-map.md` naming one bounded context may now carry
+`type: bounded-context`, which makes it addressable as
+`.domain/context-map.md#order-management` — the form a building block, a
+technology, or an arc42 chapter uses to point at the context it belongs to.
+Context maps whose sections carry no blocks are unaffected.
 
 ## Migrating to schema version 5
 

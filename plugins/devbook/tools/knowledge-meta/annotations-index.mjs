@@ -14,7 +14,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { parseAnnotations, resolveAnnotation, folderKindForPath } from "./metadata.mjs";
-import { KNOWLEDGE_FOLDERS, REPO_SCOPE, SCHEMA_VERSION, GENERATOR } from "./graph.mjs";
+import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, GENERATOR } from "./graph.mjs";
 
 /** Recursively collect Markdown files under a folder, as repo-relative posix paths. */
 async function collectMarkdown(repoRoot, relFolder) {
@@ -47,7 +47,8 @@ async function collectMarkdown(repoRoot, relFolder) {
  * plus a heading slug — with its ordinal in the chapter standing in for the id
  * the schema deliberately does not assign.
  */
-export async function collectAnnotations(repoRoot, folders = KNOWLEDGE_FOLDERS) {
+export async function collectAnnotations(repoRoot, folders = null) {
+    folders ??= (await discoverLayout(repoRoot)).folders;
     const files = (
         await Promise.all(folders.map((folder) => collectMarkdown(repoRoot, folder)))
     ).flat();
@@ -119,8 +120,9 @@ export async function buildAnnotationsDocument(
     repoRoot,
     scope = REPO_SCOPE,
     prebuilt = null,
-    folders = KNOWLEDGE_FOLDERS
+    folders = null
 ) {
+    folders ??= (await discoverLayout(repoRoot)).folders;
     const all = prebuilt ?? (await collectAnnotations(repoRoot, folders));
     const roots = scope === REPO_SCOPE ? folders : [scope];
     const threads = all.filter((thread) => roots.some((root) => thread.path.startsWith(`${root}/`)));

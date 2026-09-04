@@ -39,7 +39,7 @@ import {
     fileNumberFromPath,
     indexRole,
 } from "./metadata.mjs";
-import { KNOWLEDGE_FOLDERS, SCHEMA_VERSION, REPO_SCOPE, GENERATOR } from "./graph.mjs";
+import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, GENERATOR } from "./graph.mjs";
 
 /**
  * A document's `tests` entries as a list, whatever shape they were authored in.
@@ -305,7 +305,8 @@ async function readDirectory(repoRoot, relDir, problems) {
  *
  * `folders` is the set of knowledge folders this repository actually adopts.
  */
-export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders = KNOWLEDGE_FOLDERS) {
+export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders = null) {
+    folders ??= (await discoverLayout(repoRoot)).folders;
     const problems = [];
     const roots = scope === REPO_SCOPE ? folders : [scope];
 

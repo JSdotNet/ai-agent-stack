@@ -122,11 +122,24 @@ The generator understands only the flat one. `KNOWLEDGE_FOLDERS` lists `.arc42`,
 `.tech`, `.design`, `.ai`, and every reference in the corpus is a path starting with one of
 them, so a `.devbook/domain/…` address resolves to nothing.
 
-Consequence, and it is a sharp one: **this repository uses the nested layout, so the plugin it
-ships cannot check its own knowledge.** The chapters here are written to the convention and
-validated by reading, not by running `devbook-check` on them. Close it by teaching the folder
-resolution both prefixes — the addresses are already just repository paths, so nothing about
-the schema changes.
+**Closed, 2026-09-04, in `devbook` 1.2.0.** The fix was the one this decision named: the
+folder resolution now recognizes both prefixes. `folderKindForPath` strips an optional
+`.devbook/` and matches the five names either way, discovery probes both spellings and reports
+which layout it found, and everything downstream works off the path it is handed — so scopes,
+`_meta/` output paths, and references needed no change at all. Contract version 7, additive,
+no migration. `nested-layout.test.mjs` holds the same corpus written both ways and asserts the
+two produce the same nodes and the same edges.
+
+It cost more than the prose suggested in exactly one place: a repository containing *both*
+layouts. The generator now indexes both and raises an error saying addresses will not agree
+until one is moved, rather than silently indexing half a corpus — which is what the old code
+did to this repository, and why the gap went unnoticed.
+
+What that gap actually hid is the argument for having closed it. The first real run over
+`.devbook/` found eleven defects nothing had ever reported: two invalid `status` values, eight
+missing `type` fields, and one `type` naming a kind the schema had no word for. A convention
+that cannot check the repository that ships it will accumulate exactly that, and reading is not a
+substitute — every one of those files had been read several times.
 
 ## approved Is a Status Rung
 

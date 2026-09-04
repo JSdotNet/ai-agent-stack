@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md"]
+related: [".devbook/domain/context-map.md#plugin-authoring"]
 ```
 
 What this context is responsible for: that an asset written once loads correctly in every host

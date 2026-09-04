@@ -61,12 +61,12 @@ specification already exists, and a full derivation when it does not.
 
 Escalate instead of continuing when the module is really a separate deployable service,
 or when it needs a new architectural decision, a new bounded context, or a cross-cutting
-redesign — recommend `flow-create-service`, `flow-adr`, `flow-architecture`, or
-`flow-blueprint` and ask the user.
+redesign — recommend `flow-create-service`, `flow-adr`, or `flow-architecture` and ask
+the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` only when architectural
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
 impact is suspected.
 
 ### Stage 1: Specification Intake
@@ -79,7 +79,7 @@ impact is suspected.
 - **Capture acceptance criteria** and non-functional requirements
 - **Identify dependencies** and integration risks
 
-**Agents:** `architecture:architect`; `domain-design:domain-architect` when the module
+**Agents:** `arc42:arc42`; `domain:domain` when the module
 introduces or crosses a bounded context. A module inside one existing context does not need
 the domain pass.
 
@@ -89,7 +89,7 @@ the domain pass.
 - **Plan integration points** with existing modules/services
 - **Create an implementation checklist** for incremental delivery
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Implementation
 - **Create module files/folders** in the existing project layout

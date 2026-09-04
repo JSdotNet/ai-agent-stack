@@ -3,17 +3,18 @@
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
-      "architecture": "architecture:architect",
+      "architecture": "arc42:arc42",
       "qa": "qa:qa",
-      "domain": "domain-design:domain-architect",
-      "product": "product-owner:product-owner",
-      "ux": null,
+      "domain": "domain:domain",
+      "ux": "ux:ux",
+      "docs": "documentation:documentation",
+      "product": null,
       "security": null
     }
   },
   "extensions": {
     "session.start": ["devbook:devbook-check"],
-    "spec": "architecture:architect",
+    "spec": "arc42:arc42",
     "implement": "csharp-coding:coding",
     "verify": "csharp-coding:coding",
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],

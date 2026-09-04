@@ -1,11 +1,11 @@
 ---
 name: flow-architecture
-description: 'Run general architecture work. Uses the architecture:architect agent directly plus `jsdotnet-guidelines-mcpserver` for governed asset guidance before edits.'
+description: 'Run general architecture work. Uses the arc42:arc42 agent directly plus `jsdotnet-guidelines-mcpserver` for governed asset guidance before edits.'
 ---
 
 # Flow: Architecture Work
 
-Execute a general architecture workflow for requests that need the architect agent but do not fit a single specialized arc42, blueprint, ADR, or TDR flow.
+Execute a general architecture workflow for requests that need the `arc42` agent but do not fit a single specialized arc42, ADR, or TDR flow. Architecture blueprints run here too, through the agent's `architecture-blueprint-generator` skill.
 
 ## Input Expectations
 
@@ -31,7 +31,7 @@ Execute a general architecture workflow for requests that need the architect age
 - **Capture repository constraints** that affect governed plugin or guidance assets
 - **Stop for MCP setup** if the required guideline tools are unavailable
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
 ### Stage 2: Architecture Investigation
@@ -40,14 +40,14 @@ Execute a general architecture workflow for requests that need the architect age
 - **Call out assumptions, risks, and open questions**
 - **Align recommendations** with the retrieved guidance context
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 3: Drafting & Review
 - **Draft the requested architecture outcome** in Markdown
 - **Check internal consistency** across scope, constraints, risks, and traceability
 - **Prepare a review-ready result** with explicit follow-up actions when needed
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Final Phases (Shared)
 

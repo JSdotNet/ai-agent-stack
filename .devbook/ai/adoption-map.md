@@ -30,7 +30,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 ```
 
 Task categories route to a `flow-<category>` skill that runs the category end to end. `delivery`
-now ships sixteen of them, so the routing this repository works under is its own rather than
+now ships fifteen of them, so the routing this repository works under is its own rather than
 inherited.
 
 Every knowledge folder now has its own flow too: `devbook-flows` ships five, so an edit to
@@ -46,8 +46,13 @@ repository is authored in — `CLAUDE.md` as `repo-instructions`, sub-agents as
 `stage-delegation`, `delivery-dashboard` as `surface` — so a flow run here resolves them from
 an installed profile rather than falling through to defaults.
 
-Still `trial`, and now for the only reason left: nothing has used it. Both things that were
-missing have landed, so what is untested is the routing itself. Promote this to `adopted` once
+So are the specialists. Seven role plugins ship here now, and until they did, every stage a
+flow delegates named an agent that resolved to nothing: 251 `plugin:asset` references into
+plugins this marketplace did not offer. `spec`, `implement`, `verify`, `app.start`, and
+`qa.run` have providers, and five of the seven roles do.
+
+Still `trial`, and now for the only reason left: nothing has used it. Everything that was
+missing has landed, so what is untested is the routing itself. Promote this to `adopted` once
 a change in this repository has actually been carried by a flow end to end, reporting into one
 of those surfaces.
 

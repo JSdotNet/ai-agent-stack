@@ -57,12 +57,12 @@ exist, and a full derivation when they do not.
 - **Record the derived scope and assumptions** in the stage output and continue to Stage 1 unless escalation is required
 
 Escalate instead of continuing when the request needs a new architectural decision, a new
-bounded context, or a cross-cutting redesign — recommend `flow-adr`, `flow-architecture`,
-or `flow-blueprint` first and ask the user.
+bounded context, or a cross-cutting redesign — recommend `flow-adr` or
+`flow-architecture` first and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` only when architectural
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
 impact is suspected.
 
 ### Stage 1: Specification & Architecture Intake
@@ -71,7 +71,7 @@ impact is suspected.
 - **Capture implementation constraints** and affected integration points
 - **Define the local validation target** for the approved change
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Stage 2: Implementation
 - **Write code following standards** and patterns

@@ -48,7 +48,7 @@ belongs to.
 - **Stop and invoke the matching skill instead** when one matches but its preconditions are
   unmet — unmet preconditions do not justify this fallback
 - **Select the closest specialist agent** for the category: `csharp-coding:coding` for
-  implementation, `architecture:architect` for architecture-adjacent work,
+  implementation, `arc42:arc42` for architecture-adjacent work,
   `documentation:documentation` for documentation, `qa:qa` for test and validation work
 - **Determine the change kind** — code-modifying or documentation/config — because it
   selects the closing phase tier and the stage list passed to `start_run`

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "prompt",
+        "prompt": "For every QA validation, always run the target through Aspire, keep Aspire MCP log/trace monitoring active for the full duration, and attach concrete evidence (Playwright screenshot or video path) to every pass/fail finding from a browser scenario. Never report a browser-validated feature without evidence, and never without checking Aspire logs for errors during the run. When the caller selects a shallower depth (startup-only for a dependency update, or no runnable application at all), record that depth and its result honestly rather than claiming validation that was not performed."
+      }
+    ]
+  }
+}

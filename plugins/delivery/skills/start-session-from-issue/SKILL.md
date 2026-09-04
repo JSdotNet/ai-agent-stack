@@ -109,7 +109,7 @@ issue, because the previous one is filtered out as in flight.
    | Folder moves, project/solution layout, test placement | `flow-structure` |
    | Dependency or package updates | `flow-update-packages` |
    | An Aspire version upgrade | `flow-aspire-update` |
-   | Architecture, ADR, arc42, blueprint, TDR | `flow-architecture`, `flow-adr`, `flow-arc42`, `flow-blueprint`, `flow-tdr` |
+   | Architecture, ADR, arc42, blueprint, TDR | `flow-architecture`, `flow-adr`, `flow-arc42`, `flow-tdr` |
    | Anything no skill above covers — tooling, CI, scripting, housekeeping | `flow-fallback` |
 
    This mirrors the routing the plugin's `SessionStart` hook installs; a repository may ship

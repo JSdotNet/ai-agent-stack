@@ -1,6 +1,6 @@
 ---
 name: flow-arc42
-description: 'Run arc42 architecture documentation. Uses the architecture:architect agent for section drafting and `jsdotnet-guidelines-mcpserver` for guideline and ADR grounding before governed asset changes.'
+description: 'Run arc42 architecture documentation. Uses the arc42:arc42 agent for section drafting and `jsdotnet-guidelines-mcpserver` for guideline and ADR grounding before governed asset changes.'
 ---
 
 # Flow: arc42 Documentation
@@ -32,7 +32,7 @@ Execute an arc42 documentation workflow while keeping the architect agent indepe
 - **Collect repository-specific constraints** for governed plugin or guidance assets
 - **Stop for MCP setup** if the required guideline tools are unavailable
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
 ### Stage 2: Section Drafting
@@ -41,7 +41,7 @@ Execute an arc42 documentation workflow while keeping the architect agent indepe
 - **Link decisions and constraints** to the retrieved guidance context
 - **Record open questions** that still need user input
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 **Skills Used:** `architecture-arc42-generator`
 
 ### Stage 3: Cross-Section Review
@@ -49,7 +49,7 @@ Execute an arc42 documentation workflow while keeping the architect agent indepe
 - **Highlight gaps** between current documentation and retrieved guidance
 - **Prepare a review-ready update set** for the requested sections
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 ### Final Phases (Shared)
 

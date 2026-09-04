@@ -62,7 +62,7 @@ fix needs a new architectural decision or cross-cutting redesign — recommend
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `architecture:architect` only when architectural
+`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
 impact is suspected.
 
 ### Stage 1: Bug Intake & Reproduction

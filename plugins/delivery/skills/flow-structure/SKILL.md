@@ -1,6 +1,6 @@
 ---
 name: flow-structure
-description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-architecture, flow-blueprint, flow-adr, or flow-arc42).'
+description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-architecture, flow-adr, or flow-arc42).'
 ---
 
 # Flow: Structure Refactor
@@ -66,13 +66,13 @@ Escalate instead of continuing when the request needs a different work type:
 - Initial repository or project scaffolding routes to `flow-repo` or `flow-project`.
 - A new architectural decision routes to `flow-adr`.
 - A cross-cutting redesign or documentation-only architecture outcome routes to
-  `flow-architecture`, `flow-blueprint`, or `flow-arc42`.
+  `flow-architecture` or `flow-arc42`.
 - A new bounded context, service boundary, module, or service routes to
   `flow-create-module` or `flow-create-service`.
 
 **Agents:** the flow-runner owns the decision half; the **Identify** bullets above are
 delegated to a read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. Optionally `architecture:architect` when the layout rule
+`instructions/flow-execution-model.instructions.md`. Optionally `arc42:arc42` when the layout rule
 needs architecture interpretation.
 
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
@@ -85,7 +85,7 @@ needs architecture interpretation.
   scripts, docs, and CI path filters.
 - **Define the validation target** for the resulting structure change.
 
-**Agents:** `architecture:architect`
+**Agents:** `arc42:arc42`
 
 **MCP Servers:** `jsdotnet-guidelines-mcpserver`
 
@@ -99,7 +99,7 @@ needs architecture interpretation.
 - **Call out risks** such as generated files, case-only renames, path-sensitive tooling, or
   files that should not move.
 
-**Agents:** `architecture:architect`, `csharp-coding:coding`
+**Agents:** `arc42:arc42`, `csharp-coding:coding`
 
 ### Stage 3: Implementation
 

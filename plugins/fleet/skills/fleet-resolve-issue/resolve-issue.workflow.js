@@ -105,7 +105,7 @@ const SCOPE_SCHEMA = {
         reason: { type: 'string' },
         routeTo: {
           type: 'string',
-          description: 'flow-adr | flow-architecture | flow-blueprint | flow-tdr | flow-create-service | flow-domain',
+          description: 'flow-adr | flow-architecture | flow-tdr | flow-create-service | flow-domain',
         },
       },
     },

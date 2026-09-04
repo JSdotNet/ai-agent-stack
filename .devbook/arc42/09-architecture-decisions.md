@@ -554,42 +554,52 @@ related: [".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
 ```
 
 [CLAUDE.md](../../CLAUDE.md) states three body budgets — `SKILL.md` 40 lines,
-`*.instructions.md` 60, `*.agent.md` 80. Measured across every authored asset, after
-frontmatter:
+`*.instructions.md` 60, `*.agent.md` 80. Measured across all seventeen plugins, counting body
+lines after frontmatter:
 
 | Kind | Within budget | Smallest | Median | Largest |
 | --- | --- | --- | --- | --- |
-| `SKILL.md` | 0 of 60 | 42 | 169 | 486 |
-| `*.instructions.md` | 2 of 16 | 48 | 186 | 629 |
-| `*.agent.md` | 0 of 1 | 190 | 190 | 190 |
+| `SKILL.md` | 13 of 116 | 24 | 101 | 486 |
+| `*.instructions.md` | 12 of 35 | 28 | 78 | 629 |
+| `*.agent.md` | 5 of 10 | 65 | 75 | 295 |
 
-Not one skill in the repository meets its budget, and the closest is over. A rule with zero
-compliance is not a rule being broken — it is a rule nobody is reading, and it has been
-restated in every session-start hook while every asset ignored it.
+Eleven percent of skills meet the budget, and the split between them is the finding. It is not
+a rule nobody reads — it is a rule that arrived with the ported plugins and was never adopted
+by the ones written here:
 
-Recorded rather than fixed, because the two ways to close it are both larger than the review
-that found it. Rewriting sixty skills to a quarter of their length would delete the tables,
-the worked shapes, and the decision criteria that are the reason a flow behaves the same way
-twice — `fleet-resolve-issue` runs 486 lines because an unattended worker has nobody to ask.
-Changing the numbers would be inventing a target with no more evidence behind it than the
-first one had.
+| Plugin | Skills within 40 | Median |
+| --- | --- | --- |
+| `spec-builder` — ships the rule | 5 of 5 | 28 |
+| `arc42` | 4 of 8 | 35 |
+| `documentation` | 4 of 9 | 41 |
+| `delivery` | 0 of 31 | 176 |
+| `devbook` | 0 of 13 | 177 |
+| `devbook-flows` | 0 of 5 | 164 |
+| `fleet` | 0 of 3 | 397 |
 
-The rule the assets appear to be following is the one beside it, and it is the one worth
-keeping: *cut what the model already does by default, and state each rule in exactly one file*.
-That one is testable against a diff. A line count is measurable and still went unchecked from
-the first asset onward, which says the number was never the thing anyone was steering by.
+The plugin that *owns* the conciseness rule satisfies it exactly, at a median of 28 lines. The
+four stack-native plugins miss it by four to ten times. Whatever the budget is, it is not
+unreachable — it is unenforced past the boundary the ported assets came across.
+
+Recorded rather than fixed, because rewriting the stack-native skills to a quarter of their
+length would delete the tables, worked shapes, and decision criteria that are the reason a flow
+behaves the same way twice — `fleet-resolve-issue` runs 486 lines because an unattended worker
+has nobody to ask. That is a claim to test, though, not an excuse: `spec-builder` disproves the
+general version of it.
 
 Two ways to close this, and whoever picks one should say so here:
 
-- Restore what the port dropped. `JSdotNet/Copilot`'s
-  `spec-builder/instructions/authoring/spec-conciseness.instructions.md`, where these three
-  numbers come from, opens its budget table with "the budget is the trigger for a disclosure
-  decision, not a hard limit" and closes it with "state the reason in the file when an asset
-  genuinely must exceed its budget". CLAUDE.md carried the numbers across and left both
-  sentences behind, which is what turned a heuristic into a rule nothing satisfies.
+- Restore what the port dropped. `spec-builder`'s own
+  `instructions/authoring/spec-conciseness.instructions.md` — now in this repository, where
+  these three numbers come from — opens its budget table with "the budget is the trigger for a
+  disclosure decision, not a hard limit" and closes it with "state the reason in the file when
+  an asset genuinely must exceed its budget". CLAUDE.md carried the numbers across and left
+  both sentences behind, which is what turned a heuristic into a bare threshold. Adopting the
+  disclosure rule makes every over-budget asset legal the moment it says why, and makes the
+  ones that cannot say why visible.
 - Keep the numbers as an aspiration and say in CLAUDE.md that they are unenforced, so a session
-  stops being told a thing that is false about the repository it is reading.
+  stops being told a thing that is false about most of the repository it is reading.
 
-Until then: **do not cite a body budget when reviewing a change here.** Citing an
-unenforced number is how a review spends its credibility on the one finding that will be
-ignored.
+Until then: **do not cite a bare body budget when reviewing a change here.** Cite the
+disclosure rule instead — an over-budget asset that never says why is the reviewable defect,
+and the line count on its own is not.

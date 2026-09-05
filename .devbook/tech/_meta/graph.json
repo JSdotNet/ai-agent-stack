@@ -277,9 +277,8 @@
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/11-risks-and-technical-debt.md",
-            ".devbook/domain/plugin-authoring/naming.md#host-profile",
             ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
             ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
             ".devbook/tech/hosts.md#claude-code-cli"
           ],
@@ -334,7 +333,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 329,
+          "line": 307,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",

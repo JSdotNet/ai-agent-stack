@@ -6,34 +6,34 @@
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 80,
-    "edges": 129,
+    "nodes": 79,
+    "edges": 126,
     "nodesByFolder": {
       "arc42": 60,
-      "domain": 17,
+      "domain": 16,
       "tech": 3
     },
     "nodesByType": {
       "file": 9,
-      "chapter": 71
+      "chapter": 70
     },
     "nodesByKind": {
       "none": 60,
       "bounded-context": 1,
-      "term": 14,
+      "term": 13,
       "platform": 2,
       "runtime": 1,
       "sub-feature": 1,
       "naming": 1
     },
     "nodesByStatus": {
-      "active": 77,
+      "active": 76,
       "adopted": 2,
       "trial": 1
     },
     "edgesByType": {
       "contains": 52,
-      "related": 77
+      "related": 74
     }
   },
   "problems": [],
@@ -169,21 +169,20 @@
       },
       {
         "data": {
-          "id": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
-          "label": "Host Profile Plugins",
+          "id": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "label": "Host Slots",
           "type": "chapter",
           "folder": "arc42",
           "path": ".devbook/arc42/05-building-block-view.md",
-          "slug": "host-profile-plugins",
+          "slug": "host-slots",
           "level": 2,
           "line": 156,
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-03",
+          "date": "2026-09-05",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#host-profile",
             ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing"
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"
           ]
         }
       },
@@ -196,7 +195,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "fan-out-state",
           "level": 2,
-          "line": 187,
+          "line": 186,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -215,7 +214,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "stack-config",
           "level": 2,
-          "line": 215,
+          "line": 214,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -234,7 +233,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 234,
+          "line": 233,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -535,21 +534,20 @@
       },
       {
         "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
-          "label": "A Host Profile Depends on Nothing",
+          "id": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "label": "No Host Profile Plugins",
           "type": "chapter",
           "folder": "arc42",
           "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "a-host-profile-depends-on-nothing",
+          "slug": "no-host-profile-plugins",
           "level": 2,
           "line": 401,
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-03",
+          "date": "2026-09-05",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#host-profile",
             ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/05-building-block-view.md#host-profile-plugins"
+            ".devbook/arc42/05-building-block-view.md#host-slots"
           ]
         }
       },
@@ -562,7 +560,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "delivery-canvas-ships-both-transports",
           "level": 2,
-          "line": 437,
+          "line": 438,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -581,7 +579,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "a-role-plugin-holds-no-flow-control",
           "level": 2,
-          "line": 466,
+          "line": 467,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-04",
@@ -602,7 +600,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "budgets-are-disclosure-triggers-not-gates",
           "level": 2,
-          "line": 517,
+          "line": 518,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -622,7 +620,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "four-arc42-chapters",
           "level": 2,
-          "line": 554,
+          "line": 555,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -642,7 +640,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "fan-out-is-its-own-plugin",
           "level": 2,
-          "line": 575,
+          "line": 576,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -662,7 +660,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-payload-named-after-its-plugin",
           "level": 2,
-          "line": 597,
+          "line": 598,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -775,7 +773,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "origin",
           "level": 2,
-          "line": 34,
+          "line": 35,
           "status": "active",
           "statusDeclared": false
         }
@@ -789,7 +787,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 49,
+          "line": 50,
           "status": "active",
           "statusDeclared": false
         }
@@ -803,7 +801,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "impact",
           "level": 2,
-          "line": 71,
+          "line": 72,
           "status": "active",
           "statusDeclared": false
         }
@@ -817,7 +815,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 84,
+          "line": 85,
           "status": "active",
           "statusDeclared": false
         }
@@ -834,9 +832,8 @@
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/11-risks-and-technical-debt.md",
-            ".devbook/domain/plugin-authoring/naming.md#host-profile",
             ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
             ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
             ".devbook/tech/hosts.md#claude-code-cli"
           ],
@@ -866,7 +863,7 @@
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "slug": "origin",
           "level": 2,
-          "line": 22,
+          "line": 23,
           "status": "active",
           "statusDeclared": false
         }
@@ -880,7 +877,7 @@
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 35,
+          "line": 36,
           "status": "active",
           "statusDeclared": false
         }
@@ -894,7 +891,7 @@
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "slug": "impact",
           "level": 2,
-          "line": 44,
+          "line": 46,
           "status": "active",
           "statusDeclared": false
         }
@@ -908,7 +905,7 @@
           "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 58,
+          "line": 60,
           "status": "active",
           "statusDeclared": false
         }
@@ -1111,7 +1108,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "role",
           "level": 2,
-          "line": 254,
+          "line": 232,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1131,7 +1128,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-point",
           "level": 2,
-          "line": 143,
+          "line": 142,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1151,7 +1148,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "surface",
           "level": 2,
-          "line": 184,
+          "line": 183,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1166,28 +1163,6 @@
       },
       {
         "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#host-profile",
-          "label": "Host Profile",
-          "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
-          "slug": "host-profile",
-          "level": 2,
-          "line": 233,
-          "status": "active",
-          "statusDeclared": false,
-          "kind": "term",
-          "date": "2026-09-03",
-          "related": [
-            ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
-            ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing"
-          ],
-          "outOfScope": true
-        }
-      },
-      {
-        "data": {
           "id": ".devbook/domain/plugin-authoring/naming.md#host-slot",
           "label": "Host Slot",
           "type": "chapter",
@@ -1195,14 +1170,14 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "host-slot",
           "level": 2,
-          "line": 213,
+          "line": 212,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
           "date": "2026-09-03",
           "related": [
             ".devbook/domain/plugin-authoring/naming.md#host",
-            ".devbook/domain/plugin-authoring/naming.md#host-profile"
+            ".devbook/arc42/05-building-block-view.md#host-slots"
           ],
           "outOfScope": true
         }
@@ -1216,7 +1191,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "fleet-skill",
           "level": 2,
-          "line": 121,
+          "line": 120,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1237,7 +1212,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "stamp",
           "level": 2,
-          "line": 292,
+          "line": 270,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1315,7 +1290,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-namespace",
           "level": 2,
-          "line": 364,
+          "line": 340,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1336,7 +1311,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "tracker",
           "level": 2,
-          "line": 280,
+          "line": 258,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1353,7 +1328,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "gate",
           "level": 2,
-          "line": 166,
+          "line": 165,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1393,7 +1368,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "layer",
           "level": 2,
-          "line": 340,
+          "line": 318,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1491,9 +1466,9 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#host-profile-plugins",
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#host-slots",
           "source": ".devbook/arc42/05-building-block-view.md",
-          "target": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
           "type": "contains"
         }
       },
@@ -1643,9 +1618,9 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "source": ".devbook/arc42/09-architecture-decisions.md",
-          "target": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "type": "contains"
         }
       },
@@ -1923,25 +1898,17 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/05-building-block-view.md#host-profile-plugins->.devbook/domain/plugin-authoring/naming.md#host-profile",
-          "source": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
-          "target": ".devbook/domain/plugin-authoring/naming.md#host-profile",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/05-building-block-view.md#host-profile-plugins->.devbook/domain/plugin-authoring/naming.md#host-slot",
-          "source": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
+          "id": "related:.devbook/arc42/05-building-block-view.md#host-slots->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/arc42/05-building-block-view.md#host-slots",
           "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/05-building-block-view.md#host-profile-plugins->.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
-          "source": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
-          "target": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "id": "related:.devbook/arc42/05-building-block-view.md#host-slots->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "type": "related"
         }
       },
@@ -2179,25 +2146,17 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing->.devbook/domain/plugin-authoring/naming.md#host-profile",
-          "source": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
-          "target": ".devbook/domain/plugin-authoring/naming.md#host-profile",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing->.devbook/domain/plugin-authoring/naming.md#host-slot",
-          "source": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins->.devbook/domain/plugin-authoring/naming.md#host-slot",
+          "source": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing->.devbook/arc42/05-building-block-view.md#host-profile-plugins",
-          "source": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
-          "target": ".devbook/arc42/05-building-block-view.md#host-profile-plugins",
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
           "type": "related"
         }
       },
@@ -2403,14 +2362,6 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/domain/plugin-authoring/naming.md#host-profile",
-          "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
-          "target": ".devbook/domain/plugin-authoring/naming.md#host-profile",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
           "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/domain/plugin-authoring/naming.md#host-slot",
           "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "target": ".devbook/domain/plugin-authoring/naming.md#host-slot",
@@ -2419,9 +2370,9 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
-          "target": ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "type": "related"
         }
       },

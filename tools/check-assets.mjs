@@ -95,7 +95,7 @@ for (const [name, entry] of listed) {
             if (copilot[field] !== claude[field]) error(`${name}: ${field} differs between the Claude and Copilot manifests`);
         }
     } else {
-        notes.push(`${name}: ships only the Claude manifest (a host profile, or an omission)`);
+        error(`${name}: ships only the Claude manifest; every plugin here ships both`);
     }
     // Every agent file the manifest lists must exist, and every agent file must be listed.
     const declared = new Set((claude.agents ?? []).map((a) => a.replace(/^\.\//, "").replace(/\\/g, "/")));

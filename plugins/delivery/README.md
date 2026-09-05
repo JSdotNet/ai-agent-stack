@@ -82,8 +82,8 @@ categories it covers.
   one capability, resolved by pattern from the live tool list. **No surface bound is a normal
   outcome:** produce the file artifacts, say so once, never block a stage.
 - **A host.** A shared skill names a *slot* — `repo-instructions`, `repo-flow-context`,
-  `model-override`, `stage-delegation`, `surface`, `pr-lane` — and a host plugin binds it. A
-  slot is bound, never branched.
+  `model-override`, `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
+  or which takes its documented unbound default. A slot is bound, never branched.
 
 ## Files
 
@@ -100,11 +100,3 @@ categories it covers.
 | `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
 | `resources/delivery-flow-diagrams.md` | The flow diagrams, centralized |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |
-
-## Known gap
-
-No surface plugin ships in this marketplace yet. Until `delivery-dashboard` lands, every run
-resolves no surface, reports that once, and produces file artifacts only — which is a
-supported outcome, not a failure, but it does mean no live run timeline. The legacy
-`orch-dashboard` tool patterns stay in the `flow-runner` allowlist for one version so an
-existing dashboard installation still answers.

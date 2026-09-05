@@ -32,7 +32,7 @@ Read [CLAUDE.md](CLAUDE.md) first. In short: one authored copy per asset, one lo
 per commit, nothing pushed until asked, and before committing:
 
 ```bash
-node tools/check-assets.mjs && node plugins/devbook/tools/knowledge-meta/build.mjs --check
+node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
 ```
 
 To try a change, add this working copy as a marketplace by path instead of by repository.

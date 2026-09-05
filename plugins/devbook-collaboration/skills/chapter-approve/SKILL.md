@@ -12,7 +12,7 @@ the one place `status: approved` is written, and it is never written without a
 person choosing it in this session.
 
 `status`, `approved-by`, and `approved-at` are devbook's fields — see
-`knowledge-chapter-metadata.instructions.md`. The collaboration keys this skill
+`devbook-chapter-metadata.instructions.md`. The collaboration keys this skill
 clears are in `../../instructions/chapter-collaboration.instructions.md`.
 
 This file exceeds the 40-line body budget on purpose. Most of what is over is

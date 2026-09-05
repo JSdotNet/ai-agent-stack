@@ -1,6 +1,6 @@
 ---
 name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, and stale _meta indexes. The check-only half of devbook-sync. Use when: the knowledge-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "knowledge-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -22,7 +22,7 @@ compressing a lookup table costs a repair, not a sentence.
 1. **Check the authored Markdown** from the repository root:
 
    ```
-   node .github/tools/knowledge-meta/build.mjs --check
+   node .github/tools/devbook-meta/build.mjs --check
    ```
 
    Exit codes:
@@ -43,8 +43,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Problem | Cause | Fix |
    |---------|-------|-----|
    | Unresolved reference | A `related`, `depends-on`, or `refines` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
-   | Missing `meta` block | A chapter was added without one | Add a block per `knowledge-chapter-metadata.instructions.md` |
-   | Malformed `meta` block | Wrong field name, wrong value shape, or bad fencing | Correct it against `knowledge-chapter-metadata.instructions.md` |
+   | Missing `meta` block | A chapter was added without one | Add a block per `devbook-chapter-metadata.instructions.md` |
+   | Malformed `meta` block | Wrong field name, wrong value shape, or bad fencing | Correct it against `devbook-chapter-metadata.instructions.md` |
    | Removed schema field | An `order` field left over from before reading order moved to the folder convention | Delete the field. If the generated order is then wrong, give the documents a `number` or mark the entry point `index: root` |
    | Duplicate `number` | Two documents in one directory claim the same number | Renumber one of them, in its filename or its `number` field, so each number identifies one document |
    | Two `index: root` | Two documents in one directory both claim to be its entry point | Keep the one that introduces the directory and drop the field from the other |
@@ -58,8 +58,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Missing `status` | A `.tech` or `.ai` block with no `status` — those folders rate, so absence states nothing | Add `status` from the folder's ladder. In `.domain`, `.arc42`, and `.design` an absent `status` is correct and means the resting value `active` |
    | Resting `status` stated explicitly | A `.domain`, `.arc42`, or `.design` block writes `status: active`, which is what an absent field already says (warning) | Delete the line. If the block is then empty, keep the empty `meta` fence — it is what makes the heading an addressable chapter |
    | Missing `type` | A `.domain`, `.tech`, or `.ai` block with no `type`, or a heading still carrying a kind prefix | Add `type` from the folder's value set and strip the prefix from the heading |
-   | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `knowledge-chapter-metadata.instructions.md`. A link to another chapter belongs in `related` |
-   | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.github/tools/knowledge-meta/metadata.mjs` to make it runnable |
+   | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `devbook-chapter-metadata.instructions.md`. A link to another chapter belongs in `related` |
+   | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.github/tools/devbook-meta/metadata.mjs` to make it runnable |
    | Literal escape sequence in body text | A `` `r`n `` or `\n` was written instead of a line break, usually by a tool writing the file through a shell | Replace it with a real line break. Check whether a heading was glued onto the previous line and silently stopped being a heading |
    | Annotation before the first heading | An `annotation` fence with no chapter above it | Move it under the chapter it is about. A note is addressed by chapter and ordinal, so one outside a chapter has no address |
    | Annotation missing `author`, `date`, or `body` | The three required fields of a note | Add them. `author` is written, never inferred — a note outlives the rewrite `git blame` would have had to follow |
@@ -69,7 +69,7 @@ compressing a lookup table costs a repair, not a sentence.
    | Unrecognized annotation field | A field outside the closed core set (warning) | Move it under `ext.<namespace>` — that is the seam an extension adds state through |
 
    Fix the **source Markdown**, never the generated JSON. Anything under `_meta/`
-   is derived; see `knowledge-derived-artifacts.instructions.md`.
+   is derived; see `devbook-derived-artifacts.instructions.md`.
 
 3. **Re-run the check** until it exits `0`.
 
@@ -100,7 +100,7 @@ compressing a lookup table costs a repair, not a sentence.
 6. **Refresh the derived indexes** if you want this branch current:
 
    ```
-   ./build/Update-KnowledgeIndex.ps1
+   ./build/Update-DevbookIndex.ps1
    ```
 
    Output is deterministic — no timestamps — so "nothing changed" means the
@@ -112,7 +112,7 @@ compressing a lookup table costs a repair, not a sentence.
    edit is what makes the generated JSON conflict on merge. Commit the refresh
    when something is about to read the indexes from this branch — a release, a
    local consumer — and otherwise leave it. See
-   `knowledge-derived-artifacts.instructions.md`.
+   `devbook-derived-artifacts.instructions.md`.
 
 ## When CI fails but local is clean
 

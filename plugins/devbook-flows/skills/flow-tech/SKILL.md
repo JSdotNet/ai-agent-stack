@@ -1,6 +1,6 @@
 ---
 name: flow-tech
-description: 'Run changes to .tech/ — the technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools. Use for any create/update of .tech/technology-graph.md, shared.md, or a layer file, including adding a technology, pinning a version, promoting or retiring a status, or adding a layer. Enforces knowledge-tech.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the graph diagram in sync with depends-on edges.'
+description: 'Run changes to .tech/ — the technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools. Use for any create/update of .tech/technology-graph.md, shared.md, or a layer file, including adding a technology, pinning a version, promoting or retiring a status, or adding a layer. Enforces devbook-tech.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks, and keeps the graph diagram in sync with depends-on edges.'
 ---
 
 # Flow: Technology Knowledge (`.tech/`)
@@ -37,8 +37,8 @@ the existing `.tech/` contents, and continue.
 
 ### Stage 1: Context Loading
 
-- Load `knowledge-tech.instructions.md` and
-  `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
+- Load `devbook-tech.instructions.md` and
+  `devbook-chapter-metadata.instructions.md` (task-scoped, not baseline
   context).
 - Load `.tech/technology-graph.md` plus only the layer files in scope.
 - Load the grounding `.arc42` chapters only when the change touches a stack
@@ -63,7 +63,7 @@ the existing `.tech/` contents, and continue.
 ### Stage 3: Authoring & Metadata Enforcement
 
 - Draft or update chapters using the technology chapter template in
-  `knowledge-tech.instructions.md`; keep each chapter short.
+  `devbook-tech.instructions.md`; keep each chapter short.
 - Add or update the chapter metadata block on every touched technology chapter:
   `status` and `type` required; `version`, `depends-on`, `alternatives`,
   `related`, `issue`, `effort`, `roadmap` optional and omitted when empty.
@@ -83,7 +83,7 @@ the existing `.tech/` contents, and continue.
 - Update the Mermaid diagram in `.tech/technology-graph.md` so its nodes and
   edges match the `depends-on` fields exactly.
 - Regenerate the derived index when the repository ships the generator:
-  `node .github/tools/knowledge-meta/build.mjs --scope .tech`, and confirm it
+  `node .github/tools/devbook-meta/build.mjs --scope .tech`, and confirm it
   reports no broken references. If it reports problems, hand off to
   `devbook-check`.
 - Update the layer table and "Open questions" section when layers or open
@@ -111,9 +111,9 @@ Invoke: flow-tech
 
 ## Output Expectations
 
-- `.tech/` files updated following `knowledge-tech.instructions.md`.
+- `.tech/` files updated following `devbook-tech.instructions.md`.
 - Every touched chapter and file carries a correct metadata block per
-  `knowledge-chapter-metadata.instructions.md`.
+  `devbook-chapter-metadata.instructions.md`.
 - All `depends-on` references resolve, and the graph diagram matches them.
 - Changed paths summarized for the user.
 
@@ -135,7 +135,7 @@ the `.tech/` files stay the source of truth.
 
 ## Reference
 
-- `knowledge-tech.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+- `devbook-tech.instructions.md` and `devbook-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
 - `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
   `surface-contract.instructions.md` — the shared phase, model, and surface

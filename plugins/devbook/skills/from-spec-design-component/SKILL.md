@@ -80,8 +80,8 @@ Write them out as invariants, with the token names.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-design.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read the target chapter,
+   `devbook-design.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read the target chapter,
    `color-scheme.md`, `typography-and-layout.md`, `interaction-guidelines.md`,
    and `accessibility.md`.
 

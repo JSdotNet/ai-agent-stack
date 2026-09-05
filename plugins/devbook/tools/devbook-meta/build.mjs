@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // build.mjs — CLI wrapper that writes the derived knowledge metadata artifacts.
 //
-//   node .github/tools/knowledge-meta/build.mjs           # every adopted scope
-//   node .github/tools/knowledge-meta/build.mjs --check   # CI: verify only, write nothing
-//   node .github/tools/knowledge-meta/build.mjs --scope .tech
-//   node .github/tools/knowledge-meta/build.mjs --root ../other-repo
+//   node .github/tools/devbook-meta/build.mjs           # every adopted scope
+//   node .github/tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
+//   node .github/tools/devbook-meta/build.mjs --scope .tech
+//   node .github/tools/devbook-meta/build.mjs --root ../other-repo
 //
 // Writes three artifacts per scope, per the derived-artifacts convention:
 //
@@ -17,7 +17,7 @@
 // Only folders present in the repository produce a scope, so a repository that
 // adopts just .domain and .arc42 never grows _meta folders for the rest.
 //
-// Graph construction lives in graph.mjs, which the knowledge-graph canvas also
+// Graph construction lives in graph.mjs, which the devbook-graph canvas also
 // imports, so the written indexes and the live view are always the same graph.
 
 import { writeFile, mkdir } from "node:fs/promises";
@@ -27,8 +27,8 @@ import {
     buildGraphDocument,
     outputPathFor,
     discoverLayout,
-    KNOWLEDGE_FOLDERS,
-    NESTED_KNOWLEDGE_FOLDERS,
+    DEVBOOK_FOLDERS,
+    NESTED_DEVBOOK_FOLDERS,
     REPO_SCOPE,
 } from "./graph.mjs";
 import { buildOutlineDocument, outlinePathFor } from "./outline.mjs";
@@ -57,8 +57,8 @@ const availableScopes = layout.folders.length ? [REPO_SCOPE, ...layout.folders] 
 if (!availableScopes.length) {
     console.error(
         `No knowledge folders found under ${REPO_ROOT}. ` +
-            `Expected at least one of: ${KNOWLEDGE_FOLDERS.join(", ")} ` +
-            `(flat layout), or ${NESTED_KNOWLEDGE_FOLDERS.join(", ")} (nested).`
+            `Expected at least one of: ${DEVBOOK_FOLDERS.join(", ")} ` +
+            `(flat layout), or ${NESTED_DEVBOOK_FOLDERS.join(", ")} (nested).`
     );
     process.exit(2);
 }

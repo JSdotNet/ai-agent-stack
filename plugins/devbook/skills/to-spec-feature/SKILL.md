@@ -99,7 +99,7 @@ the capability description as unconfirmed rather than silently downgrading the
 pass.
 
 **Screenshots are evidence, not knowledge.** Treat them the way
-`knowledge-tech-update` treats its inventory JSON: they justify what the chapter
+`devbook-tech-update` treats its inventory JSON: they justify what the chapter
 says and belong in the report, not in `.domain/`. `features.md` stays prose in
 business language, and `.design` explicitly does not hold screenshots either.
 Keep them out of the knowledge folders, and where the repository has a
@@ -115,8 +115,8 @@ up to that point and record the rest from code and tests.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read only the target context's
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read only the target context's
    `features.md` and `naming.md`, plus `domain.md` for the aggregates the
    capability exercises.
 
@@ -194,7 +194,7 @@ up to that point and record the rest from code and tests.
    never resolve it by overwriting the chapter.
 
 7. **Draft the chapter.** Write to the template in
-   `knowledge-domain.instructions.md`. The heading carries the bare name; the
+   `devbook-domain.instructions.md`. The heading carries the bare name; the
    `meta` block carries `status` and `type: feature` — or `type: sub-feature`
    for a chapter grouped under a parent. A new chapter starts at
    `status: draft`; an existing chapter's `status` is left untouched. Include
@@ -215,8 +215,8 @@ up to that point and record the rest from code and tests.
 10. **Regenerate and validate.** After the write lands, per the protocol:
 
     ```bash
-    node .github/tools/knowledge-meta/build.mjs --scope .domain
-    node .github/tools/knowledge-meta/build.mjs --scope .domain --check
+    node .github/tools/devbook-meta/build.mjs --scope .domain
+    node .github/tools/devbook-meta/build.mjs --scope .domain --check
     ```
 
 11. **Report.** Close with the protocol's report table, one row per chapter

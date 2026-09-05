@@ -4,14 +4,14 @@
     Refresh the derived knowledge indexes (`_meta/graph.json`, `_meta/index.json`).
 
 .DESCRIPTION
-    On-demand wrapper around `.github/tools/knowledge-meta/build.mjs`, installed
+    On-demand wrapper around `.github/tools/devbook-meta/build.mjs`, installed
     by the `devbook-sync` skill.
 
     Refreshing the indexes is deliberate, not automatic. The pull-request check
     only warns when they have drifted, because making every knowledge pull
     request carry a regenerated index is what turns those generated files into
     merge conflicts. Run this when you want your own branch current; otherwise
-    the nightly job (`.github/workflows/knowledge-meta-nightly.yml`) reconciles
+    the nightly job (`.github/workflows/devbook-meta-nightly.yml`) reconciles
     the default branch on its own.
 
     Unlike the raw `node` invocation, this reports which index files actually
@@ -31,15 +31,15 @@
     works from any directory inside the repository.
 
 .EXAMPLE
-    ./build/Update-KnowledgeIndex.ps1
+    ./build/Update-DevbookIndex.ps1
     Refresh every adopted scope and list the index files that changed.
 
 .EXAMPLE
-    ./build/Update-KnowledgeIndex.ps1 -Scope .domain
+    ./build/Update-DevbookIndex.ps1 -Scope .domain
     Refresh only the `.domain` indexes.
 
 .EXAMPLE
-    ./build/Update-KnowledgeIndex.ps1 -Check
+    ./build/Update-DevbookIndex.ps1 -Check
     Validate the authored metadata without touching any file.
 #>
 [CmdletBinding()]
@@ -90,13 +90,13 @@ function Get-IndexFingerprints {
 }
 
 $repoRoot = Resolve-RepositoryRoot -Requested $Root
-$generator = Join-Path $repoRoot '.github/tools/knowledge-meta/build.mjs'
+$generator = Join-Path $repoRoot '.github/tools/devbook-meta/build.mjs'
 
 if (-not (Test-Path -LiteralPath $generator -PathType Leaf)) {
     throw "Generator not found at '$generator'. Install it with the devbook-sync skill."
 }
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-    throw 'Node.js is required to run the knowledge-meta generator, and `node` is not on PATH.'
+    throw 'Node.js is required to run the devbook-meta generator, and `node` is not on PATH.'
 }
 
 $arguments = @($generator)
@@ -117,7 +117,7 @@ finally {
 if ($Check) {
     if ($generatorExit -ne 0) {
         Write-Host ''
-        Write-Host 'Knowledge metadata has errors. Fix the Markdown above; regenerating will not clear them.' -ForegroundColor Red
+        Write-Host 'Devbook metadata has errors. Fix the Markdown above; regenerating will not clear them.' -ForegroundColor Red
     }
     exit $generatorExit
 }

@@ -83,8 +83,8 @@ chapter as accepted practice.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-design.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read
+   `devbook-design.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read
    `.design/component-libraries.md`, `color-scheme.md`,
    `typography-and-layout.md`, `interaction-guidelines.md`, and
    `accessibility.md`. Consult the authoritative design source when the
@@ -136,7 +136,7 @@ chapter as accepted practice.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `knowledge-design.instructions.md`. The heading carries the bare name; the
+   `devbook-design.instructions.md`. The heading carries the bare name; the
    `meta` block carries `status` and no `type` — `.design` defines no `type`
    value set, and its `status` ladder is only `draft`, `active`, `deprecated`
    plus the shared `approved` rung. A
@@ -158,8 +158,8 @@ chapter as accepted practice.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .github/tools/knowledge-meta/build.mjs --scope .design
-   node .github/tools/knowledge-meta/build.mjs --scope .design --check
+   node .github/tools/devbook-meta/build.mjs --scope .design
+   node .github/tools/devbook-meta/build.mjs --scope .design --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter

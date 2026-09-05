@@ -32,9 +32,9 @@ one entry inside it and never edits another component's:
       "contractVersion": 6,
       "adopted": ["arc42", "domain", "tech"],
       "materialized": {
-        ".github/tools/knowledge-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
-        ".github/workflows/knowledge-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
-        "build/Update-KnowledgeIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false }
+        ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
+        ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
+        "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false }
       },
       "migrations": [
         { "id": "006-drop-backlog", "applied": "2026-09-03" }
@@ -61,11 +61,11 @@ file wrong the moment a second person opens the repository.
 
 | From the plugin | Into the repository | When |
 |---|---|---|
-| `tools/knowledge-meta/` | `.github/tools/knowledge-meta/` | always |
-| `tools/knowledge-tech/` | `.github/tools/knowledge-tech/` | `.tech` adopted |
-| `assets/workflows/knowledge-meta.yml` | `.github/workflows/knowledge-meta.yml` | GitHub Actions present |
-| `assets/workflows/knowledge-meta-nightly.yml` | `.github/workflows/knowledge-meta-nightly.yml` | GitHub Actions present |
-| `assets/build/Update-KnowledgeIndex.ps1` | `build/Update-KnowledgeIndex.ps1` | always |
+| `tools/devbook-meta/` | `.github/tools/devbook-meta/` | always |
+| `tools/devbook-tech/` | `.github/tools/devbook-tech/` | `.tech` adopted |
+| `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
+| `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
+| `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`

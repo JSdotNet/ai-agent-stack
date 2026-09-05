@@ -73,20 +73,20 @@ instructions.
   views.
 - Each file's top-level chapter, and any independently trackable ## section
   inside it, must carry the metadata block described in
-  `knowledge-chapter-metadata.instructions.md` (status — optional here, see
+  `devbook-chapter-metadata.instructions.md` (status — optional here, see
   below — cross-folder tags, issue link) — required for the derived index and
   graph tooling. There is no `depends-on` field in `.arc42` —
   architecture chapters describe standing structure, not sequenced work;
   cross-references use `related` instead.
 - Because an `.arc42` file is always exactly one top-level chapter, that
   chapter's metadata block also serves as the file's file-level metadata
-  block described in `knowledge-chapter-metadata.instructions.md`
+  block described in `devbook-chapter-metadata.instructions.md`
   — do not add a second, duplicate block for the file.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. Architecture documentation describes a
   standing decision/structure, not a task, so there is no `done`.
 - On top of that ladder sits the shared `approved` rung, defined once in
-  `knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+  `devbook-chapter-metadata.instructions.md`: a person approved this chapter,
   recorded with `approved-by` and `approved-at`. It is written explicitly, never
   rested at, and comes off the moment the content changes.
 - **`active` is this folder's resting value, so it is written by omitting the

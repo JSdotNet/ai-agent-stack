@@ -23,7 +23,7 @@ the way it does; `.tech` links back to it rather than restating rationale.
 > actually used across the development flow, and how far that use has been
 > adopted, is `.ai/`. A `.ai` chapter points at the `.tech` chapter with
 > `depends-on`; the reverse link is never written. See
-> `knowledge-ai.instructions.md`.
+> `devbook-ai.instructions.md`.
 
 ## Context-loading policy
 
@@ -54,7 +54,7 @@ existing layer, and register it in `technology-graph.md`'s layer table in the
 same change. Reading order needs no declaration: `technology-graph.md` is read
 first, then `shared.md`, then the layer files alphabetically, then `tooling.md`
 last — the order shown in the tree above. See
-`knowledge-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.instructions.md`.
 
 ## File responsibilities
 
@@ -67,8 +67,8 @@ last — the order shown in the tree above. See
     carries a file-level block only (same rule as `.domain/context-map.md`).
   - It is `.tech`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
-  Never hand-edited; see `knowledge-derived-artifacts.instructions.md`
-  and the knowledge-meta tooling README (`.github/tools/knowledge-meta/README.md`).
+  Never hand-edited; see `devbook-derived-artifacts.instructions.md`
+  and the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`).
 - **`<layer>.md`** — One `## <Technology Name>` chapter per technology used (or
   under consideration) in that layer. Each chapter is an addressable node in
   the graph and carries a chapter metadata block.
@@ -100,7 +100,7 @@ context to be understood, not a design document.
 ## Metadata fields
 
 `.tech` uses the common fields from
-`knowledge-chapter-metadata.instructions.md` (`status` and `type` required;
+`devbook-chapter-metadata.instructions.md` (`status` and `type` required;
 `related`, `issue`, `effort`, and `roadmap` optional) plus the folder-specific
 fields below.
 
@@ -119,7 +119,7 @@ Maturity of the technology **in this project**, on a tech-radar-style ladder:
 Early in a project most entries are legitimately `candidate`.
 
 On top of this ladder sits the shared `approved` rung, defined once in
-`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+`devbook-chapter-metadata.instructions.md`: a person approved this chapter,
 recorded with `approved-by` and `approved-at`. It rates the chapter, not the
 technology — a chapter can be approved while what it describes is still
 `trial`, which is why the rung is stated rather than rested at.
@@ -165,7 +165,7 @@ Omit every optional field that has no value (no `related: []`, no
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
   renamed, and regenerate the derived index in the same change:
-  `node .github/tools/knowledge-meta/build.mjs --scope .tech`.
+  `node .github/tools/devbook-meta/build.mjs --scope .tech`.
 - Ground stack claims in `.arc42` (especially
   `.arc42/04-solution-strategy.md#technology-choices` and
   `.arc42/09-architecture-decisions.md`) rather than inventing new choices here.

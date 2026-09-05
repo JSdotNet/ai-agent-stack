@@ -152,8 +152,8 @@ unsettled sub-chapter, and leave it out of the invariants list.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read the target `##` chapter,
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read the target `##` chapter,
    every `###` sub-chapter under it, every event chapter it raises, the shared
    groupings it draws from, the context's `naming.md`, and `dependencies.md` for
    the cross-context relationships and published-language entries involved. Do

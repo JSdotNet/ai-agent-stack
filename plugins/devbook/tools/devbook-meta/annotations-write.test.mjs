@@ -11,7 +11,7 @@ import { validateDocument } from "./metadata.mjs";
 
 const FENCE = "```";
 const REL = ".arc42/05-building-block-view.md";
-const ADDRESS = `${REL}#knowledge-meta`;
+const ADDRESS = `${REL}#devbook-meta`;
 
 const SOURCE = [
     "# Building Block View",
@@ -20,7 +20,7 @@ const SOURCE = [
     "status: draft",
     FENCE,
     "",
-    "## Knowledge Meta",
+    "## Devbook Meta",
     "",
     FENCE + "meta",
     "status: draft",

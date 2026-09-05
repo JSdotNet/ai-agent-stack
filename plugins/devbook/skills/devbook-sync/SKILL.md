@@ -1,6 +1,6 @@
 ---
 name: devbook-sync
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the knowledge-meta generator and its CI checks, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the devbook-meta generator and its CI checks, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
 ---
 
 # devbook sync
@@ -26,9 +26,9 @@ in adoption, and a migration are one operation — the stamp says which.
 
 Each adopted folder gets its directory and one starting chapter with a valid
 `meta` block, written to the matching instruction file:
-`knowledge-arc42`, `knowledge-domain`, `knowledge-tech`, `knowledge-design`,
-`knowledge-ai` `.instructions.md`. Required block fields are in
-`knowledge-chapter-metadata.instructions.md`.
+`devbook-arc42`, `devbook-domain`, `devbook-tech`, `devbook-design`,
+`devbook-ai` `.instructions.md`. Required block fields are in
+`devbook-chapter-metadata.instructions.md`.
 
 `.ai` needs its stage set chosen before anything is written: ask which positions
 this repository's development flow actually has, create one numbered file per
@@ -41,6 +41,6 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 
 - Offer `assets/routing-snippet.md` for the user to merge. Never apply it
   silently.
-- Without GitHub Actions, install `build/Update-KnowledgeIndex.ps1` alone and
+- Without GitHub Actions, install `build/Update-DevbookIndex.ps1` alone and
   say plainly that index refresh is now manual.
 - Report a reconcile that ends on a failing check as failing, never as installed.

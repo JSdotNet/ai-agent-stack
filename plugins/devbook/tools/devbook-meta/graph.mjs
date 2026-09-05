@@ -5,7 +5,7 @@
 // Cytoscape.js `elements` JSON, which most graph libraries consume natively or
 // map from trivially.
 //
-// Consumed by the `build.mjs` CLI and by the knowledge-graph canvas, so
+// Consumed by the `build.mjs` CLI and by the devbook-graph canvas, so
 // the CLI output and the live view can never disagree.
 
 import { readFile, readdir, stat } from "node:fs/promises";
@@ -27,12 +27,12 @@ import {
     parseAnnotations,
     resolveAnnotation,
     annotationIssues,
-    KNOWLEDGE_FOLDER_NAMES,
+    DEVBOOK_FOLDER_NAMES,
     NESTED_ROOT,
 } from "./metadata.mjs";
 
 /** Every knowledge folder this convention recognizes. A repository adopts any subset. */
-export const KNOWLEDGE_FOLDERS = KNOWLEDGE_FOLDER_NAMES.map((name) => `.${name}`);
+export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `.${name}`);
 
 /**
  * The same five in the nested layout, under one `.devbook/` parent with the
@@ -40,11 +40,11 @@ export const KNOWLEDGE_FOLDERS = KNOWLEDGE_FOLDER_NAMES.map((name) => `.${name}`
  * output path, and reference below works off the path it is given, so nothing
  * downstream of discovery knows which layout it is looking at.
  */
-export const NESTED_KNOWLEDGE_FOLDERS = KNOWLEDGE_FOLDER_NAMES.map(
+export const NESTED_DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map(
     (name) => `${NESTED_ROOT}/${name}`
 );
 
-export { KNOWLEDGE_FOLDER_NAMES, NESTED_ROOT };
+export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // The repo-visible contract: one number covering the metadata schema a
 // repository authors and the derived artifacts a consumer reads. It moves only
 // when something repo-visible changes shape, which is why a plugin release
@@ -73,7 +73,7 @@ export const CONTRACT_VERSION = 7;
 // presence of a migration decides whether one runs, never the version number.
 export const SCHEMA_VERSION = CONTRACT_VERSION;
 export const REPO_SCOPE = ".";
-export const GENERATOR = ".github/tools/knowledge-meta/build.mjs";
+export const GENERATOR = ".github/tools/devbook-meta/build.mjs";
 
 // Metadata fields that hold `<path>` / `<path>#<slug>` references, and the edge
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
@@ -575,7 +575,7 @@ export async function buildGraphDocument(
 }
 
 /** Every scope this generator knows about: the repo-wide rollup plus one per folder. */
-export const SCOPES = [REPO_SCOPE, ...KNOWLEDGE_FOLDERS, ...NESTED_KNOWLEDGE_FOLDERS];
+export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS, ...NESTED_DEVBOOK_FOLDERS];
 
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
@@ -599,7 +599,7 @@ export async function discoverScopes(repoRoot) {
 export async function discoverLayout(repoRoot) {
     const flat = [];
     const nested = [];
-    for (const name of KNOWLEDGE_FOLDER_NAMES) {
+    for (const name of DEVBOOK_FOLDER_NAMES) {
         if (await isDirectory(path.join(repoRoot, `.${name}`))) flat.push(`.${name}`);
         if (await isDirectory(path.join(repoRoot, NESTED_ROOT, name))) {
             nested.push(`${NESTED_ROOT}/${name}`);

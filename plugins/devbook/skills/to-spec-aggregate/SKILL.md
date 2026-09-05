@@ -152,8 +152,8 @@ service raises it.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Then read only the target
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Then read only the target
    context's `domain.md` and `naming.md`, plus `.domain/context-map.md` for
    cross-context relationships and `dependencies.md` for the published-language
    entries any event consumers rely on. Do not read the whole `.domain` folder.
@@ -213,7 +213,7 @@ service raises it.
    site to an invariant.
 
    Write the surviving rules into the chapter's `### Invariants` table, one row
-   each, per `knowledge-domain.instructions.md`. Step 3 gives you `Enforced at` —
+   each, per `devbook-domain.instructions.md`. Step 3 gives you `Enforced at` —
    the constructor or the named transition the guard clause actually sits in —
    and step 4 gives you `Evidence`: the test selector that asserts the rule, or
    `untested` where a guard clause enforces a rule no test covers. Do not
@@ -248,7 +248,7 @@ service raises it.
    chapter contradicts — stop and ask; never resolve it by overwriting.
 
 8. **Draft the chapters.** Write to the `domain.md` template in
-   `knowledge-domain.instructions.md`. Headings carry bare names; `meta` blocks
+   `devbook-domain.instructions.md`. Headings carry bare names; `meta` blocks
    carry `status` plus `type: aggregate`, `type: entity`, `type: value-object`,
    `type: enum`, `type: shared-value-objects`, `type: shared-enums`, or
    `type: domain-event`. Owned `###` sub-chapters sit **directly** under the
@@ -275,8 +275,8 @@ service raises it.
 11. **Regenerate and validate.** After the write lands, per the protocol:
 
     ```bash
-    node .github/tools/knowledge-meta/build.mjs --scope .domain
-    node .github/tools/knowledge-meta/build.mjs --scope .domain --check
+    node .github/tools/devbook-meta/build.mjs --scope .domain
+    node .github/tools/devbook-meta/build.mjs --scope .domain --check
     ```
 
 12. **Report.** Close with the protocol's report table, one row per chapter —

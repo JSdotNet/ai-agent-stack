@@ -63,7 +63,7 @@ ships one, `devbook-canvas`, which renders the reference graph the generator wri
 diagram looks like.
 
 What coupling exists runs one way and only in source: `devbook-canvas` imports the generator's
-graph, outline, and metadata modules from `tools/knowledge-meta/` by relative path, which is why
+graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
 the live view and the committed index cannot disagree. Nothing in `devbook` imports the canvas.
 Those three imports are also the reason lifting the folder into its own plugin is more than a
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).

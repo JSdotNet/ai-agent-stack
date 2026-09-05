@@ -1,6 +1,6 @@
 ---
 name: flow-ai
-description: 'Run changes to .ai/ — the record of how this project develops with AI: which practice, agent, skill, hook, model, or guardrail is used at which stage of the development flow, the concepts underneath them, and how far adoption has got. Use for any create/update of .ai/adoption-map.md, a stage file, or concepts.md, including adding a usage, promoting or retiring an adoption status, and adding a stage. Enforces knowledge-ai.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks, and keeps the adoption map in sync with the stage files. DO NOT USE FOR: registering the tool itself with its version and vendor (use flow-tech), or AI shipped inside the product (use flow-arc42-content, flow-domain, or flow-tech).'
+description: 'Run changes to .ai/ — the record of how this project develops with AI: which practice, agent, skill, hook, model, or guardrail is used at which stage of the development flow, the concepts underneath them, and how far adoption has got. Use for any create/update of .ai/adoption-map.md, a stage file, or concepts.md, including adding a usage, promoting or retiring an adoption status, and adding a stage. Enforces devbook-ai.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks, and keeps the adoption map in sync with the stage files. DO NOT USE FOR: registering the tool itself with its version and vendor (use flow-tech), or AI shipped inside the product (use flow-arc42-content, flow-domain, or flow-tech).'
 ---
 
 # Flow: AI Knowledge (`.ai/`)
@@ -41,8 +41,8 @@ the existing `.ai/` contents, and continue.
 
 ### Stage 1: Context Loading
 
-- Load `knowledge-ai.instructions.md` and
-  `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
+- Load `devbook-ai.instructions.md` and
+  `devbook-chapter-metadata.instructions.md` (task-scoped, not baseline
   context).
 - Load `.ai/adoption-map.md` plus only the stage files in scope.
 - Load `.tech/tooling.md` (or the layer file registering the tool) only when the
@@ -77,7 +77,7 @@ Otherwise none.
 ### Stage 3: Authoring & Metadata Enforcement
 
 - Draft or update chapters using the chapter template in
-  `knowledge-ai.instructions.md`; keep each chapter short.
+  `devbook-ai.instructions.md`; keep each chapter short.
 - Fill **Adopted by** and **Evidence** honestly. These are the two lines that
   keep `status` from becoming a wish list; `none yet` is a legitimate and useful
   value.
@@ -101,7 +101,7 @@ Otherwise none.
 - Update `adoption-map.md` so its stage table and Mermaid diagram match the
   stage files and their chapters exactly.
 - Regenerate the derived index when the repository ships the generator:
-  `node .github/tools/knowledge-meta/build.mjs --scope .ai`, and confirm it
+  `node .github/tools/devbook-meta/build.mjs --scope .ai`, and confirm it
   reports no broken references. If it reports problems, hand off to
   `devbook-check`.
 - Confirm every `depends-on` resolves to an existing `.tech` or `.ai` chapter,
@@ -132,9 +132,9 @@ Invoke: flow-ai
 
 ## Output Expectations
 
-- `.ai/` files updated following `knowledge-ai.instructions.md`.
+- `.ai/` files updated following `devbook-ai.instructions.md`.
 - Every touched chapter and file carries a correct metadata block per
-  `knowledge-chapter-metadata.instructions.md`.
+  `devbook-chapter-metadata.instructions.md`.
 - All `depends-on` references resolve, and `adoption-map.md` matches the stage
   files.
 - Changed paths and every status change summarized for the user.
@@ -157,9 +157,9 @@ the `.ai/` files stay the source of truth.
 
 ## Reference
 
-- `knowledge-ai.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+- `devbook-ai.instructions.md` and `devbook-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
-- `knowledge-tech.instructions.md` — the registry `.ai` links into with
+- `devbook-tech.instructions.md` — the registry `.ai` links into with
   `depends-on`.
 - `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
   `surface-contract.instructions.md` — the shared phase, model, and surface

@@ -14,7 +14,7 @@ import path from "node:path";
 import {
     folderKindForPath,
     validateDocument,
-    KNOWLEDGE_FOLDER_NAMES,
+    DEVBOOK_FOLDER_NAMES,
     NESTED_ROOT,
 } from "./metadata.mjs";
 import {
@@ -24,8 +24,8 @@ import {
     discoverScopes,
     outputPathFor,
     SCOPES,
-    KNOWLEDGE_FOLDERS,
-    NESTED_KNOWLEDGE_FOLDERS,
+    DEVBOOK_FOLDERS,
+    NESTED_DEVBOOK_FOLDERS,
 } from "./graph.mjs";
 import { buildOutlineDocument } from "./outline.mjs";
 
@@ -37,7 +37,7 @@ const check = (ok, name, detail) => {
 
 // -- Path resolution --------------------------------------------------------
 
-for (const name of KNOWLEDGE_FOLDER_NAMES) {
+for (const name of DEVBOOK_FOLDER_NAMES) {
     check(folderKindForPath(`.${name}/x.md`) === name, `flat .${name}/ resolves to ${name}`);
     check(
         folderKindForPath(`${NESTED_ROOT}/${name}/x.md`) === name,
@@ -74,8 +74,8 @@ check(
 // -- Scope names ------------------------------------------------------------
 
 check(
-    NESTED_KNOWLEDGE_FOLDERS.every((f) => SCOPES.includes(f)) &&
-        KNOWLEDGE_FOLDERS.every((f) => SCOPES.includes(f)),
+    NESTED_DEVBOOK_FOLDERS.every((f) => SCOPES.includes(f)) &&
+        DEVBOOK_FOLDERS.every((f) => SCOPES.includes(f)),
     "SCOPES carries both spellings, so a scope argument is accepted in either layout"
 );
 check(

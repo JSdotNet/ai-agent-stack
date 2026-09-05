@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Deterministic .NET package inventory for knowledge-tech-update.
+// Deterministic .NET package inventory for devbook-tech-update.
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -234,7 +234,7 @@ const packages = summarizePackages(files);
 
 const document = {
     schemaVersion: 1,
-    generatedBy: "tools/knowledge-tech/dotnet-packages.mjs",
+    generatedBy: "tools/devbook-tech/dotnet-packages.mjs",
     ecosystem: "dotnet",
     files,
     packages,

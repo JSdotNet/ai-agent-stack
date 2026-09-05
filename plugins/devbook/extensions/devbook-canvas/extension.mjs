@@ -3,7 +3,7 @@
 // Tailored canvas for this repository's checked-in knowledge folders
 // (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
 // Mermaid diagrams, and parses each chapter/file's `meta` fenced-YAML block
-// (per knowledge-chapter-metadata.instructions.md) into a
+// (per devbook-chapter-metadata.instructions.md) into a
 // structured side panel plus a lightweight metadata lint.
 //
 // Kept intentionally self-contained: rendering is client-side via
@@ -17,15 +17,15 @@ import path from "node:path";
 import { joinSession, createCanvas } from "@github/copilot-sdk/extension";
 import { renderPage } from "./render.mjs";
 import { renderGraphPage } from "./graph-render.mjs";
-import { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE } from "../../tools/knowledge-meta/graph.mjs";
-import { buildOutlineDocument } from "../../tools/knowledge-meta/outline.mjs";
+import { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE } from "../../tools/devbook-meta/graph.mjs";
+import { buildOutlineDocument } from "../../tools/devbook-meta/outline.mjs";
 import {
     parseDocument,
     validateDocument,
     folderKindForPath,
     restingStatusFor,
     testCommand,
-} from "../../tools/knowledge-meta/metadata.mjs";
+} from "../../tools/devbook-meta/metadata.mjs";
 
 // Repository root: the CLI launches project-scoped extensions with cwd set
 // to the git root, which is also where .domain/.arc42/.tech/.design/.ai live.
@@ -33,7 +33,7 @@ const REPO_ROOT = process.cwd();
 
 // One local HTTP server + current document path per open canvas instance.
 const instances = new Map();
-// Same, for knowledge-graph canvas instances.
+// Same, for devbook-graph canvas instances.
 const graphInstances = new Map();
 
 /**
@@ -128,7 +128,7 @@ function setDocument(entry, relPath) {
 }
 
 /**
- * Local server for a knowledge-graph canvas instance.
+ * Local server for a devbook-graph canvas instance.
  *
  * The graph is rebuilt from the Markdown on disk rather than read from the
  * committed `_meta/` artifacts, so the view can never show a stale index. The
@@ -189,7 +189,7 @@ function resolveScope(value) {
 const session = await joinSession({
     canvases: [
         createCanvas({
-            id: "knowledge-graph",
+            id: "devbook-graph",
             displayName: "Knowledge graph",
             description:
                 "Obsidian-style force-directed view of the knowledge graph derived from the `meta` blocks in .arc42/.domain/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",

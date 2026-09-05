@@ -75,8 +75,8 @@ Where the change is a move or a split rather than an addition, the category is
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-arc42.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read the target chapter or
+   `devbook-arc42.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read the target chapter or
    section, `03-context-and-scope.md` for the system boundary, and
    `09-architecture-decisions.md` for the decisions that constrain the
    structure.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Deterministic frontend package inventory for knowledge-tech-update.
+// Deterministic frontend package inventory for devbook-tech-update.
 
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -188,7 +188,7 @@ const packages = summarizePackages(packageJsonFiles);
 
 const document = {
     schemaVersion: 1,
-    generatedBy: "tools/knowledge-tech/frontend-packages.mjs",
+    generatedBy: "tools/devbook-tech/frontend-packages.mjs",
     ecosystem: "frontend",
     files,
     packages,

@@ -29,7 +29,7 @@ Name the artifact you validated against when reporting the change.
 Before committing, run the checker and the generator over this repository's own knowledge:
 
 ```bash
-node tools/check-assets.mjs && node plugins/devbook/tools/knowledge-meta/build.mjs --check
+node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
 ```
 
 The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and

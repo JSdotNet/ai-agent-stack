@@ -74,8 +74,8 @@ each row's `Enforced at` point, and leave `open` rows out of the invariants list
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read the target chapter, its
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read the target chapter, its
    `###` sub-feature chapters, every chapter named in `depends-on`, the
    `related` `domain.md` chapters, and the context's `naming.md`.
 

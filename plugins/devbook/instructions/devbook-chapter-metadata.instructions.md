@@ -147,13 +147,13 @@ Some folders define additional relation fields beyond `related` (e.g.
 which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
 reference field: in `.domain`, `aliases` (defined in
-`knowledge-domain.instructions.md`) is a list of
+`devbook-domain.instructions.md`) is a list of
 plain-string surface names and `feature-flag` (same file) is a list of
 application feature keys, neither of them `<path>#<heading-slug>` references,
 in `.tech`, `alternatives` (defined in
-`knowledge-tech.instructions.md`) is likewise a
+`devbook-tech.instructions.md`) is likewise a
 plain-string list, and in `.ai`, `stage` (defined in
-`knowledge-ai.instructions.md`) is a list of stage
+`devbook-ai.instructions.md`) is a list of stage
 slugs. The universal `roadmap` and `tests` fields below behave the
 same way.
 
@@ -243,11 +243,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   the record comes out with it.
 
   The allowed values are folder-specific; see the `status` section
-  in `knowledge-domain.instructions.md`,
-  `knowledge-arc42.instructions.md`,
-  `knowledge-tech.instructions.md`,
-  `knowledge-design.instructions.md`, or
-  `knowledge-ai.instructions.md` for the value set
+  in `devbook-domain.instructions.md`,
+  `devbook-arc42.instructions.md`,
+  `devbook-tech.instructions.md`,
+  `devbook-design.instructions.md`, or
+  `devbook-ai.instructions.md` for the value set
   that applies to the folder you're editing. A file-level `status` reflects
   the document as a whole and is set independently of its chapters' own
   `status` values (e.g. a file can be `active` overall while one chapter
@@ -462,7 +462,7 @@ run.
 A runner outside that table is not an error: the level and the selector still say
 what covers the chapter. What it loses is the run command, so the generator
 reports it as a warning. Teaching the tooling a new runner means adding its
-command to `TEST_RUNNERS` in `.github/tools/knowledge-meta/metadata.mjs`.
+command to `TEST_RUNNERS` in `.github/tools/devbook-meta/metadata.mjs`.
 
 ### Rules
 
@@ -509,7 +509,7 @@ tests: unit:dotnet:Ordering.Domain.Tests.OrderTests
 ### Running a linked test
 
 `testCommand("<level>:<runner>:<selector>")`, exported from
-`.github/tools/knowledge-meta/metadata.mjs`, returns
+`.github/tools/devbook-meta/metadata.mjs`, returns
 `{ level, runner, selector, command }` — `command` being an argv array meant
 to run from the repository root — or `null` when the entry is malformed or
 names a runner with no mapping. It executes nothing, so it is the seam a "run
@@ -623,15 +623,15 @@ that still carries `order` is a validation error — delete it, and use `number`
 or `index: root` if the order it declared is not what the rules above produce.
 
 The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
-`.github/tools/knowledge-meta/outline.mjs`. Keep that table and the folders'
+`.github/tools/devbook-meta/outline.mjs`. Keep that table and the folders'
 **Structure** blocks in step with each other.
 
 ## Derived metadata index
 
 These metadata blocks are compiled into derived indexes by
-`.github/tools/knowledge-meta/build.mjs` — one pair per knowledge folder plus
+`.github/tools/devbook-meta/build.mjs` — one pair per knowledge folder plus
 a repository-wide rollup, placed per
-`knowledge-derived-artifacts.instructions.md`:
+`devbook-derived-artifacts.instructions.md`:
 
 ```text
 _meta/graph.json          # reference graph, all adopted folders
@@ -649,11 +649,11 @@ Only folders the repository actually has produce a scope.
 Regenerate whenever a chapter or file is added, renamed, or re-linked:
 
 ```bash
-node .github/tools/knowledge-meta/build.mjs
+node .github/tools/devbook-meta/build.mjs
 ```
 
 These are derived output — never edit them by hand. CI
-(`.github/workflows/knowledge-meta.yml`) fails when a reference does not
+(`.github/workflows/devbook-meta.yml`) fails when a reference does not
 resolve or when a committed index is stale. Open the **Knowledge graph**
 canvas (optionally scoped to one folder) to explore it visually. See
-the knowledge-meta tooling README (`.github/tools/knowledge-meta/README.md`) for the output shape.
+the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`) for the output shape.

@@ -1,9 +1,9 @@
-name: Knowledge metadata nightly refresh
+name: Devbook metadata nightly refresh
 
 # Reconciles the committed _meta indexes with the Markdown on the default
 # branch. Installed by the `devbook-sync` skill.
 #
-# The pull-request check (knowledge-meta.yml) only *warns* when an index has
+# The pull-request check (devbook-meta.yml) only *warns* when an index has
 # drifted, because forcing every knowledge pull request to regenerate the
 # indexes is what makes those files conflict on merge. This job is the other
 # half of that trade: refresh happens here, once, on a schedule, in a single
@@ -24,7 +24,7 @@ name: Knowledge metadata nightly refresh
 #      excluded from any branch protection that requires linear history.
 #
 # Note: pushes made with GITHUB_TOKEN deliberately do not trigger other
-# workflows, so the refresh pull request will not run knowledge-meta.yml. That
+# workflows, so the refresh pull request will not run devbook-meta.yml. That
 # is fine — its inputs already passed on the default branch, and this job only
 # rewrites generated output.
 
@@ -38,11 +38,11 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: knowledge-meta-nightly
+  group: devbook-meta-nightly
   cancel-in-progress: false
 
 env:
-  REFRESH_BRANCH: automation/knowledge-meta-refresh
+  REFRESH_BRANCH: automation/devbook-meta-refresh
 
 jobs:
   refresh:
@@ -60,7 +60,7 @@ jobs:
         id: generate
         run: |
           set +e
-          node .github/tools/knowledge-meta/build.mjs
+          node .github/tools/devbook-meta/build.mjs
           echo "status=$?" >> "$GITHUB_OUTPUT"
 
       - name: Detect drift
@@ -98,7 +98,7 @@ jobs:
             to carry them and conflict on merge.
 
             Generated output only — no authored Markdown is touched. Regenerate
-            locally with `./build/Update-KnowledgeIndex.ps1`.
+            locally with `./build/Update-DevbookIndex.ps1`.
         run: |
           existing=$(gh pr list --head "$REFRESH_BRANCH" --state open --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then

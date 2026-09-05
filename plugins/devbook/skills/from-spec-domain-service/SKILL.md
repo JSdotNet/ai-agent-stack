@@ -74,8 +74,8 @@ the first thing lost when the semantics is left implicit.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read the target chapter, the
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read the target chapter, the
    chapters of every aggregate it coordinates, the context's `naming.md`, and
    `dependencies.md` when it reaches across a context boundary.
 

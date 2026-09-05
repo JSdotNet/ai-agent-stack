@@ -38,7 +38,7 @@ user to run something themselves.
 |---|---|
 | The change requires a new architectural decision | `flow-adr` |
 | The change requires a new bounded context or service boundary | `flow-create-service`, or `flow-architecture` for the boundary decision |
-| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-domain` (`knowledge-base`), which owns the domain model; skip this row when that plugin is absent |
+| The change reshapes the **documented** domain model — a new aggregate root, a changed aggregate invariant, or a renamed concept in the ubiquitous language | `flow-domain` (`devbook-flows`), which owns the domain model; skip this row when that plugin is absent |
 | The change requires a cross-cutting redesign | `flow-architecture`, or `flow-arc42` for structured architecture documentation |
 | Accepting known debt instead of fixing it | `flow-tdr` |
 

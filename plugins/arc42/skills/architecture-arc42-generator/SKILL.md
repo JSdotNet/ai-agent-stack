@@ -1,6 +1,6 @@
 ---
 name: architecture-arc42-generator
-description: Interactive arc42 architecture blueprint generator for drafting, validating, and iterating sections using reusable prompt and instruction assets.
+description: Interactive arc42 documentation generator for drafting, validating, and iterating sections using reusable prompt and instruction assets.
 ---
 
 # Architecture arc42 Generator

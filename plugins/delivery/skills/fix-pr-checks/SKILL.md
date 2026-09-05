@@ -152,23 +152,14 @@ verifies the checks pass after the push.
 
 ## Surface Reporting
 
-This skill reports progress through whichever delivery surface is bound, resolved by pattern
-from the live tool list per `instructions/surface-contract.instructions.md`. With no surface
-bound, skip these calls, say so once, and continue — file artifacts remain the source of
-truth. Follow the shared **Reporting Contract** in
-`instructions/surface-contract.instructions.md` for the tool cadence.
+Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`.
+With no surface bound, skip the calls, say so once, and continue — file artifacts remain
+the source of truth.
 
-- Open the surface per the shared contract, then call `start_run` with
-  `skillId: "fix-pr-checks"` and these stages: Collect Failures, Classify,
+- `start_run` with `skillId: "fix-pr-checks"` and these stages: Collect Failures, Classify,
   Reproduce Locally, Fix, Push and Verify, Report.
-- Before each phase, call `update_stage` with `status: "in_progress"`.
-- After each phase, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary of that phase's result. Mark
-  Reproduce Locally `"skipped"` when the failure is environment-only.
 - Each fix-and-push iteration re-enters Fix and Push and Verify; record the
   iteration count in the stage `output` rather than starting a new run.
-- Call `finish_run` with the final check status once the checks are green or the
-  iteration limit is reached.
 
 ## Output
 

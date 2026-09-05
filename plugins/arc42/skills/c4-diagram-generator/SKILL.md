@@ -32,7 +32,7 @@ Use when the user asks to:
 4. Ask focused clarifying questions only for information that is missing or conflicting.
 5. Generate the Mermaid C4 diagram with correct element types and labelled relationships, applying the Color Conventions palette from `instructions/c4/c4-global-instructions.md` via `UpdateElementStyle`.
 6. Write a prose summary (3–5 sentences) explaining the diagram's key design decisions.
-7. Add traceability notes linking the diagram to relevant arc42 sections, ADRs, or blueprint artifacts.
+7. Add traceability notes linking the diagram to relevant arc42 sections or ADRs.
 8. List open questions or assumptions explicitly.
 9. Run `scripts/generate-diagram-svgs.ps1 -Path <directory-of-output-file>` from the plugin root to generate an SVG alongside the Markdown output.
 
@@ -49,17 +49,5 @@ Use when the user asks to:
 
 - Mermaid C4 diagram embedded in a fenced `mermaid` code block
 - Prose summary of the diagram (3–5 sentences)
-- Traceability links to related arc42 sections, ADRs, or blueprints
+- Traceability links to related arc42 sections or ADRs
 - List of open questions or assumptions
-
-## Quality Checks
-
-- [ ] Correct C4 level used for the audience and scope.
-- [ ] All elements have a name, technology tag (if applicable), and description.
-- [ ] All relationships are labelled with a verb phrase.
-- [ ] External systems and personas are marked as external (`_Ext`).
-- [ ] `UpdateElementStyle` color convention applied per `instructions/c4/c4-global-instructions.md`.
-- [ ] Diagram is embedded in a fenced `mermaid` code block.
-- [ ] Prose summary accompanies the diagram.
-- [ ] Traceability links are present where relevant.
-- [ ] SVG file generated in `diagrams/` alongside the Markdown output using `scripts/generate-diagram-svgs.ps1`.

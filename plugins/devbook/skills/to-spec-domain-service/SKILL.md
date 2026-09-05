@@ -83,13 +83,9 @@ evidence either way.
 
 3. **Read the implementation and its tests.** Read the service type in full, its
    registration in the dependency container, every call site, and the aggregates
-   it touches. Apply the protocol's evidence rules without exception: code that
-   executes and tests that pass are evidence; comments, TODOs, doc comments, and
-   disabled tests are not.
-
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   it touches. Apply the protocol's evidence rules.
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Coordination.** A test that arranges several aggregates and asserts all
      of them changed establishes the coordination the chapter has to record —
@@ -106,12 +102,6 @@ evidence either way.
    - **Resumption.** For a process manager, a test that interrupts a run and
      resumes it is the evidence that in-flight state actually persists.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Classify the invocation semantics.** Establish which of the four semantics
    applies, from the registration and call sites rather than from the type name.
@@ -152,33 +142,13 @@ evidence either way.
 10. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- One `type: domain-service` chapter in `.domain/<context>/domain.md`, written
-  through the `.domain` flow.
-- The invocation semantics stated explicitly as one (or more) of the four,
-  evidenced by registration or call sites.
-- Every coordinated aggregate and policy listed.
-- The reason the behaviour does not belong on a single aggregate, stated as
-  evidence rather than assertion.
-- Transactional behaviour across coordinated aggregates recorded.
-- For a process manager, where in-flight state lives — or that it does not
-  persist.
-- Application services reported as findings, not given chapters.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not create a `policy.md` file or a separate `Policy` chapter type. Process
   manager semantics stay in the domain service chapter.
 - Do not capture an application service as a domain service. Transaction
@@ -187,4 +157,4 @@ evidence either way.
 - Do not omit the invocation semantics. A service whose invocation is unrecorded
   reads as command-invoked by default, which is often wrong.
 - Do not describe the coordination without saying whether it is transactional.
-- Do not hand-edit files under `_meta/`.
+

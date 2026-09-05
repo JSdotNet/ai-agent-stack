@@ -151,17 +151,3 @@ run, or `qa:qa` delegation is attempted.
   repository's maintainers. The plugin defines the convention; it does not ship the file.
 - **Single source of truth.** Do not copy this convention's prose into `flow-*/SKILL.md`
   files; reference this file instead.
-
-## Quality Checks
-
-- [ ] The consuming repository's file uses the exact H1 and section headings from the schema
-      above.
-- [ ] `## Test Credentials` contains a pointer, never an actual secret value.
-- [ ] The file pins no model, family, or tier.
-- [ ] A repository with no runnable application declares
-      `**Runnable application:** none` and `## QA Depth` of `skipped`.
-- [ ] The flow-runner reads the file once per run and persists the values it uses, rather
-      than re-reading it per stage.
-- [ ] A missing or malformed file leaves current behavior unchanged.
-- [ ] `## Repo-Native Flow Skills`, when present, names skills that actually exist in the
-      host's repo-native skill folder.

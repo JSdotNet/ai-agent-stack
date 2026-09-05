@@ -111,12 +111,3 @@ If the `impeccable` skill is installed, invoke `/impeccable` as the first step o
 
 ---
 ```
-
-## Quality Checks
-
-- [ ] All Nielsen heuristics considered.
-- [ ] Accessibility (contrast, keyboard, labels) checked.
-- [ ] Consistency against design system verified.
-- [ ] Findings are rated by severity.
-- [ ] Each finding has a clear recommendation.
-- [ ] Report saved to the agreed location.

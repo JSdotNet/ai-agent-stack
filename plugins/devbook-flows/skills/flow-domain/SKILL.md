@@ -23,19 +23,11 @@ structure and metadata conventions.
 If the scope or goal is not stated, derive it in Stage 1 from the request and
 the existing `.domain/` contents, and continue.
 
-## Workflow Stages
+Agent transitions follow `flow-phases.instructions.md` and per-stage model choice
+`flow-model-selection.instructions.md`, both shipped by the `delivery` plugin. A role
+bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
-> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
-> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
-> transitions continue without separate user approval until Personal Validation. A role
-> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
->
-> Model choice per stage follows `flow-model-selection.instructions.md` (category
-> defaults, overridable via personal global model selection). A category model applies
-> only where the stage is delegated with an `Agent` call; an inline stage runs on the
-> session's model.
-
-### Stage 1: Context Loading
+## Stage 1: Context Loading
 
 - Load `knowledge-domain.instructions.md` and
   `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
@@ -49,7 +41,7 @@ the existing `.domain/` contents, and continue.
 
 **Agents:** none (context loading only)
 
-### Stage 2: Domain Modeling
+## Stage 2: Domain Modeling
 
 - Hand off to `domain:domain` for the actual modeling
   decisions: aggregate boundaries, invariants, domain services, domain
@@ -68,7 +60,7 @@ the existing `.domain/` contents, and continue.
 
 **Agents:** `domain:domain`
 
-### Stage 3: Metadata & Cross-Reference Enforcement
+## Stage 3: Metadata & Cross-Reference Enforcement
 
 - Add or update the chapter metadata block (`type` required, `status`
   optional;
@@ -98,7 +90,7 @@ the existing `.domain/` contents, and continue.
 
 **Agents:** `domain:domain`
 
-### Stage 4: Consistency Review
+## Stage 4: Consistency Review
 
 - Confirm `naming.md` aliases still resolve to the correct canonical chapter
   via `related`.
@@ -115,42 +107,20 @@ the existing `.domain/` contents, and continue.
 
 **Agents:** `domain:domain`
 
-### Final Phases (Shared)
+## Final Phases (Shared)
 
 This is a documentation/config flow: after the last stage it runs the shared closing
 phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
 **Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
 plugin's flow names its own tier; the engine never names a skill above it.
 
-## Usage Pattern
-
-```text
-Invoke: flow-domain
-- Context: order-management
-- Files: domain.md, features.md
-- Goal: add a new "Split Order" aggregate behavior and its feature entry
-```
-
-## Output Expectations
-
-- `.domain/` files updated following the exact templates in
-  `knowledge-domain.instructions.md`.
-- Every touched chapter and file carries a correct metadata block per
-  `knowledge-chapter-metadata.instructions.md`.
-- Cross-references (`related`, `depends-on`, `aliases`) kept in sync across
-  the changed and any dependent files.
-- Changed paths summarized for the user.
-
 ## Surface Reporting
 
-This flow reports progress through whichever delivery surface is bound. Resolve it by
-pattern from the live tool list and follow the **Reporting Contract** in
-`surface-contract.instructions.md` (`delivery` plugin) for the
-`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
-Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
-the `.domain/` files stay the source of truth.
+Follow the **Reporting Contract** in `surface-contract.instructions.md` (`delivery`
+plugin). With no surface bound, skip the calls, say so once, and continue — the files on
+disk stay the source of truth.
 
-- Call `start_run` with `skillId: "flow-domain"` and these stages: Context Loading,
+- `start_run` with `skillId: "flow-domain"` and these stages: Context Loading,
   Domain Modeling, Metadata & Cross-Reference Enforcement, Consistency Review, Personal
   Validation, Create Pull Request, Work Item Update, Summary.
 - During **Domain Modeling**, call `render_diagram` with any updated aggregate,
@@ -161,8 +131,5 @@ the `.domain/` files stay the source of truth.
 
 - `knowledge-domain.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
-- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
-  `surface-contract.instructions.md` — the shared phase, model, and surface
-  contracts, shipped by the `delivery` plugin.
 - `devbook`'s `assets/routing-snippet.md` — optional repository-local
   context-loading and routing policy; a flow ships procedure, not routing policy.

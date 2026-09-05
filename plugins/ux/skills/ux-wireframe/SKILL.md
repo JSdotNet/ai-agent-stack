@@ -71,12 +71,3 @@ If a project style guide or design guidelines document exists, load that too.
 
 - One SVG wireframe file per screen or component
 - Short confirmation note: output path, layout pattern used, fidelity level, open questions
-
-## Quality Checks
-
-- [ ] `viewBox`, `<title>`, and `<desc>` are present.
-- [ ] All screen regions are labelled.
-- [ ] Interactive elements are annotated with actions or targets.
-- [ ] Fidelity level is reflected in file name or companion README.
-- [ ] Placeholder content is marked.
-- [ ] Accessibility annotations are included where meaningful.

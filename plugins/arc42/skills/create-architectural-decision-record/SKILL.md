@@ -29,9 +29,3 @@ Use when the user requests a decision record for an architectural choice, trade-
 ## Output
 
 Create ADRs in the repository ADR location with standardized metadata and sections.
-
-## Quality Checks
-
-- Decision and alternatives are explicit.
-- Consequences include operational and maintenance impact.
-- Status and ownership are clear.

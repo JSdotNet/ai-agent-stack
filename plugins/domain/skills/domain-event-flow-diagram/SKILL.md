@@ -40,12 +40,3 @@ Use after `domain-exploration` or `domain-model-design` has identified commands,
 
 - One or more Mermaid `sequenceDiagram` blocks showing the command-event-policy chain for each identified process.
 - Diagrams embedded in `domain.md` or the relevant bounded context file(s).
-
-## Quality Checks
-
-- Every command has a triggering actor or policy.
-- Every domain event is raised by exactly one aggregate.
-- Cross-context event flows show bounded context boundaries using `Note over` separators.
-- Policies that react to events and produce new commands are explicitly shown.
-- Diagram participant names use ubiquitous language, not technical identifiers.
-- SVG file(s) generated in `diagrams/` alongside the Markdown output using `scripts/generate-diagram-svgs.ps1`.

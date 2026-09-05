@@ -30,12 +30,3 @@ are applied.
   `sessionStart` prompt, which both hosts honour.
 - Follow [spec-conciseness.instructions.md](spec-conciseness.instructions.md) for pruning and
   the 60-line budget.
-
-## Validation Checklist
-
-- [ ] `applyTo` pattern matches intended files.
-- [ ] `description` is specific and discoverable.
-- [ ] Scope boundaries are explicit and non-contradictory.
-- [ ] At least one skill or agent references the file by path, or the rule is promoted to a
-      `sessionStart` hook.
-- [ ] Every line changes behavior versus the model default, and no meaning appears twice.

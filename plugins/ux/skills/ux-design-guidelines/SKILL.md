@@ -69,13 +69,3 @@ If the `impeccable` skill is installed, invoke `/impeccable` before drafting des
 
 - One primary `design-guidelines.md` document (or update to an existing file)
 - Short confirmation note: output path, sections covered, and any `[TODO: define]` items
-
-## Quality Checks
-
-- [ ] Colour palette with hex codes and usage rules is present.
-- [ ] Typography scale with sizes and weights is defined.
-- [ ] Spacing scale with base unit and named steps is documented.
-- [ ] At least one component pattern is fully specified with states and variants.
-- [ ] Breakpoints are named with pixel ranges.
-- [ ] Voice and tone section has at least two concrete copy examples.
-- [ ] Missing sections are marked with `[TODO: define]`, not omitted silently.

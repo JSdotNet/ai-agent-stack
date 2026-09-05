@@ -133,9 +133,8 @@ up to that point and record the rest from code and tests.
    rules without exception: code that executes and tests that pass are evidence;
    comments, TODOs, doc comments, and disabled tests are not.
 
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Scope.** The set of scenarios covered maps closely onto the sub-features
      the chapter should list; a scenario nobody tests is worth noting as thinly
@@ -147,12 +146,6 @@ up to that point and record the rest from code and tests.
      capability, it is evidence of the path but not of the feature. Keep the
      chapter in business language.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Run the application and use the feature.** Start it the repository's own
    way — `qa:aspire-run` for an Aspire-orchestrated app, otherwise whatever the
@@ -222,44 +215,13 @@ up to that point and record the rest from code and tests.
 11. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- One `type: feature` chapter — with `type: sub-feature` `###` chapters where
-  the capability has distinguishable parts — in `.domain/<context>/features.md`,
-  written through the `.domain` flow.
-- The capability stated in business language, with no implementation nouns.
-- The application actually run and the feature actually used, with the observed
-  flow recorded: the steps, their order, where it ends, and the wording the
-  interface uses.
-- A screenshot per distinguishable step, held as evidence in the report and kept
-  out of `.domain/`.
-- The sub-feature breakdown taken from the observed seams where the flow and the
-  code suggest different splits.
-- Any disagreement between the interface wording, the code, and `naming.md`
-  reported rather than quietly normalised.
-- Where the application could not be started, or a destructive step was
-  deliberately not exercised, that stated plainly and the affected part marked
-  unconfirmed.
-- `feature-flag` set only from a flag key actually checked in code, as an
-  identity link.
-- `depends-on` set only where a genuine delivery ordering exists between
-  features.
-- `related` pointing at the `domain.md` chapters the capability exercises.
-- Business value grounded, or left as an open question rather than invented.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not write endpoints, controllers, components, or table names into
   `features.md`. It is business language.
 - Do not infer the chapter's `status` from the feature flag's maturity, or the
@@ -284,4 +246,4 @@ up to that point and record the rest from code and tests.
   prose in business language.
 - Do not claim the flow was observed when it was not. An unconfirmed capability
   description is fine; a fabricated one is not.
-- Do not hand-edit files under `_meta/`.
+

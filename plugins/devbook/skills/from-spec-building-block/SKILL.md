@@ -38,15 +38,10 @@ so confirm before building from anything below `active`.
 
 ## Chapter status gate
 
-Check `status` before doing anything else, per the protocol's status rules:
-
-- `approved` — proceed. A person has approved this chapter; that is what the
-  rung is for.
-- `active` — proceed.
-- `draft` or `proposed` — stop and confirm. State what the chapter claims and
-  that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through the `.arc42` flow first.
-- `deprecated` — do not build. Report it and stop.
+Check `status` before anything else, per the protocol's status rules: `approved` and
+`active` proceed; `draft` or `proposed` stops to confirm — say what the chapter claims and
+that it is not agreed, then ask whether to build it as written or settle it first;
+`deprecated` stops.
 
 ## Spec-to-code mapping
 
@@ -126,40 +121,10 @@ Where the change is a move or a split rather than an addition, the category is
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.
 
-## Output expectations
-
-- Exactly one change category: `new functionality`,
-  `change to existing behaviour`, or `defect`, with the reasoning for it.
-- **Outcomes**, **invariants**, **ubiquitous language**, **out of scope**, and
-  **acceptance checks**, as the protocol defines them.
-- The target structure stated as blocks with responsibilities and permitted
-  dependency edges.
-- Negative acceptance checks — which block must not reference which — assertable
-  as architecture or reference tests.
-- A no-cycle check on the reference graph.
-- Every current location of anything that must move, listed, when the change is
-  a move or a split.
-- An explicit statement that behaviour does not change, where the brief is
-  purely structural.
-- The protocol's report table, with the verdict and the evidence behind it.
-- No change to any file in the repository.
-
 ## Do not
 
-- Do not edit source code, test code, project files, or infrastructure files.
-  This skill emits a brief.
-- Do not name a code-side delivery or orchestration skill of any kind. The brief
-  stops at the brief; which flow picks it up is the user's decision, made after
-  reading it.
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
-- Do not build from a `draft` or `proposed` chapter without explicit
-  confirmation, and never from a `deprecated` one.
-- Do not turn a `conflict` into a `defect` brief. Stop and ask which side is
-  wrong.
-- Do not ask for work that already exists — read the counterpart first.
-- Do not treat a TODO, a comment, or a disabled test as proof that something is
-  already built.
 - Do not brief a behaviour change alongside a structural one. Say explicitly
   that behaviour is unchanged, and keep it that way.
 - Do not omit the negative dependency checks. Without them the structure erodes.
@@ -170,3 +135,4 @@ Where the change is a move or a split rather than an addition, the category is
   through the `.arc42` flow.
 - Do not brief package or version changes. Those go through the repository
   package-update workflow and are recorded in `.tech`.
+

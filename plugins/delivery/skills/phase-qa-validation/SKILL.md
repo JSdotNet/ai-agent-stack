@@ -235,6 +235,5 @@ the evidence file is the record, and the surface renders it from disk on demand.
 
 ## Reference
 
-Source skill location: `skills/phase-qa-validation/SKILL.md`.
 Phase definition: `instructions/flow-phases.instructions.md`.
 Repo context convention: `instructions/flow-repo-context.instructions.md`.

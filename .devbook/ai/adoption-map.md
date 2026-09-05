@@ -8,83 +8,55 @@ type: adoption-map
 
 How this repository is itself built with AI. The assets it ships are the product and are
 described in `.devbook/arc42` and `.devbook/domain`; what follows is only how the work gets
-done here.
+done here. The practices live one chapter each in the stage files; this file is the map.
 
-## Claude Code as Authoring Host
+## Stages
 
-```meta
-status: adopted
-type: practice
-stage: author
-related: [".devbook/tech/technology-graph.md#claude-code-plugin-api"]
+Three stages is the whole flow for a repository whose product is Markdown: an asset is
+written, a change is carried to a commit, and the result is checked. A stage is added here in
+the same change that adds its file.
+
+| Stage | File | Covers |
+| --- | --- | --- |
+| author | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
+| deliver | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out lane nothing here has used. |
+| verify | [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
+
+## Adoption Picture
+
+Stages in flow order, with the chapters that sit at each one. Shading is `status`.
+
+```mermaid
+graph LR
+  subgraph author
+    host[Claude Code as Authoring Host]
+  end
+  subgraph deliver
+    flows[Flow Skills]
+    fanout[Fan-Out]
+  end
+  subgraph verify
+    eval[Plugin Evaluation]
+  end
+  host --> flows
+  flows --> eval
+  flows -. never yet .-> fanout
+  classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
+  classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
+  classDef candidate fill:#e6e6e6,stroke:#7a7a7a,color:#333;
+  class host adopted;
+  class flows trial;
+  class fanout,eval candidate;
 ```
 
-Assets are authored in the host that loads them, in a worktree per change. Authoring in the
-host is what surfaces a load failure — a rejected model pin, a duplicate hooks file — while the
-change is still being written.
+## How to Read It
 
-## Flow Skills
+`status` reuses the `.tech` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
+rates a way of working, not a tool. One chapter is `adopted` because it is how every change
+here has been made. One is `trial` because everything it needs has landed and nothing has used
+it. Two are `candidate` because the honest first use is somewhere else, or has not happened.
 
-```meta
-status: trial
-type: skill
-stage: deliver
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
-```
-
-Task categories route to a `flow-<category>` skill that runs the category end to end. `delivery`
-now ships fifteen of them, so the routing this repository works under is its own rather than
-inherited.
-
-Every knowledge folder now has its own flow too: `devbook-flows` ships five, so an edit to
-`.devbook/` routes through `flow-domain`, `flow-tech`, `flow-design`, `flow-arc42-content`, or
-`flow-ai` rather than through `flow-fallback`.
-
-A flow run here can also report into a surface: `delivery-dashboard`, `delivery-canvas`, and
-`delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
-recorded file depending on which is enabled.
-
-The slots those flows read are answered too. `claude-desktop` binds them for the host this
-repository is authored in — `CLAUDE.md` as `repo-instructions`, sub-agents as
-`stage-delegation`, `delivery-dashboard` as `surface` — so a flow run here resolves them from
-an installed profile rather than falling through to defaults.
-
-So are the specialists. Seven role plugins ship here now, and until they did, every stage a
-flow delegates named an agent that resolved to nothing: 251 `plugin:asset` references into
-plugins this marketplace did not offer. `spec`, `implement`, `verify`, `app.start`, and
-`qa.run` have providers, and five of the seven roles do.
-
-Still `trial`, and now for the only reason left: nothing has used it. Everything that was
-missing has landed, so what is untested is the routing itself. Promote this to `adopted` once
-a change in this repository has actually been carried by a flow end to end, reporting into one
-of those surfaces.
-
-## Fan-Out
-
-```meta
-status: candidate
-type: skill
-stage: deliver
-related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
-```
-
-`fleet` ships here, so a backlog could be swept and worked five issues at a time instead of one
-session at a time. Nothing here has done it: this repository's backlog is small enough that the
-one-issue lane has never been the constraint, and a sweep dispatches workers that open pull
-requests nobody asked for if the triage is wrong.
-
-`candidate` rather than `trial` because the honest first use is somebody else's repository. The
-thing to watch when it is tried is the park rate — a sweep that parks four of five issues is
-the design working, and reading that as a failure is how the bar gets lowered.
-
-## Plugin Evaluation
-
-```meta
-status: candidate
-type: practice
-stage: verify
-```
-
-`claude plugin eval` runs a suite against a plugin's skills, which is the only way to check an
-asset actually triggers when it should. Untried here — the first plugin to land is the first
-thing to evaluate.
+To add a practice, write its `##` chapter in the stage file where it applies, with `status`,
+`type`, and the four fields the chapter template asks for, then add its node to the picture
+above in the same change. To promote one, change the rating in the chapter and in the `class`
+line here together, and say in the chapter what the evidence was.

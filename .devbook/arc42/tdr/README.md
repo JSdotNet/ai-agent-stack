@@ -38,7 +38,7 @@ content.
 
 | Record | Logged | Severity | State |
 | --- | --- | --- | --- |
-| [1. The body budgets are unenforced](1-body-budgets-unenforced.md) | 2026-09-04 | Low | identified |
+| [1. The body budgets are unenforced](1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress |
 | [2. fleet names the Claude CLI directly](2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified |
 
 Neither carries a target date. This repository has one maintainer and no release commitment to

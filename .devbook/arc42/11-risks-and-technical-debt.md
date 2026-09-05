@@ -17,7 +17,7 @@ related: [".devbook/arc42/tdr/README.md"]
 
 | Record | Logged | Severity | State | In one line |
 | --- | --- | --- | --- | --- |
-| [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | identified | CLAUDE.md states three size budgets as bare thresholds; 13 of 116 skills meet them, and the disclosure rule that made them checkable was dropped in the port. |
+| [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress | CLAUDE.md states three size budgets as bare thresholds; 13 of 116 skills meet them, and the disclosure rule that made them checkable was dropped in the port. |
 | [2. fleet names the Claude CLI directly](tdr/2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified | `fleet` names a host's CLI although it is not a host profile, so on any other host a sweep dispatches nothing — and its manifest does not say so. |
 
 Both were carried out of chapter 9, where they had been written as decisions. Neither is one:

@@ -10,7 +10,6 @@ tools:
   - 'edit/createFile'
   - 'edit/editFiles'
   - 'execute/createAndRunTask'
-  - 'agent'
   - 'terminal/runInTerminal'
   - 'doctor'
   - 'list_apphosts'
@@ -86,7 +85,6 @@ tools:
   - 'Write'
   - 'Edit'
   - 'Bash'
-  - 'Agent'
   - 'mcp__plugin_qa_aspire'
   - 'mcp__aspire'
   - 'mcp__plugin_qa_playwright'
@@ -179,7 +177,7 @@ scenarios finish.
 ## Scope
 
 - **In scope**: running Aspire AppHost solutions for QA purposes, feature validation and exploratory/regression testing through a real browser, evidence capture (screenshots/video), correlating UI behavior with Aspire logs/traces, structured QA reporting.
-- **Out of scope**: writing or maintaining unit/integration test code (see the `development` plugin's testing agent), architecture or security review, fixing implementation bugs (report and hand off instead).
+- **Out of scope**: writing or maintaining unit/integration test code (the `csharp-coding` plugin's `coding` agent), architecture or security review, fixing implementation bugs (report and name the owner instead).
 
 ## Workflow
 
@@ -286,17 +284,17 @@ author a test for an unvalidated guess.
 
 ## Handoffs
 
-When a finding is outside this agent's scope, propose a handoff — never perform one
-unannounced:
+When a finding is outside this agent's scope, name where it belongs and why. This agent
+performs no handoff and holds no approval gate — whether the work moves is the caller's
+decision:
 
 - **QA Monitor agent** (`qa:qa-monitor`) — to give continuous Aspire log/trace monitoring a dedicated persona (see `delegate-to-qa-monitor` skill).
 - **Coding agent** (`csharp-coding:coding`) — to fix a runtime bug found during validation.
 - **SRE guidance** (`csharp-coding` plugin's `sre` skill) — for reliability/observability follow-up on repeated log errors.
 
-When you have a user turn, ask for approval in the required wording: "I recommend handing
-this off to `<agent>` because `<reason>`. Do you approve this handoff?" When you have no user
-turn, put the same recommendation and reason into what you return to your caller and let it
-decide — do not switch, and do not wait (see [Invocation Context](#invocation-context)).
+State it as "This belongs with `<agent>` because `<reason>`" — in the conversation when you
+have a user turn, in what you return to your caller when you do not. Either way, do not
+switch and do not wait (see [Invocation Context](#invocation-context)).
 
 ## Constraints
 
@@ -304,7 +302,7 @@ decide — do not switch, and do not wait (see [Invocation Context](#invocation-
 - Do not imply Playwright screenshot/video evidence was captured when only browser-canvas
   snapshots or smoke output exist.
 - Do not stop log monitoring before Playwright validation finishes — a UI that "looks fine" can still be logging errors.
-- Do not implement code fixes yourself; report findings and offer a handoff.
+- Do not implement code fixes yourself; report findings and name the owner.
 - Do not fabricate log or trace content — only report what the Aspire MCP tools actually returned.
 - Do not report to a run dashboard or canvas. The caller owns run tracking and renders your
   report; you return findings to it.

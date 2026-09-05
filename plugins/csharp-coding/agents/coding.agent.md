@@ -10,14 +10,7 @@ tools:
   - 'edit/createFile'
   - 'edit/editFiles'
   - 'execute/createAndRunTask'
-  - 'agent'
   - 'terminal/runInTerminal'
-  - 'list_projects'
-  - 'create_session'
-  - 'send_session_message'
-  - 'list_sessions_and_chats'
-  - 'get_session'
-  - 'respond_to_session_plan'
   - 'Read'
   - 'Grep'
   - 'Glob'
@@ -26,8 +19,6 @@ tools:
   - 'Write'
   - 'Edit'
   - 'Bash'
-  - 'Agent'
-  - 'SendMessage'
   - 'Skill'
 ---
 
@@ -79,7 +70,7 @@ When an MCP server is unavailable, fall back to `web/fetch` against `https://lea
 2. Apply the `code-review` skill checklist.
 3. Check: correctness, SOLID violations, async/await correctness, null safety, error handling, security, test coverage, naming consistency.
 4. Report findings grouped by severity: Blocking → Important → Suggestion.
-5. Do NOT make changes; report only. Ask for approval before fixing anything.
+5. Do NOT make changes; report only. Whether a finding is fixed, and by whom, is the caller's decision.
 
 ### Optimize Code
 
@@ -111,8 +102,7 @@ Apply the `feature-proposal` skill:
 1. Describe the proposed feature with context and motivation.
 2. Identify affected areas (domain, application, infrastructure, tests).
 3. Estimate effort and list assumptions.
-4. Store the proposal under `.wip/proposals/` and report the path.
-5. Ask for approval before proceeding with implementation.
+4. Store the proposal under `.wip/proposals/` and report the path, then stop. Implementing it is a separate request from whoever consulted you.
 
 ### Package Management
 

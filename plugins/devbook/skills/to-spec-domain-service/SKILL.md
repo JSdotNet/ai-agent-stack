@@ -83,13 +83,9 @@ evidence either way.
 
 3. **Read the implementation and its tests.** Read the service type in full, its
    registration in the dependency container, every call site, and the aggregates
-   it touches. Apply the protocol's evidence rules without exception: code that
-   executes and tests that pass are evidence; comments, TODOs, doc comments, and
-   disabled tests are not.
-
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   it touches. Apply the protocol's evidence rules.
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Coordination.** A test that arranges several aggregates and asserts all
      of them changed establishes the coordination the chapter has to record —
@@ -106,12 +102,6 @@ evidence either way.
    - **Resumption.** For a process manager, a test that interrupts a run and
      resumes it is the evidence that in-flight state actually persists.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Classify the invocation semantics.** Establish which of the four semantics
    applies, from the registration and call sites rather than from the type name.

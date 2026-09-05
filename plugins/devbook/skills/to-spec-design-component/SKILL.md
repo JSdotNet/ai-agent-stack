@@ -98,13 +98,9 @@ chapter as accepted practice.
 3. **Read the implementation and its tests.** Read the front-end manifests, then
    the import sites, then the component usage, then the styling — looking
    specifically for hard-coded values where a token is declared, and for
-   pointer-only interactions. Apply the protocol's evidence rules without
-   exception: code that executes and tests that pass are evidence; comments,
-   TODOs, doc comments, and disabled tests are not.
-
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   pointer-only interactions. Apply the protocol's evidence rules.
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Keyboard equivalence.** A test that drives an interaction by keyboard is
      the evidence that the pointer-only rule is satisfied. Its absence on a
@@ -115,12 +111,6 @@ chapter as accepted practice.
    - **Component tests.** Which components are rendered in tests confirms real
      adoption, as distinct from a package merely being installed.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Defer to the authoritative design source.** Where the repository has an
    authoritative design source, compare what the code does against what that

@@ -90,13 +90,9 @@ not copy.
 3. **Read the implementation and its tests.** Read the solution and project
    files, the project and package references, the dependency-container
    registrations, the public API surfaces, and any AppHost or compose file that
-   declares the runnable units. Apply the protocol's evidence rules without
-   exception: code that executes and tests that pass are evidence; comments,
-   TODOs, doc comments, and disabled tests are not.
-
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   declares the runnable units. Apply the protocol's evidence rules.
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Architecture tests.** Where they exist, they are the most direct
      statement of the intended dependency direction, and comparing them against
@@ -107,12 +103,6 @@ not copy.
    - **Contract tests.** These name the interfaces a block genuinely exposes, as
      distinct from everything its public surface happens to permit.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Settle the decomposition levels.** Establish level 1 from what actually
    runs independently, and level 2 from what other blocks depend on as a unit. A

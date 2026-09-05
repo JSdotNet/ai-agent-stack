@@ -133,9 +133,8 @@ up to that point and record the rest from code and tests.
    rules without exception: code that executes and tests that pass are evidence;
    comments, TODOs, doc comments, and disabled tests are not.
 
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Scope.** The set of scenarios covered maps closely onto the sub-features
      the chapter should list; a scenario nobody tests is worth noting as thinly
@@ -147,12 +146,6 @@ up to that point and record the rest from code and tests.
      capability, it is evidence of the path but not of the feature. Keep the
      chapter in business language.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Run the application and use the feature.** Start it the repository's own
    way — `qa:aspire-run` for an Aspire-orchestrated app, otherwise whatever the

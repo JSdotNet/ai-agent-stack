@@ -170,11 +170,9 @@ service raises it.
    full inventory before writing anything — the placement decisions later in
    this pass depend on knowing every member of the boundary.
 
-4. **Read the unit tests, deliberately.** This is the highest-value step in the
-   pass and the easiest to skimp. The aggregate's unit tests are the closest
-   thing the repository has to a written specification of its rules, and they
-   carry it in the domain's own language. Read the test class for the root and
-   for each owned type, and mine them for:
+4. **Read the unit tests, deliberately**, per **Unit tests are first-class
+   evidence** in the protocol. Read the test class for the root and for each
+   owned type, and mine them for:
 
    - **Invariants.** A test asserting that construction or a transition is
      rejected is the strongest available statement that the rule holds. It also
@@ -197,13 +195,6 @@ service raises it.
    - **Equality and immutability.** Value object tests asserting two instances
      with equal components are equal, or that a mutation returns a new instance,
      are the direct evidence for those chapter fields.
-
-   Two absences are also informative, and neither is evidence of behaviour. A
-   rule with **no** test is worth noting as thinly covered rather than recording
-   with the same confidence as a tested one. A **disabled, skipped, or
-   commented-out** test is not evidence at all — per the protocol it is a record
-   of an intention, and a strong hint that the rule it asserts may not hold.
-   Where a rule appears only in a disabled test, record it as an open question.
 
 5. **Establish the invariants.** For each rule the code enforces, decide whether
    it is an invariant of the aggregate or a rule of one caller. An invariant is

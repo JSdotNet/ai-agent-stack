@@ -50,17 +50,18 @@ host.
 
 An `mcp/<server>/` folder holds a server's own tree — its entry point, its modules, its pages,
 and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
-else in the plugin has to know the folder exists. `delivery-dashboard`, `delivery-canvas`, and
-`delivery-collector` each ship exactly one.
+else in the plugin has to know the folder exists. `delivery-dashboard` and
+`delivery-collector` each ship exactly one; `delivery-canvas` ships none — see
+[the decision](09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only).
 
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
 ships one, `devbook-canvas`, which renders the reference graph the generator writes to
-`_meta/graph.json`. `delivery-canvas` ships one too, reading its pages out of its own
-`mcp/delivery-canvas/views/` so the canvas and the MCP server cannot disagree about what a
-diagram looks like.
+`_meta/graph.json`. `delivery-canvas` ships one too, and it is that plugin's only transport:
+its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
+manifest and no marketplace entry.
 
 What coupling exists runs one way and only in source: `devbook-canvas` imports the generator's
 graph, outline, and metadata modules from `tools/knowledge-meta/` by relative path, which is why
@@ -137,7 +138,7 @@ answers is decided by what is installed, and none answering is a normal outcome.
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |
 | `delivery-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
-| `delivery-canvas` | no | yes | no | The same two viewers, as an MCP server and as Copilot canvases from one copy of each page |
+| `delivery-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
 | `delivery-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
 
 Each declares exactly the tool names its groups name and nothing more, which is what makes one

@@ -42,7 +42,9 @@ Every knowledge folder now has its own flow too: `devbook-flows` ships five, so 
 
 A flow run here can also report into a surface: `delivery-dashboard`, `delivery-canvas`, and
 `delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
-recorded file depending on which is enabled.
+recorded file depending on which is enabled. Two of the three are installable on this host:
+`delivery-canvas` is a Copilot canvas, so it is not in the marketplace here and a run in this
+repository renders through the dashboard.
 
 The slots those flows read are answered too. `claude-desktop` binds them for the host this
 repository is authored in — `CLAUDE.md` as `repo-instructions`, sub-agents as

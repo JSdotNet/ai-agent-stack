@@ -91,9 +91,9 @@ resolves it when it opens the extension, which is why no `package.json` declares
 nothing here breaks when it is absent.
 
 `trial`: nothing in this repository has opened a canvas on that host. The unverified part is
-not the import — it is whether a page written for the MCP viewer renders the same way through
-`createCanvas`, and `delivery-canvas` is deliberately built so both transports read one copy of
-each page rather than answering that question twice.
+not the import — it is whether these pages render the same way through `createCanvas` as they
+did over the MCP viewer they were written against. `delivery-canvas` kept both transports until
+it became canvas-only, so there is no longer a second one to answer that on its behalf.
 
 ## Node
 
@@ -106,15 +106,16 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 
 What a plugin's executable parts run on: the `devbook` generator with its five test suites, the
 `knowledge-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
-checker and the tests behind it, the three surface plugins' MCP servers with their HTTP viewers,
-telemetry hook, and `dev/` checks, and the command hook each plugin uses to emit session-start
-context. All of that is ESM against `node:` built-ins with no third-party dependency, which is
+checker and the tests behind it, two surface plugins' MCP servers with their HTTP viewers,
+telemetry hook, and `dev/` checks, the two canvas extensions with their own HTTP viewers, and
+the command hook each plugin uses to emit session-start context. All of that is ESM against `node:` built-ins with no third-party dependency, which is
 why `npm install` is not a step anywhere in this repository.
 
 Two things the flat claim used to get wrong, both worth stating because they are the seams
 where the constraint is negotiated rather than held:
 
-- **Three package manifests exist**, one per surface plugin, under `mcp/<server>/package.json`.
+- **Two package manifests exist**, one per surface plugin that runs a server, under
+  `mcp/<server>/package.json`.
   Each is `private`, declares `type: module` and an entry point, and carries **no
   `dependencies`** — the manifest is there to name the server and floor the runtime at
   `engines.node >= 18`, not to pull anything in. So a version *is* pinned, as a floor; what is
@@ -138,9 +139,9 @@ related: [".devbook/arc42/05-building-block-view.md#surface-plugins"]
 ```
 
 The MCP extension (SEP-1865) that lets a server hand the host a page to render inline in the
-conversation instead of a link to open. `delivery-dashboard` and `delivery-canvas` publish
-their pages as `ui://` resources and speak the postMessage protocol from a small bridge script
-injected into the page.
+conversation instead of a link to open. `delivery-dashboard` publishes its pages as `ui://`
+resources and speaks the postMessage protocol from a small bridge script injected into the
+page. `delivery-canvas` did too until it became canvas-only, which leaves one user here.
 
 `trial`, and reversibly so: it is negotiated at initialize, so a host that does not implement
 it never reads the resources and the same pages are served over `127.0.0.1` instead. Nothing

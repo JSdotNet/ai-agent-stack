@@ -204,6 +204,11 @@ and `delivery-collector` lifecycle and export only. Each declares exactly the to
 groups name and nothing more, which is what makes one substitutable for another. See
 [the decision](../../arc42/09-architecture-decisions.md#three-surfaces-one-contract).
 
+A surface is not required to be an MCP server. `delivery-canvas` is a Copilot canvas and
+nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
+which is why the contract matches operation names and never a transport. See
+[the decision](../../arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only).
+
 The fourth, `devbook-canvas`, renders the reference graph `_meta/graph.json` produces. It is
 packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
 generator modules by relative path — no host resolves the two together, so this is a source

@@ -31,9 +31,3 @@ Use when the user asks to create, refresh, compare, or review a project architec
 - One blueprint document with scope, components, interactions, and constraints
 - Explicit open questions and follow-up decisions
 - Traceability pointers to arc42 sections, ADRs, and TDRs where relevant
-
-## Quality Checks
-
-- Scope and boundaries are explicit.
-- Component relationships are internally consistent.
-- Decisions and risks are traceable.

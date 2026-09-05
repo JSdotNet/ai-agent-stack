@@ -147,14 +147,6 @@ When asked to explain a concept or find resources:
 | `aspire-logging` | Retrieve and analyze structured logs via Aspire MCP |
 | `sre` | SRE practices — error budgets, runbooks, incident context |
 
-## Quality Checklist
-
-- [ ] Code follows project conventions and `copilot-instructions.md`.
-- [ ] `dotnet build` or `dotnet test` was run and results reported.
-- [ ] New and changed public APIs have tests.
-- [ ] Null safety and error handling are correct.
-- [ ] No secrets committed.
-
 ## References
 
 - `.github/copilot-instructions.md`

@@ -41,13 +41,3 @@ Use after `domain-model-design` has produced a bounded context file with aggrega
 ## Output
 
 - Updated bounded context file with an embedded Mermaid `classDiagram` of the aggregate model.
-
-## Quality Checks
-
-- Every aggregate root described in the file appears on the diagram.
-- Cross-aggregate references are shown by ID only, never as direct composition.
-- Value objects are differentiated from entities by the `<<ValueObject>>` annotation.
-- Domain events are shown as separate nodes connected to their emitting aggregate.
-- Every class is coloured per its stereotype's `style` line in `instructions/diagrams/ddd-diagram-instructions.md`; relationship lines remain uncoloured.
-- The diagram accurately reflects the bounded context file content.
-- SVG file generated in `diagrams/` alongside the Markdown output using `scripts/generate-diagram-svgs.ps1`.

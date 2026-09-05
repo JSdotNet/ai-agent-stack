@@ -69,14 +69,3 @@ author cannot look up in the repository.
   repeating guidance inline.
 - Keep resources focused and single-purpose, and update them when process behavior changes.
 - Keep examples realistic and free of secrets.
-
-## Validation Checklist
-
-- [ ] Plugin intent and scope are explicit, and README scope matches manifest scope.
-- [ ] `plugin.json` is valid JSON with the required fields present.
-- [ ] Component paths resolve to on-disk directories.
-- [ ] Required assets are enumerated and linked.
-- [ ] Agents and skills reference resources instead of duplicating content.
-- [ ] Local install test was executed (`copilot plugin install <path>`).
-- [ ] Both manifests agree on `name`, `version`, and `description`, and the marketplace lists the plugin.
-- [ ] Every line changes behavior versus the model default, and no meaning appears twice.

@@ -36,12 +36,3 @@ Use after `domain-exploration` has produced `domain.md` with a subdomain overvie
 ## Output
 
 - Updated `domain.md` with an embedded Mermaid `flowchart TD` subdomain landscape diagram.
-
-## Quality Checks
-
-- All subdomains from the Subdomains table appear on the diagram.
-- All bounded contexts appear within their owning subdomain subgraph.
-- The three subdomain type subgraphs are clearly labelled.
-- The diagram is consistent with the Bounded Context Index in `domain.md`.
-- No pattern labels clutter the landscape; relationship detail belongs on the context map.
-- SVG file generated in `diagrams/` alongside the Markdown output using `scripts/generate-diagram-svgs.ps1`.

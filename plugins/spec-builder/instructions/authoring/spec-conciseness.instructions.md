@@ -50,10 +50,3 @@ lines; frontmatter such as an agent `tools` list does not count.
 - A prohibition drags the banned behavior into context and makes it more available.
 - Keep a prohibition only as a guardrail with no positive phrasing, and pair it with the
   positive target.
-
-## Validation Checklist
-
-- [ ] Every line changes behavior versus the model default.
-- [ ] No meaning appears in two files; duplicates are replaced by a relative-path pointer.
-- [ ] The asset is within its budget, or states why it exceeds it.
-- [ ] Rules are phrased as target behavior.

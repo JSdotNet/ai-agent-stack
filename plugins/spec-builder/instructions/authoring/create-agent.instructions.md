@@ -28,13 +28,3 @@ agent needs them. An empty or restating section is a section to delete.
   the 80-line body budget.
 - The dual-host rules behind the `model`, `tools`, and `handoffs` items above are in
   [dual-host-authoring.instructions.md](dual-host-authoring.instructions.md).
-
-## Validation Checklist
-
-- [ ] File name follows `<role>.agent.md`.
-- [ ] Frontmatter is valid YAML and `name` matches the file name.
-- [ ] No `model` pin.
-- [ ] `tools` resolves to something on both hosts, and every MCP server is granted in both spellings.
-- [ ] Role, scope, and constraints are explicit.
-- [ ] References point to existing files.
-- [ ] Every line changes behavior versus the model default, and no meaning appears twice.

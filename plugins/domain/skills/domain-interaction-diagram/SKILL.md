@@ -41,12 +41,3 @@ Use after `domain-interaction-model` has defined integration contracts, or when 
 
 - `domain.md` updated with a Domain Interaction Overview `flowchart LR` diagram.
 - Relevant bounded context files updated with ACL Translation `flowchart LR` diagrams where anti-corruption layers exist.
-
-## Quality Checks
-
-- Every integration contract documented in bounded context files appears on the overview diagram.
-- ACL translators are shown as explicit intermediate nodes, never as direct edges between contexts.
-- Edge labels identify the mechanism (event name, command name, or query name) and communication pattern (sync/async/event-driven).
-- No context node exposes internal aggregate structure; only integration contracts cross the boundary.
-- ACL Translation diagrams use ubiquitous language terms on both sides of the translation.
-- SVG file(s) generated in `diagrams/` alongside the Markdown output using `scripts/generate-diagram-svgs.ps1`.

@@ -1,7 +1,7 @@
 {
   "name": "delivery-canvas",
   "version": "0.1.0",
-  "description": "A render surface: a Mermaid diagram viewer and a Markdown document viewer, shown live beside the files they were written from. Implements one surface capability group — render (render_diagram, render_markdown) — with push/replace navigation and a history the Back button walks, as an MCP server for hosts that speak MCP and as two canvases for hosts with a canvas panel, from one copy of each page. Tracks no runs and exports nothing; declares no dependency and names no engine.",
+  "description": "A render surface for hosts with a canvas panel: a Mermaid diagram viewer and a Markdown document viewer, shown live beside the files they were written from. Implements one surface capability group — render (render_diagram, render_markdown) — with push/replace navigation and a history the Back button walks, as two Copilot canvases and nothing else. Tracks no runs and exports nothing; declares no dependency and names no engine.",
   "author": {
     "name": "Job Schepers"
   },
@@ -9,8 +9,8 @@
   "keywords": [
     "surface",
     "canvas",
+    "copilot",
     "mermaid",
-    "markdown",
-    "mcp"
+    "markdown"
   ]
 }

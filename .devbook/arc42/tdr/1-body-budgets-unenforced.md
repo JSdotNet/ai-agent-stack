@@ -5,7 +5,14 @@ date: 2026-09-04
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/01-introduction-and-goals.md#quality-goals"]
 ```
 
-**Remediation state:** identified · **Severity:** low · **Owner:** the maintainer
+**Remediation state:** in-progress · **Severity:** low · **Owner:** the maintainer
+
+**2026-09-05.** The first option below was taken: `CLAUDE.md` carries the disclosure rule again
+and points at `spec-conciseness.instructions.md`, and
+[a decision](../09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates) states
+the reason once for the four kinds that are long by nature. What remains is the assets outside
+those kinds, which still owe a trim or a reason line; `tools/check-assets.mjs --budgets` lists
+them.
 
 ## The debt
 

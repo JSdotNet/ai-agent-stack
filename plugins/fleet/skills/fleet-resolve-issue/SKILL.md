@@ -118,10 +118,9 @@ whose conclusion is small belongs in a sub-agent, and the surface reporting cont
   conventions. When it is absent, fall back to the `gh pr create` call in that phase and say so
   in the summary.
 
-- **The host plugin's session-handoff skill** — writes the brief the park route leaves behind
-  in Phase 4b. Optional: when it is absent, write the equivalent brief by hand as that phase
-  describes, following **Session Handoff** in `flow-execution-model.instructions.md`
-  (`delivery` plugin).
+- **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
+  procedure behind the brief the park route leaves behind in Phase 4b. Write that brief by
+  hand as the phase describes.
 
 No other skill is required. The resolution stages live in the workflow script, not in a
 delegated flow.
@@ -325,10 +324,8 @@ prove. Park it so resuming costs one command, not a re-derivation.
 17. **Do not push, and do not open a pull request.** A branch that needs validation is not a
     merge candidate, and pushing it invites a review of work that is not ready for one.
 
-18. Write a handoff brief with the host plugin's session-handoff skill (target:
-    `same-worktree`, reason: the `parkReasons` from the workflow). When that skill is
-    unavailable, write the equivalent brief yourself to
-    `~/.claude/handoffs/<issue>-<slug>.md`: the objective, the issue link,
+18. Write a handoff brief for the parked worktree, with the `parkReasons` from the workflow
+    as its reason, to `~/.claude/handoffs/<issue>-<slug>.md`: the objective, the issue link,
     the branch and worktree, what was implemented, what the tests do and do not prove, every
     assumption taken, and the exact command to resume.
 
@@ -495,4 +492,5 @@ Contract** for the tool cadence.
   merge-ready, one per pass.
 - `create-pull-request` (`delivery` plugin) — used by Phase 4, so the pull request follows the
   repository's own template and conventions.
-- The host plugin's session-handoff skill — writes the brief the park route leaves behind.
+- **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
+  procedure behind the brief the park route leaves behind.

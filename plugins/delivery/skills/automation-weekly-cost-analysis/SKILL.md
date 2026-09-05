@@ -56,8 +56,8 @@ This skill has no hard skill dependencies, but pairs well with:
    - If a high-cost model is used for low-complexity tasks: suggest a cheaper model tier for
      those agent files.
    - If session count is high: check whether runs are being restarted rather than handed
-     off. The host plugin's session-handoff skill resumes a run from persisted state
-     instead of reloading its whole context, and each issue is meant to cost one session, not several.
+     off. A handoff resumes a run from persisted state instead of reloading its whole
+     context, and each issue is meant to cost one session, not several.
 
 ### Phase 3 — Produce Report
 

@@ -29,19 +29,11 @@ plugin skill instead when the task is one of those specific flows:
 If the target chapter or the change goal is not stated, derive it in Stage 1
 from the request and the repository contents, and continue.
 
-## Workflow Stages
+Agent transitions follow `flow-phases.instructions.md` and per-stage model choice
+`flow-model-selection.instructions.md`, both shipped by the `delivery` plugin. A role
+bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
-> Agent transitions follow the shared rule in `flow-phases.instructions.md`, shipped by
-> the `delivery` plugin: cross-plugin agents are recommended, not required, and internal
-> transitions continue without separate user approval until Personal Validation. A role
-> bound in `.github/ai-agent-stack.json` resolves before the agent named below.
->
-> Model choice per stage follows `flow-model-selection.instructions.md` (category
-> defaults, overridable via personal global model selection). A category model applies
-> only where the stage is delegated with an `Agent` call; an inline stage runs on the
-> session's model.
-
-### Stage 1: Context Loading
+## Stage 1: Context Loading
 
 - Load `knowledge-arc42.instructions.md` and
   `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
@@ -55,7 +47,7 @@ from the request and the repository contents, and continue.
 
 **Agents:** none (context loading only)
 
-### Stage 2: Content Drafting
+## Stage 2: Content Drafting
 
 - Hand off to `arc42:arc42` for the actual content: prefer Mermaid
   diagrams over long prose for building-block and runtime views.
@@ -66,7 +58,7 @@ from the request and the repository contents, and continue.
 
 **Agents:** `arc42:arc42`
 
-### Stage 3: Metadata Enforcement
+## Stage 3: Metadata Enforcement
 
 - Add or update the chapter metadata block (`status` optional; `related`,
   `issue`, `effort`, `roadmap` optional) on the file's top-level chapter
@@ -88,7 +80,7 @@ from the request and the repository contents, and continue.
 
 **Agents:** `arc42:arc42`
 
-### Stage 4: Consistency Review
+## Stage 4: Consistency Review
 
 - Confirm no ADR/TDR content was restated instead of linked.
 - Confirm diagrams use Mermaid rather than prose where feasible.
@@ -100,40 +92,20 @@ from the request and the repository contents, and continue.
 
 **Agents:** `arc42:arc42`
 
-### Final Phases (Shared)
+## Final Phases (Shared)
 
 This is a documentation/config flow: after the last stage it runs the shared closing
 phases defined in `flow-phases.instructions.md` (`delivery` plugin), in order —
 **Personal Validation → Create Pull Request → Work Item Update → Summary**. A bridge
 plugin's flow names its own tier; the engine never names a skill above it.
 
-## Usage Pattern
-
-```text
-Invoke: flow-arc42-content
-- Chapter: 06-runtime-view.md
-- Goal: refresh the checkout runtime sequence diagram after the refunds change
-```
-
-## Output Expectations
-
-- `.arc42/<nn>-<name>.md` updated following the standard chapter set and
-  template in `knowledge-arc42.instructions.md`.
-- Every touched chapter/section carries a correct metadata block per
-  `knowledge-chapter-metadata.instructions.md`.
-- ADR/TDR content linked rather than duplicated.
-- Changed paths summarized for the user.
-
 ## Surface Reporting
 
-This flow reports progress through whichever delivery surface is bound. Resolve it by
-pattern from the live tool list and follow the **Reporting Contract** in
-`surface-contract.instructions.md` (`delivery` plugin) for the
-`start_run`/`update_stage`/`finish_run` cadence and the Personal Validation → Create
-Pull Request gating. With no surface bound, skip these calls, say so once, and continue —
-the `.arc42/` files stay the source of truth.
+Follow the **Reporting Contract** in `surface-contract.instructions.md` (`delivery`
+plugin). With no surface bound, skip the calls, say so once, and continue — the files on
+disk stay the source of truth.
 
-- Call `start_run` with `skillId: "flow-arc42-content"` and these stages: Context
+- `start_run` with `skillId: "flow-arc42-content"` and these stages: Context
   Loading, Content Drafting, Metadata Enforcement, Consistency Review, Personal
   Validation, Create Pull Request, Work Item Update, Summary.
 - During **Content Drafting**, call `render_markdown` with the drafted chapter
@@ -144,8 +116,5 @@ the `.arc42/` files stay the source of truth.
 
 - `knowledge-arc42.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
-- `flow-phases.instructions.md`, `flow-model-selection.instructions.md`, and
-  `surface-contract.instructions.md` — the shared phase, model, and surface
-  contracts, shipped by the `delivery` plugin.
 - `devbook`'s `assets/routing-snippet.md` — optional repository-local
   context-loading and routing policy; a flow ships procedure, not routing policy.

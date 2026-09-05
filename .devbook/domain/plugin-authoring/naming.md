@@ -91,7 +91,7 @@ related: [".devbook/ai/02-deliver.md#flow-skills"]
 A staged procedure for one category of work, run start to finish inside one session, ending at
 the personal validation gate. `flow-<category>`, one per category.
 
-Three neighbours share the vocabulary and are not interchangeable with it:
+Four neighbours share the vocabulary and are not interchangeable with it:
 
 | Prefix | Scope |
 | --- | --- |
@@ -99,12 +99,13 @@ Three neighbours share the vocabulary and are not interchangeable with it:
 | `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
+| `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
 `delivery` holds fifteen `flow-*`, two `phase-*`, and seven `automation-*` skills,
-`devbook-flows` holds five `flow-*`, one per adopted knowledge folder, and `fleet` holds three
-`fleet-*`.
+`devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet` holds three
+`fleet-*`, and `stack-guide` holds three `stack-*`.
 
 A grep still finds the string, and never as a skill name: only the decision records that say
 what was renamed. `flow-runner`'s allowlist kept the `orch-dashboard` tool patterns for one

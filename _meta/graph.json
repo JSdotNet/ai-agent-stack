@@ -10,10 +10,10 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 114,
-    "edges": 225,
+    "nodes": 116,
+    "edges": 235,
     "nodesByFolder": {
-      "arc42": 53,
+      "arc42": 55,
       "domain": 37,
       "tech": 13,
       "design": 3,
@@ -21,10 +21,10 @@
     },
     "nodesByType": {
       "file": 22,
-      "chapter": 92
+      "chapter": 94
     },
     "nodesByKind": {
-      "none": 60,
+      "none": 62,
       "context-map": 1,
       "bounded-context": 1,
       "dependencies": 1,
@@ -46,15 +46,15 @@
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 91,
+      "active": 93,
       "adopted": 13,
       "trial": 5,
       "draft": 2,
       "candidate": 3
     },
     "edgesByType": {
-      "contains": 92,
-      "related": 129,
+      "contains": 94,
+      "related": 137,
       "depends-on": 4
     }
   },
@@ -229,6 +229,26 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "label": "Guide Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "guide-plugin",
+          "level": 2,
+          "line": 215,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/05-building-block-view.md#stack-config",
           "label": "Stack Config",
           "type": "chapter",
@@ -236,7 +256,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "stack-config",
           "level": 2,
-          "line": 215,
+          "line": 252,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -255,7 +275,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 234,
+          "line": 271,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -670,6 +690,28 @@
             ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
             ".devbook/domain/plugin-authoring/naming.md#layer",
             ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "label": "The Guide Names Every Plugin and Depends on None",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-guide-names-every-plugin-and-depends-on-none",
+          "level": 2,
+          "line": 602,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#layer",
+            ".devbook/arc42/05-building-block-view.md#guide-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config",
+            ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"
           ]
         }
       },
@@ -1378,7 +1420,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "fleet-skill",
           "level": 2,
-          "line": 120,
+          "line": 121,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1398,7 +1440,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-point",
           "level": 2,
-          "line": 142,
+          "line": 143,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1417,7 +1459,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "gate",
           "level": 2,
-          "line": 165,
+          "line": 166,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1436,7 +1478,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "surface",
           "level": 2,
-          "line": 183,
+          "line": 184,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1457,7 +1499,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "host-slot",
           "level": 2,
-          "line": 217,
+          "line": 218,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1477,7 +1519,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "role",
           "level": 2,
-          "line": 237,
+          "line": 238,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1496,7 +1538,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "tracker",
           "level": 2,
-          "line": 263,
+          "line": 264,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1512,7 +1554,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "stamp",
           "level": 2,
-          "line": 275,
+          "line": 276,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1532,7 +1574,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "migration",
           "level": 2,
-          "line": 294,
+          "line": 295,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1551,7 +1593,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 312,
+          "line": 313,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1569,7 +1611,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "layer",
           "level": 2,
-          "line": 323,
+          "line": 324,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1589,7 +1631,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-namespace",
           "level": 2,
-          "line": 345,
+          "line": 346,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -2035,6 +2077,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#guide-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#stack-config",
           "source": ".devbook/arc42/05-building-block-view.md",
           "target": ".devbook/arc42/05-building-block-view.md#stack-config",
@@ -2214,6 +2264,14 @@
           "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
           "source": ".devbook/arc42/09-architecture-decisions.md",
           "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
           "type": "contains"
         }
       },
@@ -2803,6 +2861,30 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#guide-plugin->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/05-building-block-view.md#stack-config->.devbook/domain/plugin-authoring/naming.md#stamp",
           "source": ".devbook/arc42/05-building-block-view.md#stack-config",
           "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
@@ -3150,6 +3232,46 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
           "source": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
           "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/domain/plugin-authoring/naming.md#layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/domain/plugin-authoring/naming.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/05-building-block-view.md#guide-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/05-building-block-view.md#guide-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "type": "related"
         }
       },

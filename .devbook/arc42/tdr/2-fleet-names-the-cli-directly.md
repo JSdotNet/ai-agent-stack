@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/technology-graph.md#claude-code-cli"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/hosts.md#claude-code-cli"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer

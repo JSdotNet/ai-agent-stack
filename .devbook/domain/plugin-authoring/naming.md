@@ -85,7 +85,7 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-02
-related: [".devbook/ai/adoption-map.md#flow-skills"]
+related: [".devbook/ai/02-deliver.md#flow-skills"]
 ```
 
 A staged procedure for one category of work, run start to finish inside one session, ending at
@@ -109,8 +109,8 @@ The word *orchestration* covered the first two at once, which is why it named ne
 A grep still finds the string, and never as a skill name. `flow-runner`'s allowlist
 keeps the `orch-dashboard` tool patterns so an existing dashboard installation still answers —
 [due to be dropped](../../arc42/09-architecture-decisions.md#delivery-ships-no-surface) the
-release after this one, and `delivery`'s README explains why it is there. The dashboard's own
-renderer names the old skills once, in a comment.
+release after this one, and `delivery`'s README explains why it is there. Nothing else does:
+the dashboard renderer's last comment naming an old skill was reworded on 2026-09-05.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while
@@ -335,7 +335,7 @@ repository.
 
 ```meta
 type: term
-related: [".devbook/tech/technology-graph.md#model-context-protocol"]
+related: [".devbook/tech/shared.md#model-context-protocol"]
 ```
 
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by

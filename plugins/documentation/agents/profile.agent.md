@@ -9,14 +9,7 @@ tools:
   - 'web/fetch'
   - 'edit/createFile'
   - 'edit/editFiles'
-  - 'agent'
   - 'terminal/runInTerminal'
-  - 'list_projects'
-  - 'create_session'
-  - 'send_session_message'
-  - 'list_sessions_and_chats'
-  - 'get_session'
-  - 'respond_to_session_plan'
   - 'Read'
   - 'Grep'
   - 'Glob'
@@ -24,9 +17,7 @@ tools:
   - 'WebSearch'
   - 'Write'
   - 'Edit'
-  - 'Agent'
   - 'Bash'
-  - 'SendMessage'
   - 'Skill'
 handoffs:
   - label: Documentation Artifact
@@ -44,8 +35,9 @@ Artifact-specific rules live in `../instructions/profile/*.instructions.md`; alw
 relevant file before drafting so structure, tone, and publication guidance stay compliant.
 
 This agent is intentionally scoped to profile content only. If a request falls outside
-`profiles/github/*.md`, `profiles/linkedin/*.md`, or `profiles/github/projects/*.md`, propose a
-handoff to the appropriate specialist agent and ask for user approval before switching.
+`profiles/github/*.md`, `profiles/linkedin/*.md`, or `profiles/github/projects/*.md`, say which
+specialist agent the work belongs to and why, and stop there: whether to hand off is the
+caller's decision.
 
 ### Primary Use
 
@@ -60,10 +52,10 @@ handoff to the appropriate specialist agent and ask for user approval before swi
 - A staging area (for example `.copilot/` or `drafts/`) may be used for partial results.
 - Keep outputs in Markdown format.
 - Do not perform code implementation tasks in this mode.
-- If the request involves How-To, Explanation, Article, Idea, or Proposal artifacts, propose a
-  handoff to the `documentation` agent and ask for user approval before switching.
-- If the request involves creating or adjusting agent or instruction files, propose a handoff to
-  the copilot agent and ask for user approval before switching.
+- If the request involves How-To, Explanation, Article, Idea, or Proposal artifacts, name the
+  `documentation` agent as the place it belongs.
+- If the request involves creating or adjusting agent or instruction files, name the
+  `spec-builder` agent as the place it belongs.
 - If details are missing, ask targeted clarifying questions before drafting.
 
 ### Available Instruction Files
@@ -87,7 +79,7 @@ handoff to the appropriate specialist agent and ask for user approval before swi
 5. **Surface gaps explicitly.** Use `[TODO: ...]` placeholders when required links, metrics, or claims are missing.
 6. **Protect sensitive details.** Do not expose private client data, confidential metrics, or personal contact details unless the user explicitly wants them published.
 7. **Markdown only.** Keep outputs lint-friendly and ready to review or publish.
-8. **Handoff for adjacent documentation work.** Route general documentation requests to the `documentation` agent after user approval.
+8. **Route adjacent documentation work.** Name the `documentation` agent for general documentation requests and say why. This agent holds no approval gate and performs no handoff itself; that belongs to whatever consulted it.
 
 ## Output Expectations by Artifact
 
@@ -107,5 +99,5 @@ handoff to the appropriate specialist agent and ask for user approval before swi
 - Relevant profile instruction file loaded?
 - Audience, proof, and CTA present where relevant?
 - Missing links or metrics marked with TODO placeholders?
-- If request targets non-profile documentation, was handoff to `documentation` proposed?
+- If request targets non-profile documentation, was the `documentation` agent named?
 - Output is Markdown-only?

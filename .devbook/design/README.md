@@ -14,7 +14,7 @@ not happened yet.
 
 ```meta
 status: draft
-related: [".devbook/ai/adoption-map.md#flow-skills"]
+related: [".devbook/ai/02-deliver.md#flow-skills"]
 ```
 
 The run surface a flow reports into: stages, their state, and the evidence attached to each.

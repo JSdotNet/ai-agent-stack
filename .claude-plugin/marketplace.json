@@ -43,6 +43,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "stack-guide",
+      "source": "./plugins/stack-guide",
+      "description": "The reader's way in: one skill that answers a question about this marketplace from what is on disk — what devbook, the delivery engine, the bridges, the surfaces, and the fan-out lane are and how they fit, which version of each plugin is installed against the newest published, which are enabled, and how a repository has wired its roles, extension points, gates, and policy — backed by a read-only report that names the file behind every fact. Plus stack-init and stack-update, which own the engine keys of .github/ai-agent-stack.json and hand every component's materialization to that component's own sync skill. Declares no dependency: a plugin it names but cannot find is reported as not installed.",
+      "version": "0.1.0"
+    },
+    {
       "name": "devbook",
       "source": "./plugins/devbook",
       "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, an opaque ext namespace a layered plugin keeps its own state in, and annotation fences that keep a review note in the chapter beside the passage it is about, compiled into derived _meta indexes and a reference-graph canvas. Ships bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling. Usable on its own: the per-folder flow-* procedures live in the devbook-flows bridge.",

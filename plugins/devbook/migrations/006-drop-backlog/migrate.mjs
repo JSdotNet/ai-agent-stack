@@ -21,8 +21,18 @@ const ROOT = path.resolve(rootIndex !== -1 ? args[rootIndex + 1] : process.cwd()
 // The folders devbook still recognizes. Their chapters are where a reference
 // into `.backlog/` can still be hiding.
 const FOLDERS = [".arc42", ".domain", ".tech", ".design", ".ai"];
-const WORKFLOW = ".github/workflows/knowledge-meta.yml";
+
+// Both spellings. A repository that has not yet re-synced past the
+// `knowledge-*` → `devbook-*` asset rename still carries the old filename, and
+// this migration predates that rename, so it must match either.
+const WORKFLOWS = [
+    ".github/workflows/devbook-meta.yml",
+    ".github/workflows/knowledge-meta.yml",
+];
 const ORPHANED_META = ".backlog/_meta";
+// One `- ".backlog/**"` entry in a workflow path filter, with its line ending.
+
+const BACKLOG_FILTER_LINE = /^[ \t]*-[ \t]*['"]?\.backlog\/\*\*['"]?[ \t]*\r?\n/gm;
 
 // The two fields that hold chapter references, and so the only lines a
 // `.backlog/…` entry can legally appear on.
@@ -109,12 +119,14 @@ async function sweepOrphanedMeta() {
 }
 
 async function sweepWorkflow() {
-    if (!(await exists(WORKFLOW))) return;
-    const original = await readFile(path.join(ROOT, WORKFLOW), "utf8");
-    const next = original.replace(/^[ \t]*-[ \t]*['"]?\.backlog\/\*\*['"]?[ \t]*\r?\n/gm, "");
-    if (next === original) return;
-    findings.push(`${WORKFLOW}: path filter still watches .backlog/**`);
-    if (!checkOnly) await writeFile(path.join(ROOT, WORKFLOW), next, "utf8");
+    for (const workflow of WORKFLOWS) {
+        if (!(await exists(workflow))) continue;
+        const original = await readFile(path.join(ROOT, workflow), "utf8");
+        const next = original.replace(BACKLOG_FILTER_LINE, "");
+        if (next === original) continue;
+        findings.push(`${workflow}: path filter still watches .backlog/**`);
+        if (!checkOnly) await writeFile(path.join(ROOT, workflow), next, "utf8");
+    }
 }
 
 await sweepReferences();

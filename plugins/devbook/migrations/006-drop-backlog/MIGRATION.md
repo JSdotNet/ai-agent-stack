@@ -30,8 +30,10 @@ generator is re-synced:
    `.backlog/…` chapter now resolves to nothing, so the check fails.
 2. `.backlog/_meta/` is orphaned: nothing regenerates it, and it goes stale
    silently.
-3. `.github/workflows/knowledge-meta.yml` still filters on `.backlog/**`, so the
-   check runs on edits to a folder it no longer reads.
+3. `.github/workflows/devbook-meta.yml` still filters on `.backlog/**`, so the
+   check runs on edits to a folder it no longer reads. A repository that has not
+   yet re-synced past the `knowledge-*` -> `devbook-*` asset rename carries that
+   workflow under its old name, `knowledge-meta.yml`; the script matches either.
 
 ## Run it
 

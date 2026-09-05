@@ -14,6 +14,23 @@ the reason once for the four kinds that are long by nature. What remains is the 
 those kinds, which still owe a trim or a reason line; `tools/check-assets.mjs --budgets` lists
 them.
 
+**2026-09-05, later.** The second option was then taken as well, on the assets where it cost
+nothing: a repository-wide pass deleted the duplication rather than the substance — checklists
+that re-ticked their own file, shared phase and reporting contracts copied into every skill
+that points at them, Usage Pattern and Output Expectations sections that renamed the stages
+above them, and ALWAYS/NEVER pairs in the arc42 prompts. Roughly 2,900 body lines went. The
+counts now:
+
+| Kind | Within budget | Smallest | Median | Largest |
+| --- | --- | --- | --- | --- |
+| `SKILL.md` | 38 of 113 (was 13 of 116) | 17 | 61 (was 101) | 378 |
+| `*.instructions.md` | 19 of 35 (was 12) | 18 | 56 (was 78) | 536 |
+| `*.agent.md` | 6 of 10 (was 5) | 47 | 67 (was 75) | 218 |
+
+What is left over budget is mostly the four kinds the decision already exempts — staged
+procedures, converters, schema and contract files, the runner agents — plus `fleet`, whose
+three skills stay long for the reason the options table gives.
+
 ## The debt
 
 ```meta

@@ -760,7 +760,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "the-debt",
           "level": 2,
-          "line": 17,
+          "line": 34,
           "status": "active",
           "statusDeclared": false
         }
@@ -774,7 +774,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "origin",
           "level": 2,
-          "line": 35,
+          "line": 52,
           "status": "active",
           "statusDeclared": false
         }
@@ -788,7 +788,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 50,
+          "line": 67,
           "status": "active",
           "statusDeclared": false
         }
@@ -802,7 +802,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "impact",
           "level": 2,
-          "line": 72,
+          "line": 89,
           "status": "active",
           "statusDeclared": false
         }
@@ -816,7 +816,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 85,
+          "line": 102,
           "status": "active",
           "statusDeclared": false
         }

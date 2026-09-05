@@ -173,27 +173,3 @@ hardcodes a path. See **Host Slots** in `instructions/surface-contract.instructi
 | Implementation & Coding | sonnet |
 | Review | inherit |
 ```
-
-## Quality Checks
-
-- [ ] Every agent referenced by a `flow-*/SKILL.md` `**Agents:**` line has a category in the
-      table above.
-- [ ] No agent invoked by a flow (other than `flow-runner.agent.md` itself) pins
-      its own `model` in frontmatter.
-- [ ] The flow-runner resolves and applies a model before each stage transition, following
-      the Resolution Order, and never hardcodes a version number while doing so.
-- [ ] A personal global override, when present, takes precedence over the category default.
-- [ ] No model-selection file is read from inside the repository, and no `flow-*` asset
-      documents one as a supported override source.
-- [ ] Personal Validation never receives a model or agent assignment.
-- [ ] This file names aliases, not exact version-pinned model IDs, so it does not need an
-      edit every time a new model ships.
-- [ ] An unset model is used deliberately (Fallback/Unclassified, or an explicit `inherit`
-      override), not as the blanket default for every category.
-- [ ] Every stage whose category resolves to a model other than the session's is actually
-      delegated with an `Agent` call — a category model on an inline stage is inert.
-- [ ] `tokenUsage.models` on a finished run shows more than one model whenever the run had a
-      delegated stage in a non-session category. One model on such a run means the
-      resolution never reached an `Agent` call.
-- [ ] No repo-local override path is supported or treated as a readable config source, and
-      `.github/ai-agent-stack.json` carries no model key.

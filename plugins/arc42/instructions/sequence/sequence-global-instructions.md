@@ -110,21 +110,10 @@ sequenceDiagram
 - Embed diagrams in fenced `mermaid` code blocks.
 - Add a title comment at the top of each diagram (e.g., `%% Scenario: Customer Login`).
 - Follow each diagram with a prose summary (2–4 sentences) calling out the key ordering decisions, error handling, and any timing constraints.
-- Store diagrams inside the arc42 Section 6 document or the relevant blueprint section.
+- Store diagrams inside the arc42 Section 6 document.
 
 ## Traceability
 
 - Link to arc42 Section 6 (Runtime View) as the primary home for sequence diagrams.
 - Cross-reference the C4 Container or Component diagram that provides the structural context.
 - Reference relevant ADRs for integration or protocol choices visible in the diagram.
-
-## Validation Checklist
-
-- [ ] One scenario per diagram.
-- [ ] Participants are named by role, not class name.
-- [ ] All messages are labelled with a verb phrase.
-- [ ] Synchronous and asynchronous messages use the correct arrow types.
-- [ ] Error and alternative paths are shown for architecturally significant scenarios.
-- [ ] Diagram is embedded in a fenced `mermaid` code block.
-- [ ] Prose summary accompanies the diagram.
-- [ ] Traceability links to arc42 §6 and related C4 diagrams are present.

@@ -98,13 +98,9 @@ chapter as accepted practice.
 3. **Read the implementation and its tests.** Read the front-end manifests, then
    the import sites, then the component usage, then the styling — looking
    specifically for hard-coded values where a token is declared, and for
-   pointer-only interactions. Apply the protocol's evidence rules without
-   exception: code that executes and tests that pass are evidence; comments,
-   TODOs, doc comments, and disabled tests are not.
-
-   Then read the unit tests deliberately — they are where rules and the
-   ubiquitous language are stated most precisely, and the part of a capture pass
-   most easily skimped. Mine them for:
+   pointer-only interactions. Apply the protocol's evidence rules.
+   Then mine the unit tests, per **Unit tests are first-class evidence** in the
+   protocol, for:
 
    - **Keyboard equivalence.** A test that drives an interaction by keyboard is
      the evidence that the pointer-only rule is satisfied. Its absence on a
@@ -115,12 +111,6 @@ chapter as accepted practice.
    - **Component tests.** Which components are rendered in tests confirms real
      adoption, as distinct from a package merely being installed.
 
-   Two absences are informative and neither is evidence of behaviour: a rule
-   with **no** test is recorded as thinly covered rather than with the
-   confidence of a tested one, and a **disabled, skipped, or commented-out**
-   test is not evidence at all — per the protocol it is a record of an
-   intention, and a hint that the rule it asserts may not hold. Where a rule
-   appears only in a disabled test, record it as an open question.
 
 4. **Defer to the authoritative design source.** Where the repository has an
    authoritative design source, compare what the code does against what that
@@ -165,36 +155,13 @@ chapter as accepted practice.
 10. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- Component chapters in `.design/component-libraries.md` written through
-  the `.design` flow, recording observed adoption per channel.
-- A recommendation with rationale and, where several libraries are in play, a
-  comparison table.
-- Known gaps recorded: hand-rolled components and capabilities the library
-  lacks.
-- Hard-coded values where a token exists listed as findings, per token file.
-- Pointer-only interactions without a keyboard equivalent reported as rule
-  violations, not written in as accepted practice.
-- Where an authoritative design source exists, its guidance preserved, and code
-  that contradicts it reported as a `conflict`.
-- Chapters left at `status: draft` with the gap noted, where the authoritative
-  source could not be verified.
-- `.design/_meta/` regenerated and `--check` clean.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.design/` files directly — the write routes through
   the `.design` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not overwrite guidance grounded in the authoritative design source with an
   observation from code. The source wins; the divergence is a `conflict`.
 - Do not add or pin a dependency. `component-libraries.md` records a
@@ -211,4 +178,4 @@ chapter as accepted practice.
 - Do not record a library as in use because its package is present. Confirm the
   imports.
 - Do not restate channel or stack facts that belong in `.arc42` or `.tech`.
-- Do not hand-edit files under `_meta/`.
+

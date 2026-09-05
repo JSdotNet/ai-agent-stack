@@ -184,7 +184,7 @@ C4Component
 - Follow every diagram with a prose summary (3–5 sentences) explaining key relationships and design decisions.
 - Include a note block for any non-standard symbols or conventions.
 - Produce one diagram per level per scope; create multiple diagrams only when the scope genuinely requires it.
-- Store diagrams inside arc42 sections or blueprint documents where they belong; do not create standalone diagram files.
+- Store diagrams inside the arc42 sections where they belong; do not create standalone diagram files.
 
 ## Traceability
 
@@ -192,14 +192,3 @@ C4Component
 - Link Level 2 diagrams to arc42 Section 5 (Building Block View) and Section 7 (Deployment View).
 - Link Level 3 diagrams to arc42 Section 5 (Building Block View — deeper levels).
 - Reference relevant ADRs for every technology choice visible in Level 2 and Level 3 diagrams.
-
-## Validation Checklist
-
-- [ ] Correct C4 level is used for the audience and scope.
-- [ ] All elements have a name, technology tag (if applicable), and short description.
-- [ ] All relationships are labelled with a verb phrase and protocol where relevant.
-- [ ] External elements are distinguished from internal ones using `_Ext` variants.
-- [ ] `UpdateElementStyle` is applied to every element per the documented Color Conventions palette.
-- [ ] Diagram is embedded in a fenced `mermaid` code block.
-- [ ] Prose summary accompanies every diagram.
-- [ ] Traceability links to related arc42 sections, ADRs, or blueprints are present.

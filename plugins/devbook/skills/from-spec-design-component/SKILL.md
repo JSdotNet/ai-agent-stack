@@ -43,15 +43,10 @@ before a brief; a `deprecated` one is not built.
 
 ## Chapter status gate
 
-Check `status` before doing anything else, per the protocol's status rules:
-
-- `approved` — proceed. A person has approved this chapter; that is what the
-  rung is for.
-- `active` — proceed.
-- `draft` — stop and confirm. State what the chapter claims and that it is not
-  yet agreed, then ask whether to build it as written or settle the chapter
-  through the `.design` flow first. `.design` has no `proposed`.
-- `deprecated` — do not build. Report it and stop.
+Check `status` before anything else, per the protocol's status rules: `approved` and
+`active` proceed; `draft` or `proposed` stops to confirm — say what the chapter claims and
+that it is not agreed, then ask whether to build it as written or settle it first;
+`deprecated` stops.
 
 ## Spec-to-code mapping
 
@@ -132,42 +127,10 @@ Write them out as invariants, with the token names.
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.
 
-## Output expectations
-
-- Exactly one change category: `new functionality`,
-  `change to existing behaviour`, or `defect`, with the reasoning for it.
-- **Outcomes**, **invariants**, **ubiquitous language**, **out of scope**, and
-  **acceptance checks**, as the protocol defines them.
-- Every replacement site listed, since adoption is a change to existing
-  behaviour and the list is the work.
-- Token references stated as invariants, naming the tokens from
-  `color-scheme.md` and `typography-and-layout.md`.
-- Keyboard equivalence stated as an invariant for every pointer-only interaction
-  in scope.
-- The accessibility thresholds from `accessibility.md` carried through as
-  checks.
-- Any required package named as a prerequisite, with an explicit note that the
-  dependency change itself goes through the package-update workflow.
-- The single channel in scope, and the others explicitly out of it.
-- The protocol's report table, with the verdict and the evidence behind it.
-- No change to any file in the repository.
-
 ## Do not
 
-- Do not edit source code, test code, project files, or infrastructure files.
-  This skill emits a brief.
-- Do not name a code-side delivery or orchestration skill of any kind. The brief
-  stops at the brief; which flow picks it up is the user's decision, made after
-  reading it.
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
-- Do not build from a `draft` chapter without explicit confirmation, and never
-  from a `deprecated` one.
-- Do not turn a `conflict` into a `defect` brief. Stop and ask which side is
-  wrong.
-- Do not ask for work that already exists — read the counterpart first.
-- Do not treat a TODO, a comment, or a disabled test as proof that something is
-  already built.
 - Do not add, remove, or pin a dependency. Name the requirement; the change goes
   through the package-update workflow and is recorded in `.tech`.
 - Do not brief "adopt the library" without listing the replacement sites.
@@ -180,3 +143,4 @@ Write them out as invariants, with the token names.
   Carry it through.
 - Do not brief more than one channel at a time.
 - Do not produce a wireframe or prototype. `.design` is guideline level only.
+

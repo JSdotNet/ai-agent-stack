@@ -36,15 +36,10 @@ rules, and the change-brief contract — none of which are repeated here.
 
 ## Chapter status gate
 
-Check `status` before doing anything else, per the protocol's status rules:
-
-- `approved` — proceed. A person has approved this chapter; that is what the
-  rung is for.
-- `active` — proceed.
-- `draft` or `proposed` — stop and confirm. State what the chapter claims and
-  that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through the `.domain` flow first.
-- `deprecated` — do not build. Report it and stop.
+Check `status` before anything else, per the protocol's status rules: `approved` and
+`active` proceed; `draft` or `proposed` stops to confirm — say what the chapter claims and
+that it is not agreed, then ask whether to build it as written or settle it first;
+`deprecated` stops.
 
 ## Spec-to-code mapping
 
@@ -124,45 +119,10 @@ the first thing lost when the semantics is left implicit.
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.
 
-## Output expectations
-
-- Exactly one change category: `new functionality`,
-  `change to existing behaviour`, or `defect`, with the reasoning for it.
-- **Outcomes**, **invariants**, **ubiquitous language**, **out of scope**, and
-  **acceptance checks**, as the protocol defines them.
-- The invocation semantics stated as a buildable requirement, naming the
-  triggering command, schedule, query path, or event.
-- Every coordinated aggregate named, with what happens to it.
-- Transactional behaviour stated, including the failure behaviour when
-  coordination spans transactions.
-- For a process manager, the in-flight state that must persist for a run to
-  resume.
-- An explicit note where the same logic exists today inlined in a handler or an
-  aggregate, since moving it is the work.
-- For each event this service raises: the trigger as a condition, every payload
-  field, the consumers that must be subscribed as part of this change, and
-  whether this is a new contract or a change to an already-published one. An
-  event nobody handles changes nothing observable, so publication alone is not a
-  complete brief.
-- The protocol's report table, with the verdict and the evidence behind it.
-- No change to any file in the repository.
-
 ## Do not
 
-- Do not edit source code, test code, project files, or infrastructure files.
-  This skill emits a brief.
-- Do not name a code-side delivery or orchestration skill of any kind. The brief
-  stops at the brief; which flow picks it up is the user's decision, made after
-  reading it.
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
-- Do not build from a `draft` or `proposed` chapter without explicit
-  confirmation, and never from a `deprecated` one.
-- Do not turn a `conflict` into a `defect` brief. Stop and ask which side is
-  wrong.
-- Do not ask for work that already exists — read the counterpart first.
-- Do not treat a TODO, a comment, or a disabled test as proof that something is
-  already built.
 - Do not leave the invocation semantics implicit. Without it the service gets
   built as a plain command handler.
 - Do not brief a `policy.md` file or a separate policy type. Process manager
@@ -172,3 +132,4 @@ the first thing lost when the semantics is left implicit.
 - Do not choose the scheduler, message broker, or saga library. The brief states
   the semantics and the guarantee.
 - Do not omit the failure behaviour when coordination spans transactions.
+

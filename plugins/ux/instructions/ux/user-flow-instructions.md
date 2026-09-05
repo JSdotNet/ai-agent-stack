@@ -77,13 +77,3 @@ Every user flow artifact must include:
 
 - Save flow diagrams and journey maps under `**/design/flows/` or `**/flows/`.
 - Use descriptive file names: `<task-name>-flow.md` or `<persona>-journey.md`.
-
-## Quality Checks
-
-- [ ] User persona or role is identified.
-- [ ] Entry point is clearly defined.
-- [ ] Happy path is complete end-to-end.
-- [ ] At least one error or edge-case branch is shown.
-- [ ] Exit points are explicit.
-- [ ] Mermaid diagram is valid and renders correctly.
-- [ ] Open questions and missing content are marked with `[TODO: clarify]`.

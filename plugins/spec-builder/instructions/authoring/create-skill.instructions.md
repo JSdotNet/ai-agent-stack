@@ -47,12 +47,3 @@ still be accurate prose: on Copilot it remains the model's only signal.
 - Note optional MCP dependencies in the body, with a fallback for when the server is absent.
 - Follow [spec-conciseness.instructions.md](spec-conciseness.instructions.md) for pruning and
   the 40-line budget.
-
-## Validation Checklist
-
-- [ ] Skill folder and `name` are aligned.
-- [ ] Invocation mode is chosen deliberately, and the description matches it.
-- [ ] No skill reached by an agent, a hook prompt, or another skill is marked user-invoked.
-- [ ] No host-specific tool names appear in the body.
-- [ ] Workflow is actionable and complete.
-- [ ] Every line changes behavior versus the model default, and no meaning appears twice.

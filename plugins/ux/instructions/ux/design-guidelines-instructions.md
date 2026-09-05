@@ -94,13 +94,3 @@ Document reusable UI components with:
   entry point and one file per topic for large systems.
 - Guidelines only. Wireframes, user flows, prototypes, and screenshots are artifacts produced
   from these rules and are stored with the other deliverables, never in `.design/`.
-
-## Quality Checks
-
-- [ ] Colour palette documented with hex codes and usage rules.
-- [ ] Typography scale defined with all size and weight values.
-- [ ] Spacing scale defined with a base unit.
-- [ ] Each component has states, variants, and accessibility requirements.
-- [ ] Breakpoints are named and pixel ranges are explicit.
-- [ ] Voice and tone section includes concrete examples.
-- [ ] Missing sections are marked with `[TODO: define]`.

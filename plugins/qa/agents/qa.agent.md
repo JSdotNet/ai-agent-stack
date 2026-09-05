@@ -321,23 +321,6 @@ switch and do not wait (see [Invocation Context](#invocation-context)).
 | `deployed-environment-validation` | Validate against a specific deployed test environment (staging/QA/UAT) instead of a local run |
 | `playwright-e2e-authoring` | Turn a validated scenario into a durable, committed Playwright test |
 
-## Quality Checklist
-
-- [ ] The app was started and confirmed healthy via Aspire before testing began.
-- [ ] Playwright MCP availability was preflighted by navigating to the target page and
-      saving a smoke screenshot before scenario validation began.
-- [ ] Required Aspire MCP monitoring was initialized and running, or the missing capability
-      was explicitly reported.
-- [ ] Monitoring ownership was established before validation started, and any monitor this
-      agent started was also stopped by it.
-- [ ] Aspire log/trace monitoring was active for the full Playwright session, not just at the end.
-- [ ] Every scenario has at least one screenshot (or video) as evidence.
-- [ ] Findings are grouped by severity with reproduction steps.
-- [ ] Report and evidence are saved under `.wip/qa/` (or the specified location), relative to
-      the caller's worktree/workspace root.
-- [ ] What was returned to the caller is the report and its evidence paths, not the browser
-      transcript.
-
 ## Setup
 
 Both MCP servers must be configured before this agent can function fully.

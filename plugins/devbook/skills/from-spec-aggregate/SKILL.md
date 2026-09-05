@@ -55,15 +55,10 @@ a modelling task for the `.domain` flow or, if the aggregate is already in code,
 
 ## Chapter status gate
 
-Check `status` before doing anything else, per the protocol's status rules:
-
-- `approved` — proceed. A person has approved this chapter; that is what the
-  rung is for.
-- `active` — proceed.
-- `draft` or `proposed` — stop and confirm. State what the chapter claims and
-  that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through the `.domain` flow first.
-- `deprecated` — do not build. Report it and stop.
+Check `status` before anything else, per the protocol's status rules: `approved` and
+`active` proceed; `draft` or `proposed` stops to confirm — say what the chapter claims and
+that it is not agreed, then ask whether to build it as written or settle it first;
+`deprecated` stops.
 
 Apply the gate **per chapter**, not once for the aggregate. A root at `active`
 with a sub-chapter still at `draft` is the common case, and the answer is to
@@ -217,59 +212,18 @@ unsettled sub-chapter, and leave it out of the invariants list.
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.
 
-## Output expectations
-
-- Exactly one change category: `new functionality`,
-  `change to existing behaviour`, or `defect`, with the reasoning for it.
-- **Outcomes** — what is true once the aggregate is built, in the domain's
-  language, observable rather than procedural.
-- **Invariants** — one entry per `### Invariants` row, quoted in full, each
-  carrying its `Enforced at` point and marked as already enforced (with the
-  passing test that shows it) or not yet enforced. `open` rows are listed
-  separately as decisions needed, never as invariants to build.
-- **Ubiquitous language** — the canonical terms with their `naming.md` aliases,
-  covering the root, owned types, enum members, and event payload fields.
-- **Out of scope** — the adjacent chapters, services, and contexts this change
-  does not touch, named explicitly.
-- **Acceptance checks** — one checkable statement per invariant and outcome,
-  phrased so a test can assert it.
-- One brief for the whole boundary, with a verdict per chapter inside it.
-- An explicit statement that no owned entity gets a repository of its own.
-- For a shared value object or enum, an explicit "one shared type" instruction.
-- Every call site where a concept currently appears as a bare primitive, listed.
-- Per event: the trigger as a condition, every payload field, the consumers that
-  must be subscribed as part of this change, whether this is a new contract or a
-  change to a published one, and the delivery guarantee the rules commit to.
-- Sub-chapters blocked by the status gate named as needing a decision, not
-  silently built or silently dropped.
-- The protocol's report table, with the verdict and the evidence behind it.
-- No change to any file in the repository.
-
 ## Do not
 
-- Do not edit source code, test code, or project files. This skill emits a
-  brief.
-- Do not name a code-side delivery or orchestration skill of any kind. The brief
-  stops at the brief; which flow picks it up is the user's decision, made after
-  reading it.
 - Do not edit the chapters. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
-- Do not build from a `draft` or `proposed` chapter without explicit
-  confirmation, and never from a `deprecated` one.
 - Do not apply the status gate once for the whole aggregate. Sub-chapters settle
   independently.
-- Do not turn a `conflict` into a `defect` brief. Stop and ask which side is
-  wrong.
 - Do not summarize the invariants by reference. Write each one out; the
   reference is what gets lost.
 - Do not brief an `open` row, and do not resolve one by picking the answer that
   suits the brief. An unsettled rule is a decision to ask for.
 - Do not drop a row's `Enforced at` value. "Enforce this invariant" without the
   enforcement point is the paraphrase this table exists to prevent.
-- Do not ask for work that already exists — read the counterpart and its passing
-  tests first.
-- Do not treat a TODO, a comment, or a disabled test as proof that something is
-  already built.
 - Do not brief a repository, store, or DAO for an entity the chapter places
   inside this aggregate.
 - Do not brief a per-aggregate copy of a type the chapter placed in the shared
@@ -287,3 +241,4 @@ unsettled sub-chapter, and leave it out of the invariants list.
 - Do not extend the pass into `features.md`, `model.md`, `flow.md`, or
   `dependencies.md` — `features.md` is `from-spec-feature` scope, and the rest are
   out of scope for every skill in this plugin.
+

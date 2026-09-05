@@ -190,21 +190,12 @@ the user it will rewrite the branch, and never on a branch someone else is worki
 
 ## Surface Reporting
 
-This skill reports progress through whichever delivery surface is bound, resolved by pattern
-from the live tool list per `instructions/surface-contract.instructions.md`. With no surface
-bound, skip these calls, say so once, and continue — file artifacts remain the source of
-truth. Follow the shared **Reporting Contract** in
-`instructions/surface-contract.instructions.md` for the tool cadence.
+Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`.
+With no surface bound, skip the calls, say so once, and continue — file artifacts remain
+the source of truth.
 
-- Open the surface per the shared contract, then call `start_run` with
-  `skillId: "update-pr-branch"` and these stages: Establish State, Integrate,
+- `start_run` with `skillId: "update-pr-branch"` and these stages: Establish State, Integrate,
   Resolve Conflicts, Re-validate, Push.
-- Before each phase, call `update_stage` with `status: "in_progress"`.
-- After each phase, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary of that phase's result. Use
-  `"skipped"` for Resolve Conflicts when the integration was clean.
-- Call `finish_run` with the final status and the resulting mergeability once the
-  branch is pushed or the integration is aborted.
 
 ## Output
 

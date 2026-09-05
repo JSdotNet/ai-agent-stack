@@ -1,7 +1,7 @@
 # arc42
 
-Architecture documentation: arc42 sections, blueprints, ADRs, TDRs, and the diagram set
-that belongs inside them. Fills the `architecture` role and the `spec` service.
+Architecture documentation: arc42 sections, ADRs, TDRs, and the diagram set that belongs
+inside them. Fills the `architecture` role and the `spec` service.
 
 ## Includes
 
@@ -9,7 +9,6 @@ that belongs inside them. Fills the `architecture` role and the `spec` service.
   - `agents/arc42.agent.md`
 - Skills:
   - `skills/architecture-arc42-generator/SKILL.md`
-  - `skills/architecture-blueprint-generator/SKILL.md`
   - `skills/create-architectural-decision-record/SKILL.md`
   - `skills/create-technical-debt-record/SKILL.md`
   - `skills/c4-diagram-generator/SKILL.md`
@@ -17,7 +16,6 @@ that belongs inside them. Fills the `architecture` role and the `spec` service.
   - `skills/state-diagram-generator/SKILL.md`
   - `skills/deployment-diagram-generator/SKILL.md`
 - Instructions:
-  - `instructions/blueprint/blueprint-global-instructions.md`
   - `instructions/adr/adr-global-instructions.md`
   - `instructions/tdr/tdr-global-instructions.md`
   - `instructions/c4/c4-global-instructions.md`

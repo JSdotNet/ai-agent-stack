@@ -29,9 +29,3 @@ Use when technical debt needs to be captured, prioritized, or tracked for remedi
 ## Output
 
 Create TDR entries in the repository TDR location using the agreed structure and status model.
-
-## Quality Checks
-
-- Debt scope and impact are measurable.
-- Ownership and status are explicit.
-- Remediation path is actionable and time-bounded.

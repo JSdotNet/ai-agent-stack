@@ -47,14 +47,3 @@ description: Dedicated rules for creating and refining GitHub Actions workflow f
 - Follow [spec-conciseness.instructions.md](spec-conciseness.instructions.md) for pruning and
   the 60-line budget.
 - Reference an approved plan before editing an existing workflow file.
-
-## Validation Checklist
-
-- [ ] File name is descriptive and placed under `.github/workflows/`.
-- [ ] `on` triggers are explicit and scoped.
-- [ ] Workflow-level `permissions` is present and minimal.
-- [ ] All actions are pinned to a full commit SHA with a version comment.
-- [ ] Secrets are only referenced via `${{ secrets.* }}` and never logged.
-- [ ] `pull_request_target` usage, if present, has documented justification.
-- [ ] YAML is syntactically valid.
-- [ ] Every line changes behavior versus the model default, and no meaning appears twice.

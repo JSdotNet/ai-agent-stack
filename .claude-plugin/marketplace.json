@@ -31,12 +31,6 @@
       "version": "0.1.0"
     },
     {
-      "name": "claude-desktop",
-      "source": "./plugins/claude-desktop",
-      "description": "The Claude host profile: it binds the delivery engine's six host slots to Claude's own files, paths, and capabilities — repo-instructions to CLAUDE.md, repo-flow-context to .claude/flow-context.md, model-override to the personal flow model-selection file, stage-delegation to sub-agents, surface to delivery-dashboard, pr-lane to the gh CLI — and ships the two procedures that belong to the host rather than to the engine: start, which brings the repository's own application up and opens it, and session-handoff, which packages a session into a brief the next one continues from. Declares no dependency: the flows themselves live in delivery, and a binding nothing reads is inert.",
-      "version": "1.0.0"
-    },
-    {
       "name": "devbook",
       "source": "./plugins/devbook",
       "description": "The devbook convention: .arc42, .domain, .tech, .design, and .ai knowledge folders of addressed Markdown chapters, each carrying a parseable meta block with status ladders, a shared approved rung, runnable test-case links, an opaque ext namespace a layered plugin keeps its own state in, and annotation fences that keep a review note in the chapter beside the passage it is about, compiled into derived _meta indexes and a reference-graph canvas. Ships bidirectional to-spec-<kind> and from-spec-<kind> converters between chapters and code, a versioned contract with runnable migrations, and enforcement tooling. Usable on its own: the per-folder flow-* procedures live in the devbook-flows bridge.",

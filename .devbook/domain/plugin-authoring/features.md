@@ -55,7 +55,7 @@ type: sub-feature
 ```
 
 Ship the Claude manifest and the Copilot manifest, agreeing on name, version, and
-description. A host profile is the one plugin that ships only its own host's.
+description. Every plugin ships both; the host profile that shipped one is gone.
 
 ### Declare a Dependency
 

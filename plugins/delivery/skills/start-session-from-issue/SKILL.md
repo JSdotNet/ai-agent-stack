@@ -235,6 +235,6 @@ truth. Follow the shared **Reporting Contract** in
   to `flow-bug`, ranked by severity.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
-- The host plugin's session-handoff skill — hand this session's in-flight run to a fresh
-  session when its context fills, rather than starting the issue over. Optional: without it,
-  follow **Session Handoff** in `instructions/flow-execution-model.instructions.md`.
+- **Session Handoff** in `instructions/flow-execution-model.instructions.md` — hand this
+  session's in-flight run to a fresh session when its context fills, rather than starting the
+  issue over.

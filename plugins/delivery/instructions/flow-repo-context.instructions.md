@@ -16,8 +16,8 @@ description: Defines the optional .claude/flow-context.md convention a consuming
   and never comes from the repository (see `flow-model-selection.instructions.md`), and MCP
   server configuration stays in the repository's own `.mcp.json` and instruction files.
 - Interactive developer startup — the URL to open, and optionally sign-in and an area map —
-  belongs to the host plugin's own start skill, which falls back to this file, so neither
-  states the same thing twice.
+  may live here too. No plugin ships a start procedure any more, so this file is the only
+  place a repository writes it down.
 
 ## The File
 

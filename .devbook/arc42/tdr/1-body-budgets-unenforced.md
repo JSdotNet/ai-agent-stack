@@ -23,7 +23,8 @@ them.
 `*.instructions.md` 60, `*.agent.md` 80 — as bare thresholds, and every session-start hook
 restates them. Most of the repository does not meet them, and nothing checks.
 
-Measured across all seventeen plugins, counting body lines after frontmatter:
+Measured on 2026-09-04 across the seventeen plugins shipping then, counting body lines after
+frontmatter:
 
 | Kind | Within budget | Smallest | Median | Largest |
 | --- | --- | --- | --- | --- |

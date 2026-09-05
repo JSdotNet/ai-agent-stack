@@ -66,10 +66,10 @@ classDiagram
 
 - A plugin appears in exactly one marketplace and the marketplace name is part of every
   installed reference, which is why the marketplace is never renamed after release.
-- A plugin ships two manifests, or one when it is a host profile. The manifests are two views
-  of the same three facts, not two sources of them.
-- A dependency points down the layer order only, and only at a plugin: zero for a foundation
-  or a profile, one for an extension, two for a bridge. A role, a tracker, or a surface is
+- A plugin ships two manifests. They are two views of the same three facts, not two sources
+  of them.
+- A dependency points down the layer order only, and only at a plugin: zero for a foundation,
+  one for an extension, two for a bridge. A role, a tracker, or a surface is
   reached by name at run time and never appears here.
 - An asset belongs to one plugin and one plugin only; the same file is never shipped twice.
   An agent's handoff targets and a skill's `plugin:asset` references are names, not

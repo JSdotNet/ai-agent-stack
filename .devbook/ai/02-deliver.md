@@ -23,8 +23,11 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   through `flow-domain`, `flow-tech`, `flow-design`, `flow-arc42-content`, or `flow-ai` rather
   than `flow-fallback`. A run can report into a surface — `delivery-dashboard` or
   `delivery-collector` here, `delivery-canvas` being a Copilot canvas this marketplace does not
-  offer — and resolves its host slots from the `claude-desktop` profile: `CLAUDE.md` as
-  `repo-instructions`, sub-agents as `stage-delegation`, `delivery-dashboard` as `surface`.
+  offer — but resolves no host slots: no plugin binds one, and this repository declares no
+  `.github/ai-agent-stack.json`, so each takes its unbound default. `repo-instructions`
+  resolves to nothing, because the fallback is `AGENTS.md` and this repository has `CLAUDE.md`
+  instead, and every category takes its default model. `stage-delegation` and `surface` still
+  answer, being read from the live session rather than bound.
 - **Adopted by** — nobody yet. Every change to this repository so far was carried by hand under
   `CLAUDE.md`, including the ones that built the flows.
 - **Evidence** — none yet. Everything a flow needs has landed: the seven role plugins answer

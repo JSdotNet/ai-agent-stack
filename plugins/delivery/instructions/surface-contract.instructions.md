@@ -6,7 +6,7 @@ description: The contract between the delivery engine and everything a repositor
 # Surface Contract (Engine-Owned)
 
 Everything outside the engine that a flow talks to is named here: the points a repository
-plugs providers into, the gates it adds, the slots a host plugin binds, and the surface a run
+plugs providers into, the gates it adds, the host slots it binds, and the surface a run
 reports through. Read this file once, before the first `update_stage`.
 
 Three rules hold across all of it, and they are the reason the engine stays reusable:
@@ -210,9 +210,12 @@ dependencies: one missing specialist must not demote every skill that names it.
 
 ## Host Slots
 
-A shared skill never names a host's own file. It names a slot, and a host plugin binds it. A
-slot is **bound, never branched**: the skill reads `repo-instructions`; it does not contain an
-if-this-host clause.
+A shared skill never names a host's own file. It names a slot. A slot is **bound, never
+branched**: the skill reads `repo-instructions`; it does not contain an if-this-host clause.
+No plugin ships bindings, so a slot resolves from what the running session offers, from
+`bindings["delivery.slots"]` where a repository sets one — `repo-instructions`,
+`repo-flow-context`, and `pr-lane` only — or to the unbound default below, which
+is the normal case and never a gap.
 
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |

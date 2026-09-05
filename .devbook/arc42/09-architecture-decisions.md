@@ -329,8 +329,8 @@ Consequence: **installing `delivery` alone gives no live run timeline at all.** 
 reports that no surface is bound, produces its file artifacts, and continues. That is now a
 choice rather than a gap — `delivery-dashboard`, `delivery-canvas`, and `delivery-collector`
 ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
-allowlist still carries the legacy `orch-dashboard` tool patterns beside the new ones so an
-existing dashboard installation answers; drop them the release after this one.
+allowlist carried the legacy `orch-dashboard` tool patterns beside the new ones for one
+release; they went with the plugin that shipped that server.
 
 See [Three Surfaces, One Contract](#three-surfaces-one-contract) for what each of them
 answers.
@@ -398,41 +398,42 @@ work item and the approval decision land in fields nothing looks at. Nothing mig
 because the new plugins keep their own state directories and no run has been written to one
 yet. That is the one moment these renames are free.
 
-## A Host Profile Depends on Nothing
+## No Host Profile Plugins
 
 ```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-profile-plugins"]
+date: 2026-09-05
+related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
-`claude-desktop` and `copilot-app` keep their names, lose the 27 skills that are now
-`delivery`'s, and declare no dependency on it. What is left is the slot bindings and the
-procedures that cap a session: `start` and `session-handoff` on one side,
-`update-open-sessions` on the other.
+`claude-desktop` and `copilot-app` are deleted. Nothing in this marketplace names one host's
+own file, path, or capability any more, and no plugin ships slot bindings.
 
-Declaring `delivery` would have been defensible — the slots are its concept, and a profile is
-an extension of it in every sense but the mechanical one. It was refused because a hard
-dependency exists to make an *illegal* combination unreachable, and a profile installed alone
-is not illegal: it still starts your app and still hands your session off, and a binding
-nobody reads is inert rather than broken. The rule that a surface is never a dependency in
-either direction is the same rule read from the other end — the engine must not learn which
-profile answered, and the profile must not need the engine to be worth installing.
+They were kept for one change as the place a host's facts were allowed to live: six slot
+bindings each, plus three procedures that cap a *session* rather than a run — `start` and
+`session-handoff` on one side, `update-open-sessions` on the other. What that bought was a
+six-line table per host and a hook to inject it. What it cost was a plugin per host in a
+marketplace whose whole premise is that one authored copy serves both, and a standing
+obligation that every slot added to the engine be answered twice, with nothing checking that
+it was.
 
-Three consequences, and the second is the sharp one:
+Three consequences, and the second is the one to watch:
 
-- **One manifest each.** A profile ships only its own host's, so `copilot-app` has no
-  `.claude-plugin/plugin.json` and no marketplace entry — Claude cannot offer a plugin whose
-  every statement is about somewhere else. `claude-desktop` still authors a root `hooks.json`,
-  because Copilot reads that file and would otherwise fall back to `hooks/hooks.json` and run
-  commands written against `${CLAUDE_PLUGIN_ROOT}`.
-- **The two profiles are asymmetric, deliberately.** Copilot leaves `repo-flow-context` and
-  `model-override` unbound. Both have documented unbound behaviour, and inventing a
-  `~/.copilot/...` path nobody has verified would be a worse answer than the default. Bind
-  them the moment the paths are known — the closed slot set is what makes the gap visible
-  rather than silent.
-- **Nothing enforces that the two stay in step.** A slot added to the engine's set has to be
-  answered twice, and a profile that misses it falls through to the default without saying so.
-  The engine's slot table is the checklist; there is no check.
+- **The three session skills are gone, not rehomed.** Folding them into `delivery` was the
+  alternative, and it was refused: `start` opens a URL in a host's own browser pane and
+  `update-open-sessions` walks a host's own worktrees, so moving them would have moved the
+  host-naming into the engine rather than out of the marketplace. `session-handoff` had the
+  one real claim, and the engine already carried its procedure inline under **Session
+  Handoff** in `flow-execution-model.instructions.md` — which is now the only copy.
+- **Every slot resolves unbound unless a repository binds it.** `repo-instructions` falls back
+  to `AGENTS.md`, `model-override` to category defaults, `stage-delegation` to running stages
+  inline, `surface` to file artifacts, `pr-lane` to no pull request. Three of the six are
+  settable under `bindings["delivery.slots"]`; `model-override` deliberately is not, because
+  model choice is personal, and `stage-delegation` and `surface` are read from the live
+  session rather than declared anywhere. A repository that wants the old Claude answers writes
+  three lines of config.
+- **The slot set outlives its binders.** It stays declared in
+  `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
+  an if-this-host clause, and a slot nobody binds still buys that.
 
 ## delivery-canvas Ships the Canvas Only
 
@@ -446,12 +447,12 @@ manifest, no marketplace entry — its two viewer pages live in `extensions/deli
 and the canvas actions `render_diagram` and `render_markdown` are the whole surface.
 
 It shipped both transports for two days, on the argument that the layered design's combination
-table lists *delivery + delivery-canvas* as a supported outcome and a Claude host could not
-reach it otherwise. That argument was answered from the wrong side. The same design's host-slot
-table binds `surface` to `delivery-dashboard` on Claude and `delivery-canvas` on Copilot, and
-the dashboard already implements the render group with the same two viewers — so the MCP half
-was a second implementation of a capability the primary host had covered, kept for a
-combination nobody on that host has a reason to install.
+table lists *delivery + delivery-canvas* as a supported outcome and a host without a canvas
+panel could not reach it otherwise. That argument was answered from the wrong side:
+`delivery-dashboard` already implements the render group with the same two viewers, and it is
+what the `surface` slot resolves to wherever there is no canvas to open. So the MCP half was a
+second implementation of a covered capability, kept for a combination nobody with the dashboard
+installed has a reason to add.
 
 What made this cheap to reverse is that the canvas half never depended on the server half: the
 extension declares its own actions and serves its own pages, so removing 870 lines of server,
@@ -465,7 +466,7 @@ as something other than an MCP server. The contract's resolution rule says so ex
 the operation names, not the transport. The cost is that `delivery-canvas` has no automated
 check any more — the only one drove the deleted server over stdio — and its pages are now
 verified on the Copilot host or not at all, which is the open half of the `trial` status on
-[the SDK](../tech/technology-graph.md#copilot-extension-sdk).
+[the SDK](../tech/hosts.md#copilot-extension-sdk).
 
 ## A Role Plugin Holds No Flow Control
 
@@ -583,8 +584,8 @@ date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
-The three sweep skills ported from `claude-desktop` land in a new `fleet` plugin, an L1
-extension over `delivery`, rather than as more skills inside the engine.
+The three sweep skills that used to sit beside the Claude host profile land in a new `fleet`
+plugin, an L1 extension over `delivery`, rather than as more skills inside the engine.
 
 `delivery` states the rule they are the exception to: one item per run, and never a fan-out. A
 flow owns a run, a Personal Validation gate, and a user turn, and none of those survives being

@@ -174,7 +174,3 @@ remain the source of truth.
 - During **Plan Refinement**, also open/update the `render_markdown` surface operation with
   the refined upgrade plan, per `instructions/surface-contract.instructions.md`. Optional; skip
   gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-aspire-update/SKILL.md`

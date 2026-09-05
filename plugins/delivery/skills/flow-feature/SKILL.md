@@ -169,7 +169,3 @@ remain the source of truth.
   the surface's `render_markdown` or `render_diagram` operation with the
   provided specification or architecture artifacts, per
   `instructions/surface-contract.instructions.md`.
-
-## Reference
-
-Source skill location: `skills/flow-feature/SKILL.md`

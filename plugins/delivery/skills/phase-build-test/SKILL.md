@@ -84,5 +84,4 @@ error that identifies it, not with the surrounding log.
 
 ## Reference
 
-Source skill location: `skills/phase-build-test/SKILL.md`.
 Phase definition: `instructions/flow-phases.instructions.md`.

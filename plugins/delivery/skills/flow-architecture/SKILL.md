@@ -99,7 +99,3 @@ artifacts remain the source of truth.
   the drafted Markdown result, and the `render_diagram` surface operation if the result
   includes Mermaid diagrams, per `instructions/surface-contract.instructions.md`. Optional;
   skip gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-architecture/SKILL.md`

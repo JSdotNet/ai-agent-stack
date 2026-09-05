@@ -133,7 +133,3 @@ artifacts remain the source of truth.
   in Stage 1.
 - Call `set_run_context` with the `changeKind` as soon as Stage 1 determines it, since it
   selects the closing tier.
-
-## Reference
-
-Source skill location: `skills/flow-fallback/SKILL.md`

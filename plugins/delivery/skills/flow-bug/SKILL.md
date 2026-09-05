@@ -189,7 +189,3 @@ remain the source of truth.
 - During **Bug Intake & Reproduction**, also open/update the `render_markdown` surface operation
   with the drafted bug report content, per `instructions/surface-contract.instructions.md`.
   Optional; skip gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-bug/SKILL.md`

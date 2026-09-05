@@ -185,7 +185,3 @@ artifacts remain the source of truth.
 - During **README**, also open/update the `render_markdown` surface operation with the
   expanded README content, per `instructions/surface-contract.instructions.md`. Optional; skip
   gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-repo/SKILL.md`

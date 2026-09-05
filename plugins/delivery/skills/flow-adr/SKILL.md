@@ -97,7 +97,3 @@ artifacts remain the source of truth.
 - During **ADR Drafting**, also open/update the `render_markdown` surface operation with the
   drafted ADR content, per `instructions/surface-contract.instructions.md`. Optional; skip
   gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-adr/SKILL.md`

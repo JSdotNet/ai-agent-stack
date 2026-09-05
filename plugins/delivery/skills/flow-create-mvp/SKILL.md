@@ -190,7 +190,3 @@ remain the source of truth.
   open/update `render_markdown` with the architecture documentation and `render_diagram`
   (`mermaid-diagram`) with any accompanying Mermaid diagrams, per
   `instructions/surface-contract.instructions.md`. Optional; skip gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-create-mvp/SKILL.md`

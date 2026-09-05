@@ -160,7 +160,3 @@ remain the source of truth.
 - During **Update Planning**, also open/update the `render_markdown` surface operation with
   the drafted update/rollback plan, per `instructions/surface-contract.instructions.md`.
   Optional; skip gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-update-packages/SKILL.md`

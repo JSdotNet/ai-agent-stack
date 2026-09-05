@@ -208,7 +208,3 @@ phases:
   tests against the API endpoints pass.
 - On failure, record which phase failed with the specific errors and suggested fixes, and
   re-run after fixing.
-
-## Reference
-
-Source skill location: `skills/flow-project/SKILL.md`

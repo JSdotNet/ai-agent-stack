@@ -177,7 +177,3 @@ remain the source of truth.
 ## Skills Used
 
 - `aspire` (optional) when wiring service resources into AppHost
-
-## Reference
-
-Source skill location: `skills/flow-create-service/SKILL.md`

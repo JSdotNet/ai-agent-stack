@@ -180,7 +180,3 @@ remain the source of truth.
   open/update the `render_markdown` surface operation with the recorded structure plan and
   the `render_diagram` surface operation with any accompanying layout diagram, per
   `instructions/surface-contract.instructions.md`. Optional; skip gracefully if not installed.
-
-## Reference
-
-Source skill location: `skills/flow-structure/SKILL.md`

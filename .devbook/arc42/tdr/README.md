@@ -40,8 +40,9 @@ content.
 | --- | --- | --- | --- |
 | [1. The body budgets are unenforced](1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress |
 | [2. fleet names the Claude CLI directly](2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified |
+| [3. The devbook asset rename ships no migration](3-devbook-rename-has-no-migration.md) | 2026-09-05 | Medium | identified |
 
-Neither carries a target date. This repository has one maintainer and no release commitment to
+None carries a target date. This repository has one maintainer and no release commitment to
 schedule against, so a date would be invented rather than agreed. Each record states the
 **condition** that should trigger its remediation instead, which is the part a reader can
 actually check.

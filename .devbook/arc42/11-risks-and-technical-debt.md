@@ -19,8 +19,9 @@ related: [".devbook/arc42/tdr/README.md"]
 | --- | --- | --- | --- | --- |
 | [1. The body budgets are unenforced](tdr/1-body-budgets-unenforced.md) | 2026-09-04 | Low | in-progress | CLAUDE.md states three size budgets as bare thresholds; 13 of 116 skills meet them, and the disclosure rule that made them checkable was dropped in the port. |
 | [2. fleet names the Claude CLI directly](tdr/2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified | `fleet` names a host's CLI although it is not a host profile, so on any other host a sweep dispatches nothing — and its manifest does not say so. |
+| [3. The devbook asset rename ships no migration](tdr/3-devbook-rename-has-no-migration.md) | 2026-09-05 | Medium | identified | Six materialized paths were renamed `knowledge-*` -> `devbook-*` with no migration to move them, so a re-synced repository grows a second spelling of the same tooling. |
 
-Both were carried out of chapter 9, where they had been written as decisions. Neither is one:
+Records 1 and 2 were carried out of chapter 9, where they had been written as decisions. Neither is one:
 each ends in options rather than a choice, which is the test for whether a record belongs
 [here instead](tdr/README.md).
 

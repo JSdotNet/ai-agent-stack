@@ -102,7 +102,7 @@ instruction files — through one section of `assets/code-sync-protocol.md`.
 **The canvas half is not, and the reason is an import boundary rather than a rename.** The
 extension was renamed `knowledge-canvas` → `devbook-canvas` ahead of the move, because a name
 is free to change before anything resolves it. But it imports `graph.mjs`, `outline.mjs`, and
-`metadata.mjs` out of `tools/knowledge-meta/` by relative path — deliberately, so the rendered
+`metadata.mjs` out of `tools/devbook-meta/` by relative path — deliberately, so the rendered
 graph and the committed index are the same code — and those three paths are what a lift
 breaks. So that move is not a move plus a manifest: the generator modules have to become
 something a separate plugin can import first. `devbook` still imports nothing from the canvas,
@@ -124,7 +124,7 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 The convention permits two layouts: five root-level dot-folders, or all five nested under one
 `.devbook/` parent with the dots dropped. A repository picks one and never mixes them.
 
-The generator understands only the flat one. `KNOWLEDGE_FOLDERS` lists `.arc42`, `.domain`,
+The generator understands only the flat one. `DEVBOOK_FOLDERS` lists `.arc42`, `.domain`,
 `.tech`, `.design`, `.ai`, and every reference in the corpus is a path starting with one of
 them, so a `.devbook/domain/…` address resolves to nothing.
 
@@ -194,7 +194,7 @@ Consequence: a question here loses who asked it and cannot be replied to in plac
 happens in the pull request, and only the unresolved residue stays on the chapter.
 
 **Superseded in part, 2026-09-04.** `devbook` 1.1.0 ships the fence: the schema and placement
-rule in `knowledge-annotations.instructions.md`, the parse and lint in `metadata.mjs`, the
+rule in `devbook-annotations.instructions.md`, the parse and lint in `metadata.mjs`, the
 derived `_meta/annotations.json`, and `annotations.mjs` as the one writer. So the premise this
 decision rested on — that L0 has not built it — no longer holds, and the reason to keep findings
 in `ext` is gone with it.
@@ -535,7 +535,7 @@ by accident:
 | --- | --- |
 | `flow-*`, `phase-*`, `fleet-*`, `automation-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
-| `knowledge-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
+| `devbook-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
 | `flow-runner` and `qa` agents | Each is a session's main loop and carries its own invocation contract. |
 
 For those kinds the reason is stated here, once, and not repeated at the top of a hundred
@@ -593,3 +593,39 @@ resting state. A backlog is worked one issue per session through `start-session-
 until somebody enables `fleet` on purpose. The dependency runs one way — `fleet` names
 `delivery`'s instruction files, skills, and surface contract; nothing in `delivery` names a
 `fleet-*` skill, only the subsystem.
+
+## Devbook Payload Named After Its Plugin
+
+```meta
+date: 2026-09-05
+related: [".devbook/domain/plugin-authoring/naming.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
+```
+
+Every `knowledge-` name inside `devbook` becomes `devbook-`: the two tool folders
+(`tools/devbook-meta`, `tools/devbook-tech`), the two shipped workflows, the nine instruction
+files, the `devbook-tech-update` skill, `assets/build/Update-DevbookIndex.ps1`, and the module
+constants (`DEVBOOK_FOLDER_NAMES`, `DEVBOOK_PATH_PREFIX`) behind them. `knowledge` survives
+only as the English word for what a chapter holds.
+
+The prefix was the old plugin's name, `knowledge-base`. The canvas extension was already
+renamed on this reasoning — see [devbook Still Ships the Graph Canvas](#devbook-still-ships-the-graph-canvas) — and leaving the payload
+behind left one plugin shipping two vocabularies. It also broke the naming rule the convention
+states about itself: a name does not repeat what its location already says, and inside
+`plugins/devbook/` the old prefix said nothing except which plugin used to own the folder.
+`devbook-` is not redundant at the *destination*, which is the shared `.github/tools/`,
+`.github/workflows/`, and `.github/instructions/` of a consuming repository.
+
+**Consequence, and the part that is not yet closed: the renamed assets are payload.** A
+repository synced before this rename holds `.github/tools/knowledge-meta/`,
+`.github/workflows/knowledge-meta*.yml`, `.github/instructions/knowledge-*.instructions.md`,
+and `build/Update-KnowledgeIndex.ps1`, all recorded under those keys in the stamp's
+`materialized` map. Re-syncing installs the new names beside the old ones rather than over
+them — exactly the two-spellings outcome the plugin README tells adopters to avoid. Closing it
+needs a migration that moves the six materialized paths, rewrites the references inside them,
+and rekeys the stamp; that migration is not written, so it is carried as debt in
+[chapter 11](11-risks-and-technical-debt.md) rather than claimed here.
+
+Migration `006-drop-backlog` is the one asset the rename could not simply follow. It runs
+*before* a repository is renamed, so it now matches both workflow spellings; its id and its
+contract version are unchanged, because a shipped migration is never rewritten into something
+different, only made to keep working.

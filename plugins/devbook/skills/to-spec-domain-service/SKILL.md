@@ -152,33 +152,13 @@ evidence either way.
 10. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- One `type: domain-service` chapter in `.domain/<context>/domain.md`, written
-  through the `.domain` flow.
-- The invocation semantics stated explicitly as one (or more) of the four,
-  evidenced by registration or call sites.
-- Every coordinated aggregate and policy listed.
-- The reason the behaviour does not belong on a single aggregate, stated as
-  evidence rather than assertion.
-- Transactional behaviour across coordinated aggregates recorded.
-- For a process manager, where in-flight state lives — or that it does not
-  persist.
-- Application services reported as findings, not given chapters.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not create a `policy.md` file or a separate `Policy` chapter type. Process
   manager semantics stay in the domain service chapter.
 - Do not capture an application service as a domain service. Transaction
@@ -187,4 +167,4 @@ evidence either way.
 - Do not omit the invocation semantics. A service whose invocation is unrecorded
   reads as command-invoked by default, which is often wrong.
 - Do not describe the coordination without saying whether it is transactional.
-- Do not hand-edit files under `_meta/`.
+

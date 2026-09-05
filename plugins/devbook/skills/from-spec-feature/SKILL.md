@@ -35,15 +35,10 @@ rules, and the change-brief contract — none of which are repeated here.
 
 ## Chapter status gate
 
-Check `status` before doing anything else, per the protocol's status rules:
-
-- `approved` — proceed. A person has approved this chapter; that is what the
-  rung is for.
-- `active` — proceed.
-- `draft` or `proposed` — stop and confirm. State what the chapter claims and
-  that it is not yet agreed, then ask whether to build it as written or settle
-  the chapter through the `.domain` flow first.
-- `deprecated` — do not build. Report it and stop.
+Check `status` before anything else, per the protocol's status rules: `approved` and
+`active` proceed; `draft` or `proposed` stops to confirm — say what the chapter claims and
+that it is not agreed, then ask whether to build it as written or settle it first;
+`deprecated` stops.
 
 ## Spec-to-code mapping
 
@@ -125,39 +120,10 @@ each row's `Enforced at` point, and leave `open` rows out of the invariants list
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.
 
-## Output expectations
-
-- Exactly one change category: `new functionality`,
-  `change to existing behaviour`, or `defect`, with the reasoning for it.
-- **Outcomes**, **invariants**, **ubiquitous language**, **out of scope**, and
-  **acceptance checks**, as the protocol defines them.
-- The `depends-on` chain checked, with any unbuilt prerequisite reported before
-  the brief rather than assumed.
-- Outcomes stated as user-observable behaviour in business language.
-- Invariants pulled from the `related` `domain.md` chapters, quoted rather than
-  paraphrased.
-- Each sub-feature marked in scope or deferred, explicitly.
-- The feature flag named, with whether it must be created as part of this
-  change.
-- The protocol's report table, with the verdict and the evidence behind it.
-- No change to any file in the repository.
-
 ## Do not
 
-- Do not edit source code, test code, project files, or infrastructure files.
-  This skill emits a brief.
-- Do not name a code-side delivery or orchestration skill of any kind. The brief
-  stops at the brief; which flow picks it up is the user's decision, made after
-  reading it.
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
-- Do not build from a `draft` or `proposed` chapter without explicit
-  confirmation, and never from a `deprecated` one.
-- Do not turn a `conflict` into a `defect` brief. Stop and ask which side is
-  wrong.
-- Do not ask for work that already exists — read the counterpart first.
-- Do not treat a TODO, a comment, or a disabled test as proof that something is
-  already built.
 - Do not brief a feature whose `depends-on` prerequisites are themselves unbuilt
   without reporting the chain first.
 - Do not invent invariants for a feature. They come from the `related`
@@ -167,3 +133,4 @@ each row's `Enforced at` point, and leave `open` rows out of the invariants list
 - Do not infer that a feature is delivered because its flag exists, or
   undelivered because it does not.
 - Do not silently defer a sub-feature the chapter names. Deferral is stated.
+

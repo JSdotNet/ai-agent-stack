@@ -154,35 +154,13 @@ not copy.
 10. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- `.arc42/05-building-block-view.md` written through the `.arc42` flow, with
-  one `meta` block on the top-level chapter serving as the file-level block too.
-- Level 1 and level 2 decomposition established from what runs and what is
-  depended on, not from project names.
-- A responsibility per block, grounded in its public surface and its dependents.
-- Interfaces recorded per block: routes, contracts, public API, injected
-  abstractions.
-- A Mermaid diagram whose edges are the observed dependencies in their observed
-  direction.
-- Dependencies that contradict the intended layering recorded as findings, not
-  redrawn.
-- `related` references to the `.domain` bounded contexts the blocks align with.
-- `.arc42/_meta/` regenerated and `--check` clean.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.arc42/` files directly — the write routes through
   the `.arc42` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not set a `type` field. `.arc42` defines no value set and a `type` there is
   reported as a warning.
 - Do not add `depends-on`. `.arc42` has no such field; use `related`.
@@ -195,4 +173,4 @@ not copy.
   content.
 - Do not restate `.tech` package or version facts here — that is
   `knowledge-tech-update` and the `.tech` flow scope.
-- Do not hand-edit files under `_meta/`.
+

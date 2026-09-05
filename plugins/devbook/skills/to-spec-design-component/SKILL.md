@@ -165,36 +165,13 @@ chapter as accepted practice.
 10. **Report.** Close with the protocol's report table, one row per chapter
     touched or checked, including the `aligned` ones.
 
-## Output expectations
-
-- Component chapters in `.design/component-libraries.md` written through
-  the `.design` flow, recording observed adoption per channel.
-- A recommendation with rationale and, where several libraries are in play, a
-  comparison table.
-- Known gaps recorded: hand-rolled components and capabilities the library
-  lacks.
-- Hard-coded values where a token exists listed as findings, per token file.
-- Pointer-only interactions without a keyboard equivalent reported as rule
-  violations, not written in as accepted practice.
-- Where an authoritative design source exists, its guidance preserved, and code
-  that contradicts it reported as a `conflict`.
-- Chapters left at `status: draft` with the gap noted, where the authoritative
-  source could not be verified.
-- `.design/_meta/` regenerated and `--check` clean.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.design/` files directly — the write routes through
   the `.design` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not overwrite guidance grounded in the authoritative design source with an
   observation from code. The source wins; the divergence is a `conflict`.
 - Do not add or pin a dependency. `component-libraries.md` records a
@@ -211,4 +188,4 @@ chapter as accepted practice.
 - Do not record a library as in use because its package is present. Confirm the
   imports.
 - Do not restate channel or stack facts that belong in `.arc42` or `.tech`.
-- Do not hand-edit files under `_meta/`.
+

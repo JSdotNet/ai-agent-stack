@@ -283,53 +283,17 @@ service raises it.
     root, each sub-chapter, each shared grouping, each event — including the
     `aligned` ones.
 
-## Output expectations
-
-- The aggregate captured whole in one pass: the `type: aggregate` chapter, every
-  owned `type: entity` / `type: value-object` / `type: enum` `###` sub-chapter,
-  the shared groupings where a type has two or more users, and a
-  `type: domain-event` chapter per event the root raises — all written through
-  the `.domain` flow.
-- Every claim traceable to code that executes or a test that passes.
-- The consistency boundary stated explicitly, including which other aggregates
-  are referenced by id only.
-- Invariants recorded as invariants of the aggregate or of the owning type,
-  distinguished from rules enforced by callers.
-- Invariants, transitions, and ubiquitous-language phrasing drawn from the unit
-  tests where they carry it better than the code does.
-- Rules with no test coverage noted as thinly covered; rules appearing only in a
-  disabled test recorded as open questions, not as facts.
-- Identity scope stated per entity: globally unique, or local to this aggregate.
-- Equality semantics and immutability recorded per value object from the actual
-  implementation, not assumed from the type's shape.
-- Every enum member recorded with its business meaning.
-- Each event's trigger traced to a specific publication site **and its
-  condition**, with consumers established from real registrations and
-  unestablished ones marked unknown.
-- Types that turn out to be aggregate roots of their own reported rather than
-  filed as entities.
-- New chapters at `status: draft`; existing chapters' `status` unchanged.
-- A verdict per chapter, not one for the whole aggregate.
-- `.domain/_meta/` regenerated and `--check` clean.
-- The protocol's report table, with the `aligned` rows included.
-
 ## Do not
 
-- Do not edit source or test code. This direction only reads it.
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
-- Do not treat a comment, a TODO, a doc comment, or a disabled test as evidence
-  of behaviour.
 - Do not skip the unit tests. They are where the invariants and the ubiquitous
   language are stated most precisely, and a pass that reads only production code
   will under-record both.
-- Do not record a rule found only in a disabled or skipped test as a fact.
 - Do not drop a chapter's `status` line because the aggregate is implemented and
   shipping. An omitted status means the resting value `active` — agreed — and code
   existing is not agreement that the code is the intended model.
 - Do not promote a rule enforced at one call site to an aggregate invariant.
-- Do not resolve a `conflict` verdict by rewriting the chapter to match the
-  code. Stop and put the decision to the user.
 - Do not write a kind prefix into any heading — `## Order`, never
   `## Aggregate: Order`. The kind lives in `type`.
 - Do not add `### Entities`, `### Value Objects`, or `### Enums` grouping
@@ -348,7 +312,7 @@ service raises it.
 - Do not capture an event raised by a domain service. That is
   `to-spec-domain-service` scope.
 - Do not add `depends-on` to a `domain.md` chapter.
-- Do not hand-edit files under `_meta/`.
 - Do not extend the pass into `features.md`, `model.md`, `flow.md`, or
   `dependencies.md` — `features.md` is `to-spec-feature` scope, and the rest are
   out of scope for every skill in this plugin.
+

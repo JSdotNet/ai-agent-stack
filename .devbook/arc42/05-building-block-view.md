@@ -94,9 +94,9 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 | Plugin | Fills | Ships |
 | --- | --- | --- |
 | `arc42` | role `architecture`, service `spec` | The `arc42` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
-| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fifteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
+| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fourteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
 | `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
-| `domain` | role `domain` | The `domain` agent, context mapping, model design, three diagram generators |
+| `domain` | role `domain` | The `domain` agent, context mapping, model design, four diagram generators |
 | `ux` | role `ux` | The `ux` agent, wireframes, user flows, design guidelines, UI review |
 | `documentation` | role `docs` | The `documentation` and `profile` agents, nine artifact skills including SVG infographics |
 | `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
@@ -104,7 +104,7 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 None declares a dependency and none names a flow, which is why each installs alone and is
 useful without the engine: the `arc42` agent writes an ADR whether or not `flow-adr` is what
 asked for it. The coupling runs the other way and only by name — `delivery` and
-`devbook-flows` carry 251 `plugin:asset` references into these seven, and a reference that
+`devbook-flows` carry over two hundred `plugin:asset` references into these seven, and a reference that
 resolves to nothing degrades one stage rather than failing a load.
 
 They also hold no flow control, which is what keeps that true in practice rather than only on

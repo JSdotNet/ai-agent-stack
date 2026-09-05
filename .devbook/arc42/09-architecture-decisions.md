@@ -49,7 +49,7 @@ missing specialist must not take every skill that names it down with it.
 
 ```meta
 date: 2026-09-02
-related: [".devbook/tech/technology-graph.md#copilot-plugin-api"]
+related: [".devbook/tech/hosts.md#copilot-plugin-api"]
 ```
 
 An asset is written once and read by both hosts, relying on both ignoring keys they do not
@@ -61,7 +61,7 @@ is restated in prose or by path.
 
 ```meta
 date: 2026-09-02
-related: [".devbook/tech/technology-graph.md#powershell"]
+related: [".devbook/tech/tooling.md#powershell"]
 ```
 
 A generator that derived the Claude-side files from the Copilot ones was written, verified, and
@@ -71,6 +71,12 @@ Claude manifest a file nobody was allowed to edit. Both manifests are hand-autho
 Consequence: what the generator used to lint — a missing description, an unloadable model pin,
 a handoff the body never mentions — is now a review responsibility, written down in
 [CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
+
+**Revisited, 2026-09-05.** Seventeen plugins and 161 budgeted assets made it unreliable: a
+review found five role agents still carrying tools a decision one day earlier said were gone.
+The lint is back as `tools/check-assets.mjs`, but as a checker over hand-authored files, not a
+generator that owns them — it reports, it writes nothing, and both manifests stay hand-authored.
+That is the half of the original that was worth keeping.
 
 ## devbook Still Ships the Graph Canvas
 
@@ -323,8 +329,8 @@ Consequence: **installing `delivery` alone gives no live run timeline at all.** 
 reports that no surface is bound, produces its file artifacts, and continues. That is now a
 choice rather than a gap — `delivery-dashboard`, `delivery-canvas`, and `delivery-collector`
 ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
-allowlist still carries the legacy `orch-dashboard` tool patterns beside the new ones so an
-existing dashboard installation answers; drop them the release after this one.
+allowlist carried the legacy `orch-dashboard` tool patterns beside the new ones for one
+release; they went with the plugin that shipped that server.
 
 See [Three Surfaces, One Contract](#three-surfaces-one-contract) for what each of them
 answers.
@@ -503,6 +509,69 @@ outside any flow and nothing prompts for approval before it writes. That is the 
 the guidance was never enforceable anyway, since an instruction file is a prompt and not a
 mechanism, and pretending otherwise is what made two of them contradict the assets shipped
 beside them. A repository that wants a checkpoint adds a gate, which the engine can see.
+
+**Completed, 2026-09-05.** The change that recorded this cleaned three agents and left five.
+`coding`, `documentation`, `profile`, `qa`, and `spec-builder` now carry no spawning or
+delegation tool and hold no approval question; `tools/check-assets.mjs` fails on any role
+agent that grows one back.
+
+## Budgets Are Disclosure Triggers, Not Gates
+
+```meta
+date: 2026-09-05
+related: [".devbook/arc42/tdr/1-body-budgets-unenforced.md", ".devbook/domain/plugin-authoring/features.md#stay-within-budget", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer"]
+```
+
+[Debt record 1](tdr/1-body-budgets-unenforced.md) measured the body budgets at eleven percent
+compliance and recommended restoring the disclosure rule `CLAUDE.md` had dropped in the port.
+This is that remediation, and one step past it.
+
+The budget stays, as what `spec-conciseness.instructions.md` already calls it: the trigger for
+a disclosure decision, not a hard limit. Past it, an author moves on-demand reference behind a
+pointer, splits the asset by branch, or states why it must be long. The step past the record's
+recommendation is where the reason is stated for the assets that are long by kind rather than
+by accident:
+
+| Kind | Why it exceeds by nature |
+| --- | --- |
+| `flow-*`, `phase-*`, `fleet-*`, `automation-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
+| `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
+| `knowledge-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
+| `flow-runner` and `qa` agents | Each is a session's main loop and carries its own invocation contract. |
+
+For those kinds the reason is stated here, once, and not repeated at the top of a hundred
+files. The record's own evidence supports the split: the plugin that owns the rule meets it at
+a median of 28 lines, and the four that miss it by four to ten times are exactly the ones made
+of staged procedures and contracts. Everything else over budget — a role plugin's how-to
+skills, the pull-request lane, the two profile skills — is owed a trim or a reason line in the
+file, and `tools/check-assets.mjs --budgets` is the list.
+
+Consequence: the number in `CLAUDE.md` is a review prompt and not a gate the checker fails on.
+An asset that grows past its budget is asked what it disclosed and why, not refused. The debt
+record moves to `in-progress` rather than `resolved`, because the assets outside the four
+kinds have not yet said why. If the table ever needs a fifth row, the budget is the wrong tool
+for that kind and should say so.
+
+## Four arc42 Chapters
+
+```meta
+date: 2026-09-05
+related: [".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/11-risks-and-technical-debt.md"]
+```
+
+`.devbook/arc42` holds chapters 1, 5, 9, and 11, the `tdr/` set, and no others, deliberately.
+arc42 numbers twelve; the convention here says a chapter is written when it has content, not
+to complete a set.
+
+There is no runtime here, so the runtime view (6), deployment view (7), and quality scenarios
+(10) would describe hosts this repository does not own. Constraints (2), context (3), and
+solution strategy (4) are carried by the domain folder's context map and dependencies and by
+the quality goals in chapter 1. Cross-cutting concepts (8) are the naming chapter, and the
+glossary (12) is `naming.md` itself.
+
+Consequence: a reader used to arc42 finds gaps in the numbering. The building-block view, the
+decisions, and the debt are where the substance is, and the numbering is kept so a later
+chapter lands in its place rather than being renumbered in.
 
 ## Fan-Out Is Its Own Plugin
 

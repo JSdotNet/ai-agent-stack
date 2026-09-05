@@ -26,6 +26,17 @@ apart.
 
 Name the artifact you validated against when reporting the change.
 
+Before committing, run the checker and the generator over this repository's own knowledge:
+
+```bash
+node tools/check-assets.mjs && node plugins/devbook/tools/knowledge-meta/build.mjs --check
+```
+
+The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
+reports body budgets. The second fails on a chapter whose `meta` block or reference does not
+resolve. Run the generator without `--check` to refresh `_meta/` after a chapter edit, and
+commit what it wrote.
+
 ## Committing
 
 - Commit after every change, one logical change per commit. Diffs are how this repository is
@@ -121,7 +132,13 @@ behaviour.
   consider running the suite". A softened rule is a rule that does not fire.
 - Cut what the model already does by default, and state each rule in exactly one file — point
   at it by relative path from everywhere else.
-- Body budgets: `SKILL.md` 40 lines, `*.instructions.md` 60, `*.agent.md` 80.
+- Body budgets: `SKILL.md` 40 lines, `*.instructions.md` 60, `*.agent.md` 80. The budget is a
+  disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
+  branch, or state the reason in the file. Full rule:
+  `plugins/spec-builder/instructions/authoring/spec-conciseness.instructions.md`. Staged
+  procedures, converters, schema and contract instruction files, and the two runner agents are
+  long by kind, recorded once in `.devbook/arc42/09-architecture-decisions.md` rather than in
+  each file.
 - A rule that must survive a long session says so in the asset, and repeats itself at the point
   of use. Instructions decay as context fills.
 - Exempt safety-critical text from any terseness rule: confirmations before irreversible

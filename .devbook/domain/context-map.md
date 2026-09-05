@@ -13,7 +13,7 @@ boundary.
 
 ```meta
 type: bounded-context
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/tech/technology-graph.md#claude-code-plugin-api"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/tech/hosts.md#claude-code-plugin-api"]
 ```
 
 Authoring, packaging, and distributing customization assets — agents, skills, instruction

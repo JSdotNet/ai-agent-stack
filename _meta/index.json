@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 7,
+  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "scope": ".",
+  "sources": [
+    ".devbook/arc42",
+    ".devbook/domain",
+    ".devbook/tech",
+    ".devbook/design",
+    ".devbook/ai"
+  ],
+  "problems": [],
+  "entries": [
+    {
+      "type": "area",
+      "name": ".devbook/arc42",
+      "path": ".devbook/arc42",
+      "kind": "arc42",
+      "title": ".devbook/arc42",
+      "children": [
+        {
+          "type": "file",
+          "name": "01-introduction-and-goals.md",
+          "path": ".devbook/arc42/01-introduction-and-goals.md",
+          "title": "Introduction and Goals",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 1,
+          "summary": "ai-agent-stack packages the devbook and delivery flow — the agents, skills, instruction files, and hooks that do the work — as plugins served from one marketplace, jsdotnet."
+        },
+        {
+          "type": "file",
+          "name": "05-building-block-view.md",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "title": "Building Block View",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 5
+        },
+        {
+          "type": "file",
+          "name": "09-architecture-decisions.md",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "title": "Architecture Decisions",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 9,
+          "summary": "Decisions taken and defensible. A record that ends in options rather than a choice is debt, not a decision, and lives in chapter 11 instead."
+        },
+        {
+          "type": "file",
+          "name": "11-risks-and-technical-debt.md",
+          "path": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "title": "Risks and Technical Debt",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 11,
+          "summary": "What this repository owes, and what it is exposed to. Records live in tdr/ and are linked from here rather than restated, the same way chapter 9 is meant to relate to adr/."
+        },
+        {
+          "type": "directory",
+          "name": "tdr",
+          "path": ".devbook/arc42/tdr",
+          "title": "Technical Debt Records",
+          "children": [
+            {
+              "type": "file",
+              "name": "README.md",
+              "path": ".devbook/arc42/tdr/README.md",
+              "title": "Technical Debt Records",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "Debt this repository has taken on deliberately: a rule it states and does not keep, or a rule it breaks knowingly with the fix already named. One record per item, numbered by filename, each carrying the day the debt was logged.",
+              "root": true
+            },
+            {
+              "type": "file",
+              "name": "1-body-budgets-unenforced.md",
+              "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
+              "title": "1. The Body Budgets Are Unenforced",
+              "status": "active",
+              "statusDeclared": false,
+              "number": 1,
+              "date": "2026-09-04",
+              "summary": "Remediation state: in-progress · Severity: low · Owner: the maintainer"
+            },
+            {
+              "type": "file",
+              "name": "2-fleet-names-the-cli-directly.md",
+              "path": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
+              "title": "2. fleet Names the Claude CLI Directly",
+              "status": "active",
+              "statusDeclared": false,
+              "number": 2,
+              "date": "2026-09-03",
+              "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "area",
+      "name": ".devbook/domain",
+      "path": ".devbook/domain",
+      "kind": "domain",
+      "title": "Context Map",
+      "children": [
+        {
+          "type": "file",
+          "name": "context-map.md",
+          "path": ".devbook/domain/context-map.md",
+          "title": "Context Map",
+          "kind": "context-map",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "This repository has one bounded context. It builds authoring assets, not a running product, so there is no second context to integrate with — the hosts that load the assets are outside the boundary.",
+          "root": true
+        },
+        {
+          "type": "directory",
+          "name": "plugin-authoring",
+          "path": ".devbook/domain/plugin-authoring",
+          "title": "Plugin Authoring",
+          "children": [
+            {
+              "type": "file",
+              "name": "domain.md",
+              "path": ".devbook/domain/plugin-authoring/domain.md",
+              "title": "Plugin Authoring",
+              "kind": "domain",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "What this context is responsible for: that an asset written once loads correctly in every host that reads it, and that a plugin can be installed on its own.",
+              "root": true
+            },
+            {
+              "type": "file",
+              "name": "dependencies.md",
+              "path": ".devbook/domain/plugin-authoring/dependencies.md",
+              "title": "Plugin Authoring",
+              "kind": "dependencies",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "What this context depends on and who depends on it. The hosts sit outside the boundary and are conformed to; the repositories that adopt a plugin sit outside it and are supplied."
+            },
+            {
+              "type": "file",
+              "name": "features.md",
+              "path": ".devbook/domain/plugin-authoring/features.md",
+              "title": "Plugin Authoring",
+              "kind": "features",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "What this context lets a maintainer do, in the language of naming.md rather than in file paths. Four features, and each is a thing a host or a consuming repository can observe."
+            },
+            {
+              "type": "file",
+              "name": "model.md",
+              "path": ".devbook/domain/plugin-authoring/model.md",
+              "title": "Plugin Authoring",
+              "kind": "model",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "Structural view of the context: what a marketplace holds, what a plugin is made of, and what a plugin leaves behind in a repository that adopts it. domain.md says what the context is responsible for; this file says how its terms relate.",
+              "diagrams": 1
+            },
+            {
+              "type": "file",
+              "name": "naming.md",
+              "path": ".devbook/domain/plugin-authoring/naming.md",
+              "title": "Naming",
+              "kind": "naming",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The terms this repository trades in. Where a host uses a different word for the same thing, the host's word is recorded as an alias rather than adopted."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "area",
+      "name": ".devbook/tech",
+      "path": ".devbook/tech",
+      "kind": "tech",
+      "title": "Technology Graph",
+      "children": [
+        {
+          "type": "file",
+          "name": "technology-graph.md",
+          "path": ".devbook/tech/technology-graph.md",
+          "title": "Technology Graph",
+          "status": "adopted",
+          "summary": "Everything this repository builds with. There is no runtime and no dependency manifest here: the assets are Markdown and JSON, and the platforms below are what reads them. The technologies themselves live one chapter each in the layer files; this file is the map.",
+          "diagrams": 1,
+          "root": true
+        },
+        {
+          "type": "file",
+          "name": "hosts.md",
+          "path": ".devbook/tech/hosts.md",
+          "title": "Hosts",
+          "status": "adopted",
+          "summary": "The platforms that read an asset, the one that runs it, and the one library a host supplies at load time. Nothing in this layer is a dependency in a manifest; each is what the checked-in files are authored for."
+        },
+        {
+          "type": "file",
+          "name": "shared.md",
+          "path": ".devbook/tech/shared.md",
+          "title": "Shared",
+          "status": "adopted",
+          "summary": "Formats and protocols that cut across every layer: what an asset is written in, and how a plugin ships tools rather than prose."
+        },
+        {
+          "type": "file",
+          "name": "tooling.md",
+          "path": ".devbook/tech/tooling.md",
+          "title": "Tooling",
+          "status": "adopted",
+          "summary": "What a plugin's executable parts run on. Both entries are runtimes a consuming repository already has; neither is installed by anything here."
+        }
+      ]
+    },
+    {
+      "type": "area",
+      "name": ".devbook/design",
+      "path": ".devbook/design",
+      "kind": "design",
+      "title": "Design",
+      "children": [
+        {
+          "type": "file",
+          "name": "README.md",
+          "path": ".devbook/design/README.md",
+          "title": "Design",
+          "status": "draft",
+          "summary": "Design guidance for the surfaces this repository's plugins render. Both chapters below now have an implementation. The dashboard stays draft because the intent was written first so the shipped surface would be reviewed against something other than itself, and that review has not happened yet.",
+          "root": true
+        }
+      ]
+    },
+    {
+      "type": "area",
+      "name": ".devbook/ai",
+      "path": ".devbook/ai",
+      "kind": "ai",
+      "title": "AI Adoption Map",
+      "children": [
+        {
+          "type": "file",
+          "name": "adoption-map.md",
+          "path": ".devbook/ai/adoption-map.md",
+          "title": "AI Adoption Map",
+          "kind": "adoption-map",
+          "status": "adopted",
+          "summary": "How this repository is itself built with AI. The assets it ships are the product and are described in .devbook/arc42 and .devbook/domain; what follows is only how the work gets done here. The practices live one chapter each in the stage files; this file is the map.",
+          "diagrams": 1,
+          "root": true
+        },
+        {
+          "type": "file",
+          "name": "01-author.md",
+          "path": ".devbook/ai/01-author.md",
+          "title": "1. Author",
+          "kind": "stage",
+          "status": "adopted",
+          "number": 1,
+          "summary": "Writing an asset: an agent, a skill, an instruction file, a hook, a chapter. The stage every change here starts in."
+        },
+        {
+          "type": "file",
+          "name": "02-deliver.md",
+          "path": ".devbook/ai/02-deliver.md",
+          "title": "2. Deliver",
+          "kind": "stage",
+          "status": "trial",
+          "number": 2,
+          "summary": "Carrying a change end to end: from a request to a validated commit, in one session or across several."
+        },
+        {
+          "type": "file",
+          "name": "03-verify.md",
+          "path": ".devbook/ai/03-verify.md",
+          "title": "3. Verify",
+          "kind": "stage",
+          "status": "candidate",
+          "number": 3,
+          "summary": "Checking that an asset does what it says: that a skill triggers when it should, that an agent loads, that a chapter parses."
+        }
+      ]
+    }
+  ]
+}

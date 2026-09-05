@@ -164,23 +164,15 @@ summary that the run went without the flow wrapper.
 
 ## Surface Reporting
 
-This skill reports progress through whichever delivery surface is bound, resolved by pattern
-from the live tool list per `instructions/surface-contract.instructions.md`. With no surface
-bound, skip these calls, say so once, and continue — file artifacts remain the source of
-truth. Follow the shared **Reporting Contract** in
-`instructions/surface-contract.instructions.md` for the tool cadence.
+Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`.
+With no surface bound, skip the calls, say so once, and continue — file artifacts remain
+the source of truth.
 
-- Open the surface per the shared contract, then call `start_run` with
-  `skillId: "automation-bug-fix"` and these stages: Fetch Candidate Bug Issues, Filter Out
+- `start_run` with `skillId: "automation-bug-fix"` and these stages: Fetch Candidate Bug Issues, Filter Out
   Work Already In Flight, Select One Issue, Claim and Resolve, Summary.
-- Before each phase, call `update_stage` with `status: "in_progress"`.
-- After each phase, call `update_stage` again with `status: "done"` (or
-  `"blocked"`/`"skipped"`) and an `output` summary of that phase's result.
 - The `flow-bug` flow in Phase 4 opens its own run, with the selection run's
   `githubIssue` metadata carried into its `start_run`. Reference that run id in this run's
   Claim and Resolve stage output rather than duplicating its stages here.
-- Call `finish_run` once the flow reaches Personal Validation, or once the run
-  concludes without a selection.
 
 ## Output
 

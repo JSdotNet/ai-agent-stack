@@ -10,12 +10,11 @@ content belongs to a different implementation of the same contract.
 
 ## Installation
 
-```bash
-claude plugin marketplace add JSdotNet/ai-agent-stack
-```
-
-Then enable `delivery-canvas` with `/plugin`. The server is plain Node with no npm
-dependencies and starts on the first tool call.
+A Copilot plugin, and only that. It ships no Claude manifest and is not listed in
+`.claude-plugin/marketplace.json`, because a canvas panel is the one thing it needs and
+Claude Code has none — there, `delivery-dashboard` answers the render capability. Install
+it the way the Copilot CLI installs a plugin; the extension is plain Node with no npm
+dependencies beyond the SDK the CLI resolves itself, and starts when the canvas opens.
 
 ## What it implements
 
@@ -26,32 +25,17 @@ One capability group, whole:
 | `delivery.surface.render@1` | `render_diagram` · `render_markdown` |
 
 Two names, and only two. Viewer navigation and view inspection are served over the
-plugin's own HTTP origin instead of being added as extra tools: a surface that declares
-more than the contract stops being swappable for one that declares exactly it.
+extension's own HTTP origin instead of being added as extra actions: a surface that
+declares more than the contract stops being swappable for one that declares exactly it.
 
-The tools are namespaced by whoever registered the server, so they surface as
-`mcp__plugin_delivery-canvas_delivery-canvas__*` when installed as a plugin and as
-`mcp__delivery-canvas__*` from a repository's own MCP configuration. Match by pattern,
-never by one spelling.
+## One page, one way in
 
-## One page, three ways in
+`extensions/delivery-canvas/views/` holds one copy of each viewer, and everything else is
+transport. `extension.mjs` registers two canvases with `createCanvas`, serves the pages on
+`127.0.0.1` at an ephemeral port, and pushes view changes to the open page over SSE.
 
-`mcp/delivery-canvas/views/` holds one copy of each viewer, and everything else is
-transport:
-
-| Host | How the page arrives |
-|---|---|
-| Speaks MCP Apps (SEP-1865) | As a `ui://` resource, rendered inline in the conversation, with `app-bridge.js` answering the page's own `fetch` and `EventSource` |
-| Speaks MCP | Served on `127.0.0.1` at an ephemeral port; the render tools return the URL |
-| Has a canvas panel | `extensions/delivery-canvas/` opens the same file as a canvas, one per viewer |
-
-The extension reads the pages out of `mcp/delivery-canvas/views/` by relative path
-rather than keeping a second copy, so a fix to a viewer lands in every transport at
-once and the two can never disagree about what a diagram looks like.
-
-There is no authentication on the MCP server's HTTP side: reaching it already requires
-local access to the machine. The canvas extension does check a per-instance token,
-because a canvas server outlives the panel that opened it.
+The canvas server checks a per-instance token, because it outlives the panel that opened
+it.
 
 ## Rendering
 
@@ -70,13 +54,3 @@ view that nobody saved is not a record of anything.
 
 Nothing is persisted. A view is a preview of a file that already exists, so storing it
 would only create a second, staler copy of something one call can re-render.
-
-## Developing it
-
-```bash
-node dev/render-test.mjs
-```
-
-Drives the real server over stdio the way a host does: the declared tool surface, both
-viewers, push/replace navigation, the history the Back button walks, and the pages
-themselves.

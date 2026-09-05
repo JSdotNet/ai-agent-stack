@@ -67,6 +67,6 @@ resolves it when it opens the extension, which is why no `package.json` declares
 nothing here breaks when it is absent.
 
 `trial`: nothing in this repository has opened a canvas on that host. The unverified part is
-not the import — it is whether a page written for the MCP viewer renders the same way through
-`createCanvas`, and `delivery-canvas` is deliberately built so both transports read one copy of
-each page rather than answering that question twice.
+not the import — it is whether these pages render the same way through `createCanvas` as they
+did over the MCP viewer they were written against. `delivery-canvas` kept both transports until
+it became canvas-only, so there is no longer a second one to answer that on its behalf.

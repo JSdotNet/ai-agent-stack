@@ -18,17 +18,18 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 
 What a plugin's executable parts run on: the `devbook` generator with its six test suites, the
 `devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
-checker and the tests behind it, the three surface plugins' MCP servers with their HTTP viewers,
-telemetry hook, and `dev/` checks, the command hook each plugin uses to emit session-start
-context, and this repository's own `tools/check-assets.mjs`. All of that is ESM against `node:`
+checker and the tests behind it, two surface plugins' MCP servers with their HTTP viewers,
+telemetry hook, and `dev/` checks, the two canvas extensions with their own HTTP viewers, the
+command hook each plugin uses to emit session-start context, and this repository's own
+`tools/check-assets.mjs`. All of that is ESM against `node:`
 built-ins with no third-party dependency, which is why `npm install` is not a step anywhere in
 this repository.
 
 Two things the flat claim used to get wrong, both worth stating because they are the seams
 where the constraint is negotiated rather than held:
 
-- **Three package manifests exist**, one per surface plugin, under `mcp/<server>/package.json`.
-  Each is `private`, declares `type: module` and an entry point, and carries **no
+- **Two package manifests exist**, one per surface plugin that runs a server, under
+  `mcp/<server>/package.json`. Each is `private`, declares `type: module` and an entry point, and carries **no
   `dependencies`** — the manifest is there to name the server and floor the runtime at
   `engines.node >= 18`, not to pull anything in. So a version *is* pinned, as a floor; what is
   absent is a lockfile and an install step.

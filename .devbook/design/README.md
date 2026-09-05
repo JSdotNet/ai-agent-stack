@@ -53,5 +53,6 @@ implementation of the projection would be a second thing to keep true.
 
 `delivery-canvas` applies the same rule to a diagram and a document: it renders the source that
 was written to the file artifact, never a regenerated or reinterpreted version of it, and
-stores nothing. It also keeps one copy of each page for both the MCP server and the canvas
-extension, for the reason above — two copies of a viewer are two things to keep true.
+stores nothing. One copy of each page, and now one transport reading it: it served the same
+pages over MCP as well until it became canvas-only, and collapsing to one removed a thing to
+keep true rather than adding one.

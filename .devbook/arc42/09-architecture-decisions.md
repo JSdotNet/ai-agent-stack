@@ -435,34 +435,38 @@ Three consequences, and the second is the one to watch:
   `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
   an if-this-host clause, and a slot nobody binds still buys that.
 
-## delivery-canvas Ships Both Transports
+## delivery-canvas Ships the Canvas Only
 
 ```meta
-date: 2026-09-03
+date: 2026-09-05
 related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-`delivery-canvas` ships an MCP server *and* a Copilot canvas extension, from one copy of each
-viewer page under `mcp/delivery-canvas/views/`. The extension reads those files by relative
-path rather than keeping a second copy.
+`delivery-canvas` is a Copilot canvas extension and nothing else. No MCP server, no Claude
+manifest, no marketplace entry — its two viewer pages live in `extensions/delivery-canvas/views/`
+and the canvas actions `render_diagram` and `render_markdown` are the whole surface.
 
-The layered design's host-slot table reads the other way — it binds the `surface` slot to
-`delivery-dashboard (MCP)` on one host and `delivery-canvas (extensions)` on the other, which
-would make this plugin Copilot-only. The same design's combination table then lists
-*delivery + delivery-canvas* as a supported outcome: diagram and document views, run timeline
-unrendered. Only one of those can be true on the primary host. Shipping both transports keeps
-the combination reachable everywhere and costs one server file, because the viewer half of
-the dashboard's server was already written.
+It shipped both transports for two days, on the argument that the layered design's combination
+table lists *delivery + delivery-canvas* as a supported outcome and a host without a canvas
+panel could not reach it otherwise. That argument was answered from the wrong side:
+`delivery-dashboard` already implements the render group with the same two viewers, and it is
+what the `surface` slot resolves to wherever there is no canvas to open. So the MCP half was a
+second implementation of a covered capability, kept for a combination nobody with the dashboard
+installed has a reason to add.
 
-Merging the two canvas extensions into one also fixed what the split had left broken: both
-pages fetch `/mermaid/…` and `/markdown/…`, but each extension served its page at `/` and
-routed on the first path segment, so the Back button and the state route answered 404 and the
-event stream never connected. One server, one path prefix per viewer, and the pages work
-unchanged.
+What made this cheap to reverse is that the canvas half never depended on the server half: the
+extension declares its own actions and serves its own pages, so removing 870 lines of server,
+MCP App bridge, MCPB manifest, and stdio dev check changed no behaviour on the host that keeps
+it. The two viewer pages carry no MCP-specific code and moved unedited.
 
-Consequence: the render capability has two implementations on a host that installs both this
-and the dashboard. The contract's fixed priority order — dashboard before collector before
-canvas — is what settles it, and it is now load-bearing rather than theoretical.
+Consequence, and it is the reason this record exists rather than a deletion: the render
+capability now has one implementation per host, so the contract's priority order — dashboard
+before collector before canvas — goes back to being theoretical, and a surface can now arrive
+as something other than an MCP server. The contract's resolution rule says so explicitly: match
+the operation names, not the transport. The cost is that `delivery-canvas` has no automated
+check any more — the only one drove the deleted server over stdio — and its pages are now
+verified on the Copilot host or not at all, which is the open half of the `trial` status on
+[the SDK](../tech/hosts.md#copilot-extension-sdk).
 
 ## A Role Plugin Holds No Flow Control
 

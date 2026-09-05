@@ -250,6 +250,10 @@ the same half of it.
   `mcp__<server>__<tool>` when registered in a repository's own MCP configuration. The tool
   names and arguments are identical; only the prefix differs. Match against the live tool
   list. An agent that hardcodes one spelling loses every surface tool under the other.
+  A surface may arrive as a host canvas instead of an MCP server — `delivery-canvas` does —
+  and then the same operation names are canvas actions: open the canvas once and invoke the
+  action through whatever the host exposes for that. Match the operation names, not the
+  transport.
 - **Bind each capability independently, in a fixed priority order,** and record which
   implementation answered in the run summary: dashboard before collector before canvas.
 - **No surface bound is a normal outcome.** Produce the file artifacts, say once that no

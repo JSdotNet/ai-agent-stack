@@ -367,30 +367,3 @@ the session's own tool calls and transcript. The flow-runner reads these; it nev
   attributed to that run, including unrelated work in the same session. That is the reason for
   the one-flow-per-session rule; read the numbers as an upper bound when other work happened
   alongside.
-
-## Quality Checks
-
-- [ ] No skill or agent names a host file, a canvas, or a literal MCP tool prefix — it names a
-      slot, a point, or a capability.
-- [ ] Every service point has exactly one provider and every chore point an ordered list;
-      neither invents a point outside the closed set.
-- [ ] A provider that does not resolve degrades to the point's unbound behaviour and is named
-      once in the run summary.
-- [ ] A chore never changes a flow's decision, rewrites a stage result, or stands in for a
-      gate.
-- [ ] Configuration adds gates and never removes, softens, or delegates one — Personal
-      Validation included.
-- [ ] Every gate declares what an unattended run does, and `block` parks with a handoff brief
-      rather than waiting.
-- [ ] `revise` re-runs the attached point with the human's notes and respects
-      `gate.reviseBudget`; `decline` blocks the stage and never degrades into a skip.
-- [ ] An unknown stack-config key is reported by name and rejected, not ignored.
-- [ ] No model and no secret appears anywhere in `.github/ai-agent-stack.json`.
-- [ ] Surface tools are resolved by pattern from the live tool list, never by a hardcoded
-      prefix.
-- [ ] Each surface capability is bound independently, and the implementation that answered is
-      named in the run summary.
-- [ ] A missing surface skips its calls and never blocks a stage; a resolved-but-erroring
-      required operation blocks the run with the tool's error text.
-- [ ] A rendered view is never the sole source of truth — file artifacts are produced
-      regardless of surface availability.

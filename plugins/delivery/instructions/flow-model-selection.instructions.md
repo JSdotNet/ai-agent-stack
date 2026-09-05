@@ -145,20 +145,17 @@ This is the **only** override tier. A user may define personal model preferences
 every repository, which keeps personal cost and speed preferences out of shared instructions
 and avoids accidental commits.
 
-Where that file lives is the `model-override` host slot, bound by the host plugin — the
-engine names the slot and never hardcodes a path. See **Host Slots** in
-`instructions/surface-contract.instructions.md`.
+Where that file lives is the `model-override` host slot — the engine names the slot and never
+hardcodes a path. See **Host Slots** in `instructions/surface-contract.instructions.md`.
 
 - The file holds a two-column `Category` / `Model` table, using the exact category names
   from the table above. The `Model` value is normally an alias (`opus`, `sonnet`, `haiku`,
   `fable`) or `inherit`; an exact model ID is allowed when the user deliberately pins a
   version and accepts the maintenance cost. List only the categories being overridden.
-- The `claude-desktop` binding of the slot, for reference: the path in
-  `CLAUDE_FLOW_MODEL_SELECTION_PATH` when that variable is set, otherwise
-  `%USERPROFILE%\.claude\flow\model-selection.md` on Windows and
-  `~/.claude/flow/model-selection.md` on macOS and Linux.
-- With no host plugin enabled the slot resolves to nothing, every category falls through to
-  its default, and the run says so once.
+- Nothing binds this slot. No plugin ships bindings, and a repository may not set it either:
+  `bindings["delivery.slots"]` has no `model-override` key, deliberately, because model choice
+  is personal. Unbound, it resolves to nothing, every category falls through to its default,
+  and the run says so once.
 
 - The flow-runner reads at most one personal file: whatever the `model-override` slot
   resolves to. It is read **once per run** before `start_run`, and the

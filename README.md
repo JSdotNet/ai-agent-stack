@@ -19,7 +19,6 @@ a sibling declare it and the host enforces it.
 | Delivery | `delivery`, `devbook-flows`, `fleet` | Fifteen `flow-*` procedures that carry a change from request to a validated commit, five more for the knowledge folders, and the fan-out lane that works a backlog across sessions. |
 | Surfaces | `delivery-dashboard`, `delivery-canvas`, `delivery-collector` | Where a run is watched or recorded: a live dashboard, a diagram and document viewer, a headless collector. Resolved at run time; none is a dependency. |
 | Roles | `arc42`, `csharp-coding`, `qa`, `domain`, `ux`, `documentation`, `spec-builder` | The specialists a flow consults by name, each usable alone: architecture, C# implementation, runtime QA, domain design, UX, documentation, and asset authoring. |
-| Host profiles | `claude-desktop`, `copilot-app` | Bind the engine's host slots to one host's files and ship the procedures that belong to a session rather than a run. |
 
 The design lives in `.devbook/`: the vocabulary in `domain/`, the structure and every
 recorded decision in `arc42/`, the technology graph in `tech/`, how the repository itself is

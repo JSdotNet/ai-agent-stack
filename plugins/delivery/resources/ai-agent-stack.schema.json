@@ -40,7 +40,7 @@
           }
         },
         "delivery.slots": {
-          "description": "Host slot overrides. Normally bound by the host plugin; a repository sets one only to override that binding.",
+          "description": "Host slot bindings. Nothing binds a slot unless a repository does; an unset slot takes its documented unbound default.",
           "type": "object",
           "additionalProperties": false,
           "properties": {

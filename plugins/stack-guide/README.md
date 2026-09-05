@@ -69,8 +69,17 @@ node scripts/stack-report.mjs --root <repository>
 ## Known gap
 
 The report reads one host's plugin state — the config directory, its installed-plugin file, its
-marketplace clones, and its settings layers. The other host keeps that state somewhere this
-repository has never written down, so on Copilot the plugin rows come back empty and the catalog
-half still answers. The report says which files it read and which were absent, so an empty table
-is legible rather than misleading. Binding this the way a host slot is bound is the fix, and it
-needs a slot the engine does not have yet.
+marketplace clones, and its settings layers. Two things follow, and both are deliberate.
+
+It is the only asset in this marketplace that still names a host's own paths, after
+[`claude-desktop` and `copilot-app` were deleted](../../.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins)
+for doing exactly that. Where a plugin is installed and whether it is enabled is a fact about a
+host and about nothing else, so an asset answering it either names those files or answers
+nothing, and nothing in a flow reads what this returns. The
+[decision](../../.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none)
+records the divergence rather than leaving it silent. A slot would be the clean fix and the
+engine's closed set has no member for *where this host keeps its plugins*.
+
+And the other host keeps that state somewhere this repository has never written down, so there
+its plugin rows come back empty while the catalog half still answers. The report says which
+files it read and which were absent, so an empty table is legible rather than misleading.

@@ -49,7 +49,7 @@ missing specialist must not take every skill that names it down with it.
 
 ```meta
 date: 2026-09-02
-related: [".devbook/tech/technology-graph.md#copilot-plugin-api"]
+related: [".devbook/tech/hosts.md#copilot-plugin-api"]
 ```
 
 An asset is written once and read by both hosts, relying on both ignoring keys they do not
@@ -61,7 +61,7 @@ is restated in prose or by path.
 
 ```meta
 date: 2026-09-02
-related: [".devbook/tech/technology-graph.md#powershell"]
+related: [".devbook/tech/tooling.md#powershell"]
 ```
 
 A generator that derived the Claude-side files from the Copilot ones was written, verified, and
@@ -71,6 +71,12 @@ Claude manifest a file nobody was allowed to edit. Both manifests are hand-autho
 Consequence: what the generator used to lint — a missing description, an unloadable model pin,
 a handoff the body never mentions — is now a review responsibility, written down in
 [CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
+
+**Revisited, 2026-09-05.** Seventeen plugins and 161 budgeted assets made it unreliable: a
+review found five role agents still carrying tools a decision one day earlier said were gone.
+The lint is back as `tools/check-assets.mjs`, but as a checker over hand-authored files, not a
+generator that owns them — it reports, it writes nothing, and both manifests stay hand-authored.
+That is the half of the original that was worth keeping.
 
 ## devbook Still Ships the Graph Canvas
 
@@ -323,8 +329,8 @@ Consequence: **installing `delivery` alone gives no live run timeline at all.** 
 reports that no surface is bound, produces its file artifacts, and continues. That is now a
 choice rather than a gap — `delivery-dashboard`, `delivery-canvas`, and `delivery-collector`
 ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
-allowlist still carries the legacy `orch-dashboard` tool patterns beside the new ones so an
-existing dashboard installation answers; drop them the release after this one.
+allowlist carried the legacy `orch-dashboard` tool patterns beside the new ones for one
+release; they went with the plugin that shipped that server.
 
 See [Three Surfaces, One Contract](#three-surfaces-one-contract) for what each of them
 answers.
@@ -392,41 +398,42 @@ work item and the approval decision land in fields nothing looks at. Nothing mig
 because the new plugins keep their own state directories and no run has been written to one
 yet. That is the one moment these renames are free.
 
-## A Host Profile Depends on Nothing
+## No Host Profile Plugins
 
 ```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-profile-plugins"]
+date: 2026-09-05
+related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
-`claude-desktop` and `copilot-app` keep their names, lose the 27 skills that are now
-`delivery`'s, and declare no dependency on it. What is left is the slot bindings and the
-procedures that cap a session: `start` and `session-handoff` on one side,
-`update-open-sessions` on the other.
+`claude-desktop` and `copilot-app` are deleted. Nothing in this marketplace names one host's
+own file, path, or capability any more, and no plugin ships slot bindings.
 
-Declaring `delivery` would have been defensible — the slots are its concept, and a profile is
-an extension of it in every sense but the mechanical one. It was refused because a hard
-dependency exists to make an *illegal* combination unreachable, and a profile installed alone
-is not illegal: it still starts your app and still hands your session off, and a binding
-nobody reads is inert rather than broken. The rule that a surface is never a dependency in
-either direction is the same rule read from the other end — the engine must not learn which
-profile answered, and the profile must not need the engine to be worth installing.
+They were kept for one change as the place a host's facts were allowed to live: six slot
+bindings each, plus three procedures that cap a *session* rather than a run — `start` and
+`session-handoff` on one side, `update-open-sessions` on the other. What that bought was a
+six-line table per host and a hook to inject it. What it cost was a plugin per host in a
+marketplace whose whole premise is that one authored copy serves both, and a standing
+obligation that every slot added to the engine be answered twice, with nothing checking that
+it was.
 
-Three consequences, and the second is the sharp one:
+Three consequences, and the second is the one to watch:
 
-- **One manifest each.** A profile ships only its own host's, so `copilot-app` has no
-  `.claude-plugin/plugin.json` and no marketplace entry — Claude cannot offer a plugin whose
-  every statement is about somewhere else. `claude-desktop` still authors a root `hooks.json`,
-  because Copilot reads that file and would otherwise fall back to `hooks/hooks.json` and run
-  commands written against `${CLAUDE_PLUGIN_ROOT}`.
-- **The two profiles are asymmetric, deliberately.** Copilot leaves `repo-flow-context` and
-  `model-override` unbound. Both have documented unbound behaviour, and inventing a
-  `~/.copilot/...` path nobody has verified would be a worse answer than the default. Bind
-  them the moment the paths are known — the closed slot set is what makes the gap visible
-  rather than silent.
-- **Nothing enforces that the two stay in step.** A slot added to the engine's set has to be
-  answered twice, and a profile that misses it falls through to the default without saying so.
-  The engine's slot table is the checklist; there is no check.
+- **The three session skills are gone, not rehomed.** Folding them into `delivery` was the
+  alternative, and it was refused: `start` opens a URL in a host's own browser pane and
+  `update-open-sessions` walks a host's own worktrees, so moving them would have moved the
+  host-naming into the engine rather than out of the marketplace. `session-handoff` had the
+  one real claim, and the engine already carried its procedure inline under **Session
+  Handoff** in `flow-execution-model.instructions.md` — which is now the only copy.
+- **Every slot resolves unbound unless a repository binds it.** `repo-instructions` falls back
+  to `AGENTS.md`, `model-override` to category defaults, `stage-delegation` to running stages
+  inline, `surface` to file artifacts, `pr-lane` to no pull request. Three of the six are
+  settable under `bindings["delivery.slots"]`; `model-override` deliberately is not, because
+  model choice is personal, and `stage-delegation` and `surface` are read from the live
+  session rather than declared anywhere. A repository that wants the old Claude answers writes
+  three lines of config.
+- **The slot set outlives its binders.** It stays declared in
+  `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
+  an if-this-host clause, and a slot nobody binds still buys that.
 
 ## delivery-canvas Ships Both Transports
 
@@ -503,6 +510,69 @@ the guidance was never enforceable anyway, since an instruction file is a prompt
 mechanism, and pretending otherwise is what made two of them contradict the assets shipped
 beside them. A repository that wants a checkpoint adds a gate, which the engine can see.
 
+**Completed, 2026-09-05.** The change that recorded this cleaned three agents and left five.
+`coding`, `documentation`, `profile`, `qa`, and `spec-builder` now carry no spawning or
+delegation tool and hold no approval question; `tools/check-assets.mjs` fails on any role
+agent that grows one back.
+
+## Budgets Are Disclosure Triggers, Not Gates
+
+```meta
+date: 2026-09-05
+related: [".devbook/arc42/tdr/1-body-budgets-unenforced.md", ".devbook/domain/plugin-authoring/features.md#stay-within-budget", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer"]
+```
+
+[Debt record 1](tdr/1-body-budgets-unenforced.md) measured the body budgets at eleven percent
+compliance and recommended restoring the disclosure rule `CLAUDE.md` had dropped in the port.
+This is that remediation, and one step past it.
+
+The budget stays, as what `spec-conciseness.instructions.md` already calls it: the trigger for
+a disclosure decision, not a hard limit. Past it, an author moves on-demand reference behind a
+pointer, splits the asset by branch, or states why it must be long. The step past the record's
+recommendation is where the reason is stated for the assets that are long by kind rather than
+by accident:
+
+| Kind | Why it exceeds by nature |
+| --- | --- |
+| `flow-*`, `phase-*`, `fleet-*`, `automation-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
+| `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
+| `knowledge-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
+| `flow-runner` and `qa` agents | Each is a session's main loop and carries its own invocation contract. |
+
+For those kinds the reason is stated here, once, and not repeated at the top of a hundred
+files. The record's own evidence supports the split: the plugin that owns the rule meets it at
+a median of 28 lines, and the four that miss it by four to ten times are exactly the ones made
+of staged procedures and contracts. Everything else over budget — a role plugin's how-to
+skills, the pull-request lane, the two profile skills — is owed a trim or a reason line in the
+file, and `tools/check-assets.mjs --budgets` is the list.
+
+Consequence: the number in `CLAUDE.md` is a review prompt and not a gate the checker fails on.
+An asset that grows past its budget is asked what it disclosed and why, not refused. The debt
+record moves to `in-progress` rather than `resolved`, because the assets outside the four
+kinds have not yet said why. If the table ever needs a fifth row, the budget is the wrong tool
+for that kind and should say so.
+
+## Four arc42 Chapters
+
+```meta
+date: 2026-09-05
+related: [".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/05-building-block-view.md", ".devbook/arc42/11-risks-and-technical-debt.md"]
+```
+
+`.devbook/arc42` holds chapters 1, 5, 9, and 11, the `tdr/` set, and no others, deliberately.
+arc42 numbers twelve; the convention here says a chapter is written when it has content, not
+to complete a set.
+
+There is no runtime here, so the runtime view (6), deployment view (7), and quality scenarios
+(10) would describe hosts this repository does not own. Constraints (2), context (3), and
+solution strategy (4) are carried by the domain folder's context map and dependencies and by
+the quality goals in chapter 1. Cross-cutting concepts (8) are the naming chapter, and the
+glossary (12) is `naming.md` itself.
+
+Consequence: a reader used to arc42 finds gaps in the numbering. The building-block view, the
+decisions, and the debt are where the substance is, and the numbering is kept so a later
+chapter lands in its place rather than being renumbered in.
+
 ## Fan-Out Is Its Own Plugin
 
 ```meta
@@ -510,8 +580,8 @@ date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
-The three sweep skills ported from `claude-desktop` land in a new `fleet` plugin, an L1
-extension over `delivery`, rather than as more skills inside the engine.
+The three sweep skills that used to sit beside the Claude host profile land in a new `fleet`
+plugin, an L1 extension over `delivery`, rather than as more skills inside the engine.
 
 `delivery` states the rule they are the exception to: one item per run, and never a fan-out. A
 flow owns a run, a Personal Validation gate, and a user turn, and none of those survives being
@@ -529,7 +599,7 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#guide-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#guide-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
 A skill that explains the stack has to name every part of it, and the [layer](../domain/plugin-authoring/naming.md#layer)
@@ -538,9 +608,10 @@ why `stack-guide` is a plugin of its own with an empty `dependencies` array rath
 inside `devbook`.
 
 The rule is about the dependency order, and naming is not depending. `delivery` already carries
-251 `plugin:asset` references into seven [role plugins](05-building-block-view.md#role-plugins)
+over two hundred `plugin:asset` references into seven [role plugins](05-building-block-view.md#role-plugins)
 it never declares, and a reference that resolves to nothing degrades one stage instead of
-failing a load. The guide is the same shape taken further: it names all seventeen, resolves
+failing a load. The guide is the same shape taken further: it names every plugin in the
+catalog, resolves
 each against what is on disk, and reports a plugin it cannot find as `not installed` — which is
 an answer, not a degradation. Nothing it names is loaded, so there is nothing to dangle.
 
@@ -558,6 +629,16 @@ knows what it materialized, a plugin's payload and migration ledger live inside 
 where a foreign skill has no supported path to them, and `devbook` has to keep installing
 itself to stay a foundation that works with only itself installed. So `stack-update`'s fourth
 step invokes `devbook-sync`; it never applies a migration or writes a ledger of its own.
+
+**It names a host's own paths, and that is a divergence taken on purpose.**
+[No host profile plugins](#no-host-profile-plugins) ended host-naming everywhere else in this
+marketplace, and the report is the one asset that kept it: the host's config directory, its
+installed-plugin file, its marketplace clones, and its three settings layers. The rule it bends
+is about a *shared asset* growing an if-this-host clause, and this is not that. Where a plugin
+is installed and whether it is enabled is a fact about a host and about nothing else, so an
+asset answering it either names those files or answers nothing, and no flow reads what it
+returns. A slot would be the clean fix and there is none to bind: the closed set has no member
+for *where this host keeps its plugins*, and adding one is the engine's call, not the guide's.
 
 Consequence: **the guide can be wrong about a plugin it cannot see.** It reports one host's
 plugin state, and on the other host the installed and enabled columns come back empty. It says

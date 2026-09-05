@@ -36,9 +36,9 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `scripts/` | Whatever skill in the plugin invokes it, from the plugin root |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
-A plugin normally ships both manifests. A [host profile](#host-profile-plugins) is the one
-exception and ships only its own host's, so the other host cannot install a plugin whose every
-statement is about somewhere else.
+Every plugin ships both manifests. The one exception was a host profile, which shipped only
+its own host's so the other host could not install a plugin whose every statement was about
+somewhere else; the profiles are gone, and the exception with them.
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
@@ -94,9 +94,9 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 | Plugin | Fills | Ships |
 | --- | --- | --- |
 | `arc42` | role `architecture`, service `spec` | The `arc42` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
-| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fifteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
+| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fourteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
 | `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
-| `domain` | role `domain` | The `domain` agent, context mapping, model design, three diagram generators |
+| `domain` | role `domain` | The `domain` agent, context mapping, model design, four diagram generators |
 | `ux` | role `ux` | The `ux` agent, wireframes, user flows, design guidelines, UI review |
 | `documentation` | role `docs` | The `documentation` and `profile` agents, nine artifact skills including SVG infographics |
 | `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
@@ -104,7 +104,7 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 None declares a dependency and none names a flow, which is why each installs alone and is
 useful without the engine: the `arc42` agent writes an ADR whether or not `flow-adr` is what
 asked for it. The coupling runs the other way and only by name — `delivery` and
-`devbook-flows` carry 251 `plugin:asset` references into these seven, and a reference that
+`devbook-flows` carry over two hundred `plugin:asset` references into these seven, and a reference that
 resolves to nothing degrades one stage rather than failing a load.
 
 They also hold no flow control, which is what keeps that true in practice rather than only on
@@ -153,36 +153,35 @@ gets the same lifecycle tools and the same panels, with the telemetry figures ab
 wrong. Nothing in the contract names telemetry, which is why this costs a column and not a
 group.
 
-## Host Profile Plugins
+## Host Slots
 
 ```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#host-profile", ".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#a-host-profile-depends-on-nothing"]
+date: 2026-09-05
+related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
-Two plugins are where a host's own files and capabilities are named, and nowhere else in the
-stack is. Each binds the engine's closed slot set for one host and ships the procedures that
-cap a *session* rather than a run.
+`delivery` declares a closed set of six names a shared asset reads instead of a host's own
+file. **No plugin binds them.** The two that did — `claude-desktop` and `copilot-app` — are
+[deleted](09-architecture-decisions.md#no-host-profile-plugins), and nowhere in the stack is a
+host's own file, path, or capability named now.
 
-| Slot | `claude-desktop` | `copilot-app` |
+| Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |
-| `repo-instructions` | `CLAUDE.md`, else `AGENTS.md` | `.github/copilot-instructions.md`, else `AGENTS.md` |
-| `repo-flow-context` | `.claude/flow-context.md` | unbound — discovery |
-| `model-override` | `CLAUDE_FLOW_MODEL_SELECTION_PATH`, else the per-OS default | unbound — category defaults |
-| `stage-delegation` | sub-agents | custom agents |
-| `surface` | `delivery-dashboard` | `delivery-canvas` — render only |
-| `pr-lane` | the `gh` CLI when present | the `gh` CLI when present |
-| Host-owned skills | `start`, `session-handoff` | `update-open-sessions` |
+| `repo-instructions` | `bindings["delivery.slots"]` | `AGENTS.md` if present, else nothing |
+| `repo-flow-context` | `bindings["delivery.slots"]` | discovery |
+| `pr-lane` | `bindings["delivery.slots"]` | `deliver` writes file artifacts only |
+| `stage-delegation` | the live session | stages run inline |
+| `surface` | the live tool list | file artifacts only |
+| `model-override` | nothing, deliberately | category defaults |
 
-The bindings ship as the text a `SessionStart` hook injects, which is the one channel that
-reaches every session on both hosts. That makes the hook sidecar the authored copy and every
-table restating it — including this one — a reader's summary.
+The first three are host facts a repository can state. `stage-delegation` and `surface` are
+capability answers resolved at run time, which is what keeps two hosts from re-diverging the
+moment one gains what the other has. `model-override` takes no binding from anywhere: model
+choice is personal, so a repository may not set it, and with no profile left to name a path,
+every category takes its default.
 
-Two rows are capability answers rather than host facts: `stage-delegation` asks whether
-sub-agents exist and `pr-lane` whether the CLI is on `PATH`, so neither re-diverges the moment
-one host gains what the other has. Two are deliberately unbound on Copilot, which is a
-documented engine default and not a gap. And `delivery-canvas` answers the render group only,
-so a Copilot run gets viewers and no live timeline until a lifecycle surface joins it.
+Unbound is now the resting state of the whole table, and the table is what keeps that visible
+rather than silent.
 
 ## Fan-Out State
 
@@ -241,11 +240,13 @@ stays with that component's own sync skill, which is the only thing that knows w
 materialized — so `devbook-sync` and `devbook-check` do not move here, and `stack-init`'s fifth
 step is to invoke them rather than to reimplement them.
 
-Reading one host's plugin state is the part that is not host-neutral, and it is a
-[known gap](#host-profile-plugins) rather than a binding: the other host keeps that state
-somewhere this repository has never written down, so its plugin rows come back empty while the
-catalog half still answers. The report names every file it read and every one that was absent,
-which is what keeps an empty table legible.
+The report is also the one place a host's own paths are still named, which
+[the slot decision](09-architecture-decisions.md#no-host-profile-plugins) otherwise ended —
+recorded as a [deliberate divergence](09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none)
+rather than left silent. Where a plugin is installed and whether it is enabled is a fact about
+a host and about nothing else, so a report that answers it either names those files or answers
+nothing. It reads one host's, names every file it read and every one that was absent, and
+leaves the other host's rows empty while the catalog half still answers.
 
 ## Stack Config
 

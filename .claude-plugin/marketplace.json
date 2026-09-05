@@ -37,12 +37,6 @@
       "version": "0.1.0"
     },
     {
-      "name": "claude-desktop",
-      "source": "./plugins/claude-desktop",
-      "description": "The Claude host profile: it binds the delivery engine's six host slots to Claude's own files, paths, and capabilities — repo-instructions to CLAUDE.md, repo-flow-context to .claude/flow-context.md, model-override to the personal flow model-selection file, stage-delegation to sub-agents, surface to delivery-dashboard, pr-lane to the gh CLI — and ships the two procedures that belong to the host rather than to the engine: start, which brings the repository's own application up and opens it, and session-handoff, which packages a session into a brief the next one continues from. Declares no dependency: the flows themselves live in delivery, and a binding nothing reads is inert.",
-      "version": "1.0.0"
-    },
-    {
       "name": "stack-guide",
       "source": "./plugins/stack-guide",
       "description": "The reader's way in: one skill that answers a question about this marketplace from what is on disk — what devbook, the delivery engine, the bridges, the surfaces, and the fan-out lane are and how they fit, which version of each plugin is installed against the newest published, which are enabled, and how a repository has wired its roles, extension points, gates, and policy — backed by a read-only report that names the file behind every fact. Plus stack-init and stack-update, which own the engine keys of .github/ai-agent-stack.json and hand every component's materialization to that component's own sync skill. Declares no dependency: a plugin it names but cannot find is reported as not installed.",

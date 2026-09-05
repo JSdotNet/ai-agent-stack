@@ -9,7 +9,6 @@ tools:
   - 'edit/createFile'
   - 'edit/editFiles'
   - 'vscode/memory'
-  - 'agent'
   - 'vscode/askQuestions'
   - 'terminal/runInTerminal'
   - 'extensions_manage'

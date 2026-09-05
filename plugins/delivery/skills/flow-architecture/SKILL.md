@@ -6,7 +6,7 @@ description: 'Run general architecture work. Uses the arc42:arc42 agent directly
 # Flow: Architecture Work
 
 For architecture requests that need the `arc42` agent but fit no single arc42, ADR, or TDR
-flow. Blueprints run here too, through the agent's `architecture-blueprint-generator` skill.
+flow.
 
 Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
 follows `instructions/flow-model-selection.instructions.md`.

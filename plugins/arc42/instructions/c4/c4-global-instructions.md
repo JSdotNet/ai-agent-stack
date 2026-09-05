@@ -184,7 +184,7 @@ C4Component
 - Follow every diagram with a prose summary (3–5 sentences) explaining key relationships and design decisions.
 - Include a note block for any non-standard symbols or conventions.
 - Produce one diagram per level per scope; create multiple diagrams only when the scope genuinely requires it.
-- Store diagrams inside arc42 sections or blueprint documents where they belong; do not create standalone diagram files.
+- Store diagrams inside the arc42 sections where they belong; do not create standalone diagram files.
 
 ## Traceability
 

@@ -110,7 +110,7 @@ sequenceDiagram
 - Embed diagrams in fenced `mermaid` code blocks.
 - Add a title comment at the top of each diagram (e.g., `%% Scenario: Customer Login`).
 - Follow each diagram with a prose summary (2–4 sentences) calling out the key ordering decisions, error handling, and any timing constraints.
-- Store diagrams inside the arc42 Section 6 document or the relevant blueprint section.
+- Store diagrams inside the arc42 Section 6 document.
 
 ## Traceability
 

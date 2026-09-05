@@ -93,7 +93,7 @@ it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
 
 | Plugin | Fills | Ships |
 | --- | --- | --- |
-| `arc42` | role `architecture`, service `spec` | The `arc42` agent, arc42 and blueprint generators, ADR and TDR records, four diagram generators |
+| `arc42` | role `architecture`, service `spec` | The `arc42` agent, the arc42 generator, ADR and TDR records, four diagram generators |
 | `csharp-coding` | services `implement`, `verify` | The `coding` agent and fourteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
 | `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
 | `domain` | role `domain` | The `domain` agent, context mapping, model design, four diagram generators |

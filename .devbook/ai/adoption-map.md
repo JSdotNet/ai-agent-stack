@@ -44,10 +44,13 @@ A flow run here can also report into a surface: `delivery-dashboard`, `delivery-
 `delivery-collector` ship beside the engine, so a run gets a live timeline, a viewer, or a
 recorded file depending on which is enabled.
 
-The slots those flows read are answered too. `claude-desktop` binds them for the host this
-repository is authored in — `CLAUDE.md` as `repo-instructions`, sub-agents as
-`stage-delegation`, `delivery-dashboard` as `surface` — so a flow run here resolves them from
-an installed profile rather than falling through to defaults.
+The slots those flows read are no longer answered. No plugin binds one, and this repository
+declares no `.github/ai-agent-stack.json`, so each takes its unbound default. Two of those
+defaults cost something here: `repo-instructions` resolves to nothing, because the fallback
+is `AGENTS.md` and this repository has `CLAUDE.md` instead, and `model-override` resolves to
+nothing, so every category takes its default model. `stage-delegation` and `surface` still
+answer, because both are read from the live session rather than bound. Three lines under
+`bindings["delivery.slots"]` would close the first gap.
 
 So are the specialists. Seven role plugins ship here now, and until they did, every stage a
 flow delegates named an agent that resolved to nothing: 251 `plugin:asset` references into

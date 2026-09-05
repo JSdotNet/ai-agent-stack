@@ -1,6 +1,6 @@
 {
   "schemaVersion": 7,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".devbook/arc42",
   "sources": [
     ".devbook/arc42"
@@ -82,6 +82,17 @@
           "statusDeclared": false,
           "number": 2,
           "date": "2026-09-03",
+          "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+        },
+        {
+          "type": "file",
+          "name": "3-devbook-rename-has-no-migration.md",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "title": "3. The devbook Asset Rename Ships No Migration",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 3,
+          "date": "2026-09-05",
           "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
         }
       ]

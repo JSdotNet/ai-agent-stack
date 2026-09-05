@@ -1,9 +1,9 @@
 // Extension: delivery-canvas
 //
 // The two viewers as Copilot canvases: a Mermaid diagram viewer and a Markdown document
-// viewer. The same pages the plugin's MCP server serves — one copy each, under
-// `../../mcp/delivery-canvas/views/` — so a fix to a viewer lands in both transports at
-// once and the two can never disagree about what a diagram looks like.
+// viewer, served from one copy of each page under `views/`. This is the plugin's only
+// transport — a host without a canvas panel never sees it, and that absence is the normal
+// no-surface outcome the render capability already allows for.
 //
 // A render surface, and nothing else: each canvas exposes exactly the one action the render
 // capability names, so this plugin is swappable for any other implementation of the same
@@ -21,7 +21,7 @@ import { fileURLToPath } from "node:url";
 import { createCanvas, joinSession } from "@github/copilot-sdk/extension";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const VIEWS = path.resolve(__dirname, "..", "..", "mcp", "delivery-canvas", "views");
+const VIEWS = path.resolve(__dirname, "views");
 
 // ---------------------------------------------------------------------------
 // Per-instance view state, one store per canvas kind.
@@ -93,7 +93,7 @@ const stores = {
 
 // ---------------------------------------------------------------------------
 // One HTTP server for both canvases: `/mermaid…` and `/markdown…`, each page
-// served from the shared views folder, with the per-instance token the canvas
+// served from the views folder beside this file, with the per-instance token the canvas
 // hands out in its open URL.
 // ---------------------------------------------------------------------------
 

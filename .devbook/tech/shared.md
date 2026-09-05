@@ -42,9 +42,9 @@ related: [".devbook/arc42/05-building-block-view.md#surface-plugins"]
 ```
 
 The MCP extension (SEP-1865) that lets a server hand the host a page to render inline in the
-conversation instead of a link to open. `delivery-dashboard` and `delivery-canvas` publish
-their pages as `ui://` resources and speak the postMessage protocol from a small bridge script
-injected into the page.
+conversation instead of a link to open. `delivery-dashboard` publishes its pages as `ui://`
+resources and speaks the postMessage protocol from a small bridge script injected into the
+page. `delivery-canvas` did too until it became canvas-only, which leaves one user here.
 
 `trial`, and reversibly so: it is negotiated at initialize, so a host that does not implement
 it never reads the resources and the same pages are served over `127.0.0.1` instead. Nothing

@@ -17,7 +17,7 @@ a sibling declare it and the host enforces it.
 | --- | --- | --- |
 | Knowledge | `devbook`, `devbook-collaboration` | Addressed Markdown chapters under `.devbook/` (or five root dot-folders) with parseable `meta` blocks, generated `_meta/` indexes, a reference-graph canvas, converters between chapters and code, and review and approval workflows over them. |
 | Delivery | `delivery`, `devbook-flows`, `fleet` | Fifteen `flow-*` procedures that carry a change from request to a validated commit, five more for the knowledge folders, and the fan-out lane that works a backlog across sessions. |
-| Surfaces | `delivery-dashboard`, `delivery-canvas`, `delivery-collector` | Where a run is watched or recorded: a live dashboard, a diagram and document viewer, a headless collector. Resolved at run time; none is a dependency. |
+| Surfaces | `delivery-dashboard`, `delivery-collector` (and `delivery-canvas` on Copilot) | Where a run is watched or recorded: a live dashboard, a headless collector, and a diagram and document viewer that is a Copilot canvas rather than an entry in this marketplace. Resolved at run time; none is a dependency. |
 | Roles | `arc42`, `csharp-coding`, `qa`, `domain`, `ux`, `documentation`, `spec-builder` | The specialists a flow consults by name, each usable alone: architecture, C# implementation, runtime QA, domain design, UX, documentation, and asset authoring. |
 
 The design lives in `.devbook/`: the vocabulary in `domain/`, the structure and every

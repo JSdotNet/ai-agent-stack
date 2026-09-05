@@ -211,6 +211,43 @@ make a claim legible from GitHub alone, and the host's list of live background s
 is how a missing result file is told from a worker still running.
 `instructions/fleet-issue-sweep-contract.instructions.md` owns both schemas.
 
+## Guide Plugin
+
+```meta
+date: 2026-09-05
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+```
+
+`stack-guide` is the one plugin whose subject is the marketplace rather than a unit of work. It
+answers *what is this, what have I got, and how is this repository wired* — and it is the only
+place those three questions are answered together, because no other plugin is allowed to name
+every plugin.
+
+| Skill | Writes |
+| --- | --- |
+| `stack-guide` | Nothing. It reads, and every fact it states names the file behind it |
+| `stack-init` | The four engine-owned keys of a repository's stack config, for the first time |
+| `stack-update` | The same four keys, moved forward, after each component reconciled itself |
+
+`scripts/stack-report.mjs` is the read-only half, run in place from the plugin root: it reads
+the catalog in both the working tree and the host's clone, the host's installed-plugin state,
+the three settings layers merged nearest-last, the stack config, the knowledge folders in both
+layouts, and the engine's own `skills/` folder. A clone older than the source is why "already
+latest" is usually wrong, so the report prints both and the commit behind each.
+
+The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
+stays with that component's own sync skill, which is the only thing that knows what it
+materialized — so `devbook-sync` and `devbook-check` do not move here, and `stack-init`'s fifth
+step is to invoke them rather than to reimplement them.
+
+The report is also the one place a host's own paths are still named, which
+[the slot decision](09-architecture-decisions.md#no-host-profile-plugins) otherwise ended —
+recorded as a [deliberate divergence](09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none)
+rather than left silent. Where a plugin is installed and whether it is enabled is a fact about
+a host and about nothing else, so a report that answers it either names those files or answers
+nothing. It reads one host's, names every file it read and every one that was absent, and
+leaves the other host's rows empty while the catalog half still answers.
+
 ## Stack Config
 
 ```meta

@@ -75,7 +75,7 @@ concepts, and guardrails have no product behind them.
 folder read in the order the work actually happens instead of alphabetically.
 Reading order needs no declaration: `adoption-map.md` is the root document and
 sorts first, the numbered stage files follow in flow order, and `concepts.md`
-sorts after them. See `knowledge-chapter-metadata.instructions.md`.
+sorts after them. See `devbook-chapter-metadata.instructions.md`.
 
 **The stage set is the repository's own.** This convention does not prescribe
 one — a team shipping a library and a team shipping a product do not share a
@@ -99,7 +99,7 @@ the same change that adds a file.
 - **concepts.md** — The ideas the practices rest on, and anything that genuinely
   spans the flow. Chapters here carry a `stage` field naming where they apply.
 - **`_meta/*.json`** — Derived, generated indexes for this folder. Never
-  hand-edited; see `knowledge-derived-artifacts.instructions.md`.
+  hand-edited; see `devbook-derived-artifacts.instructions.md`.
 
 ## Chapter template
 
@@ -130,7 +130,7 @@ understood and judged, not an essay about AI.
 ## Metadata fields
 
 `.ai` uses the common fields from
-`knowledge-chapter-metadata.instructions.md` (`status` and `type` required;
+`devbook-chapter-metadata.instructions.md` (`status` and `type` required;
 `related`, `issue`, `effort`, `roadmap`, `date`, and `tests` optional) plus the
 folder-specific fields below.
 
@@ -149,7 +149,7 @@ learns one adoption vocabulary and applies it in both folders:
 | `retired` | No longer used. Kept because knowing what we stopped doing, and why, is the most useful record in this folder. |
 
 On top of this ladder sits the shared `approved` rung, defined once in
-`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+`devbook-chapter-metadata.instructions.md`: a person approved this chapter,
 recorded with `approved-by` and `approved-at`. It is written explicitly and
 comes off the moment the content changes.
 
@@ -243,6 +243,6 @@ rather than listing every one.
 
 ## Reference
 
-- `knowledge-chapter-metadata.instructions.md` — required `meta` block fields.
-- `knowledge-tech.instructions.md` — the technology registry `.ai` links into.
-- `knowledge-derived-artifacts.instructions.md` — rules for `_meta/`.
+- `devbook-chapter-metadata.instructions.md` — required `meta` block fields.
+- `devbook-tech.instructions.md` — the technology registry `.ai` links into.
+- `devbook-derived-artifacts.instructions.md` — rules for `_meta/`.

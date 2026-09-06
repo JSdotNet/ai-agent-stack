@@ -57,8 +57,8 @@ the original six is deliberately empty. Work items live in the tracker bound und
 
 ## What stays in devbook
 
-Structure and metadata rules (`knowledge-*.instructions.md`), the `to-spec-<kind>` and
-`from-spec-<kind>` converters, `devbook-sync`, `devbook-check`, `knowledge-tech-update`,
+Structure and metadata rules (`devbook-*.instructions.md`), the `to-spec-<kind>` and
+`from-spec-<kind>` converters, `devbook-sync`, `devbook-check`, `devbook-tech-update`,
 and the generator. A converter's write routes through the matching flow here when this
 plugin is enabled, and is written directly under the instruction files when it is not.
 

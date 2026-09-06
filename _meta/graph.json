@@ -1,6 +1,6 @@
 {
   "schemaVersion": 7,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
     ".devbook/arc42",
@@ -10,21 +10,21 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 116,
-    "edges": 235,
+    "nodes": 123,
+    "edges": 248,
     "nodesByFolder": {
-      "arc42": 55,
+      "arc42": 62,
       "domain": 37,
       "tech": 13,
       "design": 3,
       "ai": 8
     },
     "nodesByType": {
-      "file": 22,
-      "chapter": 94
+      "file": 23,
+      "chapter": 100
     },
     "nodesByKind": {
-      "none": 62,
+      "none": 69,
       "context-map": 1,
       "bounded-context": 1,
       "dependencies": 1,
@@ -46,15 +46,15 @@
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 93,
+      "active": 100,
       "adopted": 13,
       "trial": 5,
       "draft": 2,
       "candidate": 3
     },
     "edgesByType": {
-      "contains": 94,
-      "related": 137,
+      "contains": 100,
+      "related": 144,
       "depends-on": 4
     }
   },
@@ -717,6 +717,27 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "label": "Devbook Payload Named After Its Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-payload-named-after-its-plugin",
+          "level": 2,
+          "line": 653,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+            ".devbook/arc42/11-risks-and-technical-debt.md"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/11-risks-and-technical-debt.md",
           "label": "Risks and Technical Debt",
           "type": "file",
@@ -757,7 +778,7 @@
           "path": ".devbook/arc42/11-risks-and-technical-debt.md",
           "slug": "risks",
           "level": 2,
-          "line": 27,
+          "line": 28,
           "status": "active",
           "statusDeclared": false
         }
@@ -771,7 +792,7 @@
           "path": ".devbook/arc42/11-risks-and-technical-debt.md",
           "slug": "known-gaps-in-this-chapter-set",
           "level": 2,
-          "line": 40,
+          "line": 41,
           "status": "active",
           "statusDeclared": false
         }
@@ -949,6 +970,94 @@
           "slug": "remediation-options",
           "level": 2,
           "line": 60,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "label": "3. The devbook Asset Rename Ships No Migration",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-05",
+          "related": [
+            ".devbook/arc42/11-risks-and-technical-debt.md",
+            ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ],
+          "number": 3
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "label": "The debt",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "the-debt",
+          "level": 2,
+          "line": 10,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "label": "Origin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "origin",
+          "level": 2,
+          "line": 35,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "label": "Affected components",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "affected-components",
+          "level": 2,
+          "line": 47,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "label": "Consequences",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "consequences",
+          "level": 2,
+          "line": 57,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
+          "label": "Remediation options",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "slug": "remediation-options",
+          "level": 2,
+          "line": 69,
           "status": "active",
           "statusDeclared": false
         }
@@ -2277,6 +2386,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
@@ -2376,6 +2493,46 @@
           "id": "contains:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#remediation-options",
           "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "target": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md#remediation-options",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#the-debt",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#origin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#affected-components",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#consequences",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md#remediation-options",
           "type": "contains"
         }
       },
@@ -3277,6 +3434,38 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/domain/plugin-authoring/naming.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/tdr/README.md",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/tdr/README.md",
@@ -3352,6 +3541,30 @@
           "id": "related:.devbook/arc42/tdr/2-fleet-names-the-cli-directly.md->.devbook/tech/hosts.md#claude-code-cli",
           "source": ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md",
           "target": ".devbook/tech/hosts.md#claude-code-cli",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/11-risks-and-technical-debt.md",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/tdr/3-devbook-rename-has-no-migration.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/arc42/tdr/3-devbook-rename-has-no-migration.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
           "type": "related"
         }
       },

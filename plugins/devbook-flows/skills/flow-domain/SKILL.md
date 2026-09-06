@@ -1,6 +1,6 @@
 ---
 name: flow-domain
-description: 'Run changes to .domain/ — bounded-context domain model, features, model and flow diagrams, dependencies, and naming. Use for any create/update/refresh of .domain/context-map.md or a bounded context''s domain.md, features.md, model.md, flow.md, dependencies.md, or naming.md, including small refinements and new context scaffolding. Enforces knowledge-domain.instructions.md structure and templates and knowledge-chapter-metadata.instructions.md metadata blocks before saving.'
+description: 'Run changes to .domain/ — bounded-context domain model, features, model and flow diagrams, dependencies, and naming. Use for any create/update/refresh of .domain/context-map.md or a bounded context''s domain.md, features.md, model.md, flow.md, dependencies.md, or naming.md, including small refinements and new context scaffolding. Enforces devbook-domain.instructions.md structure and templates and devbook-chapter-metadata.instructions.md metadata blocks before saving.'
 ---
 
 # Flow: Domain Knowledge (`.domain/`)
@@ -29,8 +29,8 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 1: Context Loading
 
-- Load `knowledge-domain.instructions.md` and
-  `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
+- Load `devbook-domain.instructions.md` and
+  `devbook-chapter-metadata.instructions.md` (task-scoped, not baseline
   context).
 - Load only the relevant bounded-context files already in `.domain/` (not the
   whole folder) plus `.domain/context-map.md` for cross-context relationships.
@@ -52,7 +52,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   choosing an answer for the domain expert, and do not drop it to make the table
   look finished.
 - Draft or refresh content using the exact templates in
-  `knowledge-domain.instructions.md` (`domain.md`, `features.md`, `model.md`,
+  `devbook-domain.instructions.md` (`domain.md`, `features.md`, `model.md`,
   `flow.md`, `dependencies.md`, `naming.md`).
 - Keep `model.md` structural (Mermaid class diagram) and `flow.md`
   lifecycle/process-oriented (Mermaid state/sequence diagrams) — do not mix
@@ -78,7 +78,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   the approval gate's to write and a person's to decide; an authoring skill that
   sets it approves its own work.
 - Set `type` from this folder's value sets in
-  `knowledge-domain.instructions.md`, and confirm the heading carries the name
+  `devbook-domain.instructions.md`, and confirm the heading carries the name
   only — no `Aggregate:`, `Feature:`, `Sub-feature:`, or `Term:` prefix, and no
   `Domain:`/`Features:`/`Naming:` prefix on a file title.
 - Update `depends-on` on `features.md` chapters and `aliases`/`related` on
@@ -97,10 +97,10 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 - Confirm `dependencies.md` uses explicit DDD relationship terminology (ACL,
   Customer/Supplier, Partnership, OHS + Published Language) for every row.
 - Confirm no new top-level metadata field was invented without updating
-  `knowledge-chapter-metadata.instructions.md` or
-  `knowledge-domain.instructions.md` first.
+  `devbook-chapter-metadata.instructions.md` or
+  `devbook-domain.instructions.md` first.
 - Regenerate the derived index when the repository ships the generator:
-  `node .github/tools/knowledge-meta/build.mjs --scope .domain`, and confirm it
+  `node .github/tools/devbook-meta/build.mjs --scope .domain`, and confirm it
   reports no broken references. If it reports problems, hand off to
   `devbook-check`.
 - Summarize changed files/chapters for the user.
@@ -129,7 +129,7 @@ disk stay the source of truth.
 
 ## Reference
 
-- `knowledge-domain.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+- `devbook-domain.instructions.md` and `devbook-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
 - `devbook`'s `assets/routing-snippet.md` — optional repository-local
   context-loading and routing policy; a flow ships procedure, not routing policy.

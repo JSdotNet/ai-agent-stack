@@ -48,5 +48,5 @@ Use kebab-case for files and folders (`.domain/order-management/`,
 
 ## Reference
 
-- `knowledge-derived-artifacts.instructions.md` — placement, naming,
+- `devbook-derived-artifacts.instructions.md` — placement, naming,
   and envelope rules for generated artifacts under `_meta/`.

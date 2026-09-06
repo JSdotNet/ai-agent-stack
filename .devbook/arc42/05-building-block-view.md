@@ -64,7 +64,7 @@ its two viewer pages sit in the extension's own `views/`, and the plugin carries
 manifest and no marketplace entry.
 
 What coupling exists runs one way and only in source: `devbook-canvas` imports the generator's
-graph, outline, and metadata modules from `tools/knowledge-meta/` by relative path, which is why
+graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
 the live view and the committed index cannot disagree. Nothing in `devbook` imports the canvas.
 Those three imports are also the reason lifting the folder into its own plugin is more than a
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).

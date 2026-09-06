@@ -1,6 +1,6 @@
 ---
 name: flow-arc42-content
-description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces knowledge-arc42.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
+description: 'Run direct content edits to .arc42/ chapters — refreshing an existing chapter, section, or diagram. Use for updates to .arc42/<nn>-<name>.md content, structure, or diagrams, including small one-line corrections. Enforces devbook-arc42.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks. DO NOT USE FOR: authoring a decision record (use flow-adr), a technical debt record (use flow-tdr), a full blueprint refresh or a multi-chapter architecture initiative (use flow-architecture or flow-arc42).'
 ---
 
 # Flow: arc42 Content Edits (`.arc42/`)
@@ -35,8 +35,8 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 1: Context Loading
 
-- Load `knowledge-arc42.instructions.md` and
-  `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
+- Load `devbook-arc42.instructions.md` and
+  `devbook-chapter-metadata.instructions.md` (task-scoped, not baseline
   context).
 - Load only the target chapter file(s) — not the whole `.arc42/` folder.
 - Check `09-architecture-decisions.md` / `11-risks-and-technical-debt.md` for
@@ -85,7 +85,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 - Confirm no ADR/TDR content was restated instead of linked.
 - Confirm diagrams use Mermaid rather than prose where feasible.
 - Regenerate the derived index when the repository ships the generator:
-  `node .github/tools/knowledge-meta/build.mjs --scope .arc42`, and confirm it
+  `node .github/tools/devbook-meta/build.mjs --scope .arc42`, and confirm it
   reports no broken references. If it reports problems, hand off to
   `devbook-check`.
 - Summarize changed chapters/sections for the user.
@@ -114,7 +114,7 @@ disk stay the source of truth.
 
 ## Reference
 
-- `knowledge-arc42.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+- `devbook-arc42.instructions.md` and `devbook-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
 - `devbook`'s `assets/routing-snippet.md` — optional repository-local
   context-loading and routing policy; a flow ships procedure, not routing policy.

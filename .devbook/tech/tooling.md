@@ -17,7 +17,7 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 What a plugin's executable parts run on: the `devbook` generator with its six test suites, the
-`knowledge-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
+`devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
 checker and the tests behind it, two surface plugins' MCP servers with their HTTP viewers,
 telemetry hook, and `dev/` checks, the two canvas extensions with their own HTTP viewers, the
 command hook each plugin uses to emit session-start context, and this repository's own
@@ -59,7 +59,7 @@ related: [".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
 
 The second runtime a plugin's executable parts run on, and the only one whose script runs in a
 *consuming* repository rather than here. `devbook` ships
-`assets/build/Update-KnowledgeIndex.ps1` and `devbook-sync` installs it into `build/`
+`assets/build/Update-DevbookIndex.ps1` and `devbook-sync` installs it into `build/`
 unconditionally — one of only two payload entries with no adoption condition, the other being
 the generator it wraps, because a repository that skips GitHub Actions gets this script alone
 and manual refresh. It wraps `build.mjs` to add what the raw `node` call cannot say: which

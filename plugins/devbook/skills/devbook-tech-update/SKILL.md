@@ -1,9 +1,9 @@
 ---
-name: knowledge-tech-update
+name: devbook-tech-update
 description: 'Refresh a repository technology graph from deterministic package inventories and repo analysis. Use when: update technology graph, refresh .tech, scan .NET packages, scan frontend packages, package graph, technology inventory. Produces inputs for the `.tech` flow and keeps package-derived facts reproducible through scripts.'
 ---
 
-# Knowledge technology graph update
+# Devbook technology graph update
 
 ## Purpose
 
@@ -32,15 +32,15 @@ packages, and versions, emit JSON with no timestamps, and ignore build output fo
 From a repository that installed the devbook tools:
 
 ```bash
-node .github/tools/knowledge-tech/dotnet-packages.mjs --root . > .tech/_inventory-dotnet.json
-node .github/tools/knowledge-tech/frontend-packages.mjs --root . > .tech/_inventory-frontend.json
+node .github/tools/devbook-tech/dotnet-packages.mjs --root . > .tech/_inventory-dotnet.json
+node .github/tools/devbook-tech/frontend-packages.mjs --root . > .tech/_inventory-frontend.json
 ```
 
 When running directly from the plugin source during development, use the plugin paths:
 
 ```bash
-node plugins/devbook/tools/knowledge-tech/dotnet-packages.mjs --root .
-node plugins/devbook/tools/knowledge-tech/frontend-packages.mjs --root .
+node plugins/devbook/tools/devbook-tech/dotnet-packages.mjs --root .
+node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 Treat these JSON files as temporary evidence. Do not commit them unless the repository has
@@ -49,8 +49,8 @@ chapters and generated `_meta/*.json` indexes.
 
 ## Workflow
 
-1. **Load governed context.** Read `knowledge-tech.instructions.md`,
-   `knowledge-chapter-metadata.instructions.md`, `.tech/technology-graph.md`, and only the
+1. **Load governed context.** Read `devbook-tech.instructions.md`,
+   `devbook-chapter-metadata.instructions.md`, `.tech/technology-graph.md`, and only the
    `.tech` layer files in scope. Load `.arc42/04-solution-strategy.md`,
    `.arc42/07-deployment-view.md`, and `.arc42/09-architecture-decisions.md` only when they
    exist and the refresh touches architecture decisions.
@@ -78,7 +78,7 @@ chapters and generated `_meta/*.json` indexes.
    technologies used by multiple layers belong in `shared.md`; layer-specific technologies
    depend on the shared node. Package nodes normally use `type: package`, while frameworks,
    runtimes, tools, services, platforms, protocols, and formats use the closest specific type
-   from `knowledge-tech.instructions.md`.
+   from `devbook-tech.instructions.md`.
 
 5. **Author through the `.tech` flow.** Route the actual `.tech/` edits through the
    `.tech` flow unless this skill is already being run as part of that orchestration.
@@ -87,8 +87,8 @@ chapters and generated `_meta/*.json` indexes.
 6. **Regenerate and validate indexes.** Run:
 
    ```bash
-   node .github/tools/knowledge-meta/build.mjs --scope .tech
-   node .github/tools/knowledge-meta/build.mjs --scope .tech --check
+   node .github/tools/devbook-meta/build.mjs --scope .tech
+   node .github/tools/devbook-meta/build.mjs --scope .tech --check
    ```
 
    If either command reports unresolved references, schema violations, or stale generated
@@ -101,7 +101,7 @@ chapters and generated `_meta/*.json` indexes.
 - Non-package technologies analyzed from repository evidence and recorded only when grounded.
 - Mermaid graph edges match `depends-on` metadata.
 - `.tech/_meta/graph.json` and `.tech/_meta/index.json` regenerated when the repository ships
-  `knowledge-meta`.
+  `devbook-meta`.
 
 ## Do not
 

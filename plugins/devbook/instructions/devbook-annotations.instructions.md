@@ -102,7 +102,7 @@ before, so the discipline is explicit, the same way `_meta/` has one:
 
 ## Writing one
 
-Every write goes through `tools/knowledge-meta/annotations.mjs` — `list`,
+Every write goes through `tools/devbook-meta/annotations.mjs` — `list`,
 `add`, `reply`, `resolve`. Nothing else writes a fence with a regular
 expression of its own. Adding a note changes a tracked file: say so, offer the
 commit, never push, and never auto-commit into someone's branch.

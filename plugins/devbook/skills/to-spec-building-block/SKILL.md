@@ -76,8 +76,8 @@ not copy.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-arc42.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read
+   `devbook-arc42.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read
    `.arc42/05-building-block-view.md` as it stands, plus
    `03-context-and-scope.md` for the system boundary. Load
    `.domain/context-map.md` only for the bounded-context alignment.
@@ -117,7 +117,7 @@ not copy.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `knowledge-arc42.instructions.md`. The heading carries the bare name; the
+   `devbook-arc42.instructions.md`. The heading carries the bare name; the
    `meta` block carries `status` and no `type` — `.arc42` defines no `type`
    value set, and setting one is reported as a warning. A new chapter starts at
    `status: draft`; an existing chapter's `status` is left untouched. Include
@@ -137,8 +137,8 @@ not copy.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .github/tools/knowledge-meta/build.mjs --scope .arc42
-   node .github/tools/knowledge-meta/build.mjs --scope .arc42 --check
+   node .github/tools/devbook-meta/build.mjs --scope .arc42
+   node .github/tools/devbook-meta/build.mjs --scope .arc42 --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter
@@ -162,5 +162,5 @@ not copy.
 - Do not scaffold an empty chapter. Create the file only when it has real
   content.
 - Do not restate `.tech` package or version facts here — that is
-  `knowledge-tech-update` and the `.tech` flow scope.
+  `devbook-tech-update` and the `.tech` flow scope.
 

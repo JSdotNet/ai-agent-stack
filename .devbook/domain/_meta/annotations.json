@@ -1,6 +1,6 @@
 {
   "schemaVersion": 7,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".devbook/domain",
   "sources": [
     ".devbook/domain"

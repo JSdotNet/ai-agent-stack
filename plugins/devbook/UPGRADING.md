@@ -47,10 +47,10 @@ Two rules make the difference safe:
   Both derived artifacts carry the resolved word plus `"statusDeclared": false`
   on the entries where that happened, so a viewer badges them correctly and a
   consumer that cares can still tell "at rest" from "nobody said". See
-  `tools/knowledge-meta/README.md`.
+  `tools/devbook-meta/README.md`.
 
 Stating the resting value explicitly is reported as a warning, so one state does
-not end up with two spellings. To adopt: re-sync `.github/tools/knowledge-meta/`,
+not end up with two spellings. To adopt: re-sync `.github/tools/devbook-meta/`,
 run `build.mjs`, and delete the `status: active` lines it now flags — keeping the
 fence behind them.
 
@@ -119,7 +119,7 @@ the flow, omitted inside a stage file where it would only restate the filename.
 Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
-other folder does. To adopt: re-sync `.github/tools/knowledge-meta/` from this
+other folder does. To adopt: re-sync `.github/tools/devbook-meta/` from this
 plugin, run `devbook-sync` (or create the folder by hand), add `.ai/**`
 to the CI workflow's `paths` filters, and route edits through the `.ai` write path.
 
@@ -204,7 +204,7 @@ rots on the first refactor and gives no signal when it does — which is why
 identifier that stops resolving fails a run, out loud, in the same CI that runs
 the suite.
 
-`testCommand()` in `tools/knowledge-meta/metadata.mjs` turns one entry into an
+`testCommand()` in `tools/devbook-meta/metadata.mjs` turns one entry into an
 argv and executes nothing, so a "run this test" affordance in a viewer and the
 command this convention documents are the same one:
 
@@ -220,7 +220,7 @@ a warning, because nothing can offer to run it. Add one by extending
 `TEST_RUNNERS` in `metadata.mjs`.
 
 Nothing existing breaks if you adopt none of it. To adopt: re-sync
-`.github/tools/knowledge-meta/` from this plugin, add `tests` where a chapter has
+`.github/tools/devbook-meta/` from this plugin, add `tests` where a chapter has
 tests worth naming, and regenerate — `graph.json` nodes and `index.json` file
 entries carry the field, and `schemaVersion` goes to 4. A `to-spec-*` pass now
 records the tests it read as `tests` entries, so the fastest way to populate an
@@ -241,16 +241,16 @@ files in the sequence its instructions file documents, then anything else
 filename-sorted. `.arc42` sorts by filename outright, as it always did. Nothing is authored per repository any more, so adding a file needs
 no declaration and the whole class of drift between a list and its directory is
 gone. The convention is encoded once, in `DIRECTORY_CONVENTION` in
-`.github/tools/knowledge-meta/outline.mjs`.
+`.github/tools/devbook-meta/outline.mjs`.
 
-To migrate, re-sync `.github/tools/knowledge-meta/` from this plugin, then:
+To migrate, re-sync `.github/tools/devbook-meta/` from this plugin, then:
 
 1. **Delete every `order` field.** They are all on file-level blocks:
    `.domain/context-map.md`, each `.domain/<context>/domain.md`,
    `.tech/technology-graph.md`, `.design/README.md`. Remove the line; change
    nothing else in the block.
 2. **Check the order you get is the order you want.** Run
-   `node .github/tools/knowledge-meta/build.mjs` and read the resulting
+   `node .github/tools/devbook-meta/build.mjs` and read the resulting
    `index.json`. Where a hand-declared order disagrees with the convention, the
    convention wins — a repository-specific sequence is no longer expressible, by
    design.
@@ -318,7 +318,7 @@ whether a person actually chose the value reads `statusDeclared`.
 Schema version 4 is **additive** over 3: both derived artifacts gained the
 optional `tests` field described under "0.10.0: linking test cases" above, and
 nothing else about their shape changed. Re-sync
-`.github/tools/knowledge-meta/` and regenerate; the diff is the new field where
+`.github/tools/devbook-meta/` and regenerate; the diff is the new field where
 a document declares one, and the bumped `schemaVersion`.
 
 ## Migrating to schema version 3
@@ -329,12 +329,12 @@ document's lede, and `diagrams`, how many mermaid blocks and images it embeds �
 so a viewer can render a knowledge folder's list view without opening any
 Markdown. `graph.json` is unchanged apart from the version number.
 
-Re-sync `.github/tools/knowledge-meta/` from this plugin and regenerate; the
+Re-sync `.github/tools/devbook-meta/` from this plugin and regenerate; the
 diff is the new fields and the bumped `schemaVersion`. Also install the two
-refresh assets that ship with this version — `assets/build/Update-KnowledgeIndex.ps1`
-and `assets/workflows/knowledge-meta-nightly.yml` — and re-copy
-`assets/workflows/knowledge-meta.yml`, whose staleness step now warns instead of
-failing. See `knowledge-derived-artifacts.instructions.md` for the policy and
+refresh assets that ship with this version — `assets/build/Update-DevbookIndex.ps1`
+and `assets/workflows/devbook-meta-nightly.yml` — and re-copy
+`assets/workflows/devbook-meta.yml`, whose staleness step now warns instead of
+failing. See `devbook-derived-artifacts.instructions.md` for the policy and
 for the freshness contract a runtime consumer of these indexes has to honour.
 
 ## Migrating to schema version 2
@@ -342,7 +342,7 @@ for the freshness contract a runtime consumer of these indexes has to honour.
 Schema version 2 moves the *kind* of a chapter out of its heading and into a
 `type` metadata field. A repository written against version 1 keeps parsing,
 but `build.mjs --check` reports errors until it is migrated. Re-sync
-`.github/tools/knowledge-meta/` from this plugin first, then:
+`.github/tools/devbook-meta/` from this plugin first, then:
 
 1. **Strip kind prefixes from `.domain` headings.** `## Aggregate: Order`
    becomes `## Order`; the same for `Domain Service:`, `Domain Event:`,
@@ -357,8 +357,8 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    it — this step is about stripping *kind prefixes*, and that file never had
    one.
 2. **Add `type` to every `meta` block.** Values come from the folder's own
-   instructions file — `knowledge-domain.instructions.md` for `.domain`,
-   `knowledge-tech.instructions.md` for `.tech`. File-level blocks take a
+   instructions file — `devbook-domain.instructions.md` for `.domain`,
+   `devbook-tech.instructions.md` for `.tech`. File-level blocks take a
    file-level value (`domain`, `features`, `model`, …) matching the filename.
    `.arc42` and `.design` define no value set and take no `type`.
 3. **Promote Entity, Value Object, and Enum sub-chapters one level.** Delete
@@ -381,8 +381,8 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
 6. **Regenerate and check.**
 
    ```bash
-   node .github/tools/knowledge-meta/build.mjs
-   node .github/tools/knowledge-meta/build.mjs --check
+   node .github/tools/devbook-meta/build.mjs
+   node .github/tools/devbook-meta/build.mjs --check
    ```
 
    Run `devbook-check` for anything still reported.

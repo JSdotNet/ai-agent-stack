@@ -71,7 +71,7 @@ Add a file only when a topic genuinely does not belong to an existing one, and
 register it in `README.md`'s index in the same change. Reading order needs no
 declaration: `README.md` is `.design`'s root document and is read first, then the
 files in the order shown in the tree above, with anything extra sorted by
-filename after them. See `knowledge-chapter-metadata.instructions.md`.
+filename after them. See `devbook-chapter-metadata.instructions.md`.
 
 ## Folder rules
 
@@ -100,7 +100,7 @@ filename after them. See `knowledge-chapter-metadata.instructions.md`.
 ## Metadata
 
 Every `.design` file and every `##` chapter carries a metadata block per
-`knowledge-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.instructions.md`.
 
 Allowed `status` values in `.design`:
 
@@ -111,7 +111,7 @@ Allowed `status` values in `.design`:
 | `deprecated` | Superseded; kept for history, must not be followed. |
 
 On top of this ladder sits the shared `approved` rung, defined once in
-`knowledge-chapter-metadata.instructions.md`: a person approved this chapter,
+`devbook-chapter-metadata.instructions.md`: a person approved this chapter,
 recorded with `approved-by` and `approved-at`. It is written explicitly, never
 rested at, and comes off the moment the content changes.
 

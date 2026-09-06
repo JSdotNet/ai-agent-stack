@@ -1,4 +1,4 @@
-# Knowledge metadata tooling
+# Devbook metadata tooling
 
 Derives machine-readable indexes from the `meta` blocks embedded in
 `.arc42/`, `.domain/`, `.tech/`, `.design/`, and `.ai/`:
@@ -10,7 +10,7 @@ Derives machine-readable indexes from the `meta` blocks embedded in
 
 Markdown stays canonical; these indexes are **derived output** — never edit
 them by hand. Placement and naming follow
-the `knowledge-derived-artifacts` instructions.
+the `devbook-derived-artifacts` instructions.
 
 ## Usage
 
@@ -18,25 +18,25 @@ Prefer the wrapper — it reports which index files actually moved, so a refresh
 that changed nothing is visibly a no-op:
 
 ```powershell
-./build/Update-KnowledgeIndex.ps1                 # every adopted scope
-./build/Update-KnowledgeIndex.ps1 -Scope .tech    # one scope only
-./build/Update-KnowledgeIndex.ps1 -Check          # validate, write nothing
+./build/Update-DevbookIndex.ps1                 # every adopted scope
+./build/Update-DevbookIndex.ps1 -Scope .tech    # one scope only
+./build/Update-DevbookIndex.ps1 -Check          # validate, write nothing
 ```
 
 The generator underneath, for CI and for anywhere pwsh is not available:
 
 ```bash
 # Regenerate every adopted scope
-node .github/tools/knowledge-meta/build.mjs
+node .github/tools/devbook-meta/build.mjs
 
 # One scope only
-node .github/tools/knowledge-meta/build.mjs --scope .tech
+node .github/tools/devbook-meta/build.mjs --scope .tech
 
 # Validate references without writing (exit 1 on a broken reference)
-node .github/tools/knowledge-meta/build.mjs --check
+node .github/tools/devbook-meta/build.mjs --check
 
 # Point at a repository other than the working directory
-node .github/tools/knowledge-meta/build.mjs --root ../other-repo
+node .github/tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 The repository root defaults to the working directory. Only knowledge folders
@@ -53,17 +53,17 @@ to re-run the generator. So refresh is deliberate and happens in two places:
 
 | Path | What it is | When |
 |---|---|---|
-| `./build/Update-KnowledgeIndex.ps1` | on demand | You want the indexes current in your own branch — before a release, or because something reads them locally. |
-| `.github/workflows/knowledge-meta-nightly.yml` | scheduled | Reconciles the default branch, opening one pull request when the output drifted and nothing when it did not. |
+| `./build/Update-DevbookIndex.ps1` | on demand | You want the indexes current in your own branch — before a release, or because something reads them locally. |
+| `.github/workflows/devbook-meta-nightly.yml` | scheduled | Reconciles the default branch, opening one pull request when the output drifted and nothing when it did not. |
 
-`.github/workflows/knowledge-meta.yml` **fails** on a broken reference or a
+`.github/workflows/devbook-meta.yml` **fails** on a broken reference or a
 `meta` block that violates the schema — those are errors in the authored
 Markdown and they do not fix themselves — and only **warns** when the committed
 indexes have drifted.
 
 That is safe because a consumer reading these indexes at runtime is required to
 compare each entry's source file against the index it came from and re-read the
-entries that are newer. See `knowledge-derived-artifacts.instructions.md` for
+entries that are newer. See `devbook-derived-artifacts.instructions.md` for
 both halves of the contract.
 
 ## Outputs
@@ -89,8 +89,8 @@ followed, so a scoped graph stays about its own folder.
 
 | File | Role |
 |---|---|
-| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `knowledge-chapter-metadata` instructions. Shared with the `knowledge-graph` canvas. |
-| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `knowledge-graph` canvas, so the written indexes and the live view can never disagree. |
+| `metadata.mjs` | Parses the `meta` blocks — the single implementation of the schema defined by the `devbook-chapter-metadata` instructions. Shared with the `devbook-graph` canvas. |
+| `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, plus a CLI over the same four functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. |
@@ -98,7 +98,7 @@ followed, so a scoped graph stays about its own folder.
 | `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, and the four write operations. |
 
 This folder is self-contained — copy it into a repository as
-`.github/tools/knowledge-meta/` and it runs with no other files installed.
+`.github/tools/devbook-meta/` and it runs with no other files installed.
 
 ## Output shape: `graph.json`
 
@@ -109,7 +109,7 @@ mappable to D3, vis.js, or Sigma.
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".tech",
   "sources": [".tech"],
   "stats": { "nodes": 57, "edges": 120, "nodesByFolder": { }, "nodesByKind": { }, "nodesByStatus": { } },
@@ -232,7 +232,7 @@ steers outline generation only and never reaches a node.
 ### Running a node's linked tests
 
 A node's `tests` entries are `<level>:<runner>:<selector>` identifiers — see
-"Linking test cases" in the `knowledge-chapter-metadata` instructions for the
+"Linking test cases" in the `devbook-chapter-metadata` instructions for the
 format and the vocabularies. `metadata.mjs` exports the mapping from an entry to
 a command:
 
@@ -311,7 +311,7 @@ sorting filenames.
 ```jsonc
 {
   "schemaVersion": 5,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".domain",
   "sources": [".domain"],
   "problems": [],
@@ -397,7 +397,7 @@ draw a list, which is the exact cost the index was built to avoid. Both fall
 out of the parse the generator already performs, so they cost nothing to emit.
 
 **`summary`** — the document's lede. That is the blockquote the
-`knowledge-chapter-metadata` instructions place directly after the file-level
+`devbook-chapter-metadata` instructions place directly after the file-level
 `meta` block; a document with no blockquote falls back to its first paragraph
 of prose. Either way it is the text before the first `##`, reduced to plain
 text (links and emphasis flattened to their content) and capped at 300
@@ -434,7 +434,7 @@ Ordering never comes from one document listing its siblings. Per directory:
 A document declaring `index: exclude` is left out of the outline but stays a node
 in `graph.json` — it is still referenceable content, just not something a viewer
 lists. So an area's `index.json` file count can be lower than its
-`graph.json` file-node count. See the `knowledge-chapter-metadata` instructions.
+`graph.json` file-node count. See the `devbook-chapter-metadata` instructions.
 
 `_`-prefixed folders (such as `_meta/` itself) are tooling, not content, and
 are excluded from the outline.
@@ -449,7 +449,7 @@ node, the approval gate showing the objections raised since `approved-at`.
 ```jsonc
 {
   "schemaVersion": 6,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".arc42",
   "sources": [".arc42"],
   "stats": { "threads": 2, "open": 1, "resolved": 1, "replies": 1, "chapters": 2 },
@@ -461,9 +461,9 @@ node, the approval gate showing the objections raised since `approved-at`.
       // A thread has no id. It is addressed the way devbook addresses
       // everything — a path plus a heading slug — with `ordinal` standing in
       // for the id the schema deliberately does not assign.
-      "address": ".arc42/05-building-block-view.md#knowledge-meta",
-      "chapter": "knowledge-meta",
-      "chapterTitle": "Knowledge Meta",
+      "address": ".arc42/05-building-block-view.md#devbook-meta",
+      "chapter": "devbook-meta",
+      "chapterTitle": "Devbook Meta",
       "ordinal": 1,
       "line": 23,
       // "block" annotates the passage above it; "chapter" sits straight after

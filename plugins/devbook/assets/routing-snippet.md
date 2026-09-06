@@ -25,7 +25,7 @@ folder's instruction files.
   Load only the relevant chapters after routing to the correct flow or
   specialist agent, or when the user explicitly asks for that knowledge.
 - Files under any `_meta/` folder are generated. Never hand-edit them; regenerate
-  with `node .github/tools/knowledge-meta/build.mjs`. Never read them either —
+  with `node .github/tools/devbook-meta/build.mjs`. Never read them either —
   they are tool input, and the graph is large enough to crowd out real context.
   Claude Code repositories can enforce this with the deny rule below.
 ```

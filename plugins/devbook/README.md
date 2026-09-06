@@ -71,11 +71,11 @@ it reports — broken references, missing or malformed `meta` blocks, fields the
 schema no longer defines, stale committed indexes — and hands the rest back to
 `devbook-sync`, which owns every write.
 
-**Trigger keywords:** `devbook check`, `knowledge-meta failed`,
+**Trigger keywords:** `devbook check`, `devbook-meta failed`,
 `broken reference`, `stale _meta`, `validate knowledge folders`,
 `build.mjs --check`
 
-### Skill: `knowledge-tech-update`
+### Skill: `devbook-tech-update`
 
 Refreshes a repository's `.tech/` technology graph from deterministic package
 inventories for .NET and frontend dependencies, then analyzes the repository for
@@ -160,7 +160,7 @@ a term with the discovered code name as an `alias`, which turns a one-off
 inference into a durable pairing for the next pass. The context folder itself, including
 `naming.md`, is created by the same path.
 
-`.tech` has no pair here — `knowledge-tech-update` already covers that
+`.tech` has no pair here — `devbook-tech-update` already covers that
 direction.
 
 The shared rules live once in `assets/code-sync-protocol.md`, which all 10 skills
@@ -187,15 +187,15 @@ path and hands over grounded input; no flow knows these skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `knowledge-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
-| `knowledge-domain.instructions.md` | `.domain/**` | Bounded-context structure and ubiquitous language |
-| `knowledge-arc42.instructions.md` | `.arc42/**` | arc42 chapter, ADR, and TDR structure |
-| `knowledge-tech.instructions.md` | `.tech/**` | Technology graph, versions, maturity ladder |
-| `knowledge-design.instructions.md` | `.design/**` | Design guideline scope and token rules |
-| `knowledge-ai.instructions.md` | `.ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
-| `knowledge-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
-| `knowledge-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
-| `knowledge-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
+| `devbook-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
+| `devbook-domain.instructions.md` | `.domain/**` | Bounded-context structure and ubiquitous language |
+| `devbook-arc42.instructions.md` | `.arc42/**` | arc42 chapter, ADR, and TDR structure |
+| `devbook-tech.instructions.md` | `.tech/**` | Technology graph, versions, maturity ladder |
+| `devbook-design.instructions.md` | `.design/**` | Design guideline scope and token rules |
+| `devbook-ai.instructions.md` | `.ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
+| `devbook-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
+| `devbook-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob is scoped to the knowledge folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
@@ -207,7 +207,7 @@ A plugin layered on top of devbook keeps its own per-chapter state under
 unvalidated, and emits them as one `ext` object per node — so an extension can
 remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. See
-`knowledge-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.instructions.md`.
 
 ### Extension: `devbook-canvas`
 
@@ -217,26 +217,26 @@ generator writes, so the live view and the committed indexes never disagree. The
 node inspector lists a chapter's test links with the command that runs each one,
 which is where a "run this test" button goes.
 
-### Tooling: `knowledge-meta`
+### Tooling: `devbook-meta`
 
 ```powershell
-./build/Update-KnowledgeIndex.ps1                      # refresh, and say what moved
-./build/Update-KnowledgeIndex.ps1 -Scope .tech
-./build/Update-KnowledgeIndex.ps1 -Check               # validate, write nothing
+./build/Update-DevbookIndex.ps1                      # refresh, and say what moved
+./build/Update-DevbookIndex.ps1 -Scope .tech
+./build/Update-DevbookIndex.ps1 -Check               # validate, write nothing
 ```
 
 ```bash
-node .github/tools/knowledge-meta/build.mjs            # write every adopted scope
-node .github/tools/knowledge-meta/build.mjs --check    # CI: verify only
-node .github/tools/knowledge-meta/build.mjs --scope .tech
-node .github/tools/knowledge-meta/build.mjs --root ../other-repo
+node .github/tools/devbook-meta/build.mjs            # write every adopted scope
+node .github/tools/devbook-meta/build.mjs --check    # CI: verify only
+node .github/tools/devbook-meta/build.mjs --scope .tech
+node .github/tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
 ```bash
-node .github/tools/knowledge-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#knowledge-meta
-node .github/tools/knowledge-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
-node .github/tools/knowledge-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
-node .github/tools/knowledge-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+node .github/tools/devbook-meta/annotations.mjs list --chapter .arc42/05-building-block-view.md#devbook-meta
+node .github/tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
+node .github/tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
+node .github/tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
 ```
 
 `annotations.mjs` is the only writer of an annotation fence — the CLI above and
@@ -246,14 +246,14 @@ commits: adding a note dirties a tracked file, and that is the caller's to
 review.
 
 Output is deterministic — no timestamps — so a clean `git diff` proves the
-committed indexes are current. See `tools/knowledge-meta/README.md` for the
+committed indexes are current. See `tools/devbook-meta/README.md` for the
 output shape and for when to refresh.
 
-### Tooling: `knowledge-tech`
+### Tooling: `devbook-tech`
 
 ```bash
-node .github/tools/knowledge-tech/dotnet-packages.mjs --root .
-node .github/tools/knowledge-tech/frontend-packages.mjs --root .
+node .github/tools/devbook-tech/dotnet-packages.mjs --root .
+node .github/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 The inventory scripts emit deterministic JSON from repository manifests. Use them
@@ -265,9 +265,9 @@ for technologies that do not appear in package manifests.
 | File | Purpose |
 |------|---------|
 | `assets/reconcile-protocol.md` | Shared rules for `devbook-sync` and `devbook-check`: the stamp devbook writes into `.github/ai-agent-stack.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/knowledge-meta.yml` | CI workflow template materialized by `devbook-sync`: fails on broken references, warns on drifted indexes |
-| `assets/workflows/knowledge-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
-| `assets/build/Update-KnowledgeIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-sync`: fails on broken references, warns on drifted indexes |
+| `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
+| `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
 | `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `applyTo` glob for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 
@@ -314,7 +314,7 @@ and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` a
 with. It moves only when something repo-visible changes shape, so most plugin
 releases leave it alone: plugin semver moves for prose and new skills,
 `contractVersion` moves for the contract. It lives in `CONTRACT_VERSION` in
-`tools/knowledge-meta/graph.mjs`.
+`tools/devbook-meta/graph.mjs`.
 
 Version 6 removes `.backlog` and the `implements` field (breaking — migration
 `006-drop-backlog`), and adds the shared `approved` rung with `approved-by` /
@@ -351,12 +351,12 @@ After running `devbook-sync`, a repository that adopted everything has:
 └── concepts.md
 _meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
 build/
-└── Update-KnowledgeIndex.ps1          # on-demand index refresh
+└── Update-DevbookIndex.ps1          # on-demand index refresh
 .github/
-├── tools/knowledge-meta/              # the generator
-├── tools/knowledge-tech/              # deterministic package inventory scripts
-├── workflows/knowledge-meta.yml       # the CI check
-└── workflows/knowledge-meta-nightly.yml   # the scheduled index refresh
+├── tools/devbook-meta/              # the generator
+├── tools/devbook-tech/              # deterministic package inventory scripts
+├── workflows/devbook-meta.yml       # the CI check
+└── workflows/devbook-meta-nightly.yml   # the scheduled index refresh
 ```
 
 ## Enforcement
@@ -374,7 +374,7 @@ Five layers, weakest to strongest:
    block that violates the schema. Drifted `_meta/` indexes are reported as a
    warning, not a failure — making every knowledge pull request carry a
    regenerated index is what turns those files into merge conflicts. Refresh is
-   deliberate instead: `build/Update-KnowledgeIndex.ps1` on demand, the nightly
+   deliberate instead: `build/Update-DevbookIndex.ps1` on demand, the nightly
    workflow on a schedule. A consumer that reads an index at runtime owes the
    other half of that contract — re-read any source newer than the index.
 

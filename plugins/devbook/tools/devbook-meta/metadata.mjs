@@ -1,5 +1,5 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
-// blocks defined in knowledge-chapter-metadata.instructions.md.
+// blocks defined in devbook-chapter-metadata.instructions.md.
 //
 // The schema used across .domain/.arc42/.tech/.design/.ai is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
@@ -21,7 +21,7 @@
  * nested, under one `.devbook/` parent whose subfolders drop the dot
  * (`.devbook/arc42`). A repository picks one and never mixes them.
  */
-export const KNOWLEDGE_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
+export const DEVBOOK_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
 
 /** The parent folder of the nested layout, and the prefix that identifies it. */
 export const NESTED_ROOT = ".devbook";
@@ -191,7 +191,7 @@ const TEST_LEVELS = ["unit", "integration", "e2e"];
 // bare path: a consumer that knows the runner can *run* the test. That is also
 // what makes this field admissible where a `code-path` field is not — see
 // "Why a test link and not a code link" in
-// knowledge-chapter-metadata.instructions.md. A selector that stops resolving
+// devbook-chapter-metadata.instructions.md. A selector that stops resolving
 // fails a run out loud; a source path in a metadata block rots in silence.
 //
 // Selectors are runner-native, because a runner-native selector is exactly what
@@ -233,7 +233,7 @@ const TEST_RUNNERS = {
 // A `tests` entry that starts like a knowledge path is a chapter reference
 // pasted into a field that takes test identifiers. Worth its own message,
 // because the author's intent is obvious and the fix is to move it to `related`.
-const KNOWLEDGE_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
+const DEVBOOK_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
 
 // Fields that steer how this document appears in the generated outline, and so
 // describe the document's place in its directory rather than a chapter inside
@@ -268,7 +268,7 @@ const REMOVED_FIELDS = {
         "document says about itself. Delete the field; where the generated order is " +
         "not what you want, give the documents a `number` or mark the directory's " +
         "entry point with `index: root`. See " +
-        "knowledge-chapter-metadata.instructions.md.",
+        "devbook-chapter-metadata.instructions.md.",
 };
 
 const FOLDER_EXTRA_FIELDS = {
@@ -292,7 +292,7 @@ export function folderKindForPath(relPath) {
         : null;
     const subject = nested ?? normalized;
     const prefix = nested === null ? "." : "";
-    for (const name of KNOWLEDGE_FOLDER_NAMES) {
+    for (const name of DEVBOOK_FOLDER_NAMES) {
         if (subject.startsWith(`${prefix}${name}/`)) return name;
     }
     return null;
@@ -473,7 +473,7 @@ function toPlainText(markdown) {
  * without reading a single Markdown file.
  *
  * `summary` is the blockquote that
- * `knowledge-chapter-metadata.instructions.md` places directly after the
+ * `devbook-chapter-metadata.instructions.md` places directly after the
  * file-level `meta` block, falling back to the first paragraph of prose when
  * the file has no blockquote. Either way it is the text *before* the first
  * `##`, reduced to plain text and capped at ~300 characters on a word
@@ -673,7 +673,7 @@ export function testIssues(meta) {
     if (!meta || meta.tests == null) return issues;
 
     for (const entry of toList(meta.tests)) {
-        if (KNOWLEDGE_PATH_PREFIX.test(entry)) {
+        if (DEVBOOK_PATH_PREFIX.test(entry)) {
             issues.push({
                 severity: "error",
                 message: `has \`tests\` entry "${entry}", which is a chapter reference — \`tests\` holds \`<level>:<runner>:<selector>\` test identifiers. A link to another chapter belongs in \`related\`.`,

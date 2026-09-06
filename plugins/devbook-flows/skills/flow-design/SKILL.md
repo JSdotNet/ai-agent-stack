@@ -1,6 +1,6 @@
 ---
 name: flow-design
-description: 'Run changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces knowledge-design.instructions.md structure and knowledge-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use ux:ux), UI implementation (use flow-feature or flow-bug), or UI dependency changes (use flow-update-packages).'
+description: 'Run changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces devbook-design.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use ux:ux), UI implementation (use flow-feature or flow-bug), or UI dependency changes (use flow-update-packages).'
 ---
 
 # Flow: Design Knowledge (`.design/`)
@@ -35,8 +35,8 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 1: Context Loading
 
-- Load `knowledge-design.instructions.md` and
-  `knowledge-chapter-metadata.instructions.md` (task-scoped, not baseline
+- Load `devbook-design.instructions.md` and
+  `devbook-chapter-metadata.instructions.md` (task-scoped, not baseline
   context).
 - Load only the relevant `.design/` file(s), not the whole folder.
 - Load `.arc42/` chapters only when the change depends on a documented
@@ -66,7 +66,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 - Hand off to `ux:ux` for the actual design decisions.
 - Draft or refresh content following the structure and folder rules in
-  `knowledge-design.instructions.md`.
+  `devbook-design.instructions.md`.
 - Apply the repository's own standing product rules on every edit — theme
   policy, save/auto-save behavior, canonical content format, and input
   affordances — when `.design/` or another governing document defines them. Do
@@ -104,10 +104,10 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 - Confirm tokens are declared once and referenced elsewhere, and that
   per-stack mapping guidance did not fork into divergent designs.
 - Confirm no new top-level metadata field was invented without updating
-  `knowledge-chapter-metadata.instructions.md` or
-  `knowledge-design.instructions.md` first.
+  `devbook-chapter-metadata.instructions.md` or
+  `devbook-design.instructions.md` first.
 - Regenerate the derived index when the repository ships the generator:
-  `node .github/tools/knowledge-meta/build.mjs --scope .design`, and confirm it
+  `node .github/tools/devbook-meta/build.mjs --scope .design`, and confirm it
   reports no broken references. If it reports problems, hand off to
   `devbook-check`.
 - Summarize changed files/chapters for the user.
@@ -137,7 +137,7 @@ disk stay the source of truth.
 
 ## Reference
 
-- `knowledge-design.instructions.md` and `knowledge-chapter-metadata.instructions.md` — the
+- `devbook-design.instructions.md` and `devbook-chapter-metadata.instructions.md` — the
   structure and metadata rules, shipped by the `devbook` plugin.
 - `devbook`'s `assets/routing-snippet.md` — optional repository-local
   context-loading and routing policy; a flow ships procedure, not routing policy.

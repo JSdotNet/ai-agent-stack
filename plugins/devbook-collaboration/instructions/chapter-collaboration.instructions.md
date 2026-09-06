@@ -8,7 +8,7 @@ description: How devbook-collaboration records review, comment, and hand-off sta
 devbook-collaboration owns no field in devbook's schema. Every fact it remembers
 about a chapter lives under `ext.devbook-collaboration.*` inside that chapter's
 own `meta` block, which devbook carries through untouched, unvalidated, and
-edge-free — see `knowledge-chapter-metadata.instructions.md`. Never record any of
+edge-free — see `devbook-chapter-metadata.instructions.md`. Never record any of
 it as a new field beside `status`, and never read another plugin's `ext` keys.
 
 ## The keys

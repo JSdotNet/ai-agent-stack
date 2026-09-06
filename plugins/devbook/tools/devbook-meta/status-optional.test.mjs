@@ -167,7 +167,7 @@ check(
 
 // ── The derived artifacts, over a real corpus on disk ──────────────────────
 
-const repoRoot = await mkdtemp(path.join(tmpdir(), "knowledge-status-"));
+const repoRoot = await mkdtemp(path.join(tmpdir(), "devbook-status-"));
 try {
     await mkdir(path.join(repoRoot, ".design"), { recursive: true });
     await mkdir(path.join(repoRoot, ".domain", "ordering"), { recursive: true });

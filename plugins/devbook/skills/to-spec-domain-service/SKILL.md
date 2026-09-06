@@ -71,8 +71,8 @@ evidence either way.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `knowledge-domain.instructions.md`, and
-   `knowledge-chapter-metadata.instructions.md`. Read only the target context's
+   `devbook-domain.instructions.md`, and
+   `devbook-chapter-metadata.instructions.md`. Read only the target context's
    `domain.md` and `naming.md`, plus `dependencies.md` when the service reaches
    across a context boundary.
 
@@ -116,7 +116,7 @@ evidence either way.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `knowledge-domain.instructions.md`. The heading carries the bare name; the
+   `devbook-domain.instructions.md`. The heading carries the bare name; the
    `meta` block carries `status` and `type: domain-service`. A new chapter
    starts at `status: draft`; an existing chapter's `status` is left untouched.
    Include optional fields only where they have a value.
@@ -135,8 +135,8 @@ evidence either way.
 9. **Regenerate and validate.** After the write lands, per the protocol:
 
    ```bash
-   node .github/tools/knowledge-meta/build.mjs --scope .domain
-   node .github/tools/knowledge-meta/build.mjs --scope .domain --check
+   node .github/tools/devbook-meta/build.mjs --scope .domain
+   node .github/tools/devbook-meta/build.mjs --scope .domain --check
    ```
 
 10. **Report.** Close with the protocol's report table, one row per chapter

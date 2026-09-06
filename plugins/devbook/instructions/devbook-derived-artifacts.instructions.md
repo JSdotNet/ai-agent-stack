@@ -36,7 +36,7 @@ Never nest `_meta/` deeper than one level below its scope, and never put a
 derived artifact anywhere other than an `_meta/` folder.
 
 The underscore prefix marks the folder as tooling machinery rather than
-readable content — see `knowledge-naming.instructions.md`.
+readable content — see `devbook-naming.instructions.md`.
 
 ## File naming
 
@@ -61,7 +61,7 @@ payload:
 ```jsonc
 {
   "schemaVersion": 1,
-  "generatedBy": ".github/tools/knowledge-meta/build.mjs",
+  "generatedBy": ".github/tools/devbook-meta/build.mjs",
   "scope": ".tech",
   "sources": [".tech"]
   // ...artifact-specific payload
@@ -163,12 +163,12 @@ fall back to the sources rather than guess at the payload shape.
 
 ## Knowledge artifacts
 
-The knowledge-meta generator produces these, one set per knowledge folder the
+The devbook-meta generator produces these, one set per knowledge folder the
 repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |
 |---|---|---|---|
-| `_meta/graph.json` | repository-wide | reference graph | `.github/tools/knowledge-meta/build.mjs` |
+| `_meta/graph.json` | repository-wide | reference graph | `.github/tools/devbook-meta/build.mjs` |
 | `_meta/index.json` | repository-wide | ordered reading outline | same |
 | `_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
 | `.arc42/_meta/*.json` | `.arc42` | all three of the above, scoped | same |
@@ -187,4 +187,4 @@ convention — each directory's root document first, then the sequence that
 folder's instructions file documents — plus what a document says about itself:
 its `number`, and whether its `index` field makes it the directory's entry point
 or keeps it out of the outline. No document declares the order of its siblings.
-See `knowledge-chapter-metadata.instructions.md`.
+See `devbook-chapter-metadata.instructions.md`.

@@ -14,11 +14,11 @@ workflow.
 but its stated preconditions do not hold — no approved specification, no acceptance criteria,
 no architecture sign-off — invoke that skill anyway and derive the missing inputs inside it,
 per the `flow-feature`/`flow-bug` exception in
-`instructions/flow-execution-model.instructions.md`. Reach for this fallback only when no
+`rules/flow-execution-model.md`. Reach for this fallback only when no
 skill covers the category, or when the matched skill targets fundamentally different work.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`. Perform a step directly, and say
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`. Perform a step directly, and say
 so, when its specialist agent is not installed.
 
 ## Input Expectations
@@ -68,14 +68,14 @@ Stages 2 through 4 run on the specialist agent selected in Stage 1.
 
 ## Final Phases (Shared)
 
-The tier in `instructions/flow-phases.instructions.md` matching the change kind from Stage 1:
+The tier in `rules/flow-phases.md` matching the change kind from Stage 1:
 code-modifying runs Build & Test → QA Validation → Personal Validation → Create Pull Request →
 Documentation Update → Work Item Update → Summary; documentation/config runs Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

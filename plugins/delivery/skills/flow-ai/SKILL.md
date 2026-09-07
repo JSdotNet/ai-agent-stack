@@ -9,8 +9,8 @@ description: 'Run any change to .ai/ — the record of how the team develops wit
 work happens, a chapter per thing used there, and one question every chapter answers — at
 this point in how we work, what do we use AI for, and is that real yet.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`. What a chapter must look like is
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`. What a chapter must look like is
 the repository's rule, not this flow's: the instruction files that govern the target path and
 the check the repository ships own structure, metadata, and the adoption ladder. This flow
 restates none of them.
@@ -27,7 +27,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.ai/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the devbook convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the devbook convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load the adoption map
   plus only the stage files in scope.
 - State the derived scope and goal before continuing.
@@ -71,13 +71,13 @@ Three questions, in order, before anything is written; state the answers.
 
 ## Final Phases (Shared)
 
-Documentation/config tier of `instructions/flow-phases.instructions.md`, in order: Personal
+Documentation/config tier of `rules/flow-phases.md`, in order: Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
 them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

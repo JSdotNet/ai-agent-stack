@@ -49,7 +49,7 @@ folder's `_meta/` is written beside its own chapters.
 
 ## Features
 
-### Skill: `devbook-sync`
+### Skill: `devbook-install`
 
 Reconciles a repository with the installed devbook release, in six phases:
 detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
@@ -59,7 +59,7 @@ migration are one idempotent operation — the stamp at
 marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
 protocol is in `assets/reconcile-protocol.md`.
 
-**Trigger keywords:** `devbook sync`, `set up devbook`, `adopt the devbook
+**Trigger keywords:** `devbook install`, `devbook sync`, `set up devbook`, `adopt the devbook
 folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
 `upgrade devbook`, `run devbook migrations`
 
@@ -70,7 +70,7 @@ three questions. Does the authored Markdown satisfy the schema, is the migration
 ledger current, does the stamp still describe what is on disk. Then repairs what
 it reports — broken references, missing or malformed `meta` blocks, fields the
 schema no longer defines, stale committed indexes — and hands the rest back to
-`devbook-sync`, which owns every write.
+`devbook-install`, which owns every write.
 
 **Trigger keywords:** `devbook check`, `devbook-meta failed`,
 `broken reference`, `stale _meta`, `validate devbook folders`,
@@ -187,26 +187,47 @@ path and hands over grounded input; no flow knows these skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `devbook-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
-| `devbook-domain.instructions.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
-| `devbook-arc42.instructions.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
-| `devbook-tech.instructions.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
-| `devbook-design.instructions.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.instructions.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
-| `devbook-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
-| `devbook-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
-| `devbook-naming.instructions.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
+| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
+| `devbook-domain.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
+| `devbook-arc42.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
+| `devbook-tech.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
+| `devbook-design.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
+| `devbook-ai.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
+| `devbook-derived-artifacts.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
+| `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob carries both layouts — the five root dot-folders and their `.devbook/`
 nesting — and is scoped to the devbook folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
-How a file reaches a session depends on the host. Copilot applies it from `applyTo`
-on every matching read. Claude has its own glob-scoped injection, `.claude/rules/`,
-but a plugin cannot ship it — there is no rules component and no `rules` key in
-`plugin.json` — so there the rules arrive through the session-start hook and through
-the skills that name the file by path. Both are shipped, which is why the table
-matters in either host.
+#### How they reach a session
+
+Not on their own. Neither Claude Code nor GitHub Copilot auto-applies a rule that sits
+inside a plugin: there is no rules key in either manifest and no rules component, and a
+plugin-root `CLAUDE.md` is not loaded either. A rule in the table above governs paths in
+*your* repository, and its globs can only resolve there.
+
+So `devbook-install` installs them — one copy of the rule, and a wrapper per host beside it,
+each in the folder that host already reads:
+
+```
+plugins/devbook/rules/devbook-arc42.md                  what devbook ships
+  └── .agents/rules/devbook-arc42.md                    the rule, verbatim
+        ├── .claude/rules/devbook-arc42.md              paths:   → points at it
+        └── .github/instructions/devbook-arc42.instructions.md
+                                                        applyTo: → points at it
+```
+
+From then on the rule fires when either host opens a matching chapter — no skill, flow,
+or hook has to name it first. All three are hash-tracked in the stamp like every other
+materialized file, so an upgrade refreshes them, a copy you have edited is reported and
+left alone, and dropping a folder from `adopted` orphans its trio rather than deleting
+it. The templates and the reasons are in
+[`assets/rule-wrappers.md`](assets/rule-wrappers.md).
+
+Until you run `devbook-install`, the rules still reach a session the way they always have:
+the session-start hook, and the skills that name one by path.
 
 ### The `ext` namespace
 
@@ -215,7 +236,7 @@ A plugin layered on top of devbook keeps its own per-chapter state under
 unvalidated, and emits them as one `ext` object per node — so an extension can
 remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. See
-`devbook-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.md`.
 
 ### Extension: `devbook-graph`
 
@@ -273,13 +294,14 @@ for technologies that do not appear in package manifests.
 
 | File | Purpose |
 |------|---------|
-| `assets/reconcile-protocol.md` | Shared rules for `devbook-sync` and `devbook-check`: the stamp devbook writes into `.github/ai-agent-stack.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-sync`: fails on broken references, warns on drifted indexes |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook-install` and `devbook-check`: the stamp devbook writes into `.github/ai-agent-stack.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-install`: fails on broken references, warns on drifted indexes |
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
+| `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
-| `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `applyTo` glob for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 
 ### Hook configuration
 
@@ -338,7 +360,7 @@ for the behaviour changes it does not script, are in [UPGRADING.md](UPGRADING.md
 
 ## Folder structure
 
-After running `devbook-sync`, a repository that adopted everything has:
+After running `devbook-install`, a repository that adopted everything has:
 
 ```
 .arc42/
@@ -374,12 +396,12 @@ build/
 
 Five layers, weakest to strongest:
 
-1. **Instructions** govern the paths above in every repository where the plugin is
-   installed — applied from `applyTo` on the host that reads it, reached by path on
-   the host that does not.
+1. **Instructions** govern the paths above in every repository that has run
+   `devbook-install`, which installs each one where both hosts already look. Before that,
+   they are reached by path only.
 2. **The session-start hook** stops agents treating devbook folders as baseline
-   context or hand-editing derived files, and is what carries the folder rules on the
-   host that cannot be handed a rules file by a plugin.
+   context or hand-editing derived files, and is what carries the folder rules in a
+   repository that has not installed them.
 3. **`meta` block rules** make every chapter's relationships explicit and
    checkable.
 4. **`build.mjs --check`** fails on unresolved references and schema violations.

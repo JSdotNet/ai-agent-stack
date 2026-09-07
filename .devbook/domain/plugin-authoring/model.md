@@ -76,5 +76,5 @@ classDiagram
   associations — a target that resolves to nothing degrades one stage rather than failing a
   load.
 - A stamp lives in the consuming repository, not in the plugin, and is written only by the
-  plugin's own sync skill. It relates to migrations by id presence in its ledger, never by
+  plugin's own install skill. It relates to migrations by id presence in its ledger, never by
   comparing versions.

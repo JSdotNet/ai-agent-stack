@@ -12,7 +12,7 @@ the chapter's own `meta` block. Findings are recorded, not merely reported, so
 an unanswered question survives the session that raised it.
 
 State keys, the three review states, and the one-finding-per-key rule are in
-`../../instructions/chapter-collaboration.instructions.md`. Read it first.
+`../../rules/chapter-collaboration.md`. Read it first.
 
 This file exceeds the 40-line body budget on purpose: the lens table in step 3
 is one row per thing a chapter can be wrong about, and a review that skips a

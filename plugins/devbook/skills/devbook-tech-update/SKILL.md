@@ -21,7 +21,7 @@ technology chapter by hand.
 - Target `.tech` scope. Default to every `.tech` layer that exists.
 - Optional focus, such as backend packages, frontend packages, tooling, deployment, or all.
 
-If the repository has no `.tech/` folder, stop and run `devbook-sync` first for the
+If the repository has no `.tech/` folder, stop and run `devbook-install` first for the
 `.tech` adoption path.
 
 ## Deterministic package inventories
@@ -49,8 +49,8 @@ chapters and generated `_meta/*.json` indexes.
 
 ## Workflow
 
-1. **Load governed context.** Read `devbook-tech.instructions.md`,
-   `devbook-chapter-metadata.instructions.md`, `.tech/technology-graph.md`, and only the
+1. **Load governed context.** Read `devbook-tech.md`,
+   `devbook-chapter-metadata.md`, `.tech/technology-graph.md`, and only the
    `.tech` layer files in scope. Load `.arc42/04-solution-strategy.md`,
    `.arc42/07-deployment-view.md`, and `.arc42/09-architecture-decisions.md` only when they
    exist and the refresh touches architecture decisions.
@@ -78,7 +78,7 @@ chapters and generated `_meta/*.json` indexes.
    technologies used by multiple layers belong in `shared.md`; layer-specific technologies
    depend on the shared node. Package nodes normally use `type: package`, while frameworks,
    runtimes, tools, services, platforms, protocols, and formats use the closest specific type
-   from `devbook-tech.instructions.md`.
+   from `devbook-tech.md`.
 
 5. **Author through the `.tech` flow.** Route the actual `.tech/` edits through the
    `.tech` flow unless this skill is already being run as part of that flow.

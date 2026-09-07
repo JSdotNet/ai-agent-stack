@@ -61,15 +61,18 @@ type: term
 A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
 trigger — the sentence a host matches a request against — not a summary of its contents.
 
-## Instruction File
+## Plugin Rule
 
 ```meta
 type: term
 ```
 
-A scoped rule set, as `instructions/*.instructions.md`. One host applies it automatically from
-`applyTo`; the other only when something references its path, so every instruction file is
-referenced explicitly by the asset that depends on it.
+A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
+`rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
+`.agents/rules/` an install writes hold the same names, so a rule referencing a sibling resolves in
+both. Inside a plugin no host applies one automatically, so every rule is referenced explicitly
+by the asset that depends on it; a repo-facing one also ships to the adopting repository
+through its plugin's install skill, which writes each host's wrapper there.
 
 ## Hook
 
@@ -123,7 +126,7 @@ only as the English description of what `fleet-` does. `delivery` holds sixteen 
 of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
 and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
-`fleet-*`, and `stack-guide` holds three `stack-*`.
+`fleet-*`, and `stack-guide` holds four `stack-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -341,7 +344,7 @@ it had when it landed, and the migration ledger. The same file's other top-level
 
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes
-anything ships one `<component>-sync` that writes its own entry and one `<component>-check`
+anything ships one `<component>-install` that writes its own entry and one `<component>-check`
 that reads it, and neither touches another component's.
 
 ## Migration

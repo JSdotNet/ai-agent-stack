@@ -35,6 +35,12 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `extensions/<name>/` | Copilot CLI |
 | `scripts/` | Whatever skill in the plugin invokes it, from the plugin root |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
+| `README.md`, and any sibling `*.md` at the plugin root | people, never a host |
+
+Documentation for a reader sits at the plugin root beside `README.md` — `delivery`'s
+`FLOW-DIAGRAMS.md`, `devbook`'s `UPGRADING.md`. `resources/` is not that shelf: what goes
+there is reference an asset points at by path, so a file no skill or rule names has no
+way to be loaded and only costs every consumer bytes.
 
 A plugin ships the manifest of every host that can load something in it, which for almost every
 plugin here is both. `delivery-surface-canvas` is the standing exception: a Copilot canvas extension
@@ -79,7 +85,7 @@ because neither plugin may name the other — left with them.
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
-`<component>-sync` is what puts it there and records it in the
+`<component>-install` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
 
 ## Roles and Services
@@ -210,7 +216,7 @@ Two other things carry sweep state, and neither is a file this repository owns: 
 `ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
 make a claim legible from GitHub alone, and the host's list of live background sessions, which
 is how a missing result file is told from a worker still running.
-`instructions/fleet-issue-sweep-contract.instructions.md` owns both schemas.
+`rules/fleet-issue-sweep-contract.md` owns both schemas.
 
 ## Guide Plugin
 
@@ -229,6 +235,7 @@ every plugin.
 | `stack-guide` | Nothing. It reads, and every fact it states names the file behind it |
 | `stack-init` | The four engine-owned keys of a repository's stack config, for the first time |
 | `stack-update` | The same four keys, moved forward, after each component reconciled itself |
+| `stack-adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
 
 `scripts/stack-report.mjs` is the read-only half, run in place from the plugin root: it reads
 the catalog in both the working tree and the host's clone, the host's installed-plugin state,
@@ -236,9 +243,17 @@ the three settings layers merged nearest-last, the stack config, the devbook fol
 layouts, and the engine's own `skills/` folder. A clone older than the source is why "already
 latest" is usually wrong, so the report prints both and the commit behind each.
 
+`stack-adoption` is the second reader, and it stops one step earlier than the report does. The
+derivable half of `.ai` — which plugins are installed and enabled, which `flow-*` and
+`schedule-*` the copies on disk ship, what the config wires — goes stale on every upgrade and is
+exactly what the report already prints. The other half rates whether people work that way, which
+no file on disk records, so a `status`, an **Adopted by**, or an **Evidence** line is never
+derived from an install. Reporting drift is inside the plugin's subject; writing a chapter is
+`flow-ai`'s.
+
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
-stays with that component's own sync skill, which is the only thing that knows what it
-materialized — so `devbook-sync` and `devbook-check` do not move here, and `stack-init`'s fifth
+stays with that component's own install skill, which is the only thing that knows what it
+materialized — so `devbook-install` and `devbook-check` do not move here, and `stack-init`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -262,7 +277,7 @@ stack, and it holds two kinds of top-level key:
 | Key | Owned by | Holds |
 | --- | --- | --- |
 | `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
-| `components.<name>` | that component's own sync skill | What the component materialized into the repository, and its migration ledger. |
+| `components.<name>` | that component's own install skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
@@ -290,7 +305,7 @@ carries the unattended rules every prompt starts with.
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `tech-update` | `devbook:devbook-tech-update` | weekly |
 
-Three skills read the catalog. `schedule-sync` builds each prompt, resolves the scheduler from
+Three skills read the catalog. `schedule-install` builds each prompt, resolves the scheduler from
 the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
 <title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
@@ -306,7 +321,7 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`schedule-sync` only. The environment, the model, and the scheduler ids are personal and live
+`schedule-install` only. The environment, the model, and the scheduler ids are personal and live
 in the scheduler; matching by name is what makes writing them down unnecessary.
 
 ## Asset Kinds

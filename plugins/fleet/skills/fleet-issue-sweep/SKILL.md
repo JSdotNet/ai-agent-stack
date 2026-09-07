@@ -31,7 +31,7 @@ only so a past sweep can be re-read by hand.
 A sweep spans sessions that cannot see each other's conversations, and they coordinate through
 files, `gh` labels, and `claude agents`, never through conversation and never through a
 scheduled task. Read **Issue Sweep State Contract**
-(`instructions/fleet-issue-sweep-contract.instructions.md`) before the first dispatch — it
+(`rules/fleet-issue-sweep-contract.md`) before the first dispatch — it
 owns the sweep directory layout, the manifest and result schemas, and the dispatch rules.
 
 ```text
@@ -334,7 +334,7 @@ scheduled for later. There is no later session anymore.
 ## Surface Reporting
 
 This skill reports progress through whichever delivery surface is bound, resolved by pattern
-from the live tool list per `surface-contract.instructions.md` (`delivery` plugin). With no
+from the live tool list per `surface-contract.md` (`delivery` plugin). With no
 surface bound, skip these calls, say so once, and continue — the manifest, the worker result
 files, and the brief remain the source of truth. Follow that file's **Reporting Contract** for
 the tool cadence.

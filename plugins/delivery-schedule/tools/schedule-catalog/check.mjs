@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// check.mjs — validate the schedule catalog against schedule-catalog-contract.instructions.md.
+// check.mjs — validate the schedule catalog against schedule-catalog-contract.md.
 //
 //   node plugins/delivery-schedule/tools/schedule-catalog/check.mjs
 //

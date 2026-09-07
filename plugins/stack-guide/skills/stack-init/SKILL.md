@@ -1,6 +1,6 @@
 ---
 name: stack-init
-description: 'Set a repository up for this marketplace for the first time — decide which plugins it will actually use, write the engine-owned keys of .github/ai-agent-stack.json (bindings, extensions, policy, gates), validate them against the schema, and then hand each component its own sync skill to materialize what it installs. Writes the engine keys only, never another component''s stamp. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "stack init", "set up the stack here", "adopt the delivery engine", "create ai-agent-stack.json", "wire up my flows", "onboard this repo".'
+description: 'Set a repository up for this marketplace for the first time — decide which plugins it will actually use, write the engine-owned keys of .github/ai-agent-stack.json (bindings, extensions, policy, gates), validate them against the schema, and then hand each component its own install skill to materialize what it installs. Writes the engine keys only, never another component''s stamp. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "stack init", "set up the stack here", "adopt the delivery engine", "create ai-agent-stack.json", "wire up my flows", "onboard this repo".'
 ---
 
 # stack init
@@ -9,7 +9,7 @@ description: 'Set a repository up for this marketplace for the first time — de
 
 Turn a repository with no stack config into one the engine can run in. This skill owns the
 four engine keys — `bindings`, `extensions`, `policy`, `gates` — and nothing else. Every
-`components.<name>` entry belongs to that component's own sync skill, which is the only
+`components.<name>` entry belongs to that component's own install skill, which is the only
 thing that knows what it materialized; writing one from here would record work this skill
 did not do.
 
@@ -27,7 +27,7 @@ did not do.
 3. **Write the engine keys.** Start from the delivery plugin's
    `resources/ai-agent-stack-template.json` — take its checkout root from the report's
    catalog line, or the plugin's `installPath` from `--json` — and keep only the keys step
-   2 chose. Read `instructions/surface-contract.instructions.md` in that same plugin for
+   2 chose. Read `rules/surface-contract.md` in that same plugin for
    what each point and gate means. Never put a model or a secret in this file.
 
 4. **Validate.** Run that plugin's `tools/stack-config/check.mjs` against the file. An
@@ -35,8 +35,8 @@ did not do.
    setting. Fix and re-run until it exits `0`.
 
 5. **Let each component install itself.** For every component this repository is adopting,
-   invoke that component's own sync skill and let it materialize its payload and write its
-   own stamp — `devbook:devbook-sync` for the devbook folders. Do not copy a component's
+   invoke that component's own install skill and let it materialize its payload and write its
+   own stamp — `devbook:devbook-install` for the devbook folders. Do not copy a component's
    files by hand: a copy made here lands unstamped, and the next reconcile cannot tell it
    from a file someone deliberately customized.
 

@@ -13,13 +13,20 @@ claude plugin marketplace add JSdotNet/ai-agent-stack
 Then enable `stack-guide` with `/plugin`. During development, add this working copy by path
 instead of by repository.
 
-## The three skills
+## The four skills
 
 | Skill | Does |
 | --- | --- |
 | [`stack-guide`](skills/stack-guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/naming.md`, the arc42 chapters, and `delivery`'s surface contract. |
-| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own sync skill. |
+| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own install skill. |
 | [`stack-update`](skills/stack-update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
+| [`stack-adoption`](skills/stack-adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-ai`. Reads only. |
+
+`stack-adoption` is the one that writes nothing at all, and deliberately: `.ai` rates whether
+people actually work a certain way, and the report can only see what is on disk. It says which
+plugins, flows, and bindings a chapter's prose no longer matches, and leaves `status`,
+**Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `stack-init` and
+`stack-update` keep against a `components.<name>` stamp.
 
 `stack-` is a fifth prefix beside `flow-`, `fleet-`, `phase-`, and `schedule-`, and it means
 something none of those do: a procedure about the stack itself rather than about a unit of work.
@@ -52,8 +59,8 @@ node scripts/stack-report.mjs --root <repository>
   [layer](../../.devbook/domain/plugin-authoring/naming.md#layer) order rather than under it.
 - **Writing anything a component owns.** `stack-init` and `stack-update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
-  sync skill, which is the only thing that knows what it materialized. That is also why
-  `devbook-sync` and `devbook-check` did not move here: `devbook` ships the payload, the
+  install skill, which is the only thing that knows what it materialized. That is also why
+  `devbook-install` and `devbook-check` did not move here: `devbook` ships the payload, the
   migrations, and the ledger, and a skill in this plugin has no supported path to any of them.
 
 ## Files
@@ -64,6 +71,7 @@ node scripts/stack-report.mjs --root <repository>
 | `skills/stack-guide/SKILL.md` | The question-answering procedure |
 | `skills/stack-init/SKILL.md` | First setup of the engine keys |
 | `skills/stack-update/SKILL.md` | Version drift, migrations, re-validation |
+| `skills/stack-adoption/SKILL.md` | Adoption-record drift, handed to `flow-ai` |
 | `scripts/stack-report.mjs` | The read-only report, run in place from this plugin root |
 
 ## Known gap

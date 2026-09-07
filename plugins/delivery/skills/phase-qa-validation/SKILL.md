@@ -26,7 +26,7 @@ summary. Delegated, the owner session pays for the QA *result* instead of the QA
 - **Invoke the `qa.run` provider with a single `Agent` call** in the **same worktree** (never
   `isolation: "worktree"` — an isolated checkout cannot see the change set under test or
   reach the running application), using the model resolved for this phase's category per
-  `instructions/flow-model-selection.instructions.md`.
+  `rules/flow-model-selection.md`.
 - **Keep the runtime monitor a separate background agent** — the log-and-trace watcher the
   `qa.run` provider supplies alongside its scenario driver. Its own context window is the
   point:
@@ -49,7 +49,7 @@ Location** below, which is why the QA sub-agent shares the worktree rather than 
 
 The consuming repository may supply `.claude/flow-context.md`, read once per run by
 the flow-runner. The convention is defined in
-`instructions/flow-repo-context.instructions.md` — do not restate it here. Use it as
+`rules/flow-repo-context.md` — do not restate it here. Use it as
 follows:
 
 - **How to run** — use the declared startup command and AppHost path instead of discovering
@@ -187,7 +187,7 @@ the evidence file is the record, and the surface renders it from disk on demand.
 ## Dashboard Reporting
 
 - Report as the `QA Validation` stage via the shared **Reporting Contract** in
-  `instructions/surface-contract.instructions.md`. Also pass `scenarios` (per-scenario
+  `rules/surface-contract.md`. Also pass `scenarios` (per-scenario
   `status`, `notes`, `evidence`) and `monitoring` (log/trace summary) so the surface
   renders QA results with evidence inline.
 - When required MCP tooling is unavailable, report the stage as `blocked` with the missing
@@ -230,5 +230,5 @@ the evidence file is the record, and the surface renders it from disk on demand.
 
 ## Reference
 
-Phase definition: `instructions/flow-phases.instructions.md`.
-Repo context convention: `instructions/flow-repo-context.instructions.md`.
+Phase definition: `rules/flow-phases.md`.
+Repo context convention: `rules/flow-repo-context.md`.

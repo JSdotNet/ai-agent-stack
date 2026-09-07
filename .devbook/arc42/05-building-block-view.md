@@ -7,7 +7,7 @@ number: 5
 ## Marketplace Root
 
 ```meta
-related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
+related: [".devbook/domain/plugin-authoring/domain.md#marketplace"]
 ```
 
 `.claude-plugin/marketplace.json` is the only file a host reads before installing anything: the
@@ -19,10 +19,10 @@ concerned.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-plugin-one-bounded-context", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/domain/context-map.md", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-plugin-one-bounded-context", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Nine plugin folders, grouped by [layer](../domain/plugin-authoring/naming.md#layer) — which is
+Nine plugin folders, grouped by [layer](../domain/plugin-authoring/domain.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -84,7 +84,7 @@ than a failed load.
 ## Plugin Folder
 
 ```meta
-related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/domain/plugin-authoring/naming.md#plugin-rule", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
 ```
 
 One folder per plugin, holding two manifests and the assets themselves:
@@ -118,7 +118,7 @@ other, so a plugin holding one host-only asset still ships both.
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it
 is the only one that carries `dependencies` — an array of `{ name, version, marketplace }`
-naming each [layer](../domain/plugin-authoring/naming.md#layer) beneath, one entry for an
+naming each [layer](../domain/plugin-authoring/domain.md#layer) beneath, one entry for an
 extension and two for a bridge. Copilot's manifest has no verified equivalent, so a dependency
 is declared once, on the Claude side, and stated in prose in the plugin's README for the other
 host.
@@ -129,7 +129,7 @@ else in the plugin has to know the folder exists. `delivery-surface-dashboard` a
 `delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none — see
 [the decision](09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only).
 
-An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface)
+An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/domain.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
@@ -183,13 +183,13 @@ Shared text a skill or an agent reads by path is not that, and lives in `resourc
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
 `<component>-install` is what puts it there and records it in the
-[stamp](../domain/plugin-authoring/naming.md#stamp).
+[stamp](../domain/plugin-authoring/domain.md#stamp).
 
 ## Level 2: What Lands in a Repository
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/domain/plugin-authoring/naming.md#stamp"]
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/domain/plugin-authoring/domain.md#stamp"]
 ```
 
 The other half of the building block view. Nothing above this line runs in a consuming
@@ -255,7 +255,7 @@ because two branches each touching one chapter both rewrite the same JSON.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace"]
+related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace"]
 ```
 
 **No specialist plugin ships here.** Where a flow needs expertise it names a point, and a
@@ -297,7 +297,7 @@ consults a point — see [the decision](09-architecture-decisions.md#a-role-plug
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
 ```
 
 Three plugins are where a run becomes visible or recorded. None declares a dependency, none
@@ -327,7 +327,7 @@ group.
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
 `delivery` declares a closed set of six names a shared asset reads instead of a host's own
@@ -357,7 +357,7 @@ rather than silent.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
 ```
 
 `fleet` is the only plugin here that keeps state **outside** every repository it acts on. A
@@ -385,7 +385,7 @@ is how a missing result file is told from a worker still running.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
 ```
 
 `devbook-config` is the one plugin whose subject is the marketplace rather than a unit of work.
@@ -435,7 +435,7 @@ leaves the other host's rows empty while the catalog half still answers.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook"]
 ```
 
 `.devbook/config.json` is the one file a consuming repository commits for the whole
@@ -458,7 +458,7 @@ Reading it is not adopting devbook: the engine reads that path with no devbook f
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#schedule", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
@@ -498,7 +498,7 @@ in the scheduler; matching by name is what makes writing them down unnecessary.
 ## Asset Kinds
 
 ```meta
-related: [".devbook/domain/plugin-authoring/naming.md#agent"]
+related: [".devbook/domain/plugin-authoring/domain.md#agent"]
 ```
 
 Agents, skills, instruction files, hooks, and MCP servers. Each kind has one file shape and one

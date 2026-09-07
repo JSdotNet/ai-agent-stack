@@ -23,7 +23,8 @@ a flow may never do.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery/naming.md#run", ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base"]
+aliases: [execution, session run]
+related: [".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base"]
 ```
 
 One execution of one flow over one unit of work: the stages and their results, the prompts that
@@ -54,7 +55,7 @@ in another context.
 
 ```meta
 type: entity
-related: [".devbook/domain/delivery/naming.md#stage"]
+aliases: [step]
 ```
 
 One step of a run, with identity inside it: a name, a status, the output it produced, the links
@@ -92,7 +93,8 @@ skipped stage reads as a decision nobody made.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery/naming.md#flow", ".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery"]
+aliases: [flow skill, staged procedure]
+related: [".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery"]
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
@@ -118,7 +120,7 @@ categories it covers, rather than configuring this one into something else.
 
 ```meta
 type: entity
-related: [".devbook/domain/delivery/naming.md#phase"]
+aliases: [shared step, phase skill]
 ```
 
 A shared step several flows run identically — Update Base, Build & Test, QA Validation,
@@ -130,7 +132,7 @@ of restated in sixteen.
 
 ```meta
 type: enum
-related: [".devbook/domain/delivery/naming.md#phase"]
+related: [".devbook/domain/delivery/domain.md#phase"]
 ```
 
 Which closing phases a flow runs: the code-modifying tier, which builds, tests, validates, and
@@ -145,7 +147,7 @@ stage the run has reached when the context gauge crosses its threshold.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
 
 A named place in a flow where a repository plugs a provider in. The set is closed and declared
@@ -182,7 +184,7 @@ provider gaining the authority to change an outcome without anybody re-reading t
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/naming.md#gate", ".devbook/arc42/09-architecture-decisions.md#the-overlay-may-add-a-gate-and-never-remove-one"]
+related: [".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/arc42/09-architecture-decisions.md#the-overlay-may-add-a-gate-and-never-remove-one"]
 ```
 
 A human checkpoint attached to an extension point: it presents that point's output and asks a
@@ -219,7 +221,8 @@ inferred from silence.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery/naming.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/05-building-block-view.md#stack-config"]
+aliases: [config.json, delivery config]
+related: [".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `.devbook/config.json`, and specifically the four keys this context owns — `bindings`,
@@ -245,7 +248,7 @@ devbook folder present, which is the reason the file could move there at all.
 
 ```meta
 type: value-object
-related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#tracker"]
+related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#tracker"]
 ```
 
 A name resolved to whatever fills it in this repository: a role to a plugin, the tracker to a
@@ -270,7 +273,8 @@ because an open one would be a stage definition wearing a shorter name.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery/naming.md#flow-runner", ".devbook/arc42/09-architecture-decisions.md#the-handback-is-the-commit-point"]
+aliases: [runner, sequencer]
+related: [".devbook/arc42/09-architecture-decisions.md#the-handback-is-the-commit-point"]
 ```
 
 The one agent this context ships: it sequences a flow's stages, prepends Update Base, resolves
@@ -290,7 +294,7 @@ being recorded.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery/naming.md#pr-lane"]
+related: [".devbook/domain/delivery/domain.md#pr-lane"]
 ```
 
 Getting a finished change reviewed and merge-ready: push the branch, bring it level with its
@@ -427,7 +431,7 @@ remembered.
 
 ```meta
 type: value-object
-related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
+related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
 A name a shared asset reads instead of a host's own file: `repo-instructions`,
@@ -451,7 +455,7 @@ type: shared-enums
 
 ```meta
 type: enum
-related: [".devbook/domain/delivery/naming.md#change-kind"]
+aliases: [change category]
 ```
 
 What kind of change this run is making: new functionality, a change to existing behaviour, a
@@ -462,3 +466,75 @@ runs, and how deep QA validation goes.
 It is a claim about the change, never about the flow that carried it: `flow-fallback` resolves
 one at run time and reports it, and a flow with a fixed tier still records it because the QA
 depth downstream depends on it.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
+> layer, role, tracker, surface, host slot, extension point, gate — is defined once in [Plugin
+> Authoring](../plugin-authoring/domain.md#ubiquitous-language).
+
+### Tier
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [phase tier, closing tier]
+related: [".devbook/domain/delivery/domain.md#phase-tier"]
+```
+
+Which closing phases a flow runs — code-modifying or documentation. It follows from the change
+kind rather than from preference, and a flow shipped by a higher layer declares its own,
+because the engine never enumerates a skill in a layer above it.
+
+### Personal Validation
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [the gate, approval gate]
+related: [".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/domain/delivery/domain.md#gate"]
+```
+
+The mandatory gate every flow ends at, and an instance of the gate pattern rather than a second
+mechanism. It uses no agent and no model: it hands control back to the person and waits.
+
+It is the thing [Fleet](../fleet/domain.md#park) trades away and the thing an unattended run
+parks at. Wherever a run cannot reach it, something else has to guarantee that nothing merges
+unread.
+
+### PR Lane
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [pull-request lane, delivery lane]
+related: [".devbook/domain/delivery/domain.md#pull-request-lane"]
+```
+
+How a finished change is opened for review: push the branch, level it with its base, fix the
+failing checks, score it against the merge-ready checklist. Raising the pull request is the
+host's own action rather than a skill.
+
+Also a [host slot](../plugin-authoring/domain.md#host-slot) of the same name, which is what the
+`deliver` service reads: unbound, it writes file artifacts and opens nothing.
+
+### Provider
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [implementation, binding target]
+related: [".devbook/domain/delivery/domain.md#extension-point", ".devbook/domain/delivery/domain.md#binding"]
+```
+
+Whatever a repository names to fill an extension point. A service has exactly one and a chore
+has zero or more; a provider never performs a gate on its own behalf, and a chore's provider
+never changes an outcome.
+
+The word is deliberately not *plugin*. What fills a point may be a plugin's skill, a repo-native
+skill, or nothing at all, and the point's contract is the same in every case.

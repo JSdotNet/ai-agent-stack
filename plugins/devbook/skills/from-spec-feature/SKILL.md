@@ -73,7 +73,7 @@ each row's `Enforced at` point, and leave `open` rows out of the invariants list
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read the target chapter, its
    `###` sub-feature chapters, every chapter named in `depends-on`, the
-   `related` `domain.md` chapters, and the context's `naming.md`.
+   `related` `domain.md` chapters, and the context's `domain.md`.
 
 2. **Apply the status gate.** Above. Do not proceed past a `draft`, `proposed`,
    or `deprecated` chapter without the stated confirmation.

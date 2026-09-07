@@ -22,7 +22,7 @@ which is a flow's. This context names every plugin in the marketplace and declar
 
 ```meta
 type: aggregate
-related: [".devbook/domain/devbook-config/naming.md#report"]
+related: [".devbook/domain/devbook-config/domain.md#report"]
 ```
 
 What is on disk, read and nothing else: the catalog in the working tree and in the host's clone,
@@ -58,7 +58,7 @@ the plugin name, which is also why a name is never reused after release.
 
 ```meta
 type: value-object
-related: [".devbook/domain/devbook-config/naming.md#report"]
+related: [".devbook/domain/devbook-config/domain.md#report"]
 ```
 
 The path a fact was read from, carried with the fact. It is what makes an answer checkable rather
@@ -69,7 +69,7 @@ instead of silence.
 
 ```meta
 type: enum
-related: [".devbook/domain/devbook-config/naming.md#scope-verdict"]
+aliases: [reconcile, blocked, frozen, adoptable, available, out-of-scope]
 ```
 
 What an update does with one component: `reconcile`, `blocked`, `frozen`, `adoptable`,
@@ -122,7 +122,7 @@ It is gitignored and absent by default, and gitignored is not private: nothing s
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-config/naming.md#engine-key"]
+related: [".devbook/domain/devbook-config/domain.md#engine-key"]
 ```
 
 Writes a repository's four engine keys for the first time, then invokes each component's own
@@ -151,7 +151,7 @@ installed or this checkout has not enabled, and never dropping a stamp for eithe
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-config/naming.md#report"]
+related: [".devbook/domain/devbook-config/domain.md#report"]
 ```
 
 Answers one question about this marketplace from what is on disk: what devbook, the engine, the
@@ -169,7 +169,7 @@ the marketplace rather than a unit of work.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-config/naming.md#adoption-drift"]
+aliases: [.ai drift]
 ```
 
 Reports where the `.ai` adoption record no longer matches what is installed, enabled, and wired,
@@ -181,3 +181,47 @@ the other half rates whether people actually work that way, which no file on dis
 status, an adoption line, or a piece of evidence is never derived from an install.
 
 Reporting drift is inside this context's subject. Writing the chapter is not.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
+> layer, stamp, migration — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language)
+
+> The stack config's four keys belong to [Delivery](../delivery/domain.md#stack-config).
+
+### Engine Key
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [bindings, extensions, policy, gates]
+related: [".devbook/domain/devbook-config/domain.md#engine-configuration", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+```
+
+One of the four top-level keys of `.devbook/config.json` that the engine owns and this context
+writes. Everything else in that file is a `components.<name>` stamp belonging to the component
+that materialized it.
+
+The word marks the boundary rather than the file: one file, two kinds of key, and nobody writes
+another owner's.
+
+### Report
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [stack report, read-only report]
+related: [".devbook/domain/devbook-config/domain.md#stack-report", ".devbook/domain/devbook-config/domain.md#fact-source"]
+```
+
+The read-only model behind every answer this context gives, printing the path behind each fact and
+naming the files that were absent as well as the ones that were read.
+
+Naming the source is what makes an answer checkable rather than authoritative, and it is why an
+empty table here reads as *this file was not there* rather than as *there is nothing*.

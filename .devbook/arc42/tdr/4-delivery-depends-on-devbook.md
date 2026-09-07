@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook", ".devbook/domain/plugin-authoring/naming.md#layer"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook", ".devbook/domain/plugin-authoring/domain.md#layer"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -90,7 +90,7 @@ section, says which five.
 devbook's contract version, so devbook can and did make a breaking change — contract 6 dropped
 `.backlog` — without `delivery` noticing.
 
-**The [layer table](../../domain/plugin-authoring/naming.md#layer) has no row for it.**
+**The [layer table](../../domain/plugin-authoring/domain.md#layer) has no row for it.**
 `delivery` is not L1 over `devbook`: eleven of its flows work with devbook absent. It is not
 the L2b bridge: one stack, not two. It is not a surface. Undeclared is the only position left,
 and an undeclared coupling has nowhere for a check to live — which is exactly why the

@@ -43,13 +43,13 @@ across `.domain`, ADRs, and code module names where practical.
     flow.<name>.md   # optional: one flow, split out of flow.md when it is
                      # large enough or invoked often enough to stand alone
     dependencies.md
-    naming.md        # optional: the terms may live in domain.md instead
+    domain.md        # optional: the terms may live in domain.md instead
 ```
 
 When starting a new bounded context, create the folder with `domain.md`,
 `model.md`, `dependencies.md`, and one of `features.md` or `skills.md`, using
 the templates below. Add `flow.md` when the context has lifecycle or process
-flows, and `naming.md` when its vocabulary is large enough to want a file of its
+flows, and `domain.md` when its vocabulary is large enough to want a file of its
 own.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
@@ -58,7 +58,7 @@ of repository, so a context holding both has split one answer across two files.
 Pick per context, not per repository, though in practice a repository lands on
 one of them throughout.
 
-**`naming.md` is optional and its absence is not a missing file.** A context
+**`domain.md` is optional and its absence is not a missing file.** A context
 either gives its vocabulary a file or keeps the same `term` chapters at the end
 of `domain.md`; the chapter, its `type`, its `aliases`, and the `related` link
 to where the term is modelled are identical either way, and so is the address
@@ -80,7 +80,7 @@ filenames. `context-map.md` is `.domain`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
 tree above — `skills.md` or `features.md`, `model.md`, `flow.md`,
-`dependencies.md`, `naming.md`, then any `flow.<name>.md` in filename order.
+`dependencies.md`, `domain.md`, then any `flow.<name>.md` in filename order.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
@@ -145,7 +145,7 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     integration prose.
   - For each relationship, document DDD pattern, integration mechanism,
     contract, and why/what the dependency relies on.
-- **naming.md** — The context's ubiquitous-language naming registry: one
+- **domain.md** — The context's ubiquitous-language naming registry: one
   chapter per key term, headed by the canonical term itself. Surface synonyms
   are recorded in the `aliases` metadata field; a `related` reference links the
   term to the chapter where it is modeled. This gives every synonym (code class
@@ -167,7 +167,7 @@ instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
-  `features.md` or `skills.md`, and every Term chapter — in `naming.md` or
+  `features.md` or `skills.md`, and every Term chapter — in `domain.md` or
   under `domain.md`'s `## Ubiquitous Language` grouping — must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
@@ -175,7 +175,7 @@ instructions.
   issue link (`issue`) are included only when they have a value.
 - Every file in `.domain` — `context-map.md` and, per bounded context,
   `domain.md`, `features.md` or `skills.md`, `model.md`, `flow.md` and each
-  `flow.<name>.md` (when present), `dependencies.md`, and `naming.md` (when
+  `flow.<name>.md` (when present), `dependencies.md`, and `domain.md` (when
   present) — must also carry the file-level
   metadata block described in
   `devbook-chapter-metadata.md`, placed directly
@@ -519,7 +519,7 @@ type: ubiquitous-language
 \`\`\`
 
 > Present only where the context keeps its terms here rather than in
-> `naming.md`. A grouping heading, so its descriptive text *is* its name.
+> `domain.md`. A grouping heading, so its descriptive text *is* its name.
 
 ### <Canonical Term>
 
@@ -756,7 +756,7 @@ type: dependencies
 ```
 
 
-### naming.md
+### domain.md
 
 ```markdown
 # <Bounded Context Name>

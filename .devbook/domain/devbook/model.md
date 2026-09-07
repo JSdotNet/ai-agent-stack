@@ -102,5 +102,5 @@ classDiagram
   transitioning when it is resolved.
 - **The stamp lives in the consuming repository.** It relates to a folder by adoption and to a
   migration by id presence in the ledger, never by comparing versions. It is
-  [Plugin Authoring](../plugin-authoring/naming.md#stamp)'s kernel concept, held here only for
+  [Plugin Authoring](../plugin-authoring/domain.md#stamp)'s kernel concept, held here only for
   the keys this context owns.

@@ -23,7 +23,7 @@ a chapter and who approved it belongs to
 
 ```meta
 type: aggregate
-related: [".devbook/domain/devbook/naming.md#chapter"]
+aliases: [section, heading, node]
 ```
 
 The consistency boundary of this context, and the unit everything else is expressed in terms
@@ -54,7 +54,7 @@ top-level heading carries a block of its own describing the document as a whole.
 
 ```meta
 type: value-object
-related: [".devbook/domain/devbook/naming.md#meta-block"]
+aliases: [meta fence, metadata block]
 ```
 
 The fenced `meta` (YAML) block under a heading: flat keys, no nesting, and equal by value. It
@@ -71,7 +71,7 @@ spelling.
 
 ```meta
 type: entity
-related: [".devbook/domain/devbook/naming.md#annotation"]
+aliases: [note, comment, thread]
 ```
 
 A review note living in the chapter, in a second fenced block, beside the passage it is about.
@@ -109,7 +109,7 @@ heading level.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/naming.md#devbook-folder", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
@@ -151,7 +151,8 @@ set and adding a sixth is a contract change rather than a folder.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/devbook/naming.md#reference-graph", ".devbook/arc42/09-architecture-decisions.md#automation-owns-the-_meta-refresh"]
+aliases: [graph, graph.json]
+related: [".devbook/arc42/09-architecture-decisions.md#automation-owns-the-_meta-refresh"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -198,7 +199,7 @@ rather than maintained.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/naming.md#reconcile", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#every-install-skill-is-called-install"]
+related: [".devbook/domain/devbook/domain.md#reconcile", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#every-install-skill-is-called-install"]
 ```
 
 Brings a repository level with the installed release, in six phases — detect, resolve, plan,
@@ -220,7 +221,7 @@ wrappers each host reads, the CI workflow templates, and devbook's own marker-fe
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/naming.md#derived-index"]
+related: [".devbook/domain/devbook/domain.md#derived-index"]
 ```
 
 Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
@@ -235,7 +236,7 @@ request and the daily `devbook-check` schedule opens a pull request when the out
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/naming.md#drift-verdict", ".devbook/domain/devbook/features.md#convert-between-chapter-and-code"]
+related: [".devbook/domain/devbook/domain.md#drift-verdict", ".devbook/domain/devbook/skills.md#to-spec-aggregate"]
 ```
 
 The two directions between a chapter and the code that implements it, over five kinds:
@@ -248,7 +249,7 @@ differently; a domain service is the deliberate exception and keeps its own pair
 
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
-`naming.md` aliases, then the building-block view, then the observed naming convention, and
+`domain.md` aliases, then the building-block view, then the observed naming convention, and
 reports `unresolved` rather than guessing.
 
 ## Shared Value Objects
@@ -263,7 +264,7 @@ type: shared-value-objects
 
 ```meta
 type: value-object
-related: [".devbook/domain/devbook/naming.md#chapter-address"]
+aliases: [reference, anchor, path#slug]
 ```
 
 `<path>#<heading-slug>` for a chapter, or the bare `<path>` for a file: the repository-relative
@@ -279,7 +280,7 @@ stored ids to reconcile.
 
 ```meta
 type: value-object
-related: [".devbook/domain/devbook/naming.md#test-reference"]
+aliases: [tests entry, test link]
 ```
 
 `<level>:<runner>:<selector>`, where only the first two colons delimit — a selector routinely
@@ -290,3 +291,78 @@ Admissible where a code path is not, for one reason: it is executable. An entry 
 resolving fails a run, out loud, in the same CI that runs the suite. A runner outside the known
 table is a warning rather than an error — the pairing still holds, only the run command is
 lost.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
+> layer, stamp, migration, host — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Derived Index
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [_meta, generated index, build output]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/09-architecture-decisions.md#automation-owns-the-_meta-refresh"]
+```
+
+Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
+emitted deterministically so a clean `git diff` proves they are current.
+
+A session never reads one as a source of fact and never regenerates one. Two branches that each
+touch one chapter both rewrite the same JSON, and the conflict is only resolvable by re-running
+the generator — so the refresh belongs to automation, and the check that runs in a session
+writes nothing.
+
+### Adoption
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [adopted folders, scope]
+related: [".devbook/domain/devbook/domain.md#devbook-folder", ".devbook/domain/plugin-authoring/domain.md#devbook-folder"]
+```
+
+Which of the five folders a repository has taken on, and in which layout. It is partial by
+design: the tooling emits scopes for the folders that exist, so a folder nobody adopted has no
+index, no rule firing, and no line in a report.
+
+Adoption is the convention's own install and never a flow's job — a folder flow in a repository
+that has not adopted the folder stops and says so.
+
+### Reconcile
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [install, upgrade, sync]
+related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync"]
+```
+
+Bringing a repository level with the installed release in one idempotent operation covering
+first install, upgrade, a change of adopted folders, and an outstanding migration.
+
+*Sync* is the word to avoid: it suggests two sides converging, and this one only ever moves the
+repository toward the release, reporting what a person has customized rather than restoring it.
+
+### Drift Verdict
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [aligned, code-ahead, spec-ahead, conflict, unresolved]
+related: [".devbook/domain/devbook/domain.md#spec-converter", ".devbook/domain/devbook/flow.md"]
+```
+
+Where a chapter and its implementation stand relative to each other, in five values. `aligned`
+reports and stops, `code-ahead` and `spec-ahead` say which side moves, and `conflict` and
+`unresolved` both stop and ask — never guess.
+
+The verdict is what makes the two converter directions one subject rather than two. It is
+established before anything is written, from source and tests alone.

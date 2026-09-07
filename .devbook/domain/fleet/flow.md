@@ -6,7 +6,7 @@ related: [".devbook/domain/fleet/domain.md#sweep", ".devbook/domain/fleet/domain
 ```
 
 > How a sweep moves, and how a worker ends. Structure is in [model.md](model.md); the terms are
-> in [naming.md](naming.md).
+> in [domain.md](domain.md#ubiquitous-language).
 
 ## A Sweep, End to End
 

@@ -16,7 +16,7 @@ the `.arc42` flow.
 
 This view is the second rung of counterpart resolution for every other skill in
 this family. An accurate building block view is what lets a capture or build
-pass narrow to one project when `naming.md` has no alias — so keeping it current
+pass narrow to one project when `domain.md` has no alias — so keeping it current
 has value well beyond the chapter itself.
 
 `.arc42` has its own folder rules, and they differ from `.domain`:
@@ -83,7 +83,7 @@ not copy.
    `.domain/context-map.md` only for the bounded-context alignment.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
-   `naming.md` aliases first, then `.arc42/05-building-block-view.md`, then the
+   `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
    observed naming convention. Record which rung matched. Stop at `unresolved`
    if the ladder yields no single candidate or more than one.
 

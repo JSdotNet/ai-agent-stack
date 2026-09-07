@@ -58,7 +58,7 @@ entry names a test, and the counterpart still has to be resolved by naming. See
 "Linking test cases" in `devbook-chapter-metadata.md`.
 
 1. **Term aliases.** Look up the chapter's canonical term in the context —
-   `.domain/<context>/naming.md`, or `domain.md`'s `## Ubiquitous Language`
+   `.domain/<context>/domain.md`, or `domain.md`'s `## Ubiquitous Language`
    grouping where the context keeps its terms there — and read its `aliases`
    field. Search for the `term` chapter, never for the filename. Those entries are
    exactly the surface names the concept wears in code — class names, identifier

@@ -8,6 +8,9 @@ related: [".devbook/domain/context-map.md#delivery-surface-collector"]
 > Two capability groups, and one deliberate absence. Everything here is about what is still true
 > after the session has ended.
 
+**This context keeps `features.md` rather than `skills.md`, because it ships no skills** — one
+MCP server, no page, and nothing a person invokes by name.
+
 ## Record a Run
 
 ```meta
@@ -42,7 +45,7 @@ marker is the only thing that separates them.
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery-surface-collector/naming.md#headless"]
+related: [".devbook/domain/delivery-surface-collector/domain.md#headless"]
 ```
 
 Leave the render tool names absent rather than stubbing them. A caller resolves each capability

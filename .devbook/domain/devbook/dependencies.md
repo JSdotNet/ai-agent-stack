@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/09-architect
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
-| Plugin Authoring | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [naming.md](../plugin-authoring/naming.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
+| Plugin Authoring | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper the install writes | The host's own schemas | The host decides what loads; this context writes to the shape and has no say in it. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper the install writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
 | Copilot Extension SDK | Conformist | `extensions/devbook-graph/`, registering two canvases | `copilot-extension.json` | The graph canvas is a host capability this context uses and does not define. |

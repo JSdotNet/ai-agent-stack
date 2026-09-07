@@ -115,12 +115,12 @@ devbook is absent.
 | `.devbook/config.json` — four engine keys plus one stamp per component | Delivery owns the four keys; each component owns its own stamp | Devbook Config reads all of it; every install skill writes one key | `resources/config.schema.json` |
 | The schedule catalog entry | Delivery Schedule | Whatever scheduler the live session exposes | `resources/schedule-catalog-contract.md` |
 | The sweep manifest and the worker result files | Fleet | Its own workers, across sessions that cannot see each other | `resources/fleet-issue-sweep-contract.md` |
-| The plugin folder shape and the two manifests | Plugin Authoring | Every plugin; checked by `tools/check-assets.mjs` | [naming.md](plugin-authoring/naming.md) and the hosts' own schemas |
+| The plugin folder shape and the two manifests | Plugin Authoring | Every plugin; checked by `tools/check-assets.mjs` | [domain.md](plugin-authoring/domain.md) and the hosts' own schemas |
 
 ## Strategic rules
 
 - **A lower layer never names a higher one.** The `dependencies` array is the whole statement
-  of the [layer](plugin-authoring/naming.md#layer) order, and a context that would have to name
+  of the [layer](plugin-authoring/domain.md#layer) order, and a context that would have to name
   something above it has found a published language it should be conforming to instead.
 - **A role, a tracker, and a surface are bound per repository, never declared.** They are how a
   context reaches capability it does not own without acquiring a dependency on it, and a
@@ -131,9 +131,9 @@ devbook is absent.
 - **Nobody writes another context's state.** One component's stamp, another context's `ext`
   namespace, and the engine's four config keys each have exactly one writer.
 - **Two contexts never share a term with two meanings.** Where a host's word differs from this
-  repository's, the host's word is recorded as an alias in the owning context's `naming.md` and
+  repository's, the host's word is recorded as an alias in the owning context's `domain.md` and
   never adopted — *Routines* and *Automations* both resolve to
-  [Schedule](delivery-schedule/naming.md#schedule).
+  [Schedule](delivery-schedule/domain.md#schedule).
 
 ## Plugin Authoring
 

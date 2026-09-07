@@ -71,7 +71,7 @@ to build the draft silently because its parent is agreed.
 
 | Chapter element | What building it requires | Where to check |
 |---|---|---|
-| Heading (canonical name) | A root type whose name resolves to this term through `naming.md` aliases | The context's domain project |
+| Heading (canonical name) | A root type whose name resolves to this term through `domain.md` aliases | The context's domain project |
 | Identity | An id type and an assignment path — constructor argument, factory, or store-assigned | The root's constructor and factory methods |
 | Responsibility | Public methods that let a caller do what the chapter describes, and nothing beyond it | The root's public surface |
 | Consistency boundary | One transactional unit: a repository whose granularity is this root, owned collections held inline, other aggregates referenced by id | The repository interface and the persistence mapping |
@@ -150,7 +150,7 @@ unsettled sub-chapter, and leave it out of the invariants list.
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read the target `##` chapter,
    every `###` sub-chapter under it, every event chapter it raises, the shared
-   groupings it draws from, the context's `naming.md`, and `dependencies.md` for
+   groupings it draws from, the context's `domain.md`, and `dependencies.md` for
    the cross-context relationships and published-language entries involved. Do
    not read the whole `.domain` folder.
 
@@ -181,7 +181,7 @@ unsettled sub-chapter, and leave it out of the invariants list.
    person decides which side is wrong.
 
 6. **Extract the ubiquitous language.** Collect the canonical terms the change
-   must use from the chapters and from `naming.md`, each with its `aliases`, so
+   must use from the chapters and from `domain.md`, each with its `aliases`, so
    an implementation reuses existing surface names instead of inventing a new
    synonym. Include the root's term, every owned type's term, every enum
    member's term, each event's term and payload field terms, and the terms of

@@ -17,7 +17,7 @@ related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/09-ar
 | [Devbook Collaboration](../devbook-collaboration/dependencies.md), [Delivery Schedule](../delivery-schedule/dependencies.md) | Conformist, read-only | Reads their stamps and invokes their install skills during a fan-out | The stamp shape and each install skill's name | Every component's stamp stays with the component. This context decides *whether* an install runs and never what it does. |
 | [Fleet](../fleet/dependencies.md), the three surfaces | Conformist, read-only | Reports whether each is installed, enabled, and at what version | The marketplace entries and manifests | Naming a plugin is not depending on one. Every row degrades to `not installed`. |
 | The host's own plugin state | Conformist, **and a known divergence** | Reads the host's config directory, its installed-plugin file, its marketplace clones, and three settings layers merged nearest-last | The host's own file layout | Where a plugin is installed and whether it is enabled is a fact about a host and nothing else, so an asset answering it either names those files or answers nothing. |
-| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `scripts/` run in place from the plugin root | [naming.md](../plugin-authoring/naming.md) | It is packaged like everything else here. |
+| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `scripts/` run in place from the plugin root | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like everything else here. |
 
 ## Inbound dependents (known)
 

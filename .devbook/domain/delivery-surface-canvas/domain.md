@@ -21,7 +21,7 @@ one plugin here that ships a single host's manifest and takes no marketplace ent
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-surface-canvas/naming.md#view"]
+aliases: [render, panel content]
 ```
 
 What is currently shown on a canvas, and the history behind it. It is the only aggregate here,
@@ -56,7 +56,7 @@ would make the Back button lie, and one that merged views would make the breadcr
 
 ```meta
 type: entity
-related: [".devbook/domain/delivery-surface-canvas/naming.md#view"]
+related: [".devbook/domain/delivery-surface-canvas/domain.md#view"]
 ```
 
 One step in the history a `push` left behind, identified by its position. It exists so a
@@ -67,7 +67,7 @@ context's memory.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery-surface-canvas/naming.md#canvas", ".devbook/tech/hosts.md#copilot-extension-sdk"]
+related: [".devbook/domain/delivery-surface-canvas/domain.md#canvas", ".devbook/tech/hosts.md#copilot-extension-sdk"]
 ```
 
 Registers the two canvases, serves the viewer pages on a loopback origin at an ephemeral port,
@@ -81,3 +81,46 @@ pages.
 **This is the plugin's only transport, and it is why the contract matches operation names rather
 than a transport.** The two operations arrive as canvas actions rather than namespaced tools, and
 the surface contract is still satisfied — a surface is not required to be an MCP server.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — surface,
+> capability group, plugin — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Canvas
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [panel, extension canvas]
+related: [".devbook/domain/delivery-surface-canvas/domain.md#canvas-transport", ".devbook/tech/hosts.md#copilot-extension-sdk"]
+```
+
+The host panel a viewer page is registered into, and this plugin's only transport. Two are
+registered: one for diagrams, one for documents.
+
+It is the reason the surface contract matches operation names and never a transport. These two
+operations arrive as canvas actions rather than as namespaced tools, and the contract is still
+satisfied — a surface is not required to be an MCP server.
+
+### Preview
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [live view, rendered artifact]
+related: [".devbook/domain/delivery-surface-canvas/features.md#stay-a-preview"]
+```
+
+What every render here produces, and what none of them is allowed to stop being: a live view of a
+file that already exists on disk.
+
+Rendering the same source that was written, and storing none of it, is what keeps a surface from
+becoming a second answer to what a run produced. A rendered view nobody saved is not a record of
+anything.

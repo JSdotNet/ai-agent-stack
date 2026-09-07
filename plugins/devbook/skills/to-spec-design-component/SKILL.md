@@ -91,7 +91,7 @@ chapter as accepted practice.
    repository has one.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
-   `naming.md` aliases first, then `.arc42/05-building-block-view.md`, then the
+   `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
    observed naming convention. Record which rung matched. Stop at `unresolved`
    if the ladder yields no single candidate or more than one.
 

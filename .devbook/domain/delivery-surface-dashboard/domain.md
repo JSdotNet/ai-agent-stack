@@ -20,7 +20,8 @@ from the live tool list. It declares no dependency and names no engine.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-surface-dashboard/naming.md#run-record", ".devbook/domain/delivery/domain.md#run"]
+aliases: [run, run store, run file]
+related: [".devbook/domain/delivery/domain.md#run"]
 ```
 
 One run as this context holds it: stages with status and output, the prompt history, QA
@@ -80,7 +81,7 @@ produced.
 
 ```meta
 type: value-object
-related: [".devbook/domain/delivery-surface-dashboard/naming.md#telemetry"]
+aliases: [tool activity, token usage, insight panel]
 ```
 
 Tool calls, sub-agent use, and token usage, folded into the record by hooks running on tool
@@ -105,7 +106,7 @@ an abandoned one — both look idle by every other signal, and only one should b
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-surface-dashboard/naming.md#viewer"]
+aliases: [page, panel, dashboard]
 ```
 
 The three pages: the run timeline, the Mermaid diagram viewer, and the Markdown document viewer.
@@ -136,7 +137,7 @@ is what makes a drill-down steppable, so a view has identity within its viewer.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery-surface-dashboard/naming.md#run-record"]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#run-record"]
 ```
 
 Writes the run's report from what was recorded: prompt history, the stage table, each stage's
@@ -160,3 +161,30 @@ record, and warns when the session's context gauge crosses a threshold.
 Invocation semantics: event-triggered, by the host, outside any run's control flow. It is the
 one thing in this marketplace that measures a session rather than being told about it — which is
 also why it is the one place this context is host-specific, structurally rather than by omission.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — surface,
+> capability group, MCP server — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Idleness
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [stalled, abandoned]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#handoff-marker"]
+```
+
+A run whose session ended or that nothing has advanced for hours. It is derived on read and never
+stored, because a stored idleness is indistinguishable from a stale one.
+
+A deliberately parked run is idle by every one of those signals and is not abandoned. The handoff
+marker is the only thing that separates them — and separating them is what a later `start_run`
+needs in order to reattach to one and refuse the other.

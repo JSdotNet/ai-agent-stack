@@ -21,7 +21,7 @@ reserves and never interprets.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/devbook-collaboration/naming.md#review-pass", ".devbook/domain/devbook/domain.md#meta-block"]
+related: [".devbook/domain/devbook-collaboration/domain.md#review-pass", ".devbook/domain/devbook/domain.md#meta-block"]
 ```
 
 One chapter's position in a review, held entirely in `ext.devbook-collaboration.*` keys inside
@@ -49,7 +49,7 @@ is no keys at all.
 
 ```meta
 type: entity
-related: [".devbook/domain/devbook-collaboration/naming.md#finding"]
+aliases: [open-n, comment, objection]
 ```
 
 One unresolved objection, as one key — `open-1`, `open-2` — rather than an entry in a list. It
@@ -57,13 +57,14 @@ has identity within the review because it is resolved individually, and the flat
 lets it be removed without rewriting its siblings, in a block grammar that has no nesting.
 
 One line is the whole budget. A finding that needs a paragraph is a review comment about the
-chapter's content, and belongs in an [annotation](../devbook/naming.md#annotation) beside the
+chapter's content, and belongs in an [annotation](../devbook/domain.md#annotation) beside the
 passage it is about.
 
 ### Reviewer
 
 ```meta
 type: value-object
+aliases: [assignee, owner]
 ```
 
 One handle, name, or role — never a list. Two reviewers is two review passes, because a state
@@ -73,7 +74,7 @@ that says "awaiting someone" cannot tell you which of them the chapter is actual
 
 ```meta
 type: enum
-related: [".devbook/domain/devbook-collaboration/naming.md#review-pass"]
+related: [".devbook/domain/devbook-collaboration/domain.md#review-pass"]
 ```
 
 `requested`, `changes-requested`, `cleared`. Three values, each naming who owes the next move:
@@ -85,7 +86,8 @@ state that obliges no one.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-collaboration/naming.md#approval", ".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung"]
+aliases: [sign-off, agreed]
+related: [".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung"]
 ```
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,
@@ -104,7 +106,7 @@ which is a coordination across two owners rather than a transition of one.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook-collaboration/naming.md#review-pass"]
+related: [".devbook/domain/devbook-collaboration/domain.md#review-pass"]
 ```
 
 Sweeps the adopted folders and reports what is awaiting whom, and which approvals have gone
@@ -152,3 +154,42 @@ flow configuration or in somebody's memory.
   out with it.
 - **An approval is of what was read, not of the heading.** Nothing may re-assert it from a
   previous approval, a cleared review, or a version comparison.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. Both of these keep two nearby ideas
+> apart: a review is not an approval, and cleared is not agreed.
+
+### Review Pass
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [review, review state, review cycle]
+related: [".devbook/domain/devbook-collaboration/domain.md#chapter-review", ".devbook/domain/devbook-collaboration/flow.md"]
+```
+
+One chapter's trip through `requested`, `changes-requested`, and `cleared`, held as keys in
+that chapter's own block. Each value names who owes the next move — the reviewer, the author,
+nobody — which is the only question the state exists to answer.
+
+There is no fourth value for work in progress. A review nobody has recorded a verdict on is
+still `requested`, and a state that obliges no one is a state that hides a stall.
+
+### Stale Approval
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [lapsed approval]
+related: [".devbook/domain/devbook-collaboration/domain.md#review-queue"]
+```
+
+An approval still written on a chapter whose content has moved under it. It is a reporting
+concept rather than a state: nothing transitions a chapter into it, and the queue sweep is what
+surfaces it, because a chapter cannot notice its own approval has expired.

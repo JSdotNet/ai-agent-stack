@@ -40,7 +40,7 @@ The domain service chapter's parts and the code that evidences each one:
 
 | Chapter element | Code and test evidence |
 |---|---|
-| Heading (the bare name) | The service type name, after resolving through `naming.md` aliases |
+| Heading (the bare name) | The service type name, after resolving through `domain.md` aliases |
 | Responsibility | What the service's methods accomplish in domain terms, taken together |
 | Why not on an aggregate | The evidence that the behaviour spans aggregates or needs data no single root owns: which roots it loads, which it mutates, what it reads across boundaries |
 | Coordinated aggregates and policies | Every aggregate the service loads, mutates, or saves, and every other service or policy it invokes |
@@ -73,11 +73,11 @@ evidence either way.
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read only the target context's
-   `domain.md` and `naming.md`, plus `dependencies.md` when the service reaches
+   `domain.md` and `domain.md`, plus `dependencies.md` when the service reaches
    across a context boundary.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
-   `naming.md` aliases first, then `.arc42/05-building-block-view.md`, then the
+   `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
    observed naming convention. Record which rung matched. Stop at `unresolved`
    if the ladder yields no single candidate or more than one.
 

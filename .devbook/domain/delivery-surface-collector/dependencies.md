@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#delivery-surface-collector", ".devbook
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
 | [Delivery](../delivery/dependencies.md) | Conformist to a Published Language | Implements the lifecycle and export tool names, and deliberately not the render ones | `resources/surface-contract.md`: `delivery.surface.lifecycle@1`, `.export@1` | Declaring exactly the names of the groups it answers is what makes it substitutable for another implementation of those groups. |
-| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `mcp/<server>/` | [naming.md](../plugin-authoring/naming.md) | It is packaged like everything else here. |
+| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `mcp/<server>/` | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like everything else here. |
 | Model Context Protocol | Conformist | One MCP server over stdio, plain Node, no listening socket | The protocol's own schemas | The transport is how a caller reaches it. There is no page and no port. |
 | The local filesystem, outside the repository | Conformist | One JSON file per run, keyed by worktree path, root overridable | Its own store layout | A run must survive a session restart and must never appear in `git status`. |
 

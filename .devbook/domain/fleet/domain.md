@@ -22,7 +22,8 @@ of the engine.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/fleet/naming.md#sweep", ".devbook/arc42/05-building-block-view.md#fan-out-state"]
+aliases: [issue sweep, triage pass, fan-out]
+related: [".devbook/arc42/05-building-block-view.md#fan-out-state"]
 ```
 
 One pass over a repository's open items: what was triaged, what was claimed, what was proposed
@@ -52,7 +53,7 @@ files *are* the coordination surface, and anything not written to one did not ha
 
 ```meta
 type: entity
-related: [".devbook/domain/fleet/naming.md#worker"]
+aliases: [background session, resolver]
 ```
 
 One spawned session resolving one item in its own worktree, identified inside the sweep by
@@ -66,7 +67,7 @@ A worker cannot talk to the sweep or to another worker. Everything it has to say
 
 ```meta
 type: entity
-related: [".devbook/domain/fleet/naming.md#triage-verdict"]
+related: [".devbook/domain/fleet/domain.md#triage-verdict"]
 ```
 
 An item triage judged no longer relevant, put forward for closing with the reason. It is an
@@ -77,7 +78,7 @@ unanswered and re-proposed next time, which is a different thing from being decl
 
 ```meta
 type: value-object
-related: [".devbook/domain/fleet/naming.md#triage-verdict"]
+aliases: [relevance judgement]
 ```
 
 What one pass concluded about one item: relevant and pickable, colliding with work in flight,
@@ -88,7 +89,7 @@ nothing here is remembered from the last one except the closure proposals nobody
 
 ```meta
 type: enum
-related: [".devbook/domain/fleet/naming.md#claim"]
+related: [".devbook/domain/fleet/domain.md#claim"]
 ```
 
 `ready-for-pickup`, `in-progress`, `needs-validation` — carried as labels on the tracker rather
@@ -99,7 +100,7 @@ alone, by a person who has never heard of this plugin and has no access to any s
 
 ```meta
 type: domain-service
-related: [".devbook/domain/fleet/naming.md#park", ".devbook/domain/delivery/domain.md#run"]
+related: [".devbook/domain/fleet/domain.md#park", ".devbook/domain/delivery/domain.md#run"]
 ```
 
 What one worker does with its item: claim it, cut a worktree and a branch, run the resolution
@@ -118,7 +119,7 @@ request is the review surface, and a change that cannot demonstrate itself never
 
 ```meta
 type: domain-service
-related: [".devbook/domain/fleet/naming.md#brief"]
+aliases: [report, morning brief]
 ```
 
 Reads a sweep back from its manifest and its worker result files and writes the report: what was
@@ -133,7 +134,7 @@ on the day. The sweep follows this same format for its own closing report.
 
 ```meta
 type: domain-event
-related: [".devbook/domain/fleet/domain.md#pickup-state", ".devbook/domain/plugin-authoring/naming.md#tracker"]
+related: [".devbook/domain/fleet/domain.md#pickup-state", ".devbook/domain/plugin-authoring/domain.md#tracker"]
 ```
 
 Published when triage takes an item for this sweep, as a label change on the tracker. The
@@ -191,3 +192,43 @@ failure alike.
   must check, which is what makes parking an honest outcome rather than a quiet failure.
 - **The file is written before the session ends**, because a session that ends without one has
   said nothing and there is no second chance to say it.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
+> layer, tracker, gate — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Park
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [handoff, needs-validation]
+related: [".devbook/domain/fleet/domain.md#worker-run", ".devbook/domain/delivery/domain.md#personal-validation"]
+```
+
+What a worker does when its change cannot prove itself: commit it, leave it in its worktree,
+label the item `needs-validation`, and write a brief naming exactly what a person has to look at.
+
+Parking is what an unattended run does wherever a gate would be. It is neither approval nor
+failure, and the distinction matters — a parked change is finished work waiting on a judgement,
+not broken work waiting on a fix.
+
+### Claim
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [pickup, in-progress]
+related: [".devbook/domain/fleet/domain.md#pickup-state", ".devbook/domain/fleet/domain.md#issue-claimed"]
+```
+
+Taking an item for this sweep, recorded as a label on the tracker rather than in this context's
+own files. The tracker is the transport because a claim has to be legible to a person who has
+never heard of this plugin — a claim only the coordination folder knows about is not a claim.

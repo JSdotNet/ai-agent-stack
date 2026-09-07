@@ -2,7 +2,7 @@
 
 ```meta
 type: model
-related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 > Structural view of the context: what a marketplace holds, what a plugin is made of, and what

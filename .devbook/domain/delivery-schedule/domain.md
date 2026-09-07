@@ -22,7 +22,8 @@ and anything a target delegates to, which is a binding the consuming repository 
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-schedule/naming.md#schedule", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
+aliases: [routine, automation, trigger, cron entry]
+related: [".devbook/arc42/05-building-block-view.md#schedule-plugin"]
 ```
 
 One trigger: a cadence, a target, the plugins that target needs, and a prompt self-contained
@@ -74,7 +75,7 @@ and an unattended run parks where a gate would be, so scheduling a flow schedule
 
 ```meta
 type: value-object
-related: [".devbook/domain/delivery-schedule/naming.md#preamble"]
+related: [".devbook/domain/delivery-schedule/domain.md#preamble"]
 ```
 
 What the cloud session is given, assembled from the shared preamble and the schedule's own task
@@ -85,7 +86,7 @@ anything the prompt does not say is not available to be remembered.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-schedule/naming.md#entry-point"]
+aliases: [schedule skill, schedulable procedure]
 ```
 
 A `schedule-*` skill that picks its own input, so it needs no person to hand it one — the top
@@ -110,7 +111,7 @@ needs a person, and a person is exactly what an unattended run does not have.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 Which schedules this repository chose and any cadence it overrode, recorded under
@@ -143,7 +144,7 @@ somebody's choice — or silently keeping it.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery-schedule/naming.md#scheduler"]
+related: [".devbook/domain/delivery-schedule/domain.md#scheduler"]
 ```
 
 Finds whatever the live session exposes that turns a name, a cron expression, a repository, and
@@ -176,7 +177,7 @@ nobody re-reads.
 
 ```meta
 type: domain-event
-related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/plugin-authoring/naming.md#tracker"]
+related: [".devbook/domain/delivery-schedule/domain.md#entry-point", ".devbook/domain/plugin-authoring/domain.md#tracker"]
 ```
 
 Published when an unattended run has something to say: a report as an issue labelled
@@ -203,3 +204,60 @@ nobody watched reaches a person, so a run that publishes nothing has, from outsi
   of its own within two months.
 - **Nothing personal travels.** The environment, the model, and the scheduler ids stay in the
   scheduler; nothing published here would be wrong for the next person who opens the file.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — plugin,
+> layer, schedule, flow skill — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Catalog
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [schedule catalog, trigger files]
+related: [".devbook/domain/delivery-schedule/domain.md#schedule", ".devbook/domain/delivery-schedule/domain.md#catalog-check"]
+```
+
+The set of schedule files this plugin ships — the defaults, readable as defaults. A repository
+selects from it and overrides a cadence in its own stamp rather than by editing the file, so an
+upgrade can move a shipped default without silently reverting or silently keeping somebody's
+choice.
+
+### Preamble
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [unattended rules]
+related: [".devbook/domain/delivery-schedule/domain.md#prompt"]
+```
+
+The unattended rules every prompt starts with, stated once in one file: park rather than pass a
+gate, never merge or approve or close or delete, publish as a pull request or a labelled issue,
+update what the last run left open, carry nothing personal into the repository.
+
+One file rather than six copies, because this is the most safety-critical prose in the plugin and
+six copies drift.
+
+### Scheduler
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [the host's scheduler]
+related: [".devbook/domain/delivery-schedule/domain.md#scheduler-resolution", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
+```
+
+Whatever the live session exposes that turns a name, a cron expression, a repository, and a
+prompt into a scheduled session. It is resolved by capability and never named, and **absent is a
+normal outcome** — the operation reports it and changes nothing.
+
+The scheduler is also where everything personal lives: the environment, the model, and the entry
+ids. Matching by name is what makes writing any of that into the repository unnecessary.

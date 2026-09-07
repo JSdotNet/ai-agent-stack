@@ -13,7 +13,7 @@ related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/tdr/4-deliv
 
 | Depends on (context/module) | DDD pattern | Integration mechanism | Contract | Why |
 |---|---|---|---|---|
-| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [naming.md](../plugin-authoring/naming.md) | It is packaged like everything else here, and the kernel is what "packaged" means. |
+| Plugin Authoring | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [domain.md](../plugin-authoring/domain.md#ubiquitous-language) | It is packaged like everything else here, and the kernel is what "packaged" means. |
 | [Devbook](../devbook/dependencies.md) | **Undeclared** | Five folder flows name the folders, restate three schema rules, and run devbook's generator at the path devbook's install writes it to | None, on either side | Eleven of sixteen flows work with devbook absent, so it is not an L1 extension; declaring it would demote all twenty-four skills. Logged as [debt record 4](../../arc42/tdr/4-delivery-depends-on-devbook.md). |
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
 | A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, or `.backlog/` chapters | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |

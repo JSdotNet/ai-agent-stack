@@ -20,7 +20,8 @@ dependency and names no engine.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery-surface-collector/naming.md#run-record", ".devbook/domain/delivery-surface-dashboard/domain.md#run-record"]
+aliases: [run, run store, run file]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#run-record"]
 ```
 
 One run kept for later rather than shown now: stages with status, output and repeat count, gate
@@ -66,7 +67,7 @@ writing Markdown and not HTML.
 
 ```meta
 type: value-object
-related: [".devbook/domain/delivery-surface-dashboard/domain.md#handoff-marker", ".devbook/domain/fleet/naming.md#park"]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#handoff-marker", ".devbook/domain/fleet/domain.md#park"]
 ```
 
 The note a deliberately handed-off run leaves behind, and the difference between a run to
@@ -80,7 +81,7 @@ and it is the reason a marker is a stored value while idleness is derived.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/delivery-surface-collector/naming.md#headless"]
+related: [".devbook/domain/delivery-surface-collector/domain.md#headless"]
 ```
 
 Writes the run's report from what was recorded: prompt history, the stage table, each stage's
@@ -91,3 +92,46 @@ Invocation semantics: command-invoked, at the end of a run or long after it. **M
 Markdown.** A self-contained HTML report with evidence inlined is a rendering job, and rendering
 is the half this surface does not answer — so asking for another format still writes Markdown and
 says so in the result rather than failing the run over a file extension.
+
+## Ubiquitous Language
+
+```meta
+type: ubiquitous-language
+```
+
+> The terms this context owns that are not chapters above. A term naming an aggregate, service,
+> event, or field carries its aliases on that chapter instead. The kernel vocabulary — surface,
+> capability group, MCP server — is defined once in [Plugin Authoring](../plugin-
+> authoring/domain.md#ubiquitous-language).
+
+### Headless
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [no page, recorded rather than watched]
+related: [".devbook/domain/delivery-surface-collector/domain.md#report-export"]
+```
+
+Recorded rather than shown: no page, no port, nothing rendered. `open_dashboard` answers with no
+URL and says so once.
+
+It is a property of this implementation and never a degraded state. For a scheduled run, an
+unattended worker, or a terminal nobody is looking at, headless is the correct answer and a live
+page would be the wrong one.
+
+### Unanswered Group
+
+```meta
+type: term
+date: 2026-09-08
+aliases: [absent capability, not implemented]
+related: [".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names"]
+```
+
+A capability group whose tool names this surface does not declare, so a caller resolving it finds
+nothing.
+
+Deliberately distinct from a stub. An unanswered group means the caller renders nowhere and knows
+it; a stub means the caller believes a person saw something. That difference is why declaring a
+name you do not implement is forbidden rather than discouraged.

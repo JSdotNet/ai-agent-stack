@@ -12,7 +12,7 @@ not a decision, and lives in [chapter 11](11-risks-and-technical-debt.md) instea
 
 ```meta
 date: 2026-09-02
-related: [".devbook/domain/plugin-authoring/naming.md#marketplace"]
+related: [".devbook/domain/plugin-authoring/domain.md#marketplace"]
 ```
 
 The marketplace is `jsdotnet`, not `jsdotnet-copilot` — this repository is not Copilot-specific.
@@ -28,7 +28,7 @@ marketplace, not renaming plugins.
 
 ```meta
 date: 2026-09-02
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/naming.md#plugin"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/domain/plugin-authoring/domain.md#plugin"]
 ```
 
 Every plugin is self-contained under `plugins/<name>/`, with its own manifests and assets. It
@@ -82,7 +82,7 @@ That is the half of the original that was worth keeping.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
 The layered design puts the five folder-writing skills — one per adopted folder — in
@@ -172,7 +172,7 @@ migration and not a rewrite.
 
 ```meta
 date: 2026-09-04
-related: [".devbook/domain/plugin-authoring/naming.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
+related: [".devbook/domain/plugin-authoring/domain.md#extension-namespace", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
 ```
 
 `devbook-collaboration` records a comment as one single-line finding in the chapter's
@@ -219,7 +219,7 @@ of that.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `delivery` declares eleven extension points and a repository fills them. It never adds one, and
@@ -246,7 +246,7 @@ open one.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/naming.md#stamp"]
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/domain.md#stamp"]
 ```
 
 `.devbook/config.json` carries both the engine's four keys — `bindings`, `extensions`,
@@ -289,7 +289,7 @@ declares in one place, for the same reason the file itself is
 
 **The path is not a dependency.** `delivery` reads that file whether or not the repository
 adopted a single devbook folder, and `devbook` uninstalled costs the engine nothing: reading a
-path is not naming a plugin, and no [layer](../domain/plugin-authoring/naming.md#layer) order
+path is not naming a plugin, and no [layer](../domain/plugin-authoring/domain.md#layer) order
 is touched. What the folder means widens by one file — the chapters plus the wiring — and
 `devbook:install` still owns nothing but the chapter folders.
 
@@ -332,7 +332,7 @@ where that would be recorded.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#tracker"]
+related: [".devbook/domain/plugin-authoring/domain.md#tracker"]
 ```
 
 The closing phase that reports a finished run to the work item is **Work Item Update**, not
@@ -352,7 +352,7 @@ because nothing has run yet — which is the one moment this rename is free.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
 The MCP server that backed the run dashboard stays in `JSdotNet/Copilot` and is not ported
@@ -377,7 +377,7 @@ answers.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface", ".devbook/arc42/05-building-block-view.md#surface-plugins"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/09-architecture-decisions.md#delivery-ships-no-surface", ".devbook/arc42/05-building-block-view.md#surface-plugins"]
 ```
 
 Three plugins implement `delivery.surface.*@1`, none depending on `delivery` or on each other:
@@ -408,7 +408,7 @@ to be swappable. Bind one lifecycle surface per repository.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/domain/plugin-authoring/naming.md#surface"]
+related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/domain/plugin-authoring/domain.md#surface"]
 ```
 
 Each surface exposes exactly the tool names its capability groups name, and nothing else. The
@@ -440,7 +440,7 @@ yet. That is the one moment these renames are free.
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
+related: [".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/05-building-block-view.md#host-slots"]
 ```
 
 `claude-desktop` and `copilot-app` are deleted. Nothing in this marketplace names one host's
@@ -510,7 +510,7 @@ verified on the Copilot host or not at all, which is the open half of the `trial
 
 ```meta
 date: 2026-09-04
-related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#gate", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
 
 A specialist filling a [role or a service](05-building-block-view.md#roles-and-services)
@@ -611,7 +611,7 @@ There is no runtime here, so the runtime view (6), deployment view (7), and qual
 (10) would describe hosts this repository does not own. Constraints (2), context (3), and
 solution strategy (4) are carried by the domain folder's context map and dependencies and by
 the quality goals in chapter 1. Cross-cutting concepts (8) are the naming chapter, and the
-glossary (12) is `naming.md` itself.
+glossary (12) is `domain.md` itself.
 
 Consequence: a reader used to arc42 finds gaps in the numbering. The building-block view, the
 decisions, and the debt are where the substance is, and the numbering is kept so a later
@@ -621,7 +621,7 @@ chapter lands in its place rather than being renumbered in.
 
 ```meta
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
 The three sweep skills that used to sit beside the Claude host profile land in a new `fleet`
@@ -643,10 +643,10 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
-A skill that explains the stack has to name every part of it, and the [layer](../domain/plugin-authoring/naming.md#layer)
+A skill that explains the stack has to name every part of it, and the [layer](../domain/plugin-authoring/domain.md#layer)
 rule says a lower layer never names a higher one. Both cannot hold in the same plugin, which is
 why `devbook-config` is a plugin of its own with an empty `dependencies` array rather than a
 skill inside `devbook`.
@@ -709,7 +709,7 @@ slot the engine does not have yet.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control", ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
+related: [".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/domain/plugin-authoring/domain.md#role", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control", ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
 ```
 
 `arc42`, `csharp-coding`, `qa`, `domain`, `ux`, `documentation`, and `spec-builder` are removed
@@ -759,7 +759,7 @@ plugin keeps its own copy, and the two are free to diverge — nothing here read
 
 ```meta
 date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
+related: [".devbook/domain/plugin-authoring/domain.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
 ```
 
 Every `knowledge-` name inside `devbook` becomes `devbook-`: the two tool folders
@@ -796,7 +796,7 @@ different, only made to keep working.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#schedule", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
+related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
 ```
 
 Everything that runs with nobody watching lands in one plugin, `delivery-schedule`: the nine
@@ -857,7 +857,7 @@ renames it by hand and re-runs `delivery-schedule:install`, which rewrites the e
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
+related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
 ```
 
 Both hosts inject rules scoped to a path glob, and no single file can serve both: Claude reads
@@ -934,7 +934,7 @@ a wrapper that grows a rule is how the second copy gets in.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/domain/plugin-authoring/naming.md#stamp"]
+related: [".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/domain/plugin-authoring/domain.md#stamp"]
 ```
 
 Nothing in the stack maintained a repository's root instruction file. `flow-repo` wrote it
@@ -964,7 +964,7 @@ moved on. Three limits keep it inside the decisions already taken:
   is never read or written.
 
 Consequence: the `materialized` map now holds a section as well as files, and the
-[Stamp](../domain/plugin-authoring/naming.md#stamp) term says so. The contract version is
+[Stamp](../domain/plugin-authoring/domain.md#stamp) term says so. The contract version is
 unchanged, because the chapter schema did not move, and a repository synced before
 `devbook` 1.3.0 gains the section as a plain `create` on its next reconcile. The session-start
 hook keeps its generic text: it is what reaches a session in a repository that never ran a
@@ -1037,7 +1037,7 @@ round, not one per flow.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed", ".devbook/domain/plugin-authoring/naming.md#flow-skill"]
+related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed", ".devbook/domain/plugin-authoring/domain.md#flow-skill"]
 ```
 
 Every flow opens with an **Update Base** phase that fetches the base branch and brings the
@@ -1071,7 +1071,7 @@ repository, and another session can pop what this one pushed.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/naming.md#mcp-server", ".devbook/domain/plugin-authoring/naming.md#extension-point"]
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/domain.md#mcp-server", ".devbook/domain/plugin-authoring/domain.md#extension-point"]
 ```
 
 `delivery` named two MCP servers by id — a guidelines server and a design server, both
@@ -1108,7 +1108,7 @@ repository that disagrees binds the point to `null`.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
 ```
 
 The three surface plugins are `delivery-surface-dashboard`, `delivery-surface-collector`, and
@@ -1145,7 +1145,7 @@ since a rename changes which entry a host installs, not what the entry does.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/ai/02-deliver.md#flow-skills"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/ai/02-deliver.md#flow-skills"]
 ```
 
 `devbook` enforces what a devbook folder holds — the instruction files, the metadata schema,
@@ -1154,7 +1154,7 @@ folder: `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`. The 
 bridge is removed, and `flow-adr`, `flow-tdr`, `flow-architecture`, and `flow-arc42-content`
 are folded into `flow-arc42`.
 
-Three faults, and the name was the smallest. The [naming chapter](../domain/plugin-authoring/naming.md#flow-skill)
+Three faults, and the name was the smallest. The [naming chapter](../domain/plugin-authoring/domain.md#flow-skill)
 says a plugin takes its subsystem's stem and the things inside are named for what they are;
 the bridge held five `flow-*` skills, which are `delivery`'s kind, under `devbook`'s stem.
 `.arc42` was written by five flows across two plugins, with the split drawn by which old
@@ -1186,7 +1186,7 @@ Consequence: `flow-arc42` is the escalation target for a new decision, a cross-c
 redesign, a boundary question, and accepted debt alike, and the record's kind is settled inside
 it. `delivery` ships sixteen flows and `devbook-flows` is no longer published, so a consumer
 that had it enabled sees it reported as not installed and finds the same five under the engine.
-The L2b bridge row in the [layer table](../domain/plugin-authoring/naming.md#layer) keeps its
+The L2b bridge row in the [layer table](../domain/plugin-authoring/domain.md#layer) keeps its
 pattern and, for now, no example.
 
 What this argument covers is the rules. It does not cover the generator path the five folder
@@ -1199,7 +1199,7 @@ flows name, the devbook rules they restate, or the folder names they are called 
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md", ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
+related: [".devbook/domain/plugin-authoring/domain.md", ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
 ```
 
 *Knowledge* is not a term here any more, in prose or in identifiers. The folders are **devbook
@@ -1233,7 +1233,7 @@ Consequence: a grep for the word finds only those two, and finding it anywhere e
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
+related: [".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
 ```
 
 `devbook`'s extension folder is `devbook-graph`, not `devbook-surface-canvas`. It was
@@ -1256,7 +1256,7 @@ blocks describe, and the second canvas the extension registers is `devbook-chapt
 chapter's Markdown beside its parsed block and a metadata lint. That id was also `devbook-canvas`,
 so the string named both the whole extension and one of the two canvases inside it.
 
-Consequence: the [surface term](../domain/plugin-authoring/naming.md#surface) still counts four
+Consequence: the [surface term](../domain/plugin-authoring/domain.md#surface) still counts four
 surfaces, and the stem rule now reads with the scope it always had — the contract word marks
 interchangeability, so a surface interchangeable with nothing does not carry it. The lift this
 folder is still waiting on takes the new name with it, and the blocker is unchanged: the three
@@ -1267,7 +1267,7 @@ relative imports into `tools/devbook-meta/`, per
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/arc42/09-architecture-decisions.md#only-a-delivered-rule-lives-in-rules", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
+related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/arc42/09-architecture-decisions.md#only-a-delivered-rule-lives-in-rules", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
 ```
 
 [One Rule, One Wrapper Per Host](#one-rule-one-wrapper-per-host) settled the repository half
@@ -1357,7 +1357,7 @@ it. That plugin's README no longer says it materializes nothing into a repositor
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
 ```
 
 `<component>-sync` is now `<component>-install`. *Sync* names a two-way reconcile between
@@ -1385,7 +1385,7 @@ migration: `components.devbook` and `components.schedule` were never named after
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
 ```
 
 `devbook-install`, `collaboration-install`, and `schedule-install` are all `install`,
@@ -1397,7 +1397,7 @@ Every one of those prefixes was its own plugin's name said twice, and the three 
 three different shapes — the plugin name in `devbook-install`, the stem in
 `collaboration-install` and `schedule-install`. `plugin:skill` addressing already carries the
 scope, which is exactly what
-[naming](../domain/plugin-authoring/naming.md#flow-skill) says makes a prefix redundant: a
+[naming](../domain/plugin-authoring/domain.md#flow-skill) says makes a prefix redundant: a
 prefix marks a procedure's scope against its neighbours, and these have no neighbour to be
 marked against. Knowing one plugin's install skill now means knowing all of them.
 
@@ -1517,7 +1517,7 @@ needs it in the matcher too — a dropped tool reaches none of the hook's code.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
+related: [".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install", ".devbook/arc42/05-building-block-view.md", ".devbook/domain/plugin-authoring/domain.md#plugin-rule"]
 ```
 
 [A Plugin's Rules Reach a Host Through the Install](#a-plugins-rules-reach-a-host-through-the-install)
@@ -1579,7 +1579,7 @@ That argument was about the wrong axis. It answered "is there a second *product*
 question a context map asks is "where can a model change without somebody having to agree?" A
 plugin is exactly that line: it is the unit a host installs, versions, and refuses to load, and
 [one folder per plugin](#one-folder-per-plugin) already makes it the unit a change is scoped to.
-Nine plugins were sharing one `naming.md` while meaning different things by *run*, *record*, and
+Nine plugins were sharing one `domain.md` while meaning different things by *run*, *record*, and
 *view*, and one `dependencies.md` was carrying two rows for the two hosts and nothing for the
 seven relationships between the plugins themselves.
 
@@ -1602,3 +1602,44 @@ Consequence: a new plugin now costs a domain folder as well as a marketplace ent
 land together — a plugin whose boundary nobody could write down is a plugin whose boundary
 nobody has decided. `delivery-surface-canvas` gets a folder like the rest, despite taking no
 marketplace entry, because it is a boundary regardless of which hosts can install it.
+
+## A Context Describes Its Skills, and Keeps Its Terms in domain.md
+
+```meta
+date: 2026-09-08
+related: [".devbook/domain/context-map.md", ".devbook/arc42/09-architecture-decisions.md#one-plugin-one-bounded-context", ".devbook/domain/delivery/skills.md"]
+```
+
+Three changes to the `.domain` convention, taken together because they answer one question: what
+does a bounded context look like when the product is procedures rather than a running application.
+
+**`skills.md` joins `features.md`; it does not replace it.** A context takes one or the other. The
+chapters stay `type: feature` and `type: sub-feature`, because a skill *is* a feature and a second
+vocabulary for the same relationship would make every consumer of the graph branch on a filename
+to learn nothing. Six contexts here ship skills and take `skills.md`; four ship none —
+`plugin-authoring`, which is not a plugin, and the three surfaces, whose whole surface is an MCP
+server's tools — and those keep `features.md` and say so in the file.
+
+**`flow.<name>.md` splits one flow out of `flow.md`.** The sixteen `flow-*` skills each get a page
+carrying that flow's stages, its tier, and what is distinctive about it; `flow.md` keeps the three
+pictures that are about the context rather than about one procedure — the shared spine, the two
+tiers, and the gate. The file carries `type: flow`, because the suffix narrows the scope and not
+the kind. What each page deliberately does not carry is the roles-and-MCP table: that is a binding,
+it already lives in the engine's own `FLOW-DIAGRAMS.md`, and a second copy across a folder
+boundary is a copy that drifts.
+
+**`naming.md` becomes optional and this repository stops using it.** Its `term` chapters move to a
+`## Ubiquitous Language` grouping at the end of `domain.md`, which takes the new
+`ubiquitous-language` chapter type the way `Shared Value Objects` already takes one. The merge is
+what exposed the reason: twenty-eight of the seventy-three terms were near-verbatim restatements of
+an aggregate, service, or event chapter in the same context. Those folded down to an `aliases`
+field on the chapter they duplicated — `aliases` is a folder-level field, not a term-level one, so
+this needed no schema change — and forty-five real terms survived as chapters.
+
+That is the argument for the whole change: a registry that names the same things the model already
+names is not a second view, it is a second copy, and it goes stale on the side nobody is reading.
+
+Consequence: counterpart resolution can no longer assume a filename. `code-sync-protocol.md`, both
+feature converters, and the design rule now say to search a context for a `term` chapter rather
+than to open `naming.md`. Nothing is removed from any value set, so every repository already on
+devbook still validates and no migration is needed — devbook 3.1.0, contract version unchanged.

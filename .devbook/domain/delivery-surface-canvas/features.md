@@ -8,6 +8,9 @@ related: [".devbook/domain/context-map.md#delivery-surface-canvas"]
 > One capability group, whole, and nothing else. The absences below are as much a feature as the
 > renders are.
 
+**This context keeps `features.md` rather than `skills.md`, because it ships no skills** — two
+canvas operations and nothing else.
+
 ## Render a Diagram
 
 ```meta
@@ -43,7 +46,7 @@ different content — which is why the two are one plugin rather than two.
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery-surface-canvas/naming.md#preview"]
+related: [".devbook/domain/delivery-surface-canvas/domain.md#preview"]
 ```
 
 Persist nothing. Render the same source that was written to disk; the file stays the source of

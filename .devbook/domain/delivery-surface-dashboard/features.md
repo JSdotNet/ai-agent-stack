@@ -7,6 +7,9 @@ related: [".devbook/domain/context-map.md#delivery-surface-dashboard"]
 
 > Three capability groups, whole, plus the one thing no other surface here does: measure.
 
+**This context keeps `features.md` rather than `skills.md`, because it ships no skills.** Its
+whole surface is an MCP server's tools and three pages; there is nothing a person invokes by name.
+
 ## Track a Run
 
 ```meta
@@ -64,7 +67,7 @@ is a preview of a file that exists, never a replacement for it.
 
 ```meta
 type: feature
-related: [".devbook/domain/delivery-surface-dashboard/domain.md#telemetry-capture", ".devbook/domain/delivery-surface-dashboard/naming.md#telemetry"]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md#telemetry-capture", ".devbook/domain/delivery-surface-dashboard/domain.md#telemetry"]
 ```
 
 Fold tool calls, sub-agent use, and token usage into the run from hook-captured tool events, and

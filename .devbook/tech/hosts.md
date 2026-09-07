@@ -61,14 +61,14 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 `@github/copilot-sdk/extension`, imported by both canvas extensions — `devbook`'s
-`devbook-canvas` and `delivery-canvas`'s own — for `joinSession` and `createCanvas`. It is the
+`devbook-canvas` and `delivery-surface-canvas`'s own — for `joinSession` and `createCanvas`. It is the
 only third-party import anywhere in this repository, and it is not installed: the Copilot CLI
 resolves it when it opens the extension, which is why no `package.json` declares it and why
 nothing here breaks when it is absent.
 
 `trial`: nothing in this repository has opened a canvas on that host. The unverified part is
 not the import — it is whether these pages render the same way through `createCanvas` as they
-did over the MCP viewer they were written against. `delivery-canvas` kept both transports until
+did over the MCP viewer they were written against. `delivery-surface-canvas` kept both transports until
 it became canvas-only, so there is no longer a second one to answer that on its behalf.
 
 ## Claude Code Routines

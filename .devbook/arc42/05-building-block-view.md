@@ -37,7 +37,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
 A plugin ships the manifest of every host that can load something in it, which for almost every
-plugin here is both. `delivery-canvas` is the standing exception: a Copilot canvas extension
+plugin here is both. `delivery-surface-canvas` is the standing exception: a Copilot canvas extension
 and nothing else, so it carries the Copilot manifest alone and takes no marketplace entry —
 there is nothing in it for Claude to install. The exception is allowed on that test and no
 other, so a plugin holding one host-only asset still ships both.
@@ -52,16 +52,16 @@ host.
 
 An `mcp/<server>/` folder holds a server's own tree — its entry point, its modules, its pages,
 and its `dev/` checks. The Claude manifest names the entry point under `mcpServers`; nothing
-else in the plugin has to know the folder exists. `delivery-dashboard` and
-`delivery-collector` each ship exactly one; `delivery-canvas` ships none — see
-[the decision](09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only).
+else in the plugin has to know the folder exists. `delivery-surface-dashboard` and
+`delivery-surface-collector` each ship exactly one; `delivery-surface-canvas` ships none — see
+[the decision](09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only).
 
 An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/naming.md#surface)
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
 ships one, `devbook-canvas`, which renders the reference graph the generator writes to
-`_meta/graph.json`. `delivery-canvas` ships one too, and it is that plugin's only transport:
+`_meta/graph.json`. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
@@ -137,12 +137,12 @@ answers is decided by what is installed, and none answering is a normal outcome.
 
 | Plugin | lifecycle | render | export | Ships |
 | --- | --- | --- | --- | --- |
-| `delivery-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
-| `delivery-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
-| `delivery-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
+| `delivery-surface-dashboard` | yes | yes | yes | An MCP server: run timeline, diagram and document viewers, hook-captured telemetry, Markdown and self-contained HTML reports |
+| `delivery-surface-canvas` | no | yes | no | The same two viewers, as two Copilot canvases and nothing else — no MCP server, so it answers on that host only |
+| `delivery-surface-collector` | yes | no | yes | An MCP server with no page and no port: the run on disk, and its Markdown report |
 
 Each declares exactly the tool names its groups name and nothing more, which is what makes one
-substitutable for another. `delivery-dashboard` is also the only one that captures anything by
+substitutable for another. `delivery-surface-dashboard` is also the only one that captures anything by
 itself: its hooks fold tool calls, sub-agent use, and token usage into the run, so the numbers
 in its panels are measured rather than self-reported.
 

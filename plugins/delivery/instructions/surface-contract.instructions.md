@@ -261,7 +261,7 @@ the same half of it.
   `mcp__<server>__<tool>` when registered in a repository's own MCP configuration. The tool
   names and arguments are identical; only the prefix differs. Match against the live tool
   list. An agent that hardcodes one spelling loses every surface tool under the other.
-  A surface may arrive as a host canvas instead of an MCP server — `delivery-canvas` does —
+  A surface may arrive as a host canvas instead of an MCP server — `delivery-surface-canvas` does —
   and then the same operation names are canvas actions: open the canvas once and invoke the
   action through whatever the host exposes for that. Match the operation names, not the
   transport.

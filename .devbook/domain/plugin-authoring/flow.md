@@ -31,7 +31,7 @@ flowchart LR
 ```
 
 - A plugin folder that never reaches `marketplace.json` does not exist to a host, so the list
-  step is the one that cannot be skipped for a plugin meant to be installed. `delivery-canvas`
+  step is the one that cannot be skipped for a plugin meant to be installed. `delivery-surface-canvas`
   skips it deliberately: it is a Copilot canvas extension and reaches its host another way.
 - The two load paths never rejoin. A shape one host rejects is fatal there and invisible on the
   other, which is what makes authoring in a host the practice recorded in

@@ -22,7 +22,7 @@ It sits beside a conversation rather than replacing it, so it stays readable at 
 survives the viewer's light and dark theme, and never becomes the only place a result is
 recorded.
 
-`delivery-dashboard` is the implementation, and the last of those three is the one it is built
+`delivery-surface-dashboard` is the implementation, and the last of those three is the one it is built
 around: every run produces its file artifacts whether or not anything renders them, and
 `export_report` writes the run out to a file that outlives the page.
 
@@ -33,7 +33,7 @@ they are hard-coded dark, down to the Mermaid theme, and a light-themed host ren
 panel beside a light conversation. One of the two is wrong and it is the second.
 
 The headless case belongs to the same design and has no visual answer at all:
-`delivery-collector` records the same run with nothing to look at, which is what a scheduled
+`delivery-surface-collector` records the same run with nothing to look at, which is what a scheduled
 run needs. A design for a run surface that only works when someone is watching it is
 incomplete.
 
@@ -51,7 +51,7 @@ of it, so a viewer can be absent without any knowledge being lost.
 with, which is what makes the live view and the committed index unable to disagree — a second
 implementation of the projection would be a second thing to keep true.
 
-`delivery-canvas` applies the same rule to a diagram and a document: it renders the source that
+`delivery-surface-canvas` applies the same rule to a diagram and a document: it renders the source that
 was written to the file artifact, never a regenerated or reinterpreted version of it, and
 stores nothing. One copy of each page, and now one transport reading it: it served the same
 pages over MCP as well until it became canvas-only, and collapsing to one removed a thing to

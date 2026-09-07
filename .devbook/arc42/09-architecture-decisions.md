@@ -327,7 +327,7 @@ prevent.
 
 Consequence: **installing `delivery` alone gives no live run timeline at all.** Every run
 reports that no surface is bound, produces its file artifacts, and continues. That is now a
-choice rather than a gap — `delivery-dashboard`, `delivery-canvas`, and `delivery-collector`
+choice rather than a gap — `delivery-surface-dashboard`, `delivery-surface-canvas`, and `delivery-surface-collector`
 ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
 allowlist carried the legacy `orch-dashboard` tool patterns beside the new ones for one
 release; they went with the plugin that shipped that server.
@@ -343,8 +343,8 @@ related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/
 ```
 
 Three plugins implement `delivery.surface.*@1`, none depending on `delivery` or on each other:
-`delivery-dashboard` answers all three capability groups, `delivery-canvas` answers render
-only, `delivery-collector` answers lifecycle and export only.
+`delivery-surface-dashboard` answers all three capability groups, `delivery-surface-canvas` answers render
+only, `delivery-surface-collector` answers lifecycle and export only.
 
 Two of the three would have been enough to ship a viewer. Three is what makes the contract a
 contract: the moment a second implementation exists, the split by operation group stops being
@@ -435,21 +435,21 @@ Three consequences, and the second is the one to watch:
   `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
   an if-this-host clause, and a slot nobody binds still buys that.
 
-## delivery-canvas Ships the Canvas Only
+## delivery-surface-canvas Ships the Canvas Only
 
 ```meta
 date: 2026-09-05
 related: [".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
-`delivery-canvas` is a Copilot canvas extension and nothing else. No MCP server, no Claude
-manifest, no marketplace entry — its two viewer pages live in `extensions/delivery-canvas/views/`
+`delivery-surface-canvas` is a Copilot canvas extension and nothing else. No MCP server, no Claude
+manifest, no marketplace entry — its two viewer pages live in `extensions/delivery-surface-canvas/views/`
 and the canvas actions `render_diagram` and `render_markdown` are the whole surface.
 
 It shipped both transports for two days, on the argument that the layered design's combination
-table lists *delivery + delivery-canvas* as a supported outcome and a host without a canvas
+table lists *delivery + delivery-surface-canvas* as a supported outcome and a host without a canvas
 panel could not reach it otherwise. That argument was answered from the wrong side:
-`delivery-dashboard` already implements the render group with the same two viewers, and it is
+`delivery-surface-dashboard` already implements the render group with the same two viewers, and it is
 what the `surface` slot resolves to wherever there is no canvas to open. So the MCP half was a
 second implementation of a covered capability, kept for a combination nobody with the dashboard
 installed has a reason to add.
@@ -463,7 +463,7 @@ Consequence, and it is the reason this record exists rather than a deletion: the
 capability now has one implementation per host, so the contract's priority order — dashboard
 before collector before canvas — goes back to being theoretical, and a surface can now arrive
 as something other than an MCP server. The contract's resolution rule says so explicitly: match
-the operation names, not the transport. The cost is that `delivery-canvas` has no automated
+the operation names, not the transport. The cost is that `delivery-surface-canvas` has no automated
 check any more — the only one drove the deleted server over stdio — and its pages are now
 verified on the Copilot host or not at all, which is the open half of the `trial` status on
 [the SDK](../tech/hosts.md#copilot-extension-sdk).
@@ -998,3 +998,40 @@ Consequence: the phase can honestly do nothing. A dirty tree, an open pull reque
 each mark it `skipped`, so a run can still start stale and only the stage output says so. It
 never stashes to get past a dirty tree — the stash stack is shared by every worktree of the
 repository, and another session can pop what this one pushed.
+
+## Surfaces Carry the Surface Word
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+```
+
+The three surface plugins are `delivery-surface-dashboard`, `delivery-surface-collector`, and
+`delivery-surface-canvas`. They were `delivery-dashboard`, `delivery-collector`, and
+`delivery-canvas` until this date, and a grep for those strings finds only this record.
+
+The stem rule says a plugin takes its subsystem's stem and the things inside are named for what
+they are — and what these three are is one thing, in three implementations. `dashboard`,
+`collector`, and `canvas` name the implementation; `surface` names the contract all three
+answer, `delivery.surface.*@1`, and it was the one word the plugin names did not carry. The
+marketplace listed a dashboard and a collector beside an engine, a bridge, and a lane, and
+nothing in the name said the first two were interchangeable and the rest were not.
+
+Only the plugins are renamed. The inner `mcp/<name>/` and `extensions/<name>/` folders follow,
+because they are named after the plugin they ship in, and so does everything derived from the
+name: the tool namespaces (`mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard__*`
+and the shorter `mcp__delivery-surface-dashboard__*`), the environment variables
+(`DELIVERY_SURFACE_DASHBOARD_STATE_DIR`, `DELIVERY_SURFACE_COLLECTOR_STATE_DIR`, and the idle
+and token-limit overrides beside them), and the default state directory under the host's
+configuration folder. The tool names inside the namespace do not move: the contract names
+them, not the plugin.
+
+The shared viewers and run store the three still carry as separate copies are not touched. A
+shared source folder for them is a separate change, and if it comes it takes the same stem —
+`delivery-surface` — rather than a fourth plugin, because
+[a surface is never a dependency](#three-surfaces-one-contract).
+
+Consequence: run files written under the old state directories are not read from the new ones,
+and nothing migrates them. Nothing needs to: no repository has bound a surface by its new name
+yet, and the old folder is left where it is rather than moved. Plugin versions stay at `0.1.0`,
+since a rename changes which entry a host installs, not what the entry does.

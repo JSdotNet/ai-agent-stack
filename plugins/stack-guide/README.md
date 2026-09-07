@@ -47,8 +47,8 @@ node scripts/stack-report.mjs --root <repository>
 ## What it never depends on
 
 - **Any plugin here.** It names all of them and declares none. A plugin it cannot find is
-  reported as `not installed` — the same degrade-rather-than-fail shape `delivery` already uses
-  for the seven role plugins it names and never depends on. That is what keeps this outside the
+  reported as `not installed` — the same degrade-rather-than-fail shape `delivery` uses for a
+  role or a service whose provider does not resolve. That is what keeps this outside the
   [layer](../../.devbook/domain/plugin-authoring/naming.md#layer) order rather than under it.
 - **Writing anything a component owns.** `stack-init` and `stack-update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own

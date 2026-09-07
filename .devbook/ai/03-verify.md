@@ -24,7 +24,8 @@ related: [".devbook/tech/hosts.md#claude-code-plugin-api"]
   --strict` on every manifest, `tools/check-assets.mjs` over the manifests, agents, and hooks,
   the Node suites, and the generator's `--check` over `.devbook/`.
 - **Evidence** — none yet. The first plugin to get a suite is the first thing to evaluate; the
-  candidates are the role plugins, whose skill descriptions are the triggers a flow relies on.
+  candidates are the `flow-*` and `devbook-*` skills, whose descriptions are the triggers a
+  session routes on.
 - **Limits** — an eval exercises a skill's trigger and output, not the load-time shape both
   hosts reject; those stay with the validator, the checker, and the review rules in
   `CLAUDE.md`.

@@ -30,12 +30,13 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   answer, being read from the live session rather than bound.
 - **Adopted by** — nobody yet. Every change to this repository so far was carried by hand under
   `CLAUDE.md`, including the ones that built the flows.
-- **Evidence** — none yet. Everything a flow needs has landed: the seven role plugins answer
-  `spec`, `implement`, `verify`, `app.start`, and `qa.run` and five of the seven roles, where
-  before them every delegating stage named an agent that resolved to nothing — over two hundred
-  `plugin:asset` references into plugins this marketplace did not offer. What is untested is the
-  routing itself. Promote to `adopted` once a change here has been carried by a flow end to
-  end, reporting into one of those surfaces.
+- **Evidence** — none yet. Every stage now names the role or service it delegates to rather
+  than a plugin, so nothing dangles and nothing resolves either: the seven specialists that
+  answered `spec`, `implement`, `verify`, `app.start`, `qa.run`, and five roles
+  [left the marketplace](../arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace).
+  A flow run here therefore runs those stages unbound unless the specialist marketplace is
+  installed too. What is untested is the routing itself. Promote to `adopted` once a change
+  here has been carried by a flow end to end, reporting into one of those surfaces.
 - **Limits** — the plugins loaded in the authoring sessions are older versions from another
   marketplace, so the flows this repository documents are not the ones that run in it until
   the working copy is enabled by path.

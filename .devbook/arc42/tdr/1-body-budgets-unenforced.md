@@ -49,13 +49,20 @@ frontmatter:
 | `*.instructions.md` | 12 of 35 | 28 | 78 | 629 |
 | `*.agent.md` | 5 of 10 | 65 | 75 | 295 |
 
+Re-measured on 2026-09-07, after the seven specialist plugins
+[left the marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace):
+66 of 76 budgeted assets are over. The ratio worsened because the departing plugins carried
+most of the short assets — the debt is unchanged, and it is now concentrated in the staged
+procedures and contracts that are long by kind.
+
 ## Origin
 
 ```meta
 ```
 
-The three numbers came from `spec-builder`'s
-`instructions/authoring/spec-conciseness.instructions.md`, which is now in this repository. It
+The three numbers came from `spec-conciseness.instructions.md` in the `spec-builder` plugin,
+which [left this marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace)
+on 2026-09-07 and is published from its own. It
 opens its budget table with "the budget is the trigger for a disclosure decision, not a hard
 limit" and closes it with "state the reason in the file when an asset genuinely must exceed its
 budget". CLAUDE.md carried the table across and left both sentences behind.

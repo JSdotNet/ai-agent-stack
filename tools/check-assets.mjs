@@ -30,12 +30,13 @@ const showBudgets = process.argv.includes("--budgets");
 
 const BUDGETS = { "SKILL.md": 40, ".instructions.md": 60, ".agent.md": 80 };
 const MODEL_PIN = /^(opus|sonnet|haiku|fable|inherit|claude-[\w.-]+)$/;
-// Tools that sequence, spawn, or delegate. A role plugin's agent carries none of them.
+// Tools that sequence, spawn, or delegate. Only the runner's agent may carry them.
 const FLOW_CONTROL_TOOLS = new Set([
     "Agent", "agent", "SendMessage", "create_session", "send_session_message",
     "respond_to_session_plan", "list_sessions_and_chats", "get_session",
 ]);
-// Plugins whose agents are allowed to delegate: the engine's runner is one; a role is not.
+// Plugins whose agents may delegate: the engine's runner. No specialist ships here any more,
+// so this guards agents added later rather than any on disk today.
 const RUNNER_PLUGINS = new Set(["delivery"]);
 
 const errors = [];
@@ -132,7 +133,7 @@ for (const folder of folders) {
         if (!tools.has("Skill")) error(`${label}: tools does not include Skill, so the agent cannot reach plugin skills`);
         if (!RUNNER_PLUGINS.has(folder)) {
             const carried = [...tools].filter((t) => FLOW_CONTROL_TOOLS.has(t));
-            if (carried.length) error(`${label}: a role plugin's agent carries flow-control tools: ${carried.join(", ")}`);
+            if (carried.length) error(`${label}: only a runner plugin's agent may carry flow-control tools: ${carried.join(", ")}`);
         }
         if (/^handoffs:/m.test(fm)) {
             for (const m of fm.matchAll(/^\s+agent:\s*['"]?([\w-]+)/gm)) {

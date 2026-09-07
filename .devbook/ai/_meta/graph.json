@@ -108,7 +108,7 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "fan-out",
           "level": 2,
-          "line": 43,
+          "line": 44,
           "status": "candidate",
           "kind": "skill",
           "related": [
@@ -225,7 +225,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "fan-out-is-its-own-plugin",
           "level": 2,
-          "line": 580,
+          "line": 582,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",

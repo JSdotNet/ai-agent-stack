@@ -199,7 +199,7 @@ resolves it at runtime, by pattern, from the live tool list. **Absence is a norm
 the run produces its file artifacts, says so once, and continues — it costs a view, never a
 capability.
 
-Four ship here. `delivery-dashboard` answers all three groups, `delivery-canvas` render only,
+Three ship here. `delivery-dashboard` answers all three groups, `delivery-canvas` render only,
 and `delivery-collector` lifecycle and export only. Each declares exactly the tool names its
 groups name and nothing more, which is what makes one substitutable for another. See
 [the decision](../../arc42/09-architecture-decisions.md#three-surfaces-one-contract).
@@ -249,13 +249,13 @@ missing advisor must not demote every skill that names it. Every role reference 
 fallback, so no flow is dead because a role is unbound. An explicit `null` means deliberately
 unbound, which is not the same as absent.
 
-Five of the seven have a provider in this marketplace; see
-[Role Plugins](../../arc42/05-building-block-view.md#role-plugins). `product` and `security`
-are `null`.
+No provider for any of them ships in this marketplace; see
+[Roles and Services](../../arc42/05-building-block-view.md#roles-and-services). `product` and
+`security` were never filled here and are `null`.
 
-The key is not the plugin's name. `arc42` fills `architecture`; `domain` and `ux` match theirs
-by coincidence. A role plugin also holds no flow control — no sequencing, no gate, no session
-spawning, no delegation — because all four belong to whatever consults it. See
+The key is not the plugin's name, and a plugin whose name matches a key matches it by
+coincidence. A specialist filling a role also holds no flow control — no sequencing, no gate,
+no session spawning, no delegation — because all four belong to whatever consults it. See
 [the decision](../../arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with

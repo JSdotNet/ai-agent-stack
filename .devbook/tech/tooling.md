@@ -66,9 +66,6 @@ and manual refresh. It wraps `build.mjs` to add what the raw `node` call cannot 
 index files actually moved, so a refresh that changed nothing is visibly a no-op. `-Scope`
 narrows it to one folder, `-Check` validates without writing.
 
-`arc42` and `domain` each ship a second script on it, `generate-diagram-svgs.ps1`, which eight
-of their diagram skills run in place to render Mermaid beside the Markdown they wrote.
-
 It requires PowerShell 7, stated as `#Requires -Version 7.0` in the script itself. The
 generator README, `devbook-check`, both shipped workflows, and the pull-request check's own
 warning text all name it as the way to refresh a branch, with `node build.mjs` as the fallback

@@ -53,21 +53,31 @@ Discovery** below.
 
 ## MCP Server Strategy (Shared)
 
-- Use `jsdotnet-guidelines-mcpserver` for repository standards, governed asset
-  constraints, template conventions, and repository instruction guidance.
-- Use `jsdotnet-design-mcpserver` only for UX-specific design work such as wireframes,
-  user flows, and design artifacts. Do not use it for the architecture, ADR, TDR, or
-  general implementation phases documented in the current `flow-*` skills unless a flow
-  explicitly adds UX design work.
+This plugin ships no MCP server and names none by id. Every server below is a **capability**
+resolved from the live tool list at the stage that needs it — a host may namespace it, and the
+repository's own `.mcp.json` and instruction files say which server fills it. An absent
+capability is a normal outcome: the stage takes its stated fallback, records once that nothing
+answered, and continues. It never stops the run and never turns into an MCP setup task.
+
+- **Guidelines** — repository standards, governed asset constraints, template conventions,
+  and existing decision context. Resolve any guideline server the repository declares — tools
+  that list, search, and fetch guides — from the live tool list. **Fallback, inline:** the
+  repository's own instruction files — the `repo-instructions` slot, matching
+  `**/*.instructions.md`, and the checked-in knowledge chapters and ADRs. A stage that reads
+  `**MCP:** the guidelines capability` means exactly this pair.
+- **Design guidelines** — the same shape, for UX-specific work only: wireframes, user flows,
+  and design artifacts. Do not use it for the architecture, ADR, TDR, or general
+  implementation phases unless a flow explicitly adds UX design work. Fallback: the
+  repository's design chapters.
 - Use `microsoft-learn` during implementation-focused phases when official
   Microsoft/.NET/Azure/Aspire documentation or code samples are needed. Prefer targeted
   lookups tied to the stack being changed; do not turn implementation phases back into
   broad research passes.
 - Use `playwright` in QA Validation when browser-based scenarios or visual evidence are
   required. Skip it when the validation mode is startup-only or the change has no browser
-  surface.
-- Prefer the narrowest server that matches the phase. Do not query all four servers by
-  default.
+  surface. QA Validation's required-tooling rule in `flow-phases.instructions.md` still
+  applies: a required server missing there marks that phase `blocked`, never the run.
+- Prefer the narrowest server that matches the phase. Do not query every server by default.
 
 ## Execution Model (Shared)
 

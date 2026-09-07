@@ -32,6 +32,7 @@
     "commit.at": "gate",
     "pr.required": true,
     "pr.base": "main",
+    "phases.updateBase": true,
     "phases.documentationUpdate": true,
     "phases.workItemUpdate": true
   },

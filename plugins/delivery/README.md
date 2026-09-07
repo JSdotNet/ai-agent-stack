@@ -93,7 +93,7 @@ categories it covers.
 | Path | Holds |
 |---|---|
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
-| `instructions/flow-phases.instructions.md` | Which phases each tier runs, and the closing phases in full |
+| `instructions/flow-phases.instructions.md` | Which phases each tier runs, and the opening and closing phases in full |
 | `instructions/surface-contract.instructions.md` | Extension points, gates, the stack config, host slots, and the surface capability |
 | `instructions/flow-execution-model.instructions.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `instructions/flow-model-selection.instructions.md` | Category → model resolution and the personal override |

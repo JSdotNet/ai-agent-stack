@@ -20,6 +20,7 @@ companion files so a run reads the part it is actually in.
 | `flow-model-selection.instructions.md` | Category → model resolution and the personal override | Once, before `start_run` |
 | `surface-contract.instructions.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
 | `flow-repo-context.instructions.md` | The `.claude/flow-context.md` convention | **Only if that file exists.** Check first; when it is absent there is no convention to apply |
+| **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
 
@@ -30,6 +31,9 @@ need is not.
 
 ## Phase Tiers
 
+**Every tier opens with Update Base**, before the flow's own stages. The flow-runner prepends
+it to the stage list; no skill names it. The rest of the tier runs after those stages:
+
 - **Code-modifying flows** — `flow-feature`, `flow-bug`, `flow-structure`,
   `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`,
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
@@ -37,8 +41,8 @@ need is not.
   Summary**.
 - **Documentation/config flows** — `flow-adr`, `flow-tdr`, `flow-arc42`,
   `flow-architecture`, `flow-repo` — run: **Personal Validation → Create Pull Request →
-  Work Item Update → Summary**. They produce no runnable code change, so the first two
-  phases do not apply.
+  Work Item Update → Summary**. They produce no runnable code change, so Build & Test and QA
+  Validation do not apply.
 - **`flow-fallback`** has no fixed tier: it runs the code-modifying tier when its Routing
   Check determines a code-modifying change kind, and the documentation/config tier
   otherwise. It reports the resolved tier's phase names in `start_run`.
@@ -52,6 +56,9 @@ need is not.
 
 ## How Skills Reference These Phases
 
+- **No skill names Update Base.** The closing tier differs per skill, so a skill names its
+  own; the opening phase is identical for every flow, so the flow-runner prepends it and
+  there is nothing per-skill to say.
 - A skill lists its shared phases under a `### Final Phases (Shared)` heading and links
   here. This file is the source of truth; the skill only names which phases it runs and adds
   skill-specific notes, such as the QA scope.
@@ -75,9 +82,45 @@ need is not.
   request, updating a work item, or marking the flow complete. A repository may add further
   gates; it may never remove this one.
 
+## Phase: Update Base
+
+Every tier. Runs **first**, before the flow's own stages, so the work starts from the current
+base instead of from whatever commit the branch was cut at. A worktree is created from the
+local checkout and never from the remote, so a branch is already stale when the local default
+branch is behind — and nothing later in the run notices.
+
+- **Prepended by the engine.** The flow-runner puts this phase at the head of the stage list
+  it passes to `start_run`, and reports it like any other stage.
+- **Resolve the base** from `policy.pr.base`, falling back to the repository's default
+  branch, and fetch it. No remote, or a fetch that fails, marks the phase `skipped` with the
+  reason — never `blocked`. Working offline is not an error.
+- **Refuse to touch a dirty tree.** With uncommitted changes present, mark the phase
+  `skipped` and name the files. **Never stash.** The stash stack is shared by every worktree
+  of the repository, so an entry left here can be popped by another session.
+- **Fast-forward when the branch carries no commits of its own** — the common case for a
+  freshly cut worktree.
+- **Otherwise rebase the branch's own commits onto the fetched base tip.** That history is
+  still private, so rewriting it is safe here and keeps the branch linear.
+- **Never rebase a branch that already has an open pull request.** Mark the phase `skipped`
+  and name `update-pr-branch`, which does that job under review-safe rules — see **Never
+  rewrite the PR branch history** under Documentation Update for what is at stake.
+- **Block on conflict.** Abort the rebase so the tree is exactly as it was, mark the phase
+  `blocked` with the conflicting paths, and stop before the flow's first stage. Resolving a
+  base conflict is work with its own scope; never fold it silently into a run the user started
+  for something else.
+- **Already current is `done`**, with an output saying so. Create no commit, and never push.
+- **`policy.phases.updateBase: false`** turns the phase off. It is then `skipped` with that
+  reason, for a repository that tracks a long-lived branch or has no remote to sync with.
+
+**Agents:** *(default)* — no dedicated agent runs this phase, so the flow-runner performs it
+directly.
+
+**Model Category:** Documentation & Low-Complexity.
+
 ## Phase: Build & Test
 
-Code-modifying tier. Runs first, before QA Validation and Personal Validation.
+Code-modifying tier. Runs after the flow's own stages, before QA Validation and Personal
+Validation.
 
 **Defined in `skills/phase-build-test/SKILL.md`** — steps, agents, MCP servers, and stage
 reporting all live there. What stays here is its place in the tier: build every project, run

@@ -642,14 +642,22 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 ## The Guide Names Every Plugin and Depends on None
 
 ```meta
-date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#guide-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
 A skill that explains the stack has to name every part of it, and the [layer](../domain/plugin-authoring/naming.md#layer)
 rule says a lower layer never names a higher one. Both cannot hold in the same plugin, which is
-why `stack-guide` is a plugin of its own with an empty `dependencies` array rather than a skill
-inside `devbook`.
+why `devbook-config` is a plugin of its own with an empty `dependencies` array rather than a
+skill inside `devbook`.
+
+**The name is the file, not a dependency.** It was `stack-guide`, and the rename followed the
+config into `.devbook/`: a plugin whose subject is `.devbook/config.json` is named for it, the
+way `devbook-graph` is named for the graph it draws rather than for the plugin whose generator
+produces one. Reading `devbook-config` as an L1 extension over `devbook` would be the obvious
+mistake and the `dependencies` array is the answer to it — empty, `devbook` included, and the
+argument below is why it has to stay that way. The four skills lose their `stack-` prefix with
+the rename: a prefix separates scopes inside a plugin, and here every skill has the same one.
 
 The rule is about the dependency order, and naming is not depending. `delivery` already carries
 over two hundred `plugin:asset` references into seven specialist plugins it never declared,
@@ -661,19 +669,24 @@ catalog, resolves
 each against what is on disk, and reports a plugin it cannot find as `not installed` — which is
 an answer, not a degradation. Nothing it names is loaded, so there is nothing to dangle.
 
-Putting it in `devbook` was the obvious first move and is the one the README already argues
-against: the five per-folder flows left that plugin for `devbook-flows` precisely because
+Putting it *inside* `devbook` was the obvious first move and is the one the README already
+argues against: the five per-folder flows left that plugin for `devbook-flows` precisely because
 keeping them made the foundation name the layer above it. Adding a skill that names `delivery`,
 `fleet`, and all three surfaces would have undone that in a larger way, and it would have made
 the guide unreachable for anyone who installed the engine without the devbook convention.
 
-**The write skills stop at the engine keys.** `stack-init` and `stack-update` own `bindings`,
+The rename does not reopen that. Sharing a stem is not being inside: `devbook-config` is a
+separate folder, a separate manifest, and a separate marketplace entry, and a repository can
+enable it with `devbook` absent — which is exactly the case the empty `dependencies` array
+keeps reachable.
+
+**The write skills stop at the engine keys.** `devbook-config:setup` and `devbook-config:update` own `bindings`,
 `extensions`, `policy`, and `gates`, and every `components.<name>` stamp stays with that
 component's own install skill — the rule [one config file, two kinds of key](#one-config-file-two-kinds-of-key)
 already states. Three things follow from it and all three are load-bearing: only the install skill
 knows what it materialized, a plugin's payload and migration ledger live inside that plugin
 where a foreign skill has no supported path to them, and `devbook` has to keep installing
-itself to stay a foundation that works with only itself installed. So `stack-update`'s fourth
+itself to stay a foundation that works with only itself installed. So `devbook-config:update`'s fourth
 step invokes `devbook-install`; it never applies a migration or writes a ledger of its own.
 
 **It names a host's own paths, and that is a divergence taken on purpose.**

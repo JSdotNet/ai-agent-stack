@@ -1,9 +1,9 @@
 ---
-name: stack-guide
+name: guide
 description: 'Answer a question about this marketplace and the plugins in it — what devbook, delivery, the bridges, the surfaces, and the fan-out lane are and how they fit together, which version of a plugin is installed against the newest one published, which plugins are enabled here, and how this repository has wired its flows, roles, gates, and policy. Reads only; it never installs or reconciles anything. Use when: asking how the stack works, comparing installed against newest, checking what is enabled, or reading a repository''s flow wiring. Triggers on: "what is devbook", "explain the delivery engine", "how do the plugins fit together", "which version am I on", "is there a newer version", "which plugins are enabled", "how are my flows set up", "what does this repo bind", "which gates are on".'
 ---
 
-# stack guide
+# devbook-config guide
 
 ## Purpose
 
@@ -19,7 +19,7 @@ file behind them, and that file is the answer.
 Run from this plugin's own root:
 
 ```
-node scripts/stack-report.mjs --root <repository>
+node scripts/report.mjs --root <repository>
 ```
 
 It prints, with the path every fact came from: the catalog and where it is checked out,
@@ -54,5 +54,5 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 - Report configuration as declared or defaulted, never as absent-therefore-broken: an
   unset key takes the engine's documented default, and `null` is deliberately unbound.
 - Say when the clone is stale rather than reporting its versions as the newest.
-- Send writing elsewhere: `stack-init` and `stack-update` set a repository up, each
+- Send writing elsewhere: `devbook-config:setup` and `devbook-config:update` set a repository up, each
   component's own install skill materializes it. This skill only reads.

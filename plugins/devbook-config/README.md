@@ -1,8 +1,12 @@
-# stack-guide
+# devbook-config
 
-The reader's way into the marketplace. It answers *what is this, what have I got, and how is
-this repository wired* from files on disk, and it owns the two procedures that set a repository
-up and move it forward.
+The repository's stack configuration, and the way into the marketplace that writes it. It owns
+`.devbook/config.json` — set up first, moved forward after — and answers *what is this, what
+have I got, and how is this repository wired* from files on disk.
+
+It is named for the file it writes, not for a plugin it needs: the `dependencies` array is
+empty, `devbook` included. See
+[the decision](../../.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none).
 
 ## Installation
 
@@ -10,34 +14,35 @@ up and move it forward.
 claude plugin marketplace add JSdotNet/ai-agent-stack
 ```
 
-Then enable `stack-guide` with `/plugin`. During development, add this working copy by path
+Then enable `devbook-config` with `/plugin`. During development, add this working copy by path
 instead of by repository.
 
 ## The four skills
 
 | Skill | Does |
 | --- | --- |
-| [`stack-guide`](skills/stack-guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/naming.md`, the arc42 chapters, and `delivery`'s surface contract. |
-| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.devbook/config.json` for the first time, validates them, then hands each component its own install skill. |
-| [`stack-update`](skills/stack-update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
-| [`stack-adoption`](skills/stack-adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-ai`. Reads only. |
+| [`setup`](skills/setup/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component installs itself. |
+| [`update`](skills/update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
+| [`guide`](skills/guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/naming.md`, the arc42 chapters, and `delivery`'s surface contract. |
+| [`adoption`](skills/adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-ai`. Reads only. |
 
-`stack-adoption` is the one that writes nothing at all, and deliberately: `.ai` rates whether
+`devbook-config:adoption` is the one that writes nothing at all, and deliberately: `.ai` rates whether
 people actually work a certain way, and the report can only see what is on disk. It says which
 plugins, flows, and bindings a chapter's prose no longer matches, and leaves `status`,
-**Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `stack-init` and
-`stack-update` keep against a `components.<name>` stamp.
+**Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:setup` and
+`devbook-config:update` keep against a `components.<name>` stamp.
 
-`stack-` is a fifth prefix beside `flow-`, `fleet-`, `phase-`, and `schedule-`, and it means
-something none of those do: a procedure about the stack itself rather than about a unit of work.
+The four carry no prefix. `flow-`, `fleet-`, `phase-`, and `schedule-` each mark a procedure's
+scope against its neighbours in the same plugin; here the plugin name is the scope, and
+`devbook-config:setup` says everything a prefix would have.
 
 ## The report
 
-[`scripts/stack-report.mjs`](scripts/stack-report.mjs) is what makes an answer checkable. It is
+[`scripts/report.mjs`](scripts/report.mjs) is what makes an answer checkable. It is
 read-only, takes no network, and prints the path behind every fact:
 
 ```bash
-node scripts/stack-report.mjs --root <repository>
+node scripts/report.mjs --root <repository>
 ```
 
 | Reads | To answer |
@@ -57,7 +62,7 @@ node scripts/stack-report.mjs --root <repository>
   reported as `not installed` — the same degrade-rather-than-fail shape `delivery` uses for a
   role or a service whose provider does not resolve. That is what keeps this outside the
   [layer](../../.devbook/domain/plugin-authoring/naming.md#layer) order rather than under it.
-- **Writing anything a component owns.** `stack-init` and `stack-update` write the four
+- **Writing anything a component owns.** `devbook-config:setup` and `devbook-config:update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
   install skill, which is the only thing that knows what it materialized. That is also why
   `devbook-install` and `devbook-check` did not move here: `devbook` ships the payload, the
@@ -68,11 +73,11 @@ node scripts/stack-report.mjs --root <repository>
 | Path | Holds |
 | --- | --- |
 | `.claude-plugin/plugin.json`, `.github/plugin/plugin.json` | The two manifests, agreeing on name, version, and description |
-| `skills/stack-guide/SKILL.md` | The question-answering procedure |
-| `skills/stack-init/SKILL.md` | First setup of the engine keys |
-| `skills/stack-update/SKILL.md` | Version drift, migrations, re-validation |
-| `skills/stack-adoption/SKILL.md` | Adoption-record drift, handed to `flow-ai` |
-| `scripts/stack-report.mjs` | The read-only report, run in place from this plugin root |
+| `skills/setup/SKILL.md` | First setup of the engine keys, before any component installs |
+| `skills/update/SKILL.md` | Version drift, migrations, re-validation |
+| `skills/guide/SKILL.md` | The question-answering procedure |
+| `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-ai` |
+| `scripts/report.mjs` | The read-only report, run in place from this plugin root |
 
 ## Known gap
 

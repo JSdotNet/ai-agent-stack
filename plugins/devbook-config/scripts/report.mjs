@@ -3,7 +3,7 @@
 // installed and at what version, which are enabled, and how one repository has wired
 // the delivery engine.
 //
-//   node stack-report.mjs [--root <repo>] [--marketplace <name>] [--json]
+//   node report.mjs [--root <repo>] [--marketplace <name>] [--json]
 //
 // Reads only; writes nothing. Every fact names the file it came from, so a wrong
 // answer is traceable to a stale file rather than to this script.
@@ -397,7 +397,7 @@ function parseArgs(argv) {
 function main(argv) {
     const { options, error } = parseArgs(argv);
     if (error) {
-        process.stderr.write(`stack-report: ${error}\n`);
+        process.stderr.write(`report: ${error}\n`);
         return 1;
     }
 

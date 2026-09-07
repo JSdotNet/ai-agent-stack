@@ -118,15 +118,18 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
-| `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
+
+A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
+one scope needs none: `devbook-config` holds `setup`, `update`, `guide`, and `adoption` bare,
+and the plugin name carries what a prefix would have.
 
 Each prefix names one scope and no prefix names two, which is why none of them is called after
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
 only as the English description of what `fleet-` does. `delivery` holds sixteen `flow-*` — five
 of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
-and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
-`fleet-*`, and `stack-guide` holds four `stack-*`.
+and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, and `fleet` holds three
+`fleet-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

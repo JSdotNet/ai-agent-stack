@@ -61,7 +61,7 @@ sequenceDiagram
         C-->>P: review: cleared
     end
     P->>C: chapter-approve — a person, in this session
-    C-->>C: status: approved, approved-by, approved-at; ext namespace cleared
+    C-->>C: status approved, signed and dated, ext namespace cleared
     Note over C: An approval is of what was read. Change the content and it comes off.
 ```
 

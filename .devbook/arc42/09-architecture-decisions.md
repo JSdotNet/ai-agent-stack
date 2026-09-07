@@ -1204,3 +1204,37 @@ interchangeability, so a surface interchangeable with nothing does not carry it.
 folder is still waiting on takes the new name with it, and the blocker is unchanged: the three
 relative imports into `tools/devbook-meta/`, per
 [devbook Still Ships the Graph Canvas](#devbook-still-ships-the-graph-canvas).
+
+## A Session-Start Hook Fires Only Where the Repository Adopted the Plugin
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+```
+
+A plugin is enabled per machine; almost everything it ships is inert until asked for. A hook is
+the exception — it fires on the host's schedule, not on a request — so an unguarded
+`SessionStart` hook is the one component that speaks in every repository on the machine whether
+or not that repository uses the plugin. Five of them did, spending context in every session and
+pushing routing toward skills the repository never adopted.
+
+Each `emit-session-context.mjs` now resolves the repository root and stays silent unless the
+repository opted in: it names the plugin in its own `enabledPlugins`, or it carries the assets
+the guidance is about — a devbook folder for `devbook` and `devbook-collaboration`,
+`.github/ai-agent-stack.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
+`delivery-schedule`. The explicit opt-in outranks the markers, so a repository that adopted a
+plugin but has written nothing yet still gets its guidance. Only `MARKERS` differs between the
+five copies; a plugin installs alone and may not import from a sibling, so the logic is
+duplicated rather than shared.
+
+Consequence, and it is a real one: [a missing config file is still normal to a
+run](#one-config-file-two-kinds-of-key), but it no longer carries the routing hint. A
+repository that runs flows on pure defaults, with neither the stack config nor an entry in its
+own `enabledPlugins`, now starts its sessions without the flow routing text. The flows are
+unchanged and still work there; only the unprompted nudge is gone, and the file that restores
+it is the one `stack-init` writes anyway.
+
+Copilot reads `hooks.json` at the plugin root, where a hook is `type: prompt` and cannot guard
+itself. That copy stays unconditional, which is why its opening sentence hedges where the
+Claude one can decide.
+

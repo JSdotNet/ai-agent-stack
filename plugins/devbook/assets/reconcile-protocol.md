@@ -36,8 +36,9 @@ one entry inside it and never edits another component's:
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
         "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true },
-        ".github/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
-        ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true }
+        ".agents/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
+        ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true },
+        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.4.0", "hash": "sha256:e3f0…", "managed": true }
       },
       "migrations": [
         { "id": "006-drop-backlog", "applied": "2026-09-03" }
@@ -70,8 +71,9 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
-| `instructions/<name>.instructions.md` | `.github/instructions/<name>.instructions.md` | per `assets/rule-wrappers.md` |
-| the same file's `paths` | `.claude/rules/<name>.md` | per `assets/rule-wrappers.md` |
+| `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
+| its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
+| the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
@@ -88,14 +90,14 @@ Text that no longer matches the stamped hash is customized: reported, left alone
 outside the markers is read or written. Absent `AGENTS.md` is created holding only the
 section; present without the markers, the section is appended at the end.
 
-The folder rules are the one asset materialized as a pair. An instruction file sitting
-in a plugin is read by no host automatically, so it is authored host-neutral — `name`,
-`description`, `paths` — and its `paths` name folders in this repository, the only place
-they resolve. Each one lands twice, with each host's spelling derived on the way in:
-`.github/instructions/<name>.instructions.md`, body verbatim and `applyTo` set to `paths`
-joined with commas, and `.claude/rules/<name>.md`, a wrapper carrying that same `paths`
-and one sentence pointing at the first. `assets/rule-wrappers.md` carries both templates,
-the table of which file lands when, and why there is no third copy.
+The folder rules are the one asset materialized as a trio. A rule sitting in a plugin
+is read by no host automatically, and the globs in `rules/rules.json` name folders in
+this repository, the only place they resolve. So each rule lands as its own copy under
+`.agents/rules/<name>.md`, verbatim, with a wrapper per host beside it — `.claude/rules/`
+carrying `paths`, `.github/instructions/` carrying the same list comma-joined as
+`applyTo` — each frontmatter and a single sentence pointing at the rule. Which rules ship,
+and which adopted folder pulls each one in, is in `rules/rules.json`;
+`assets/rule-wrappers.md` carries the three templates and the reasons.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

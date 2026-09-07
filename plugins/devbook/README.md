@@ -197,36 +197,39 @@ path and hands over grounded input; no flow knows these skills exist.
 | `devbook-derived-artifacts.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
 | `devbook-naming.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
-Each file is authored host-neutral — `name`, `description`, and a `paths` list, with no
-host's own spelling of the glob. Every glob carries both layouts, the five root
-dot-folders and their `.devbook/` nesting, and is scoped to the knowledge folders, so
-the plugin stays silent in repositories and files that have not adopted the convention.
+Each rule is `rules/<name>.md` — the body, plus a `name` and a `description` and nothing
+else. Its globs live beside it in [`rules/rules.json`](rules/rules.json), which also says
+which adopted folder pulls each rule in. Every glob carries both layouts, the five root
+dot-folders and their `.devbook/` nesting, and is scoped to the knowledge folders, so the
+plugin stays silent in repositories and files that have not adopted the convention.
 
 #### How they reach a session
 
-Not on their own. Neither Claude Code nor GitHub Copilot auto-applies an instruction
-file that sits inside a plugin: there is no `instructions` key in either manifest and no
-rules component, and a plugin-root `CLAUDE.md` is not loaded either. A file in the table
-above governs paths in *your* repository, and the glob can only resolve there.
+Not on their own. Neither Claude Code nor GitHub Copilot auto-applies a rule that sits
+inside a plugin: there is no rules key in either manifest and no rules component, and a
+plugin-root `CLAUDE.md` is not loaded either. A rule in the table above governs paths in
+*your* repository, and its globs can only resolve there.
 
-So `devbook-sync` installs them. Each file in the table lands twice, in the place each
-host already looks, with that host's spelling derived from the authored `paths`:
+So `devbook-sync` installs them — one copy of the rule, and a wrapper per host beside it,
+each in the folder that host already reads:
 
 ```
-plugins/devbook/rules/devbook-arc42.md    what devbook ships
-  ├── .github/rules/devbook-arc42.md      applyTo: ".arc42/**,.devbook/arc42/**"
-  └── .claude/rules/devbook-arc42.md                          paths: → one line pointing at it
+plugins/devbook/rules/devbook-arc42.md                  what devbook ships
+  └── .agents/rules/devbook-arc42.md                    the rule, verbatim
+        ├── .claude/rules/devbook-arc42.md              paths:   → points at it
+        └── .github/instructions/devbook-arc42.instructions.md
+                                                        applyTo: → points at it
 ```
 
 From then on the rule fires when either host opens a matching chapter — no skill, flow,
-or hook has to name it first. The pair is hash-tracked in the stamp like every other
-materialized file, so an upgrade refreshes it, a copy you have edited is reported and
-left alone, and dropping a folder from `adopted` orphans its pair rather than deleting
-it. Which file lands when, and why there is no third copy, is in
+or hook has to name it first. All three are hash-tracked in the stamp like every other
+materialized file, so an upgrade refreshes them, a copy you have edited is reported and
+left alone, and dropping a folder from `adopted` orphans its trio rather than deleting
+it. The templates and the reasons are in
 [`assets/rule-wrappers.md`](assets/rule-wrappers.md).
 
 Until you run `devbook-sync`, the rules still reach a session the way they always have:
-the session-start hook, and the skills that name a file by path.
+the session-start hook, and the skills that name one by path.
 
 ### The `ext` namespace
 
@@ -297,7 +300,7 @@ for technologies that do not appear in package manifests.
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
-| `assets/rule-wrappers.md` | How the instruction files land in an adopting repository: the derived `applyTo` copy Copilot reads, the `paths` wrapper Claude reads, which file lands when, and why there is no third copy |
+| `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
 | `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 

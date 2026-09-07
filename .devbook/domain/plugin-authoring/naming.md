@@ -61,17 +61,18 @@ type: term
 A procedure a host loads on demand, as `skills/<name>/SKILL.md`. Its `description` is the
 trigger — the sentence a host matches a request against — not a summary of its contents.
 
-## Instruction File
+## Plugin Rule
 
 ```meta
 type: term
 ```
 
-A scoped rule set, as `instructions/*.instructions.md`, declaring the paths it governs in a
-host-neutral `paths` list. Inside a plugin no host applies it automatically, so every
-instruction file is referenced explicitly by the asset that depends on it; a repo-facing one
-also ships to the adopting repository through its plugin's sync, which derives each host's
-spelling of the glob there.
+A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
+`rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
+`.agents/rules/` a sync writes hold the same names, so a rule referencing a sibling resolves in
+both. Inside a plugin no host applies one automatically, so every rule is referenced explicitly
+by the asset that depends on it; a repo-facing one also ships to the adopting repository
+through its plugin's sync, which writes each host's wrapper there.
 
 ## Hook
 

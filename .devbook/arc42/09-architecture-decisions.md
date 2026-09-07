@@ -807,7 +807,7 @@ renames it by hand and re-runs `schedule-sync`, which rewrites the entry either 
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
 ```
 
 Both hosts inject rules scoped to a path glob, and no single file can serve both: Claude reads
@@ -1142,14 +1142,14 @@ pattern and, for now, no example.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
 ```
 
 [One Rule, One Wrapper Per Host](#one-rule-one-wrapper-per-host) settled the repository half
 and left the plugin half on an assumption that does not hold: that `applyTo` "steers Copilot".
-It steers nothing from inside a plugin. Neither manifest has an `instructions` key — no plugin
-here declares one — and neither host has a rules component, so a file under
-`plugins/*/instructions/` is auto-applied by *both* hosts equally: not at all. The seventeen
+It steers nothing from inside a plugin. Neither manifest has an `instructions` or `rules`
+key — no plugin here declares one — and neither host has a rules component, so a scoped rule
+shipped inside a plugin is auto-applied by *both* hosts equally: not at all. The seventeen
 files reached a session only where a skill or an agent named one by path.
 
 For the six that glob a path inside the plugin — `delivery`'s five over `skills/flow-*/SKILL.md`
@@ -1164,50 +1164,60 @@ glob can resolve. A rule that can only fire there has to be delivered there, and
 already delivers: tools, workflows, and one section of `AGENTS.md`, hash-tracked in the stamp.
 So the rules join the asset table.
 
-Each lands twice, not three times:
+Each ships as a trio, in the shape this repository already uses for its own rules:
 
 ```
-plugins/devbook/instructions/<name>.instructions.md      authored: name / description / paths
-  ├── .github/instructions/<name>.instructions.md        body verbatim; applyTo = paths.join(",")
-  └── .claude/rules/<name>.md                            paths verbatim → pointer
+plugins/devbook/rules/<name>.md          the rule. name + description, no scope of its own
+plugins/devbook/rules/rules.json         its paths, and which adopted folder pulls it in
+  └── .agents/rules/<name>.md            the rule, verbatim
+        ├── .claude/rules/<name>.md      paths verbatim → pointer
+        └── .github/instructions/<name>.instructions.md
+                                         applyTo = paths.join(",") → pointer
 ```
 
-Three choices inside that, each with a reason:
+Four choices inside that, each with a reason:
 
-- **Derived from `paths` as authored, not trimmed to the adopted layout.** The globs carry both spellings, flat and
+- **The file is named for what it becomes.** `instructions/<name>.instructions.md` was
+  Copilot's filename for a file Copilot does not read here. `rules/<name>.md` matches its
+  target, `.agents/rules/<name>.md`, character for character — so a rule that references a
+  sibling by bare filename resolves in the plugin *and* in every repository the sync writes to,
+  with no rewrite at either end. That property is what makes the neutral copy cheap; under the
+  old naming it would have cost a rewrite of every cross-reference between the ten, which is
+  why a two-file shape with the body in `.github/instructions/` was reached for first and then
+  abandoned.
+- **The globs live in `rules/rules.json`, not the frontmatter.** A rule is content; its scope
+  and its adoption condition are delivery metadata the sync reads. Splitting them makes the
+  rule a template with nothing host-shaped in it, and puts every rule's scope on one screen —
+  which the nine devbook rules needed, and which a hand-written prose table in
+  `rule-wrappers.md` had been standing in for. `sync` joins `paths` in the same entry, so one
+  file answers both "where does this apply" and "who gets it".
+- **Verbatim, not trimmed to the adopted layout.** The globs carry both spellings, flat and
   nested. Trimming is what the two workflows get, and it makes them customized from the first
   reconcile onward — right for a workflow nobody ships twice, wrong for a rule that must keep
   taking upgrades. A glob matching nothing applies nothing, so carrying both costs nothing.
-- **Under their own filenames.** These files reference each other as bare names. They resolve
-  only while they sit together in one folder under the names they were written with.
-- **No third copy under `.agents/rules/`.** That layering exists to give one rule a
-  host-neutral home when neither host's folder can be it. Here the `.github/instructions/`
-  file already is that copy, and a neutral third would have to rewrite every cross-reference
-  between the ten to reach it — the second copy this convention exists to prevent, bought with
-  a rewrite that can silently go stale.
+- **A wrapper per host, and neither host holding the body.** The alternative was to put the
+  rule in one host's folder and point the other at it, which buys one fewer file and picks a
+  favourite. Three files keep the invariant intact in both places: one copy of the rule, a
+  wrapper per host, and never a rule written in a wrapper. Because `applyTo` is exactly
+  `paths` comma-joined, the wrappers stay derivable and checkable — the bargain
+  [No Generated Sync Layer](#no-generated-sync-layer) already struck.
 
-The asymmetry with the repository's own rules is real and accepted: there the one copy sits in
-`.agents/rules/` and both hosts wrap it; here the one copy sits in the folder Copilot reads
-natively and only Claude wraps it. The invariant that matters — one copy, a wrapper per host
-that needs one, and never a rule written in a wrapper — holds in both.
-
-**So the frontmatter goes neutral too.** All seventeen carried `applyTo`, which is Copilot's
+**The frontmatter goes neutral with it.** All seventeen carried `applyTo`, which is Copilot's
 key and nothing else's, on files no host reads it from — it announced a host that was not
-reading and hid the one that could not. Each is now authored `name` / `description` / `paths`,
-the shape `.agents/rules/` already uses, and each host's spelling is derived at the moment of
-delivery: `applyTo` for the Copilot copy, `paths` copied through for the Claude wrapper. That
-is the same bargain [No Generated Sync Layer](#no-generated-sync-layer) strikes everywhere
-else — derive at the boundary, check the derivation, never let a host's vocabulary leak back
-into the authored file. `check-assets.mjs` gains an `instructions` pass that refuses `applyTo`
-in a plugin, a `name` that is not the filename, a missing `description`, and a missing `paths`.
+reading and hid the one that could not. `check-assets.mjs` replaces its `instructions` pass
+with a `plugin rules` pass refusing `applyTo` or `paths` in a rule, a `name` that is not the
+filename, a missing `description`, a rule with no `rules.json` entry, an entry with no rule,
+and an empty `paths`.
 
-The filenames do not change. `*.instructions.md` is the name both hosts' ecosystems use for
-this kind of file, roughly two hundred references point at them, and the ten repo-facing ones
-cross-reference each other by bare name.
+The cost is a rename across the marketplace: 309 references in 98 files, and
+`.agents/rules/instructions.md` becomes `plugin-rules.md` because it no longer describes
+instruction files. Nothing outside this repository had them yet — no release ever materialized
+one — so the rename is paid once, here, and `devbook`'s `UPGRADING.md` says so for anyone who
+hardcoded an old path.
 
-Consequence: devbook goes to `1.4.0` and reconcile materializes eighteen more files into a
-fully adopting repository. No migration: the contract version is untouched, and a new asset row
-is materialized by the phase that already exists. `devbook-collaboration` ships no sync skill,
-so its one file still reaches a session only by explicit path from its four `chapter-*` skills;
-it gets this treatment when that plugin grows a sync, and never through `devbook`, which may
-not name the layer above it.
+Consequence: devbook goes to `1.4.0` and reconcile installs twenty-seven files into a fully
+adopting repository. No migration: the contract version is untouched, and a new asset row is
+materialized by the phase that already exists. `devbook-collaboration` ships no sync skill, so
+its one rule still reaches a session only by explicit path from its four `chapter-*` skills; it
+gets this treatment when that plugin grows a sync, and never through `devbook`, which may not
+name the layer above it.

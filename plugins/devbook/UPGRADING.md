@@ -7,26 +7,29 @@ script.
 
 ## 1.4.0: the folder rules reach both hosts
 
-**New assets; no migration.** 1.3.1 fixed the `applyTo` globs and said "nothing to re-sync —
-the globs travel with the plugin". They travel, but they arrive nowhere: no plugin manifest
-declares an `instructions` key on either host, and there is no rules component, so an
-instruction file sitting in the plugin is read automatically by neither. Until now these rules
-reached a session only when a skill or an agent named one by path.
+**Renamed assets; no migration.** 1.3.1 fixed the globs and said "nothing to re-sync — the
+globs travel with the plugin". They travel, but they arrive nowhere: no plugin manifest
+declares an instructions or rules key on either host, and there is no rules component, so a
+file sitting in the plugin is auto-applied by neither. Until now these rules reached a session
+only when a skill or an agent named one by path.
 
-Reconcile now materializes them. Each instruction file lands twice in the repository — verbatim
-as `.github/instructions/<name>.instructions.md`, which Copilot applies from its own `applyTo`,
-and as a `.claude/rules/<name>.md` wrapper whose `paths` is that `applyTo` split on commas,
-which is how Claude applies it. Both are hash-tracked like every other materialized file:
-customized copies are reported and left alone, and a folder dropped from `adopted` orphans its
-pair rather than deleting it. `assets/rule-wrappers.md` carries the shape and the table.
+`instructions/<name>.instructions.md` is therefore now `rules/<name>.md`, named for what it
+becomes, and its globs move out of the frontmatter into `rules/rules.json` beside it, keyed by
+name and carrying the adopted folder that pulls each rule in. A rule file is body plus `name`
+and `description`. **Anything that referenced one by its old path must be updated** — inside
+this plugin that is done, but a repository or another plugin that hardcoded
+`instructions/devbook-domain.instructions.md` will not resolve it any more.
 
-The instruction files themselves change shape in the same release. They were authored with
-`applyTo`, which is Copilot's key, on files no host reads it from; they now carry the
-host-neutral `name` / `description` / `paths` frontmatter, and each host's spelling is derived
-at materialization. Bodies are untouched, and nothing that references one by path is affected.
+Reconcile now installs them, in the same shape `ai-agent-stack` uses for its own rules: the
+rule verbatim at `.agents/rules/<name>.md`, a `.claude/rules/<name>.md` wrapper carrying its
+`paths`, and a `.github/instructions/<name>.instructions.md` wrapper carrying the same list as
+`applyTo`. All three are hash-tracked like every other materialized file: customized copies are
+reported and left alone, and a folder dropped from `adopted` orphans its trio rather than
+deleting it. `assets/rule-wrappers.md` carries the templates.
 
 Run `devbook-sync` once to pick them up. Nothing already on disk changes, and a repository that
-would rather keep reaching the plugin copies by path can take ownership of either file.
+would rather keep reaching the plugin copies by path can take ownership of any of the three.
+
 
 ## 1.3.2: the plugin names no flow
 

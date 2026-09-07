@@ -1,43 +1,43 @@
 # The folder rules, in the repository
 
-An instruction file inside a plugin is read by no host automatically. There is no
-`instructions` key in either manifest and no rules component. So these files are authored
-host-neutral — `name`, `description`, `paths`, the shape `.agents/rules/` uses — and
-carry no host's own spelling of the glob. Their `paths` name folders in the adopting
-repository, which is the only place those globs can resolve.
+A rule in `rules/` is read by no host while it sits in the plugin. There is no rules key in
+either manifest and no rules component, and the globs in `rules/rules.json` name folders in
+the adopting repository, which is the only place they resolve.
 
-So `devbook-sync` materializes them. Two files per instruction file, and the rules for
-both — key, hash, customized, orphan — are in `reconcile-protocol.md` under **What
-devbook materializes**.
+So `devbook-sync` installs them, in the same shape `ai-agent-stack` uses for its own rules:
+one copy of the rule, and a wrapper per host pointing at it.
 
-## The copy Copilot reads
-
-`.github/instructions/<name>.instructions.md`. The body is verbatim; the frontmatter is
-the authored one with `paths` rewritten to the key Copilot reads:
-
-```markdown
----
-applyTo: ".arc42/**,.devbook/arc42/**"
-description: Structure and authoring rules for the arc42 architecture documentation folder.
----
+```
+plugins/devbook/rules/<name>.md                       what devbook ships
+  └── .agents/rules/<name>.md                         the rule, verbatim
+        ├── .claude/rules/<name>.md                   paths  → pointer
+        └── .github/instructions/<name>.instructions.md
+                                                      applyTo → pointer
 ```
 
-`applyTo` is `paths` joined with commas, in order — the same derivation
-`tools/check-assets.mjs` enforces on this repository's own wrappers. `description` is
-copied. `name` is dropped: the filename carries it.
+The rules for all three — key, hash, customized, orphan — are in `reconcile-protocol.md`
+under **What devbook materializes**. `rules/rules.json` says which rules exist, what each
+one's `paths` are, and which adopted folder pulls it in; read it rather than hardcoding a
+list.
 
-Derive from `paths` as authored. Do not trim to the layout this repository uses: a glob
-that matches nothing applies nothing, and a trimmed file matches no release devbook
-shipped, so the next reconcile would report it customized and never refresh it again.
-That is the right outcome for the two workflows and the wrong one here.
+## The rule
 
-The filename is load-bearing. These files reference each other as bare names —
-`devbook-chapter-metadata.md` and its siblings — so they resolve only while
-they sit together under one folder under their own names.
+`.agents/rules/<name>.md`, byte-for-byte, filename included.
 
-## The wrapper Claude reads
+The filename is load-bearing: these rules reference each other by bare filename, and the
+plugin's `rules/` folder and this one hold the same names, so every reference resolves in
+both places without a rewrite.
 
-`.claude/rules/<name>.md`. Frontmatter and one sentence, never a second copy of the rule:
+Nothing is edited on the way in, and no glob is trimmed to the layout this repository uses.
+A glob that matches nothing applies nothing, while a trimmed file matches no release devbook
+shipped — so the next reconcile would report it customized and never refresh it again. That
+is the right outcome for the two workflows and the wrong one here.
+
+## The two wrappers
+
+Frontmatter and one sentence each, never a second copy of the rule.
+
+`.claude/rules/<name>.md` — `paths` verbatim from the rule's entry in `rules.json`:
 
 ```markdown
 ---
@@ -46,33 +46,35 @@ paths:
   - ".devbook/arc42/**"
 ---
 
-Read `.github/rules/devbook-arc42.md` and follow it before editing this file.
+Read `.agents/rules/devbook-arc42.md` and follow it before editing this file.
 ```
 
-`paths` is copied from the instruction file verbatim. Nothing else is derived and nothing
-else is written.
+`.github/instructions/<name>.instructions.md` — the same `paths` joined with commas, and the
+`description` copied from the rule's own frontmatter:
 
-There is no third copy under `.agents/rules/`. That layering exists so one rule serves
-two hosts from a host-neutral home; here the `.github/instructions/` file already holds
-the body, and a neutral third would have to rewrite every cross-reference between these
-files to reach it.
+```markdown
+---
+applyTo: '.arc42/**,.devbook/arc42/**'
+description: Structure and authoring rules for the arc42 architecture documentation folder.
+---
 
-## Which files, and when
+Read `.agents/rules/devbook-arc42.md` and follow it before editing this file.
+```
 
-| Instruction file | Materialized when |
-|---|---|
-| `devbook-arc42.md` | `arc42` adopted |
-| `devbook-domain.md` | `domain` adopted |
-| `devbook-tech.md` | `tech` adopted |
-| `devbook-design.md` | `design` adopted |
-| `devbook-ai.md` | `ai` adopted |
-| `devbook-chapter-metadata.md` | any folder adopted |
-| `devbook-annotations.md` | any folder adopted |
-| `devbook-naming.md` | any folder adopted |
-| `devbook-derived-artifacts.md` | any folder adopted |
+Because `applyTo` is exactly `paths` comma-joined, both wrappers are derivable from one
+place and neither can drift unnoticed — the bargain `tools/check-assets.mjs` already enforces
+on this marketplace's own rules.
 
-A folder dropped from `adopted` orphans its pair: reported, never deleted.
+## Which rules, and when
 
-A repository that has taken ownership of either file keeps it. Report the drift and move
-on — the plugin copy stays reachable by explicit path from a skill or an agent, which is
-how these rules reached a session before any of them were materialized.
+`rules/rules.json` carries it, one entry per rule:
+
+- `sync: "<folder>"` — install the trio when that folder is in `adopted`.
+- `sync: "always"` — install it whenever any folder is adopted.
+- no `sync` key — never installed; that rule governs a path inside the plugin.
+
+A folder dropped from `adopted` orphans its trio: reported, never deleted.
+
+A repository that has taken ownership of any of the three keeps it. Report the drift and move
+on — the plugin copy stays reachable by explicit path from a skill or an agent, which is how
+these rules reached a session before any of them were installed.

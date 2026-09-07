@@ -71,7 +71,13 @@ payload:
 - **schemaVersion** (required) — integer, incremented whenever the payload
   shape changes, so consumers can detect drift.
 - **generatedBy** (required) — repo-relative path to the generator, so anyone
-  finding the file knows how to regenerate it.
+  finding the file knows how to regenerate it. A generator resolves its own
+  location against the repository root rather than hardcoding one, because a
+  repository that vendors it somewhere other than `.github/tools/` would
+  otherwise stamp a path that resolves to nothing. Where the generator sits
+  outside the repository it is indexing — a plugin install, or `--root` — it
+  falls back to the conventional location: an absolute path would break
+  determinism, and a `../..` climb out of the repository is not repo-relative.
 - **scope** (required) — the folder this artifact describes, or `"."` for a
   repository-wide artifact.
 - **sources** (required) — the folders actually read to produce it.

@@ -39,7 +39,7 @@ import {
     fileNumberFromPath,
     indexRole,
 } from "./metadata.mjs";
-import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, GENERATOR } from "./graph.mjs";
+import { discoverLayout, SCHEMA_VERSION, REPO_SCOPE, generatorPath } from "./graph.mjs";
 
 /**
  * A document's `tests` entries as a list, whatever shape they were authored in.
@@ -332,7 +332,7 @@ export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders
 
     return {
         schemaVersion: SCHEMA_VERSION,
-        generatedBy: GENERATOR,
+        generatedBy: generatorPath(repoRoot),
         scope,
         sources: roots,
         // Deliberately no timestamp: the index is a deterministic function of

@@ -1,39 +1,39 @@
 {
   "schemaVersion": 7,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
   "scope": ".devbook/arc42",
   "sources": [
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 90,
-    "edges": 163,
+    "nodes": 88,
+    "edges": 158,
     "nodesByFolder": {
-      "arc42": 67,
-      "domain": 19,
+      "arc42": 66,
+      "domain": 18,
       "tech": 4
     },
     "nodesByType": {
       "file": 9,
-      "chapter": 81
+      "chapter": 79
     },
     "nodesByKind": {
-      "none": 67,
+      "none": 66,
       "bounded-context": 1,
-      "term": 16,
+      "term": 15,
       "platform": 3,
       "runtime": 1,
       "sub-feature": 1,
       "naming": 1
     },
     "nodesByStatus": {
-      "active": 86,
+      "active": 84,
       "adopted": 2,
       "trial": 2
     },
     "edgesByType": {
-      "contains": 59,
-      "related": 104
+      "contains": 58,
+      "related": 100
     }
   },
   "problems": [],
@@ -781,27 +781,6 @@
       },
       {
         "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "label": "One Rule, One Wrapper Per Host",
-          "type": "chapter",
-          "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "one-rule-one-wrapper-per-host",
-          "level": 2,
-          "line": 790,
-          "status": "active",
-          "statusDeclared": false,
-          "date": "2026-09-07",
-          "related": [
-            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
-            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
-            ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
-            ".devbook/domain/plugin-authoring/naming.md#instruction-file"
-          ]
-        }
-      },
-      {
-        "data": {
           "id": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
           "label": "devbook Owns One Section of AGENTS.md",
           "type": "chapter",
@@ -809,7 +788,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-owns-one-section-of-agentsmd",
           "level": 2,
-          "line": 853,
+          "line": 790,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -908,7 +887,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "the-debt",
           "level": 2,
-          "line": 52,
+          "line": 51,
           "status": "active",
           "statusDeclared": false
         }
@@ -922,7 +901,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "origin",
           "level": 2,
-          "line": 70,
+          "line": 69,
           "status": "active",
           "statusDeclared": false
         }
@@ -936,7 +915,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 86,
+          "line": 85,
           "status": "active",
           "statusDeclared": false
         }
@@ -950,7 +929,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "impact",
           "level": 2,
-          "line": 108,
+          "line": 107,
           "status": "active",
           "statusDeclared": false
         }
@@ -964,7 +943,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 121,
+          "line": 120,
           "status": "active",
           "statusDeclared": false
         }
@@ -1609,22 +1588,6 @@
       },
       {
         "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#instruction-file",
-          "label": "Instruction File",
-          "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
-          "slug": "instruction-file",
-          "level": 2,
-          "line": 64,
-          "status": "active",
-          "statusDeclared": false,
-          "kind": "term",
-          "outOfScope": true
-        }
-      },
-      {
-        "data": {
           "id": ".devbook/tech/hosts.md#claude-code-cli",
           "label": "Claude Code CLI",
           "type": "chapter",
@@ -1939,14 +1902,6 @@
           "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "source": ".devbook/arc42/09-architecture-decisions.md",
           "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
-          "type": "contains"
-        }
-      },
-      {
-        "data": {
-          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "source": ".devbook/arc42/09-architecture-decisions.md",
-          "target": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
           "type": "contains"
         }
       },
@@ -2771,38 +2726,6 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/tech/hosts.md#claude-code-routines",
           "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "target": ".devbook/tech/hosts.md#claude-code-routines",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host->.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
-          "source": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "target": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
-          "source": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host->.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
-          "source": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host->.devbook/domain/plugin-authoring/naming.md#instruction-file",
-          "source": ".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host",
-          "target": ".devbook/domain/plugin-authoring/naming.md#instruction-file",
           "type": "related"
         }
       },

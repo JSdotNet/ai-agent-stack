@@ -10,6 +10,7 @@
 
 import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
     parseDocument,
     folderKindForPath,
@@ -73,7 +74,29 @@ export const CONTRACT_VERSION = 7;
 // presence of a migration decides whether one runs, never the version number.
 export const SCHEMA_VERSION = CONTRACT_VERSION;
 export const REPO_SCOPE = ".";
+
+// Where a repository that adopts the convention keeps this folder. The fallback
+// for `generatedBy`, and still the right answer whenever the generator is not
+// inside the repository it is indexing — a plugin install, or `--root`.
 export const GENERATOR = ".github/tools/devbook-meta/build.mjs";
+
+const GENERATOR_FILE = fileURLToPath(new URL("./build.mjs", import.meta.url));
+
+/**
+ * What a derived artifact stamps as `generatedBy`: a repo-relative path to the
+ * generator, so anyone finding a `_meta/` file knows how to regenerate it.
+ *
+ * A repository that vendors this folder somewhere other than the conventional
+ * location — the one that authors the convention, for instance — gets a path
+ * that actually resolves. When the generator sits outside the repository the
+ * only honest answer is the conventional location: an absolute path would break
+ * determinism, and a `../..` climb out of the repository is not repo-relative.
+ */
+export function generatorPath(repoRoot) {
+    const relative = path.relative(path.resolve(repoRoot), GENERATOR_FILE);
+    if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) return GENERATOR;
+    return relative.split(path.sep).join("/");
+}
 
 // Metadata fields that hold `<path>` / `<path>#<slug>` references, and the edge
 // type each one produces. Non-reference list fields (`aliases`, `alternatives`,
@@ -559,7 +582,7 @@ export async function buildGraphDocument(
     return {
         // Bumped whenever the emitted shape changes, so consumers detect drift.
         schemaVersion: SCHEMA_VERSION,
-        generatedBy: GENERATOR,
+        generatedBy: generatorPath(repoRoot),
         scope,
         sources: scope === REPO_SCOPE ? folders : [scope],
         // Deliberately no timestamp: the index is a deterministic function of

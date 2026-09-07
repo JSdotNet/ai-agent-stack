@@ -34,8 +34,15 @@ node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs
 
 The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
 reports body budgets. The second fails on a chapter whose `meta` block or reference does not
-resolve. Run the generator without `--check` to refresh `_meta/` after a chapter edit, and
-commit what it wrote.
+resolve.
+
+`--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
+branches that each touch one chapter both rewrite the same JSON, and the conflict is only
+resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
+`devbook-check` routine refreshes the indexes daily and opens a pull request when they moved.
+`.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
+at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
+`plugins/devbook/instructions/devbook-derived-artifacts.instructions.md`.
 
 ## Committing
 
@@ -68,10 +75,13 @@ A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`
 
 A rule that applies to one kind of file is authored once in `.agents/rules/` and wrapped per
 host: Claude loads `.claude/rules/<topic>.md` when it opens a matching file, Copilot loads
-`.github/instructions/<topic>.instructions.md`. Seven topics — `agents`, `skills`,
-`instructions`, `manifests`, `hooks`, `devbook-chapter`, `devbook-meta`. Change a rule and its
-two wrappers in the same commit; `node tools/check-assets.mjs` fails on drift. The convention
-itself is [.agents/rules/README.md](.agents/rules/README.md).
+`.github/instructions/<topic>.instructions.md`. Five topics, all plugin authoring — `agents`,
+`skills`, `instructions`, `manifests`, `hooks`. Change a rule and its two wrappers in the same
+commit; `node tools/check-assets.mjs` fails on drift. The convention itself is
+[.agents/rules/README.md](.agents/rules/README.md).
+
+`.devbook/**` has no topic here on purpose: the devbook section at the end of this file states
+the folder rules for both hosts, and devbook owns it.
 
 A rule fires when a host **reads** a matching file, so authoring one from scratch may not
 trigger it. Open a sibling first, or read the rule directly.
@@ -104,3 +114,32 @@ claude plugin marketplace add JSdotNet/ai-agent-stack
 
 During development, add this working copy by path instead of by repo, then `/plugin` to enable
 what you are editing.
+
+<!-- devbook:begin -->
+## Knowledge folders
+
+Managed by `devbook-sync`. Edit outside these markers; an edit inside them makes the
+next reconcile report the section as customized and leave it alone.
+
+This repository keeps its knowledge as addressed Markdown chapters. Treat the folders as
+task-scoped context, never baseline context: load the chapters a task names, walk
+`related` and `depends-on` from them, and never load a folder whole.
+
+| Folder | Holds | Rules |
+| --- | --- | --- |
+| `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.instructions.md` |
+| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.instructions.md` |
+| `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.instructions.md` |
+| `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.instructions.md` |
+| `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.instructions.md` |
+
+Every chapter carries a fenced `meta` block; write it in the same change as the content,
+per `devbook-chapter-metadata.instructions.md`. Skip `annotation` fences when loading a
+chapter as context: they hold review notes, not content.
+
+Files under any `_meta/` folder are generated tool input. Never read or hand-edit them,
+and never regenerate or commit them in a session — the `devbook-check` routine owns that
+refresh. Run the check before committing:
+
+    node plugins/devbook/tools/devbook-meta/build.mjs --check
+<!-- devbook:end -->

@@ -8,7 +8,7 @@ description: "Push the current branch to its remote and stop there — no pull r
 ## Purpose
 
 Get the current branch and its commits onto the remote, and nothing more. This is the
-lightweight alternative to `create-pull-request` for when the branch just needs to exist
+lightweight alternative to opening a pull request for when the branch just needs to exist
 on the remote — to back up work, to trigger CI, or because a pull request already exists
 and only needs the new commits.
 
@@ -19,7 +19,7 @@ and only needs the new commits.
 
 ## Hard Constraints
 
-- Never create, update, or publish a pull request. That is `create-pull-request`.
+- Never create, update, or publish a pull request. This skill pushes and stops.
 - Never force-push. If the remote has diverged, stop and hand off to `update-pr-branch`.
 - Never commit, amend, stash, or rebase on the user's behalf without being asked.
 - Never push secrets, `.env` files, or local settings — inspect the outgoing diff first.
@@ -107,7 +107,6 @@ Skip this step when `gh` is unavailable or unauthenticated — it is information
 
 ## Related Skills
 
-- `create-pull-request` — push and open a reviewable pull request with a diff-grounded body.
 - `update-pr-branch` — integrate the base branch and resolve conflicts after a rejected push.
 - `fix-pr-checks` — diagnose and fix checks that go red after the push.
 

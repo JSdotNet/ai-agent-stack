@@ -3,6 +3,7 @@
 ```meta
 index: root
 type: context-map
+related: [".devbook/arc42/09-architecture-decisions.md#one-plugin-one-bounded-context", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 **One plugin, one bounded context.** A plugin is the unit a host installs, versions, and can
@@ -10,7 +11,8 @@ refuse to load, so it is already the line a model cannot cross without somebody 
 which is what a bounded context has to be before it earns a folder here. Nine folders follow
 the nine plugin folders under `plugins/`, name for name, plus
 [Plugin Authoring](#plugin-authoring), the only one that is not a plugin: it is the language
-the other nine are written in.
+the other nine are written in. See
+[the decision](../arc42/09-architecture-decisions.md#one-plugin-one-bounded-context).
 
 This repository ships authoring assets rather than a running product, so a *user* here is a
 host that loads an asset and a repository that installs one. Both sit outside every boundary,

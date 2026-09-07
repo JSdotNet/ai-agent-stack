@@ -120,10 +120,14 @@ release, and they went with the plugin that shipped that server. The dashboard r
 last comment naming an old skill was reworded on 2026-09-05.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
-`delivery`, `delivery-dashboard`, and `delivery-collector` are packages of one subsystem while
-`flow-feature` and `phase-build-test` are the procedures inside them — which is why a surface
-is `delivery-dashboard` and never `flow-dashboard`. `fleet` is its own stem, not a package
-inside `delivery`, because fan-out is a different subsystem.
+`delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
+subsystem while `flow-feature` and `phase-build-test` are the procedures inside them — which is
+why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface carries the
+contract word after the stem and the implementation after that, so the three are read as one
+kind from the marketplace list alone; see
+[the decision](../../arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word).
+`fleet` is its own stem, not a package inside `delivery`, because fan-out is a different
+subsystem.
 
 ## Fleet Skill
 
@@ -234,15 +238,16 @@ resolves it at runtime, by pattern, from the live tool list. **Absence is a norm
 the run produces its file artifacts, says so once, and continues — it costs a view, never a
 capability.
 
-Three ship here. `delivery-dashboard` answers all three groups, `delivery-canvas` render only,
-and `delivery-collector` lifecycle and export only. Each declares exactly the tool names its
-groups name and nothing more, which is what makes one substitutable for another. See
+Three ship here. `delivery-surface-dashboard` answers all three groups, `delivery-surface-canvas`
+render only, and `delivery-surface-collector` lifecycle and export only. Each declares exactly
+the tool names its groups name and nothing more, which is what makes one substitutable for
+another. See
 [the decision](../../arc42/09-architecture-decisions.md#three-surfaces-one-contract).
 
-A surface is not required to be an MCP server. `delivery-canvas` is a Copilot canvas and
+A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
 nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
 which is why the contract matches operation names and never a transport. See
-[the decision](../../arc42/09-architecture-decisions.md#delivery-canvas-ships-the-canvas-only).
+[the decision](../../arc42/09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only).
 
 The fourth, `devbook-canvas`, renders the reference graph `_meta/graph.json` produces. It is
 packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's

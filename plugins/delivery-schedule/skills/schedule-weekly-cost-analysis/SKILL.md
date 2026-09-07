@@ -1,6 +1,6 @@
 ---
 name: schedule-weekly-cost-analysis
-description: 'Analyse the token usage the delivery-dashboard recorded for the week''s flow runs, surface the top actionable cost-reduction tips, and produce a concise report.'
+description: 'Analyse the token usage the delivery-surface-dashboard recorded for the week''s flow runs, surface the top actionable cost-reduction tips, and produce a concise report.'
 disable-model-invocation: true
 ---
 

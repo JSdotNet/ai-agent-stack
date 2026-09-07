@@ -8,11 +8,10 @@ is repository-specific, and belongs in that repository's own instruction files.
 Copy the relevant parts below into the target repository, then edit them to name
 the flows, agents, and MCP servers that repository actually has installed. Delete any knowledge folder the repository did not adopt.
 
-The plugin ships no per-folder flow of its own. The `devbook-flows` bridge does —
-`flow-arc42-content`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai` — so a
-repository that has it enabled can name those directly as the entry point for each
-folder. Without it, name the repository's own `flow-*` skill, `flow-fallback`, or the
-folder's instruction files.
+The plugin ships no flow of its own. The `delivery` engine ships one per folder —
+`flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai` — which the routes below
+name as the entry point for each folder. Without that engine, name the repository's own
+`flow-*` skill or the folder's instruction files instead.
 
 The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
 `devbook-sync` writes (`agents-section.md`), so do not restate them here. What follows
@@ -25,7 +24,8 @@ is routing only, and none of it goes inside that section's markers.
 
 - Architecture, arc42, blueprint, ADR, and TDR workflows may load `.arc42/` as
   working context, but should load only the chapter(s) relevant to the requested
-  scope. Route direct `.arc42/` chapter edits through `flow-arc42-content`.
+  scope. Route every `.arc42/` change — a chapter, a decision record, a debt record —
+  through `flow-arc42`.
 - Domain modeling workflows may load `.domain/` as working context, but should
   load only the relevant bounded-context chapters. Route `.domain/` edits through
   `flow-domain`.

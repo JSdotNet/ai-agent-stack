@@ -250,10 +250,9 @@ the write to whatever flow covers the folder, resolved in this order:
 
 1. **A repo-native `flow-*` skill** for that folder — it takes precedence over anything a
    plugin provides.
-2. **The folder's own flow** — `flow-domain`, `flow-tech`, `flow-design`,
-   `flow-arc42-content`, `flow-ai` — present when the `devbook-flows` bridge is enabled.
-3. **`flow-fallback`**, when a flow engine is installed but no flow covers the folder.
-4. **Directly**, following that folder's `devbook-*.instructions.md` and
+2. **The flow engine's own flow for the folder**, named after it — `flow-<folder>` —
+   when an engine is installed.
+3. **Directly**, following that folder's `devbook-*.instructions.md` and
    `devbook-chapter-metadata.instructions.md`, when no flow engine is installed at all.
 
 Name the rung that answered, once, in the report. Whichever rung it is owns template

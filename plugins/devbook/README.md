@@ -86,14 +86,13 @@ tooling before delegating graph authoring to the `.tech` write path.
 **Trigger keywords:** `update technology graph`, `refresh .tech`,
 `technology inventory`, `.NET packages`, `frontend packages`, `package graph`
 
-### Skills: per-folder flows — moved
+### No flows
 
-The five folder-specific writing flows are no longer here. `flow-arc42-content`,
-`flow-domain`, `flow-tech`, `flow-design`, and `flow-ai` live in the
-[`devbook-flows`](../devbook-flows) bridge plugin, which depends on this plugin and on
-`delivery`. They only make sense with a flow-runner and its shared phases, and keeping
-them here made the foundation name the layer above it. With `devbook` alone, a folder edit
-follows that folder's instruction file directly.
+This plugin ships the shape of a knowledge folder and never the procedure for changing one.
+The instruction files below say what a chapter must look like, and the check says whether it
+does; how a change is carried — stages, roles, the approval gate, a pull request — is the
+delivery engine's, which ships one flow per folder and reads these rules from the repository.
+With `devbook` alone, a folder edit follows the folder's instruction file directly.
 
 ### Skills: `to-spec-<kind>` and `from-spec-<kind>`
 

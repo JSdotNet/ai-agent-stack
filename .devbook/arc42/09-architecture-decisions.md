@@ -1319,3 +1319,56 @@ own and the skills report a five-way drift verdict between them. Ordinary Englis
 Consequence: two skills renamed, the Stamp term reworded, and `devbook sync` kept as a trigger
 phrase in both so a session asking by the old name still lands. No stamp key changes, so no
 migration: `components.devbook` and `components.schedule` were never named after the skill.
+
+## A Session-Start Hook Fires Only Where the Repository Adopted the Plugin
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+```
+
+A plugin is enabled per machine; almost everything it ships is inert until asked for. A hook is
+the exception — it fires on the host's schedule, not on a request — so an unguarded
+`SessionStart` hook is the one component that speaks in every repository on the machine whether
+or not that repository uses the plugin. Five of them did, spending context in every session and
+pushing routing toward skills the repository never adopted.
+
+Each `emit-session-context.mjs` now resolves the repository root and stays silent unless the
+repository opted in: it names the plugin in its own `enabledPlugins`, or it carries the assets
+the guidance is about — a devbook folder for `devbook` and `devbook-collaboration`,
+`.github/ai-agent-stack.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
+`delivery-schedule`. The explicit opt-in outranks the markers, so a repository that adopted a
+plugin but has written nothing yet still gets its guidance. Only `MARKERS` differs between the
+five copies; a plugin installs alone and may not import from a sibling, so the logic is
+duplicated rather than shared.
+
+Consequence, and it is a real one: [a missing config file is still normal to a
+run](#one-config-file-two-kinds-of-key), but it no longer carries the routing hint. A
+repository that runs flows on pure defaults, with neither the stack config nor an entry in its
+own `enabledPlugins`, now starts its sessions without the flow routing text. The flows are
+unchanged and still work there; only the unprompted nudge is gone, and the file that restores
+it is the one `stack-init` writes anyway.
+
+Copilot reads `hooks.json` at the plugin root, where a hook is `type: prompt` and cannot guard
+itself. That copy stays unconditional, which is why its opening sentence hedges where the
+Claude one can decide.
+
+## A Tool Matcher Names Its Tools
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#a-session-start-hook-fires-only-where-the-repository-adopted-the-plugin", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+```
+
+`delivery-surface-dashboard` collects tool telemetry through `PreToolUse`/`PostToolUse`, and a
+`"*"` matcher there is one process spawn per tool call, in every session the plugin is enabled
+in, whether or not a run is active. The guards above do not reach it: the run-active check
+happens inside the process, after it has already started.
+
+The matcher now names shell, edits, `Artifact`, sub-agents, skills, and every MCP tool
+including QA, and drops the read-only ones — `Read`, `Grep`, `Glob`, `WebFetch`, `WebSearch`,
+`TodoWrite`. Those are the bulk of a session's calls and the least of its time.
+
+Consequence: `categorizeTool`'s "Read" bucket no longer appears in a run's time-by-tool
+breakdown, and the context gauge samples on matched calls only. A panel that needs a new tool
+needs it in the matcher too — a dropped tool reaches none of the hook's code.

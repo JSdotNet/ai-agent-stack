@@ -13,7 +13,7 @@ several.
 ```meta
 status: trial
 type: skill
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill"]
 ```
 
 Task categories route to a `flow-<category>` skill that runs the category end to end.
@@ -46,7 +46,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
 ```meta
 status: candidate
 type: skill
-related: [".devbook/domain/plugin-authoring/naming.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#fleet-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
 ```
 
 `fleet` sweeps a backlog and works it five issues at a time across sessions and worktrees,
@@ -68,7 +68,7 @@ instead of one session at a time.
 ```meta
 status: candidate
 type: skill
-related: [".devbook/domain/plugin-authoring/naming.md#schedule", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#schedule", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin"]
 ```
 
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud

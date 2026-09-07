@@ -4,15 +4,19 @@
 type: features
 ```
 
-> What this context lets a maintainer do, in the language of [naming.md](naming.md) rather
+> What this context lets a maintainer do, in the language of [domain.md](domain.md#ubiquitous-language) rather
 > than in file paths. Four features, and each is a thing a host or a consuming repository
 > can observe.
+
+**This context keeps `features.md` rather than `skills.md`, because it ships no skills** — it
+is the only context here that is not a plugin. What it offers is a way of authoring, and the
+chapters below are features of that.
 
 ## Author an Asset
 
 ```meta
 type: feature
-related: [".devbook/domain/plugin-authoring/naming.md#agent", ".devbook/domain/plugin-authoring/naming.md#skill", ".devbook/domain/plugin-authoring/naming.md#plugin-rule", ".devbook/domain/plugin-authoring/naming.md#hook"]
+related: [".devbook/domain/plugin-authoring/domain.md#agent", ".devbook/domain/plugin-authoring/domain.md#skill", ".devbook/domain/plugin-authoring/domain.md#plugin-rule", ".devbook/domain/plugin-authoring/domain.md#hook"]
 ```
 
 Write one file that both hosts load: an agent, a skill, an instruction file, or a hook. The
@@ -43,7 +47,7 @@ must be longer. The budget triggers a disclosure decision; it is not a gate.
 
 ```meta
 type: feature
-related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 Group assets that belong together into one folder a host can install on its own.
@@ -62,7 +66,7 @@ plugin whose whole payload belongs to one host ships that host's alone.
 
 ```meta
 type: sub-feature
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
 ```
 
 Name the lower layer a plugin cannot work without, with a version range, so the host makes an
@@ -73,7 +77,7 @@ bound per repository or resolved from the live tool list.
 
 ```meta
 type: feature
-related: [".devbook/domain/plugin-authoring/naming.md#marketplace", ".devbook/arc42/05-building-block-view.md#marketplace-root"]
+related: [".devbook/domain/plugin-authoring/domain.md#marketplace", ".devbook/arc42/05-building-block-view.md#marketplace-root"]
 ```
 
 List a plugin once in the marketplace so a host can offer it. A folder that is not listed does
@@ -84,7 +88,7 @@ Claude's catalogue.
 
 ```meta
 type: feature
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/domain/plugin-authoring/naming.md#migration"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/domain/plugin-authoring/domain.md#migration"]
 ```
 
 Copy a plugin's inert payload into a consuming repository, record what landed in that

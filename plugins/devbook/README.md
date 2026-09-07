@@ -126,7 +126,7 @@ Five kinds, two directions each:
 |------|--------|-----------------|-----------------|
 | `aggregate` | `.domain/<context>/domain.md` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-event` | `.domain/<context>/` |
 | `domain-service` | `.domain/<context>/domain.md` | `domain-service`, plus `domain-event` for events the service itself raises | `.domain/<context>/` |
-| `feature` | `.domain/<context>/features.md` | `feature`, `sub-feature` | `.domain/<context>/` |
+| `feature` | `.domain/<context>/features.md`, or `skills.md` where the context describes skills | `feature`, `sub-feature` | `.domain/<context>/` |
 | `building-block` | `.arc42/05-building-block-view.md` | none — `.arc42` defines no value set | `.arc42/` |
 | `design-component` | `.design/component-libraries.md` | none — `.design` defines no value set | `.design/` |
 
@@ -153,12 +153,12 @@ only against a local or disposable environment, never exercises a destructive
 step to document it, and keeps the screenshots as report evidence rather than
 committing them to a devbook folder.
 
-**`naming.md` term chapters have no pair of their own.** They are written through
+**Term chapters have no pair of their own.** They are written through
 the `.domain` write path, and populated incrementally by the capture passes: whenever one
 resolves a counterpart by inference rather than by an existing alias, it proposes
 a term with the discovered code name as an `alias`, which turns a one-off
 inference into a durable pairing for the next pass. The context folder itself, including
-`naming.md`, is created by the same path.
+its term chapters, is created by the same path.
 
 `.tech` has no pair here — `devbook-tech-update` already covers that
 direction.
@@ -172,7 +172,7 @@ regeneration, and a shared report table.
 
 Counterpart resolution deliberately uses **no metadata field** linking a chapter
 to a code path — a path in a `meta` block rots on the first refactor and gives no
-signal when it does. It goes through `naming.md` `aliases`, then the `.arc42`
+signal when it does. It goes through a `term` chapter's `aliases`, then the `.arc42`
 building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 

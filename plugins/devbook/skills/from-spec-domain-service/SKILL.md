@@ -48,7 +48,7 @@ is already there:
 
 | Chapter element | What building it requires | Where to check |
 |---|---|---|
-| Heading (canonical name) | A type whose name resolves to this term through `naming.md` aliases | The context's domain project |
+| Heading (canonical name) | A type whose name resolves to this term through `domain.md` aliases | The context's domain project |
 | Responsibility | Methods that accomplish what the chapter describes, and no transaction or transport concerns beyond it | Any existing near-equivalent, including logic inlined in a handler |
 | Why not on an aggregate | The behaviour placed in a service rather than pushed onto one root | Whether the logic currently sits inside an aggregate that should not own it |
 | Coordinated aggregates and policies | Each named aggregate loaded, mutated, or saved as the chapter states | Existing repository usage at the call sites |
@@ -71,7 +71,7 @@ the first thing lost when the semantics is left implicit.
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read the target chapter, the
-   chapters of every aggregate it coordinates, the context's `naming.md`, and
+   chapters of every aggregate it coordinates, the context's `domain.md`, and
    `dependencies.md` when it reaches across a context boundary.
 
 2. **Apply the status gate.** Above. Do not proceed past a `draft`, `proposed`,

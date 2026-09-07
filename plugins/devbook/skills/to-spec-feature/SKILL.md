@@ -8,7 +8,8 @@ description: 'To-spec direction (capture), feature kind: read a shipped capabili
 ## Purpose
 
 A capability is shipped and reachable by users, and
-`.domain/<context>/features.md` does not describe it — or describes a
+`.domain/<context>/features.md` — or `skills.md`, where the context describes
+skills rather than product features — does not describe it, or describes a
 sub-feature breakdown the product has since outgrown. This skill runs the
 application and uses the feature, reads the implementation and its tests, states
 the capability in business language, and routes a grounded chapter through
@@ -45,7 +46,7 @@ The feature chapter's parts and the code that evidences each one:
 
 | Chapter element | Code, test, and runtime evidence |
 |---|---|
-| Heading (the bare name) | The capability's name in business language, reconciled with `naming.md` — not the controller, component, or flag name |
+| Heading (the bare name) | The capability's name in business language, reconciled with `domain.md` — not the controller, component, or flag name |
 | Capability description | What a user can now do, established from the reachable paths through the application: endpoints, screens, commands, jobs — and confirmed by **running the application and using the feature** |
 | Observed behaviour | What the running application actually does when the feature is exercised: the steps a user takes, the state changes they see, the wording the interface uses, and where the flow ends |
 | Screenshots | Captures of each distinguishable step of the flow, used as the evidence behind the capability description and its sub-feature breakdown |
@@ -117,11 +118,11 @@ up to that point and record the rest from code and tests.
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read only the target context's
-   `features.md` and `naming.md`, plus `domain.md` for the aggregates the
+   `features.md` and `domain.md`, plus `domain.md` for the aggregates the
    capability exercises.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
-   `naming.md` aliases first, then `.arc42/05-building-block-view.md`, then the
+   `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
    observed naming convention. Record which rung matched. Stop at `unresolved`
    if the ladder yields no single candidate or more than one.
 
@@ -157,7 +158,7 @@ up to that point and record the rest from code and tests.
    - **The steps**, in the order a user meets them, and where the flow ends.
    - **The wording the interface actually uses** — this is real evidence about
      the ubiquitous language, and it often disagrees with both the code and
-     `naming.md`. A disagreement is worth reporting rather than quietly
+     `domain.md`. A disagreement is worth reporting rather than quietly
      normalising.
    - **The observable outcome** of each step: what the user sees change.
    - **The sub-feature seams**: which parts a user would name separately.
@@ -172,7 +173,7 @@ up to that point and record the rest from code and tests.
    not content for `.domain/`.
 
 5. **Translate into business language.** Restate what the code does and what you
-   observed as what the product lets someone do, using the context's `naming.md`
+   observed as what the product lets someone do, using the context's `domain.md`
    terms. Prefer the observed flow over the code's structure where they suggest
    different breakdowns — the user's view is what this file records. Drop every
    implementation noun. If the capability cannot be stated without naming a

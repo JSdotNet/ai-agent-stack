@@ -55,7 +55,8 @@ here.
 If the repository has no `.domain/` folder, stop and run `devbook:install`
 first for the `.domain` adoption path. If the bounded context folder does not
 exist, stop — this skill does not create one. A context's `domain.md`,
-`features.md`, `model.md`, `dependencies.md`, and `naming.md` are created
+`features.md` or `skills.md`, `model.md`, `dependencies.md`, and the context's
+term chapters are created
 together by the `.domain` flow, and creating only `domain.md` leaves the folder
 malformed.
 
@@ -65,7 +66,7 @@ malformed.
 
 | Chapter element | Code and test evidence |
 |---|---|
-| Heading (the bare name) | The aggregate root type's name, after resolving through `naming.md` aliases — the heading carries the canonical term, not the class name, when they differ |
+| Heading (the bare name) | The aggregate root type's name, after resolving through `domain.md` aliases — the heading carries the canonical term, not the class name, when they differ |
 | Identity | The root's id type and how it is assigned: constructor argument, factory-generated, database-assigned |
 | Responsibility | What the root's public methods, taken together, let a caller do — not what any one method is called |
 | Consistency boundary | Which types are loaded, mutated, and saved in one transaction: the repository interface's granularity, what the root's collections own, what it references by id only |
@@ -80,7 +81,7 @@ needs and the one a prose-only chapter most often loses.
 
 | Chapter element | Code and test evidence |
 |---|---|
-| Heading | The entity type name, via `naming.md` aliases |
+| Heading | The entity type name, via `domain.md` aliases |
 | Identity | The id type and its **scope**: globally unique, or unique only within this aggregate. A local-only id is a strong signal the type is an entity rather than a root |
 | Role within the aggregate | Which of the root's methods create, mutate, or remove it |
 | Lifecycle | Whether it can be removed independently, and whether removal cascades from the root |
@@ -97,7 +98,7 @@ When the code says root and the chapter says entity, or the reverse, that is a
 
 | Chapter element | Code and test evidence |
 |---|---|
-| Heading | The type name, via `naming.md` aliases |
+| Heading | The type name, via `domain.md` aliases |
 | Meaning | What it represents, from its members and the operations offered on it |
 | Equality semantics | How value equality is actually implemented: a record type, a struct, an overridden `Equals`/`GetHashCode`, an `IEquatable` implementation, or comparison on a component list |
 | Immutability | Absence of setters, init-only or readonly members, and copy-style mutation returning a new instance |
@@ -127,7 +128,7 @@ records the current model, not a prediction.
 
 | Chapter element | Code and test evidence |
 |---|---|
-| Heading | The event type name, via `naming.md` aliases |
+| Heading | The event type name, via `domain.md` aliases |
 | Trigger | The exact publication site: which of the root's methods raises it, **and under what condition**. An event raised inside a conditional branch has that condition as part of its trigger |
 | Payload | Every field, with meaning and shape expectations — nullability, units, identifier form, whether an id refers to another aggregate |
 | Consumers | Registered handlers and subscribers: dispatcher registrations, bus subscriptions, outbox mappings, and the contexts they belong to |
@@ -154,12 +155,12 @@ service raises it.
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Then read only the target
-   context's `domain.md` and `naming.md`, plus `.domain/context-map.md` for
+   context's `domain.md` and `domain.md`, plus `.domain/context-map.md` for
    cross-context relationships and `dependencies.md` for the published-language
    entries any event consumers rely on. Do not read the whole `.domain` folder.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
-   `naming.md` aliases first, then `.arc42/05-building-block-view.md`, then the
+   `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
    observed naming convention of the context's sibling aggregates. Record which
    rung matched. Stop at `unresolved` if the ladder yields no single candidate
    or more than one.
@@ -252,12 +253,12 @@ service raises it.
    untouched.
 
 9. **Propose the naming entries.** Where a counterpart resolved through the
-   observed-convention rung and the type has no `naming.md` term, propose one
+   observed-convention rung and the type has no `domain.md` term, propose one
    with the discovered code name as an `alias` and a `related` reference back to
    its chapter. Propose it; the write still routes through the `.domain` flow.
 
 10. **Route the write through the `.domain` flow.** Hand over every drafted chapter, the
-    placement decisions and the evidence for them, the proposed `naming.md` entries, and
+    placement decisions and the evidence for them, the proposed `domain.md` entries, and
     the evidence behind each claim. The `.domain` flow owns template conformance, the
     metadata blocks, and the consistency review. Do not write `domain.md` directly. The
     rung that answers is resolved per **Where the spec-side write goes** in

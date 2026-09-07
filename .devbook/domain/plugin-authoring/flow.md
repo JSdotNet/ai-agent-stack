@@ -2,7 +2,7 @@
 
 ```meta
 type: flow
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/domain/plugin-authoring/naming.md#gate", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/domain/plugin-authoring/domain.md#stamp", ".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 > How the terms in [model.md](model.md) move over time: a file becoming something a host
@@ -41,7 +41,7 @@ flowchart LR
 
 ## Materializing a Component
 
-The one flow whose state persists outside this repository. A [stamp](naming.md#stamp) is the
+The one flow whose state persists outside this repository. A [stamp](domain.md#stamp) is the
 consuming repository's record of what a plugin put there, and it is read by presence — a
 missing key means *absent*, never *older*.
 
@@ -71,8 +71,8 @@ stateDiagram-v2
 
 ## A Flow Run
 
-What a [flow skill](naming.md#flow-skill) does with the closed set of
-[extension points](naming.md#extension-point), in one session. Services are on the spine;
+What a [flow skill](domain.md#flow-skill) does with the closed set of
+[extension points](domain.md#extension-point), in one session. Services are on the spine;
 chores hang off it and may never move it.
 
 ```mermaid
@@ -107,4 +107,4 @@ flowchart TD
   `data.prepare`, `app.start`, and `qa.run`: gate, then `deliver`. The tier a bridge plugin's
   flow declares is its own, because the engine may not name a skill in a layer above it.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
-  never self-approves, which is the boundary between a flow and a [fleet skill](naming.md#fleet-skill).
+  never self-approves, which is the boundary between a flow and a [fleet skill](domain.md#fleet-skill).

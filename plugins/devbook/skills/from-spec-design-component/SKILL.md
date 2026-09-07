@@ -105,7 +105,7 @@ Write them out as invariants, with the token names.
 
 6. **Extract the ubiquitous language.** Use the component and token names the
    `.design` chapters declare, and the domain terms from
-   `.domain/<context>/naming.md` for any user-facing copy, so the implementation
+   `.domain/<context>/domain.md` for any user-facing copy, so the implementation
    does not introduce a third vocabulary.
 
 7. **Draw the out-of-scope boundary.** Name what this change does not do: other

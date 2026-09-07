@@ -8,7 +8,8 @@ disable-model-invocation: true
 
 ## Purpose
 
-A capability is described in `.domain/<context>/features.md` and agreed, and the
+A capability is described in `.domain/<context>/features.md` — or `skills.md`,
+where the context describes skills — and agreed, and the
 product does not offer it — or offers part of it, missing sub-features the
 chapter names. This skill reads the chapter and produces a **change brief**:
 outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus
@@ -72,7 +73,7 @@ each row's `Enforced at` point, and leave `open` rows out of the invariants list
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read the target chapter, its
    `###` sub-feature chapters, every chapter named in `depends-on`, the
-   `related` `domain.md` chapters, and the context's `naming.md`.
+   `related` `domain.md` chapters, and the context's `domain.md`.
 
 2. **Apply the status gate.** Above. Do not proceed past a `draft`, `proposed`,
    or `deprecated` chapter without the stated confirmation.

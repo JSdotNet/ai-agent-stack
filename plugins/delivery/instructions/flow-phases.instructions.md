@@ -127,6 +127,15 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
 
 - **Do not delegate to an agent and do not auto-approve.** Pause and wait for the user's
   explicit decision.
+- **Commit the change set before handing back, when `policy.commit.at` is `gate`.** One commit
+  per handback, on the run's working branch, with a message derived from the run's scope
+  record. This is then the flow's only commit point — no earlier stage commits. Stage what the
+  run changed; name anything else in the working tree in the stage output and leave it
+  uncommitted. Never amend, squash, or push here — a revise round produces a **new** commit at
+  the next handback, and pushing belongs to Create Pull Request. With nothing to commit, say so
+  and create no empty commit. If the commit fails — a rejecting hook, a signing error — name
+  the actual error in the stage output and hand back anyway: the user is present, and the
+  failure is theirs to decide on. Under the default `manual` this phase commits nothing.
 - **Present the code review** of the change set for the user to read.
 - **Present the recorded QA review** — scenarios, pass/fail, monitoring findings, and any
   captured evidence — when QA Validation ran.

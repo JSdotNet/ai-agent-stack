@@ -826,3 +826,29 @@ unchanged, because the chapter schema did not move, and a repository synced befo
 `devbook` 1.3.0 gains the section as a plain `create` on its next reconcile. The session-start
 hook keeps its generic text: it is what reaches a session in a repository that never ran a
 reconcile, and the section is what makes a reconciled one specific.
+
+## The Handback Is the Commit Point
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+```
+
+The engine said nothing about when a flow commits, so whether a run produced one commit or
+fifteen was whatever the bound `implement` provider happened to do. A reviewer reading the
+resulting branch could not tell a handback from a mid-stage save.
+
+`policy.commit.at` closes that: `gate` makes Personal Validation the single commit point —
+one commit before every handback, a new commit for every revise round, and no stage before it
+commits at all. `manual`, the default, is today's behaviour and leaves committing to the user.
+
+The commit belongs to the gate phase rather than to `implement` because the handback is what
+it marks. A commit per implementation pass records how the work was written; a commit per
+handback records what the user was asked to approve, which is the unit anyone later reads the
+branch for. Attaching it to the phase also keeps it out of the provider contract, so a
+repository swapping coding plugins does not change how its history is shaped.
+
+Consequence: with `gate` set, a rejected handback leaves a committed change set on the branch
+that the next commit corrects rather than replaces — deliberately, since amending would
+rewrite what the user already reviewed. A branch therefore carries one commit per validation
+round, not one per flow.

@@ -79,6 +79,10 @@
         "verify.retryBudget": { "type": "integer", "minimum": 0 },
         "gate.reviseBudget": { "type": "integer", "minimum": 0 },
         "gate.personalValidation": { "const": "required" },
+        "commit.at": {
+          "description": "Where the flow commits its change set. `gate` makes Personal Validation the single commit point — one commit per handback, a new commit per revise round, and no intermediate commits. `manual` leaves committing to the user.",
+          "enum": ["gate", "manual"]
+        },
         "pr.required": { "type": "boolean" },
         "pr.base": { "type": "string", "minLength": 1 },
         "phases.documentationUpdate": { "type": "boolean" },

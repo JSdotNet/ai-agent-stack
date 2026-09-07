@@ -27,7 +27,7 @@ when it does not.
 - Identify the suspected code paths and the integration points they touch.
 - Identify the governing instructions — the repository instructions bound to the
   `repo-instructions` slot, any matching `**/*.instructions.md`, and relevant guidelines or
-  ADRs via `jsdotnet-guidelines-mcpserver`.
+  ADRs from the checked-in chapters and any MCP server bound to `spec`.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the defect is really a missing feature, or when the fix needs a new

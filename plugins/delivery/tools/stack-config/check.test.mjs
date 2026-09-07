@@ -27,6 +27,7 @@ test('the worked example from the surface contract validates', () => {
             bindings: {
                 'delivery.tracker': { provider: 'github' },
                 'delivery.roles': { architecture: 'your-architecture-plugin', ux: null },
+                'delivery.mcp': { spec: ['your-guidelines-server'], 'qa.run': ['playwright'] },
             },
             extensions: {
                 'session.start': ['devbook:load-context'],
@@ -113,6 +114,19 @@ test('null binds a role deliberately, which is not the same as absent', () => {
 test('the tracker provider set is closed', () => {
     assert.deepEqual(check({ bindings: { 'delivery.tracker': { provider: 'jira', project: 'FIN' } } }), []);
     assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'trello' } } }).length, 1);
+});
+
+test('an MCP server binds to a point in the closed set, never to a free name', () => {
+    assert.deepEqual(check({ bindings: { 'delivery.mcp': { implement: ['microsoft-learn'] } } }), []);
+    const errors = check({ bindings: { 'delivery.mcp': { 'stage-1': ['your-guidelines-server'] } } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown key "stage-1"/);
+});
+
+test('a point takes a list of server ids, or null for deliberately none', () => {
+    assert.deepEqual(check({ bindings: { 'delivery.mcp': { spec: null } } }), []);
+    assert.equal(check({ bindings: { 'delivery.mcp': { spec: 'your-guidelines-server' } } }).length, 1);
+    assert.equal(check({ bindings: { 'delivery.mcp': { spec: ['mcp__plugin x'] } } }).length, 1);
 });
 
 test('no model key exists anywhere in the engine-owned config', () => {

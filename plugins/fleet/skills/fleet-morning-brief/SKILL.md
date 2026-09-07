@@ -173,5 +173,5 @@ worker finished cleanly, and the result file is the record.
 - `fleet-resolve-issue` — the worker that writes each result file.
 - `pr-merge-ready` (`delivery` plugin) — takes the pull requests this brief lists to
   merge-ready, one per pass.
-- `automation-week-starter` (`delivery` plugin) — the weekly external-news digest, not this
+- `schedule-week-starter` (`delivery-schedule` plugin) — the weekly external-news digest, not this
   repository's own work.

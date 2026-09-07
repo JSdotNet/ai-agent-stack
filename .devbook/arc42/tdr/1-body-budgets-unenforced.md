@@ -43,7 +43,8 @@ taking most of the short assets with them, and `spec-conciseness.instructions.md
 | `*.instructions.md` | 2 of 17 | 19 of 35 |
 | `*.agent.md` | 0 of 1 | 6 of 10 |
 
-Counted after `routines` merged in, which added six budgeted assets, three of them within.
+Counted after the unattended lane merged into `delivery-schedule`, which moved nine budgeted
+assets out of `delivery` and added three, one of them within.
 
 The debt is unchanged in substance and now concentrated almost entirely in the exempt kinds
 plus `fleet`. The largest four are `devbook`'s chapter-metadata and domain instruction files

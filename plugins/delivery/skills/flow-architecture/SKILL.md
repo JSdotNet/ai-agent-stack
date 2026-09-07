@@ -1,6 +1,6 @@
 ---
 name: flow-architecture
-description: 'Run general architecture work. Routes the work to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` for governed asset guidance before edits.'
+description: 'Run general architecture work. Routes the work to the `architecture` role, grounded in the repository guidelines for governed assets before edits.'
 ---
 
 # Flow: Architecture Work
@@ -21,11 +21,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Goal & Guideline Retrieval
 
 - Clarify the objective and the expected output.
-- Query `jsdotnet-guidelines-mcpserver` for standards and governed asset constraints.
+- Retrieve standards and governed asset constraints from the repository's own instruction
+  files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the repository constraints that affect governed plugin or guidance assets.
-- Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role
 
 ## Stage 2: Architecture Investigation
 

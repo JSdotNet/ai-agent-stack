@@ -261,51 +261,53 @@ stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
 | --- | --- | --- |
-| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
+| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
 | `components.<name>` | that component's own sync skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
-## Routine Plugin
+## Schedule Plugin
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#routine", ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/naming.md#schedule", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
-`routines` is where a schedule lives. It ships no procedure: six files under
-`resources/routines/`, each a cadence, a target skill in another plugin, the plugins that
-target needs, and the task half of a prompt, plus one preamble that carries the unattended
-rules every prompt starts with.
+`delivery-schedule` is where work that nobody watches lives, stacked on the engine it calls
+into. Two halves in one folder: nine `schedule-*` entry points that pick their own input and
+run a flow or a review, and six files under `resources/schedules/`, each a cadence, a target
+skill, the plugins that target needs, and the task half of a prompt, plus one preamble that
+carries the unattended rules every prompt starts with.
 
-| Routine | Target | Cadence |
+| Schedule | Target | Cadence |
 | --- | --- | --- |
-| `package-update` | `delivery:automation-package-update` | weekly |
-| `merge-review` | `delivery:automation-merge-review` | weekdays |
-| `change-report` | `delivery:automation-whats-new` | weekly |
+| `package-update` | `delivery-schedule:schedule-package-update` | weekly |
+| `merge-review` | `delivery-schedule:schedule-merge-review` | weekdays |
+| `change-report` | `delivery-schedule:schedule-whats-new` | weekly |
 | `devbook-check` | `devbook:devbook-check` | daily |
-| `security-review` | `delivery:automation-security-review` | weekly |
+| `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `tech-update` | `devbook:devbook-tech-update` | weekly |
 
-Three skills read it. `routine-sync` builds each prompt, resolves the scheduler from the live
-tool list, and creates or updates each routine matched by name — `<owner>/<repo> · <title>` —
-so a second sync updates rather than duplicates; `routine-status` reads runs and logs back;
-`routine-run` fires one. `tools/routine-catalog/check.mjs` fails a malformed entry, a cron
-that could fire more than hourly, or a target that is a flow.
+Three skills read the catalog. `schedule-sync` builds each prompt, resolves the scheduler from
+the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
+<title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
+logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
+entry, a cron that could fire more than hourly, or a target that is a flow.
 
-The plugin declares no dependency and names two — `delivery` and `devbook` — which is the
-[guide's](#guide-plugin) shape for the guide's reason: naming is not depending, and a target
-that is not enabled is reported and skipped. It named a third until the specialists
+The plugin depends on `delivery` and names `devbook`, which is the L1 extension shape `fleet`
+already has: the entry points call the engine's flows and phases, so the dependency is real,
+while a target in another plugin is named and skipped when the repository has not enabled it.
+It named a third until the specialists
 [left the marketplace](09-architecture-decisions.md#the-specialists-leave-the-marketplace):
-what a routine's target delegates to is a binding the consuming repository makes, not a plugin
-the routine can require.
+what a target delegates to is a binding the consuming repository makes, not a plugin the
+schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
-facts and go in `components.routines` of the [stack config](#stack-config), written by
-`routine-sync` only. The environment, the model, and the routine ids are personal and live in
-the scheduler; matching by name is what makes writing them down unnecessary.
+facts and go in `components.schedule` of the [stack config](#stack-config), written by
+`schedule-sync` only. The environment, the model, and the scheduler ids are personal and live
+in the scheduler; matching by name is what makes writing them down unnecessary.
 
 ## Asset Kinds
 

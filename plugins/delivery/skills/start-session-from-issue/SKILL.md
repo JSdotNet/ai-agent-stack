@@ -16,8 +16,8 @@ Turn one GitHub issue into work in progress. Fetch the open issues matching a fi
 a single issue, claim it, decide which `flow-*` flow its type calls for, and run
 that flow **in this session** with the issue context and origin metadata baked in.
 
-This is the generic counterpart to `automation-bug-fix`: any filter, any issue type, routed
-to the matching flow rather than always `flow-bug`.
+This is the generic counterpart to `schedule-bug-fix` in the `delivery-schedule` plugin: any
+filter, any issue type, routed to the matching flow rather than always `flow-bug`.
 
 ## One Issue Per Run
 
@@ -91,7 +91,7 @@ issue, because the previous one is filtered out as in flight.
 
    - **Interactive run:** ask the user to confirm the selected issue, or name a different
      one. Do not proceed until they answer.
-   - **Unattended run** (scheduled routine, no user turn available): proceed without
+   - **Unattended run** (a scheduled run, no user turn available): proceed without
      confirmation. The scope is one issue, the Phase 5 claim prevents a double pickup, and
      the flow still stops at Personal Validation before any pull request.
 
@@ -163,10 +163,10 @@ issue, because the previous one is filtered out as in flight.
     approval before implementing.
 
     On an **unattended run** there is nobody to approve, so record the plan as the stage output
-    and continue into implementation rather than parking the routine on a gate that cannot be
+    and continue into implementation rather than parking the run on a gate that cannot be
     answered. Nothing is lost by continuing: the flow still stops at Personal
     Validation, where the user reviews the recorded plan and the change it produced together,
-    and no pull request is opened before that. Stop at the plan instead only when the routine
+    and no pull request is opened before that. Stop at the plan instead only when the run
     was explicitly configured to — for work where implementing on an unreviewed plan is the
     expensive mistake, such as an architecture or migration issue.
 
@@ -223,8 +223,8 @@ the source of truth.
 
 ## Related Skills
 
-- `automation-bug-fix` — the same single-issue pickup narrowed to `bug` issues, always routed
-  to `flow-bug`, ranked by severity.
+- `schedule-bug-fix` (`delivery-schedule` plugin) — the same single-issue pickup narrowed to
+  `bug` issues, always routed to `flow-bug`, ranked by severity.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
 - **Session Handoff** in `instructions/flow-execution-model.instructions.md` — hand this

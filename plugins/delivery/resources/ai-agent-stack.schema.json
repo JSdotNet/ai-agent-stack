@@ -48,6 +48,24 @@
             "repo-flow-context": { "$ref": "#/$defs/nullableString" },
             "pr-lane": { "$ref": "#/$defs/nullableString" }
           }
+        },
+        "delivery.mcp": {
+          "description": "Which MCP servers each flow extension point uses, by the server id the repository's own MCP configuration declares. A stage resolves the servers of the point it serves from the live tool list; a server that does not answer costs that stage its grounding, never the run. An absent point takes the engine default; null means deliberately none. A server is never a plugin dependency.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "session.start": { "$ref": "#/$defs/mcpServers" },
+            "flow.start": { "$ref": "#/$defs/mcpServers" },
+            "spec": { "$ref": "#/$defs/mcpServers" },
+            "implement": { "$ref": "#/$defs/mcpServers" },
+            "verify": { "$ref": "#/$defs/mcpServers" },
+            "data.prepare": { "$ref": "#/$defs/mcpServers" },
+            "app.start": { "$ref": "#/$defs/mcpServers" },
+            "qa.run": { "$ref": "#/$defs/mcpServers" },
+            "deliver": { "$ref": "#/$defs/mcpServers" },
+            "docs.update": { "$ref": "#/$defs/mcpServers" },
+            "flow.end": { "$ref": "#/$defs/mcpServers" }
+          }
         }
       }
     },
@@ -115,6 +133,18 @@
   },
   "$defs": {
     "nullableString": { "type": ["string", "null"] },
+    "mcpServerId": {
+      "description": "A server id as the repository's own MCP configuration spells it. Resolved from the live tool list by pattern, since a host may namespace it.",
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "mcpServers": {
+      "description": "The servers a point uses, in preference order, or null for deliberately none.",
+      "oneOf": [
+        { "type": "null" },
+        { "type": "array", "items": { "$ref": "#/$defs/mcpServerId" } }
+      ]
+    },
     "roleBinding": {
       "description": "A plugin or plugin:skill id, or null for deliberately unbound.",
       "type": ["string", "null"],

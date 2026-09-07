@@ -203,7 +203,7 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
 - **Never let this gate be delegated to a plugin, or removed by configuration.** A gate a
   plugin can supply is not a gate. `policy.gate.personalValidation` may only be `required`;
   the key exists so the stack config can state the fact, not soften it.
-- **In an unattended run** — a scheduled `automation-*` skill, or a spawned worker session —
+- **In an unattended run** — a scheduled `schedule-*` entry point, or a spawned worker session —
   this gate blocks: park the work with a handoff brief naming what is done and what is not,
   leave `approval` as `pending`, and stop. Never self-approve because no one answered.
 - **Do not leave a runtime running behind an unanswered gate.** The app must stay up while

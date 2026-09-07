@@ -9,7 +9,7 @@
     {
       "name": "delivery",
       "source": "./plugins/delivery",
-      "description": "The host-neutral delivery engine: 15 flow-* staged procedures, 2 shared phases, 9 scheduled automations, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
+      "description": "The host-neutral delivery engine: 15 flow-* staged procedures, 2 shared phases, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
       "version": "1.0.0"
     },
     {
@@ -31,9 +31,9 @@
       "version": "0.1.0"
     },
     {
-      "name": "routines",
-      "source": "./plugins/routines",
-      "description": "The trigger lane: schedules that fire a procedure the stack already ships, never a procedure of their own. A catalog of six routine definitions — package update, merge review, change report, devbook check, security review, and technology graph refresh — each naming the skill it runs, the plugins that skill needs, a cadence, and the prompt for a cloud session that starts with nothing but the repository. routine-sync creates or updates them through whatever scheduler the live session exposes and records the selection under components.routines; routine-status reads their runs and logs; routine-run fires one now. Declares no dependency and names four plugins: a routine whose target is not enabled is reported and skipped, never scheduled.",
+      "name": "delivery-schedule",
+      "source": "./plugins/delivery-schedule",
+      "description": "The unattended lane, stacked on delivery: the twelve schedule-* skills that run with nobody watching, plus the catalog of triggers that fires them. Nine schedulable entry points that pick their own input and run a flow or a review — bug fix, merge review, package update, performance review, review, security review, week starter, weekly cost analysis, and what's new — and six trigger definitions naming a target, a cadence, the plugins that target needs, and the prompt for a cloud session that starts with nothing but the repository. schedule-sync creates or updates them through whatever scheduler the live session exposes and records the selection under components.schedule; schedule-status reads their runs and logs; schedule-run fires one now. One capability, two host names: Routines in Claude Code, Automations in the GitHub Copilot app. Depends on delivery and names devbook: a trigger whose target is not enabled is reported and skipped, never scheduled.",
       "version": "0.1.0"
     },
     {

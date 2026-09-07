@@ -171,37 +171,12 @@ flowchart TD
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-architecture
-
-```mermaid
-flowchart TD
-    A["Goal & Guideline Retrieval"] --> B["Architecture Investigation"]
-    B --> C["Drafting & Review"]
-    C --> D["Personal Validation"]
-    D --> E{User approves?}
-    E -->|Yes| F["Create Pull Request or Skip"]
-    E -->|No| G["Return to the relevant earlier stage"]
-    G --> A
-    F --> U["Work Item Update or Skip"]
-    U --> H["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Goal & Guideline Retrieval | the `architecture` role | servers bound to `spec` |
-| Architecture Investigation | the `architecture` role | — |
-| Drafting & Review | the `architecture` role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
 ## flow-arc42
 
 ```mermaid
 flowchart TD
-    A["Context & Guideline Retrieval"] --> B["Section Drafting"]
-    B --> C["Cross-Section Review"]
+    A["Context Loading"] --> B["Drafting"]
+    B --> C["Check & Review"]
     C --> D["Personal Validation"]
     D --> E{User approves?}
     E -->|Yes| F["Create Pull Request or Skip"]
@@ -213,20 +188,20 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Context & Guideline Retrieval | the `architecture` role | servers bound to `spec` |
-| Section Drafting | the `architecture` role | — |
-| Cross-Section Review | the `architecture` role | — |
+| Context Loading | — | servers bound to `spec` |
+| Drafting | the `architecture` role | — |
+| Check & Review | the `architecture` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-adr
+## flow-domain
 
 ```mermaid
 flowchart TD
-    A["Decision Context Retrieval"] --> B["ADR Drafting"]
-    B --> C["Traceability Review"]
+    A["Context Loading"] --> B["Domain Modeling"]
+    B --> C["Check & Review"]
     C --> D["Personal Validation"]
     D --> E{User approves?}
     E -->|Yes| F["Create Pull Request or Skip"]
@@ -238,20 +213,20 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Decision Context Retrieval | the `architecture` role | servers bound to `spec` |
-| ADR Drafting | the `architecture` role | — |
-| Traceability Review | the `architecture` role | — |
+| Context Loading | — | — |
+| Domain Modeling | the `domain` role | — |
+| Check & Review | the `domain` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
-## flow-tdr
+## flow-tech
 
 ```mermaid
 flowchart TD
-    A["Debt Context Retrieval"] --> B["TDR Drafting"]
-    B --> C["Risk & Follow-Up Review"]
+    A["Context Loading"] --> B["Technology Reasoning"]
+    B --> C["Check & Review"]
     C --> D["Personal Validation"]
     D --> E{User approves?}
     E -->|Yes| F["Create Pull Request or Skip"]
@@ -263,9 +238,63 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Debt Context Retrieval | the `architecture` role | servers bound to `spec` |
-| TDR Drafting | the `architecture` role | — |
-| Risk & Follow-Up Review | the `architecture` role | — |
+| Context Loading | — | — |
+| Technology Reasoning | the `architecture` role | — |
+| Check & Review | the `architecture` role | — |
+| Personal Validation | — | — |
+| Create Pull Request | *(default)* | — |
+| Work Item Update | *(default)* | — |
+| Summary | `flow-runner` agent | — |
+
+## flow-design
+
+```mermaid
+flowchart TD
+    A["Context Loading"] --> B["Authoritative Grounding"]
+    B --> C["Design Authoring"]
+    C --> D["Check & Review"]
+    D --> E["Personal Validation"]
+    E --> F{User approves?}
+    F -->|Yes| G["Create Pull Request or Skip"]
+    F -->|No| H["Return to the relevant earlier stage"]
+    H --> A
+    G --> U["Work Item Update or Skip"]
+    U --> I["Summary"]
+```
+
+| Phase | Roles & services | MCP servers |
+|-------|--------|-------------|
+| Context Loading | — | — |
+| Authoritative Grounding | — | servers bound to `spec` |
+| Design Authoring | the `ux` role | — |
+| Check & Review | the `ux` role | — |
+| Personal Validation | — | — |
+| Create Pull Request | *(default)* | — |
+| Work Item Update | *(default)* | — |
+| Summary | `flow-runner` agent | — |
+
+## flow-ai
+
+```mermaid
+flowchart TD
+    A["Context Loading"] --> B["Placement & Boundary Check"]
+    B --> C["Authoring"]
+    C --> D["Check & Review"]
+    D --> E["Personal Validation"]
+    E --> F{User approves?}
+    F -->|Yes| G["Create Pull Request or Skip"]
+    F -->|No| H["Return to the relevant earlier stage"]
+    H --> A
+    G --> U["Work Item Update or Skip"]
+    U --> I["Summary"]
+```
+
+| Phase | Roles & services | MCP servers |
+|-------|--------|-------------|
+| Context Loading | — | — |
+| Placement & Boundary Check | — | — |
+| Authoring | the `docs` role | — |
+| Check & Review | the `docs` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |

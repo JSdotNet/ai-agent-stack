@@ -1,6 +1,6 @@
 ---
 name: flow-structure
-description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-architecture, flow-adr, or flow-arc42).'
+description: 'Run existing repository structure and layout refactors. Use for folder moves, project or solution layout corrections, test/harness placement, and reference updates. Do not use for initial scaffolding (use flow-repo or flow-project), new modules/services (use flow-create-module or flow-create-service), or architecture documentation only (use flow-arc42).'
 ---
 
 # Flow: Structure Refactor
@@ -35,8 +35,8 @@ derivation when it does not.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the request is a different work type: initial scaffolding routes to
-`flow-repo` or `flow-project`; a new architectural decision to `flow-adr`; a cross-cutting
-redesign or documentation-only outcome to `flow-architecture` or `flow-arc42`; a new bounded
+`flow-repo` or `flow-project`; a new architectural decision, a cross-cutting redesign, or a
+documentation-only outcome to `flow-arc42`; a new bounded
 context, module, or service to `flow-create-module` or `flow-create-service`.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a

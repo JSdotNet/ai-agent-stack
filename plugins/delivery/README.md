@@ -16,11 +16,18 @@ instead of by repository.
 
 | Kind | Members |
 |---|---|
-| `flow-*` (15) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-adr`, `flow-tdr`, `flow-arc42`, `flow-architecture`, `flow-fallback` |
+| `flow-*` (16) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`, `flow-fallback` |
 | `phase-*` (2) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-qa-validation` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `azure-sre-to-github-issue` |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
+
+Five of the flows are named after a knowledge folder — `.arc42`, `.domain`, `.tech`,
+`.design`, `.ai` — and carry a chapter change the same way the others carry a code change.
+They own the procedure and none of the rules: what a chapter must look like comes from the
+instruction files the repository keeps for the folder and the check it ships, which the
+`devbook` plugin materializes and this plugin never names. A folder flow in a repository that
+has not adopted the folder stops and says so.
 
 A flow never leaves its session. Fan-out across sessions and worktrees — triage a backlog,
 spawn workers, aggregate results — is a different subsystem and lives in the `fleet` plugin.
@@ -80,7 +87,7 @@ categories it covers.
 
 - **Specialist plugins.** An architecture, QA, coding, domain, UX, or docs specialist is
   bound as a role or a service per repository, never declared as a dependency — one missing
-  specialist must not demote all 32 skills. The engine names no specialist and none of them
+  specialist must not demote all 24 skills. The engine names no specialist and none of them
   is published from this marketplace. The reverse holds too: no specialist ever learns about
   `delivery`.
 - **A tracker.** GitHub, Jira, or `.backlog/` chapters, whichever `delivery.tracker` names.

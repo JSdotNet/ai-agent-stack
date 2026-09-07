@@ -103,9 +103,10 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds fifteen `flow-*` and two `phase-*`, `delivery-schedule` holds twelve
-`schedule-*`, `devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet`
-holds three `fleet-*`, and `stack-guide` holds three `stack-*`.
+`delivery` holds sixteen `flow-*` — five of them one per knowledge folder, since
+[flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
+and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
+`fleet-*`, and `stack-guide` holds three `stack-*`.
 
 `automation-` and `routine-` were the two halves of `schedule-` until 2026-09-07: the first
 named the procedure in `delivery`, the second the trigger in a plugin beside it. They were
@@ -382,7 +383,7 @@ plugins it may name. A lower layer never names a higher one.
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
 | L1 extension | One foundation | `devbook-collaboration` |
-| L2b bridge | Two stacks at once, deliberately | `devbook-flows` |
+| L2b bridge | Two stacks at once, deliberately | none today; `devbook-flows` was one until [the flows moved](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) |
 | L3 surface | Neither direction. Reads generated files | `devbook-canvas` |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a

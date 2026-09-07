@@ -194,7 +194,7 @@ spawning one, and it is never itself spawned as a sub-agent.
 
 - "Run `flow-feature` for the new export endpoint and stop at Personal Validation."
 - "Run `flow-update-packages`; QA should be startup-only."
-- "Drive `flow-adr` through Personal Validation, Create Pull Request, Work Item Update, and
+- "Drive `flow-arc42` through Personal Validation, Create Pull Request, Work Item Update, and
   Summary."
 
 ## References

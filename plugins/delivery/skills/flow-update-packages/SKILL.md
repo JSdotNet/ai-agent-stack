@@ -11,8 +11,8 @@ packages" is in scope. An approved maintenance directive aligns those stages ins
 replacing them.
 
 Escalate only when the request is really a maintenance *policy* decision — standing rules on
-major-version adoption, supported framework baselines. Recommend `flow-architecture` for the
-policy or `flow-adr` to record it, and ask the user.
+major-version adoption, supported framework baselines. Recommend `flow-arc42` to record it,
+and ask the user.
 
 Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
 follows `instructions/flow-model-selection.instructions.md`.

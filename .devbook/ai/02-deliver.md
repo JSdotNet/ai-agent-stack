@@ -25,8 +25,8 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   `delivery-collector` here, `delivery-canvas` being a Copilot canvas this marketplace does not
   offer — but resolves no host slots: no plugin binds one, and this repository declares no
   `.github/ai-agent-stack.json`, so each takes its unbound default. `repo-instructions`
-  resolves to nothing, because the fallback is `AGENTS.md` and this repository has `CLAUDE.md`
-  instead, and every category takes its default model. `stage-delegation` and `surface` still
+  resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file, and
+  every category takes its default model. `stage-delegation` and `surface` still
   answer, being read from the live session rather than bound.
 - **Adopted by** — nobody yet. Every change to this repository so far was carried by hand under
   `CLAUDE.md`, including the ones that built the flows.

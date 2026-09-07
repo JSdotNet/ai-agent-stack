@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// check-assets.mjs — the review lint CLAUDE.md describes, as a script.
+// check-assets.mjs — the review lint AGENTS.md describes, as a script.
 //
 //   node tools/check-assets.mjs            # report, exit 1 on any error
 //   node tools/check-assets.mjs --budgets  # also list every asset over its body budget
@@ -14,7 +14,7 @@
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
 //                 Holds No Flow Control")
 //   hooks         hooks/hooks.json never uses type: prompt on SessionStart
-//   budgets       body-line counts against the budgets in CLAUDE.md — reported, never
+//   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
 //

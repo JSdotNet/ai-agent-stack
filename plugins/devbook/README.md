@@ -217,13 +217,14 @@ remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. See
 `devbook-chapter-metadata.instructions.md`.
 
-### Extension: `devbook-canvas`
+### Extension: `devbook-graph`
 
-Renders the knowledge graph as an interactive canvas — chapters as nodes,
+Two canvases. `devbook-graph` renders the knowledge graph — chapters as nodes,
 `related` / `depends-on` as edges — using the same graph code the
 generator writes, so the live view and the committed indexes never disagree. The
 node inspector lists a chapter's test links with the command that runs each one,
-which is where a "run this test" button goes.
+which is where a "run this test" button goes. `devbook-chapter` opens one
+chapter's Markdown beside its parsed `meta` block and a metadata lint.
 
 ### Tooling: `devbook-meta`
 

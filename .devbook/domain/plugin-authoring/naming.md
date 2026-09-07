@@ -99,13 +99,14 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
 | `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
+| `routine-` | The trigger for a schedulable entry point: a cadence and a prompt, run in a cloud session with nobody watching. Names a procedure; never is one. |
 | `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds fifteen `flow-*`, two `phase-*`, and seven `automation-*` skills,
+`delivery` holds fifteen `flow-*`, two `phase-*`, and nine `automation-*` skills,
 `devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet` holds three
-`fleet-*`, and `stack-guide` holds three `stack-*`.
+`fleet-*`, `stack-guide` holds three `stack-*`, and `routines` holds three `routine-*`.
 
 A grep still finds the string, and never as a skill name: only the decision records that say
 what was renamed. `flow-runner`'s allowlist kept the `orch-dashboard` tool patterns for one
@@ -139,6 +140,27 @@ has to look at — and opens a pull request only when it can.
 A fleet skill owns no run and holds no gate. `fleet-resolve-issue` trades Personal Validation
 for a narrower guarantee, not for nothing: the pull request is the review surface, and a change
 that cannot demonstrate itself never reaches one.
+
+## Routine
+
+```meta
+type: term
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/05-building-block-view.md#routine-plugin", ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"]
+```
+
+A schedule that fires a procedure the stack already ships, in a cloud session that starts
+with nothing but the repository: a cadence, a target skill, the plugins that skill needs, and
+a prompt self-contained enough to run it with nobody watching. A routine is a trigger and
+never a procedure — the `automation-*` skill is what runs; the routine is what asks.
+
+Three words carry the shape. The **catalog** is the set of routine files a plugin ships. The
+**preamble** is the unattended rules every prompt starts with, stated once. The **scheduler**
+is whatever the live session exposes that turns a name, a cron expression, a repository, and a
+prompt into a scheduled session — resolved by capability, and absent as a normal outcome.
+
+A routine schedules an `automation-*`, a `fleet-*`, or a read-and-report skill, never a
+[flow](#flow-skill): a flow ends at a gate, and a routine parks where a gate would be.
 
 ## Extension Point
 

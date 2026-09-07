@@ -266,6 +266,45 @@ Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
+## Routine Plugin
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#routine", ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin", ".devbook/arc42/05-building-block-view.md#stack-config"]
+```
+
+`routines` is where a schedule lives. It ships no procedure: six files under
+`resources/routines/`, each a cadence, a target skill in another plugin, the plugins that
+target needs, and the task half of a prompt, plus one preamble that carries the unattended
+rules every prompt starts with.
+
+| Routine | Target | Cadence |
+| --- | --- | --- |
+| `package-update` | `delivery:automation-package-update` | weekly |
+| `merge-review` | `delivery:automation-merge-review` | weekdays |
+| `change-report` | `delivery:automation-whats-new` | weekly |
+| `devbook-check` | `devbook:devbook-check` | daily |
+| `security-review` | `delivery:automation-security-review` | weekly |
+| `tech-update` | `devbook:devbook-tech-update` | weekly |
+
+Three skills read it. `routine-sync` builds each prompt, resolves the scheduler from the live
+tool list, and creates or updates each routine matched by name — `<owner>/<repo> · <title>` —
+so a second sync updates rather than duplicates; `routine-status` reads runs and logs back;
+`routine-run` fires one. `tools/routine-catalog/check.mjs` fails a malformed entry, a cron
+that could fire more than hourly, or a target that is a flow.
+
+The plugin declares no dependency and names two — `delivery` and `devbook` — which is the
+[guide's](#guide-plugin) shape for the guide's reason: naming is not depending, and a target
+that is not enabled is reported and skipped. It named a third until the specialists
+[left the marketplace](09-architecture-decisions.md#the-specialists-leave-the-marketplace):
+what a routine's target delegates to is a binding the consuming repository makes, not a plugin
+the routine can require.
+
+State splits by who it belongs to. The selection and any cadence override are repository
+facts and go in `components.routines` of the [stack config](#stack-config), written by
+`routine-sync` only. The environment, the model, and the routine ids are personal and live in
+the scheduler; matching by name is what makes writing them down unnecessary.
+
 ## Asset Kinds
 
 ```meta

@@ -62,3 +62,29 @@ instead of one session at a time.
   the bar gets lowered.
 - **Limits** — Claude-only until the `session-spawn` slot lands; see
   [the debt record](../arc42/tdr/2-fleet-names-the-cli-directly.md).
+
+## Scheduling
+
+```meta
+status: candidate
+type: skill
+related: [".devbook/domain/plugin-authoring/naming.md#routine", ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"]
+```
+
+`routines` fires an automation, a check, or a refresh on a cadence, in a cloud session with
+nobody watching, and lands what it produced as a pull request or a report issue.
+
+- **Used for** — nothing here yet. Six routines are defined; none is scheduled against this
+  repository.
+- **Adopted by** — nobody. The first repository to schedule one should be one where a draft
+  pull request nobody asked for costs a glance, not a rebase.
+- **Evidence** — none yet. `candidate` because the whole design rests on one unverified fact:
+  that a cloud session loads the marketplace from the repository's committed settings. The
+  first `routine-run` answers it; until then a routine's prompt cannot reach its skill and the
+  session either stops or improvises. Promote to `trial` once one routine has run its target
+  and published, and watch two things: whether the idempotence rule held — one open pull
+  request per routine, updated rather than doubled — and whether a parked run's draft carried
+  enough brief to resume by hand.
+- **Limits** — one platform: the scheduler is resolved from the live tool list and only one
+  host has one, so on the other the prompts print and a person pastes them. No routine
+  schedules a flow; see [the decision](../arc42/09-architecture-decisions.md#routines-are-their-own-plugin).

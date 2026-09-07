@@ -38,9 +38,11 @@ taking most of the short assets with them, and `spec-conciseness.instructions.md
 
 | Kind | Within budget | Was |
 | --- | --- | --- |
-| `SKILL.md` | 8 of 59 | 38 of 113 |
-| `*.instructions.md` | 2 of 16 | 19 of 35 |
+| `SKILL.md` | 11 of 64 | 38 of 113 |
+| `*.instructions.md` | 2 of 17 | 19 of 35 |
 | `*.agent.md` | 0 of 1 | 6 of 10 |
+
+Counted after `routines` merged in, which added six budgeted assets, three of them within.
 
 The debt is unchanged in substance and now concentrated almost entirely in the exempt kinds
 plus `fleet`. The largest four are `devbook`'s chapter-metadata and domain instruction files

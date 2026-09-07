@@ -6,20 +6,20 @@
     ".devbook/tech"
   ],
   "stats": {
-    "nodes": 20,
-    "edges": 22,
+    "nodes": 23,
+    "edges": 26,
     "nodesByFolder": {
-      "tech": 13,
-      "arc42": 6,
+      "tech": 14,
+      "arc42": 8,
       "domain": 1
     },
     "nodesByType": {
       "file": 5,
-      "chapter": 15
+      "chapter": 18
     },
     "nodesByKind": {
-      "none": 10,
-      "platform": 3,
+      "none": 12,
+      "platform": 4,
       "library": 1,
       "format": 1,
       "protocol": 2,
@@ -28,13 +28,13 @@
     },
     "nodesByStatus": {
       "adopted": 10,
-      "trial": 3,
-      "active": 7
+      "trial": 4,
+      "active": 9
     },
     "edgesByType": {
-      "contains": 9,
-      "related": 9,
-      "depends-on": 4
+      "contains": 10,
+      "related": 11,
+      "depends-on": 5
     }
   },
   "problems": [],
@@ -122,6 +122,28 @@
           ],
           "related": [
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-routines",
+          "label": "Claude Code Routines",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-routines",
+          "level": 2,
+          "line": 74,
+          "status": "trial",
+          "kind": "platform",
+          "date": "2026-09-07",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin"
           ]
         }
       },
@@ -326,6 +348,50 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 743,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 269,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
           "label": "MCP Server",
           "type": "chapter",
@@ -333,7 +399,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 313,
+          "line": 335,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -413,6 +479,14 @@
           "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#copilot-extension-sdk",
           "source": ".devbook/tech/hosts.md",
           "target": ".devbook/tech/hosts.md#copilot-extension-sdk",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-routines",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#claude-code-routines",
           "type": "contains"
         }
       },
@@ -501,6 +575,30 @@
           "id": "related:.devbook/tech/hosts.md#copilot-extension-sdk->.devbook/arc42/05-building-block-view.md#plugin-folder",
           "source": ".devbook/tech/hosts.md#copilot-extension-sdk",
           "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "depends-on:.devbook/tech/hosts.md#claude-code-routines->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
           "type": "related"
         }
       },

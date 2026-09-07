@@ -261,7 +261,7 @@ stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
 | --- | --- | --- |
-| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
+| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
 | `components.<name>` | that component's own sync skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in

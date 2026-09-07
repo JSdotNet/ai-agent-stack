@@ -336,12 +336,18 @@ repository.
 
 ```meta
 type: term
-related: [".devbook/tech/shared.md#model-context-protocol"]
+related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/09-architecture-decisions.md#an-mcp-server-is-bound-per-point"]
 ```
 
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
 whichever plugin provides it, so an allowlist that names the server must carry both the
 plugin-namespaced and the bare spelling.
+
+The engine requires none. A repository declares its servers in its own MCP configuration and
+binds them per extension point under `bindings["delivery.mcp"]`; a bound server is resolved
+from the live tool list the way a surface is, and one that does not answer costs a stage its
+grounding, never the run. See
+[the decision](../../arc42/09-architecture-decisions.md#an-mcp-server-is-bound-per-point).
 
 ## Layer
 

@@ -1,6 +1,6 @@
 ---
 name: devbook-sync
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the devbook-meta generator and its CI checks, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
 ---
 
 # devbook sync
@@ -39,8 +39,11 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 
 ## Notes
 
+- Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
+  never from what is on disk. Report the file it landed in; whether a host reads
+  or imports that file is the repository's to arrange.
 - Offer `assets/routing-snippet.md` for the user to merge. Never apply it
-  silently.
+  silently, and never put routing inside the `AGENTS.md` markers.
 - Without GitHub Actions, install `build/Update-DevbookIndex.ps1` alone and
   say plainly that index refresh is now manual.
 - Report a reconcile that ends on a failing check as failing, never as installed.

@@ -34,7 +34,8 @@ one entry inside it and never edits another component's:
       "materialized": {
         ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
-        "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false }
+        "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
+        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true }
       },
       "migrations": [
         { "id": "006-drop-backlog", "applied": "2026-09-03" }
@@ -49,7 +50,7 @@ one entry inside it and never edits another component's:
 | `pluginVersion` | The devbook release that last reconciled this repository. |
 | `contractVersion` | The schema contract the repository is on. Migrations key off this, not off `pluginVersion`, which is why most upgrades reconcile to nothing. |
 | `adopted` | Which knowledge folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
-| `materialized` | Every file devbook copied in, with the release it came from and the hash it had when it landed. |
+| `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
 | `migrations` | Append-only ledger. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |
 
@@ -66,6 +67,7 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
+| `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
@@ -73,8 +75,18 @@ chosen. That makes them customized from the first reconcile onward, which is the
 intended outcome: their hash matches no shipped release, so reconcile reports
 them and leaves them alone.
 
+The `AGENTS.md` section is the one asset rendered rather than copied. It is generated
+from the stamp's `adopted` list per `assets/agents-section.md`, keyed `AGENTS.md#devbook`,
+and its hash is of the text between the markers as devbook wrote it. Every reconcile
+renders it again and compares: text on disk still matching the stamped hash is managed,
+and is rewritten when the fresh rendering differs — adoption moved, or the template did.
+Text that no longer matches the stamped hash is customized: reported, left alone. Nothing
+outside the markers is read or written. Absent `AGENTS.md` is created holding only the
+section; present without the markers, the section is appended at the end.
+
 `assets/routing-snippet.md` is never materialized. Routing policy is
-repository-specific and is offered for the user to merge, never applied silently.
+repository-specific and is offered for the user to merge, never applied silently — and
+it never goes inside the markers.
 
 ## The six phases
 
@@ -103,6 +115,8 @@ repository-specific and is offered for the user to merge, never applied silently
    release devbook shipped — that is stale, and stale gets replaced. A hash
    matching nothing ever shipped is customized: report it and leave it alone.
    Orphan anything no adopted folder claims any more; report it, do not delete.
+   The `AGENTS.md` section follows the same rule, with the text between its
+   markers standing in for the file.
 
 6. **Stamp and verify.** Rewrite devbook's entry, run `devbook-check`, and report
    what moved. A reconcile that ends with a failing check is reported as failing —

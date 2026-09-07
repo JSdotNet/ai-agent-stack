@@ -55,8 +55,9 @@ Reconciles a repository with the installed devbook release, in six phases:
 detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
 plugin upgrade, a change in which folders are adopted, and an outstanding
 migration are one idempotent operation — the stamp at
-`.github/ai-agent-stack.json` says which. The protocol is in
-`assets/reconcile-protocol.md`.
+`.github/ai-agent-stack.json` says which. Materialize also writes devbook's
+marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
+protocol is in `assets/reconcile-protocol.md`.
 
 **Trigger keywords:** `devbook sync`, `set up devbook`, `adopt the knowledge
 folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
@@ -268,6 +269,7 @@ for technologies that do not appear in package manifests.
 | `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-sync`: fails on broken references, warns on drifted indexes |
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
+| `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy, plus the `Read(_meta/**)` deny rule that keeps generated indexes out of agent context |
 | `assets/code-sync-protocol.md` | Shared rules for the `to-spec-*` / `from-spec-*` skills: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, index regeneration, and the report table. An asset rather than an instruction, because an honest `applyTo` glob for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
 
@@ -350,6 +352,7 @@ After running `devbook-sync`, a repository that adopted everything has:
 ├── <nn>-<stage>.md
 └── concepts.md
 _meta/{graph.json,index.json,annotations.json}          # repository-wide rollup
+AGENTS.md                            # devbook's section between markers; the rest is the repository's
 build/
 └── Update-DevbookIndex.ps1          # on-demand index refresh
 .github/

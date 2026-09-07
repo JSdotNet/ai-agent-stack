@@ -1,13 +1,6 @@
 ---
 name: chapter-collaboration
 description: How devbook-collaboration records review, comment, and hand-off state on a devbook chapter — the ext.devbook-collaboration keys, the three review states, the rule that none of it is chapter content, and the fact that approval stays devbook's.
-paths:
-  - ".domain/**"
-  - ".arc42/**"
-  - ".tech/**"
-  - ".design/**"
-  - ".ai/**"
-  - ".devbook/**"
 ---
 
 # Chapter collaboration state
@@ -15,7 +8,7 @@ paths:
 devbook-collaboration owns no field in devbook's schema. Every fact it remembers
 about a chapter lives under `ext.devbook-collaboration.*` inside that chapter's
 own `meta` block, which devbook carries through untouched, unvalidated, and
-edge-free — see `devbook-chapter-metadata.instructions.md`. Never record any of
+edge-free — see `devbook-chapter-metadata.md`. Never record any of
 it as a new field beside `status`, and never read another plugin's `ext` keys.
 
 ## The keys

@@ -196,7 +196,7 @@ Consequence: a question here loses who asked it and cannot be replied to in plac
 happens in the pull request, and only the unresolved residue stays on the chapter.
 
 **Superseded in part, 2026-09-04.** `devbook` 1.1.0 ships the fence: the schema and placement
-rule in `devbook-annotations.instructions.md`, the parse and lint in `metadata.mjs`, the
+rule in `devbook-annotations.md`, the parse and lint in `metadata.mjs`, the
 derived `_meta/annotations.json`, and `annotations.mjs` as the one writer. So the premise this
 decision rested on — that L0 has not built it — no longer holds, and the reason to keep findings
 in `ext` is gone with it.
@@ -275,7 +275,7 @@ date: 2026-09-03
 related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
 
-One instruction file — `surface-contract.instructions.md` — holds the point set, the gates
+One instruction file — `surface-contract.md` — holds the point set, the gates
 mechanism, the stack config, the host slots, and the surface capability with its reporting
 contract. It replaces three files that came across from the two host plugins:
 `orch-dashboard-contract`, `dashboard-usage`, and `canvas-usage`.
@@ -425,7 +425,7 @@ Three consequences, and the second is the one to watch:
   `update-open-sessions` walks a host's own worktrees, so moving them would have moved the
   host-naming into the engine rather than out of the marketplace. `session-handoff` had the
   one real claim, and the engine already carried its procedure inline under **Session
-  Handoff** in `flow-execution-model.instructions.md` — which is now the only copy.
+  Handoff** in `flow-execution-model.md` — which is now the only copy.
 - **Every slot resolves unbound unless a repository binds it.** `repo-instructions` falls back
   to `AGENTS.md`, `model-override` to category defaults, `stage-delegation` to running stages
   inline, `surface` to file artifacts, `pr-lane` to no pull request. Three of the six are
@@ -434,7 +434,7 @@ Three consequences, and the second is the one to watch:
   session rather than declared anywhere. A repository that wants the old Claude answers writes
   three lines of config.
 - **The slot set outlives its binders.** It stays declared in
-  `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
+  `surface-contract.md`, because what it buys is a shared asset that never grows
   an if-this-host clause, and a slot nobody binds still buys that.
 
 ## delivery-surface-canvas Ships the Canvas Only
@@ -1048,7 +1048,7 @@ repository, resolved at run time, never a dependency — and the four-key story 
 the guide, and this chapter stays true.
 
 Consequence: a stage that wants a server it cannot name has to say which point it serves, and
-the mapping table in `flow-execution-model.instructions.md` is where that is decided once. The
+the mapping table in `flow-execution-model.md` is where that is decided once. The
 engine still names two servers by id, as defaults only, because `microsoft-learn` and
 `playwright` are public tools rather than plugins published from another marketplace; a
 repository that disagrees binds the point to `null`.

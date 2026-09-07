@@ -1,5 +1,5 @@
 // metadata.mjs — parsing and validation for the chapter/file `meta` YAML
-// blocks defined in devbook-chapter-metadata.instructions.md.
+// blocks defined in devbook-chapter-metadata.md.
 //
 // The schema used across .domain/.arc42/.tech/.design/.ai is intentionally small and
 // flat (single-line scalars, null, or bracket lists), so we parse it with a
@@ -191,7 +191,7 @@ const TEST_LEVELS = ["unit", "integration", "e2e"];
 // bare path: a consumer that knows the runner can *run* the test. That is also
 // what makes this field admissible where a `code-path` field is not — see
 // "Why a test link and not a code link" in
-// devbook-chapter-metadata.instructions.md. A selector that stops resolving
+// devbook-chapter-metadata.md. A selector that stops resolving
 // fails a run out loud; a source path in a metadata block rots in silence.
 //
 // Selectors are runner-native, because a runner-native selector is exactly what
@@ -268,7 +268,7 @@ const REMOVED_FIELDS = {
         "document says about itself. Delete the field; where the generated order is " +
         "not what you want, give the documents a `number` or mark the directory's " +
         "entry point with `index: root`. See " +
-        "devbook-chapter-metadata.instructions.md.",
+        "devbook-chapter-metadata.md.",
 };
 
 const FOLDER_EXTRA_FIELDS = {
@@ -473,7 +473,7 @@ function toPlainText(markdown) {
  * without reading a single Markdown file.
  *
  * `summary` is the blockquote that
- * `devbook-chapter-metadata.instructions.md` places directly after the
+ * `devbook-chapter-metadata.md` places directly after the
  * file-level `meta` block, falling back to the first paragraph of prose when
  * the file has no blockquote. Either way it is the text *before* the first
  * `##`, reduced to plain text and capped at ~300 characters on a word

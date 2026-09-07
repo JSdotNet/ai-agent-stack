@@ -388,7 +388,7 @@ diff is the new fields and the bumped `schemaVersion`. Also install the two
 refresh assets that ship with this version — `assets/build/Update-DevbookIndex.ps1`
 and `assets/workflows/devbook-meta-nightly.yml` — and re-copy
 `assets/workflows/devbook-meta.yml`, whose staleness step now warns instead of
-failing. See `devbook-derived-artifacts.instructions.md` for the policy and
+failing. See `devbook-derived-artifacts.md` for the policy and
 for the freshness contract a runtime consumer of these indexes has to honour.
 
 ## Migrating to schema version 2
@@ -411,8 +411,8 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    it — this step is about stripping *kind prefixes*, and that file never had
    one.
 2. **Add `type` to every `meta` block.** Values come from the folder's own
-   instructions file — `devbook-domain.instructions.md` for `.domain`,
-   `devbook-tech.instructions.md` for `.tech`. File-level blocks take a
+   instructions file — `devbook-domain.md` for `.domain`,
+   `devbook-tech.md` for `.tech`. File-level blocks take a
    file-level value (`domain`, `features`, `model`, …) matching the filename.
    `.arc42` and `.design` define no value set and take no `type`.
 3. **Promote Entity, Value Object, and Enum sub-chapters one level.** Delete

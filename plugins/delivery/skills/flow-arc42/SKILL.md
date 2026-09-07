@@ -9,8 +9,8 @@ One flow for the folder, whatever kind of chapter the change produces. A decisio
 record, and a chapter are three templates under one set of folder rules, and the procedure
 around them is the same: load the rules, draft through the role, check, gate.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`. What a chapter must look like is
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`. What a chapter must look like is
 the repository's rule, not this flow's: the instruction files that govern the target path and
 the check the repository ships own structure, metadata, and status. This flow restates none
 of them.
@@ -64,13 +64,13 @@ contents, and continue.
 
 ## Final Phases (Shared)
 
-Documentation/config tier of `instructions/flow-phases.instructions.md`, in order: Personal
+Documentation/config tier of `rules/flow-phases.md`, in order: Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
 them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

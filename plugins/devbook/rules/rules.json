@@ -1,0 +1,79 @@
+{
+  "rules": {
+    "devbook-ai": {
+      "paths": [
+        ".ai/**",
+        ".devbook/ai/**"
+      ],
+      "sync": "ai"
+    },
+    "devbook-annotations": {
+      "paths": [
+        ".domain/**",
+        ".arc42/**",
+        ".tech/**",
+        ".design/**",
+        ".ai/**",
+        ".devbook/**"
+      ],
+      "sync": "always"
+    },
+    "devbook-arc42": {
+      "paths": [
+        ".arc42/**",
+        ".devbook/arc42/**"
+      ],
+      "sync": "arc42"
+    },
+    "devbook-chapter-metadata": {
+      "paths": [
+        ".domain/**",
+        ".arc42/**",
+        ".tech/**",
+        ".design/**",
+        ".ai/**",
+        ".devbook/**"
+      ],
+      "sync": "always"
+    },
+    "devbook-derived-artifacts": {
+      "paths": [
+        "**/_meta/**"
+      ],
+      "sync": "always"
+    },
+    "devbook-design": {
+      "paths": [
+        ".design/**",
+        ".devbook/design/**"
+      ],
+      "sync": "design"
+    },
+    "devbook-domain": {
+      "paths": [
+        ".domain/**",
+        ".devbook/domain/**"
+      ],
+      "sync": "domain"
+    },
+    "devbook-naming": {
+      "paths": [
+        ".arc42/**",
+        ".domain/**",
+        ".tech/**",
+        ".design/**",
+        ".ai/**",
+        ".devbook/**",
+        "**/_meta/**"
+      ],
+      "sync": "always"
+    },
+    "devbook-tech": {
+      "paths": [
+        ".tech/**",
+        ".devbook/tech/**"
+      ],
+      "sync": "tech"
+    }
+  }
+}

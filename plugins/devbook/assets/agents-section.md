@@ -31,14 +31,14 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 
 | Folder | Holds | Rules |
 | --- | --- | --- |
-| `<prefix>arc42/` | Structure, decisions, and technical debt | `devbook-arc42.instructions.md` |
-| `<prefix>domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.instructions.md` |
-| `<prefix>tech/` | The technology graph and its ratings | `devbook-tech.instructions.md` |
-| `<prefix>design/` | Design principles, tokens, and component guidelines | `devbook-design.instructions.md` |
-| `<prefix>ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.instructions.md` |
+| `<prefix>arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
+| `<prefix>domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
+| `<prefix>tech/` | The technology graph and its ratings | `devbook-tech.md` |
+| `<prefix>design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
+| `<prefix>ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
 
 Every chapter carries a fenced `meta` block; write it in the same change as the content,
-per `devbook-chapter-metadata.instructions.md`. Skip `annotation` fences when loading a
+per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
 Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.

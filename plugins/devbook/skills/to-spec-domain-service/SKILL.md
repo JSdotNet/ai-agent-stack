@@ -71,8 +71,8 @@ evidence either way.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `devbook-domain.instructions.md`, and
-   `devbook-chapter-metadata.instructions.md`. Read only the target context's
+   `devbook-domain.md`, and
+   `devbook-chapter-metadata.md`. Read only the target context's
    `domain.md` and `naming.md`, plus `dependencies.md` when the service reaches
    across a context boundary.
 
@@ -116,7 +116,7 @@ evidence either way.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `devbook-domain.instructions.md`. The heading carries the bare name; the
+   `devbook-domain.md`. The heading carries the bare name; the
    `meta` block carries `status` and `type: domain-service`. A new chapter
    starts at `status: draft`; an existing chapter's `status` is left untouched.
    Include optional fields only where they have a value.

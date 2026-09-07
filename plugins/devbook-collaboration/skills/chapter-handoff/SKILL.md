@@ -12,7 +12,7 @@ ask outlives the session that made it. This is the author's half of the pass;
 `chapter-review` is the reviewer's.
 
 State keys and their meanings are in
-`../../instructions/chapter-collaboration.instructions.md`. Read it first.
+`../../rules/chapter-collaboration.md`. Read it first.
 
 This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
 four-row lookup, and a reviewer who is handed three of the four rows starts by

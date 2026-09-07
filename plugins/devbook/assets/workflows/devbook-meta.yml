@@ -8,7 +8,7 @@ name: Devbook metadata
 # run — forcing every knowledge pull request to carry a regenerated index is
 # what makes those files conflict on merge. Refresh is deliberate instead:
 # ./build/Update-DevbookIndex.ps1 on demand, devbook-meta-nightly.yml on a
-# schedule. See devbook-derived-artifacts.instructions.md.
+# schedule. See devbook-derived-artifacts.md.
 #
 # Trim the path filters to the knowledge folders this repository actually
 # adopted; extra entries are harmless but noisy.

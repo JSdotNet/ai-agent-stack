@@ -50,7 +50,7 @@ and the **sweep directory**.
 
 When a sweep directory is given, this skill additionally writes
 `<sweep dir>/workers/<number>.json` as its last act, on **every** outcome — see the **Issue
-Sweep State Contract** (`instructions/fleet-issue-sweep-contract.instructions.md`) for the
+Sweep State Contract** (`rules/fleet-issue-sweep-contract.md`) for the
 schema. The morning brief reads those files; a worker that writes nothing is indistinguishable
 from one that never ran, so write the file even when the news is bad.
 
@@ -113,7 +113,7 @@ whose conclusion is small belongs in a sub-agent, and the surface reporting cont
 
 ## Skill Dependencies
 
-- **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
+- **Session Handoff** in `flow-execution-model.md` (`delivery` plugin) — the
   procedure behind the brief the park route leaves behind in Phase 4b. Write that brief by
   hand as the phase describes.
 
@@ -408,7 +408,7 @@ Pair it with `pr-merge-ready` on its own schedule to keep the pull requests it o
 ## Surface Reporting
 
 This skill reports progress through whichever delivery surface is bound, resolved by pattern
-from the live tool list per `surface-contract.instructions.md` (`delivery` plugin). With no
+from the live tool list per `surface-contract.md` (`delivery` plugin). With no
 surface bound, skip these calls, say so once, and continue — the pull request, the handoff
 brief, and the worker result file remain the source of truth. Follow that file's **Reporting
 Contract** for the tool cadence.
@@ -486,5 +486,5 @@ Contract** for the tool cadence.
   issues.
 - `pr-merge-ready` (`delivery` plugin) — takes the pull request this skill opens to
   merge-ready, one per pass.
-- **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
+- **Session Handoff** in `flow-execution-model.md` (`delivery` plugin) — the
   procedure behind the brief the park route leaves behind.

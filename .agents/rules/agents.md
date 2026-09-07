@@ -19,7 +19,7 @@ paths:
 - Claude ignores the `handoffs` key: name every handoff target in the body prose.
 - An instruction file reaches Claude only when something references its path — a plugin
   cannot ship rules. Reference every one explicitly from the agent that depends on it, per
-  `.agents/rules/instructions.md`.
+  `.agents/rules/plugin-rules.md`.
 
 Body budget 80 lines: [AUTHORING.md](../../AUTHORING.md). `node tools/check-assets.mjs`
 enforces the frontmatter and tool rules above.

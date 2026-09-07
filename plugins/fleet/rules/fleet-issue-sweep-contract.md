@@ -1,8 +1,6 @@
 ---
 name: fleet-issue-sweep-contract
 description: Defines the shared state contract for the issue sweep — the sweep directory layout, the manifest and worker result schemas, how worker sessions are dispatched without a scheduled task, how the routine session waits for them and writes its own brief, and the rules that keep a sweep resumable when a session dies mid-flight.
-paths:
-  - "skills/fleet-*/SKILL.md"
 ---
 
 # Issue Sweep State Contract (Fleet-Owned)

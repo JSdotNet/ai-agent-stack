@@ -1,9 +1,6 @@
 ---
 name: devbook-tech
 description: Structure and authoring rules for the technology knowledge folder, holding the project's technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools.
-paths:
-  - ".tech/**"
-  - ".devbook/tech/**"
 ---
 
 # Technology knowledge (`.tech`)
@@ -26,7 +23,7 @@ the way it does; `.tech` links back to it rather than restating rationale.
 > actually used across the development flow, and how far that use has been
 > adopted, is `.ai/`. A `.ai` chapter points at the `.tech` chapter with
 > `depends-on`; the reverse link is never written. See
-> `devbook-ai.instructions.md`.
+> `devbook-ai.md`.
 
 ## Context-loading policy
 
@@ -57,7 +54,7 @@ existing layer, and register it in `technology-graph.md`'s layer table in the
 same change. Reading order needs no declaration: `technology-graph.md` is read
 first, then `shared.md`, then the layer files alphabetically, then `tooling.md`
 last — the order shown in the tree above. See
-`devbook-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.md`.
 
 ## File responsibilities
 
@@ -70,7 +67,7 @@ last — the order shown in the tree above. See
     carries a file-level block only (same rule as `.domain/context-map.md`).
   - It is `.tech`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
-  Never hand-edited; see `devbook-derived-artifacts.instructions.md`
+  Never hand-edited; see `devbook-derived-artifacts.md`
   and the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`).
 - **`<layer>.md`** — One `## <Technology Name>` chapter per technology used (or
   under consideration) in that layer. Each chapter is an addressable node in
@@ -103,7 +100,7 @@ context to be understood, not a design document.
 ## Metadata fields
 
 `.tech` uses the common fields from
-`devbook-chapter-metadata.instructions.md` (`status` and `type` required;
+`devbook-chapter-metadata.md` (`status` and `type` required;
 `related`, `issue`, `effort`, and `roadmap` optional) plus the folder-specific
 fields below.
 
@@ -122,7 +119,7 @@ Maturity of the technology **in this project**, on a tech-radar-style ladder:
 Early in a project most entries are legitimately `candidate`.
 
 On top of this ladder sits the shared `approved` rung, defined once in
-`devbook-chapter-metadata.instructions.md`: a person approved this chapter,
+`devbook-chapter-metadata.md`: a person approved this chapter,
 recorded with `approved-by` and `approved-at`. It rates the chapter, not the
 technology — a chapter can be approved while what it describes is still
 `trial`, which is why the rung is stated rather than rested at.
@@ -176,5 +173,5 @@ Omit every optional field that has no value (no `related: []`, no
 - A change of technology *decision* belongs in an ADR first; `.tech` records the
   outcome and links to it.
 - Do not add a new metadata field without updating this file (folder-specific)
-  or `devbook-chapter-metadata.instructions.md` (universal) first — the visualization
+  or `devbook-chapter-metadata.md` (universal) first — the visualization
   tooling depends on a fixed schema.

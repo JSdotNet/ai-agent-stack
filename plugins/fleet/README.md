@@ -24,7 +24,7 @@ add this working copy by path instead of by repository.
 
 They coordinate through files on disk, `gh` labels, and the host's session list — never through
 conversation, because no two of these sessions can see each other's. The layout, both schemas,
-and the dispatch rules live in `instructions/fleet-issue-sweep-contract.instructions.md`.
+and the dispatch rules live in `rules/fleet-issue-sweep-contract.md`.
 
 ## Why it is its own plugin
 
@@ -60,7 +60,7 @@ that lands, `fleet` is effectively Claude-only and its manifest does not say so.
 ## Surface reporting
 
 Every skill here resolves the delivery surface by pattern from the live tool list and follows
-the **Reporting Contract** in `delivery`'s `surface-contract.instructions.md`. No surface bound
+the **Reporting Contract** in `delivery`'s `surface-contract.md`. No surface bound
 is a normal outcome: the manifest, the worker result files, and the brief are the source of
 truth, the skill says so once, and nothing blocks.
 

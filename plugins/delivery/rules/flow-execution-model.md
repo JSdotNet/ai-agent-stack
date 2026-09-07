@@ -1,13 +1,11 @@
 ---
 name: flow-execution-model
 description: Defines where a flow-* flow runs and how its work is delegated — implementation context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, session handoff, and run state and resume.
-paths:
-  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Execution Model (Flow-Owned)
 
-Part of the shared `flow-*` contract indexed by `flow-phases.instructions.md`.
+Part of the shared `flow-*` contract indexed by `flow-phases.md`.
 Read this file once, at the start of a run.
 
 ## Code-Modifying Flow Context
@@ -56,7 +54,7 @@ Discovery** below.
 
 This plugin ships no MCP server and requires none. A repository declares its servers in its
 own MCP configuration and binds them per extension point under `bindings["delivery.mcp"]` in
-`.github/ai-agent-stack.json` — see **Bindings** in `surface-contract.instructions.md`. A
+`.github/ai-agent-stack.json` — see **Bindings** in `surface-contract.md`. A
 stage uses the servers bound to the point it serves:
 
 | Stage | Point |
@@ -74,7 +72,7 @@ Defaults, for a point the repository leaves absent:
 - `implement` and `verify`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
   lookups tied to the stack being changed — never a broad research pass.
 - `app.start` and `qa.run`: `aspire` and `playwright`, under the required-tooling rule in
-  `flow-phases.instructions.md`; not used when the depth is startup-only or the change has no
+  `flow-phases.md`; not used when the depth is startup-only or the change has no
   browser surface.
 - Every other point: none. The stage grounds itself in the repository's own instruction
   files — the `repo-instructions` slot, matching `**/*.instructions.md`, and the checked-in
@@ -133,7 +131,7 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    started still alive.
 
 Whichever form is used, pass the model resolved for that stage's category per
-`instructions/flow-model-selection.instructions.md` in the `Agent` call's `model`. That
+`flow-model-selection.md` in the `Agent` call's `model`. That
 parameter is the *only* place a category model takes effect — an inline stage runs on the
 session's model no matter what the table says, so skipping delegation silently discards the
 model choice along with the context saving.
@@ -180,7 +178,7 @@ Neither is a reason to guess. Read what the decision actually needs — the wast
 here is re-reading and drip-feeding, not thoroughness.
 
 **Escalate to sub-agent delegation when the run-level context gauge approaches its limit.**
-The gauge described in **Context and Token Insight** (`surface-contract.instructions.md`)
+The gauge described in **Context and Token Insight** (`surface-contract.md`)
 is the signal: when the owner session's context is filling up, move the next heavy step —
 broad exploration, large refactors, verbose build/test output — to a sub-agent so its cost
 lands in a separate context window, instead of continuing inline until compaction interrupts

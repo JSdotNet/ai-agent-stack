@@ -53,7 +53,7 @@ ext.devbook-collaboration.open-1: The 30-day window in the refund rule table has
 
 The full contract — the three states, why a finding is one key rather than a
 list entry, and the rule that none of it is chapter content — is in
-[`instructions/chapter-collaboration.instructions.md`](instructions/chapter-collaboration.instructions.md).
+[`rules/chapter-collaboration.md`](rules/chapter-collaboration.md).
 
 ## What this release does not do
 
@@ -62,7 +62,7 @@ devbook 1.1.0 that is one release out of date. The
 [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19)
 design puts a threaded `annotation` fence in devbook itself, with authors,
 replies, quoted passages, and a sweep, and [devbook has now shipped
-it](../devbook/instructions/devbook-annotations.instructions.md). This plugin
+it](../devbook/rules/devbook-annotations.md). This plugin
 has not moved yet, so a repository with both installed has two places to leave
 a comment. The migration is one pass: every `open-<n>` becomes one fence with
 `body` set from the line and `author` unknown. See

@@ -1,8 +1,6 @@
 ---
 name: surface-contract
 description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .github/ai-agent-stack.json stack config, the host slots, and the surface capability a run reports and renders through.
-paths:
-  - "skills/flow-*/SKILL.md"
 ---
 
 # Surface Contract (Engine-Owned)
@@ -81,7 +79,7 @@ and never edits another component's. `components` belongs to each component's ow
 - **`null` means deliberately unbound**, which is different from absent. Absent means nobody
   has decided; `null` means somebody decided no.
 - **No model ever appears in this file.** Model choice is personal — see
-  `flow-model-selection.instructions.md`.
+  `flow-model-selection.md`.
 - **No secrets.** The file is committed. A credential pointer belongs in
   `.claude/flow-context.md`, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
@@ -200,7 +198,7 @@ key means the engine's own choice rather than undefined.
 defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
 stage commits** and every `implement` provider is briefed to leave committing to that phase.
 The mechanics — one commit per handback, a new commit per revise round — are in **Personal
-Validation** (`flow-phases.instructions.md`). `manual` leaves committing to the user.
+Validation** (`flow-phases.md`). `manual` leaves committing to the user.
 
 `pr.base` is the one value that is neither enum nor number. Validate it as a git ref that
 exists on the remote, never as free prose.
@@ -227,7 +225,7 @@ dependencies: one missing specialist must not demote every skill that names it.
   since a host may namespace them. A server that does not answer is reported once, and the
   stage continues on the repository's own instruction files and chapters — it costs that
   stage its grounding, never the run. An absent point takes the engine default in **MCP
-  Server Strategy** (`flow-execution-model.instructions.md`); `null` binds none. The engine
+  Server Strategy** (`flow-execution-model.md`); `null` binds none. The engine
   names no server of its own beyond those defaults, and no server is ever a dependency.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   verification, so it binds as the `implement` and `verify` services above rather than as an
@@ -389,7 +387,7 @@ the session's own tool calls and transcript. The flow-runner reads these; it nev
   working; a heavy stage with none ran inline and charged the whole run for it. Build & Test
   and QA Validation are delegated by default, so a zero subtotal on either is a finding.
 - **Act on the run-level gauge before it forces compaction.** The ladder is in
-  `flow-execution-model.instructions.md`: **Delegation Order** first, then **Session Handoff**
+  `flow-execution-model.md`: **Delegation Order** first, then **Session Handoff**
   once delegation is no longer enough. The gauge ignores sub-agent samples, so delegating
   genuinely relieves the owner session rather than relabelling the cost.
 - **Attribution is session-wide.** Any model call made while a run is `in_progress` is

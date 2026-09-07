@@ -1,8 +1,6 @@
 ---
 name: devbook-derived-artifacts
 description: Convention for derived index artifacts — where generated, machine-readable views of canonical Markdown live, how they are named, what every such file must declare, how CI and scheduled refresh keep them current, and how a consumer reads one without going stale.
-paths:
-  - "**/_meta/**"
 ---
 
 # Derived metadata artifacts (`_meta/`)
@@ -38,7 +36,7 @@ Never nest `_meta/` deeper than one level below its scope, and never put a
 derived artifact anywhere other than an `_meta/` folder.
 
 The underscore prefix marks the folder as tooling machinery rather than
-readable content — see `devbook-naming.instructions.md`.
+readable content — see `devbook-naming.md`.
 
 ## File naming
 
@@ -195,4 +193,4 @@ convention — each directory's root document first, then the sequence that
 folder's instructions file documents — plus what a document says about itself:
 its `number`, and whether its `index` field makes it the directory's entry point
 or keeps it out of the outline. No document declares the order of its siblings.
-See `devbook-chapter-metadata.instructions.md`.
+See `devbook-chapter-metadata.md`.

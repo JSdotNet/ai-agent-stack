@@ -1,8 +1,6 @@
 ---
 name: flow-phases
 description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary).
-paths:
-  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Phases (Engine-Owned)
@@ -18,10 +16,10 @@ companion files so a run reads the part it is actually in.
 
 | File | Holds | Read it |
 | --- | --- | --- |
-| `flow-execution-model.instructions.md` | Context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, run state and resume, **Session Handoff** | Once, at the start of the run |
-| `flow-model-selection.instructions.md` | Category → model resolution and the personal override | Once, before `start_run` |
-| `surface-contract.instructions.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
-| `flow-repo-context.instructions.md` | The `.claude/flow-context.md` convention | **Only if that file exists.** Check first; when it is absent there is no convention to apply |
+| `flow-execution-model.md` | Context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, run state and resume, **Session Handoff** | Once, at the start of the run |
+| `flow-model-selection.md` | Category → model resolution and the personal override | Once, before `start_run` |
+| `surface-contract.md` | The extension points, the gates mechanism, the stack config, the surface capability and its reporting contract | Once, before the first `update_stage` |
+| `flow-repo-context.md` | The `.claude/flow-context.md` convention | **Only if that file exists.** Check first; when it is absent there is no convention to apply |
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
@@ -54,7 +52,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **Session Handoff belongs to no tier.** It is an interrupt, not a step: it fires whenever
   the run-level context gauge reaches the handoff threshold, at whatever stage the run has
   reached, and the run resumes on that same stage in a fresh session. See **Session
-  Handoff** in `flow-execution-model.instructions.md`.
+  Handoff** in `flow-execution-model.md`.
 
 ## How Skills Reference These Phases
 
@@ -69,14 +67,14 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - The `flow-runner` agent (`agents/flow-runner.agent.md`) runs these phases in order, drives
   the surface, and enforces the Personal Validation gate.
 - Model choice for every phase and every skill-specific stage is resolved once, centrally,
-  from `flow-model-selection.instructions.md` — never described here or in a skill.
+  from `flow-model-selection.md` — never described here or in a skill.
 
 ## Agent Transition Rule
 
 - Cross-plugin agents are recommended, not required. When a referenced plugin is not
   installed, skip the stage or perform it manually and continue with the remaining stages.
   A role bound in `.github/ai-agent-stack.json` resolves first; see **Bindings** in
-  `surface-contract.instructions.md`.
+  `surface-contract.md`.
 - Internal transitions **do not require separate user approval**. The flow-runner may move
   between its own stages, sub-agents, and phase skills without pausing, so the run can
   build, test, and continue up to Personal Validation.
@@ -156,7 +154,7 @@ the phase:
   degraded fallback, and never present browser-snapshot output as Playwright evidence.
 - **A background monitor you started, you stop.** Collect the monitor's summary with
   `SendMessage` and end it with `TaskStop` before marking the phase done — see **Delegation
-  Order** in `flow-execution-model.instructions.md`.
+  Order** in `flow-execution-model.md`.
 
 This phase covers two service points: `app.start` starts the runtime and returns base URLs
 and a health verdict, and `qa.run` turns scenarios into evidence. The `data.prepare` chores
@@ -168,7 +166,7 @@ run before both.
 
 Every tier. This phase uses **no agent and no model** — it hands control back to the user
 and waits. It is the mandatory instance of the gate pattern in **Gates**
-(`surface-contract.instructions.md`), placed after `verify` with purpose `handoff`.
+(`surface-contract.md`), placed after `verify` with purpose `handoff`.
 
 - **Do not delegate to an agent and do not auto-approve.** Pause and wait for the user's
   explicit decision.

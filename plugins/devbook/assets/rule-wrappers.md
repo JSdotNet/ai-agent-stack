@@ -32,7 +32,7 @@ shipped, so the next reconcile would report it customized and never refresh it a
 That is the right outcome for the two workflows and the wrong one here.
 
 The filename is load-bearing. These files reference each other as bare names —
-`devbook-chapter-metadata.instructions.md` and its siblings — so they resolve only while
+`devbook-chapter-metadata.md` and its siblings — so they resolve only while
 they sit together under one folder under their own names.
 
 ## The wrapper Claude reads
@@ -46,7 +46,7 @@ paths:
   - ".devbook/arc42/**"
 ---
 
-Read `.github/instructions/devbook-arc42.instructions.md` and follow it before editing this file.
+Read `.github/rules/devbook-arc42.md` and follow it before editing this file.
 ```
 
 `paths` is copied from the instruction file verbatim. Nothing else is derived and nothing
@@ -61,15 +61,15 @@ files to reach it.
 
 | Instruction file | Materialized when |
 |---|---|
-| `devbook-arc42.instructions.md` | `arc42` adopted |
-| `devbook-domain.instructions.md` | `domain` adopted |
-| `devbook-tech.instructions.md` | `tech` adopted |
-| `devbook-design.instructions.md` | `design` adopted |
-| `devbook-ai.instructions.md` | `ai` adopted |
-| `devbook-chapter-metadata.instructions.md` | any folder adopted |
-| `devbook-annotations.instructions.md` | any folder adopted |
-| `devbook-naming.instructions.md` | any folder adopted |
-| `devbook-derived-artifacts.instructions.md` | any folder adopted |
+| `devbook-arc42.md` | `arc42` adopted |
+| `devbook-domain.md` | `domain` adopted |
+| `devbook-tech.md` | `tech` adopted |
+| `devbook-design.md` | `design` adopted |
+| `devbook-ai.md` | `ai` adopted |
+| `devbook-chapter-metadata.md` | any folder adopted |
+| `devbook-annotations.md` | any folder adopted |
+| `devbook-naming.md` | any folder adopted |
+| `devbook-derived-artifacts.md` | any folder adopted |
 
 A folder dropped from `adopted` orphans its pair: reported, never deleted.
 

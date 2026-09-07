@@ -18,10 +18,10 @@
 //                 globs and description are derived from it, and neither wrapper has
 //                 grown a rule of its own (see the decision "One Rule, One Wrapper Per
 //                 Host")
-//   instructions  a plugin instruction file is authored host-neutral: name matching the
-//                 filename, a description, a paths list, and no host's own spelling of
-//                 the glob (see the decision "A Plugin's Rules Reach a Host Through the
-//                 Sync")
+//   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
+//                 description, no glob of its own, and an entry with globs in the
+//                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
+//                 Through the Sync")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -39,7 +39,7 @@ const CLAUDE_RULES = path.join(ROOT, ".claude", "rules");
 const COPILOT_RULES = path.join(ROOT, ".github", "instructions");
 const showBudgets = process.argv.includes("--budgets");
 
-const BUDGETS = { "SKILL.md": 40, ".instructions.md": 60, ".agent.md": 80 };
+const BUDGETS = { "SKILL.md": 40, "rule": 60, ".agent.md": 80 };
 // A wrapper is frontmatter plus one sentence. Three lines is slack, not licence.
 const WRAPPER_BODY_MAX = 3;
 const MODEL_PIN = /^(opus|sonnet|haiku|fable|inherit|claude-[\w.-]+)$/;
@@ -258,28 +258,43 @@ if (await exists(SHARED_RULES)) {
     }
 }
 
-// ── instructions ────────────────────────────────────────────────────────────
+// ── plugin rules ────────────────────────────────────────────────────────────
 //
-// Neither host auto-applies an instruction file from inside a plugin, so neither host's
-// spelling of the glob belongs in one. It is authored in the same host-neutral shape as
-// .agents/rules/ — name / description / paths — and a sync derives `applyTo` for the
-// Copilot copy and `paths` for the Claude wrapper when it materializes the file into a
-// repository.
+// A plugin rule is a template a sync materializes into a repository, so it carries no
+// host's spelling of anything: `name` and `description` in the file, and the globs in
+// the plugin's rules/rules.json beside it, where the sync reads them (see the decision
+// "A Plugin's Rules Reach a Host Through the Sync").
 
-const INSTRUCTION_SUFFIX = ".instructions.md";
-for (const file of await walk(PLUGINS)) {
-    if (!file.endsWith(INSTRUCTION_SUFFIX)) continue;
-    const where = rel(file);
-    const name = path.basename(file).slice(0, -INSTRUCTION_SUFFIX.length);
-    const { fm } = frontmatter(await readFile(file, "utf8"));
-
-    if (scalar(fm, "applyTo") !== null) {
-        error(`${where}: applyTo is Copilot's spelling of the glob; author paths and let the sync derive it`);
+for (const folder of await readdir(PLUGINS)) {
+    const dir = path.join(PLUGINS, folder, "rules");
+    if (!(await exists(dir))) continue;
+    const mapPath = path.join(dir, "rules.json");
+    if (!(await exists(mapPath))) {
+        error(`plugins/${folder}/rules: no rules.json, so the sync has no globs to derive from`);
+        continue;
     }
-    if (scalar(fm, "name") !== name) error(`${where}: frontmatter name must equal the filename "${name}"`);
-    if (!scalar(fm, "description")) error(`${where}: description is required; every host wrapper copies it`);
-    const ipaths = yamlPaths(fm);
-    if (!ipaths || ipaths.length === 0) error(`${where}: needs a paths list; without one no wrapper can be derived`);
+    const declared = (await json(mapPath)).rules ?? {};
+    const onDisk = new Set();
+
+    for (const entry of await readdir(dir)) {
+        if (!entry.endsWith(".md")) continue;
+        const name = entry.slice(0, -3);
+        onDisk.add(name);
+        const where = `plugins/${folder}/rules/${entry}`;
+        const { fm } = frontmatter(await readFile(path.join(dir, entry), "utf8"));
+
+        if (scalar(fm, "applyTo") !== null) error(`${where}: applyTo is Copilot's spelling; the globs live in rules.json`);
+        if (yamlPaths(fm) !== null) error(`${where}: paths belongs in rules.json, not in the rule`);
+        if (scalar(fm, "name") !== name) error(`${where}: frontmatter name must equal the filename "${name}"`);
+        if (!scalar(fm, "description")) error(`${where}: description is required; every host wrapper copies it`);
+        if (!(name in declared)) error(`${where}: no entry in rules.json, so nothing ever applies it`);
+    }
+
+    for (const [name, entry] of Object.entries(declared)) {
+        const label = `plugins/${folder}/rules/rules.json: ${name}`;
+        if (!onDisk.has(name)) error(`${label} has no ${name}.md behind it`);
+        if (!Array.isArray(entry.paths) || entry.paths.length === 0) error(`${label} needs a non-empty paths array`);
+    }
 }
 
 // ── budgets (report only) ───────────────────────────────────────────────────
@@ -288,7 +303,8 @@ const over = [];
 let budgeted = 0;
 for (const file of await walk(PLUGINS)) {
     const base = path.basename(file);
-    const key = base === "SKILL.md" ? "SKILL.md" : base.endsWith(".instructions.md") ? ".instructions.md" : base.endsWith(".agent.md") ? ".agent.md" : null;
+    const inRules = path.basename(path.dirname(file)) === "rules" && base.endsWith(".md") && base !== "rules.json";
+    const key = base === "SKILL.md" ? "SKILL.md" : inRules ? "rule" : base.endsWith(".agent.md") ? ".agent.md" : null;
     if (!key) continue;
     budgeted++;
     const { body } = frontmatter(await readFile(file, "utf8"));

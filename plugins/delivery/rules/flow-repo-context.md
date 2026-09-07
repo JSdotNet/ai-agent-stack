@@ -1,8 +1,6 @@
 ---
 name: flow-repo-context
 description: Defines the optional .claude/flow-context.md convention a consuming repository uses to declare how its application starts, where to validate it, and how deep QA should go, so flows do not have to guess or ask.
-paths:
-  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Repo Context (Flow-Owned)
@@ -15,7 +13,7 @@ paths:
 - Define the convention **once** here, so a maintainer edits this file instead of
   re-describing repo context in every `flow-*/SKILL.md`.
 - Keep the file strictly about **runtime and validation context**. Model choice is personal
-  and never comes from the repository (see `flow-model-selection.instructions.md`), and MCP
+  and never comes from the repository (see `flow-model-selection.md`), and MCP
   server configuration stays in the repository's own `.mcp.json` and instruction files.
 - Interactive developer startup — the URL to open, and optionally sign-in and an area map —
   may live here too. No plugin ships a start procedure any more, so this file is the only
@@ -146,7 +144,7 @@ run, or `qa.run` delegation is attempted.
   string.
 - **No model IDs.** This file must not pin a model, a model family, or a tier. Model choice
   belongs to the personal override and the categories in
-  `flow-model-selection.instructions.md`; the repository never sets it.
+  `flow-model-selection.md`; the repository never sets it.
 - **Degrade gracefully.** A missing section, an unrecognized `## QA Depth` value, or
   malformed content is not an error: fall back to the existing behavior for that concern,
   note the fallback once, and continue the run. Never block a run on this file.

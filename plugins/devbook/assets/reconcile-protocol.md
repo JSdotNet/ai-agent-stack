@@ -36,7 +36,7 @@ one entry inside it and never edits another component's:
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
         "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true },
-        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
+        ".github/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
         ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true }
       },
       "migrations": [

@@ -83,8 +83,8 @@ chapter as accepted practice.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `devbook-design.instructions.md`, and
-   `devbook-chapter-metadata.instructions.md`. Read
+   `devbook-design.md`, and
+   `devbook-chapter-metadata.md`. Read
    `.design/component-libraries.md`, `color-scheme.md`,
    `typography-and-layout.md`, `interaction-guidelines.md`, and
    `accessibility.md`. Consult the authoritative design source when the
@@ -126,7 +126,7 @@ chapter as accepted practice.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `devbook-design.instructions.md`. The heading carries the bare name; the
+   `devbook-design.md`. The heading carries the bare name; the
    `meta` block carries `status` and no `type` — `.design` defines no `type`
    value set, and its `status` ladder is only `draft`, `active`, `deprecated`
    plus the shared `approved` rung. A

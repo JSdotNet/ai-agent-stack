@@ -13,6 +13,6 @@ of skill prose.
 
 Reference instruction and resource files by relative path. Neither host auto-applies an
 instruction file from inside a plugin, so the explicit reference is what loads the guidance —
-in both. See [instructions.md](instructions.md).
+in both. See [plugin-rules.md](plugin-rules.md).
 
 Body budget 40 lines: [AUTHORING.md](../../AUTHORING.md).

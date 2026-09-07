@@ -3,7 +3,7 @@
 // Tailored canvas for this repository's checked-in knowledge folders
 // (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
 // Mermaid diagrams, and parses each chapter/file's `meta` fenced-YAML block
-// (per devbook-chapter-metadata.instructions.md) into a
+// (per devbook-chapter-metadata.md) into a
 // structured side panel plus a lightweight metadata lint.
 //
 // Kept intentionally self-contained: rendering is client-side via

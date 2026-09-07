@@ -13,8 +13,8 @@ aligns those stages instead of replacing them.
 Escalate only when the upgrade forces a new architectural decision, or when adopting a new
 Aspire capability changes the target architecture. Recommend `flow-arc42` and ask the user.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`.
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -68,7 +68,7 @@ red baseline, and never decline the request over one.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `instructions/flow-phases.instructions.md`, in order: Build & Test →
+Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -78,7 +78,7 @@ evidence only for adopted new functionality, or when a failure needs it.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

@@ -36,7 +36,7 @@ A plugin instruction file is authored in the same host-neutral shape all the sam
 `description`, `paths` — and never in one host's spelling. What differs is delivery: a rule
 here is wrapped per host in place, while a plugin's is materialized into the adopting
 repository by that plugin's sync, which derives each host's spelling on the way in. See
-[instructions.md](instructions.md) and
+[plugin-rules.md](plugin-rules.md) and
 [the decision](../../.devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-sync).
 
 A shared file may point at a plugin instruction file rather than restate it, when that plugin

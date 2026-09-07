@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "chapter-collaboration": {
+      "paths": [
+        ".domain/**",
+        ".arc42/**",
+        ".tech/**",
+        ".design/**",
+        ".ai/**",
+        ".devbook/**"
+      ]
+    }
+  }
+}

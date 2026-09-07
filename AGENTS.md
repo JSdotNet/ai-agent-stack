@@ -42,7 +42,7 @@ resolvable by re-running the generator. Never regenerate or commit `_meta/` here
 `devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
-`plugins/devbook/instructions/devbook-derived-artifacts.instructions.md`.
+`plugins/devbook/rules/devbook-derived-artifacts.md`.
 
 ## Committing
 
@@ -60,7 +60,8 @@ plugins/<name>/
   .github/plugin/plugin.json      Copilot manifest — same name, version, description
   agents/<role>.agent.md          frontmatter name must equal <role>
   skills/<skill>/SKILL.md
-  instructions/*.instructions.md  name / description / paths — never a host's own glob key
+  rules/<name>.md                 the rule; name and description only
+  rules/rules.json                its globs, keyed by name
   hooks/hooks.json                Claude hooks
   hooks.json                      Copilot hooks
   resources/
@@ -76,7 +77,7 @@ A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`
 A rule that applies to one kind of file is authored once in `.agents/rules/` and wrapped per
 host: Claude loads `.claude/rules/<topic>.md` when it opens a matching file, Copilot loads
 `.github/instructions/<topic>.instructions.md`. Six topics, all plugin authoring — `agents`,
-`skills`, `instructions`, `manifests`, `hooks`, `schedules`. Change a rule and its two
+`skills`, `plugin-rules`, `manifests`, `hooks`, `schedules`. Change a rule and its two
 wrappers in the same commit; `node tools/check-assets.mjs` fails on drift. The convention is
 [.agents/rules/README.md](.agents/rules/README.md).
 
@@ -95,7 +96,7 @@ behaviour.
   consider running the suite". A softened rule is a rule that does not fire.
 - Cut what the model already does by default, and state each rule in exactly one file — point
   at it by relative path from everywhere else.
-- Body budgets: `SKILL.md` 40 lines, `*.instructions.md` 60, `*.agent.md` 80. The budget is a
+- Body budgets: `SKILL.md` 40 lines, `rules/<name>.md` 60, `*.agent.md` 80. The budget is a
   disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
   branch, or state the reason in the file. Full rule: [AUTHORING.md](AUTHORING.md). Staged
   procedures, converters, schema and contract instruction files, and the `flow-runner` agent
@@ -127,14 +128,14 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 
 | Folder | Holds | Rules |
 | --- | --- | --- |
-| `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.instructions.md` |
-| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.instructions.md` |
-| `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.instructions.md` |
-| `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.instructions.md` |
-| `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.instructions.md` |
+| `.devbook/arc42/` | Structure, decisions, and technical debt | `devbook-arc42.md` |
+| `.devbook/domain/` | Bounded contexts and the ubiquitous language | `devbook-domain.md` |
+| `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.md` |
+| `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
+| `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
 
 Every chapter carries a fenced `meta` block; write it in the same change as the content,
-per `devbook-chapter-metadata.instructions.md`. Skip `annotation` fences when loading a
+per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
 Files under any `_meta/` folder are generated tool input. Never read or hand-edit them,

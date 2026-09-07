@@ -8,7 +8,7 @@ paths:
 # Schedule catalog entries
 
 The format is authored once, in
-[`schedule-catalog-contract.instructions.md`](../../plugins/delivery-schedule/instructions/schedule-catalog-contract.instructions.md):
+[`schedule-catalog-contract.md`](../../plugins/delivery-schedule/rules/schedule-catalog-contract.md):
 the frontmatter table, the five-field UTC `cron` at one hour minimum, `requires`, the tool
 allowlist, and the four placeholders `schedule-sync` substitutes. Read it before adding or
 editing an entry — the contract is the copy, and this wrapper is not a summary of it.

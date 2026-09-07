@@ -39,7 +39,7 @@ lines; frontmatter such as an agent `tools` list does not count.
 | Asset | Budget |
 |---|---|
 | `SKILL.md` | 40 lines |
-| `*.instructions.md` | 60 lines |
+| `rules/<name>.md` | 60 lines |
 | `*.agent.md` | 80 lines |
 
 - Past the budget, move on-demand reference into a `resources/` file and point at it, or split

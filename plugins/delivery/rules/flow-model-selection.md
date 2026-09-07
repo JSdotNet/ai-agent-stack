@@ -1,8 +1,6 @@
 ---
 name: flow-model-selection
 description: Defines the model-selection categories the flow-runner uses to pick a model for each flow step, the Claude alias to pick per category, and how personal and team configuration can override those defaults.
-paths:
-  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Model Selection (Flow-Owned)
@@ -34,7 +32,7 @@ switches the model of the main loop mid-run. So a category that resolves to `son
 This is not a detail of the mechanism — it is the mechanism. Every category below is a claim
 about a stage that will be delegated, and the categories deliver nothing on a run that does
 everything itself. The delegation rules in **Delegation Order**
-(`flow-execution-model.instructions.md`) and the two phase skills are what make this file
+(`flow-execution-model.md`) and the two phase skills are what make this file
 real; treat a stage that resolves to a non-session model and then runs inline as a defect in
 the run, not as a harmless simplification.
 
@@ -133,7 +131,7 @@ There is deliberately **no repository-level model override**. Model choice is a 
 and speed preference, not a property of the repository being worked on, and a committed
 override would silently change what every collaborator's runs cost. A repository that needs
 to influence a run does so through `.claude/flow-context.md`
-(`flow-repo-context.instructions.md`), which sets runtime and QA context and never a model.
+(`flow-repo-context.md`), which sets runtime and QA context and never a model.
 
 None of the agents invoked by a flow pin their own `model`, so there is no
 "agent's pinned model" tier to consider — the flow-runner's resolution above is the only
@@ -148,7 +146,7 @@ every repository, which keeps personal cost and speed preferences out of shared 
 and avoids accidental commits.
 
 Where that file lives is the `model-override` host slot — the engine names the slot and never
-hardcodes a path. See **Host Slots** in `instructions/surface-contract.instructions.md`.
+hardcodes a path. See **Host Slots** in `surface-contract.md`.
 
 - The file holds a two-column `Category` / `Model` table, using the exact category names
   from the table above. The `Model` value is normally an alias (`opus`, `sonnet`, `haiku`,

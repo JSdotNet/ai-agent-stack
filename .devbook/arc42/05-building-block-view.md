@@ -210,7 +210,7 @@ Two other things carry sweep state, and neither is a file this repository owns: 
 `ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
 make a claim legible from GitHub alone, and the host's list of live background sessions, which
 is how a missing result file is told from a worker still running.
-`instructions/fleet-issue-sweep-contract.instructions.md` owns both schemas.
+`rules/fleet-issue-sweep-contract.md` owns both schemas.
 
 ## Guide Plugin
 

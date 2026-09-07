@@ -187,15 +187,15 @@ path and hands over grounded input; no flow knows these skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `devbook-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
-| `devbook-domain.instructions.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
-| `devbook-arc42.instructions.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
-| `devbook-tech.instructions.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
-| `devbook-design.instructions.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
-| `devbook-ai.instructions.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
-| `devbook-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
-| `devbook-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
-| `devbook-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
+| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
+| `devbook-domain.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
+| `devbook-arc42.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
+| `devbook-tech.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
+| `devbook-design.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
+| `devbook-ai.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
+| `devbook-derived-artifacts.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
+| `devbook-naming.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Each file is authored host-neutral — `name`, `description`, and a `paths` list, with no
 host's own spelling of the glob. Every glob carries both layouts, the five root
@@ -213,8 +213,8 @@ So `devbook-sync` installs them. Each file in the table lands twice, in the plac
 host already looks, with that host's spelling derived from the authored `paths`:
 
 ```
-plugins/devbook/instructions/devbook-arc42.instructions.md    what devbook ships
-  ├── .github/instructions/devbook-arc42.instructions.md      applyTo: ".arc42/**,.devbook/arc42/**"
+plugins/devbook/rules/devbook-arc42.md    what devbook ships
+  ├── .github/rules/devbook-arc42.md      applyTo: ".arc42/**,.devbook/arc42/**"
   └── .claude/rules/devbook-arc42.md                          paths: → one line pointing at it
 ```
 
@@ -235,7 +235,7 @@ A plugin layered on top of devbook keeps its own per-chapter state under
 unvalidated, and emits them as one `ext` object per node — so an extension can
 remember something about a chapter without a devbook schema change, a contract
 bump, and a migration in every consuming repository. See
-`devbook-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.md`.
 
 ### Extension: `devbook-canvas`
 

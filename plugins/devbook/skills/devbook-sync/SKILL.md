@@ -28,7 +28,7 @@ Each adopted folder gets its directory and one starting chapter with a valid
 `meta` block, written to the matching instruction file:
 `devbook-arc42`, `devbook-domain`, `devbook-tech`, `devbook-design`,
 `devbook-ai` `.instructions.md`. Required block fields are in
-`devbook-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.md`.
 
 `.ai` needs its stage set chosen before anything is written: ask which positions
 this repository's development flow actually has, create one numbered file per

@@ -5,8 +5,8 @@ description: 'Run Minimum Viable Product (MVP) creation — from an ad-hoc produ
 
 # Flow: Create MVP
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`.
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -39,7 +39,7 @@ needs a new architectural decision or a documented target architecture first: re
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. the `architecture` role when the target
+`rules/flow-execution-model.md`. the `architecture` role when the target
 architecture needs shaping.
 
 ## Stage 1: MVP Scope Intake
@@ -72,7 +72,7 @@ modeling belongs to `flow-domain`.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `instructions/flow-phases.instructions.md`, in order: Build & Test →
+Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -81,7 +81,7 @@ user flows, runtime monitoring active throughout, evidence recorded.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

@@ -1,9 +1,6 @@
 ---
 name: devbook-domain
 description: Structure and authoring rules for the domain knowledge folder, including root strategic DDD context mapping and per-bounded-context documentation.
-paths:
-  - ".domain/**"
-  - ".devbook/domain/**"
 ---
 
 # Domain knowledge (`.domain`)
@@ -56,7 +53,7 @@ followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
 tree above — `features.md`, `model.md`, `flow.md`, `dependencies.md`,
 `naming.md`. Adding a context or a file needs no declaration anywhere; just
-regenerate `_meta/`. See `devbook-chapter-metadata.instructions.md`.
+regenerate `_meta/`. See `devbook-chapter-metadata.md`.
 
 ## File responsibilities
 
@@ -115,14 +112,14 @@ instructions.
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
   `features.md`, and every Term chapter in `naming.md` must carry a
   metadata block as described in
-  `devbook-chapter-metadata.instructions.md`. `type` is required; `status` is
+  `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
 - Every file in `.domain` — `context-map.md` and, per bounded context,
   `domain.md`, `features.md`, `model.md`, `flow.md` (when present),
   `dependencies.md`, and `naming.md` — must also carry the file-level
   metadata block described in
-  `devbook-chapter-metadata.instructions.md`, placed directly
+  `devbook-chapter-metadata.md`, placed directly
   under the file's top-level `#` heading. This applies even to
   `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`, whose `##`
   sections do not carry their own per-chapter blocks — the file-level block
@@ -132,7 +129,7 @@ instructions.
   agreed-future) model, not a task queue, so there is no `done`: `active`
   means "this is the current model", `deprecated` means superseded.
 - On top of that ladder sits the shared `approved` rung, defined once in
-  `devbook-chapter-metadata.instructions.md`: a person approved this chapter,
+  `devbook-chapter-metadata.md`: a person approved this chapter,
   recorded with `approved-by` and `approved-at`. It is written explicitly, never
   rested at, and comes off the moment the content changes.
 - **`active` is this folder's resting value, so it is written by omitting the
@@ -181,7 +178,7 @@ instructions.
   the devbook plugin README under "Migrating to schema version 2".
 - `features.md` Feature/Sub-feature chapters may carry an additional
   `depends-on` field: a list of `<path>#<heading-slug>` references (see
-  `devbook-chapter-metadata.instructions.md` for the reference
+  `devbook-chapter-metadata.md` for the reference
   format) to other features that must be delivered first, e.g.
   `depends-on: [.domain/order-management/features.md#refunds]`.
   `domain.md` chapters (Aggregates, Domain Services, Domain Events, Shared

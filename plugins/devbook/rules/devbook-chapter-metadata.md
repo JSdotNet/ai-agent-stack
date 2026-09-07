@@ -1,13 +1,6 @@
 ---
 name: devbook-chapter-metadata
 description: Common per-chapter and per-file metadata convention for .domain, .arc42, .tech, .design, and .ai, so tooling can parse status, dependencies, and cross-references.
-paths:
-  - ".domain/**"
-  - ".arc42/**"
-  - ".tech/**"
-  - ".design/**"
-  - ".ai/**"
-  - ".devbook/**"
 ---
 
 # Chapter and file metadata
@@ -154,13 +147,13 @@ Some folders define additional relation fields beyond `related` (e.g.
 which extra fields apply and what they mean. Most such fields use the same
 reference format described below, but not every folder-specific field is a
 reference field: in `.domain`, `aliases` (defined in
-`devbook-domain.instructions.md`) is a list of
+`devbook-domain.md`) is a list of
 plain-string surface names and `feature-flag` (same file) is a list of
 application feature keys, neither of them `<path>#<heading-slug>` references,
 in `.tech`, `alternatives` (defined in
-`devbook-tech.instructions.md`) is likewise a
+`devbook-tech.md`) is likewise a
 plain-string list, and in `.ai`, `stage` (defined in
-`devbook-ai.instructions.md`) is a list of stage
+`devbook-ai.md`) is a list of stage
 slugs. The universal `roadmap` and `tests` fields below behave the
 same way.
 
@@ -250,11 +243,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   the record comes out with it.
 
   The allowed values are folder-specific; see the `status` section
-  in `devbook-domain.instructions.md`,
-  `devbook-arc42.instructions.md`,
-  `devbook-tech.instructions.md`,
-  `devbook-design.instructions.md`, or
-  `devbook-ai.instructions.md` for the value set
+  in `devbook-domain.md`,
+  `devbook-arc42.md`,
+  `devbook-tech.md`,
+  `devbook-design.md`, or
+  `devbook-ai.md` for the value set
   that applies to the folder you're editing. A file-level `status` reflects
   the document as a whole and is set independently of its chapters' own
   `status` values (e.g. a file can be `active` overall while one chapter
@@ -638,7 +631,7 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 These metadata blocks are compiled into derived indexes by
 `.github/tools/devbook-meta/build.mjs` — one pair per knowledge folder plus
 a repository-wide rollup, placed per
-`devbook-derived-artifacts.instructions.md`:
+`devbook-derived-artifacts.md`:
 
 ```text
 _meta/graph.json          # reference graph, all adopted folders

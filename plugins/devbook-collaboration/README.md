@@ -5,8 +5,10 @@ Review, comment, and hand-off workflows over [devbook](../devbook) chapters.
 An L1 extension: it depends on `devbook` and nothing else, and every fact it
 remembers about a chapter lives under `ext.devbook-collaboration.*` in that
 chapter's own `meta` block — the opaque namespace devbook carries through
-untouched. It adds no field to devbook's schema, materializes nothing into a
-repository, and needs no devbook release of its own.
+untouched. It adds no field to devbook's schema and needs no devbook release of
+its own. The one thing it puts in a repository is its own rule, installed by
+[`collaboration-install`](skills/collaboration-install/SKILL.md) and stamped
+under `components.collaboration`.
 
 ## Installation
 
@@ -28,6 +30,12 @@ owes the next move:
 | `chapter-review` | The reviewer | `review: changes-requested` with one `open-<n>` per finding, or `review: cleared` |
 | `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state at all |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting |
+
+`collaboration-install` sits outside the pass: run it once when you enable the
+plugin, and again after an upgrade. It installs `rules/chapter-collaboration.md`
+as `.agents/rules/chapter-collaboration.md` with a wrapper per host beside it, so
+both Claude Code and Copilot apply the contract when either opens a chapter —
+rather than only when one of the four skills above names it by path.
 
 Approval is devbook's own field and keeps devbook's meaning. This plugin never
 writes it without a person choosing it in that session, and clears its own

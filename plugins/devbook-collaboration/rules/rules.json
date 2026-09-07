@@ -8,7 +8,8 @@
         ".design/**",
         ".ai/**",
         ".devbook/**"
-      ]
+      ],
+      "install": "always"
     }
   }
 }

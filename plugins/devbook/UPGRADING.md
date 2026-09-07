@@ -27,7 +27,11 @@ rule verbatim at `.agents/rules/<name>.md`, a `.claude/rules/<name>.md` wrapper 
 reported and left alone, and a folder dropped from `adopted` orphans its trio rather than
 deleting it. `assets/rule-wrappers.md` carries the templates.
 
-Run `devbook-install` once to pick them up. Nothing already on disk changes, and a repository that
+**`devbook-sync` is now `devbook-install`.** The skill is otherwise unchanged, and `devbook
+sync` still works as a trigger phrase; a script or document that invokes the skill by name
+needs the new one. `components.devbook` is untouched, so there is nothing to migrate.
+
+Run `devbook-install` once to pick the rules up. Nothing already on disk changes, and a repository that
 would rather keep reaching the plugin copies by path can take ownership of any of the three.
 
 

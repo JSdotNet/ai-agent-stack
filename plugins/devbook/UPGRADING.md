@@ -20,6 +20,11 @@ which is how Claude applies it. Both are hash-tracked like every other materiali
 customized copies are reported and left alone, and a folder dropped from `adopted` orphans its
 pair rather than deleting it. `assets/rule-wrappers.md` carries the shape and the table.
 
+The instruction files themselves change shape in the same release. They were authored with
+`applyTo`, which is Copilot's key, on files no host reads it from; they now carry the
+host-neutral `name` / `description` / `paths` frontmatter, and each host's spelling is derived
+at materialization. Bodies are untouched, and nothing that references one by path is affected.
+
 Run `devbook-sync` once to pick them up. Nothing already on disk changes, and a repository that
 would rather keep reaching the plugin copies by path can take ownership of either file.
 

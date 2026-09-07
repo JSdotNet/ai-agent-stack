@@ -20,11 +20,11 @@ apply.
 
 ## Why this is an asset and not an instruction
 
-An auto-applied instruction file needs an `applyTo` glob, and an honest glob for
-these rules would have to cover source and test trees — which would make the
-plugin speak in every repository that has not adopted the knowledge-folder
-convention. This file is therefore loaded on demand by the skills that need it,
-and the plugin stays silent everywhere else.
+An instruction file declares the paths it governs, and `devbook-sync` installs it
+so both hosts apply it there. An honest `paths` list for these rules would have to
+cover source and test trees — which would make the plugin speak in every repository
+that has not adopted the knowledge-folder convention. This file is therefore loaded
+on demand by the skills that need it, and the plugin stays silent everywhere else.
 
 ## The two directions
 

@@ -71,7 +71,7 @@ file wrong the moment a second person opens the repository.
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `instructions/<name>.instructions.md` | `.github/instructions/<name>.instructions.md` | per `assets/rule-wrappers.md` |
-| the same file's `applyTo` | `.claude/rules/<name>.md` | per `assets/rule-wrappers.md` |
+| the same file's `paths` | `.claude/rules/<name>.md` | per `assets/rule-wrappers.md` |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
@@ -89,12 +89,13 @@ outside the markers is read or written. Absent `AGENTS.md` is created holding on
 section; present without the markers, the section is appended at the end.
 
 The folder rules are the one asset materialized as a pair. An instruction file sitting
-in a plugin is read by no host automatically, and its globs name paths in this
-repository, so each one lands twice: verbatim as `.github/instructions/<name>.instructions.md`,
-which Copilot applies from its own `applyTo`, and as a `.claude/rules/<name>.md` wrapper
-whose `paths` is that `applyTo` split on commas, which is how Claude applies it. Neither
-is edited on the way in. `assets/rule-wrappers.md` carries the wrapper template, the
-table of which file lands when, and why there is no third copy.
+in a plugin is read by no host automatically, so it is authored host-neutral — `name`,
+`description`, `paths` — and its `paths` name folders in this repository, the only place
+they resolve. Each one lands twice, with each host's spelling derived on the way in:
+`.github/instructions/<name>.instructions.md`, body verbatim and `applyTo` set to `paths`
+joined with commas, and `.claude/rules/<name>.md`, a wrapper carrying that same `paths`
+and one sentence pointing at the first. `assets/rule-wrappers.md` carries both templates,
+the table of which file lands when, and why there is no third copy.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

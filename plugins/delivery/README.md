@@ -29,6 +29,10 @@ instruction files the repository keeps for the folder and the check it ships, wh
 `devbook` plugin materializes and this plugin never names. A folder flow in a repository that
 has not adopted the folder stops and says so.
 
+[FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws every flow: stage order, where the approval gate
+sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
+deliberately leave out, so they can stay execution rules.
+
 A flow never leaves its session. Fan-out across sessions and worktrees — triage a backlog,
 spawn workers, aggregate results — is a different subsystem and lives in the `fleet` plugin.
 Work that runs with nobody watching — the `schedule-*` entry points and the triggers that fire
@@ -103,6 +107,7 @@ categories it covers.
 
 | Path | Holds |
 |---|---|
+| `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
 | `instructions/flow-phases.instructions.md` | Which phases each tier runs, and the opening and closing phases in full |
 | `instructions/surface-contract.instructions.md` | Extension points, gates, the stack config, host slots, and the surface capability |
@@ -112,5 +117,4 @@ categories it covers.
 | `resources/ai-agent-stack.schema.json` | The four engine-owned keys, as a schema |
 | `resources/ai-agent-stack-template.json` | A filled-in starting point to copy |
 | `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
-| `resources/delivery-flow-diagrams.md` | The flow diagrams, centralized |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

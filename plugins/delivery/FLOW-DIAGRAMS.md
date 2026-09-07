@@ -1,6 +1,6 @@
-# Flow Flow Diagrams
+# Flow Diagrams
 
-Centralized workflow diagrams for the `delivery` flow skills. This keeps the
+Every flow this plugin ships, drawn once. This keeps the
 individual `SKILL.md` files focused on execution rules while preserving one reviewable
 overview of stage order, approval gates, and PR handoff points.
 

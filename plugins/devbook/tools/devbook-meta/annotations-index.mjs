@@ -14,7 +14,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { parseAnnotations, resolveAnnotation, folderKindForPath } from "./metadata.mjs";
-import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, GENERATOR } from "./graph.mjs";
+import { discoverLayout, REPO_SCOPE, SCHEMA_VERSION, generatorPath } from "./graph.mjs";
 
 /** Recursively collect Markdown files under a folder, as repo-relative posix paths. */
 async function collectMarkdown(repoRoot, relFolder) {
@@ -129,7 +129,7 @@ export async function buildAnnotationsDocument(
 
     return {
         schemaVersion: SCHEMA_VERSION,
-        generatedBy: GENERATOR,
+        generatedBy: generatorPath(repoRoot),
         scope,
         sources: roots,
         // Deliberately no timestamp: the index is a deterministic function of

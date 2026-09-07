@@ -75,9 +75,9 @@ A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`
 
 A rule that applies to one kind of file is authored once in `.agents/rules/` and wrapped per
 host: Claude loads `.claude/rules/<topic>.md` when it opens a matching file, Copilot loads
-`.github/instructions/<topic>.instructions.md`. Five topics, all plugin authoring — `agents`,
-`skills`, `instructions`, `manifests`, `hooks`. Change a rule and its two wrappers in the same
-commit; `node tools/check-assets.mjs` fails on drift. The convention itself is
+`.github/instructions/<topic>.instructions.md`. Six topics, all plugin authoring — `agents`,
+`skills`, `instructions`, `manifests`, `hooks`, `schedules`. Change a rule and its two
+wrappers in the same commit; `node tools/check-assets.mjs` fails on drift. The convention is
 [.agents/rules/README.md](.agents/rules/README.md).
 
 `.devbook/**` has no topic here on purpose: the devbook section at the end of this file states

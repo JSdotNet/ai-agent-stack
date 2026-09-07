@@ -18,16 +18,16 @@ only place a mistake can be caught before a consumer's install is the authoring 
 
 ```mermaid
 flowchart LR
-    write["Write the asset<br/>agents/ skills/ instructions/ hooks/"] --> manifests["Declare the manifests<br/>Claude and/or Copilot"]
-    manifests --> deps{"Needs a<br/>lower layer?"}
-    deps -->|yes| declare["Declare dependencies<br/>Claude manifest, prose in README"]
+    write["Write the asset"] --> manifests["Declare the manifests"]
+    manifests --> deps{"Needs a lower layer?"}
+    deps -->|yes| declare["Declare dependencies, Claude manifest only"]
     deps -->|no| list
     declare --> list["List in marketplace.json"]
-    list --> check["check-assets.mjs<br/>plugin validate --strict"]
+    list --> check["Validate the shape"]
     check -->|shape rejected| write
     check -->|clean| install["Host installs by plugin@jsdotnet"]
-    install --> claude["Claude Code loads<br/>manifest, scans skills/, hooks/hooks.json"]
-    install --> copilot["Copilot loads<br/>manifest, applyTo, hooks.json"]
+    install --> claude["Claude Code loads it"]
+    install --> copilot["Copilot loads it"]
 ```
 
 - A plugin folder that never reaches `marketplace.json` does not exist to a host, so the list
@@ -48,14 +48,14 @@ missing key means *absent*, never *older*.
 ```mermaid
 stateDiagram-v2
     [*] --> NotAdopted
-    NotAdopted --> Materialized: sync copies payload, writes components.&lt;name&gt;
+    NotAdopted --> Materialized: sync copies payload, writes the component's stamp
     Materialized --> Reconciling: sync runs again
     Reconciling --> Materialized: every key resolves, hashes match
     Reconciling --> Drifted: a materialized file changed underneath
     Reconciling --> Pending: ledger is missing a migration id
-    Pending --> Materialized: migrate.mjs runs, id appended to the ledger
-    Pending --> Pending: migrate.mjs --check still reports work
-    Drifted --> Materialized: a person resolves it; sync never overwrites silently
+    Pending --> Materialized: the migration runs, its id joins the ledger
+    Pending --> Pending: the check still reports work
+    Drifted --> Materialized: a person resolves it, sync never overwriting silently
     Materialized --> [*]: component removed
 ```
 
@@ -86,7 +86,7 @@ flowchart TD
     verify -->|green| dataPrepare(["data.prepare · chore"])
     dataPrepare --> appStart["app.start · service"]
     appStart --> qaRun["qa.run · service"]
-    qaRun --> gate{"Personal Validation<br/>mandatory gate"}
+    qaRun --> gate{"Personal Validation"}
     gate -->|approve| deliver["deliver · service"]
     gate -->|revise| implement
     gate -->|decline| stop(["Blocked · never a silent skip"])

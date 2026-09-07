@@ -56,6 +56,7 @@ and never edits another component's. `components` belongs to each component's ow
     "qa.depth":               "targeted",
     "verify.retryBudget":     2,
     "gate.reviseBudget":      3,
+    "commit.at":              "gate",
     "pr.required":            true,
     "pr.base":                "main"
   },
@@ -182,11 +183,18 @@ key means the engine's own choice rather than undefined.
 | `verify.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
+| `commit.at` | `gate`, `manual` | `manual` |
 | `pr.required` | boolean | `true` |
 | `pr.base` | a branch name | the repository's default branch |
 | `phases.updateBase` | boolean | `true` |
 | `phases.documentationUpdate` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
+
+`commit.at` is the one policy key that binds a stage running long before the phase that
+defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
+stage commits** and every `implement` provider is briefed to leave committing to that phase.
+The mechanics — one commit per handback, a new commit per revise round — are in **Personal
+Validation** (`flow-phases.instructions.md`). `manual` leaves committing to the user.
 
 `pr.base` is the one value that is neither enum nor number. Validate it as a git ref that
 exists on the remote, never as free prose.

@@ -70,7 +70,7 @@ Claude manifest a file nobody was allowed to edit. Both manifests are hand-autho
 
 Consequence: what the generator used to lint — a missing description, an unloadable model pin,
 a handoff the body never mentions — is now a review responsibility, written down in
-[CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
+[AGENTS.md](../../AGENTS.md) and the rules it points at. Revisit once the number of plugins makes that unreliable.
 
 **Revisited, 2026-09-05.** Seventeen plugins and 161 budgeted assets made it unreliable: a
 review found five role agents still carrying tools a decision one day earlier said were gone.
@@ -552,7 +552,7 @@ of staged procedures and contracts. Everything else over budget — at the time,
 how-to skills, the pull-request lane, the two profile skills — is owed a trim or a reason line
 in the file, and `tools/check-assets.mjs --budgets` is the list.
 
-Consequence: the number in `CLAUDE.md` is a review prompt and not a gate the checker fails on.
+Consequence: the number in `AGENTS.md` is a review prompt and not a gate the checker fails on.
 An asset that grows past its budget is asked what it disclosed and why, not refused. The debt
 record moves to `in-progress` rather than `resolved`, because the assets outside the four
 kinds have not yet said why. If the table ever needs a fifth row, the budget is the wrong tool
@@ -787,6 +787,77 @@ not enable. And a routine's first run is the only proof that the cloud session l
 marketplace at all — recorded as `trial` in [hosts](../tech/hosts.md#claude-code-routines)
 until one has.
 
+## One Rule, One Wrapper Per Host
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+```
+
+Both hosts inject rules scoped to a path glob, and no single file can serve both: Claude reads
+`.claude/rules/*.md` with a `paths` list, Copilot reads `.github/instructions/*.instructions.md`
+with `applyTo`. Different directory, different filename, different key. So this repository used
+neither, and `CLAUDE.md` carried 154 lines that loaded on every session whatever was being
+edited.
+
+[One Authored Copy Per Asset](#one-authored-copy-per-asset) does not stretch here — it rests on
+both hosts ignoring keys they do not know, and these two disagree on the *filename*. The
+layering used for manifests and hooks applies instead: one authored rule, a thin wrapper per
+host.
+
+```
+.agents/rules/<topic>.md            the rule. One copy. name / description / paths.
+  ├── .claude/rules/<topic>.md      wrapper: paths verbatim → pointer
+  └── .github/instructions/<topic>.instructions.md
+                                    wrapper: applyTo = paths.join(",") → pointer
+```
+
+A wrapper is frontmatter and one sentence. It never restates a rule, so a third host adds a
+third wrapper and never a second copy. Because `applyTo` is exactly `paths.join(",")`, the
+wrappers are derivable from the shared file and `tools/check-assets.mjs` fails on drift — a
+checker over hand-authored files, which is the bargain
+[No Generated Sync Layer](#no-generated-sync-layer) already struck.
+
+Three things follow, and each is deliberate:
+
+- **`.agents/rules/` is a local convention, not a standard.** `AGENTS.md` is the standard for
+  the *root* file and defines no globs; its answer to scoping is nested files, closest-wins.
+  [agents.md#179](https://github.com/agentsmd/agents.md/issues/179) is the open proposal for
+  glob-scoped rules, and its `name` / `description` / `paths` shape is what this uses.
+- **A plugin cannot ship rules.** There is no rules component, no `rules` key in
+  `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
+  ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
+  under `.agents/rules/` is repository-scoped: it serves people working *in* this repository,
+  never someone who installed a plugin from it. A plugin instruction file keeps `applyTo` and
+  keeps being reached by explicit path, and is not renamed to the neutral shape — its
+  filename and its glob are part of the plugin contract. That inconsistency is the price of
+  the plugin host having no rules component.
+- **A rule that already has one home both hosts read stays there.** The topic set is plugin
+  authoring only.
+- **The root file is `AGENTS.md`.** `CLAUDE.md` becomes an `@AGENTS.md` import, because
+  Copilot reads `AGENTS.md` natively and Claude does not. That is the same choice
+  [devbook Owns One Section of AGENTS.md](#devbook-owns-one-section-of-agentsmd) made for the
+  file devbook writes into, and it makes the `repo-instructions` slot resolve here for the
+  first time.
+
+The topic set stops at plugin authoring. `.devbook/**` gets no topic, because
+[devbook Owns One Section of AGENTS.md](#devbook-owns-one-section-of-agentsmd) already puts
+the folder routing table and the `_meta/` rule in front of both hosts, and a second copy here
+would be exactly what this layering exists to prevent. Where a rule already has one home that
+both hosts read, it keeps it.
+
+Consequence: six authored files and ten wrappers where there were none, against a `CLAUDE.md`
+that shrank from 154 lines to four. The context cost is lower, not higher — only the running
+host's wrapper loads, and only on a matching read. The cost is paid in file count and in a
+checker rule.
+
+That rule is `check-assets.mjs`'s `rules` pass, and it refuses six things: a shared file whose
+`name` does not match its filename or that carries no `paths`, a missing wrapper on either
+side, a Claude wrapper whose `paths` differ, a Copilot wrapper whose `applyTo` is not those
+paths comma-joined or whose `description` differs, a wrapper body past three lines, and a
+wrapper with no shared file behind it. The fifth is the one the layering actually rests on:
+a wrapper that grows a rule is how the second copy gets in.
+
 ## devbook Owns One Section of AGENTS.md
 
 ```meta
@@ -826,6 +897,69 @@ unchanged, because the chapter schema did not move, and a repository synced befo
 `devbook` 1.3.0 gains the section as a plain `create` on its next reconcile. The session-start
 hook keeps its generic text: it is what reaches a session in a repository that never ran a
 reconcile, and the section is what makes a reconciled one specific.
+
+## Automation Owns the _meta Refresh
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd"]
+```
+
+The derived-artifacts convention says a repository owes contributors two refresh paths: an
+on-demand command, and a scheduled job reconciling the default branch. This repository ships
+neither — no `.github/`, no `build/` — and `CLAUDE.md` had filled the gap by telling every
+session to regenerate `_meta/` after a chapter edit, which is the one thing the convention
+forbids by name.
+
+**The refresh is automation's, and only automation's.** The `devbook-check` routine already
+does it: check, fix the Markdown, refresh the indexes, open a pull request when they moved. So
+this repository keeps one refresh path rather than two, and the on-demand half is deliberately
+absent. A session that could refresh is a session that will, in the same commit as its chapter
+edit, and the merge conflict that follows is resolvable only by running the generator again.
+
+Three things enforce it, because prose alone decays across a long session:
+
+- `.claude/settings.json` denies `Read(_meta/**)`. A `Read` deny also blocks `Edit` and
+  `Write`, and matches the directory name at any depth, so one rule covers the root rollup and
+  all five scoped folders. `build.mjs` is a subprocess and reaches the files anyway.
+- `AGENTS.md` states the rule for Copilot. Content exclusion is not an equivalent lever — it
+  does not apply to Copilot CLI or to agent mode — so prose is the whole mechanism there.
+- `CLAUDE.md` names the routine as the owner, at the point where the check is run.
+
+**The `AGENTS.md` section diverges from its template, in two lines.** `agents-section.md`
+names `./build/Update-DevbookIndex.ps1` and `.github/tools/devbook-meta/build.mjs`: correct in
+a repository that ran `devbook-sync`, wrong in the one that authors the convention and vendors
+the generator under `plugins/devbook/tools/`. The section here names this repository's real
+path and the routine instead of the script. It was written by hand, so no stamp claims it and
+no reconcile will report it as customized; a later `devbook-sync` run over this repository
+would overwrite it with the template's paths, and that is the moment to make the template
+resolve the generator location the way `generatorPath` now does.
+
+## The Handback Is the Commit Point
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+```
+
+The engine said nothing about when a flow commits, so whether a run produced one commit or
+fifteen was whatever the bound `implement` provider happened to do. A reviewer reading the
+resulting branch could not tell a handback from a mid-stage save.
+
+`policy.commit.at` closes that: `gate` makes Personal Validation the single commit point —
+one commit before every handback, a new commit for every revise round, and no stage before it
+commits at all. `manual`, the default, is today's behaviour and leaves committing to the user.
+
+The commit belongs to the gate phase rather than to `implement` because the handback is what
+it marks. A commit per implementation pass records how the work was written; a commit per
+handback records what the user was asked to approve, which is the unit anyone later reads the
+branch for. Attaching it to the phase also keeps it out of the provider contract, so a
+repository swapping coding plugins does not change how its history is shaped.
+
+Consequence: with `gate` set, a rejected handback leaves a committed change set on the branch
+that the next commit corrects rather than replaces — deliberately, since amending would
+rewrite what the user already reviewed. A branch therefore carries one commit per validation
+round, not one per flow.
 
 ## Every Run Opens With Update Base
 

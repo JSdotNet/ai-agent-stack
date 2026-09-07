@@ -206,7 +206,6 @@ the source of truth.
 
 ## Related Skills
 
-- `create-pull-request` — open the PR in the first place.
 - `fix-pr-checks` — for check failures that are not caused by the integration.
 - `pr-merge-ready` — pick the pull request that needs this integration and run it, one PR per pass, on a timer.
 

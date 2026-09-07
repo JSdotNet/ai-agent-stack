@@ -1,5 +1,5 @@
 ---
-applyTo: ".design/**"
+applyTo: ".design/**,.devbook/design/**"
 description: Structure and authoring rules for the design knowledge folder, holding UX principles, design tokens, interaction guidelines, accessibility rules, and component-library decisions.
 ---
 

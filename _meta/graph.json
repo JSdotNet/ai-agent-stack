@@ -1,6 +1,6 @@
 {
   "schemaVersion": 7,
-  "generatedBy": ".github/tools/devbook-meta/build.mjs",
+  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
     ".devbook/arc42",
@@ -10,10 +10,10 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 131,
-    "edges": 284,
+    "nodes": 130,
+    "edges": 281,
     "nodesByFolder": {
-      "arc42": 67,
+      "arc42": 66,
       "domain": 38,
       "tech": 14,
       "design": 3,
@@ -21,10 +21,10 @@
     },
     "nodesByType": {
       "file": 23,
-      "chapter": 108
+      "chapter": 107
     },
     "nodesByKind": {
-      "none": 74,
+      "none": 73,
       "context-map": 1,
       "bounded-context": 1,
       "dependencies": 1,
@@ -46,15 +46,15 @@
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 106,
+      "active": 105,
       "adopted": 13,
       "trial": 6,
       "draft": 2,
       "candidate": 4
     },
     "edgesByType": {
-      "contains": 108,
-      "related": 171,
+      "contains": 107,
+      "related": 169,
       "depends-on": 5
     }
   },
@@ -819,25 +819,6 @@
             ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
             ".devbook/arc42/05-building-block-view.md#host-slots",
             ".devbook/domain/plugin-authoring/naming.md#stamp"
-          ]
-        }
-      },
-      {
-        "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
-          "label": "Every Run Opens With Update Base",
-          "type": "chapter",
-          "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "every-run-opens-with-update-base",
-          "level": 2,
-          "line": 830,
-          "status": "active",
-          "statusDeclared": false,
-          "date": "2026-09-07",
-          "related": [
-            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
-            ".devbook/domain/plugin-authoring/naming.md#flow-skill"
           ]
         }
       },
@@ -2592,14 +2573,6 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
-          "source": ".devbook/arc42/09-architecture-decisions.md",
-          "target": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
-          "type": "contains"
-        }
-      },
-      {
-        "data": {
           "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
@@ -3835,22 +3808,6 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/domain/plugin-authoring/naming.md#stamp",
           "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
           "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
-          "source": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
-          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
-          "type": "related"
-        }
-      },
-      {
-        "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base->.devbook/domain/plugin-authoring/naming.md#flow-skill",
-          "source": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
-          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
           "type": "related"
         }
       },

@@ -1,5 +1,5 @@
 ---
-applyTo: ".arc42/**"
+applyTo: ".arc42/**,.devbook/arc42/**"
 description: Structure and authoring rules for the arc42 architecture documentation folder.
 ---
 

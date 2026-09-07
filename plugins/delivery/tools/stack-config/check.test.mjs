@@ -72,6 +72,12 @@ test('personalValidation may only say required', () => {
     assert.equal(check({ policy: { 'gate.personalValidation': 'optional' } }).length, 1);
 });
 
+test('commit.at takes gate or manual and nothing else', () => {
+    assert.deepEqual(check({ policy: { 'commit.at': 'gate' } }), []);
+    assert.deepEqual(check({ policy: { 'commit.at': 'manual' } }), []);
+    assert.equal(check({ policy: { 'commit.at': 'every-stage' } }).length, 1);
+});
+
 test('a gate needs at, when, and purpose', () => {
     const errors = check({ gates: [{ at: 'spec' }] });
     assert.equal(errors.length, 2);

@@ -29,6 +29,7 @@
     "verify.retryBudget": 2,
     "gate.reviseBudget": 3,
     "gate.personalValidation": "required",
+    "commit.at": "gate",
     "pr.required": true,
     "pr.base": "main",
     "phases.updateBase": true,

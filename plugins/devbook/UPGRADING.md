@@ -5,6 +5,16 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 1.3.1: instruction globs cover the nested layout
+
+**A fix; no migration.** Schema version 7 taught the generator to resolve `.devbook/arc42`,
+`.devbook/domain`, `.devbook/tech`, `.devbook/design`, and `.devbook/ai`, but the instruction
+files kept globbing the root dot-folders alone. So a repository on the nested layout indexed
+correctly and had every folder rule applied to nothing. Each `applyTo` now carries both
+spellings, and the cross-folder ones (`devbook-chapter-metadata`, `devbook-annotations`,
+`devbook-naming`) carry `.devbook/**`. `devbook-derived-artifacts` is unchanged: `**/_meta/**`
+already matched either layout. Nothing to re-sync — the globs travel with the plugin.
+
 ## 1.3.0: a section of `AGENTS.md`
 
 **Additive; no migration.** `devbook-sync` now writes one marker-fenced section of the

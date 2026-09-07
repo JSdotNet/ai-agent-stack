@@ -1,5 +1,5 @@
 ---
-applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**"
+applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**,.devbook/**"
 description: Common per-chapter and per-file metadata convention for .domain, .arc42, .tech, .design, and .ai, so tooling can parse status, dependencies, and cross-references.
 ---
 

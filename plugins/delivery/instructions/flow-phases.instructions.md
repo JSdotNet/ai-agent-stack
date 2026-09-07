@@ -170,6 +170,15 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
 
 - **Do not delegate to an agent and do not auto-approve.** Pause and wait for the user's
   explicit decision.
+- **Commit the change set before handing back, when `policy.commit.at` is `gate`.** One commit
+  per handback, on the run's working branch, with a message derived from the run's scope
+  record. This is then the flow's only commit point — no earlier stage commits. Stage what the
+  run changed; name anything else in the working tree in the stage output and leave it
+  uncommitted. Never amend, squash, or push here — a revise round produces a **new** commit at
+  the next handback, and pushing belongs to Create Pull Request. With nothing to commit, say so
+  and create no empty commit. If the commit fails — a rejecting hook, a signing error — name
+  the actual error in the stage output and hand back anyway: the user is present, and the
+  failure is theirs to decide on. Under the default `manual` this phase commits nothing.
 - **Present the code review** of the change set for the user to read.
 - **Present the recorded QA review** — scenarios, pass/fail, monitoring findings, and any
   captured evidence — when QA Validation ran.
@@ -223,7 +232,12 @@ description as file artifacts, say so once, and continue.
   evidence capture, or Personal Validation review. Never close the surface's own tabs or
   unrelated user browser sessions.
 - **Write the PR description** from the change set, the code review outcome, and the
-  validation evidence.
+  validation evidence. Follow the repository's own PR template when it has one, and link the
+  originating work item — `Closes` when merging resolves it, `Refs` when it does not.
+- **Open it through the lane, and validate nothing twice.** Push the branch, then raise the PR
+  with the host's own pull-request action when the session offers one, otherwise `gh pr create`
+  or the bound GitHub tooling. Build & Test, QA Validation, and the recorded approval **are**
+  the validation: never rebuild, re-run tests or QA, or ask for a second confirmation here.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Skip this phase** (`skipped`) when the run produces no change set to submit.
 

@@ -19,7 +19,7 @@ instead of by repository.
 | `flow-*` (15) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-feature`, `flow-bug`, `flow-structure`, `flow-create-module`, `flow-create-service`, `flow-create-mvp`, `flow-update-packages`, `flow-aspire-update`, `flow-project`, `flow-repo`, `flow-adr`, `flow-tdr`, `flow-arc42`, `flow-architecture`, `flow-fallback` |
 | `phase-*` (2) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-qa-validation` |
 | `automation-*` (9) | A schedulable entry point that picks its own input, then runs a flow or a review: `automation-bug-fix`, `automation-merge-review`, `automation-package-update`, `automation-performance-review`, `automation-review`, `automation-security-review`, `automation-week-starter`, `automation-weekly-cost-analysis`, `automation-whats-new` |
-| The pull-request lane (5) | `create-pull-request`, `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` |
+| The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `azure-sre-to-github-issue` |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
@@ -44,7 +44,8 @@ separate mechanism. `spec → gate → implement` is the highest-value one to tu
 
 **Bindings and policy.** Which plugin fills each role, which tracker the repository uses, and
 a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
-budget, whether a pull request is required.
+budget, whether the flow commits its change set at each handback, whether a pull request is
+required.
 
 All four live in `.github/ai-agent-stack.json`:
 

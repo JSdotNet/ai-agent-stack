@@ -1,7 +1,7 @@
 # Authoring
 
 Pruning rules and size budgets that keep authored assets short enough to stay predictable.
-[CLAUDE.md](CLAUDE.md) states the short form of these; this file is the full rule it points at.
+[AGENTS.md](AGENTS.md) states the short form of these; this file is the full rule it points at.
 
 It arrived from the `spec-builder` plugin's `instructions/authoring/spec-conciseness.instructions.md`
 and stayed behind when that plugin
@@ -16,8 +16,9 @@ because it governs authoring *here*.
 ## Single Source Of Truth
 
 - State each rule in exactly one file. Everywhere else, link to that file by relative path.
-- Canonical sources: [CLAUDE.md](CLAUDE.md) for the dual-host contract and the repository's own
-  standards, and this file for conciseness.
+- Canonical sources: [AGENTS.md](AGENTS.md) for the dual-host contract and the repository's own
+  standards, [`.agents/rules/`](.agents/rules/README.md) for the per-file-kind rules, and this
+  file for conciseness.
 - Prefer a one-line pointer over a summary. A summary is a second copy that drifts.
 - The environment is a source of truth too: record what an author cannot find by looking —
   the unwritten convention, the reason behind a choice, the gotcha no config confesses.

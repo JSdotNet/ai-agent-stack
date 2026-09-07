@@ -1,6 +1,6 @@
 ---
-name: devbook-install
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
+name: install
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai devbook folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the devbook folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations", "devbook-install".'
 ---
 
 # devbook install

@@ -32,7 +32,7 @@ operation, and the report is what says which of them applies.
    skill does not reach into the host's plugin cache.
 
 4. **Let each component reconcile itself.** For every component with a stamp, invoke that
-   component's own install skill — `devbook:devbook-install` — and let it run its outstanding
+   component's own install skill — `devbook:install` — and let it run its outstanding
    migrations oldest first, overwrite what is stale, leave what is customized, and rewrite
    its own stamp. A migration applied from here would leave the ledger describing something
    that did not happen.

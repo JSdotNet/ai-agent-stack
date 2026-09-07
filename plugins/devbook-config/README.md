@@ -65,7 +65,7 @@ node scripts/report.mjs --root <repository>
 - **Writing anything a component owns.** `devbook-config:setup` and `devbook-config:update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
   install skill, which is the only thing that knows what it materialized. That is also why
-  `devbook-install` and `devbook-check` did not move here: `devbook` ships the payload, the
+  `devbook:install` and `devbook-check` did not move here: `devbook` ships the payload, the
   migrations, and the ledger, and a skill in this plugin has no supported path to any of them.
 
 ## Files

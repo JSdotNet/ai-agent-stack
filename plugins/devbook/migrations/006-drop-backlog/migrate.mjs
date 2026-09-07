@@ -8,7 +8,7 @@
 // Idempotent by construction: every step is expressed as "this shape must not
 // be present", so applying it twice is applying it once. `--check` runs the
 // same detection and writes nothing, which is what CI and the plan phase of
-// `devbook-install` call.
+// `devbook:install` call.
 
 import { readFile, writeFile, readdir, stat, rm } from "node:fs/promises";
 import path from "node:path";

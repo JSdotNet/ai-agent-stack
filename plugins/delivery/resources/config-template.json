@@ -24,7 +24,7 @@
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
     "app.start": null,
     "qa.run": null,
-    "docs.update": ["devbook:devbook-install"],
+    "docs.update": ["devbook:install"],
     "flow.end": []
   },
   "policy": {

@@ -119,7 +119,7 @@ what you are editing.
 <!-- devbook:begin -->
 ## Devbook folders
 
-Managed by `devbook-install`. Edit outside these markers; an edit inside them makes the
+Managed by `devbook:install`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its devbook as addressed Markdown chapters. Treat the folders as

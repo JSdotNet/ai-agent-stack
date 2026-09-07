@@ -5,6 +5,29 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 3.0.0: every install skill is called `install`
+
+**Breaking; scripted migration `009-install-skill-ids`.** `devbook-install` is now
+`devbook:install`, and its two siblings elsewhere in the marketplace lost the same
+redundant prefix. A repository names these ids under `extensions`, so the rename reaches
+committed files.
+
+`contractVersion` moves to **9**. No stamp key changes — `components.devbook` was never
+named after the skill that writes it — and no chapter, rule, or materialized asset moves
+for the rename.
+
+```bash
+node migrate.mjs --check
+```
+
+It rewrites the ids under `extensions` in `.devbook/config.json` and in the gitignored
+`.devbook/config.local.json` when that exists, touching only `provider` and `run`. A gate
+prompt quoting the old name in prose is left alone.
+
+The same release adds the `.gitignore` block devbook now renders beside its `AGENTS.md`
+section, covering `AGENTS.local.md` and `.devbook/config.local.json`. Both are
+machine-scope and neither is ever created by a reconcile.
+
 ## 2.0.0: the stack config leaves `.github/`
 
 **Breaking; scripted migration `008-config-to-devbook`.** The file devbook writes its stamp
@@ -51,11 +74,11 @@ rule verbatim at `.agents/rules/<name>.md`, a `.claude/rules/<name>.md` wrapper 
 reported and left alone, and a folder dropped from `adopted` orphans its trio rather than
 deleting it. `assets/rule-wrappers.md` carries the templates.
 
-**`devbook-sync` is now `devbook-install`.** The skill is otherwise unchanged, and `devbook
+**`devbook-sync` is now `devbook:install`.** The skill is otherwise unchanged, and `devbook
 sync` still works as a trigger phrase; a script or document that invokes the skill by name
 needs the new one. `components.devbook` is untouched, so there is nothing to migrate.
 
-Run `devbook-install` once to pick the rules up. Nothing already on disk changes, and a
+Run `devbook:install` once to pick the rules up. Nothing already on disk changes, and a
 repository that would rather keep reaching the plugin copies by path can take ownership of any
 of the three.
 
@@ -102,7 +125,7 @@ already matched either layout. Nothing to re-sync — the globs travel with the 
 
 ## 1.3.0: a section of `AGENTS.md`
 
-**Additive; no migration.** `devbook-install` now writes one marker-fenced section of the
+**Additive; no migration.** `devbook:install` now writes one marker-fenced section of the
 repository's `AGENTS.md`, rendered from the adopted folders per `assets/agents-section.md`
 and keyed `AGENTS.md#devbook` in the stamp. A repository synced before 1.3.0 gains it as a
 plain `create` on its next reconcile: an absent `AGENTS.md` is created holding only the
@@ -225,7 +248,7 @@ Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
 other folder does. To adopt: re-sync `.github/tools/devbook-meta/` from this
-plugin, run `devbook-install` (or create the folder by hand), add `.ai/**`
+plugin, run `devbook:install` (or create the folder by hand), add `.ai/**`
 to the CI workflow's `paths` filters, and route edits through the `.ai` write path.
 
 ## 0.11.0: invariants as a table

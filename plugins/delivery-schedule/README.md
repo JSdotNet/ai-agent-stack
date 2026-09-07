@@ -16,7 +16,7 @@ claude plugin marketplace add JSdotNet/ai-agent-stack
 ```
 
 Enable `delivery-schedule` with `/plugin` — the host installs `delivery` with it — then run
-`schedule-install` in the repository.
+`delivery-schedule:install` in the repository.
 
 ## The entry points
 
@@ -64,7 +64,7 @@ enabled is reported and skipped, never scheduled.
 
 | Skill | Does |
 |---|---|
-| `schedule-install` | Creates or updates the selected schedules, disables the deselected, writes `components.schedule` |
+| `delivery-schedule:install` | Creates or updates the selected schedules, disables the deselected, writes `components.schedule` |
 | `schedule-status` | Lists them with their last runs, what each published, and the log where one failed |
 | `schedule-run` | Fires one now and reports the run |
 
@@ -98,7 +98,7 @@ data; only the scheduler resolution knows which tool answers.
 ## Before the first schedule
 
 A cloud session loads this marketplace only if the repository's committed host settings enable
-it and the plugins a schedule requires. `schedule-install` checks that and refuses to schedule
+it and the plugins a schedule requires. `delivery-schedule:install` checks that and refuses to schedule
 what would start without its skill. The first run is still the proof: fire one with
 `schedule-run` and read it with `schedule-status` before trusting the cadence.
 

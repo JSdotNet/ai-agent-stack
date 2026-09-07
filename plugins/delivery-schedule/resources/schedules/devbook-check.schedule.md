@@ -15,7 +15,7 @@ Fix what the check reports in the source Markdown, never under `_meta/`, re-run 
 `chore(devbook): daily check <YYYY-MM-DD>` with the findings and the fixes in its body.
 
 If the check exits `2`, the repository has not adopted devbook: say so and stop. If the
-migration ledger or the stamp reports hard drift, do not repair it — `devbook-install` owns that
+migration ledger or the stamp reports hard drift, do not repair it — `devbook:install` owns that
 and it needs a person. Publish a schedule-report issue naming the outstanding migrations or the
 drift, unless one is already open.
 

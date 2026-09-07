@@ -128,10 +128,12 @@ and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
 subsystem while `flow-feature` and `phase-build-test` are the procedures inside them — which is
-why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface carries the
-contract word after the stem and the implementation after that, so the three are read as one
-kind from the marketplace list alone; see
-[the decision](../../arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word).
+why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
+a contract other surfaces answer carries the contract word after the stem and the
+implementation after that, so the three are read as one kind from the marketplace list alone;
+see [the decision](../../arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word).
+A surface interchangeable with nothing does not — see
+[the decision](../../arc42/09-architecture-decisions.md#devbooks-canvas-carries-no-surface-word).
 `fleet` is its own stem, not a package inside `delivery`, because fan-out is a different
 subsystem.
 
@@ -255,8 +257,12 @@ nothing else, so its two operations arrive as canvas actions rather than namespa
 which is why the contract matches operation names and never a transport. See
 [the decision](../../arc42/09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only).
 
-The fourth, `devbook-canvas`, renders the reference graph `_meta/graph.json` produces. It is
-packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
+The fourth, `devbook-graph`, renders the reference graph `_meta/graph.json` produces, and opens
+a single chapter beside its parsed `meta` block in a second canvas, `devbook-chapter`. It
+answers no operation group and substitutes for nothing, which is why it takes devbook's stem
+and the thing it draws rather than the surface word — see
+[the decision](../../arc42/09-architecture-decisions.md#devbooks-canvas-carries-no-surface-word).
+It is packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
 generator modules by relative path — no host resolves the two together, so this is a source
 coupling to undo, not a dependency to declare. See
 [the decision](../../arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
@@ -389,7 +395,7 @@ plugins it may name. A lower layer never names a higher one.
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
 | L1 extension | One foundation | `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
-| L3 surface | Neither direction. Reads generated files | `devbook-canvas` |
+| L3 surface | Neither direction. Reads generated files | `devbook-graph` |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
 sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live

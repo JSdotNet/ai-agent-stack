@@ -87,7 +87,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/
 
 The layered design puts the five folder-writing skills — one per adopted folder — in
 `devbook-flows`, an L2b bridge depending on both `devbook` and `delivery`, and the graph
-renderer in `devbook-canvas`, an L3 surface. The flows have moved; the canvas has not.
+renderer in `devbook-graph`, an L3 surface. The flows have moved; the canvas has not.
 
 **The flow half is closed.** The five folder-writing skills are now `flow-domain`,
 `flow-tech`, `flow-design`, `flow-arc42-content`, and `flow-ai` in `devbook-flows`, which
@@ -102,17 +102,18 @@ instruction files — through one section of `assets/code-sync-protocol.md`. Sup
 
 **The canvas half is not, and the reason is an import boundary rather than a rename.** The
 extension was renamed `knowledge-canvas` → `devbook-canvas` ahead of the move, because a name
-is free to change before anything resolves it. But it imports `graph.mjs`, `outline.mjs`, and
-`metadata.mjs` out of `tools/devbook-meta/` by relative path — deliberately, so the rendered
-graph and the committed index are the same code — and those three paths are what a lift
-breaks. So that move is not a move plus a manifest: the generator modules have to become
-something a separate plugin can import first. `devbook` still imports nothing from the canvas,
-which is the direction that matters for L0.
+is free to change before anything resolves it, and again to `devbook-graph` on 2026-09-07 for
+the same reason — see [the decision](#devbooks-canvas-carries-no-surface-word). But it imports
+`graph.mjs`, `outline.mjs`, and `metadata.mjs` out of `tools/devbook-meta/` by relative path —
+deliberately, so the rendered graph and the committed index are the same code — and those
+three paths are what a lift breaks. So that move is not a move plus a manifest: the generator
+modules have to become something a separate plugin can import first. `devbook` still imports
+nothing from the canvas, which is the direction that matters for L0.
 
 Consequence: `devbook` is L0-clean on the skill side and can now be installed alone, which the
 five dashboard-referencing skills previously made untrue. It still ships a surface inside its
 own folder, so the claim that a surface is never packaged with what it renders stays
-unenforced here. Close it by lifting `devbook-canvas` into its own plugin once the generator
+unenforced here. Close it by lifting `devbook-graph` into its own plugin once the generator
 modules have a published shape to import.
 
 ## Flat Devbook Folders Only
@@ -1169,3 +1170,37 @@ Two places keep the old spelling on purpose, and neither is the term:
   not before.
 
 Consequence: a grep for the word finds only those two, and finding it anywhere else is a bug.
+
+## devbook's Canvas Carries No Surface Word
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas"]
+```
+
+`devbook`'s extension folder is `devbook-graph`, not `devbook-surface-canvas`. It was
+`devbook-canvas` until this date, and a grep for that string now finds only this record, the one
+sentence it amends in [devbook Still Ships the Graph
+Canvas](#devbook-still-ships-the-graph-canvas), and the plugin's upgrade note.
+
+[Surfaces Carry the Surface Word](#surfaces-carry-the-surface-word) put the contract word in the
+middle of the three delivery surfaces because they answer `delivery.surface.*@1` and are
+substitutable for one another — nothing in `delivery-dashboard` said the dashboard and the
+collector were interchangeable and the engine beside them was not. That reason does not reach
+this extension. It answers no operation group, no run resolves it from the live tool list, and
+it substitutes for nothing, so the word it would carry marks a membership it does not have.
+What it does have in common with `delivery-surface-canvas` is only the host mechanism, and
+naming the mechanism is what made the two look like one kind: `devbook-canvas` beside
+`delivery-surface-canvas` reads as a second implementation of the render group, which it is not.
+
+So the name states the subject instead. `devbook-graph` draws the reference graph the `meta`
+blocks describe, and the second canvas the extension registers is `devbook-chapter` — one
+chapter's Markdown beside its parsed block and a metadata lint. That id was also `devbook-canvas`,
+so the string named both the whole extension and one of the two canvases inside it.
+
+Consequence: the [surface term](../domain/plugin-authoring/naming.md#surface) still counts four
+surfaces, and the stem rule now reads with the scope it always had — the contract word marks
+interchangeability, so a surface interchangeable with nothing does not carry it. The lift this
+folder is still waiting on takes the new name with it, and the blocker is unchanged: the three
+relative imports into `tools/devbook-meta/`, per
+[devbook Still Ships the Graph Canvas](#devbook-still-ships-the-graph-canvas).

@@ -5,6 +5,25 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 1.4.0: the canvas extension is `devbook-graph`
+
+**A rename; no migration.** The extension folder, its `copilot-extension.json` name, and one
+of the two canvas ids change. `devbook-canvas` named the host mechanism, which put it beside
+`delivery-surface-canvas` as if the two were interchangeable implementations of one render
+contract — they are not, and devbook's answers no surface contract at all. It is now
+`devbook-graph`, after the thing it draws. The chapter viewer, whose id was also
+`devbook-canvas`, is now `devbook-chapter`.
+
+| Was | Is |
+| --- | --- |
+| extension `devbook-canvas` | extension `devbook-graph` |
+| canvas `devbook-graph` | canvas `devbook-graph` — unchanged |
+| canvas `devbook-canvas` | canvas `devbook-chapter` |
+
+Ask for the **Reference graph** or **Devbook chapter** canvas by those names on the Copilot
+CLI. Nothing materialized into a repository changes, so there is nothing to re-sync, and the
+`meta` schema and `contractVersion` are untouched.
+
 ## 1.3.2: the plugin names no flow
 
 **Prose only; no migration.** The per-folder flows now live in `delivery`, one per folder —

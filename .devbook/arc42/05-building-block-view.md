@@ -60,12 +60,12 @@ An `extensions/<name>/` folder ships a [surface](../domain/plugin-authoring/nami
 the other way: a `copilot-extension.json` naming it, and the module that registers its
 canvases. No manifest lists it and nothing in the plugin loads it — whichever tool opens it
 resolves it at runtime, and a host without an extension mechanism never sees it. `devbook`
-ships one, `devbook-canvas`, which renders the reference graph the generator writes to
+ships one, `devbook-graph`, which renders the reference graph the generator writes to
 `_meta/graph.json`. `delivery-surface-canvas` ships one too, and it is that plugin's only transport:
 its two viewer pages sit in the extension's own `views/`, and the plugin carries no Claude
 manifest and no marketplace entry.
 
-What coupling exists runs one way and only in source: `devbook-canvas` imports the generator's
+What coupling exists runs one way and only in source: `devbook-graph` imports the generator's
 graph, outline, and metadata modules from `tools/devbook-meta/` by relative path, which is why
 the live view and the committed index cannot disagree. Nothing in `devbook` imports the canvas.
 Those three imports are also the reason lifting the folder into its own plugin is more than a

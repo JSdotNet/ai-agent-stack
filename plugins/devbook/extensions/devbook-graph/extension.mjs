@@ -1,10 +1,12 @@
-// Extension: devbook-canvas
+// Extension: devbook-graph
 //
-// Tailored canvas for this repository's checked-in devbook folders
-// (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
-// Mermaid diagrams, and parses each chapter/file's `meta` fenced-YAML block
-// (per devbook-chapter-metadata.instructions.md) into a
-// structured side panel plus a lightweight metadata lint.
+// Two canvases over this repository's checked-in devbook folders
+// (.domain/, .arc42/, .tech/, .design/, .ai/). `devbook-graph` draws the
+// reference graph the `meta` blocks describe; `devbook-chapter` renders one
+// chapter's Markdown with its embedded Mermaid diagrams and parses each
+// chapter/file's `meta` fenced-YAML block (per
+// devbook-chapter-metadata.instructions.md) into a structured side panel plus
+// a lightweight metadata lint.
 //
 // Kept intentionally self-contained: rendering is client-side via
 // CDN-hosted `marked`/`mermaid` (see render.mjs); metadata parsing/lint is
@@ -259,8 +261,8 @@ const session = await joinSession({
             },
         }),
         createCanvas({
-            id: "devbook-canvas",
-            displayName: "Devbook canvas",
+            id: "devbook-chapter",
+            displayName: "Devbook chapter",
             description:
                 "View .domain/.arc42/.tech/.design/.ai Markdown with rendered Mermaid diagrams and a structured metadata/lint side panel, per chapter-metadata.instructions.md.",
             inputSchema: {
@@ -321,7 +323,7 @@ const session = await joinSession({
                     setDocument(entry, String(requestedPath));
                 }
                 return {
-                    title: entry.state.relPath ? `Devbook: ${entry.state.relPath}` : "Devbook canvas",
+                    title: entry.state.relPath ? `Devbook: ${entry.state.relPath}` : "Devbook chapter",
                     url: entry.url,
                 };
             },

@@ -6,19 +6,19 @@
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 88,
-    "edges": 158,
+    "nodes": 89,
+    "edges": 161,
     "nodesByFolder": {
-      "arc42": 66,
+      "arc42": 67,
       "domain": 18,
       "tech": 4
     },
     "nodesByType": {
       "file": 9,
-      "chapter": 79
+      "chapter": 80
     },
     "nodesByKind": {
-      "none": 66,
+      "none": 67,
       "bounded-context": 1,
       "term": 15,
       "platform": 3,
@@ -27,13 +27,13 @@
       "naming": 1
     },
     "nodesByStatus": {
-      "active": 84,
+      "active": 85,
       "adopted": 2,
       "trial": 2
     },
     "edgesByType": {
-      "contains": 58,
-      "related": 100
+      "contains": 59,
+      "related": 102
     }
   },
   "problems": [],
@@ -797,6 +797,25 @@
             ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
             ".devbook/arc42/05-building-block-view.md#host-slots",
             ".devbook/domain/plugin-authoring/naming.md#stamp"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
+          "label": "Every Run Opens With Update Base",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "every-run-opens-with-update-base",
+          "level": 2,
+          "line": 830,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill"
           ]
         }
       },
@@ -1915,6 +1934,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
@@ -2758,6 +2785,22 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/domain/plugin-authoring/naming.md#stamp",
           "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
           "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "source": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
           "type": "related"
         }
       },

@@ -58,35 +58,44 @@ those contracts; it does not re-decide them per skill.
    live tool list, in the priority order in the surface contract, and record which
    implementation answered. With a lifecycle capability bound, call its open operation once
    per session and show it in the host's inline browser rather than only printing the link.
-   Then call `start_run` with the skill's `skillId`, the full ordered stage list, and the
+   Then call `start_run` with the skill's `skillId` and the full ordered stage list —
+   **Update Base** first, then the skill's own stages, then its tier's closing phases — and the
    `changeKind` when known; `resumed: true` means continue from the first stage that is not
    `done` rather than restarting. **No surface bound is a normal outcome** — produce the file
    artifacts, say so once, and never block a stage. A capability that resolves but whose
    required operation errors is a tooling failure: mark the run blocked and report the error
    text rather than falling back to chat-only tracking.
-6. **Run each extension point through its provider.** A service point takes the one provider
+6. **Update the base before the flow's first stage.** Run **Update Base** per
+   `flow-phases.instructions.md`: fetch `policy.pr.base`, fast-forward a branch that carries
+   no commits of its own, and otherwise rebase its commits onto the fetched tip. A worktree is
+   cut from the local checkout and never from the remote, so the branch starts stale whenever
+   the local default branch is behind, and no later stage notices. Skip on a dirty tree, an
+   open pull request, or no remote; block on a conflict and stop there rather than resolving it
+   inside a run started for something else. **Never stash** to get past a dirty tree — the
+   stash stack is shared with every other worktree of the repository.
+7. **Run each extension point through its provider.** A service point takes the one provider
    the stack config names, or its default provider when unbound; a chore point runs its
    ordered list, and a chore that declared `on-failure: "required"` stops the run when it
    fails. A chore never changes a decision or stands in for a gate. Name any provider that
    did not resolve once, in the run summary.
-7. **Apply the resolved model at every stage transition.** When delegating a stage to a
+8. **Apply the resolved model at every stage transition.** When delegating a stage to a
    sub-agent — including a background monitor — pass the model resolved for that stage's
    category in the `Agent` call. No agent invoked by a flow pins its own model, so this
    resolved value is always the one that applies. The `Agent` call is also the *only* place
    the resolution has any effect: an inline stage runs on this session's model whatever its
    category says, and silently discards the choice.
-8. **Run the shared phases in order** for the tier, per **Phase Tiers** in
+9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
    `flow-phases.instructions.md`.
-9. **Invoke the phase skills for the heavy phases, and run them in sub-agents.** Use
-   `phase-build-test` and `phase-qa-validation` rather than re-describing build, test, or QA
-   logic. Pass the change kind so QA depth is selected automatically, together with the
-   resolved repo context. Both are **delegated by default** — one `Agent` call each in the
-   same worktree, returning a summary rather than build logs or browser snapshots. Running
-   them inline is the single most expensive mistake available to a run. Reserve inline
-   execution for startup-only QA and for a host where `stage-delegation` resolves to nothing.
-10. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
+10. **Invoke the phase skills for the heavy phases, and run them in sub-agents.** Use
+    `phase-build-test` and `phase-qa-validation` rather than re-describing build, test, or QA
+    logic. Pass the change kind so QA depth is selected automatically, together with the
+    resolved repo context. Both are **delegated by default** — one `Agent` call each in the
+    same worktree, returning a summary rather than build logs or browser snapshots. Running
+    them inline is the single most expensive mistake available to a run. Reserve inline
+    execution for startup-only QA and for a host where `stage-delegation` resolves to nothing.
+11. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
     build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
-11. **Run every gate the config declares, and the mandatory one always.** A gate presents the
+12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the point it attaches to and asks its question. `approve` continues; `revise`
     re-runs that point with the human's notes, bounded by `policy.gate.reviseBudget`;
     `decline` marks the stage `blocked` and is never a silent skip. Personal Validation uses
@@ -94,18 +103,18 @@ those contracts; it does not re-decide them per skill.
     recorded QA review, start the application for code changes, publish quick links to the
     review target, and wait for explicit approval. Never auto-approve. Record every decision
     with `set_run_context`.
-12. **Never complete a gate as a sub-agent.** This gate is why the agent runs as the
+13. **Never complete a gate as a sub-agent.** This gate is why the agent runs as the
     session's main loop and is never spawned by another agent: a sub-agent has no user turn
     to hand control back to. If this agent finds itself without `AskUserQuestion` — the
     signal that it was launched as a sub-agent — it is in a setup it cannot complete. Report
     that, leave `approval` as `pending`, and stop at the gate. In a genuinely unattended run,
     a blocking gate parks the work with a handoff brief instead of waiting.
-13. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
+14. **Gate delivery.** Open a pull request only when the persisted `approval` is `approved`;
     mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
     **Documentation Update** and **Work Item Update** as defined in
     `flow-phases.instructions.md`.
-14. **Stay in one owner session and delegate deliberately.** Run the flow in the invoking
+15. **Stay in one owner session and delegate deliberately.** Run the flow in the invoking
     session and keep sole ownership of the surface actions and the approval gate. Delegate
     build, test, browser execution, and large code changes to **sub-agents in the same
     worktree** so evidence paths and the change set stay valid. Use a background sub-agent
@@ -113,24 +122,24 @@ those contracts; it does not re-decide them per skill.
     require its evidence to land in this worktree. Whatever you background, you end: collect
     its summary with `SendMessage` and stop it with `TaskStop` in the phase that started it.
     See **Delegation Order** in `flow-execution-model.instructions.md`.
-15. **Track the run durably.** The run state the surface persists is the source of truth, not
+16. **Track the run durably.** The run state the surface persists is the source of truth, not
     the conversation. Persist `changeKind`, `approval`, the resolved model, and the resolved
     stack config so a compacted or resumed session recovers the run's position and gate
     state.
-16. **Watch the context gauge, never author it.** Stage token deltas and the run-level gauge
+17. **Watch the context gauge, never author it.** Stage token deltas and the run-level gauge
     are captured automatically; do not invent, estimate, or write token numbers into stage
     output or the summary. Judge which stage is expensive on the **uncached** figure, never
     the headline total. Escalate the next heavy step to a sub-agent in the same worktree, and
     once delegation is no longer enough, **hand the run off to a fresh session** rather than
     running on until compaction interrupts it. See **Context and Token Insight** in
     `surface-contract.instructions.md`.
-17. **Hand off before compaction, not after.** A run is not obliged to finish in the session
+18. **Hand off before compaction, not after.** A run is not obliged to finish in the session
     that started it. At the handoff threshold, persist the gating decisions, mark the run
     handed off with a note holding what is done, what is not, and the exact resume
     invocation. Leave the stage in flight `in_progress`, hand the invocation to the user, and
     stop. Do not launch that session yourself, and do not round a stage up to `done` to leave
     things tidy: a resumed run skips it.
-18. **Close the run.** Run the `flow.end` chores, mark Summary `done`, and finish the run with
+19. **Close the run.** Run the `flow.end` chores, mark Summary `done`, and finish the run with
     the final status.
 
 ## Constraints and Priorities

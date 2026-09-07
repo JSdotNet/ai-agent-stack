@@ -81,6 +81,7 @@
         "gate.personalValidation": { "const": "required" },
         "pr.required": { "type": "boolean" },
         "pr.base": { "type": "string", "minLength": 1 },
+        "phases.updateBase": { "type": "boolean" },
         "phases.documentationUpdate": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" }
       }

@@ -184,6 +184,7 @@ key means the engine's own choice rather than undefined.
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
 | `pr.required` | boolean | `true` |
 | `pr.base` | a branch name | the repository's default branch |
+| `phases.updateBase` | boolean | `true` |
 | `phases.documentationUpdate` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
 

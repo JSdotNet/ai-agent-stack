@@ -4,6 +4,10 @@ Centralized workflow diagrams for the `delivery` flow skills. This keeps the
 individual `SKILL.md` files focused on execution rules while preserving one reviewable
 overview of stage order, approval gates, and PR handoff points.
 
+Every diagram below starts at the flow's own first stage. **Update Base** runs before it in
+every flow — the engine prepends that phase, so no diagram and no `SKILL.md` repeats it. See
+**Phase: Update Base** in `instructions/flow-phases.instructions.md`.
+
 ## flow-repo
 
 ```mermaid

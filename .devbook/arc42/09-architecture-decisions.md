@@ -1385,8 +1385,12 @@ pushing routing toward skills the repository never adopted.
 Each `emit-session-context.mjs` now resolves the repository root and stays silent unless the
 repository opted in: it names the plugin in its own `enabledPlugins`, or it carries the assets
 the guidance is about — a devbook folder for `devbook` and `devbook-collaboration`,
-`.github/ai-agent-stack.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
-`delivery-schedule`. The explicit opt-in outranks the markers, so a repository that adopted a
+`.devbook/config.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
+`delivery-schedule`. Those three keep the pre-move `.github/ai-agent-stack.json` on the list
+beside the current path: a marker is an existence probe rather than a config read, so testing
+both is not the second supported path
+[the config move refused](#the-stack-config-lives-in-devbook), and it keeps a repository that
+has not run the 008 migration from losing its routing context. The explicit opt-in outranks the markers, so a repository that adopted a
 plugin but has written nothing yet still gets its guidance. Only `MARKERS` differs between the
 five copies; a plugin installs alone and may not import from a sibling, so the logic is
 duplicated rather than shared.

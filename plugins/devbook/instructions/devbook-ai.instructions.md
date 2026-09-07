@@ -1,6 +1,9 @@
 ---
-applyTo: ".ai/**,.devbook/ai/**"
+name: devbook-ai
 description: Structure and authoring rules for the AI knowledge folder, recording how this project develops with AI — which practice, agent, skill, or model is applied at which stage of the development flow, the concepts underneath them, and how far adoption has actually got.
+paths:
+  - ".ai/**"
+  - ".devbook/ai/**"
 ---
 
 # AI knowledge (`.ai`)

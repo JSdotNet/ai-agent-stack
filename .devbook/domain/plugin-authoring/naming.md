@@ -67,9 +67,11 @@ trigger — the sentence a host matches a request against — not a summary of i
 type: term
 ```
 
-A scoped rule set, as `instructions/*.instructions.md`. One host applies it automatically from
-`applyTo`; the other only when something references its path, so every instruction file is
-referenced explicitly by the asset that depends on it.
+A scoped rule set, as `instructions/*.instructions.md`, declaring the paths it governs in a
+host-neutral `paths` list. Inside a plugin no host applies it automatically, so every
+instruction file is referenced explicitly by the asset that depends on it; a repo-facing one
+also ships to the adopting repository through its plugin's sync, which derives each host's
+spelling of the glob there.
 
 ## Hook
 

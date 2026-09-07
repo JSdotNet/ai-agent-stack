@@ -1,6 +1,8 @@
 ---
-applyTo: 'skills/flow-*/SKILL.md'
+name: flow-repo-context
 description: Defines the optional .claude/flow-context.md convention a consuming repository uses to declare how its application starts, where to validate it, and how deep QA should go, so flows do not have to guess or ask.
+paths:
+  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Repo Context (Flow-Owned)

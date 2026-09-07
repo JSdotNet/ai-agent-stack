@@ -1,6 +1,14 @@
 ---
-applyTo: ".arc42/**,.domain/**,.tech/**,.design/**,.ai/**,.devbook/**,**/_meta/**"
+name: devbook-naming
 description: File and folder naming conventions inside knowledge folders, including dot-prefixed specification areas and underscore-prefixed tool-interpreted data.
+paths:
+  - ".arc42/**"
+  - ".domain/**"
+  - ".tech/**"
+  - ".design/**"
+  - ".ai/**"
+  - ".devbook/**"
+  - "**/_meta/**"
 ---
 
 # File and folder naming in knowledge folders

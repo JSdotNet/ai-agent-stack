@@ -30,10 +30,14 @@ ecosystem is pointing, and that pairs with `AGENTS.md` at the root.
 `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
 ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything here
 is repository-scoped: it serves people working **in** `ai-agent-stack`, never someone who
-installed a plugin from it. A plugin instruction file keeps `applyTo`, and how it reaches a
-*consumer* depends on what its glob names — a path inside the plugin, or a path in the
-adopting repository, where the plugin's sync materializes it. See
-[instructions.md](instructions.md).
+installed a plugin from it.
+
+A plugin instruction file is authored in the same host-neutral shape all the same — `name`,
+`description`, `paths` — and never in one host's spelling. What differs is delivery: a rule
+here is wrapped per host in place, while a plugin's is materialized into the adopting
+repository by that plugin's sync, which derives each host's spelling on the way in. See
+[instructions.md](instructions.md) and
+[the decision](../../.devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-sync).
 
 A shared file may point at a plugin instruction file rather than restate it, when that plugin
 file is already the one authored copy. The rule stays one hop from the wrapper either way;

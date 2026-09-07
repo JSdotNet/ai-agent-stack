@@ -18,6 +18,10 @@
 //                 globs and description are derived from it, and neither wrapper has
 //                 grown a rule of its own (see the decision "One Rule, One Wrapper Per
 //                 Host")
+//   instructions  a plugin instruction file is authored host-neutral: name matching the
+//                 filename, a description, a paths list, and no host's own spelling of
+//                 the glob (see the decision "A Plugin's Rules Reach a Host Through the
+//                 Sync")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -252,6 +256,30 @@ if (await exists(SHARED_RULES)) {
             if (!topics.has(topic)) error(`${label}/${entry}: no .agents/rules/${topic}.md behind it; a rule is authored once and wrapped, never written in a wrapper`);
         }
     }
+}
+
+// ── instructions ────────────────────────────────────────────────────────────
+//
+// Neither host auto-applies an instruction file from inside a plugin, so neither host's
+// spelling of the glob belongs in one. It is authored in the same host-neutral shape as
+// .agents/rules/ — name / description / paths — and a sync derives `applyTo` for the
+// Copilot copy and `paths` for the Claude wrapper when it materializes the file into a
+// repository.
+
+const INSTRUCTION_SUFFIX = ".instructions.md";
+for (const file of await walk(PLUGINS)) {
+    if (!file.endsWith(INSTRUCTION_SUFFIX)) continue;
+    const where = rel(file);
+    const name = path.basename(file).slice(0, -INSTRUCTION_SUFFIX.length);
+    const { fm } = frontmatter(await readFile(file, "utf8"));
+
+    if (scalar(fm, "applyTo") !== null) {
+        error(`${where}: applyTo is Copilot's spelling of the glob; author paths and let the sync derive it`);
+    }
+    if (scalar(fm, "name") !== name) error(`${where}: frontmatter name must equal the filename "${name}"`);
+    if (!scalar(fm, "description")) error(`${where}: description is required; every host wrapper copies it`);
+    const ipaths = yamlPaths(fm);
+    if (!ipaths || ipaths.length === 0) error(`${where}: needs a paths list; without one no wrapper can be derived`);
 }
 
 // ── budgets (report only) ───────────────────────────────────────────────────

@@ -60,7 +60,7 @@ plugins/<name>/
   .github/plugin/plugin.json      Copilot manifest — same name, version, description
   agents/<role>.agent.md          frontmatter name must equal <role>
   skills/<skill>/SKILL.md
-  instructions/*.instructions.md
+  instructions/*.instructions.md  name / description / paths — never a host's own glob key
   hooks/hooks.json                Claude hooks
   hooks.json                      Copilot hooks
   resources/

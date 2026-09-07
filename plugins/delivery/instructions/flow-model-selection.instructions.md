@@ -1,6 +1,8 @@
 ---
-applyTo: 'skills/flow-*/SKILL.md'
+name: flow-model-selection
 description: Defines the model-selection categories the flow-runner uses to pick a model for each flow step, the Claude alias to pick per category, and how personal and team configuration can override those defaults.
+paths:
+  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Model Selection (Flow-Owned)

@@ -1,6 +1,8 @@
 ---
-applyTo: 'skills/flow-*/SKILL.md'
+name: surface-contract
 description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .github/ai-agent-stack.json stack config, the host slots, and the surface capability a run reports and renders through.
+paths:
+  - "skills/flow-*/SKILL.md"
 ---
 
 # Surface Contract (Engine-Owned)

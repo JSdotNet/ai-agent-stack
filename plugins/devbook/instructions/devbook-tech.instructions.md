@@ -1,6 +1,9 @@
 ---
-applyTo: ".tech/**,.devbook/tech/**"
+name: devbook-tech
 description: Structure and authoring rules for the technology knowledge folder, holding the project's technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools.
+paths:
+  - ".tech/**"
+  - ".devbook/tech/**"
 ---
 
 # Technology knowledge (`.tech`)

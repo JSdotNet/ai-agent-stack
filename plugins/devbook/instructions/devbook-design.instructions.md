@@ -1,6 +1,9 @@
 ---
-applyTo: ".design/**,.devbook/design/**"
+name: devbook-design
 description: Structure and authoring rules for the design knowledge folder, holding UX principles, design tokens, interaction guidelines, accessibility rules, and component-library decisions.
+paths:
+  - ".design/**"
+  - ".devbook/design/**"
 ---
 
 # Design knowledge (`.design`)

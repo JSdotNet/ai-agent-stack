@@ -1,6 +1,13 @@
 ---
-applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**,.devbook/**"
+name: devbook-annotations
 description: The annotation fence — a note on a chapter, written in the chapter as a second fenced block, with its schema, its placement rule, its lifecycle, and the rule that keeps an open question out of task context.
+paths:
+  - ".domain/**"
+  - ".arc42/**"
+  - ".tech/**"
+  - ".design/**"
+  - ".ai/**"
+  - ".devbook/**"
 ---
 
 # Annotations

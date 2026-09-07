@@ -1,6 +1,8 @@
 ---
-applyTo: 'skills/flow-*/SKILL.md'
+name: flow-phases
 description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary).
+paths:
+  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Phases (Engine-Owned)

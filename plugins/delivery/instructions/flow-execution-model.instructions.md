@@ -1,6 +1,8 @@
 ---
-applyTo: 'skills/flow-*/SKILL.md'
+name: flow-execution-model
 description: Defines where a flow-* flow runs and how its work is delegated — implementation context and escalation, MCP server strategy, session ownership, delegation order, sub-agent constraints, session handoff, and run state and resume.
+paths:
+  - "skills/flow-*/SKILL.md"
 ---
 
 # Flow Execution Model (Flow-Owned)

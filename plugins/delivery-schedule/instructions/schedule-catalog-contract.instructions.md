@@ -1,6 +1,8 @@
 ---
+name: schedule-catalog-contract
 description: The schedule catalog contract — the schedule file, the preamble every prompt starts with, where a run's output goes, the scheduler operations resolved from the live tool list, the components.schedule stamp, and the rules that keep an unattended run safe.
-applyTo: "**/*.schedule.md"
+paths:
+  - "**/*.schedule.md"
 ---
 
 # Schedule Catalog Contract

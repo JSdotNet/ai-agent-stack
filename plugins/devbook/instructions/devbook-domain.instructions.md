@@ -1,6 +1,9 @@
 ---
-applyTo: ".domain/**,.devbook/domain/**"
+name: devbook-domain
 description: Structure and authoring rules for the domain knowledge folder, including root strategic DDD context mapping and per-bounded-context documentation.
+paths:
+  - ".domain/**"
+  - ".devbook/domain/**"
 ---
 
 # Domain knowledge (`.domain`)

@@ -844,9 +844,9 @@ Three things follow, and each is deliberate:
   `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
   ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
   under `.agents/rules/` is repository-scoped: it serves people working *in* this repository,
-  never someone who installed a plugin from it. A plugin instruction file keeps `applyTo` and
-  is not renamed to the neutral shape — its filename and its glob are part of the plugin
-  contract. Reaching a *consumer* is the sync's job, not the wrapper's, and
+  never someone who installed a plugin from it. A plugin instruction file keeps its filename
+  and its glob, both part of the plugin contract, but is authored in the same host-neutral
+  frontmatter as everything here. Reaching a *consumer* is the sync's job, not the wrapper's, and
   [A Plugin's Rules Reach a Host Through the Sync](#a-plugins-rules-reach-a-host-through-the-sync)
   settles how.
 - **A rule that already has one home both hosts read stays there.** The topic set is plugin
@@ -1115,7 +1115,7 @@ Metadata Enforcement stage in each of its flows restated the rules `devbook`'s i
 files already state, against the one-file rule this repository holds its own authoring to.
 
 The reason no bridge is needed is that the rules reach a session through the host, not through
-a flow. Copilot applies an instruction file from its `applyTo` glob; `devbook-sync` materializes
+a flow. An instruction file declares the paths it governs; `devbook-sync` materializes
 the same files into the repository, as the pair
 [A Plugin's Rules Reach a Host Through the Sync](#a-plugins-rules-reach-a-host-through-the-sync)
 describes, so any session reads them by path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
@@ -1167,14 +1167,14 @@ So the rules join the asset table.
 Each lands twice, not three times:
 
 ```
-plugins/devbook/instructions/<name>.instructions.md      the one authored copy
-  ├── .github/instructions/<name>.instructions.md        verbatim; Copilot applies its applyTo
-  └── .claude/rules/<name>.md                            paths = applyTo.split(","); → pointer
+plugins/devbook/instructions/<name>.instructions.md      authored: name / description / paths
+  ├── .github/instructions/<name>.instructions.md        body verbatim; applyTo = paths.join(",")
+  └── .claude/rules/<name>.md                            paths verbatim → pointer
 ```
 
 Three choices inside that, each with a reason:
 
-- **Verbatim, not trimmed to the adopted layout.** The globs carry both spellings, flat and
+- **Derived from `paths` as authored, not trimmed to the adopted layout.** The globs carry both spellings, flat and
   nested. Trimming is what the two workflows get, and it makes them customized from the first
   reconcile onward — right for a workflow nobody ships twice, wrong for a rule that must keep
   taking upgrades. A glob matching nothing applies nothing, so carrying both costs nothing.
@@ -1190,6 +1190,20 @@ The asymmetry with the repository's own rules is real and accepted: there the on
 `.agents/rules/` and both hosts wrap it; here the one copy sits in the folder Copilot reads
 natively and only Claude wraps it. The invariant that matters — one copy, a wrapper per host
 that needs one, and never a rule written in a wrapper — holds in both.
+
+**So the frontmatter goes neutral too.** All seventeen carried `applyTo`, which is Copilot's
+key and nothing else's, on files no host reads it from — it announced a host that was not
+reading and hid the one that could not. Each is now authored `name` / `description` / `paths`,
+the shape `.agents/rules/` already uses, and each host's spelling is derived at the moment of
+delivery: `applyTo` for the Copilot copy, `paths` copied through for the Claude wrapper. That
+is the same bargain [No Generated Sync Layer](#no-generated-sync-layer) strikes everywhere
+else — derive at the boundary, check the derivation, never let a host's vocabulary leak back
+into the authored file. `check-assets.mjs` gains an `instructions` pass that refuses `applyTo`
+in a plugin, a `name` that is not the filename, a missing `description`, and a missing `paths`.
+
+The filenames do not change. `*.instructions.md` is the name both hosts' ecosystems use for
+this kind of file, roughly two hundred references point at them, and the ten repo-facing ones
+cross-reference each other by bare name.
 
 Consequence: devbook goes to `1.4.0` and reconcile materializes eighteen more files into a
 fully adopting repository. No migration: the contract version is untouched, and a new asset row

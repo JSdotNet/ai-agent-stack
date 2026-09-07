@@ -1,6 +1,8 @@
 ---
-applyTo: "**/_meta/**"
+name: devbook-derived-artifacts
 description: Convention for derived index artifacts — where generated, machine-readable views of canonical Markdown live, how they are named, what every such file must declare, how CI and scheduled refresh keep them current, and how a consumer reads one without going stale.
+paths:
+  - "**/_meta/**"
 ---
 
 # Derived metadata artifacts (`_meta/`)

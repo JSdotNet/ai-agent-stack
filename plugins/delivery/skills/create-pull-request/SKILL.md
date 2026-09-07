@@ -11,17 +11,33 @@ Turn a finished working branch into a reviewable pull request. The skill collect
 reviewer needs — a scoped title, a body grounded in the actual commits and diff, a linked issue,
 and the right labels and reviewers — and creates the PR with `gh`.
 
+## Two Entry Paths
+
+- **Standalone** — invoked directly on a finished branch. Everything below applies as written.
+- **From a flow** — invoked by the `flow-runner` as the `deliver` service point, after Build
+  & Test, QA Validation, and the Personal Validation gate have already run. Those phases are
+  the validation; this skill consumes their result and never re-derives it:
+  - Do not build, run tests, or run QA again, and do not read "failing local checks" into the
+    draft decision. Take those verdicts from the recorded stages.
+  - Do not reopen the approval question. `approval: "approved"` recorded at Personal
+    Validation **is** the confirmation this skill's constraints require. A persisted
+    `pending` or `rejected` blocks the phase — stop and report it; never ask for a second yes.
+  - Write the title and body from the change set and evidence the run already holds, and put
+    them in the stage output instead of pausing for a second sign-off.
+
 ## Inputs
 
 - Base branch (default: the repository default branch from `gh repo view --json defaultBranchRef`).
-- Draft or ready for review (default: `draft` when the branch has open TODOs or failing local
-  checks, otherwise `ready`).
+- Draft or ready for review (default: `ready` when validation is green — from a flow, the
+  recorded Build & Test and QA verdicts; standalone, what the user reports. `draft` when it is
+  red, incomplete, or unknown, or the branch has open TODOs).
 - Linked issue number (optional; inferred from the branch name or commit trailers).
 - Reviewers and labels (optional).
 
 ## Hard Constraints
 
-- Never push or create a PR without explicit user confirmation of the title, body, and base branch.
+- Never push or create a PR without explicit user confirmation of the title, body, and base
+  branch. From a flow, the approval recorded at Personal Validation is that confirmation.
 - Never force-push in this skill. History rewriting belongs to `update-pr-branch`.
 - Never invent scope: the body describes only what the diff actually changes.
 - Never commit secrets, `.env` files, or local settings — check the staged diff before pushing.
@@ -39,7 +55,8 @@ and the right labels and reviewers — and creates the PR with `gh`.
 
 2. If the branch is the default branch, stop and ask the user to create a feature branch first.
 3. If there are uncommitted changes, list them and ask whether to commit them into the PR or
-   leave them behind. Do not stash silently.
+   leave them behind. Do not stash silently. From a flow the earlier phases commit as they go,
+   so report what is left over rather than asking about it.
 4. Check whether a PR already exists for this branch:
 
    ```bash
@@ -97,7 +114,8 @@ and the right labels and reviewers — and creates the PR with `gh`.
 10. Use `Closes #<n>` only when merging the PR genuinely resolves the issue; otherwise use
     `Refs #<n>`.
 11. Present the title, body, base branch, and draft/ready decision to the user and wait for
-    confirmation.
+    confirmation. From a flow, skip this pause — record the same four in the stage output and
+    continue on the approval already given.
 
 ### Phase 4 — Push the Branch
 

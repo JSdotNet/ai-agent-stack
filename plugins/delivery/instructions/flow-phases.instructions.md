@@ -181,6 +181,10 @@ description as file artifacts, say so once, and continue.
   unrelated user browser sessions.
 - **Write the PR description** from the change set, the code review outcome, and the
   validation evidence.
+- **Enter a PR skill on its flow path.** When `pr-lane` resolves to
+  `skills/create-pull-request/SKILL.md`, use its **From a flow** entry: the phases behind this
+  one are the validation and the approval, so that skill re-runs neither and asks for no second
+  confirmation.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Skip this phase** (`skipped`) when the run produces no change set to submit.
 

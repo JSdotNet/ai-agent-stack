@@ -16,7 +16,7 @@
 // stands, and drops back to its ordinary rung the moment the content changes —
 // an approval is of what was read, not of the heading.
 /**
- * The five knowledge folders, by kind. A repository adopts any subset and lays
+ * The five devbook folders, by kind. A repository adopts any subset and lays
  * them out one of two ways: flat, as five root-level dot-folders (`.arc42`), or
  * nested, under one `.devbook/` parent whose subfolders drop the dot
  * (`.devbook/arc42`). A repository picks one and never mixes them.
@@ -230,7 +230,7 @@ const TEST_RUNNERS = {
     },
 };
 
-// A `tests` entry that starts like a knowledge path is a chapter reference
+// A `tests` entry that starts like a devbook path is a chapter reference
 // pasted into a field that takes test identifiers. Worth its own message,
 // because the author's intent is obvious and the fix is to move it to `related`.
 const DEVBOOK_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
@@ -279,7 +279,7 @@ const FOLDER_EXTRA_FIELDS = {
     ai: ["depends-on", "stage"],
 };
 
-/** Determine which knowledge folder a repo-relative path belongs to. */
+/** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
     const normalized = String(relPath).replace(/\\/g, "/");
     // Both layouts resolve to the same five kinds. Flat is five root-level
@@ -469,7 +469,7 @@ function toPlainText(markdown) {
  * otherwise have to open every file to learn.
  *
  * Both are by-products of a parse the generator is doing anyway, so carrying
- * them on the derived index is what lets a consumer list a knowledge folder
+ * them on the derived index is what lets a consumer list a devbook folder
  * without reading a single Markdown file.
  *
  * `summary` is the blockquote that
@@ -481,7 +481,7 @@ function toPlainText(markdown) {
  *
  * `diagrams` counts embedded diagrams across the whole document: fenced
  * ```mermaid blocks plus Markdown image embeds. Both are diagrams to a reader,
- * and the knowledge folders use images for nothing else.
+ * and the devbook folders use images for nothing else.
  */
 export function documentDigest(markdown) {
     const lines = markdown.split(/\r?\n/);

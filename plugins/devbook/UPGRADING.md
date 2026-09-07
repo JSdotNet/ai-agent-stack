@@ -5,7 +5,9 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
-## 1.4.0: the folder rules reach both hosts
+## 1.4.0: the folder rules reach both hosts, and the canvas is `devbook-graph`
+
+### The folder rules
 
 **Renamed assets; no migration.** 1.3.1 fixed the globs and said "nothing to re-sync — the
 globs travel with the plugin". They travel, but they arrive nowhere: no plugin manifest
@@ -31,9 +33,29 @@ deleting it. `assets/rule-wrappers.md` carries the templates.
 sync` still works as a trigger phrase; a script or document that invokes the skill by name
 needs the new one. `components.devbook` is untouched, so there is nothing to migrate.
 
-Run `devbook-install` once to pick the rules up. Nothing already on disk changes, and a repository that
-would rather keep reaching the plugin copies by path can take ownership of any of the three.
+Run `devbook-install` once to pick the rules up. Nothing already on disk changes, and a
+repository that would rather keep reaching the plugin copies by path can take ownership of any
+of the three.
 
+### The canvas extension
+
+
+**A rename; no migration.** The extension folder, its `copilot-extension.json` name, and one
+of the two canvas ids change. `devbook-canvas` named the host mechanism, which put it beside
+`delivery-surface-canvas` as if the two were interchangeable implementations of one render
+contract — they are not, and devbook's answers no surface contract at all. It is now
+`devbook-graph`, after the thing it draws. The chapter viewer, whose id was also
+`devbook-canvas`, is now `devbook-chapter`.
+
+| Was | Is |
+| --- | --- |
+| extension `devbook-canvas` | extension `devbook-graph` |
+| canvas `devbook-graph` | canvas `devbook-graph` — unchanged |
+| canvas `devbook-canvas` | canvas `devbook-chapter` |
+
+Ask for the **Reference graph** or **Devbook chapter** canvas by those names on the Copilot
+CLI. Nothing materialized into a repository changes, so there is nothing to re-sync, and the
+`meta` schema and `contractVersion` are untouched.
 
 ## 1.3.2: the plugin names no flow
 
@@ -117,7 +139,7 @@ fence behind them.
 
 ## 0.12.0: the `.ai` folder
 
-**Additive, and nothing existing changes.** A sixth knowledge folder, `.ai`,
+**Additive, and nothing existing changes.** A sixth devbook folder, `.ai`,
 records **how the project develops with AI** — which practice, agent, skill,
 hook, model, or guardrail is used at which position in the development flow,
 the concepts underneath them, and how far adoption has actually got.
@@ -387,7 +409,7 @@ a document declares one, and the bumped `schemaVersion`.
 Schema version 3 is **additive** over 2 and needs no authoring changes. A `file`
 entry in `index.json` may now carry two optional fields — `summary`, the
 document's lede, and `diagrams`, how many mermaid blocks and images it embeds —
-so a viewer can render a knowledge folder's list view without opening any
+so a viewer can render a devbook folder's list view without opening any
 Markdown. `graph.json` is unchanged apart from the version number.
 
 Re-sync `.github/tools/devbook-meta/` from this plugin and regenerate; the

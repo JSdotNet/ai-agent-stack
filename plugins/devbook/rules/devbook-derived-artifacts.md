@@ -5,14 +5,14 @@ description: Convention for derived index artifacts — where generated, machine
 
 # Derived metadata artifacts (`_meta/`)
 
-Knowledge folders keep **Markdown canonical and derived data generated**.
+Devbook folders keep **Markdown canonical and derived data generated**.
 Generated, machine-readable views of that Markdown — graphs, outlines, search
 indexes, rollups — are *derived metadata artifacts*, and they all follow one
 convention so a new one can be added anywhere without inventing placement or
 naming rules again.
 
 This convention is deliberately generic: it applies to any current or future
-generated artifact, not just the knowledge graph.
+generated artifact, not just the reference graph.
 
 ## Location
 
@@ -110,7 +110,7 @@ payload:
   contributors two ways to refresh: an on-demand command for anyone who wants
   the indexes current in their own branch, and a scheduled job that reconciles
   the default branch by opening a single pull request when the output drifted,
-  and doing nothing when it did not. Never regenerate on every knowledge edit.
+  and doing nothing when it did not. Never regenerate on every devbook edit.
 - **Consumers re-check what they read.** A consumer that reads a derived
   artifact at runtime compares each entry's source file against the artifact
   itself and re-reads the entries that are newer, rather than trusting the
@@ -167,9 +167,9 @@ for each entry in artifact.entries:
 Also honour `schemaVersion`: a consumer that does not recognise the value must
 fall back to the sources rather than guess at the payload shape.
 
-## Knowledge artifacts
+## Devbook artifacts
 
-The devbook-meta generator produces these, one set per knowledge folder the
+The devbook-meta generator produces these, one set per devbook folder the
 repository actually adopts, plus a repository-wide rollup:
 
 | Path | Scope | Contents | Generator |

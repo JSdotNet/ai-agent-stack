@@ -1,9 +1,9 @@
 ---
 name: devbook-ai
-description: Structure and authoring rules for the AI knowledge folder, recording how this project develops with AI — which practice, agent, skill, or model is applied at which stage of the development flow, the concepts underneath them, and how far adoption has actually got.
+description: Structure and authoring rules for the AI devbook folder, recording how this project develops with AI — which practice, agent, skill, or model is applied at which stage of the development flow, the concepts underneath them, and how far adoption has actually got.
 ---
 
-# AI knowledge (`.ai`)
+# AI adoption (`.ai`)
 
 `.ai` is the durable record of **how this project develops with AI** — which AI
 capability is applied at which position in the development flow, what concepts
@@ -36,7 +36,7 @@ of how we chose to work — and points at the registered technology with
 | Fact | Folder |
 |---|---|
 | "We use Claude Code, version X, `adopted`" | `.tech` |
-| "At Specify we draft knowledge chapters with the devbook skills, `trial`" | `.ai` |
+| "At Specify we draft devbook chapters with the devbook skills, `trial`" | `.ai` |
 | "The coding agent persona, and when we hand work to it" | `.ai` |
 | "Anthropic's API is a service dependency of the build pipeline" | `.tech` |
 | "Every agent-authored change is reviewed by a human before merge" | `.ai` |
@@ -182,7 +182,7 @@ What kind of thing the chapter describes. Required on every chapter.
 | `plugin` | A plugin whose contribution to this stage is worth naming as a unit. |
 | `mcp-server` | An MCP surface the flow depends on at this stage. |
 | `hook` | An automation that fires without anyone asking — the strongest form of adoption, and the one most worth recording. |
-| `workflow` | A multi-agent or multi-step orchestration. |
+| `workflow` | A multi-agent or multi-step procedure. |
 | `model` | A model choice that is a real decision at this stage, not the default. |
 | `concept` | An idea the practices rest on — context engineering, evaluation, prompt patterns. Belongs in `concepts.md`. |
 | `guardrail` | A limit or control: a review gate, a permission policy, what agents may not touch. |

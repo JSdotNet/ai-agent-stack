@@ -22,7 +22,7 @@ instead of by repository.
 | Pickup (2) | `start-session-from-issue`, `azure-sre-to-github-issue` |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
-Five of the flows are named after a knowledge folder — `.arc42`, `.domain`, `.tech`,
+Five of the flows are named after a devbook folder — `.arc42`, `.domain`, `.tech`,
 `.design`, `.ai` — and carry a chapter change the same way the others carry a code change.
 They own the procedure and none of the rules: what a chapter must look like comes from the
 instruction files the repository keeps for the folder and the check it ships, which the

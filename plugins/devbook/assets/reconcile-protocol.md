@@ -52,7 +52,7 @@ one entry inside it and never edits another component's:
 |---|---|
 | `pluginVersion` | The devbook release that last reconciled this repository. |
 | `contractVersion` | The schema contract the repository is on. Migrations key off this, not off `pluginVersion`, which is why most upgrades reconcile to nothing. |
-| `adopted` | Which knowledge folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
+| `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
 | `migrations` | Append-only ledger. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |

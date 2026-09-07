@@ -116,7 +116,7 @@ Where the change is a move or a split rather than an addition, the category is
 
 9. **Emit the change brief and stop.** Assemble the five parts and the change
    category per the protocol. Then stop. Do not open a source file for editing,
-   do not create a test, do not name a delivery orchestration.
+   do not create a test, do not name a delivery flow.
 
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.

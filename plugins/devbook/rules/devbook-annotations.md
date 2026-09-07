@@ -88,7 +88,7 @@ prose, and it belongs in the chapter as prose.
 ## An annotation is not chapter content
 
 Notes live in the canonical file, so anything loading a chapter for task
-context will read reviewer chatter as established knowledge unless it is told
+context will read reviewer chatter as settled content unless it is told
 not to. A question about whether a rule still holds, ingested as context,
 becomes the rule. This is the one failure mode the convention did not have
 before, so the discipline is explicit, the same way `_meta/` has one:

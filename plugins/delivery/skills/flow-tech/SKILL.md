@@ -24,7 +24,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.tech/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the knowledge convention's own install, never a flow's.
+  stop and say so: adopting a folder is the devbook convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load the graph file plus
   only the layer files in scope, and the `.arc42/` decision the change follows when there is one.
 - State the derived scope and goal before continuing.

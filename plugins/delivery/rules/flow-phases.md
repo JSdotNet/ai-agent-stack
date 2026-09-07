@@ -256,7 +256,7 @@ documentation drifts out of date.
 - **Skip this phase** (`skipped`) when Create Pull Request was skipped — there is no change
   set and no PR branch to update.
 - **Discover the documentation surface.** Read the target repository's own conventions — the
-  `repo-instructions` file, any repository `*.instructions.md`, and the checked-in knowledge
+  `repo-instructions` file, any repository `*.instructions.md`, and the checked-in devbook
   folders it governs (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`, `docs/`,
   `README.md`) together with their per-chapter metadata format.
 - **Decide whether documentation is now stale.** Compare the landed change set against that

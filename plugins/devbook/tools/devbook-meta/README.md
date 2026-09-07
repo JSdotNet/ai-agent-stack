@@ -39,10 +39,10 @@ node .github/tools/devbook-meta/build.mjs --check
 node .github/tools/devbook-meta/build.mjs --root ../other-repo
 ```
 
-The repository root defaults to the working directory. Only knowledge folders
+The repository root defaults to the working directory. Only devbook folders
 that actually exist produce a scope, so a repository that adopts just `.domain`
 and `.arc42` never grows `_meta/` folders for the rest. The generator exits `2`
-when no knowledge folder is present at all.
+when no devbook folder is present at all.
 
 ### When to run it
 
@@ -72,7 +72,7 @@ Three artifacts per adopted scope, each co-located with what it describes:
 
 | Path | Scope |
 |---|---|
-| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted knowledge folders |
+| `_meta/graph.json`, `_meta/index.json`, `_meta/annotations.json` | repository-wide rollup across all adopted devbook folders |
 | `.arc42/_meta/*.json` | `.arc42` only |
 | `.domain/_meta/*.json` | `.domain` only |
 | `.tech/_meta/*.json` | `.tech` only |
@@ -162,10 +162,10 @@ carry no `kind`, because those folders deliberately define no value set.
 
 | Type | Meaning |
 |---|---|
-| `file` | A knowledge document. `id` is the repo-relative path. |
+| `file` | A devbook document. `id` is the repo-relative path. |
 | `chapter` | A heading that carries a `meta` block. `id` is `<path>#<heading-slug>`. |
 | `heading` | A structural heading with no `meta` block, materialized only when something references it. |
-| `external` | A reference target outside the knowledge folders. |
+| `external` | A reference target outside the devbook folders. |
 
 Nodes carrying `outOfScope: true` sit outside the current scope and are
 included only because an in-scope node references them.
@@ -265,11 +265,11 @@ each expects, without building a command.
 
 | Problem | Severity |
 |---|---|
-| A `related` / `depends-on` reference that resolves to nothing inside a knowledge folder | error |
+| A `related` / `depends-on` reference that resolves to nothing inside a devbook folder | error |
 | Two headings in one file that slugify identically | error |
 | A block missing `type` where its folder defines a value set for that level | error |
 | A `type` value outside its folder's value set | error |
-| A reference pointing outside the knowledge folders | warning |
+| A reference pointing outside the devbook folders | warning |
 | A `type` set in a folder that defines no value set | warning |
 | A literal `` `r`n `` / `\r\n` / `\n` escape sequence in body text | warning |
 | `.tech` still using the old `kind` field name | warning |
@@ -356,7 +356,7 @@ other optional entry field.
 
 On a `file` entry, `kind` is the authored `type` field — what distinguishes six
 identically-titled files of a bounded context. It is omitted for folders that
-define no value set. On an `area` entry it is the knowledge folder itself
+define no value set. On an `area` entry it is the devbook folder itself
 (`domain`, `arc42`, …), which is that entry's equivalent answer to "what kind of
 thing is this".
 
@@ -390,7 +390,7 @@ node in `graph.json`, which is where a consumer goes for per-chapter detail.
 ### `summary` and `diagrams`
 
 Two optional fields on a `file` entry, both omitted when they would be empty.
-They exist so a viewer can render a knowledge folder's **list view** — a lede
+They exist so a viewer can render a devbook folder's **list view** — a lede
 under each title, a "3 diagrams" badge beside a chapter — without opening a
 single Markdown file. Without them a consumer has to parse the whole corpus to
 draw a list, which is the exact cost the index was built to avoid. Both fall
@@ -406,7 +406,7 @@ straight into a chapter.
 
 **`diagrams`** — how many diagrams the document embeds, counting mermaid code
 fences and Markdown image embeds across the whole file. Both are diagrams to a
-reader, and the knowledge folders use images for nothing else. A fence nested
+reader, and the devbook folders use images for nothing else. A fence nested
 inside a wider fence is content, not a diagram, and is not counted. Omitted when
 the document embeds none.
 
@@ -414,7 +414,7 @@ Neither field is a reference, so neither produces a graph edge; they do not
 appear in `graph.json` at all.
 
 At the repository scope the top level is `type: "area"` — one entry per
-knowledge folder, in canonical area order.
+devbook folder, in canonical area order.
 
 Ordering never comes from one document listing its siblings. Per directory:
 
@@ -495,12 +495,12 @@ this index makes visible.
 
 ## Viewing
 
-Open the **Knowledge graph** canvas in Copilot CLI for an Obsidian-style
+Open the **Reference graph** canvas in Copilot CLI for an Obsidian-style
 force-directed view with folder colouring, status shading, search, filters, and
 click-to-inspect neighbourhoods. Open it scoped to one folder:
 
 ```text
-open the knowledge graph canvas with scope .tech
+open the reference graph canvas with scope .tech
 ```
 
 The canvas has a scope selector, rebuilds from disk on open (so it never shows

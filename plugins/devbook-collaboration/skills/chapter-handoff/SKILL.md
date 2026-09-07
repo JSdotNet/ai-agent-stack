@@ -1,6 +1,6 @@
 ---
 name: chapter-handoff
-description: 'Hand a devbook chapter to a named reviewer and produce the brief they start from — what changed, what the reviewer is being asked to judge, and which neighbouring chapters they need. Records the request on the chapter itself so it survives the session. Use when: asking someone to review a chapter, passing knowledge work to another person or session, or parking a chapter that needs a decision you cannot make. Triggers on: "hand off this chapter", "ask someone to review", "request review of", "who should review this", "park this for review".'
+description: 'Hand a devbook chapter to a named reviewer and produce the brief they start from — what changed, what the reviewer is being asked to judge, and which neighbouring chapters they need. Records the request on the chapter itself so it survives the session. Use when: asking someone to review a chapter, passing devbook work to another person or session, or parking a chapter that needs a decision you cannot make. Triggers on: "hand off this chapter", "ask someone to review", "request review of", "who should review this", "park this for review".'
 ---
 
 # chapter handoff

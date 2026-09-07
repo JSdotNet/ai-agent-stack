@@ -1,16 +1,16 @@
 name: Devbook metadata
 
-# Enforces the knowledge-folder convention: every metadata reference must
+# Enforces the devbook convention: every metadata reference must
 # resolve and every `meta` block must match the schema. Installed by the
 # `devbook-install` skill.
 #
 # Staleness of the committed _meta indexes is reported but does not fail the
-# run — forcing every knowledge pull request to carry a regenerated index is
+# run — forcing every devbook pull request to carry a regenerated index is
 # what makes those files conflict on merge. Refresh is deliberate instead:
 # ./build/Update-DevbookIndex.ps1 on demand, devbook-meta-nightly.yml on a
 # schedule. See devbook-derived-artifacts.md.
 #
-# Trim the path filters to the knowledge folders this repository actually
+# Trim the path filters to the devbook folders this repository actually
 # adopted; extra entries are harmless but noisy.
 
 on:

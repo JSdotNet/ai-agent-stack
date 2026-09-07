@@ -69,7 +69,7 @@ until another one exists is. When the ordering is not evident, omit the field.
 
 ## Running the application is part of this pass
 
-`features.md` is the one knowledge file written from the **user's** point of
+`features.md` is the one chapter written from the **user's** point of
 view, and a feature is the one kind whose subject you can go and look at.
 Reading a controller tells you a route exists; using the feature tells you what
 the product lets someone do, in what order, with what wording — which is exactly
@@ -98,11 +98,11 @@ at all, say so in the report, capture the chapter from code and tests, and mark
 the capability description as unconfirmed rather than silently downgrading the
 pass.
 
-**Screenshots are evidence, not knowledge.** Treat them the way
+**Screenshots are evidence, not chapters.** Treat them the way
 `devbook-tech-update` treats its inventory JSON: they justify what the chapter
 says and belong in the report, not in `.domain/`. `features.md` stays prose in
 business language, and `.design` explicitly does not hold screenshots either.
-Keep them out of the knowledge folders, and where the repository has a
+Keep them out of the devbook folders, and where the repository has a
 convention for run artifacts, put them there.
 
 **Do not mutate data you do not own.** Exercising a feature can create, change,

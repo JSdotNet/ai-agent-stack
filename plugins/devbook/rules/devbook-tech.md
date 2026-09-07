@@ -1,14 +1,14 @@
 ---
 name: devbook-tech
-description: Structure and authoring rules for the technology knowledge folder, holding the project's technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools.
+description: Structure and authoring rules for the technology devbook folder, holding the project's technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools.
 ---
 
-# Technology knowledge (`.tech`)
+# Technology documentation (`.tech`)
 
 `.tech` is the durable record of **which technologies this project itself is
 built with, and how they depend on each other** — the technology graph. It is
 complementary to `.arc42` (system architecture), `.domain` (domain model), and
-and the rest of the knowledge folders.
+and the rest of the devbook folders.
 
 `.tech` answers "what do we build on, at which version, with what maturity, and
 what depends on what". `.arc42` stays the place for *why* an architecture looks

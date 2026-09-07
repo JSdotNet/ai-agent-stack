@@ -1,9 +1,9 @@
 ---
 name: devbook-domain
-description: Structure and authoring rules for the domain knowledge folder, including root strategic DDD context mapping and per-bounded-context documentation.
+description: Structure and authoring rules for the domain devbook folder, including root strategic DDD context mapping and per-bounded-context documentation.
 ---
 
-# Domain knowledge (`.domain`)
+# Domain documentation (`.domain`)
 
 `.domain` is the durable, ubiquitous-language record of the domain model,
 organized by bounded context. It is the authoritative source for "what the
@@ -14,7 +14,7 @@ domain looks like" — complementary to `.arc42` (system architecture), `.tech`
 
 - `.domain` is **not** baseline repository context. Load it only for domain
   modeling, bounded-context, or ubiquitous-language tasks, normally after
-  routing through the repository's domain orchestration or a domain specialist
+  routing through the repository's domain flow or a domain specialist
   agent.
 - When `.domain` is needed as task context, load only the relevant bounded
   context's chapters instead of reading the whole folder by default.
@@ -125,7 +125,7 @@ instructions.
   sections do not carry their own per-chapter blocks — the file-level block
   is the only metadata those files carry.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
-  `deprecated` in this folder. Domain knowledge describes the current (or
+  `deprecated` in this folder. This folder describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
   means "this is the current model", `deprecated` means superseded.
 - On top of that ladder sits the shared `approved` rung, defined once in
@@ -164,7 +164,7 @@ instructions.
   `type: context-map` carrying the kind, exactly as everywhere else. The
   generator composes its node label as `Order Platform (context-map)`, so the kind
   stays visible in the graph and the label stays distinct when several
-  repositories' knowledge folders are viewed together.
+  repositories' devbook folders are viewed together.
 
   A plain `# Context Map` is also accepted, and the generator suppresses the
   redundant suffix so it renders as `Context Map` rather than

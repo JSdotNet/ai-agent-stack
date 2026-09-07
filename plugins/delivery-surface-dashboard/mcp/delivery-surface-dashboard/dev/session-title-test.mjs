@@ -30,7 +30,7 @@ const write = (file_path) => ({ toolName: "Write", input: { file_path } });
 const edit = (file_path) => ({ toolName: "Edit", input: { file_path } });
 
 console.log("— destination to prefix —");
-check("knowledge folder wins its own prefix", await titleFor("Add Fulfilment aggregate", [write(".domain/order-management/domain.md")]), "domain:order-management — Add Fulfilment aggregate");
+check("devbook folder wins its own prefix", await titleFor("Add Fulfilment aggregate", [write(".domain/order-management/domain.md")]), "domain:order-management — Add Fulfilment aggregate");
 check("arc42", await titleFor("Runtime view refresh", [write(".arc42/06-runtime-view.md")]), "arc42 — Runtime view refresh");
 check("tech", await titleFor("Pin Aspire 9", [edit(".tech/backend.md")]), "tech — Pin Aspire 9");
 check("design", await titleFor("Dense table tokens", [edit(".design/color-scheme.md")]), "design — Dense table tokens");

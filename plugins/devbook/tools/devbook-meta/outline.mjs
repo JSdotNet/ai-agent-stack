@@ -1,4 +1,4 @@
-// outline.mjs — derives the ordered reading outline of a knowledge area from
+// outline.mjs — derives the ordered reading outline of a devbook area from
 // the folder convention, not from anything authored per repository.
 //
 // Markdown stays canonical; this produces the *derived* index that a viewer
@@ -56,7 +56,7 @@ function testList(meta) {
 }
 
 /**
- * Reading order per directory shape, keyed by knowledge folder with each
+ * Reading order per directory shape, keyed by devbook folder with each
  * subdirectory level written as `*`. `root` is the entry point; `first` and
  * `last` pin the prescribed siblings around whatever else the directory holds.
  *
@@ -303,7 +303,7 @@ async function readDirectory(repoRoot, relDir, problems) {
  * Build the serializable outline document for one scope, following the
  * derived-artifacts convention.
  *
- * `folders` is the set of knowledge folders this repository actually adopts.
+ * `folders` is the set of devbook folders this repository actually adopts.
  */
 export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders = null) {
     folders ??= (await discoverLayout(repoRoot)).folders;
@@ -312,7 +312,7 @@ export async function buildOutlineDocument(repoRoot, scope = REPO_SCOPE, folders
 
     let entries;
     if (scope === REPO_SCOPE) {
-        // The repo-wide outline lists the knowledge areas themselves, in the
+        // The repo-wide outline lists the devbook areas themselves, in the
         // canonical area order, each with its own outline nested underneath.
         entries = [];
         for (const folder of roots) {

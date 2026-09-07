@@ -20,12 +20,12 @@ never goes inside them; that stays in `routing-snippet.md`, offered and never ap
 
 ```markdown
 <!-- devbook:begin -->
-## Knowledge folders
+## Devbook folders
 
 Managed by `devbook-install`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
-This repository keeps its knowledge as addressed Markdown chapters. Treat the folders as
+This repository keeps its devbook as addressed Markdown chapters. Treat the folders as
 task-scoped context, never baseline context: load the chapters a task names, walk
 `related` and `depends-on` from them, and never load a folder whole.
 

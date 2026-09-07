@@ -122,7 +122,7 @@ Write them out as invariants, with the token names.
 
 9. **Emit the change brief and stop.** Assemble the five parts and the change
    category per the protocol. Then stop. Do not open a source file for editing,
-   do not create a test, do not name a delivery orchestration.
+   do not create a test, do not name a delivery flow.
 
 10. **Report.** Close with the protocol's report table, one row per chapter in
     scope, with the brief attached.

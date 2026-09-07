@@ -39,7 +39,7 @@ node scripts/stack-report.mjs --root <repository>
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.github/ai-agent-stack.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
-| The knowledge folders, flat and nested | Which of the five this repository adopted, and in which layout |
+| The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 
 `--json` prints the same model unrendered. `--marketplace <name>` reports a different catalog.

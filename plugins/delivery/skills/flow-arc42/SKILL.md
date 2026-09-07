@@ -1,6 +1,6 @@
 ---
 name: flow-arc42
-description: 'Run arc42 architecture documentation. Routes section drafting to the `architecture` role, and uses `jsdotnet-guidelines-mcpserver` for guideline and ADR grounding before governed asset changes.'
+description: 'Run arc42 architecture documentation. Routes section drafting to the `architecture` role, grounded in the repository guidelines and ADRs before governed asset changes.'
 ---
 
 # Flow: arc42 Documentation
@@ -20,12 +20,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Context & Guideline Retrieval
 
 - Clarify the target sections and the documentation goal.
-- Query `jsdotnet-guidelines-mcpserver` for standards, ADR context, and governed asset
-  constraints.
+- Retrieve standards, ADR context, and governed asset constraints through the guidelines
+  capability, or from the repository's own instruction files when none answers — **MCP
+  Server Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Collect the repository-specific constraints for governed plugin or guidance assets.
-- Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** the guidelines capability
 
 ## Stage 2: Section Drafting
 

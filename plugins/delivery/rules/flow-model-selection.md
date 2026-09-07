@@ -163,7 +163,7 @@ hardcodes a path. See **Host Slots** in `surface-contract.md`.
   unreadable, malformed, or a category is not listed, fall back to the next step in the
   Resolution Order.
 - Do **not** read any model-selection file inside the repository, and never accept a model
-  from `.github/ai-agent-stack.json`. Model choice is personal and never comes from the repo.
+  from `.devbook/config.json`. Model choice is personal and never comes from the repo.
 
 ```markdown
 # Flow Model Selection Overrides

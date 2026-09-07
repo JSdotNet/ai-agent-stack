@@ -19,12 +19,12 @@ a sibling declare it and the host enforces it.
 | Delivery | `delivery`, `fleet` | Sixteen `flow-*` procedures that carry a change from request to a validated commit, five of them one per devbook folder, and the fan-out lane that works a backlog across sessions. |
 | Surfaces | `delivery-surface-dashboard`, `delivery-surface-collector` (and `delivery-surface-canvas` on Copilot) | Where a run is watched or recorded: a live dashboard, a headless collector, and a diagram and document viewer that is a Copilot canvas rather than an entry in this marketplace. Resolved at run time; none is a dependency. |
 | Unattended | `delivery-schedule` | Work that runs with nobody watching: nine `schedule-*` entry points that pick their own input and run a flow or a review, and six triggers a repository selects from and syncs into the host's scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app. |
-| Guide | `stack-guide` | One skill that answers what this marketplace is, what you have installed against what is published, and how a repository has wired its roles, extension points, gates, and policy. |
+| Config | `devbook-config` | The repository's `.devbook/config.json` — written by `setup` before anything installs, moved forward by `update` — plus `guide`, which answers what this marketplace is, what you have installed against what is published, and how a repository has wired its roles, extension points, gates, and policy. |
 
 **No specialist ships here.** The `architecture`, `qa`, `domain`, `ux`, and `docs` roles and
 the `spec`, `implement`, `verify`, `app.start`, and `qa.run` services are points the engine
 declares and a repository fills, naming whichever specialist plugin it installed in
-`.github/ai-agent-stack.json`. Unbound, a flow loses that stage's expertise and runs on — a
+`.devbook/config.json`. Unbound, a flow loses that stage's expertise and runs on — a
 provider that does not resolve costs capability, never a load. The seven specialists that used
 to live here are [published from their own marketplace](.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace).
 

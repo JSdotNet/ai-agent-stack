@@ -3,7 +3,7 @@
 // installed and at what version, which are enabled, and how one repository has wired
 // the delivery engine.
 //
-//   node stack-report.mjs [--root <repo>] [--marketplace <name>] [--json]
+//   node report.mjs [--root <repo>] [--marketplace <name>] [--json]
 //
 // Reads only; writes nothing. Every fact names the file it came from, so a wrong
 // answer is traceable to a stale file rather than to this script.
@@ -196,8 +196,10 @@ function buildPluginRows(catalogs, installed, enabled, marketplace) {
 }
 
 function buildRepository(repoRoot) {
-    const path = join(repoRoot, '.github', 'ai-agent-stack.json');
+    const path = join(repoRoot, '.devbook', 'config.json');
     const config = load('stack config', path);
+    const legacyPath = join(repoRoot, '.github', 'ai-agent-stack.json');
+    const legacy = existsSync(legacyPath) ? legacyPath : null;
     const folders = DEVBOOK_FOLDERS.map((folder) => {
         const flat = join(repoRoot, `.${folder}`);
         const nested = join(repoRoot, '.devbook', folder);
@@ -208,6 +210,7 @@ function buildRepository(repoRoot) {
 
     return {
         path,
+        legacyPath: legacy,
         present: Boolean(config),
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
@@ -281,11 +284,15 @@ function render(model) {
     const repo = model.repository;
     out.push('## This repository');
     out.push('');
+    if (repo.legacyPath) {
+        out.push(`\`${repo.legacyPath}\` is still present. The stack config moved to \`.devbook/config.json\`; nothing reads the old path any more, so move the file before anything else.`);
+        out.push('');
+    }
     if (!repo.present) {
-        out.push('No `.github/ai-agent-stack.json` - every engine setting takes its documented default, and no component has been reconciled here.');
+        out.push('No `.devbook/config.json` - every engine setting takes its documented default, and no component has been reconciled here.');
         out.push('');
     } else {
-        out.push(`\`.github/ai-agent-stack.json\` declares ${repo.engineKeys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key'}${repo.components ? ', plus component stamps' : ''}.`);
+        out.push(`\`.devbook/config.json\` declares ${repo.engineKeys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key'}${repo.components ? ', plus component stamps' : ''}.`);
         out.push('');
         out.push('### Roles and tracker');
         out.push('');
@@ -390,7 +397,7 @@ function parseArgs(argv) {
 function main(argv) {
     const { options, error } = parseArgs(argv);
     if (error) {
-        process.stderr.write(`stack-report: ${error}\n`);
+        process.stderr.write(`report: ${error}\n`);
         return 1;
     }
 

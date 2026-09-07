@@ -79,7 +79,7 @@ Those three imports are also the reason lifting the folder into its own plugin i
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
 A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
-payload copied anywhere: `stack-guide` ships `stack-report.mjs`, which its read-only skill runs
+payload copied anywhere: `devbook-config` ships `report.mjs`, which its read-only skills run
 from the plugin root. It is the only one left. The pair of identical
 `generate-diagram-svgs.ps1` scripts that used to sit in two specialist plugins — duplicated
 because neither plugin may name the other — left with them.
@@ -228,32 +228,36 @@ make a claim legible from GitHub alone, and the host's list of live background s
 is how a missing result file is told from a worker still running.
 `rules/fleet-issue-sweep-contract.md` owns both schemas.
 
-## Guide Plugin
+## Config Plugin
 
 ```meta
-date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
 ```
 
-`stack-guide` is the one plugin whose subject is the marketplace rather than a unit of work. It
-answers *what is this, what have I got, and how is this repository wired* — and it is the only
-place those three questions are answered together, because no other plugin is allowed to name
-every plugin.
+`devbook-config` is the one plugin whose subject is the marketplace rather than a unit of work.
+It owns the repository's [stack config](#stack-config) and answers *what is this, what have I
+got, and how is this repository wired* — the only place those questions are answered together,
+because no other plugin is allowed to name every plugin.
 
 | Skill | Writes |
 | --- | --- |
-| `stack-guide` | Nothing. It reads, and every fact it states names the file behind it |
-| `stack-init` | The four engine-owned keys of a repository's stack config, for the first time |
-| `stack-update` | The same four keys, moved forward, after each component reconciled itself |
-| `stack-adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
+| `setup` | The four engine-owned keys of a repository's stack config, for the first time, before any component installs itself |
+| `update` | The same four keys, moved forward, after each component reconciled itself |
+| `guide` | Nothing. It reads, and every fact it states names the file behind it |
+| `adoption` | Nothing. It reports where `.ai` no longer matches what is installed and hands the write to `flow-ai` |
 
-`scripts/stack-report.mjs` is the read-only half, run in place from the plugin root: it reads
+The four take no prefix. It is named `devbook-config` for the file it writes,
+`.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
+`devbook` included.
+
+`scripts/report.mjs` is the read-only half, run in place from the plugin root: it reads
 the catalog in both the working tree and the host's clone, the host's installed-plugin state,
 the three settings layers merged nearest-last, the stack config, the devbook folders in both
 layouts, and the engine's own `skills/` folder. A clone older than the source is why "already
 latest" is usually wrong, so the report prints both and the commit behind each.
 
-`stack-adoption` is the second reader, and it stops one step earlier than the report does. The
+`devbook-config:adoption` is the second reader, and it stops one step earlier than the report does. The
 derivable half of `.ai` — which plugins are installed and enabled, which `flow-*` and
 `schedule-*` the copies on disk ship, what the config wires — goes stale on every upgrade and is
 exactly what the report already prints. The other half rates whether people work that way, which
@@ -263,7 +267,7 @@ derived from an install. Reporting drift is inside the plugin's subject; writing
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
 stays with that component's own install skill, which is the only thing that knows what it
-materialized — so `devbook-install` and `devbook-check` do not move here, and `stack-init`'s fifth
+materialized — so `devbook-install` and `devbook-check` do not move here, and `devbook-config:setup`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -277,11 +281,11 @@ leaves the other host's rows empty while the catalog half still answers.
 ## Stack Config
 
 ```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook"]
 ```
 
-`.github/ai-agent-stack.json` is the one file a consuming repository commits for the whole
+`.devbook/config.json` is the one file a consuming repository commits for the whole
 stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
@@ -290,8 +294,12 @@ stack, and it holds two kinds of top-level key:
 | `components.<name>` | that component's own install skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
-`resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
+`resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
+
+It sits beside the devbook chapter folders and is read by every host, which is the whole reason
+it left `.github/` — see [the decision](09-architecture-decisions.md#the-stack-config-lives-in-devbook).
+Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
 
 ## Schedule Plugin
 

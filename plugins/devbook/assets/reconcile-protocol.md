@@ -21,7 +21,7 @@ materialize, stamp — every time.
 
 ## The stamp
 
-`.github/ai-agent-stack.json`, repo-scope and committed. devbook owns exactly
+`.devbook/config.json`, repo-scope and committed. devbook owns exactly
 one entry inside it and never edits another component's:
 
 ```json

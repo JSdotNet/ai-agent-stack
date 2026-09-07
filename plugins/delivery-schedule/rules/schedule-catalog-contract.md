@@ -83,7 +83,7 @@ is the one host fact this plugin carries, recorded as a divergence in
 
 ## The Stamp
 
-`components.schedule` in `.github/ai-agent-stack.json`, written by `schedule-install` and by
+`components.schedule` in `.devbook/config.json`, written by `schedule-install` and by
 nothing else, and never another component's key:
 
 ```json

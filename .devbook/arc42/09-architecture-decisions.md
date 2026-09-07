@@ -249,7 +249,7 @@ date: 2026-09-03
 related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/domain/plugin-authoring/naming.md#stamp"]
 ```
 
-`.github/ai-agent-stack.json` carries both the engine's four keys — `bindings`, `extensions`,
+`.devbook/config.json` carries both the engine's four keys — `bindings`, `extensions`,
 `policy`, `gates` — and every component's `components.<name>` entry, in one committed file that
 nobody but the owner writes into.
 
@@ -267,6 +267,42 @@ rule and is validated as a git ref instead.
 Consequence: two components can conflict on the file itself when both write it in one session.
 Each writes only its own key, so the conflict is textual rather than semantic, but nothing
 enforces that yet beyond the rule being written down.
+
+## The Stack Config Lives in devbook
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+```
+
+The stack config is `.devbook/config.json`. It was `.github/ai-agent-stack.json` and the folder
+was wrong from the first commit: `.github/` is one host's folder, and a file both hosts read
+does not belong in either one's. The same rule that
+[ended host profile plugins](#no-host-profile-plugins) applies to a path.
+
+`.devbook/` won over `.agents/`, the other host-neutral folder here. `.agents/` holds authored
+rules that get wrapped per host, so a file nothing wraps would be the odd one in it. `.devbook/`
+already holds the repository's own account of how it works, which is what this file is the
+machine-readable half of — and it puts the folders a repository adopts and the wiring it
+declares in one place, for the same reason the file itself is
+[one file with two kinds of key](#one-config-file-two-kinds-of-key).
+
+**The path is not a dependency.** `delivery` reads that file whether or not the repository
+adopted a single devbook folder, and `devbook` uninstalled costs the engine nothing: reading a
+path is not naming a plugin, and no [layer](../domain/plugin-authoring/naming.md#layer) order
+is touched. What the folder means widens by one file — the chapters plus the wiring — and
+`devbook-install` still owns nothing but the chapter folders.
+
+The filename drops the marketplace's name with the folder. `ai-agent-stack.json` was
+disambiguating inside `.github/`, where it sat among a host's own files; inside `.devbook/`
+there is one config and `config.json` is what it is called. `delivery`'s two resources follow
+the file they describe — `resources/config.schema.json` and `resources/config-template.json`.
+
+Consequence: **every repository already on the stack has the file in the old place, and nothing
+reads it there.** There is no fallback and deliberately so — two supported paths is two places
+for a repository to disagree with itself. `devbook-config:update` reports the old file and
+moves it as its first step, and the report prints the legacy path whenever it still exists, so
+the failure mode is a named instruction rather than settings that silently stop applying.
 
 ## Extension Points and Gates Live in the Surface Contract
 
@@ -606,14 +642,22 @@ until somebody enables `fleet` on purpose. The dependency runs one way — `flee
 ## The Guide Names Every Plugin and Depends on None
 
 ```meta
-date: 2026-09-05
-related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#guide-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
 ```
 
 A skill that explains the stack has to name every part of it, and the [layer](../domain/plugin-authoring/naming.md#layer)
 rule says a lower layer never names a higher one. Both cannot hold in the same plugin, which is
-why `stack-guide` is a plugin of its own with an empty `dependencies` array rather than a skill
-inside `devbook`.
+why `devbook-config` is a plugin of its own with an empty `dependencies` array rather than a
+skill inside `devbook`.
+
+**The name is the file, not a dependency.** It was `stack-guide`, and the rename followed the
+config into `.devbook/`: a plugin whose subject is `.devbook/config.json` is named for it, the
+way `devbook-graph` is named for the graph it draws rather than for the plugin whose generator
+produces one. Reading `devbook-config` as an L1 extension over `devbook` would be the obvious
+mistake and the `dependencies` array is the answer to it — empty, `devbook` included, and the
+argument below is why it has to stay that way. The four skills lose their `stack-` prefix with
+the rename: a prefix separates scopes inside a plugin, and here every skill has the same one.
 
 The rule is about the dependency order, and naming is not depending. `delivery` already carries
 over two hundred `plugin:asset` references into seven specialist plugins it never declared,
@@ -625,19 +669,24 @@ catalog, resolves
 each against what is on disk, and reports a plugin it cannot find as `not installed` — which is
 an answer, not a degradation. Nothing it names is loaded, so there is nothing to dangle.
 
-Putting it in `devbook` was the obvious first move and is the one the README already argues
-against: the five per-folder flows left that plugin for `devbook-flows` precisely because
+Putting it *inside* `devbook` was the obvious first move and is the one the README already
+argues against: the five per-folder flows left that plugin for `devbook-flows` precisely because
 keeping them made the foundation name the layer above it. Adding a skill that names `delivery`,
 `fleet`, and all three surfaces would have undone that in a larger way, and it would have made
 the guide unreachable for anyone who installed the engine without the devbook convention.
 
-**The write skills stop at the engine keys.** `stack-init` and `stack-update` own `bindings`,
+The rename does not reopen that. Sharing a stem is not being inside: `devbook-config` is a
+separate folder, a separate manifest, and a separate marketplace entry, and a repository can
+enable it with `devbook` absent — which is exactly the case the empty `dependencies` array
+keeps reachable.
+
+**The write skills stop at the engine keys.** `devbook-config:setup` and `devbook-config:update` own `bindings`,
 `extensions`, `policy`, and `gates`, and every `components.<name>` stamp stays with that
 component's own install skill — the rule [one config file, two kinds of key](#one-config-file-two-kinds-of-key)
 already states. Three things follow from it and all three are load-bearing: only the install skill
 knows what it materialized, a plugin's payload and migration ledger live inside that plugin
 where a foreign skill has no supported path to them, and `devbook` has to keep installing
-itself to stay a foundation that works with only itself installed. So `stack-update`'s fourth
+itself to stay a foundation that works with only itself installed. So `devbook-config:update`'s fourth
 step invokes `devbook-install`; it never applies a migration or writes a ledger of its own.
 
 **It names a host's own paths, and that is a divergence taken on purpose.**
@@ -681,7 +730,7 @@ naming a plugin published from another one is a coupling nothing here can check:
 declares it, no test resolves it, and a rename on the other side would rot every reference
 silently. Every stage now names the point it fills — `arc42:arc42` became the `architecture`
 role, `csharp-coding:coding` the `implement` service, `qa:qa` the `app.start` or `qa.run`
-provider by stage — and a repository's `.github/ai-agent-stack.json` is the only place a
+provider by stage — and a repository's `.devbook/config.json` is the only place a
 specialist's name appears. The `**Skills:**` halves that reached inside a specialist are gone
 for the same reason: which skill a role uses is the role's business.
 
@@ -1032,7 +1081,7 @@ MCP setup when the guidelines tools were absent. That was the coupling
 present for servers, and with a harder failure: a role that does not resolve degrades one
 stage, while these stops ended the run.
 
-The servers are now a binding. `bindings["delivery.mcp"]` in `.github/ai-agent-stack.json`
+The servers are now a binding. `bindings["delivery.mcp"]` in `.devbook/config.json`
 maps each point of the closed set to the server ids the repository's own MCP configuration
 declares, and a stage uses the servers of the point it serves — Scope Discovery and every
 intake or drafting stage read `spec`, implementation stages `implement`, Build & Test

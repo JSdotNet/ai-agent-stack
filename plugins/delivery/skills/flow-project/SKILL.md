@@ -31,7 +31,7 @@ framework preferences, and the Aspire services to include.
   release procedure — from the repository's conventions and the MCP servers bound to
   `implement`, and write the developer guidance under `.github/instructions/`.
 - Create the host's repository settings file for the repository-level plugin combination, and
-  `.github/ai-agent-stack.json` for the bindings, extensions, policy, and gates. See **The
+  `.devbook/config.json` for the bindings, extensions, policy, and gates. See **The
   Stack Config** in `rules/surface-contract.md`.
 - Create `.claude/flow-context.md` so later flows know how to start and validate this
   project, per `rules/flow-repo-context.md` and the template at

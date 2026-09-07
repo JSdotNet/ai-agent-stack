@@ -11,7 +11,7 @@ Read-only. The scheduler, the identity rule, and the stamp are in
 ## Steps
 
 1. **Resolve the repository** with `gh repo view --json nameWithOwner` and read
-   `components.schedule` from `.github/ai-agent-stack.json` for the selection.
+   `components.schedule` from `.devbook/config.json` for the selection.
 2. **Resolve the scheduler** from the live tool list. None: say the host's own page holds the
    answer, list the selection from the stamp, and stop.
 3. **List** and keep the entries named `<owner>/<repo> · …`. For each, `list_runs`. For the

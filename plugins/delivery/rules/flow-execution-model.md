@@ -54,7 +54,7 @@ Discovery** below.
 
 This plugin ships no MCP server and requires none. A repository declares its servers in its
 own MCP configuration and binds them per extension point under `bindings["delivery.mcp"]` in
-`.github/ai-agent-stack.json` — see **Bindings** in `surface-contract.md`. A
+`.devbook/config.json` — see **Bindings** in `surface-contract.md`. A
 stage uses the servers bound to the point it serves:
 
 | Stage | Point |

@@ -1,6 +1,6 @@
 ---
 name: collaboration-install
-description: 'Install this plugin''s chapter-collaboration rule into a repository so both hosts apply it on a matching read, and record it under components.collaboration in .github/ai-agent-stack.json. Idempotent: run it on first setup, after upgrading the plugin, and to pick up a rule change. Use when: adopting devbook-collaboration, upgrading it, or the review rules are not being applied. Triggers on: "install devbook-collaboration", "set up chapter review", "collaboration install".'
+description: 'Install this plugin''s chapter-collaboration rule into a repository so both hosts apply it on a matching read, and record it under components.collaboration in .devbook/config.json. Idempotent: run it on first setup, after upgrading the plugin, and to pick up a rule change. Use when: adopting devbook-collaboration, upgrading it, or the review rules are not being applied. Triggers on: "install devbook-collaboration", "set up chapter review", "collaboration install".'
 ---
 
 # collaboration install

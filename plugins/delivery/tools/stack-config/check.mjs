@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Validates the delivery-owned keys of .github/ai-agent-stack.json against
-// resources/ai-agent-stack.schema.json.
+// Validates the delivery-owned keys of .devbook/config.json against
+// resources/config.schema.json.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
 // setting. Keys the engine does not own — `components` and anything another component
 // writes — are ignored here, because each component validates its own entry.
 //
-//   node check.mjs [path-to-ai-agent-stack.json]
+//   node check.mjs [path-to-config.json]
 //
 // Exit 0 when the file is valid or absent, 1 when it is not.
 
@@ -15,7 +15,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'ai-agent-stack.schema.json');
+const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'config.schema.json');
 const OWNED = ['bindings', 'extensions', 'policy', 'gates'];
 
 /** Resolve a local `#/...` pointer against the schema root. */
@@ -106,7 +106,7 @@ export function checkStackConfig(config, schema) {
 }
 
 function main() {
-    const target = resolve(process.argv[2] ?? join('.github', 'ai-agent-stack.json'));
+    const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
     let raw;
     try {
         raw = readFileSync(target, 'utf8');

@@ -1,6 +1,6 @@
 ---
 name: schedule-install
-description: 'Put this repository''s schedules from the catalog into the host''s scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected one, disabling the rest, and recording the selection under components.schedule in .github/ai-agent-stack.json. Idempotent by name. Use when: setting up recurring unattended runs for a repository, scheduling routines or automations, changing a cadence, adding or removing one, or after upgrading this plugin.'
+description: 'Put this repository''s schedules from the catalog into the host''s scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected one, disabling the rest, and recording the selection under components.schedule in .devbook/config.json. Idempotent by name. Use when: setting up recurring unattended runs for a repository, scheduling routines or automations, changing a cadence, adding or removing one, or after upgrading this plugin.'
 ---
 
 # schedule install
@@ -11,7 +11,7 @@ upgrade. Everything it reads and writes is in `rules/schedule-catalog-contract.m
 ## Steps
 
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
-   plugin, and `components.schedule` from `.github/ai-agent-stack.json`. No stamp: ask which
+   plugin, and `components.schedule` from `.devbook/config.json`. No stamp: ask which
    to enable, offering every schedule whose `requires` are met as the default.
 2. **Resolve the repository.** `gh repo view --json nameWithOwner,defaultBranchRef` gives
    `{{repo}}` and `{{base}}`.

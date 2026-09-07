@@ -80,7 +80,7 @@ compressing a lookup table costs a repair, not a sentence.
    outside phase 4 leaves the ledger describing something that did not happen.
    Report which migrations are outstanding and stop.
 
-5. **Check the stamp.** Read devbook's entry in `.github/ai-agent-stack.json`
+5. **Check the stamp.** Read devbook's entry in `.devbook/config.json`
    per `assets/reconcile-protocol.md` and compare it with disk:
 
    | Drift | Severity | Fix |

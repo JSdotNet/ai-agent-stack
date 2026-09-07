@@ -1,9 +1,9 @@
 ---
-name: stack-adoption
+name: adoption
 description: 'Check whether a repository''s .ai adoption record still describes the stack it actually has — which plugins are installed and enabled, which flows and schedules the copies on disk ship, and what the stack config wires — then hand every edit to flow-ai. Reports drift; never writes a chapter and never rates one. Use when: the adoption record has gone stale after an upgrade, a plugin was added or removed, or you are reviewing how this repository works with AI. Triggers on: "refresh the adoption record", "is my .ai still accurate", "update .devbook/ai", "which plugins are missing from the adoption map", "does the ai folder match what is installed".'
 ---
 
-# stack adoption
+# devbook-config adoption
 
 ## Purpose
 
@@ -14,7 +14,7 @@ skill reports the first half and never asserts the second.
 
 ## Steps
 
-1. **Look.** Run `node scripts/stack-report.mjs --root <repository> --json` from this
+1. **Look.** Run `node scripts/report.mjs --root <repository> --json` from this
    plugin's root. If the report shows no `ai` folder, stop — adopting a devbook folder is
    `devbook:devbook-install`, not this.
 

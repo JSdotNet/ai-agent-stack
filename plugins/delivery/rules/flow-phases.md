@@ -73,7 +73,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 
 - Cross-plugin agents are recommended, not required. When a referenced plugin is not
   installed, skip the stage or perform it manually and continue with the remaining stages.
-  A role bound in `.github/ai-agent-stack.json` resolves first; see **Bindings** in
+  A role bound in `.devbook/config.json` resolves first; see **Bindings** in
   `surface-contract.md`.
 - Internal transitions **do not require separate user approval**. The flow-runner may move
   between its own stages, sub-agents, and phase skills without pausing, so the run can

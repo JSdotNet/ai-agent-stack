@@ -845,9 +845,10 @@ Three things follow, and each is deliberate:
   ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
   under `.agents/rules/` is repository-scoped: it serves people working *in* this repository,
   never someone who installed a plugin from it. A plugin instruction file keeps `applyTo` and
-  keeps being reached by explicit path, and is not renamed to the neutral shape — its
-  filename and its glob are part of the plugin contract. That inconsistency is the price of
-  the plugin host having no rules component.
+  is not renamed to the neutral shape — its filename and its glob are part of the plugin
+  contract. Reaching a *consumer* is the sync's job, not the wrapper's, and
+  [A Plugin's Rules Reach a Host Through the Sync](#a-plugins-rules-reach-a-host-through-the-sync)
+  settles how.
 - **A rule that already has one home both hosts read stays there.** The topic set is plugin
   authoring only.
 - **The root file is `AGENTS.md`, and each host gets a root wrapper pointing at it.**
@@ -1115,8 +1116,9 @@ files already state, against the one-file rule this repository holds its own aut
 
 The reason no bridge is needed is that the rules reach a session through the host, not through
 a flow. Copilot applies an instruction file from its `applyTo` glob; `devbook-sync` materializes
-the same files into the repository's `.github/instructions/`, so any session reads them by
-path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
+the same files into the repository, as the pair
+[A Plugin's Rules Reach a Host Through the Sync](#a-plugins-rules-reach-a-host-through-the-sync)
+describes, so any session reads them by path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
 couple. The engine therefore names folders — `.arc42/`, `.domain/`, `.tech/`, `.design/`,
 `.ai/` — as it already did in its Documentation Update phase, and never the `devbook` plugin;
 `devbook` names the category "the engine's own flow for the folder" and never a skill, the way
@@ -1135,3 +1137,63 @@ it. `delivery` ships sixteen flows and `devbook-flows` is no longer published, s
 that had it enabled sees it reported as not installed and finds the same five under the engine.
 The L2b bridge row in the [layer table](../domain/plugin-authoring/naming.md#layer) keeps its
 pattern and, for now, no example.
+
+## A Plugin's Rules Reach a Host Through the Sync
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+```
+
+[One Rule, One Wrapper Per Host](#one-rule-one-wrapper-per-host) settled the repository half
+and left the plugin half on an assumption that does not hold: that `applyTo` "steers Copilot".
+It steers nothing from inside a plugin. Neither manifest has an `instructions` key — no plugin
+here declares one — and neither host has a rules component, so a file under
+`plugins/*/instructions/` is auto-applied by *both* hosts equally: not at all. The seventeen
+files reached a session only where a skill or an agent named one by path.
+
+For the six that glob a path inside the plugin — `delivery`'s five over `skills/flow-*/SKILL.md`
+and `fleet`'s one — that costs nothing. Only a maintainer of this repository edits those, and
+`.agents/rules/skills.md` already wraps that glob for both hosts. `delivery-schedule`'s
+contract globs `**/*.schedule.md`, and all six of those files live in the plugin too, so it is
+the same kind and now has the same treatment in `.agents/rules/schedules.md`.
+
+The other ten are different in kind. `devbook`'s nine and `devbook-collaboration`'s one glob
+`.devbook/domain/**` and its siblings — paths in the *adopting* repository, the only place the
+glob can resolve. A rule that can only fire there has to be delivered there, and devbook
+already delivers: tools, workflows, and one section of `AGENTS.md`, hash-tracked in the stamp.
+So the rules join the asset table.
+
+Each lands twice, not three times:
+
+```
+plugins/devbook/instructions/<name>.instructions.md      the one authored copy
+  ├── .github/instructions/<name>.instructions.md        verbatim; Copilot applies its applyTo
+  └── .claude/rules/<name>.md                            paths = applyTo.split(","); → pointer
+```
+
+Three choices inside that, each with a reason:
+
+- **Verbatim, not trimmed to the adopted layout.** The globs carry both spellings, flat and
+  nested. Trimming is what the two workflows get, and it makes them customized from the first
+  reconcile onward — right for a workflow nobody ships twice, wrong for a rule that must keep
+  taking upgrades. A glob matching nothing applies nothing, so carrying both costs nothing.
+- **Under their own filenames.** These files reference each other as bare names. They resolve
+  only while they sit together in one folder under the names they were written with.
+- **No third copy under `.agents/rules/`.** That layering exists to give one rule a
+  host-neutral home when neither host's folder can be it. Here the `.github/instructions/`
+  file already is that copy, and a neutral third would have to rewrite every cross-reference
+  between the ten to reach it — the second copy this convention exists to prevent, bought with
+  a rewrite that can silently go stale.
+
+The asymmetry with the repository's own rules is real and accepted: there the one copy sits in
+`.agents/rules/` and both hosts wrap it; here the one copy sits in the folder Copilot reads
+natively and only Claude wraps it. The invariant that matters — one copy, a wrapper per host
+that needs one, and never a rule written in a wrapper — holds in both.
+
+Consequence: devbook goes to `1.4.0` and reconcile materializes eighteen more files into a
+fully adopting repository. No migration: the contract version is untouched, and a new asset row
+is materialized by the phase that already exists. `devbook-collaboration` ships no sync skill,
+so its one file still reaches a session only by explicit path from its four `chapter-*` skills;
+it gets this treatment when that plugin grows a sync, and never through `devbook`, which may
+not name the layer above it.

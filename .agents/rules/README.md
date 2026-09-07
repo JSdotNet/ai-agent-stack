@@ -30,8 +30,10 @@ ecosystem is pointing, and that pairs with `AGENTS.md` at the root.
 `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
 ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything here
 is repository-scoped: it serves people working **in** `ai-agent-stack`, never someone who
-installed a plugin from it. Plugin instruction files keep `applyTo` and keep being reached by
-explicit path — see [instructions.md](instructions.md).
+installed a plugin from it. A plugin instruction file keeps `applyTo`, and how it reaches a
+*consumer* depends on what its glob names — a path inside the plugin, or a path in the
+adopting repository, where the plugin's sync materializes it. See
+[instructions.md](instructions.md).
 
 A shared file may point at a plugin instruction file rather than restate it, when that plugin
 file is already the one authored copy. The rule stays one hop from the wrapper either way;

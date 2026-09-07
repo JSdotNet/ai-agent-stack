@@ -57,6 +57,17 @@
         },
         {
           "type": "file",
+          "name": "flow.md",
+          "path": ".devbook/domain/plugin-authoring/flow.md",
+          "title": "Plugin Authoring",
+          "kind": "flow",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "How the terms in model.md move over time: a file becoming something a host loads, payload becoming state in somebody else's repository, and the run a flow skill describes. Structure lives in model.md; responsibilities and boundary live in domain.md.",
+          "diagrams": 3
+        },
+        {
+          "type": "file",
           "name": "model.md",
           "path": ".devbook/domain/plugin-authoring/model.md",
           "title": "Plugin Authoring",

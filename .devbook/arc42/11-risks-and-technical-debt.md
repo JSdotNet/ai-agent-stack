@@ -43,8 +43,12 @@ register invites the scaffolding this convention asks authors not to write.
 ```meta
 ```
 
-`adr/` does not exist. All nineteen decisions sit inline in
+`adr/` does not exist. All twenty-six decisions sit inline in
 [chapter 9](09-architecture-decisions.md), which the convention describes as a chapter that
 links out and does not restate. That is tolerable while one file holds them and a reader can
 still find one by heading; it stops being tolerable when a decision needs its own number, date,
 and supersession chain. Split them out then, and this chapter's shape is the model.
+
+Twenty-six is where that argument starts to strain. Nothing has needed a supersession chain
+yet, which is still the trigger, but the count has grown faster than the file's readability and
+the next reader to lose a decision in it is the signal to split.

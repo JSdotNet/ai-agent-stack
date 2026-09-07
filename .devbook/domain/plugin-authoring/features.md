@@ -55,7 +55,8 @@ type: sub-feature
 ```
 
 Ship the Claude manifest and the Copilot manifest, agreeing on name, version, and
-description. Every plugin ships both; the host profile that shipped one is gone.
+description. A plugin ships the manifest of every host that can load something in it, so a
+plugin whose whole payload belongs to one host ships that host's alone.
 
 ### Declare a Dependency
 

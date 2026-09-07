@@ -19,12 +19,14 @@ the same change that adds its file.
 | Stage | File | Covers |
 | --- | --- | --- |
 | author | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
-| deliver | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out lane nothing here has used. |
+| deliver | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out and scheduling lanes nothing here has used. |
 | verify | [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
 
 ## Adoption Picture
 
-Stages in flow order, with the chapters that sit at each one. Shading is `status`.
+Stages in flow order, with the chapters that sit at each one. Shading is `status`. Scheduling
+reaches fan-out and the automations, never a flow — the missing edge to `Flow Skills` is the
+[decision](../arc42/09-architecture-decisions.md#routines-are-their-own-plugin), not an omission.
 
 ```mermaid
 graph LR
@@ -34,6 +36,7 @@ graph LR
   subgraph deliver
     flows[Flow Skills]
     fanout[Fan-Out]
+    schedule[Scheduling]
   end
   subgraph verify
     eval[Plugin Evaluation]
@@ -41,12 +44,13 @@ graph LR
   host --> flows
   flows --> eval
   flows -. never yet .-> fanout
+  schedule -. never yet .-> fanout
   classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
   classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
   classDef candidate fill:#e6e6e6,stroke:#7a7a7a,color:#333;
   class host adopted;
   class flows trial;
-  class fanout,eval candidate;
+  class fanout,schedule,eval candidate;
 ```
 
 ## How to Read It
@@ -54,7 +58,7 @@ graph LR
 `status` reuses the `.tech` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
 here has been made. One is `trial` because everything it needs has landed and nothing has used
-it. Two are `candidate` because the honest first use is somewhere else, or has not happened.
+it. Three are `candidate` because the honest first use is somewhere else, or has not happened.
 
 To add a practice, write its `##` chapter in the stage file where it applies, with `status`,
 `type`, and the four fields the chapter template asks for, then add its node to the picture

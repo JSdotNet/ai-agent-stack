@@ -91,7 +91,7 @@ related: [".devbook/ai/02-deliver.md#flow-skills"]
 A staged procedure for one category of work, run start to finish inside one session, ending at
 the personal validation gate. `flow-<category>`, one per category.
 
-Four neighbours share the vocabulary and are not interchangeable with it:
+Five neighbours share the vocabulary and are not interchangeable with it:
 
 | Prefix | Scope |
 | --- | --- |

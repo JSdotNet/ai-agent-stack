@@ -1,0 +1,43 @@
+# Repository rules
+
+A rule that applies to one kind of file is authored **once** here and wrapped per host. A new
+host adds a third wrapper; it never adds a second copy.
+
+```
+.agents/rules/<topic>.md                      the rule. One copy. Host-neutral.
+  ├── .claude/rules/<topic>.md                wrapper: paths:   → pointer
+  └── .github/instructions/<topic>.instructions.md
+                                              wrapper: applyTo: → pointer
+```
+
+A wrapper carries frontmatter and one sentence of body. It never restates a rule. The shared
+file declares `name`, `description`, and a `paths` list; the Claude wrapper copies `paths`
+verbatim, and the Copilot wrapper's `applyTo` is that list joined with commas. Because
+`applyTo` is exactly `paths.join(",")`, drift is machine-detectable —
+`node tools/check-assets.mjs` fails on it. It stays a checker, not a generator: this
+repository has [no generated sync layer](../../.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer)
+by decision.
+
+`.agents/rules/` is not a ratified standard. `AGENTS.md` is the standard for the *root* file
+and defines no globs; [agents.md#179](https://github.com/agentsmd/agents.md/issues/179) is the
+open proposal for glob-scoped rules, and its `name` / `description` / `paths` shape is what
+this convention uses. Treat the folder as a local convention that happens to match where the
+ecosystem is pointing, and that pairs with `AGENTS.md` at the root.
+
+## Two exceptions, both deliberate
+
+- **A plugin cannot ship rules.** There is no rules component and no `rules` key in
+  `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
+  ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
+  here is repository-scoped: it serves people working **in** `ai-agent-stack`, never someone
+  who installed a plugin from it. Plugin instruction files keep `applyTo` and keep being
+  reached by explicit path — see [instructions.md](instructions.md).
+- **A wrapper may point at a plugin instruction file instead of a shared file**, when that
+  plugin file is already the one authored copy. `devbook-chapter` does this. The rule is one
+  hop from the wrapper either way; what is forbidden is copying the content.
+
+A rule fires when a host **reads** a matching file, so authoring one from scratch may not
+trigger it. Open a sibling first, or read the rule directly.
+
+All three directories are committed, so every worktree under `.claude/worktrees/` picks them
+up. A rule is therefore never the place for anything personal or machine-local.

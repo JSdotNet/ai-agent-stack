@@ -827,6 +827,43 @@ unchanged, because the chapter schema did not move, and a repository synced befo
 hook keeps its generic text: it is what reaches a session in a repository that never ran a
 reconcile, and the section is what makes a reconciled one specific.
 
+## Automation Owns the _meta Refresh
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd"]
+```
+
+The derived-artifacts convention says a repository owes contributors two refresh paths: an
+on-demand command, and a scheduled job reconciling the default branch. This repository ships
+neither — no `.github/`, no `build/` — and `CLAUDE.md` had filled the gap by telling every
+session to regenerate `_meta/` after a chapter edit, which is the one thing the convention
+forbids by name.
+
+**The refresh is automation's, and only automation's.** The `devbook-check` routine already
+does it: check, fix the Markdown, refresh the indexes, open a pull request when they moved. So
+this repository keeps one refresh path rather than two, and the on-demand half is deliberately
+absent. A session that could refresh is a session that will, in the same commit as its chapter
+edit, and the merge conflict that follows is resolvable only by running the generator again.
+
+Three things enforce it, because prose alone decays across a long session:
+
+- `.claude/settings.json` denies `Read(_meta/**)`. A `Read` deny also blocks `Edit` and
+  `Write`, and matches the directory name at any depth, so one rule covers the root rollup and
+  all five scoped folders. `build.mjs` is a subprocess and reaches the files anyway.
+- `AGENTS.md` states the rule for Copilot. Content exclusion is not an equivalent lever — it
+  does not apply to Copilot CLI or to agent mode — so prose is the whole mechanism there.
+- `CLAUDE.md` names the routine as the owner, at the point where the check is run.
+
+**The `AGENTS.md` section diverges from its template, in two lines.** `agents-section.md`
+names `./build/Update-DevbookIndex.ps1` and `.github/tools/devbook-meta/build.mjs`: correct in
+a repository that ran `devbook-sync`, wrong in the one that authors the convention and vendors
+the generator under `plugins/devbook/tools/`. The section here names this repository's real
+path and the routine instead of the script. It was written by hand, so no stamp claims it and
+no reconcile will report it as customized; a later `devbook-sync` run over this repository
+would overwrite it with the template's paths, and that is the moment to make the template
+resolve the generator location the way `generatorPath` now does.
+
 ## The Handback Is the Commit Point
 
 ```meta

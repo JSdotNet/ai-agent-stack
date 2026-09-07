@@ -189,7 +189,12 @@ description as file artifacts, say so once, and continue.
   evidence capture, or Personal Validation review. Never close the surface's own tabs or
   unrelated user browser sessions.
 - **Write the PR description** from the change set, the code review outcome, and the
-  validation evidence.
+  validation evidence. Follow the repository's own PR template when it has one, and link the
+  originating work item — `Closes` when merging resolves it, `Refs` when it does not.
+- **Open it through the lane, and validate nothing twice.** Push the branch, then raise the PR
+  with the host's own pull-request action when the session offers one, otherwise `gh pr create`
+  or the bound GitHub tooling. Build & Test, QA Validation, and the recorded approval **are**
+  the validation: never rebuild, re-run tests or QA, or ask for a second confirmation here.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Skip this phase** (`skipped`) when the run produces no change set to submit.
 

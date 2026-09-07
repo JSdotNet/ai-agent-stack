@@ -171,7 +171,6 @@ the source of truth.
 ## Related Skills
 
 - `update-pr-branch` — when the failure is a conflict or an out-of-date base.
-- `create-pull-request` — opening the PR.
 - `pr-merge-ready` — score one pull request against the merge-ready checklist and clear its blockers, one PR per pass.
 - `phase-build-test` — the shared build-and-test procedure the `flow-*` flows run
   before a PR exists.

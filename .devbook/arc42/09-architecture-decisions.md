@@ -696,11 +696,13 @@ it wrote its bindings. The cost is that a first-time user gets no worked binding
 template shows the shape and the contract explains the id form, but which plugin to install is
 now a question this repository does not answer.
 
-Two smaller consequences, both accepted. `tools/check-assets.mjs` still refuses flow-control
-tools on any non-runner plugin's agent, and no such agent ships here any more — the rule guards
-future assets rather than present ones. And the body-budget rule this repository holds its own
-authoring to now lives in a plugin published elsewhere; `CLAUDE.md` points at it by
-marketplace rather than by path.
+Two smaller consequences. `tools/check-assets.mjs` still refuses flow-control tools on any
+non-runner plugin's agent, and no such agent ships here any more — the rule guards future
+assets rather than present ones. And the conciseness rule this repository holds its own
+authoring to came out of `spec-builder` and stayed, as `AUTHORING.md` beside `CLAUDE.md`: it
+governs authoring here, so a pointer into a marketplace this repository does not publish would
+have been the one dangling reference the rest of this change exists to remove. The departing
+plugin keeps its own copy, and the two are free to diverge — nothing here reads that one.
 
 ## Devbook Payload Named After Its Plugin
 

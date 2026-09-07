@@ -747,7 +747,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-payload-named-after-its-plugin",
           "level": 2,
-          "line": 705,
+          "line": 707,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -846,7 +846,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "the-debt",
           "level": 2,
-          "line": 34,
+          "line": 49,
           "status": "active",
           "statusDeclared": false
         }
@@ -860,7 +860,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "origin",
           "level": 2,
-          "line": 58,
+          "line": 67,
           "status": "active",
           "statusDeclared": false
         }
@@ -874,7 +874,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 74,
+          "line": 83,
           "status": "active",
           "statusDeclared": false
         }
@@ -888,7 +888,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "impact",
           "level": 2,
-          "line": 96,
+          "line": 105,
           "status": "active",
           "statusDeclared": false
         }
@@ -902,7 +902,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 109,
+          "line": 118,
           "status": "active",
           "statusDeclared": false
         }

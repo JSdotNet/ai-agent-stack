@@ -31,6 +31,21 @@ What is left over budget is mostly the four kinds the decision already exempts �
 procedures, converters, schema and contract files, the runner agents — plus `fleet`, whose
 three skills stay long for the reason the options table gives.
 
+**2026-09-07.** The seven specialist plugins
+[left the marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace),
+taking most of the short assets with them, and `spec-conciseness.instructions.md` stayed as
+[AUTHORING.md](../../../AUTHORING.md). Nothing was trimmed or grown; the population changed:
+
+| Kind | Within budget | Was |
+| --- | --- | --- |
+| `SKILL.md` | 8 of 59 | 38 of 113 |
+| `*.instructions.md` | 2 of 16 | 19 of 35 |
+| `*.agent.md` | 0 of 1 | 6 of 10 |
+
+The debt is unchanged in substance and now concentrated almost entirely in the exempt kinds
+plus `fleet`. The largest four are `devbook`'s chapter-metadata and domain instruction files
+and `fleet`'s two sweep skills.
+
 ## The debt
 
 ```meta
@@ -49,20 +64,14 @@ frontmatter:
 | `*.instructions.md` | 12 of 35 | 28 | 78 | 629 |
 | `*.agent.md` | 5 of 10 | 65 | 75 | 295 |
 
-Re-measured on 2026-09-07, after the seven specialist plugins
-[left the marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace):
-66 of 76 budgeted assets are over. The ratio worsened because the departing plugins carried
-most of the short assets — the debt is unchanged, and it is now concentrated in the staged
-procedures and contracts that are long by kind.
-
 ## Origin
 
 ```meta
 ```
 
-The three numbers came from `spec-conciseness.instructions.md` in the `spec-builder` plugin,
-which [left this marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace)
-on 2026-09-07 and is published from its own. It
+The three numbers came from `spec-conciseness.instructions.md` in the `spec-builder` plugin.
+That plugin [left this marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace)
+on 2026-09-07 and the rule stayed, as [AUTHORING.md](../../../AUTHORING.md). It
 opens its budget table with "the budget is the trigger for a disclosure decision, not a hard
 limit" and closes it with "state the reason in the file when an asset genuinely must exceed its
 budget". CLAUDE.md carried the table across and left both sentences behind.
@@ -113,7 +122,7 @@ others stand is how a review spends its credibility on the finding that will be 
 
 | Option | Trade-off |
 | --- | --- |
-| Adopt the disclosure rule — restore the two sentences CLAUDE.md dropped, and point at `spec-conciseness.instructions.md` rather than restating the table | Makes every over-budget asset legal the moment it says why, and makes the ones that cannot say why visible. Cheap, and it is the upstream design. Does not by itself shorten anything |
+| Adopt the disclosure rule — restore the two sentences CLAUDE.md dropped, and point at `AUTHORING.md` rather than restating the table | Makes every over-budget asset legal the moment it says why, and makes the ones that cannot say why visible. Cheap, and it is the upstream design. Does not by itself shorten anything |
 | Rewrite the stack-native skills to budget | Would delete the tables, worked shapes, and decision criteria that are the reason a flow behaves the same way twice — `fleet-resolve-issue` runs 486 lines because an unattended worker has nobody to ask. `spec-builder` disproves the general form of that defence, so it is a claim to test per asset, not a blanket exemption |
 | Say in CLAUDE.md that the numbers are unenforced | Honest and free, but leaves the repository with a stated rule it has agreed not to keep |
 

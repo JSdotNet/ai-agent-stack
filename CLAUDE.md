@@ -134,11 +134,10 @@ behaviour.
   at it by relative path from everywhere else.
 - Body budgets: `SKILL.md` 40 lines, `*.instructions.md` 60, `*.agent.md` 80. The budget is a
   disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
-  branch, or state the reason in the file. Full rule: `instructions/authoring/spec-conciseness.instructions.md`
-  in the `spec-builder` plugin, which is published from its own marketplace and is no longer
-  in this repository. Staged procedures, converters, schema and contract instruction files,
-  and the `flow-runner` agent are long by kind, recorded once in
-  `.devbook/arc42/09-architecture-decisions.md` rather than in each file.
+  branch, or state the reason in the file. Full rule: [AUTHORING.md](AUTHORING.md). Staged
+  procedures, converters, schema and contract instruction files, and the `flow-runner` agent
+  are long by kind, recorded once in `.devbook/arc42/09-architecture-decisions.md` rather than
+  in each file.
 - A rule that must survive a long session says so in the asset, and repeats itself at the point
   of use. Instructions decay as context fills.
 - Exempt safety-critical text from any terseness rule: confirmations before irreversible

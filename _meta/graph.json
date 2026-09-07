@@ -10,21 +10,21 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 124,
-    "edges": 253,
+    "nodes": 129,
+    "edges": 274,
     "nodesByFolder": {
-      "arc42": 63,
-      "domain": 37,
-      "tech": 13,
+      "arc42": 65,
+      "domain": 38,
+      "tech": 14,
       "design": 3,
-      "ai": 8
+      "ai": 9
     },
     "nodesByType": {
       "file": 23,
-      "chapter": 101
+      "chapter": 106
     },
     "nodesByKind": {
-      "none": 70,
+      "none": 72,
       "context-map": 1,
       "bounded-context": 1,
       "dependencies": 1,
@@ -34,28 +34,28 @@
       "sub-feature": 6,
       "model": 1,
       "naming": 1,
-      "term": 20,
-      "platform": 3,
+      "term": 21,
+      "platform": 4,
       "library": 1,
       "format": 1,
       "protocol": 2,
       "runtime": 2,
       "stage": 3,
       "practice": 2,
-      "skill": 2,
+      "skill": 3,
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 101,
+      "active": 104,
       "adopted": 13,
-      "trial": 5,
+      "trial": 6,
       "draft": 2,
-      "candidate": 3
+      "candidate": 4
     },
     "edgesByType": {
-      "contains": 101,
-      "related": 148,
-      "depends-on": 4
+      "contains": 106,
+      "related": 163,
+      "depends-on": 5
     }
   },
   "problems": [],
@@ -268,6 +268,26 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 271,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/05-building-block-view.md#asset-kinds",
           "label": "Asset Kinds",
           "type": "chapter",
@@ -275,7 +295,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 271,
+          "line": 307,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -738,6 +758,28 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 689,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
           "label": "devbook Owns One Section of AGENTS.md",
           "type": "chapter",
@@ -745,7 +787,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-owns-one-section-of-agentsmd",
           "level": 2,
-          "line": 689,
+          "line": 736,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -1550,7 +1592,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "fleet-skill",
           "level": 2,
-          "line": 121,
+          "line": 122,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1563,6 +1605,27 @@
       },
       {
         "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "label": "Routine",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "routine",
+          "level": 2,
+          "line": 144,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/domain/plugin-authoring/naming.md#extension-point",
           "label": "Extension Point",
           "type": "chapter",
@@ -1570,7 +1633,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-point",
           "level": 2,
-          "line": 143,
+          "line": 165,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1589,7 +1652,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "gate",
           "level": 2,
-          "line": 166,
+          "line": 188,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1608,7 +1671,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "surface",
           "level": 2,
-          "line": 184,
+          "line": 206,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1629,7 +1692,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "host-slot",
           "level": 2,
-          "line": 218,
+          "line": 240,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1649,7 +1712,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "role",
           "level": 2,
-          "line": 238,
+          "line": 260,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1668,7 +1731,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "tracker",
           "level": 2,
-          "line": 264,
+          "line": 286,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1684,7 +1747,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "stamp",
           "level": 2,
-          "line": 276,
+          "line": 298,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1704,7 +1767,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "migration",
           "level": 2,
-          "line": 295,
+          "line": 317,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1723,7 +1786,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 313,
+          "line": 335,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1741,7 +1804,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "layer",
           "level": 2,
-          "line": 324,
+          "line": 346,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1761,7 +1824,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-namespace",
           "level": 2,
-          "line": 346,
+          "line": 368,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -1854,6 +1917,28 @@
           ],
           "related": [
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/tech/hosts.md#claude-code-routines",
+          "label": "Claude Code Routines",
+          "type": "chapter",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-routines",
+          "level": 2,
+          "line": 74,
+          "status": "trial",
+          "kind": "platform",
+          "date": "2026-09-07",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin"
           ]
         }
       },
@@ -2101,6 +2186,24 @@
       },
       {
         "data": {
+          "id": ".devbook/ai/02-deliver.md#scheduling",
+          "label": "Scheduling",
+          "type": "chapter",
+          "folder": "ai",
+          "path": ".devbook/ai/02-deliver.md",
+          "slug": "scheduling",
+          "level": 2,
+          "line": 65,
+          "status": "candidate",
+          "kind": "skill",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/ai/03-verify.md",
           "label": "3. Verify (stage)",
           "type": "file",
@@ -2218,6 +2321,14 @@
           "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#stack-config",
           "source": ".devbook/arc42/05-building-block-view.md",
           "target": ".devbook/arc42/05-building-block-view.md#stack-config",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
           "type": "contains"
         }
       },
@@ -2410,6 +2521,14 @@
           "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
           "source": ".devbook/arc42/09-architecture-decisions.md",
           "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "type": "contains"
         }
       },
@@ -2743,6 +2862,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#extension-point",
           "source": ".devbook/domain/plugin-authoring/naming.md",
           "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
@@ -2863,6 +2990,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-routines",
+          "source": ".devbook/tech/hosts.md",
+          "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/tech/shared.md->.devbook/tech/shared.md#markdown",
           "source": ".devbook/tech/shared.md",
           "target": ".devbook/tech/shared.md#markdown",
@@ -2938,6 +3073,14 @@
           "id": "contains:.devbook/ai/02-deliver.md->.devbook/ai/02-deliver.md#fan-out",
           "source": ".devbook/ai/02-deliver.md",
           "target": ".devbook/ai/02-deliver.md#fan-out",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/ai/02-deliver.md->.devbook/ai/02-deliver.md#scheduling",
+          "source": ".devbook/ai/02-deliver.md",
+          "target": ".devbook/ai/02-deliver.md#scheduling",
           "type": "contains"
         }
       },
@@ -3082,6 +3225,30 @@
           "id": "related:.devbook/arc42/05-building-block-view.md#stack-config->.devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
           "source": ".devbook/arc42/05-building-block-view.md#stack-config",
           "target": ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#routine-plugin->.devbook/arc42/05-building-block-view.md#stack-config",
+          "source": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#stack-config",
           "type": "related"
         }
       },
@@ -3495,6 +3662,46 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/tech/hosts.md#claude-code-routines",
+          "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
           "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
@@ -3871,6 +4078,30 @@
       },
       {
         "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/domain/plugin-authoring/naming.md#extension-point->.devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
           "source": ".devbook/domain/plugin-authoring/naming.md#extension-point",
           "target": ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed",
@@ -4047,6 +4278,30 @@
       },
       {
         "data": {
+          "id": "depends-on:.devbook/tech/hosts.md#claude-code-routines->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
+          "type": "depends-on"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/tech/shared.md#model-context-protocol->.devbook/domain/plugin-authoring/naming.md#mcp-server",
           "source": ".devbook/tech/shared.md#model-context-protocol",
           "target": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
@@ -4154,6 +4409,22 @@
           "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
           "source": ".devbook/ai/02-deliver.md#fan-out",
           "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/ai/02-deliver.md#scheduling",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/ai/02-deliver.md#scheduling",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "type": "related"
         }
       },

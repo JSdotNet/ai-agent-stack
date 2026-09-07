@@ -9,7 +9,7 @@
     {
       "name": "delivery",
       "source": "./plugins/delivery",
-      "description": "The host-neutral delivery engine: 15 flow-* staged procedures, 2 shared phases, 7 scheduled automations, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
+      "description": "The host-neutral delivery engine: 15 flow-* staged procedures, 2 shared phases, 9 scheduled automations, and the pull-request lane, sequenced by the flow-runner agent through a closed set of extension points — spec, implement, verify, app.start, qa.run and deliver as services, session.start, flow.start, data.prepare, docs.update and flow.end as chores — with human gates a repository adds but never removes, and a run surface resolved from the live tool list so none is a normal outcome. Bindings, extensions, policy, and gates are declared per repository in .github/ai-agent-stack.json.",
       "version": "1.0.0"
     },
     {
@@ -28,6 +28,12 @@
       "name": "fleet",
       "source": "./plugins/fleet",
       "description": "The fan-out lane: a backlog turned into parallel work across sessions and worktrees — the one thing a flow may never do. fleet-issue-sweep triages a repository's open issues for relevance and for collision with work in flight, proposes the stale ones for closure, and dispatches up to five independent worker sessions, one issue and one worktree each, then waits them out and writes the brief. fleet-resolve-issue is what each worker runs: one issue to a pull request when the change proves itself, or to a parked worktree with a handoff brief when a human has to look. fleet-morning-brief re-reads a past sweep from its manifest and worker result files. An L1 extension over delivery: it owns no flow and holds no gate, and trades Personal Validation for a pull request nobody merges unread.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "routines",
+      "source": "./plugins/routines",
+      "description": "The trigger lane: schedules that fire a procedure the stack already ships, never a procedure of their own. A catalog of six routine definitions — package update, merge review, change report, devbook check, security review, and technology graph refresh — each naming the skill it runs, the plugins that skill needs, a cadence, and the prompt for a cloud session that starts with nothing but the repository. routine-sync creates or updates them through whatever scheduler the live session exposes and records the selection under components.routines; routine-status reads their runs and logs; routine-run fires one now. Declares no dependency and names four plugins: a routine whose target is not enabled is reported and skipped, never scheduled.",
       "version": "0.1.0"
     },
     {

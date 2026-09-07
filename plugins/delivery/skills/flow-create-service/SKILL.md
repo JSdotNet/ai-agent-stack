@@ -34,8 +34,8 @@ derivation when it does not.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the work is really a module inside an existing service, or when the
-service boundary is itself an open architectural question: recommend `flow-create-module`,
-`flow-adr`, or `flow-architecture` and ask the user.
+service boundary is itself an open architectural question: recommend `flow-create-module` or
+`flow-arc42` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in

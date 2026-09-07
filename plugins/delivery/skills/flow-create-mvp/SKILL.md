@@ -35,7 +35,7 @@ derivation when it does not.
 
 Escalate instead when the product direction itself is the open question, or when the MVP
 needs a new architectural decision or a documented target architecture first: recommend
-`flow-architecture` or `flow-adr` and ask the user.
+`flow-arc42` and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in

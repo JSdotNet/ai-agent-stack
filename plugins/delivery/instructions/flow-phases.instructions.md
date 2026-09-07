@@ -39,10 +39,10 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
   `flow-aspire-update`, `flow-project` — run, in order: **Build & Test → QA Validation →
   Personal Validation → Create Pull Request → Documentation Update → Work Item Update →
   Summary**.
-- **Documentation/config flows** — `flow-adr`, `flow-tdr`, `flow-arc42`,
-  `flow-architecture`, `flow-repo` — run: **Personal Validation → Create Pull Request →
-  Work Item Update → Summary**. They produce no runnable code change, so Build & Test and QA
-  Validation do not apply.
+- **Documentation/config flows** — `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`,
+  `flow-ai`, `flow-repo` — run: **Personal Validation → Create Pull Request → Work Item
+  Update → Summary**. They produce no runnable code change, so Build & Test and QA Validation
+  do not apply.
 - **`flow-fallback`** has no fixed tier: it runs the code-modifying tier when its Routing
   Check determines a code-modifying change kind, and the documentation/config tier
   otherwise. It reports the resolved tier's phase names in `start_run`.

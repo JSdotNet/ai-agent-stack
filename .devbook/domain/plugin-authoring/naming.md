@@ -305,8 +305,8 @@ related: [".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/arc4
 
 A component's entry under `components` in `.github/ai-agent-stack.json`, recording what that
 plugin has materialized into the repository: the plugin version and contract version it is on,
-which features it adopted, every file copied in with the hash it had when it landed, and the
-migration ledger. The same file's other top-level keys are the engine's — see
+which features it adopted, every file copied in or marker-fenced section written with the hash
+it had when it landed, and the migration ledger. The same file's other top-level keys are the engine's — see
 [Stack Config](../../arc42/05-building-block-view.md#stack-config).
 
 It records what the *repository* has taken on, never who installed what — that is per-user and

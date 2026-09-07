@@ -5,6 +5,16 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 1.3.0: a section of `AGENTS.md`
+
+**Additive; no migration.** `devbook-sync` now writes one marker-fenced section of the
+repository's `AGENTS.md`, rendered from the adopted folders per `assets/agents-section.md`
+and keyed `AGENTS.md#devbook` in the stamp. A repository synced before 1.3.0 gains it as a
+plain `create` on its next reconcile: an absent `AGENTS.md` is created holding only the
+section, a present one gets the section appended. Nothing outside the markers is touched,
+and `devbook-check` reports the section stale when adoption moves on. Which host reads
+that file, or imports it from a file of its own, is the repository's to arrange.
+
 ## 0.15.0: `status` optional at rest
 
 **A behaviour change in three folders, and a sweep worth doing.** `status` is no

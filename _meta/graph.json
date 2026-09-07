@@ -10,10 +10,10 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 128,
-    "edges": 269,
+    "nodes": 129,
+    "edges": 274,
     "nodesByFolder": {
-      "arc42": 64,
+      "arc42": 65,
       "domain": 38,
       "tech": 14,
       "design": 3,
@@ -21,10 +21,10 @@
     },
     "nodesByType": {
       "file": 23,
-      "chapter": 105
+      "chapter": 106
     },
     "nodesByKind": {
-      "none": 71,
+      "none": 72,
       "context-map": 1,
       "bounded-context": 1,
       "dependencies": 1,
@@ -46,15 +46,15 @@
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 103,
+      "active": 104,
       "adopted": 13,
       "trial": 6,
       "draft": 2,
       "candidate": 4
     },
     "edgesByType": {
-      "contains": 105,
-      "related": 159,
+      "contains": 106,
+      "related": 163,
       "depends-on": 5
     }
   },
@@ -775,6 +775,27 @@
             ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
             ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
             ".devbook/tech/hosts.md#claude-code-routines"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "label": "devbook Owns One Section of AGENTS.md",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-owns-one-section-of-agentsmd",
+          "level": 2,
+          "line": 736,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/05-building-block-view.md#host-slots",
+            ".devbook/domain/plugin-authoring/naming.md#stamp"
           ]
         }
       },
@@ -2513,6 +2534,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
@@ -3668,6 +3697,38 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin->.devbook/tech/hosts.md#claude-code-routines",
           "source": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
           "type": "related"
         }
       },

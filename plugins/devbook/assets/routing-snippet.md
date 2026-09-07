@@ -14,21 +14,9 @@ repository that has it enabled can name those directly as the entry point for ea
 folder. Without it, name the repository's own `flow-*` skill, `flow-fallback`, or the
 folder's instruction files.
 
-## For `.github/copilot-instructions.md`
-
-```markdown
-## Guardrails
-
-- Treat checked-in knowledge folders such as `.arc42/`, `.domain/`, `.tech/`,
-  `.design/`, and `.ai/` as **task-scoped context**, not baseline
-  context.
-  Load only the relevant chapters after routing to the correct flow or
-  specialist agent, or when the user explicitly asks for that knowledge.
-- Files under any `_meta/` folder are generated. Never hand-edit them; regenerate
-  with `node .github/tools/devbook-meta/build.mjs`. Never read them either —
-  they are tool input, and the graph is large enough to crowd out real context.
-  Claude Code repositories can enforce this with the deny rule below.
-```
+The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
+`devbook-sync` writes (`agents-section.md`), so do not restate them here. What follows
+is routing only, and none of it goes inside that section's markers.
 
 ## For a repository routing instructions file
 

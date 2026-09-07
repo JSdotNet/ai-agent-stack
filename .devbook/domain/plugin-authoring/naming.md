@@ -103,7 +103,7 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds fifteen `flow-*`, two `phase-*`, and seven `automation-*` skills,
+`delivery` holds fifteen `flow-*`, two `phase-*`, and nine `automation-*` skills,
 `devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet` holds three
 `fleet-*`, and `stack-guide` holds three `stack-*`.
 

@@ -30,7 +30,7 @@ and rollback boundaries, and the runtime validation target.
 - Check for security vulnerabilities — CVEs and advisories.
 - Identify the breaking changes in major versions, from the changelogs and release notes.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 2: Update Planning
 
@@ -40,7 +40,7 @@ and rollback boundaries, and the runtime validation target.
   deliberately deferred.
 - Raise major-version upgrades with the user before taking them.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 3: Implementation
 
@@ -48,7 +48,7 @@ and rollback boundaries, and the runtime validation target.
   package manager for npm, the `dotnet` CLI for the SDK.
 - Verify the lockfiles and the resolved dependency tree.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 4: Security Validation
 
@@ -57,7 +57,7 @@ and rollback boundaries, and the runtime validation target.
   vulnerabilities.
 - Document any exception to security policy.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 

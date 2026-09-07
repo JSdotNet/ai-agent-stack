@@ -17,8 +17,10 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 2. **Configuration chooses among behaviour the engine already implements.** It never
    introduces new behaviour. A repository that needs a different stage sequence writes a
    repo-native `flow-*` skill, which takes precedence for the categories it covers.
-3. **A lower layer never names a higher one.** The engine may name specialists and surfaces;
-   no specialist, content plugin, or surface is ever modified to know about the engine.
+3. **A lower layer never names a higher one, and the engine names no specialist.** It names
+   points, roles, and capabilities; a repository names the plugin that fills one. No
+   specialist, content plugin, or surface is ever modified to know about the engine, and the
+   `your-*` ids below are placeholders for whatever you installed, not plugins that exist.
 
 ## The Stack Config
 
@@ -30,23 +32,23 @@ and never edits another component's. `components` belongs to each component's ow
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
-      "architecture": "arc42:arc42",
-      "qa":           "qa:qa",
-      "domain":       "domain:domain",
-      "ux":           "ux:ux",
-      "docs":         "documentation:documentation",
+      "architecture": "your-architecture-plugin",
+      "qa":           "your-qa-plugin",
+      "domain":       "your-domain-plugin",
+      "ux":           "your-ux-plugin",
+      "docs":         "your-docs-plugin",
       "product":      null,
       "security":     null
     }
   },
   "extensions": {
     "session.start": [ "devbook:load-context" ],
-    "spec":          "arc42:arc42",
-    "implement":     "csharp-coding:coding",
-    "verify":        "csharp-coding:coding",
+    "spec":          "your-architecture-plugin:draft-spec",
+    "implement":     "your-coding-plugin:coding",
+    "verify":        "your-coding-plugin:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
-    "app.start":     { "provider": "qa:qa", "host": "aspire" },
-    "qa.run":        { "provider": "qa:qa" },
+    "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
+    "qa.run":        { "provider": "your-qa-plugin:qa" },
     "docs.update":   [ "devbook:sync-chapters" ],
     "flow.end":      [ "delivery:capture-improvement" ]
   },

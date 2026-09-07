@@ -51,7 +51,7 @@ All four live in `.github/ai-agent-stack.json`:
 ```json
 {
   "extensions": {
-    "implement": "csharp-coding:coding",
+    "implement": "your-coding-plugin:coding",
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }]
   },
   "gates": [{ "at": "spec", "when": "after", "purpose": "approval", "show": "artifact" }],
@@ -73,9 +73,11 @@ categories it covers.
 
 ## What it never depends on
 
-- **Specialist plugins.** `arc42`, `qa`, `csharp-coding` and the rest are bound as
-  roles per repository, never declared as dependencies — one missing specialist must not
-  demote all 32 skills. The reverse holds too: no specialist ever learns about `delivery`.
+- **Specialist plugins.** An architecture, QA, coding, domain, UX, or docs specialist is
+  bound as a role or a service per repository, never declared as a dependency — one missing
+  specialist must not demote all 32 skills. The engine names no specialist and none of them
+  is published from this marketplace. The reverse holds too: no specialist ever learns about
+  `delivery`.
 - **A tracker.** GitHub, Jira, or `.backlog/` chapters, whichever `delivery.tracker` names.
   Unbound, a flow runs to its file artifacts and opens nothing.
 - **A surface.** A dashboard, a canvas, and a headless collector are three implementations of

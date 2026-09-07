@@ -37,7 +37,7 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 - Expand `README.md` with the project description, architecture overview, setup steps, and
   contribution guide.
 
-**Agents:** `documentation:profile` *(preferred)*
+**Agents:** the `docs` role *(preferred)*
 
 ## Stage 3: MCP Configuration
 
@@ -55,8 +55,8 @@ gh repo create <org>/<name> --description "<description>" --private --clone
   project type.
 - Create the repository agent instructions file bound to the `repo-instructions` slot: tech
   stack, conventions, key patterns, agent guidance.
-- Add the repo-level instruction files under `.github/instructions/` with `spec-builder`'s
-  `create-instruction` skill when it is installed.
+- Add the repo-level instruction files under `.github/instructions/`, using an
+  asset-authoring skill when one is installed.
 
 **MCP:** `jsdotnet-guidelines-mcpserver`
 

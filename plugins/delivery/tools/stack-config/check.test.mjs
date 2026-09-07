@@ -26,13 +26,13 @@ test('the worked example from the surface contract validates', () => {
         check({
             bindings: {
                 'delivery.tracker': { provider: 'github' },
-                'delivery.roles': { architecture: 'arc42:arc42', ux: null },
+                'delivery.roles': { architecture: 'your-architecture-plugin', ux: null },
             },
             extensions: {
                 'session.start': ['devbook:load-context'],
-                spec: 'arc42:arc42',
+                spec: 'your-architecture-plugin:draft-spec',
                 'data.prepare': [{ run: 'repo:seed-test-data', 'on-failure': 'required' }],
-                'app.start': { provider: 'qa:qa', host: 'aspire' },
+                'app.start': { provider: 'your-qa-plugin:qa', host: 'aspire' },
             },
             policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2, 'pr.base': 'main' },
             gates: [

@@ -41,7 +41,7 @@ context, module, or service to `flow-create-module` or `flow-create-service`.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` when the layout rule needs
+`instructions/flow-execution-model.instructions.md`. the `architecture` role when the layout rule needs
 architecture interpretation. **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 1: Structure & Architecture Intake
@@ -52,7 +52,7 @@ architecture interpretation. **MCP:** `jsdotnet-guidelines-mcpserver`
   scripts, docs, and CI path filters.
 - Define the validation target for the resulting change.
 
-**Agents:** `arc42:arc42` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 2: Refactor Planning
 
@@ -62,7 +62,7 @@ architecture interpretation. **MCP:** `jsdotnet-guidelines-mcpserver`
 - Call out the risks: generated files, case-only renames, path-sensitive tooling, files that
   should not move at all.
 
-**Agents:** `arc42:arc42`, `csharp-coding:coding`
+**Agents:** the `architecture` role, the `implement` service
 
 ## Stage 3: Implementation
 
@@ -71,7 +71,7 @@ architecture interpretation. **MCP:** `jsdotnet-guidelines-mcpserver`
   encodes the old structure.
 - Leave behavior unchanged apart from the layout itself.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 

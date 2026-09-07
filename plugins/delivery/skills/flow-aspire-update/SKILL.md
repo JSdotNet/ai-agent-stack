@@ -39,7 +39,7 @@ pre-existing, then either fix them inside this run or agree with the user to pro
 those items explicitly excluded from the success criteria. Never upgrade over an unrecorded
 red baseline, and never decline the request over one.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 2: Plan Refinement
 
@@ -48,7 +48,7 @@ red baseline, and never decline the request over one.
 - Split the work into batches, low-risk first.
 - Finalize which new Aspire capabilities the run adopts.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Implementation
 
@@ -56,7 +56,7 @@ red baseline, and never decline the request over one.
 - Upgrade the AppHost integrations and the service references that follow them.
 - Resolve the breaking changes in configuration and wiring.
 
-**Agents:** `csharp-coding:coding` — **Skills:** `aspire`, `nuget-manager`
+**Agents:** the `implement` service
 
 ## Stage 4: New Feature Adoption
 
@@ -65,7 +65,7 @@ red baseline, and never decline the request over one.
 - Add or update the telemetry and health setup those features require.
 - Record the enabled features and their expected operational impact in the stage output.
 
-**Agents:** `csharp-coding:coding`, `arc42:arc42` — **Skills:** `aspire`, `open-telemetry`
+**Agents:** the `implement` service, the `architecture` role
 
 ## Final Phases (Shared)
 
@@ -74,7 +74,7 @@ QA Validation → Personal Validation → Create Pull Request → Documentation 
 Update → Summary. That file defines them; change them there, for every flow.
 
 A framework upgrade, so QA Validation covers startup health plus Playwright smoke checks on
-the critical paths the upgrade and the adopted features touch, under `qa:qa-monitor`. Capture
+the critical paths the upgrade and the adopted features touch, under the runtime monitor. Capture
 evidence only for adopted new functionality, or when a failure needs it.
 
 ## Surface Reporting

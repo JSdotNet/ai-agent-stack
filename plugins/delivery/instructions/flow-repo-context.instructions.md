@@ -8,8 +8,8 @@ description: Defines the optional .claude/flow-context.md convention a consuming
 ## Purpose
 
 - Give a consuming repository **one** optional file that states how its application is
-  started and validated, so the `qa:qa` agent and the `aspire` / `aspire-run` skills stop
-  guessing the AppHost or interrupting a run to ask the user.
+  started and validated, so the `app.start` and `qa.run` providers stop guessing the AppHost
+  or interrupting a run to ask the user.
 - Define the convention **once** here, so a maintainer edits this file instead of
   re-describing repo context in every `flow-*/SKILL.md`.
 - Keep the file strictly about **runtime and validation context**. Model choice is personal
@@ -132,7 +132,7 @@ of a stage attempting discovery and failing:
 `**Runnable application:** none` alone is sufficient to trigger the skip, so a repository
 that writes only the `## Application` line still behaves correctly. When it is present, the
 QA Validation stage is marked `skipped` with the reason recorded, and no startup, Playwright
-run, or `qa:qa` delegation is attempted.
+run, or `qa.run` delegation is attempted.
 
 ## Rules
 

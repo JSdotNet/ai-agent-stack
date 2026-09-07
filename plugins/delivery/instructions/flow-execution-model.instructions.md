@@ -104,11 +104,11 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
    conclusion is small belongs in a sub-agent, because the owner session only needs the
    conclusion but pays for the output on every remaining turn of the run.
 3. **Run a background sub-agent only for genuinely concurrent long-running work** — in
-   practice, `qa:qa-monitor` tailing Aspire logs while Playwright drives scenarios. Launch
+   practice, the runtime monitor tailing Aspire logs while Playwright drives scenarios. Launch
    it with the `Agent` tool's `run_in_background`, steer it with `SendMessage`, and do not
    background work merely to save context.
 4. **Stop every background sub-agent you started, in the same phase that started it.**
-   `qa-monitor` is built to poll until told otherwise — its own instructions say not to stop
+   The runtime monitor is built to poll until told otherwise — its own instructions say not to stop
    monitoring — so nothing ends it on its own. Ask it for its final summary with
    `SendMessage`, then end it with `TaskStop`. A monitor left running keeps polling Aspire
    after the run has moved on, and a phase must never complete with a background agent it

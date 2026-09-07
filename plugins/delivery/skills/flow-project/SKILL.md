@@ -38,7 +38,7 @@ framework preferences, and the Aspire services to include.
   `resources/flow-context-template.md`. A repository with nothing to run declares that in the
   file rather than omitting it.
 
-**Agents:** `csharp-coding:coding` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `implement` service — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 2: GitHub Actions Workflows
 
@@ -47,7 +47,7 @@ framework preferences, and the Aspire services to include.
 - Give every workflow least-privilege token scopes.
 - Set up the environments, with required reviewers where they are needed.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 3: Specification & Architecture Intake
 
@@ -66,7 +66,7 @@ Escalate instead when the project needs a documented target architecture or a re
 decision in its own right: recommend `flow-architecture`, `flow-arc42`, or `flow-adr` and ask
 the user.
 
-**Agents:** `arc42:arc42` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 4: Tooling & Dependencies
 
@@ -74,7 +74,7 @@ the user.
 - Configure the build and test pipelines, the linting and code quality tools, and the logging
   and observability setup.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 5: Implementation
 
@@ -88,7 +88,7 @@ AppHost configuration, service discovery, and health checks.
   checks, and generate the boilerplate around it.
 - Set up the testing framework with the first unit tests and their fixtures.
 
-**Agents:** `csharp-coding:coding` — **Skills:** `aspire`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -99,7 +99,7 @@ Update → Summary. That file defines them; change them there, for every flow.
 A new runnable scaffold, so QA Validation runs with capture: start the AppHost, confirm the
 dashboard and the service health endpoints are green — default `localhost:18888`, or the
 entry points Stage 1 declared in `.claude/flow-context.md` — confirm database connectivity,
-and run Playwright smoke checks on the example service under `qa:qa-monitor`.
+and run Playwright smoke checks on the example service under the runtime monitor.
 
 Two expectations are specific to this scaffold: Build & Test compiles the AppHost, service,
 and test projects with every NuGet dependency resolved, and runs the unit suite as the

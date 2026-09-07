@@ -33,9 +33,9 @@ so, when its specialist agent is not installed.
 
 - Confirm no dedicated `flow-*` skill matches the category, plugin-provided or repo-native.
 - Stop and invoke the matching skill instead when one matches with unmet preconditions.
-- Select the closest specialist agent: `csharp-coding:coding` for implementation,
-  `arc42:arc42` for architecture-adjacent work, `documentation:documentation` for
-  documentation, `qa:qa` for test and validation work.
+- Select the closest specialist agent: the `implement` service for implementation,
+  the `architecture` role for architecture-adjacent work, the `docs` role for
+  documentation, the `qa` role for test and validation work.
 - Determine the change kind — code-modifying or documentation/config — since it selects the
   closing tier and the stage list passed to `start_run`.
 

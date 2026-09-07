@@ -23,10 +23,10 @@ flowchart TD
     U --> L["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Repository Creation (Manual) | — | — |
-| README | `documentation:profile`, default agent | — |
+| README | the `docs` role, default agent | — |
 | MCP Configuration | Default agent | `jsdotnet-guidelines-mcpserver`, `jsdotnet-design-mcpserver` *(enable for future UX flows)*, `microsoft-learn`, `playwright` |
 | Repository Instructions | Default agent | `jsdotnet-guidelines-mcpserver` |
 | Branch Protection | Default agent | — |
@@ -56,15 +56,15 @@ flowchart TD
     U --> L["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| GitHub Folder Setup (Foundation) | `csharp-coding:coding` | `jsdotnet-guidelines-mcpserver` |
-| GitHub Actions Workflows | `csharp-coding:coding` | — |
-| Specification & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Tooling & Dependencies | `csharp-coding:coding` | `microsoft-learn` |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
+| GitHub Folder Setup (Foundation) | the `implement` service | `jsdotnet-guidelines-mcpserver` |
+| GitHub Actions Workflows | the `implement` service | — |
+| Specification & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Tooling & Dependencies | the `implement` service | `microsoft-learn` |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -88,14 +88,14 @@ flowchart TD
     U --> J["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| MVP Scope Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `arc42:arc42` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| MVP Scope Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | the `architecture` role | — |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -119,14 +119,14 @@ flowchart TD
     U --> K["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Dependency Analysis | `csharp-coding:coding` | `microsoft-learn` |
-| Update Planning | `csharp-coding:coding` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Security Validation | `csharp-coding:coding` | — |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
+| Dependency Analysis | the `implement` service | `microsoft-learn` |
+| Update Planning | the `implement` service | — |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Security Validation | the `implement` service | — |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -150,14 +150,14 @@ flowchart TD
     U --> K["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Upgrade Intake & Baseline | `csharp-coding:coding` | `microsoft-learn` |
-| Plan Refinement | `arc42:arc42` | `microsoft-learn` |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| New Feature Adoption | `csharp-coding:coding`, `arc42:arc42` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture only for adopted new functionality)* |
+| Upgrade Intake & Baseline | the `implement` service | `microsoft-learn` |
+| Plan Refinement | the `architecture` role | `microsoft-learn` |
+| Implementation | the `implement` service | `microsoft-learn` |
+| New Feature Adoption | the `implement` service, the `architecture` role | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only for adopted new functionality)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -178,11 +178,11 @@ flowchart TD
     U --> H["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Goal & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Architecture Investigation | `arc42:arc42` | — |
-| Drafting & Review | `arc42:arc42` | — |
+| Goal & Guideline Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Architecture Investigation | the `architecture` role | — |
+| Drafting & Review | the `architecture` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -203,11 +203,11 @@ flowchart TD
     U --> H["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Context & Guideline Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Section Drafting | `arc42:arc42` | — |
-| Cross-Section Review | `arc42:arc42` | — |
+| Context & Guideline Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Section Drafting | the `architecture` role | — |
+| Cross-Section Review | the `architecture` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -228,11 +228,11 @@ flowchart TD
     U --> H["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Decision Context Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| ADR Drafting | `arc42:arc42` | — |
-| Traceability Review | `arc42:arc42` | — |
+| Decision Context Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| ADR Drafting | the `architecture` role | — |
+| Traceability Review | the `architecture` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -253,11 +253,11 @@ flowchart TD
     U --> H["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Debt Context Retrieval | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| TDR Drafting | `arc42:arc42` | — |
-| Risk & Follow-Up Review | `arc42:arc42` | — |
+| Debt Context Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| TDR Drafting | the `architecture` role | — |
+| Risk & Follow-Up Review | the `architecture` role | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -280,13 +280,13 @@ flowchart TD
     U --> I["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Specification & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Specification & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -310,14 +310,14 @@ flowchart TD
     U --> J["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Bug Intake & Reproduction | `csharp-coding:coding`, `qa:qa` (runtime repro) | — |
-| Root Cause Analysis | `csharp-coding:coding` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Bug Intake & Reproduction | the `implement` service, the `qa.run` provider (runtime repro) | — |
+| Root Cause Analysis | the `implement` service | — |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture only when needed for failure or on request)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -342,17 +342,17 @@ flowchart TD
     U --> J["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Structure & Architecture Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Refactor Planning | `arc42:arc42`, `csharp-coding:coding` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Structure & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Refactor Planning | the `architecture` role, the `implement` service | — |
+| Implementation | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | `documentation:documentation` | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
+| Documentation Update | the `docs` role | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -374,14 +374,14 @@ flowchart TD
     U --> J["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `arc42:arc42` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Specification Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | the `architecture` role | — |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -405,14 +405,14 @@ flowchart TD
     U --> J["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | `arc42:arc42` | `jsdotnet-guidelines-mcpserver` |
-| Implementation Planning | `arc42:arc42` | — |
-| Implementation | `csharp-coding:coding` | `microsoft-learn` |
-| Build & Test | `csharp-coding:coding` | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` | `playwright` *(capture for new functionality only)* |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Specification Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Implementation Planning | the `architecture` role | — |
+| Implementation | the `implement` service | `microsoft-learn` |
+| Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Work Item Update | *(default)* | — |
@@ -441,16 +441,16 @@ flowchart TD
     U --> S["Summary"]
 ```
 
-| Phase | Agents | MCP servers |
+| Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Routing Check | `flow-runner` agent | — |
 | Plan | The closest specialist agent for the task category | `jsdotnet-guidelines-mcpserver` *(when the task touches governed assets)* |
 | Execute | The closest specialist agent for the task category | `microsoft-learn` *(targeted lookups only)* |
 | Review & Recommend | The closest specialist agent for the task category | — |
-| Build & Test | `csharp-coding:coding` *(code-modifying change kind only)* | `microsoft-learn` *(targeted remediation only)* |
-| QA Validation | `qa:qa`, `qa:qa-monitor`, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
+| Build & Test | the `implement` service *(code-modifying change kind only)* | `microsoft-learn` *(targeted remediation only)* |
+| QA Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | `documentation:documentation` *(code-modifying change kind only)* | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
+| Documentation Update | the `docs` role *(code-modifying change kind only)* | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |

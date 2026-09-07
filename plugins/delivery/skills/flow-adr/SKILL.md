@@ -1,6 +1,6 @@
 ---
 name: flow-adr
-description: 'Run ADR creation. Uses the arc42:arc42 agent for decision documentation plus `jsdotnet-guidelines-mcpserver` to retrieve relevant project guidance and existing ADR context first.'
+description: 'Run ADR creation. Routes decision documentation to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` to retrieve relevant project guidance and existing ADR context first.'
 ---
 
 # Flow: Architectural Decision Record
@@ -22,7 +22,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Capture the constraints and decision drivers that govern the change.
 - Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** `arc42:arc42` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 2: ADR Drafting
 
@@ -31,7 +31,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Capture consequences, risks, and rollback notes.
 - Link the draft to the retrieved guideline and ADR context.
 
-**Agents:** `arc42:arc42` — **Skills:** `create-architectural-decision-record`
+**Agents:** the `architecture` role
 
 ## Stage 3: Traceability Review
 
@@ -39,7 +39,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Identify dependent blueprint, arc42, or TDR updates.
 - Leave the ADR review-ready, with its follow-up actions explicit.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Final Phases (Shared)
 

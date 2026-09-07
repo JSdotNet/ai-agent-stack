@@ -8,10 +8,9 @@ description: Defines the model-selection categories the flow-runner uses to pick
 ## Purpose
 
 - Make the `flow-runner` agent (`agents/flow-runner.agent.md`) the **single** place that
-  chooses a model for every step of a `flow-*` run. Every other agent used by an
-  flow (`arc42:arc42`, `csharp-coding:coding`, `qa:qa`,
-  `qa:qa-monitor`, `documentation:profile`, etc.) has no
-  `model` in its own frontmatter for this reason — pinning a model on the agent itself would
+  chooses a model for every step of a `flow-*` run. Every specialist agent a flow delegates
+  to — whichever plugin a repository bound to a role or a service — is expected to carry no
+  `model` in its own frontmatter for this reason: pinning a model on the agent itself would
   create a second, conflicting source of truth. Only `flow-runner.agent.md` pins its own
   model, because it is the one agent that must run under a fixed, known model to reliably
   drive the rest of the process.
@@ -63,26 +62,27 @@ the run, not as a harmless simplification.
 
 ## Categories
 
-Each stage in a `flow-*` skill delegates to one or more agents (its `**Agents:**` line).
-Every agent used across the `flow-*` skills maps to a category below. Add new agents to this
-table when a new `flow-*` skill introduces one.
+Each stage in a `flow-*` skill delegates to one or more roles or services (its `**Agents:**`
+line). Every one used across the `flow-*` skills maps to a category below. Add a new entry to
+this table when a new `flow-*` skill introduces one.
 
-Category follows the **work**, not only the agent. Most agents appear once, so the agent
-names the category on its own. `csharp-coding:coding` is the exception, because the same
-agent both runs the suites and repairs them: **the stage decides**. Build & Test resolves it
+Category follows the **work**, not only the point. Most points appear once, so the point
+names the category on its own. `implement` and `verify` are the exception, because a
+repository usually binds both to the same provider, and that one agent both runs the suites
+and repairs them: **the stage decides**. Build & Test resolves it
 to `sonnet`; Implementation — including the fix for a build that Build & Test just returned
 red — resolves it to `opus`. When a stage could read either way, resolve to the category
 whose **Typical Stages** names it.
 
-| Category | Typical Stages | Agents | Model | Rationale |
+| Category | Typical Stages | Roles & services | Model | Rationale |
 | --- | --- | --- | --- | --- |
-| **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | `arc42:arc42` | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
-| **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | `csharp-coding:coding` | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
-| **Testing, QA & Monitoring** | Build & Test, QA Validation, runtime monitoring | `qa:qa`, `qa:qa-monitor`, `csharp-coding:coding` *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
-| **Domain Design** | Bounded-context and boundary review during service/module creation | `domain:domain` | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
-| **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Summary | `documentation:profile` | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
+| **Architecture & Design** | Architecture & Design intake, ADR/TDR/arc42/Blueprint drafting | the `architecture` role, the `spec` service | `opus` | Trade-off analysis and long-term design decisions warrant the strongest reasoning available. |
+| **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | the `implement` service | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
+| **Testing, QA & Monitoring** | Build & Test, QA Validation, runtime monitoring | the `qa` role, the `app.start` and `qa.run` services, the runtime monitor, the `verify` service *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
+| **Domain Design** | Bounded-context and boundary review during service/module creation | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
+| **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Summary | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
 | **Human-in-the-Loop** | Personal Validation | *(none)* | *(none)* | No agent and no model: this phase always hands control back to the user. |
-| **Fallback / Unclassified** | Any stage whose agent is not yet listed above, and any `(default)` stage with no clear category match | *(any)* | *(session default)* | Let the session's own model run it until the agent is added to this table — safer than guessing a family for an uncategorized case. |
+| **Fallback / Unclassified** | Any stage whose role or service is not yet listed above, and any `(default)` stage with no clear category match | *(any)* | *(session default)* | Let the session's own model run it until the entry is added to this table — safer than guessing a family for an uncategorized case. |
 
 Stages the flow-runner performs itself — Create Pull Request, Summary, and Scope Discovery's
 decision half — have no category, because they run inline and inline stages always run on the
@@ -96,12 +96,12 @@ that genuinely move cost today are **Testing, QA & Monitoring** (`sonnet`) and *
 & Low-Complexity** (`haiku`). Expect a run's `tokenUsage.models` to show `opus` plus `sonnet`
 whenever Build & Test or QA Validation ran.
 
-A stage may list agents from more than one category (for example `flow-bug`'s "Bug Intake &
-Reproduction", naming `csharp-coding:coding` and `qa:qa`). Resolve the model per named
-agent, not once per stage, so each
-agent still gets its own category's model — and for the one agent that spans two categories,
-per named agent **in that stage**, so the same agent can be `sonnet` in Build & Test and
-`opus` in Implementation within a single run.
+A stage may list entries from more than one category (for example `flow-bug`'s "Bug Intake &
+Reproduction", naming the `implement` service and the `app.start` service). Resolve the model
+per named entry, not once per stage, so each still gets its own category's model — and where
+one provider fills both `implement` and `verify`, resolve per named entry **in that stage**,
+so the same agent can be `sonnet` in Build & Test and `opus` in Implementation within a
+single run.
 
 ## When to Leave the Model Unset
 
@@ -137,7 +137,7 @@ None of the agents invoked by a flow pin their own `model`, so there is no
 "agent's pinned model" tier to consider — the flow-runner's resolution above is the only
 source of truth. Apply the resolved model explicitly wherever the flow-runner controls it:
 the `model` parameter on every `Agent` call it makes for that stage, including background
-sub-agents such as the parallel `qa:qa-monitor`.
+sub-agents such as the parallel runtime monitor.
 
 ## Personal Global Override File
 

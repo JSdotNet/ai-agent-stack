@@ -36,12 +36,12 @@ The first fails on a manifest, agent, or hook shape a host rejects or a decision
 reports body budgets. The second fails on a chapter whose `meta` block or reference does not
 resolve.
 
-`--check` is the gate; refreshing `_meta/` is a separate, deliberate pass. Never regenerate in
-the same commit as a chapter edit — two branches that each touch one chapter both rewrite the
-same JSON, and the conflict is only resolvable by re-running the generator. When the indexes
-need to be current, run `node plugins/devbook/tools/devbook-meta/build.mjs` on its own and
-commit only what it wrote. This repository ships neither refresh path the convention asks for
-— no scheduled workflow, no on-demand script — so that pass is by hand. Full rule:
+`--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
+branches that each touch one chapter both rewrite the same JSON, and the conflict is only
+resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
+`devbook-check` routine refreshes the indexes daily and opens a pull request when they moved.
+`.claude/settings.json` denies the folder to Claude Code's file tools, and `AGENTS.md` states
+the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook/instructions/devbook-derived-artifacts.instructions.md`.
 
 ## Committing

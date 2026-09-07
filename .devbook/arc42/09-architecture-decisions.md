@@ -540,7 +540,7 @@ by accident:
 
 | Kind | Why it exceeds by nature |
 | --- | --- |
-| `flow-*`, `phase-*`, `fleet-*`, `automation-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
+| `flow-*`, `phase-*`, `fleet-*`, `schedule-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
 | `devbook-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
 | The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
@@ -740,52 +740,66 @@ Migration `006-drop-backlog` is the one asset the rename could not simply follow
 contract version are unchanged, because a shipped migration is never rewritten into something
 different, only made to keep working.
 
-## Routines Are Their Own Plugin
+## The Unattended Lane Is Its Own Plugin
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#routine", ".devbook/arc42/05-building-block-view.md#routine-plugin", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/tech/hosts.md#claude-code-routines"]
+related: [".devbook/domain/plugin-authoring/naming.md#schedule", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
 ```
 
-The schedules that fire `delivery`'s automations and `devbook`'s check and refresh land in a
-`routines` plugin that ships triggers and no procedure, declares no dependency, and names
-three plugins.
+Everything that runs with nobody watching lands in one plugin, `delivery-schedule`: the nine
+entry points that were `delivery`'s `automation-*` skills, and the triggers that fire them,
+which were a `routines` plugin beside it. One prefix, `schedule-*`. It depends on `delivery`
+and names `devbook`.
 
-The alternative was a routine file beside each procedure — `delivery/routines/`,
-`devbook/routines/` — and one install skill somewhere. That spreads a new asset kind across
-plugins that would each have to learn it, and puts the install skill in a plugin that then
-names every other. The [guide](#the-guide-names-every-plugin-and-depends-on-none) already
-settled that shape: a plugin whose job is to name across layers sits beside them, depends on
-none, and reports what it cannot find. Two `automation-*` skills were added to `delivery`
-rather than written as routine prompts, because a routine that carries its own procedure is
-the duplication the split exists to prevent.
+The first shape had the procedures inside the engine and the triggers outside it, because a
+trigger names across layers and the engine may not. That kept the layer rule and split one
+subject: nine skills no attended flow ever reaches sat in the engine, and the plugin that
+fired them could not be installed with them in one act. Merging them upward keeps the layer
+rule the other way round — the extension names the engine, never the reverse — and makes the
+subject one folder, one dependency, one enable. It is the shape
+[fan-out](#fan-out-is-its-own-plugin) already has, for the same reason: an L1 extension that
+owns no flow, holds no gate, and adds no extension point.
 
-**A routine is a trigger and never a procedure.** That is the rule the plugin exists to keep:
-a prompt names a skill and its inputs, and one preamble names the unattended rules once. A
-routine never schedules a `flow-*` skill, because a flow ends at Personal Validation and no
-routine can pass a gate. The surface contract's unattended rule already says what happens at
-a gate nobody can answer — park with a brief — and a routine parks the same way, as a draft
-pull request.
+**A schedule is a trigger and never a procedure.** That is the rule the plugin exists to keep:
+a prompt names an entry point and its inputs, and one preamble names the unattended rules
+once. A schedule never fires a `flow-*` skill, because a flow ends at Personal Validation and
+no unattended run can pass a gate. The surface contract's unattended rule already says what
+happens at a gate nobody can answer — park with a brief — and a scheduled run parks the same
+way, as a draft pull request. Two entry points were written as skills rather than as prompts
+for exactly this reason: a trigger that carries its own procedure is the duplication the rule
+exists to prevent.
+
+**`schedule-` is the name because neither host's is.** Claude Code calls the capability
+*Routines*; the GitHub Copilot app calls it *Automations*. The old split used both words for
+two different things, which made each half read as one host's product. Naming says a host's
+word is recorded as an alias rather than adopted, so the term is *schedule* and both are
+aliases — one catalog, either host, no branch.
 
 **It names a host capability, and that is a divergence taken on purpose.**
 [No host profile plugins](#no-host-profile-plugins) ended host-naming, and a cron-scheduled
-cloud session is one host's capability. The catalog stays host-neutral data — a cadence, a
-target, a prompt — and only the scheduler resolution knows which tool answers, resolved from
-the live tool list the way a surface is, with none a normal outcome that prints the prompts
-for a person to paste. The one host fact the plugin writes down is the name of that tool and
-of the settings file a cloud session needs to load the marketplace, in the catalog contract,
-because a sync skill that could not say either would schedule nothing.
+cloud session is a host capability. The catalog stays host-neutral data — a cadence, a target,
+a prompt — and only the scheduler resolution knows which tool answers, resolved from the live
+tool list the way a surface is, with none a normal outcome that prints the prompts for a
+person to paste. The one host fact the plugin writes down is the name of that tool and of the
+settings file a cloud session needs to load the marketplace, in the catalog contract, because
+a sync skill that could not say either would schedule nothing.
 
-**Nothing personal reaches the repository.** Routine ids, the environment, and the model are
-account facts; matching on the routine's name makes every operation idempotent without a
+**Nothing personal reaches the repository.** Scheduler ids, the environment, and the model are
+account facts; matching on the schedule's name makes every operation idempotent without a
 ledger, so the stamp records the selection and cadence overrides and nothing else. That is the
 same line the devbook stamp draws about installed plugin versions, drawn for the same reason.
 
-Consequence: **enabling `routines` schedules nothing.** A repository selects routines through
-`routine-sync`, which refuses a target whose plugin the repository's committed host settings do
-not enable. And a routine's first run is the only proof that the cloud session loaded the
-marketplace at all — recorded as `trial` in [hosts](../tech/hosts.md#claude-code-routines)
-until one has.
+Consequence: **enabling `delivery-schedule` schedules nothing.** A repository selects through
+`schedule-sync`, which refuses a target whose plugin the repository's committed host settings
+do not enable. And a first run is the only proof that the cloud session loaded the marketplace
+at all — recorded as `trial` in [hosts](../tech/hosts.md#scheduled-cloud-sessions) until one
+has.
+
+Consequence: **`components.routines` is now `components.schedule`.** The plugin that wrote the
+old key landed and merged the same day and never left `0.1.0`, so the rename ships without a
+migration rather than with one nothing would run. A repository that did stamp the old key
+renames it by hand and re-runs `schedule-sync`, which rewrites the entry either way.
 
 ## One Rule, One Wrapper Per Host
 
@@ -911,7 +925,7 @@ neither — no `.github/`, no `build/` — and `CLAUDE.md` had filled the gap by
 session to regenerate `_meta/` after a chapter edit, which is the one thing the convention
 forbids by name.
 
-**The refresh is automation's, and only automation's.** The `devbook-check` routine already
+**The refresh is automation's, and only automation's.** The `devbook-check` schedule already
 does it: check, fix the Markdown, refresh the indexes, open a pull request when they moved. So
 this repository keeps one refresh path rather than two, and the on-demand half is deliberately
 absent. A session that could refresh is a session that will, in the same commit as its chapter
@@ -924,13 +938,13 @@ Three things enforce it, because prose alone decays across a long session:
   all five scoped folders. `build.mjs` is a subprocess and reaches the files anyway.
 - `AGENTS.md` states the rule for Copilot. Content exclusion is not an equivalent lever — it
   does not apply to Copilot CLI or to agent mode — so prose is the whole mechanism there.
-- `CLAUDE.md` names the routine as the owner, at the point where the check is run.
+- `CLAUDE.md` names the schedule as the owner, at the point where the check is run.
 
 **The `AGENTS.md` section diverges from its template, in two lines.** `agents-section.md`
 names `./build/Update-DevbookIndex.ps1` and `.github/tools/devbook-meta/build.mjs`: correct in
 a repository that ran `devbook-sync`, wrong in the one that authors the convention and vendors
 the generator under `plugins/devbook/tools/`. The section here names this repository's real
-path and the routine instead of the script. It was written by hand, so no stamp claims it and
+path and the schedule instead of the script. It was written by hand, so no stamp claims it and
 no reconcile will report it as customized; a later `devbook-sync` run over this repository
 would overwrite it with the template's paths, and that is the moment to make the template
 resolve the generator location the way `generatorPath` now does.

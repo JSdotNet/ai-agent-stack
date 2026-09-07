@@ -91,22 +91,28 @@ related: [".devbook/ai/02-deliver.md#flow-skills"]
 A staged procedure for one category of work, run start to finish inside one session, ending at
 the personal validation gate. `flow-<category>`, one per category.
 
-Five neighbours share the vocabulary and are not interchangeable with it:
+Four neighbours share the vocabulary and are not interchangeable with it:
 
 | Prefix | Scope |
 | --- | --- |
 | `flow-` | One session, delegating to subagents. Never to another session. |
 | `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
 | `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
-| `automation-` | A schedulable entry point that picks its own input, then runs a flow. |
-| `routine-` | The trigger for a schedulable entry point: a cadence and a prompt, run in a cloud session with nobody watching. Names a procedure; never is one. |
+| `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 | `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds fifteen `flow-*`, two `phase-*`, and nine `automation-*` skills,
-`devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet` holds three
-`fleet-*`, `stack-guide` holds three `stack-*`, and `routines` holds three `routine-*`.
+`delivery` holds fifteen `flow-*` and two `phase-*`, `delivery-schedule` holds twelve
+`schedule-*`, `devbook-flows` holds five `flow-*`, one per adopted knowledge folder, `fleet`
+holds three `fleet-*`, and `stack-guide` holds three `stack-*`.
+
+`automation-` and `routine-` were the two halves of `schedule-` until 2026-09-07: the first
+named the procedure in `delivery`, the second the trigger in a plugin beside it. They were
+merged because they were the same subject split across two folders, and because the words are
+the two hosts' names for one capability — Routines in Claude Code, Automations in the GitHub
+Copilot app — so adopting either would have named a host. Both are recorded as aliases of
+[Schedule](#schedule) and neither survives as a prefix.
 
 A grep still finds the string, and never as a skill name: only the decision records that say
 what was renamed. `flow-runner`'s allowlist kept the `orch-dashboard` tool patterns for one
@@ -141,26 +147,33 @@ A fleet skill owns no run and holds no gate. `fleet-resolve-issue` trades Person
 for a narrower guarantee, not for nothing: the pull request is the review surface, and a change
 that cannot demonstrate itself never reaches one.
 
-## Routine
+## Schedule
 
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/05-building-block-view.md#routine-plugin", ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"]
+aliases: [routine, automation]
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin"]
 ```
 
-A schedule that fires a procedure the stack already ships, in a cloud session that starts
-with nothing but the repository: a cadence, a target skill, the plugins that skill needs, and
-a prompt self-contained enough to run it with nobody watching. A routine is a trigger and
-never a procedure — the `automation-*` skill is what runs; the routine is what asks.
+A trigger that fires a procedure the stack already ships, in a cloud session that starts with
+nothing but the repository: a cadence, a target skill, the plugins that skill needs, and a
+prompt self-contained enough to run it with nobody watching. A schedule is a trigger and never
+a procedure — the `schedule-*` entry point is what runs; the schedule is what asks.
 
-Three words carry the shape. The **catalog** is the set of routine files a plugin ships. The
-**preamble** is the unattended rules every prompt starts with, stated once. The **scheduler**
-is whatever the live session exposes that turns a name, a cron expression, a repository, and a
-prompt into a scheduled session — resolved by capability, and absent as a normal outcome.
+Both hosts ship the capability under their own name: **Routines** in Claude Code,
+**Automations** in the GitHub Copilot app. Neither word is adopted, because adopting one would
+name a host; *schedule* is the term and both are aliases of it.
 
-A routine schedules an `automation-*`, a `fleet-*`, or a read-and-report skill, never a
-[flow](#flow-skill): a flow ends at a gate, and a routine parks where a gate would be.
+Four words carry the shape. An **entry point** is a `schedule-*` skill that picks its own
+input, so it needs no person to hand it one. The **catalog** is the set of schedule files a
+plugin ships. The **preamble** is the unattended rules every prompt starts with, stated once.
+The **scheduler** is whatever the live session exposes that turns a name, a cron expression, a
+repository, and a prompt into a scheduled session — resolved by capability, and absent as a
+normal outcome.
+
+A schedule names an entry point, a `fleet-*` skill, or a read-and-report skill, never a
+[flow](#flow-skill): a flow ends at a gate, and an unattended run parks where a gate would be.
 
 ## Extension Point
 

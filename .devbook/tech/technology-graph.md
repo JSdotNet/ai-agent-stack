@@ -14,7 +14,7 @@ technologies themselves live one chapter each in the layer files; this file is t
 | File | Covers |
 | --- | --- |
 | [shared.md](shared.md) | Cross-layer formats and protocols: Markdown, the Model Context Protocol, MCP Apps. |
-| [hosts.md](hosts.md) | The platforms that read or run an asset: the two plugin APIs, the Claude Code CLI, the scheduler `routines` drives, and the Copilot extension SDK the canvases import. |
+| [hosts.md](hosts.md) | The platforms that read or run an asset: the two plugin APIs, the Claude Code CLI, the scheduler `delivery-schedule` drives, and the Copilot extension SDK the canvases import. |
 | [tooling.md](tooling.md) | What the executable parts run on: Node, PowerShell. |
 
 Three layers is the whole stack. A fourth appears only when a technology genuinely belongs to
@@ -37,7 +37,7 @@ graph LR
     claudeCli[Claude Code CLI]
     copilotApi[Copilot Plugin API]
     copilotSdk[Copilot Extension SDK]
-    routines[Claude Code Routines]
+    scheduler[Scheduled Cloud Sessions]
   end
   subgraph tooling
     node[Node]
@@ -45,13 +45,13 @@ graph LR
   end
   mcpApps --> mcp
   claudeCli --> claudeApi
-  routines --> claudeApi
+  scheduler --> claudeApi
   copilotSdk --> copilotApi
   pwsh --> node
   classDef adopted fill:#cde7c9,stroke:#3c7a35,color:#1c3a19;
   classDef trial fill:#fff1c2,stroke:#b58a00,color:#4a3800;
   class markdown,mcp,claudeApi,copilotApi,node,pwsh adopted;
-  class mcpApps,claudeCli,copilotSdk,routines trial;
+  class mcpApps,claudeCli,copilotSdk,scheduler trial;
 ```
 
 ## How to Read It

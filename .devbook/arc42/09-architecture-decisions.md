@@ -834,8 +834,12 @@ Three things follow, and each is deliberate:
   the plugin host having no rules component.
 - **A rule that already has one home both hosts read stays there.** The topic set is plugin
   authoring only.
-- **The root file is `AGENTS.md`.** `CLAUDE.md` becomes an `@AGENTS.md` import, because
-  Copilot reads `AGENTS.md` natively and Claude does not. That is the same choice
+- **The root file is `AGENTS.md`, and each host gets a root wrapper pointing at it.**
+  `CLAUDE.md` is an `@AGENTS.md` import; `.github/copilot-instructions.md` is one sentence
+  telling Copilot to read it. Only the Claude wrapper is load-bearing — Copilot resolves
+  `AGENTS.md` natively and Claude does not — but the root files then follow the same
+  wrapper-per-host shape as the rules above, and Copilot still lands on the rules on a
+  surface that does not resolve the root file. That is the same choice
   [devbook Owns One Section of AGENTS.md](#devbook-owns-one-section-of-agentsmd) made for the
   file devbook writes into, and it makes the `repo-instructions` slot resolve here for the
   first time.

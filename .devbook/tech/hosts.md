@@ -70,3 +70,24 @@ nothing here breaks when it is absent.
 not the import — it is whether these pages render the same way through `createCanvas` as they
 did over the MCP viewer they were written against. `delivery-canvas` kept both transports until
 it became canvas-only, so there is no longer a second one to answer that on its behalf.
+
+## Claude Code Routines
+
+```meta
+status: trial
+type: platform
+date: 2026-09-07
+depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
+related: [".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin", ".devbook/arc42/05-building-block-view.md#routine-plugin"]
+```
+
+Cron-scheduled cloud sessions: a name, a five-field UTC expression at one hour minimum, a
+repository, a tool allowlist, a model, an environment, and one prompt, with no local files, no
+locally configured MCP servers, and no memory between runs. The second platform here an asset
+*drives* rather than is read by: `routines` creates and updates them through the scheduler
+tool the session exposes, and reads their runs and logs back.
+
+`trial`: nothing in this repository has fired one. The unverified part is not the API — it is
+whether a cloud session loads this marketplace from the repository's committed settings, and a
+routine whose session starts without its skill has scheduled nothing. Its absence costs the
+schedule, never the procedure: every target runs by hand exactly as before.

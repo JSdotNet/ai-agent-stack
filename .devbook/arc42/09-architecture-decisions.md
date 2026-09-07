@@ -685,3 +685,50 @@ Migration `006-drop-backlog` is the one asset the rename could not simply follow
 *before* a repository is renamed, so it now matches both workflow spellings; its id and its
 contract version are unchanged, because a shipped migration is never rewritten into something
 different, only made to keep working.
+
+## Routines Are Their Own Plugin
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#routine", ".devbook/arc42/05-building-block-view.md#routine-plugin", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/tech/hosts.md#claude-code-routines"]
+```
+
+The schedules that fire `delivery`'s automations and `devbook`'s check and refresh land in a
+`routines` plugin that ships triggers and no procedure, declares no dependency, and names
+three plugins.
+
+The alternative was a routine file beside each procedure — `delivery/routines/`,
+`devbook/routines/` — and one install skill somewhere. That spreads a new asset kind across
+plugins that would each have to learn it, and puts the install skill in a plugin that then
+names every other. The [guide](#the-guide-names-every-plugin-and-depends-on-none) already
+settled that shape: a plugin whose job is to name across layers sits beside them, depends on
+none, and reports what it cannot find. Two `automation-*` skills were added to `delivery`
+rather than written as routine prompts, because a routine that carries its own procedure is
+the duplication the split exists to prevent.
+
+**A routine is a trigger and never a procedure.** That is the rule the plugin exists to keep:
+a prompt names a skill and its inputs, and one preamble names the unattended rules once. A
+routine never schedules a `flow-*` skill, because a flow ends at Personal Validation and no
+routine can pass a gate. The surface contract's unattended rule already says what happens at
+a gate nobody can answer — park with a brief — and a routine parks the same way, as a draft
+pull request.
+
+**It names a host capability, and that is a divergence taken on purpose.**
+[No host profile plugins](#no-host-profile-plugins) ended host-naming, and a cron-scheduled
+cloud session is one host's capability. The catalog stays host-neutral data — a cadence, a
+target, a prompt — and only the scheduler resolution knows which tool answers, resolved from
+the live tool list the way a surface is, with none a normal outcome that prints the prompts
+for a person to paste. The one host fact the plugin writes down is the name of that tool and
+of the settings file a cloud session needs to load the marketplace, in the catalog contract,
+because a sync skill that could not say either would schedule nothing.
+
+**Nothing personal reaches the repository.** Routine ids, the environment, and the model are
+account facts; matching on the routine's name makes every operation idempotent without a
+ledger, so the stamp records the selection and cadence overrides and nothing else. That is the
+same line the devbook stamp draws about installed plugin versions, drawn for the same reason.
+
+Consequence: **enabling `routines` schedules nothing.** A repository selects routines through
+`routine-sync`, which refuses a target whose plugin the repository's committed host settings do
+not enable. And a routine's first run is the only proof that the cloud session loaded the
+marketplace at all — recorded as `trial` in [hosts](../tech/hosts.md#claude-code-routines)
+until one has.

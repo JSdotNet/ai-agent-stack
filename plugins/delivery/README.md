@@ -44,7 +44,8 @@ separate mechanism. `spec → gate → implement` is the highest-value one to tu
 
 **Bindings and policy.** Which plugin fills each role, which tracker the repository uses, and
 a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
-budget, whether a pull request is required.
+budget, whether the flow commits its change set at each handback, whether a pull request is
+required.
 
 All four live in `.github/ai-agent-stack.json`:
 

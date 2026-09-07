@@ -45,6 +45,9 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 - Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
   never from what is on disk. Report the file it landed in; whether a host reads
   or imports that file is the repository's to arrange.
+- The `.gitignore` block follows the same marker rules and covers `AGENTS.local.md`
+  and `.devbook/config.local.json`. Ignore both; create neither. An empty overlay
+  reads as a setting somebody chose.
 - Offer `assets/routing-snippet.md` for the user to merge. Never apply it
   silently, and never put routing inside the `AGENTS.md` markers.
 - Without GitHub Actions, install `build/Update-DevbookIndex.ps1` alone and

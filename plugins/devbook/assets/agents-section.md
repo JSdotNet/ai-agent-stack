@@ -14,7 +14,9 @@ Render it from the stamp's `adopted` list, never from what happens to be on disk
   repository gets it on its next reconcile.
 
 When `AGENTS.md` is absent, create it holding only this section. When it exists without
-the markers, append the section at the end. Nothing outside the markers is read or
+the markers, append the section at the end. `AGENTS.local.md` is never created — the
+section describes it so a session reads it where it exists, and an empty local file is
+worse than an absent one. Nothing outside the markers is read or
 written, and routing policy — which flow, agent, or MCP server the repository prefers —
 never goes inside them; that stays in `routing-snippet.md`, offered and never applied.
 
@@ -45,5 +47,11 @@ Files under any `_meta/` folder are generated tool input. Never read or hand-edi
 Refresh them with `./build/Update-DevbookIndex.ps1`, and run the check before committing:
 
     node .github/tools/devbook-meta/build.mjs --check
+
+Two files here are yours alone, gitignored and absent by default. `AGENTS.local.md`
+holds instructions that apply on your machine only; read it when it exists and treat
+it as this file's last word. `.devbook/config.local.json` overlays the committed
+stack config the same way. Never commit either, and put no secret in them — gitignored
+is not private.
 <!-- devbook:end -->
 ```

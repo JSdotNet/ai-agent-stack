@@ -1,5 +1,5 @@
 ---
-applyTo: ".tech/**"
+applyTo: ".tech/**,.devbook/tech/**"
 description: Structure and authoring rules for the technology knowledge folder, holding the project's technology graph of platforms, runtimes, frameworks, libraries, packages, services, and tools.
 ---
 

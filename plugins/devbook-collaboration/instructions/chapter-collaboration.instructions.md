@@ -1,5 +1,5 @@
 ---
-applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**"
+applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**,.devbook/**"
 description: How devbook-collaboration records review, comment, and hand-off state on a devbook chapter — the ext.devbook-collaboration keys, the three review states, the rule that none of it is chapter content, and the fact that approval stays devbook's.
 ---
 

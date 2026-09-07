@@ -7,8 +7,9 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/01-in
 
 **Remediation state:** in-progress · **Severity:** low · **Owner:** the maintainer
 
-**2026-09-05.** The first option below was taken: `CLAUDE.md` carries the disclosure rule again
-and points at `spec-conciseness.instructions.md`, and
+**2026-09-05.** The first option below was taken: the root instruction file carries the
+disclosure rule again and points at [AUTHORING.md](../../../AUTHORING.md) — that file is
+`AGENTS.md` since 2026-09-07 — and
 [a decision](../09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates) states
 the reason once for the four kinds that are long by nature. What remains is the assets outside
 those kinds, which still owe a trim or a reason line; `tools/check-assets.mjs --budgets` lists
@@ -130,6 +131,6 @@ others stand is how a review spends its credibility on the finding that will be 
 
 The first is recommended, and the third is what to do if it is deferred again.
 
-**Trigger:** the next time CLAUDE.md's authoring rules are edited for any reason. Until then,
+**Trigger:** the next time the root file's authoring rules are edited for any reason. Until then,
 cite the disclosure rule in review rather than a bare line count — an over-budget asset that
 never says why is the reviewable defect.

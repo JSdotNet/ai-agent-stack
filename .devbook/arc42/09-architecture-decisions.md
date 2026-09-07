@@ -70,7 +70,7 @@ Claude manifest a file nobody was allowed to edit. Both manifests are hand-autho
 
 Consequence: what the generator used to lint — a missing description, an unloadable model pin,
 a handoff the body never mentions — is now a review responsibility, written down in
-[CLAUDE.md](../../CLAUDE.md). Revisit once the number of plugins makes that unreliable.
+[AGENTS.md](../../AGENTS.md) and the rules it points at. Revisit once the number of plugins makes that unreliable.
 
 **Revisited, 2026-09-05.** Seventeen plugins and 161 budgeted assets made it unreliable: a
 review found five role agents still carrying tools a decision one day earlier said were gone.
@@ -552,7 +552,7 @@ of staged procedures and contracts. Everything else over budget — at the time,
 how-to skills, the pull-request lane, the two profile skills — is owed a trim or a reason line
 in the file, and `tools/check-assets.mjs --budgets` is the list.
 
-Consequence: the number in `CLAUDE.md` is a review prompt and not a gate the checker fails on.
+Consequence: the number in `AGENTS.md` is a review prompt and not a gate the checker fails on.
 An asset that grows past its budget is asked what it disclosed and why, not refused. The debt
 record moves to `in-progress` rather than `resolved`, because the assets outside the four
 kinds have not yet said why. If the table ever needs a fifth row, the budget is the wrong tool
@@ -786,6 +786,77 @@ Consequence: **enabling `routines` schedules nothing.** A repository selects rou
 not enable. And a routine's first run is the only proof that the cloud session loaded the
 marketplace at all — recorded as `trial` in [hosts](../tech/hosts.md#claude-code-routines)
 until one has.
+
+## One Rule, One Wrapper Per Host
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+```
+
+Both hosts inject rules scoped to a path glob, and no single file can serve both: Claude reads
+`.claude/rules/*.md` with a `paths` list, Copilot reads `.github/instructions/*.instructions.md`
+with `applyTo`. Different directory, different filename, different key. So this repository used
+neither, and `CLAUDE.md` carried 154 lines that loaded on every session whatever was being
+edited.
+
+[One Authored Copy Per Asset](#one-authored-copy-per-asset) does not stretch here — it rests on
+both hosts ignoring keys they do not know, and these two disagree on the *filename*. The
+layering used for manifests and hooks applies instead: one authored rule, a thin wrapper per
+host.
+
+```
+.agents/rules/<topic>.md            the rule. One copy. name / description / paths.
+  ├── .claude/rules/<topic>.md      wrapper: paths verbatim → pointer
+  └── .github/instructions/<topic>.instructions.md
+                                    wrapper: applyTo = paths.join(",") → pointer
+```
+
+A wrapper is frontmatter and one sentence. It never restates a rule, so a third host adds a
+third wrapper and never a second copy. Because `applyTo` is exactly `paths.join(",")`, the
+wrappers are derivable from the shared file and `tools/check-assets.mjs` fails on drift — a
+checker over hand-authored files, which is the bargain
+[No Generated Sync Layer](#no-generated-sync-layer) already struck.
+
+Three things follow, and each is deliberate:
+
+- **`.agents/rules/` is a local convention, not a standard.** `AGENTS.md` is the standard for
+  the *root* file and defines no globs; its answer to scoping is nested files, closest-wins.
+  [agents.md#179](https://github.com/agentsmd/agents.md/issues/179) is the open proposal for
+  glob-scoped rules, and its `name` / `description` / `paths` shape is what this uses.
+- **A plugin cannot ship rules.** There is no rules component, no `rules` key in
+  `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
+  ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
+  under `.agents/rules/` is repository-scoped: it serves people working *in* this repository,
+  never someone who installed a plugin from it. A plugin instruction file keeps `applyTo` and
+  keeps being reached by explicit path, and is not renamed to the neutral shape — its
+  filename and its glob are part of the plugin contract. That inconsistency is the price of
+  the plugin host having no rules component.
+- **A rule that already has one home both hosts read stays there.** The topic set is plugin
+  authoring only.
+- **The root file is `AGENTS.md`.** `CLAUDE.md` becomes an `@AGENTS.md` import, because
+  Copilot reads `AGENTS.md` natively and Claude does not. That is the same choice
+  [devbook Owns One Section of AGENTS.md](#devbook-owns-one-section-of-agentsmd) made for the
+  file devbook writes into, and it makes the `repo-instructions` slot resolve here for the
+  first time.
+
+The topic set stops at plugin authoring. `.devbook/**` gets no topic, because
+[devbook Owns One Section of AGENTS.md](#devbook-owns-one-section-of-agentsmd) already puts
+the folder routing table and the `_meta/` rule in front of both hosts, and a second copy here
+would be exactly what this layering exists to prevent. Where a rule already has one home that
+both hosts read, it keeps it.
+
+Consequence: six authored files and ten wrappers where there were none, against a `CLAUDE.md`
+that shrank from 154 lines to four. The context cost is lower, not higher — only the running
+host's wrapper loads, and only on a matching read. The cost is paid in file count and in a
+checker rule.
+
+That rule is `check-assets.mjs`'s `rules` pass, and it refuses six things: a shared file whose
+`name` does not match its filename or that carries no `paths`, a missing wrapper on either
+side, a Claude wrapper whose `paths` differ, a Copilot wrapper whose `applyTo` is not those
+paths comma-joined or whose `description` differs, a wrapper body past three lines, and a
+wrapper with no shared file behind it. The fifth is the one the layering actually rests on:
+a wrapper that grows a rule is how the second copy gets in.
 
 ## devbook Owns One Section of AGENTS.md
 

@@ -35,7 +35,7 @@ built with AI in `ai/`. Start with
 
 ## Working on it
 
-Read [CLAUDE.md](CLAUDE.md) first. In short: one authored copy per asset, one logical change
+Read [AGENTS.md](AGENTS.md) first. In short: one authored copy per asset, one logical change
 per commit, nothing pushed until asked, and before committing:
 
 ```bash

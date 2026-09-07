@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// check-assets.mjs — the review lint CLAUDE.md describes, as a script.
+// check-assets.mjs — the review lint AGENTS.md describes, as a script.
 //
 //   node tools/check-assets.mjs            # report, exit 1 on any error
 //   node tools/check-assets.mjs --budgets  # also list every asset over its body budget
@@ -14,7 +14,11 @@
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
 //                 Holds No Flow Control")
 //   hooks         hooks/hooks.json never uses type: prompt on SessionStart
-//   budgets       body-line counts against the budgets in CLAUDE.md — reported, never
+//   rules         every .agents/rules/<topic>.md has a wrapper per host, the wrappers'
+//                 globs and description are derived from it, and neither wrapper has
+//                 grown a rule of its own (see the decision "One Rule, One Wrapper Per
+//                 Host")
+//   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
 //
@@ -26,9 +30,14 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PLUGINS = path.join(ROOT, "plugins");
+const SHARED_RULES = path.join(ROOT, ".agents", "rules");
+const CLAUDE_RULES = path.join(ROOT, ".claude", "rules");
+const COPILOT_RULES = path.join(ROOT, ".github", "instructions");
 const showBudgets = process.argv.includes("--budgets");
 
 const BUDGETS = { "SKILL.md": 40, ".instructions.md": 60, ".agent.md": 80 };
+// A wrapper is frontmatter plus one sentence. Three lines is slack, not licence.
+const WRAPPER_BODY_MAX = 3;
 const MODEL_PIN = /^(opus|sonnet|haiku|fable|inherit|claude-[\w.-]+)$/;
 // Tools that sequence, spawn, or delegate. Only the runner's agent may carry them.
 const FLOW_CONTROL_TOOLS = new Set([
@@ -155,6 +164,92 @@ for (const folder of folders) {
     for (const group of events.SessionStart ?? []) {
         for (const hook of group.hooks ?? []) {
             if (hook.type === "prompt") error(`${folder}/hooks/hooks.json: SessionStart type: prompt fails silently in Claude Code; author it as a command hook`);
+        }
+    }
+}
+
+// ── rules ───────────────────────────────────────────────────────────────────
+//
+// One authored rule per topic in .agents/rules/, a thin wrapper per host. The Claude
+// wrapper copies `paths` verbatim; the Copilot wrapper's `applyTo` is that list joined
+// with commas. Both are therefore derivable from the shared file, which is what makes
+// drift checkable without a generator owning the files.
+
+function yamlPaths(fm) {
+    const m = /^paths:\s*$/m.exec(fm);
+    if (!m) return null;
+    const out = [];
+    for (const line of fm.slice(m.index + m[0].length).split(/\r?\n/)) {
+        if (line.trim() === "") continue;
+        const item = /^\s+-\s*(.+?)\s*$/.exec(line);
+        if (!item) break;                       // the list ended; the next key starts here
+        out.push(item[1].replace(/^['"]|['"]$/g, ""));
+    }
+    return out;
+}
+function scalar(fm, key) {
+    const m = new RegExp(String.raw`^${key}:\s*(.+?)\s*$`, "m").exec(fm);
+    return m ? m[1].replace(/^['"]|['"]$/g, "") : null;
+}
+
+if (await exists(SHARED_RULES)) {
+    const topics = new Set();
+    for (const entry of await readdir(SHARED_RULES)) {
+        if (!entry.endsWith(".md") || entry === "README.md") continue;
+        const topic = entry.slice(0, -3);
+        topics.add(topic);
+        const shared = `.agents/rules/${entry}`;
+        const { fm } = frontmatter(await readFile(path.join(SHARED_RULES, entry), "utf8"));
+
+        if (scalar(fm, "name") !== topic) error(`${shared}: frontmatter name must equal the filename "${topic}"`);
+        const description = scalar(fm, "description");
+        if (!description) error(`${shared}: description is required; the Copilot wrapper copies it`);
+        const paths = yamlPaths(fm);
+        if (!paths || paths.length === 0) {
+            error(`${shared}: needs a paths list; without one neither wrapper can be derived`);
+            continue;
+        }
+
+        const claudePath = path.join(CLAUDE_RULES, `${topic}.md`);
+        if (!(await exists(claudePath))) {
+            error(`${shared}: no .claude/rules/${topic}.md, so Claude applies this rule nowhere`);
+        } else {
+            const { fm: cfm, body } = frontmatter(await readFile(claudePath, "utf8"));
+            const cpaths = yamlPaths(cfm) ?? [];
+            if (cpaths.join(",") !== paths.join(",")) {
+                error(`.claude/rules/${topic}.md: paths differ from ${shared} (${cpaths.join(",")} vs ${paths.join(",")})`);
+            }
+            const lines = bodyLines(body);
+            if (lines > WRAPPER_BODY_MAX) error(`.claude/rules/${topic}.md: ${lines} body lines; a wrapper points at ${shared}, it does not restate it`);
+        }
+
+        const copilotPath = path.join(COPILOT_RULES, `${topic}.instructions.md`);
+        if (!(await exists(copilotPath))) {
+            error(`${shared}: no .github/instructions/${topic}.instructions.md, so Copilot applies this rule nowhere`);
+        } else {
+            const { fm: gfm, body } = frontmatter(await readFile(copilotPath, "utf8"));
+            const applyTo = scalar(gfm, "applyTo");
+            if (applyTo !== paths.join(",")) {
+                error(`.github/instructions/${topic}.instructions.md: applyTo must be ${shared}'s paths joined with commas (${paths.join(",")})`);
+            }
+            if (scalar(gfm, "description") !== description) {
+                error(`.github/instructions/${topic}.instructions.md: description differs from ${shared}`);
+            }
+            const lines = bodyLines(body);
+            if (lines > WRAPPER_BODY_MAX) error(`.github/instructions/${topic}.instructions.md: ${lines} body lines; a wrapper points at ${shared}, it does not restate it`);
+        }
+    }
+
+    // A wrapper with nothing behind it is a rule that lives in one host only.
+    for (const [dir, suffix, label] of [
+        [CLAUDE_RULES, ".md", ".claude/rules"],
+        [COPILOT_RULES, ".instructions.md", ".github/instructions"],
+    ]) {
+        if (!(await exists(dir))) continue;
+        for (const entry of await readdir(dir)) {
+            if (!entry.endsWith(suffix)) continue;
+            const topic = entry.slice(0, -suffix.length);
+            if (!topics.has(topic)) error(`${label}/${entry}: no .agents/rules/${topic}.md behind it; a rule is authored once and wrapped, never written in a wrapper`);
         }
     }
 }

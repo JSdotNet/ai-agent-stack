@@ -28,4 +28,4 @@ related: [".devbook/tech/hosts.md#claude-code-plugin-api"]
   session routes on.
 - **Limits** — an eval exercises a skill's trigger and output, not the load-time shape both
   hosts reject; those stay with the validator, the checker, and the review rules in
-  `CLAUDE.md`.
+  `AGENTS.md` and `.agents/rules/`.

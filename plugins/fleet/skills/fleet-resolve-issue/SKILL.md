@@ -113,11 +113,6 @@ whose conclusion is small belongs in a sub-agent, and the surface reporting cont
 
 ## Skill Dependencies
 
-- **`create-pull-request`** (`delivery` plugin, a hard dependency of this one) — used in
-  Phase 4a, so the pull request picks up the repository's PR template, labels, and reviewer
-  conventions. When it is absent, fall back to the `gh pr create` call in that phase and say so
-  in the summary.
-
 - **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
   procedure behind the brief the park route leaves behind in Phase 4b. Write that brief by
   hand as the phase describes.
@@ -285,8 +280,8 @@ how big the change feels.
     git -C "<worktree>" push -u origin <branch>
     ```
 
-15. Open the pull request. Prefer `create-pull-request` so the repository's template and
-    conventions apply; otherwise:
+15. Open the pull request, following the repository's PR template, labels, and reviewer
+    conventions when it has them:
 
     ```bash
     gh pr create --repo <owner/repo> --base <base branch> --head <branch> \
@@ -490,7 +485,5 @@ Contract** for the tool cadence.
   issues.
 - `pr-merge-ready` (`delivery` plugin) — takes the pull request this skill opens to
   merge-ready, one per pass.
-- `create-pull-request` (`delivery` plugin) — used by Phase 4, so the pull request follows the
-  repository's own template and conventions.
 - **Session Handoff** in `flow-execution-model.instructions.md` (`delivery` plugin) — the
   procedure behind the brief the park route leaves behind.

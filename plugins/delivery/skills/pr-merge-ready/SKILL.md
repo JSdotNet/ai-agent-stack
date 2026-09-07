@@ -17,8 +17,8 @@ request to work, works out exactly what blocks it from merging, and dispatches t
 remediation skill against it **in this session**. The pass is idempotent — a PR that is
 already merge-ready is reported and left alone, so the skill is safe to run on a timer.
 
-A pull request that does not exist yet is reported, not created. Raising the PR is
-`create-pull-request`'s job and stays a deliberate decision.
+A pull request that does not exist yet is reported, not created. Raising the PR stays a
+deliberate decision, taken outside this skill.
 
 ## One Pull Request Per Pass
 
@@ -76,13 +76,11 @@ This skill sequences the following skills:
 - **`update-pr-branch`** (this plugin) — merges or rebases the base branch into the PR branch
   and resolves conflicts.
 - **`fix-pr-checks`** (this plugin) — reads failing job logs, reproduces, fixes, pushes.
-- **`create-pull-request`** (this plugin) — used only to publish a draft that is otherwise
-  ready.
 - **`pr-remarks-review`** (plugin: `review`, optional) — works through unresolved reviewer
   comments.
 - **`fix-security-issue`** (plugin: `aikido`, optional) — security-scan check failures.
 
-The three same-plugin skills always ship together with this one. The optional cross-plugin
+The two same-plugin skills always ship together with this one. The optional cross-plugin
 dependencies degrade gracefully: when one is missing, perform its phase directly and note the
 degraded path in the report.
 
@@ -127,7 +125,7 @@ A pull request is merge-ready when all of these hold:
    | --- | --- |
    | One open PR | In scope — score it in Phase 2 |
    | Open PR, draft, drafts excluded | Report and end the pass |
-   | No PR | Report as "no PR yet" → `create-pull-request` |
+   | No PR | Report as "no PR yet" — raising it is outside this skill |
    | PR merged or closed | Report as reclaimable — the working tree can be removed |
 
 4. **Ranking for target `next`.** List your own open pull requests
@@ -160,7 +158,7 @@ A pull request is merge-ready when all of these hold:
    | Changes requested | `reviewDecision: CHANGES_REQUESTED` | `pr-remarks-review` |
    | Unresolved threads | open threads on the PR | `pr-remarks-review` |
    | Awaiting review | `reviewDecision: REVIEW_REQUIRED` | ping reviewers — no code action |
-   | Draft | `isDraft: true` and nothing else blocking | `create-pull-request` (publish step) |
+   | Draft | `isDraft: true` and nothing else blocking | `gh pr ready <number>` |
    | Blocking label | `do-not-merge` / `blocked` / `wip` | none — respect it and end the pass |
    | Unpushed local commits | working tree ahead of its remote branch | push, then re-score |
    | None | all checklist items pass | ready to merge |
@@ -295,7 +293,6 @@ the source of truth.
 
 ## Related Skills
 
-- `create-pull-request` — raise the PR this skill reports as "no PR yet".
 - `update-pr-branch`, `fix-pr-checks` — the per-PR remediations, usable standalone.
 - `start-session-from-issue`, `automation-bug-fix` — pick up the single issue whose work this
   skill later takes to merge-ready.

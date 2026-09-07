@@ -1145,7 +1145,7 @@ since a rename changes which entry a host installs, not what the entry does.
 
 ```meta
 date: 2026-09-07
-related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas", ".devbook/ai/02-deliver.md#flow-skills"]
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/ai/02-deliver.md#flow-skills"]
 ```
 
 `devbook` enforces what a devbook folder holds — the instruction files, the metadata schema,
@@ -1188,6 +1188,12 @@ it. `delivery` ships sixteen flows and `devbook-flows` is no longer published, s
 that had it enabled sees it reported as not installed and finds the same five under the engine.
 The L2b bridge row in the [layer table](../domain/plugin-authoring/naming.md#layer) keeps its
 pattern and, for now, no example.
+
+What this argument covers is the rules. It does not cover the generator path the five folder
+flows name, the devbook rules they restate, or the folder names they are called after, so
+`delivery` depends on `devbook` while declaring nothing —
+[debt record 4](tdr/4-delivery-depends-on-devbook.md) logs that and weighs the split into
+`delivery-devbook` this decision's shape would otherwise invite.
 
 ## The Word Knowledge Is Retired
 

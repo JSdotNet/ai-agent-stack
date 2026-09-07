@@ -9,7 +9,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "*",
+        "matcher": "^(Bash|PowerShell|Edit|MultiEdit|Write|NotebookEdit|Artifact|Task|Agent|Skill|Workflow)$|^mcp__",
         "hooks": [
           { "type": "command", "command": "node", "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/delivery-surface-dashboard/telemetry-hook.mjs"], "timeout": 10 }
         ]
@@ -17,7 +17,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "*",
+        "matcher": "^(Bash|PowerShell|Edit|MultiEdit|Write|NotebookEdit|Artifact|Task|Agent|Skill|Workflow)$|^mcp__",
         "hooks": [
           { "type": "command", "command": "node", "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/delivery-surface-dashboard/telemetry-hook.mjs"], "timeout": 10 }
         ]

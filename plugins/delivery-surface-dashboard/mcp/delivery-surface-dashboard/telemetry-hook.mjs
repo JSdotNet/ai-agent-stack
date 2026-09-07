@@ -26,6 +26,16 @@
 // the agent acting on it — nothing reads the gauge on the agent's behalf unless it is put in
 // front of the agent.
 //
+// PreToolUse/PostToolUse are matched, not wildcarded. The hook is one process spawn per
+// matched call, in every session the plugin is enabled in, whether or not a run is active, so
+// the matcher in hooks/hooks.json keeps only the calls a run's panels are read for: shell,
+// edits, Artifact publishes, sub-agents, skills, and every MCP tool including QA. It drops the
+// high-frequency read-only ones (Read, Grep, Glob, WebFetch, WebSearch, TodoWrite) — the bulk
+// of a session's calls and the least of its time. Consequence: `categorizeTool`'s "Read"
+// bucket no longer appears in a run's time-by-tool breakdown, and the context gauge samples on
+// matched calls only. Adding a tool the panels need means adding it to that matcher too — a
+// tool the matcher drops reaches none of the code below.
+//
 // Usage: `node telemetry-hook.mjs` with the hook payload on stdin.
 //
 // Everything here is best-effort and must never fail a tool call: the script exits 0 on

@@ -34,8 +34,15 @@ node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs
 
 The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
 reports body budgets. The second fails on a chapter whose `meta` block or reference does not
-resolve. Run the generator without `--check` to refresh `_meta/` after a chapter edit, and
-commit what it wrote.
+resolve.
+
+`--check` is the gate; refreshing `_meta/` is a separate, deliberate pass. Never regenerate in
+the same commit as a chapter edit — two branches that each touch one chapter both rewrite the
+same JSON, and the conflict is only resolvable by re-running the generator. When the indexes
+need to be current, run `node plugins/devbook/tools/devbook-meta/build.mjs` on its own and
+commit only what it wrote. This repository ships neither refresh path the convention asks for
+— no scheduled workflow, no on-demand script — so that pass is by hand. Full rule:
+`plugins/devbook/instructions/devbook-derived-artifacts.instructions.md`.
 
 ## Committing
 

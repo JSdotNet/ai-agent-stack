@@ -6,19 +6,19 @@
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 82,
-    "edges": 136,
+    "nodes": 83,
+    "edges": 141,
     "nodesByFolder": {
-      "arc42": 62,
+      "arc42": 63,
       "domain": 17,
       "tech": 3
     },
     "nodesByType": {
       "file": 9,
-      "chapter": 73
+      "chapter": 74
     },
     "nodesByKind": {
-      "none": 62,
+      "none": 63,
       "bounded-context": 1,
       "term": 14,
       "platform": 2,
@@ -27,13 +27,13 @@
       "naming": 1
     },
     "nodesByStatus": {
-      "active": 79,
+      "active": 80,
       "adopted": 2,
       "trial": 1
     },
     "edgesByType": {
-      "contains": 54,
-      "related": 82
+      "contains": 55,
+      "related": 86
     }
   },
   "problems": [],
@@ -711,6 +711,27 @@
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
             ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin",
             ".devbook/arc42/11-risks-and-technical-debt.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "label": "devbook Owns One Section of AGENTS.md",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "devbook-owns-one-section-of-agentsmd",
+          "level": 2,
+          "line": 689,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/05-building-block-view.md#host-slots",
+            ".devbook/domain/plugin-authoring/naming.md#stamp"
           ]
         }
       },
@@ -1752,6 +1773,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/11-risks-and-technical-debt.md->.devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
           "source": ".devbook/arc42/11-risks-and-technical-debt.md",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md#technical-debt",
@@ -2451,6 +2480,38 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin->.devbook/arc42/11-risks-and-technical-debt.md",
           "source": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
           "target": ".devbook/arc42/11-risks-and-technical-debt.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/arc42/05-building-block-view.md#host-slots",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/arc42/05-building-block-view.md#host-slots",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
           "type": "related"
         }
       },

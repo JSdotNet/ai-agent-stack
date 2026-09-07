@@ -338,23 +338,23 @@ function render(model) {
     ));
     out.push('');
 
-    if (model.deliverySkills) {
-        const grouped = { flow: [], phase: [], automation: [], other: [] };
-        for (const skill of model.deliverySkills) {
+    if (model.deliverySkills || model.scheduleSkills) {
+        const grouped = { flow: [], phase: [], schedule: [], other: [] };
+        for (const skill of model.deliverySkills ?? []) {
             if (skill.startsWith('flow-')) grouped.flow.push(skill);
             else if (skill.startsWith('phase-')) grouped.phase.push(skill);
-            else if (skill.startsWith('automation-')) grouped.automation.push(skill);
             else grouped.other.push(skill);
         }
-        out.push('## Flows the engine on disk ships');
+        for (const skill of model.scheduleSkills ?? []) grouped.schedule.push(skill);
+        out.push('## Procedures the plugins on disk ship');
         out.push('');
         out.push(table(
-            ['Kind', 'Count', 'Members'],
+            ['Kind', 'Plugin', 'Count', 'Members'],
             [
-                ['`flow-*`', grouped.flow.length, grouped.flow.join(', ') || '-'],
-                ['`phase-*`', grouped.phase.length, grouped.phase.join(', ') || '-'],
-                ['`automation-*`', grouped.automation.length, grouped.automation.join(', ') || '-'],
-                ['other', grouped.other.length, grouped.other.join(', ') || '-'],
+                ['`flow-*`', '`delivery`', grouped.flow.length, grouped.flow.join(', ') || '-'],
+                ['`phase-*`', '`delivery`', grouped.phase.length, grouped.phase.join(', ') || '-'],
+                ['other', '`delivery`', grouped.other.length, grouped.other.join(', ') || '-'],
+                ['`schedule-*`', '`delivery-schedule`', grouped.schedule.length, grouped.schedule.join(', ') || '-'],
             ],
         ));
         out.push('');
@@ -401,9 +401,10 @@ function main(argv) {
     const enabled = resolveEnabled(options.root, configDir);
     const plugins = buildPluginRows(catalogs, installed, enabled, options.marketplace);
 
-    const deliveryRow = plugins.find((p) => p.name === 'delivery');
-    const deliveryRoot = deliveryRow?.installPath
-        ?? (catalogs[0] ? join(catalogs[0].root, 'plugins', 'delivery') : null);
+    const pluginRoot = (name) => plugins.find((p) => p.name === name)?.installPath
+        ?? (catalogs[0] ? join(catalogs[0].root, 'plugins', name) : null);
+    const deliveryRoot = pluginRoot('delivery');
+    const scheduleRoot = pluginRoot('delivery-schedule');
 
     const model = {
         marketplace: options.marketplace,
@@ -413,6 +414,7 @@ function main(argv) {
         plugins,
         repository: buildRepository(options.root),
         deliverySkills: deliveryRoot ? skillNames(deliveryRoot) : null,
+        scheduleSkills: scheduleRoot ? skillNames(scheduleRoot) : null,
         sources,
     };
 

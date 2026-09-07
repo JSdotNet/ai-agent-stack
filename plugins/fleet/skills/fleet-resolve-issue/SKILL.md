@@ -5,9 +5,9 @@ description: >
   and branch, run the resolve-issue Workflow script (scope, TDD implementation, build and test
   with bounded repair, multi-lens review), then open a pull request when the change proves
   itself or park the worktree with a handoff brief when a human must validate it. One issue per
-  run. Use when: a sweep's worker session or a scheduled routine asks for exactly one issue
+  run. Use when: a sweep's worker session or a scheduled run asks for exactly one issue
   resolved unattended. DO NOT USE FOR: work a human is sitting with (use
-  start-session-from-issue); never start it mid-task — only a user turn, a routine, or a
+  start-session-from-issue); never start it mid-task — only a user turn, a schedule, or a
   sweep's dispatch prompt may.
 ---
 
@@ -193,7 +193,7 @@ delegated flow.
 ### Phase 3 — Run the Resolution Workflow
 
 9. Invoke the `Workflow` tool with the script that ships beside this skill. The prompt that
-   asked for this issue — a user turn, a routine, or a sweep's dispatch — is the explicit
+   asked for this issue — a user turn, a schedule, or a sweep's dispatch — is the explicit
    opt-in the tool requires:
 
    ```text
@@ -388,10 +388,11 @@ prove. Park it so resuming costs one command, not a re-derivation.
 24. State what needs you: reviewing this pull request, or validating the parked worktree — and
     any assumption you would have answered differently.
 
-## Running It as a Routine
+## Running It on a Schedule
 
-The run is idempotent and needs no user turn, so it is safe on a schedule. Ask for a routine
-in the host's own scheduling UI, or use the `schedule` skill:
+The run is idempotent and needs no user turn, so it is safe on a cadence. Ask for one in the
+host's own scheduling page — Routines in Claude Code, Automations in the GitHub Copilot app —
+or use the `schedule` skill:
 
 ```text
 Every weekday at 08:00, run fleet-resolve-issue for acme/store with label "ready"
@@ -481,7 +482,7 @@ Contract** for the tool cadence.
 - `start-session-from-issue` (`delivery` plugin) — the interactive counterpart: same
   single-issue pickup, routed to a `flow-*` skill in your session, stopping at Personal
   Validation.
-- `automation-bug-fix` (`delivery` plugin) — the same interactive pickup narrowed to `bug`
+- `schedule-bug-fix` (`delivery-schedule` plugin) — the same interactive pickup narrowed to `bug`
   issues.
 - `pr-merge-ready` (`delivery` plugin) — takes the pull request this skill opens to
   merge-ready, one per pass.

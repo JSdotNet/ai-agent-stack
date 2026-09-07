@@ -203,7 +203,8 @@ mechanism; background sub-agents remain reserved for concurrent monitoring.
   described under **Delegation Order**.
 - **One item per run, and never a fan-out.** A skill that works from a queue of issues or
   pull requests selects **one** item, claims it, and runs the flow for it in its own
-  session, as `automation-bug-fix`, `start-session-from-issue`, and `pr-merge-ready` do. An
+  session, as `start-session-from-issue`, `pr-merge-ready`, and the `schedule-*` entry points
+  of `delivery-schedule` do. An
   `flow-*` run does not prepare work for other sessions and does not spawn them: it owns a
   run, a Personal Validation gate, and a user turn, none of which survives being
   split across sessions mid-flow. Parallelism across items comes from the **user**

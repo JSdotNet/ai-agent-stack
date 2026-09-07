@@ -27,7 +27,7 @@ sessions, and it never spawns an agent to run the flow.
 A `flow-*` run needs its own session: it must be able to ask about what is ambiguous, hold
 the Personal Validation gate, and own its surface run. `AskUserQuestion` is foreground-only
 and a sub-agent has no user turn to wait for — see **Session Ownership** and **Sub-Agent
-Constraints** in `rules/flow-execution-model.md`. Scoping a run to one
+Constraints** in `resources/flow-execution-model.md`. Scoping a run to one
 issue is what makes that work: this session is the owner session, so the flow is
 plan-first and gated for real.
 
@@ -191,7 +191,7 @@ issue, because the previous one is filtered out as in flight.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`.
+Follow the **Reporting Contract** in `resources/surface-contract.md`.
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 
@@ -228,6 +228,6 @@ the source of truth.
   `bug` issues, always routed to `flow-bug`, ranked by severity.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
-- **Session Handoff** in `rules/flow-execution-model.md` — hand this
+- **Session Handoff** in `resources/flow-execution-model.md` — hand this
   session's in-flight run to a fresh session when its context fills, rather than starting the
   issue over.

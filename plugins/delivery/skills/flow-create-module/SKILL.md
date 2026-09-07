@@ -5,8 +5,8 @@ description: 'Create a new module in an existing project — from an ad-hoc "we 
 
 # Flow: Create Module
 
-Agent transitions follow `rules/flow-phases.md`; per-stage model choice
-follows `rules/flow-model-selection.md`.
+Agent transitions follow `resources/flow-phases.md`; per-stage model choice
+follows `resources/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -38,7 +38,7 @@ architectural decision, a new bounded context, or a cross-cutting redesign: reco
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`rules/flow-execution-model.md`. the `architecture` role only when architectural
+`resources/flow-execution-model.md`. the `architecture` role only when architectural
 impact is suspected.
 
 ## Stage 1: Specification Intake
@@ -71,7 +71,7 @@ context — a module inside one existing context needs no domain pass.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
+Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -80,7 +80,7 @@ endpoints and flows, runtime monitoring active throughout, evidence recorded.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
+Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

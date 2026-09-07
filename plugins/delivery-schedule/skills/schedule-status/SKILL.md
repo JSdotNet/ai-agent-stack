@@ -6,7 +6,7 @@ description: 'Show this repository''s schedules and how their recent runs went â
 # schedule status
 
 Read-only. The scheduler, the identity rule, and the stamp are in
-`rules/schedule-catalog-contract.md`.
+`resources/schedule-catalog-contract.md`.
 
 ## Steps
 

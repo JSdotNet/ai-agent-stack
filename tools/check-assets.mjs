@@ -21,7 +21,8 @@
 //   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
 //                 description, no glob of its own, and an entry with globs in the
 //                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
-//                 Through the Install")
+//                 Through the Install"). Only a plugin whose install delivers rules has
+//                 the folder at all (see "Only a Delivered Rule Lives in rules/")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -260,10 +261,12 @@ if (await exists(SHARED_RULES)) {
 
 // ── plugin rules ────────────────────────────────────────────────────────────
 //
-// A plugin rule is a template an install skill materializes into a repository, so it carries
-// no host's spelling of anything: `name` and `description` in the file, and the globs in
-// the plugin's rules/rules.json beside it, where that skill reads them (see the decision
-// "A Plugin's Rules Reach a Host Through the Install").
+// A plugin rule is a template an install skill materializes into a repository, and that is the
+// only thing rules/ holds — shared text an asset reads by path lives in resources/ (see the
+// decision "Only a Delivered Rule Lives in rules/"). So a rule carries no host's spelling of
+// anything: `name` and `description` in the file, and the globs in the plugin's
+// rules/rules.json beside it, where that skill reads them (see the decision "A Plugin's Rules
+// Reach a Host Through the Install").
 
 for (const folder of await readdir(PLUGINS)) {
     const dir = path.join(PLUGINS, folder, "rules");
@@ -303,11 +306,20 @@ const over = [];
 let budgeted = 0;
 for (const file of await walk(PLUGINS)) {
     const base = path.basename(file);
-    const inRules = path.basename(path.dirname(file)) === "rules" && base.endsWith(".md") && base !== "rules.json";
-    const key = base === "SKILL.md" ? "SKILL.md" : inRules ? "rule" : base.endsWith(".agent.md") ? ".agent.md" : null;
+    if (!base.endsWith(".md")) continue;
+    const parent = path.basename(path.dirname(file));
+    const { fm, body } = frontmatter(await readFile(file, "utf8"));
+    // A delivered rule under rules/ and a contract under resources/ are the same kind of
+    // prose and take the same budget. What else sits in resources/ — a prompt fragment, a
+    // template copied into a repository — carries no name/description and is not guidance,
+    // so it is not budgeted; nor is a resources/schedules/ catalog entry, one folder down.
+    const isContract = parent === "resources" && scalar(fm, "name") !== null && scalar(fm, "description") !== null;
+    const key = base === "SKILL.md" ? "SKILL.md"
+        : parent === "rules" || isContract ? "rule"
+        : base.endsWith(".agent.md") ? ".agent.md"
+        : null;
     if (!key) continue;
     budgeted++;
-    const { body } = frontmatter(await readFile(file, "utf8"));
     const lines = bodyLines(body);
     if (lines > BUDGETS[key]) over.push({ file: rel(file), lines, budget: BUDGETS[key] });
 }

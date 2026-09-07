@@ -32,7 +32,7 @@ work this skill did not do.
 3. **Write the engine keys.** Start from the delivery plugin's
    `resources/config-template.json` — take its checkout root from the report's
    catalog line, or the plugin's `installPath` from `--json` — and keep only the keys step
-   2 chose. Read `rules/surface-contract.md` in that same plugin for
+   2 chose. Read `resources/surface-contract.md` in that same plugin for
    what each point and gate means. Never put a model or a secret in this file.
 
 4. **Validate.** Run that plugin's `tools/stack-config/check.mjs` against the file. An

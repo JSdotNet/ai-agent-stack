@@ -73,7 +73,7 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    against the config; take its checkout root from the report's catalog line, or the plugin's
    `installPath` from `--json`. It picks up `.devbook/config.local.json` beside the committed
    file on its own. An upgrade can retire a key, and an unknown key is an error rather than a
-   silently absent setting. Fix against `rules/surface-contract.md` in that same plugin.
+   silently absent setting. Fix against `resources/surface-contract.md` in that same plugin.
 
 6. **Verify and report honestly.** Re-run the report and each component's own check skill.
    Name what was upgraded, what migrations ran, what was left customized, what was skipped and

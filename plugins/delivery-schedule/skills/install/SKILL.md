@@ -6,7 +6,7 @@ description: 'Put this repository''s schedules from the catalog into the host''s
 # schedule install
 
 One idempotent operation for first setup, a changed selection, a changed cadence, and a plugin
-upgrade. Everything it reads and writes is in `rules/schedule-catalog-contract.md`.
+upgrade. Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 
 ## Steps
 

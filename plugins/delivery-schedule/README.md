@@ -70,7 +70,7 @@ enabled is reported and skipped, never scheduled.
 
 All three resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
-the stamp, and the operations are in `rules/schedule-catalog-contract.md`.
+the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 
 ## What a scheduled run never does
 

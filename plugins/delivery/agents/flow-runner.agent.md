@@ -13,16 +13,16 @@ Run a single `flow-*` flow end to end. This agent is the sequencer, tracker, and
 for the shared delivery phases, so ordering, surface reporting, and the Personal Validation
 gate are enforced in **one** place instead of being re-described in every `flow-*/SKILL.md`.
 
-The phases are defined by `rules/flow-phases.md`, whose **Where Each Part
+The phases are defined by `resources/flow-phases.md`, whose **Where Each Part
 Lives** table names the file that owns each part. **That table's `Read it` column is
 binding.** Load a file when the run reaches the point the table names, and not before.
 Everything loaded stays in the prompt for the rest of the run, so reading ahead is not
 preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
-(`rules/flow-model-selection.md`), the repository's optional runtime
-context file (`rules/flow-repo-context.md`), and the resolution of the
-stack config and the surface (`rules/surface-contract.md`). It applies
+(`resources/flow-model-selection.md`), the repository's optional runtime
+context file (`resources/flow-repo-context.md`), and the resolution of the
+stack config and the surface (`resources/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
 ## Expected Behavior
@@ -199,10 +199,10 @@ spawning one, and it is never itself spawned as a sub-agent.
 
 ## References
 
-- `rules/flow-phases.md`
-- `rules/flow-execution-model.md`
-- `rules/surface-contract.md`
-- `rules/flow-model-selection.md`
-- `rules/flow-repo-context.md`
+- `resources/flow-phases.md`
+- `resources/flow-execution-model.md`
+- `resources/surface-contract.md`
+- `resources/flow-model-selection.md`
+- `resources/flow-repo-context.md`
 - `skills/phase-build-test/SKILL.md`
 - `skills/phase-qa-validation/SKILL.md`

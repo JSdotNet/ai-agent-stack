@@ -29,7 +29,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `.github/plugin/plugin.json` | Copilot |
 | `agents/`, `agents-internal/` | both |
 | `skills/`, `resources/` | both |
-| `rules/<name>.md`, `rules/rules.json` | neither host on its own |
+| `rules/<name>.md`, `rules/rules.json` | neither host on its own; an install delivers them |
 | `hooks/hooks.json` | Claude Code |
 | `hooks.json` | Copilot |
 | `mcp/<server>/` | Whatever the Claude manifest's `mcpServers` points at |
@@ -84,14 +84,18 @@ from the plugin root. It is the only one left. The pair of identical
 `generate-diagram-svgs.ps1` scripts that used to sit in two specialist plugins — duplicated
 because neither plugin may name the other — left with them.
 
-A `rules/` folder is the one asset folder neither host applies on its own: no manifest here
-declares a rules key and neither host has a rules component, so a rule shipped inside a plugin
-fires only where a skill or an agent names it by path, or where the plugin's
-`<component>-install` writes it into a repository as one `.agents/rules/<name>.md` body and a
+A `rules/` folder holds exactly one thing: rules an install writes into a repository. Neither
+host applies one on its own — no manifest here declares a rules key and neither host has a
+rules component — so the folder's whole purpose is delivery. The plugin's
+`<component>-install` writes each into a repository as one `.agents/rules/<name>.md` body and a
 wrapper per host. `rules/<name>.md` carries name and description and no scope of its own;
 `rules/rules.json` keys each rule by that name and holds its `paths` and the adopted folder
 that pulls it in — see
 [the decision](09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install).
+
+Shared text a skill or an agent reads by path is not that, and lives in `resources/` — see
+[Only a Delivered Rule Lives in `rules/`](09-architecture-decisions.md#only-a-delivered-rule-lives-in-rules).
+`delivery`, `delivery-schedule`, and `fleet` ship no `rules/` folder at all.
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
@@ -226,7 +230,7 @@ Two other things carry sweep state, and neither is a file this repository owns: 
 `ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
 make a claim legible from GitHub alone, and the host's list of live background sessions, which
 is how a missing result file is told from a worker still running.
-`rules/fleet-issue-sweep-contract.md` owns both schemas.
+`resources/fleet-issue-sweep-contract.md` owns both schemas.
 
 ## Config Plugin
 

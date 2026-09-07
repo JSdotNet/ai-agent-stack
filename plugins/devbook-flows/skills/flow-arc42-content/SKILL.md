@@ -49,14 +49,14 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 2: Content Drafting
 
-- Hand off to `arc42:arc42` for the actual content: prefer Mermaid
+- Hand off to the `architecture` role for the actual content: prefer Mermaid
   diagrams over long prose for building-block and runtime views.
 - Keep the glossary aligned with the ubiquitous language defined per bounded
   context in `.domain/`, when the repository has adopted that folder.
 - Only create a chapter file when it has real content — do not scaffold
   empty placeholders.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Metadata Enforcement
 
@@ -78,7 +78,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   entry elsewhere that references its old `<path>#<heading-slug>` or
   `<path>`.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 4: Consistency Review
 
@@ -90,7 +90,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   `devbook-check`.
 - Summarize changed chapters/sections for the user.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Final Phases (Shared)
 

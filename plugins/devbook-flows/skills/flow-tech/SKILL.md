@@ -43,14 +43,14 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 2: Technology Reasoning
 
-- Hand off to `arc42:arc42` when the change implies a real decision
+- Hand off to the `architecture` role when the change implies a real decision
   (new technology, replacement, or status promotion/demotion).
 - Confirm the technology belongs in exactly one layer; anything used by two or
   more layers belongs in `shared.md`.
 - If the change is a genuine architecture decision, record it as an ADR first
   (`flow-adr`) and let `.tech` record the outcome with a `related` link.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Authoring & Metadata Enforcement
 
@@ -68,7 +68,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   `related` for `.arc42`/`.domain`/`.design` links instead.
 - Update the file-level metadata block on every touched file.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 4: Graph Sync & Review
 
@@ -84,7 +84,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   the intentional no-meta sections of `technology-graph.md`; hand a failure to `devbook-check`.
 - Summarize changed files/chapters for the user.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Final Phases (Shared)
 

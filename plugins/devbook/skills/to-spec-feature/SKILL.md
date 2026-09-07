@@ -88,10 +88,10 @@ code only:
   sub-features or three handlers may serve one.
 
 **Use the repository's own way of starting the app.** Where the repository ships
-a runtime or QA workflow, prefer it over improvising: `qa:aspire-run` to bring
-an Aspire-orchestrated app up, `qa:playwright-screenshot` to capture screens,
-and `qa:playwright-validation` when the flow needs driving rather than just
-viewing. These are recommended, not required — if they are not installed, start
+a runtime or QA workflow skill, prefer it over improvising — one that brings an
+Aspire-orchestrated app up, one that captures screens, and one that drives the
+flow rather than only viewing it. These are recommended, not required — if the
+repository has none, start
 the app the way the repository's own README or launch configuration says to and
 capture screens with whatever is available. If the application cannot be started
 at all, say so in the report, capture the chapter from code and tests, and mark
@@ -148,12 +148,11 @@ up to that point and record the rest from code and tests.
 
 
 4. **Run the application and use the feature.** Start it the repository's own
-   way — `qa:aspire-run` for an Aspire-orchestrated app, otherwise whatever the
-   README or launch configuration specifies — against a local or disposable
-   environment. Then walk the feature end to end as a user would, and capture a
-   screenshot of each distinguishable step (`qa:playwright-screenshot`, or
-   `qa:playwright-validation` where the flow has to be driven rather than
-   viewed). Record:
+   way — its own runtime workflow skill for an Aspire-orchestrated app,
+   otherwise whatever the README or launch configuration specifies — against a
+   local or disposable environment. Then walk the feature end to end as a user
+   would, and capture a screenshot of each distinguishable step, driving the flow
+   rather than only viewing it where it has to be driven. Record:
 
    - **The steps**, in the order a user meets them, and where the flow ends.
    - **The wording the interface actually uses** — this is real evidence about

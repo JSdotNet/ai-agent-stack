@@ -1,9 +1,9 @@
 ---
 applyTo: ".arc42/**,.domain/**,.tech/**,.design/**,.ai/**,.devbook/**,**/_meta/**"
-description: File and folder naming conventions inside knowledge folders, including dot-prefixed specification areas and underscore-prefixed tool-interpreted data.
+description: File and folder naming conventions inside devbook folders, including dot-prefixed specification areas and underscore-prefixed tool-interpreted data.
 ---
 
-# File and folder naming in knowledge folders
+# File and folder naming in devbook folders
 
 ## Underscore prefix marks tool-interpreted data
 
@@ -26,7 +26,7 @@ humans and tooling and stay unprefixed.
 
 ## Dot prefix marks specification areas
 
-Top-level knowledge areas keep the leading-dot convention and are **not**
+Top-level devbook areas keep the leading-dot convention and are **not**
 renamed: `.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`. The dot marks
 a repository-level specification area; the underscore marks tool-interpreted
 data within one. Folders with a leading dot are for specifications.

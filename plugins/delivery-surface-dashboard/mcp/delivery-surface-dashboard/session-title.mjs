@@ -1,7 +1,7 @@
 // Session naming: derive a scannable session title from where a run's output actually landed.
 //
 // The prefix answers "what kind of work was this" without anyone declaring it, because the
-// destination already says so: a write under a knowledge folder is a specification change, a
+// destination already says so: a write under a devbook folder is a specification change, a
 // write anywhere else is a code change, and a published Artifact is a deliverable that lives
 // outside the repository entirely. Keying on the destination rather than on the skill that ran
 // means an ad-hoc session and a tracked one classify identically, and a skill that turns
@@ -14,7 +14,7 @@
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 
-// Knowledge folders carry their own prefix; everything else is code. The order here is also
+// Devbook folders carry their own prefix; everything else is code. The order here is also
 // the tie-break rank: a run that wrote the same number of files to two destinations is named
 // after the rarer one, because "this session touched the domain model" is the more surprising
 // fact and the one worth finding again.

@@ -36,7 +36,7 @@ did not do.
 
 5. **Let each component install itself.** For every component this repository is adopting,
    invoke that component's own sync skill and let it materialize its payload and write its
-   own stamp — `devbook:devbook-sync` for the knowledge folders. Do not copy a component's
+   own stamp — `devbook:devbook-sync` for the devbook folders. Do not copy a component's
    files by hand: a copy made here lands unstamped, and the next reconcile cannot tell it
    from a file someone deliberately customized.
 

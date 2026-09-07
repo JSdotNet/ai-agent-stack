@@ -18,7 +18,7 @@ export function renderGraphPage({ scopes = ["."], scope = "." } = {}) {
 <html>
 <head>
 <meta charset="utf-8" />
-<title>Knowledge graph</title>
+<title>Reference graph</title>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape@3/dist/cytoscape.min.js"></script>
 <style>
   :root { color-scheme: light dark; }

@@ -116,7 +116,7 @@ own folder, so the claim that a surface is never packaged with what it renders s
 unenforced here. Close it by lifting `devbook-canvas` into its own plugin once the generator
 modules have a published shape to import.
 
-## Flat Knowledge Folders Only
+## Flat Devbook Folders Only
 
 ```meta
 date: 2026-09-03
@@ -629,7 +629,7 @@ Putting it in `devbook` was the obvious first move and is the one the README alr
 against: the five per-folder flows left that plugin for `devbook-flows` precisely because
 keeping them made the foundation name the layer above it. Adding a skill that names `delivery`,
 `fleet`, and all three surfaces would have undone that in a larger way, and it would have made
-the guide unreachable for anyone who installed the engine without the knowledge convention.
+the guide unreachable for anyone who installed the engine without the devbook convention.
 
 **The write skills stop at the engine keys.** `stack-init` and `stack-update` own `bindings`,
 `extensions`, `policy`, and `gates`, and every `components.<name>` stamp stays with that
@@ -716,8 +716,9 @@ related: [".devbook/domain/plugin-authoring/naming.md", ".devbook/arc42/05-build
 Every `knowledge-` name inside `devbook` becomes `devbook-`: the two tool folders
 (`tools/devbook-meta`, `tools/devbook-tech`), the two shipped workflows, the nine instruction
 files, the `devbook-tech-update` skill, `assets/build/Update-DevbookIndex.ps1`, and the module
-constants (`DEVBOOK_FOLDER_NAMES`, `DEVBOOK_PATH_PREFIX`) behind them. `knowledge` survives
-only as the English word for what a chapter holds.
+constants (`DEVBOOK_FOLDER_NAMES`, `DEVBOOK_PATH_PREFIX`) behind them. `knowledge` survived
+this decision as the English word for what a chapter holds, and no longer does — see
+[The Word Knowledge Is Retired](#the-word-knowledge-is-retired).
 
 The prefix was the old plugin's name, `knowledge-base`. The canvas extension was already
 renamed on this reasoning — see [devbook Still Ships the Graph Canvas](#devbook-still-ships-the-graph-canvas) — and leaving the payload
@@ -889,7 +890,7 @@ Nothing in the stack maintained a repository's root instruction file. `flow-repo
 once, `devbook-sync` offered `assets/routing-snippet.md` for a person to merge, and the
 session-start hook told every session the folder rules in the same words whether the
 repository had adopted one folder or five. So the one thing a repository's own instruction
-file should say about its knowledge — which folders it keeps, where the rules for each are,
+file should say about its devbook — which folders it keeps, where the rules for each are,
 and how the indexes are checked — was said nowhere on disk.
 
 `devbook-sync` now materializes that as one marker-fenced section of `AGENTS.md`, generated
@@ -1096,8 +1097,8 @@ date: 2026-09-07
 related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/domain/plugin-authoring/naming.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas", ".devbook/ai/02-deliver.md#flow-skills"]
 ```
 
-`devbook` enforces what a knowledge folder holds — the instruction files, the metadata schema,
-the check, the generator, the sync. `delivery` holds every flow, including one per knowledge
+`devbook` enforces what a devbook folder holds — the instruction files, the metadata schema,
+the check, the generator, the sync. `delivery` holds every flow, including one per devbook
 folder: `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`. The `devbook-flows`
 bridge is removed, and `flow-adr`, `flow-tdr`, `flow-architecture`, and `flow-arc42-content`
 are folded into `flow-arc42`.
@@ -1135,3 +1136,37 @@ it. `delivery` ships sixteen flows and `devbook-flows` is no longer published, s
 that had it enabled sees it reported as not installed and finds the same five under the engine.
 The L2b bridge row in the [layer table](../domain/plugin-authoring/naming.md#layer) keeps its
 pattern and, for now, no example.
+
+## The Word Knowledge Is Retired
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md", ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin", ".devbook/arc42/11-risks-and-technical-debt.md"]
+```
+
+*Knowledge* is not a term here any more, in prose or in identifiers. The folders are **devbook
+folders**, what they hold is a **chapter**, what `_meta/graph.json` derives is the **reference
+graph**, and a review note that has not settled is **unsettled content** rather than
+"not established knowledge".
+
+[Devbook Payload Named After Its Plugin](#devbook-payload-named-after-its-plugin) renamed every
+`knowledge-` identifier and kept the English word. That half-measure was the problem: a reader
+met "the knowledge folders" in the same paragraph as `devbook-meta` and had to work out that
+the two named one thing. A convention that has a name does not also need a common noun standing
+in for it, and the leftover word made the marketplace descriptions, the session-start hook, and
+the instruction file headings read as if a second subsystem existed.
+
+Two places keep the old spelling on purpose, and neither is the term:
+
+- The pre-rename **payload paths** — `.github/tools/knowledge-meta/`,
+  `.github/workflows/knowledge-meta*.yml`, `.github/instructions/knowledge-*.instructions.md`,
+  `build/Update-KnowledgeIndex.ps1` — and the plugin name `knowledge-base` they came from.
+  These name files that exist on disk in already-synced repositories, so the technical debt
+  record in [chapter 11](11-risks-and-technical-debt.md), the `006-drop-backlog` migration that
+  matches both workflow spellings, and the decision above all keep them. Erasing them would
+  break the migration and lose the record of what has to move.
+- The external design artifact **Knowledge Base Internals 2.0**, cited by title in `AGENTS.md`.
+  A citation carries the target's name, so this one changes when the artifact is renamed and
+  not before.
+
+Consequence: a grep for the word finds only those two, and finding it anywhere else is a bug.

@@ -1,7 +1,7 @@
 # Code sync protocol
 
 Shared rules for the two families of bidirectional skills that connect a
-repository's knowledge folders to its running code:
+repository's devbook folders to its running code:
 
 - **`to-spec-<kind>`** — something already exists in the application, the
   matching chapter is missing, thin, or stale, so read the implementation and
@@ -22,7 +22,7 @@ apply.
 
 An auto-applied instruction file needs an `applyTo` glob, and an honest glob for
 these rules would have to cover source and test trees — which would make the
-plugin speak in every repository that has not adopted the knowledge-folder
+plugin speak in every repository that has not adopted the devbook
 convention. This file is therefore loaded on demand by the skills that need it,
 and the plugin stays silent everywhere else.
 
@@ -168,7 +168,7 @@ Two rules on top of the ones there:
 
 Entries go in with the drafted content, so they route through the folder's
 orchestration skill along with everything else — a capture pass does not edit a
-knowledge file directly, and that includes this field.
+chapter file directly, and that includes this field.
 
 A build pass writes no `tests` entries: the tests in its brief do not exist yet.
 Its acceptance checks are what those entries will name once someone has written
@@ -199,7 +199,7 @@ concept nobody can pair to code is itself worth knowing about.
 
 ## Status rules
 
-`status` records how settled the written knowledge is. It is not a report on the
+`status` records how settled the written chapter is. It is not a report on the
 code, and the two directions each have a way of getting this wrong.
 
 **Capture must not promote status on the strength of code alone.** Finding an
@@ -221,7 +221,7 @@ So:
   `code-ahead` with the removal as the finding, and let the orchestration skill
   and the user decide.
 
-**Build must not build from unsettled knowledge without confirmation.** A
+**Build must not build from an unsettled chapter without confirmation.** A
 chapter at `draft` or `proposed` has not been agreed:
 
 - `approved` — proceed. The approval gate's rung: a person read this chapter and
@@ -245,7 +245,7 @@ answering it, writes `approved`, `approved-by`, and `approved-at`.
 
 ## Where the spec-side write goes
 
-A capture skill never writes a knowledge file directly. It prepares the content and hands
+A capture skill never writes a chapter file directly. It prepares the content and hands
 the write to whatever flow covers the folder, resolved in this order:
 
 1. **A repo-native `flow-*` skill** for that folder — it takes precedence over anything a
@@ -345,7 +345,7 @@ stale committed index, fix the source Markdown; run `devbook-check`
 for anything that does not resolve from the message alone. Never hand-edit a
 file under `_meta/`.
 
-A build pass changes no knowledge file and therefore regenerates nothing.
+A build pass changes no chapter file and therefore regenerates nothing.
 
 ## Report table
 

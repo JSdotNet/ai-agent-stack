@@ -1,6 +1,6 @@
 // Extension: devbook-canvas
 //
-// Tailored canvas for this repository's checked-in knowledge folders
+// Tailored canvas for this repository's checked-in devbook folders
 // (.domain/, .arc42/, .tech/, .design/, .ai/). Renders the Markdown with its embedded
 // Mermaid diagrams, and parses each chapter/file's `meta` fenced-YAML block
 // (per devbook-chapter-metadata.instructions.md) into a
@@ -190,9 +190,9 @@ const session = await joinSession({
     canvases: [
         createCanvas({
             id: "devbook-graph",
-            displayName: "Knowledge graph",
+            displayName: "Reference graph",
             description:
-                "Obsidian-style force-directed view of the knowledge graph derived from the `meta` blocks in .arc42/.domain/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
+                "Obsidian-style force-directed view of the reference graph derived from the `meta` blocks in .arc42/.domain/.tech. Open it scoped to one folder (e.g. .tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
             inputSchema: {
                 type: "object",
                 properties: {
@@ -200,7 +200,7 @@ const session = await joinSession({
                         type: "string",
                         enum: SCOPES,
                         description:
-                            'Which graph to show: a knowledge folder such as ".tech", or "." for the repository-wide rollup. Defaults to ".".',
+                            'Which graph to show: a devbook folder such as ".tech", or "." for the repository-wide rollup. Defaults to ".".',
                     },
                 },
             },
@@ -220,7 +220,7 @@ const session = await joinSession({
                 {
                     name: "set_scope",
                     description:
-                        'Switch the canvas to a different graph scope (a knowledge folder such as ".tech", or "." for repository-wide). Reload the canvas afterwards.',
+                        'Switch the canvas to a different graph scope (a devbook folder such as ".tech", or "." for repository-wide). Reload the canvas afterwards.',
                     inputSchema: {
                         type: "object",
                         properties: {
@@ -246,7 +246,7 @@ const session = await joinSession({
                 entry.scope = scope;
                 entry.graph = await buildGraph(REPO_ROOT);
                 return {
-                    title: scope === REPO_SCOPE ? "Knowledge graph" : `Knowledge graph: ${scope}`,
+                    title: scope === REPO_SCOPE ? "Reference graph" : `Reference graph: ${scope}`,
                     url: entry.url,
                 };
             },
@@ -321,7 +321,7 @@ const session = await joinSession({
                     setDocument(entry, String(requestedPath));
                 }
                 return {
-                    title: entry.state.relPath ? `Knowledge: ${entry.state.relPath}` : "Devbook canvas",
+                    title: entry.state.relPath ? `Devbook: ${entry.state.relPath}` : "Devbook canvas",
                     url: entry.url,
                 };
             },

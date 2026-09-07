@@ -87,7 +87,7 @@ fence behind them.
 
 ## 0.12.0: the `.ai` folder
 
-**Additive, and nothing existing changes.** A sixth knowledge folder, `.ai`,
+**Additive, and nothing existing changes.** A sixth devbook folder, `.ai`,
 records **how the project develops with AI** — which practice, agent, skill,
 hook, model, or guardrail is used at which position in the development flow,
 the concepts underneath them, and how far adoption has actually got.
@@ -357,7 +357,7 @@ a document declares one, and the bumped `schemaVersion`.
 Schema version 3 is **additive** over 2 and needs no authoring changes. A `file`
 entry in `index.json` may now carry two optional fields — `summary`, the
 document's lede, and `diagrams`, how many mermaid blocks and images it embeds —
-so a viewer can render a knowledge folder's list view without opening any
+so a viewer can render a devbook folder's list view without opening any
 Markdown. `graph.json` is unchanged apart from the version number.
 
 Re-sync `.github/tools/devbook-meta/` from this plugin and regenerate; the

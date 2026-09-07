@@ -1,14 +1,14 @@
 #Requires -Version 7.0
 <#
 .SYNOPSIS
-    Refresh the derived knowledge indexes (`_meta/graph.json`, `_meta/index.json`).
+    Refresh the derived devbook indexes (`_meta/graph.json`, `_meta/index.json`).
 
 .DESCRIPTION
     On-demand wrapper around `.github/tools/devbook-meta/build.mjs`, installed
     by the `devbook-sync` skill.
 
     Refreshing the indexes is deliberate, not automatic. The pull-request check
-    only warns when they have drifted, because making every knowledge pull
+    only warns when they have drifted, because making every devbook pull
     request carry a regenerated index is what turns those generated files into
     merge conflicts. Run this when you want your own branch current; otherwise
     the nightly job (`.github/workflows/devbook-meta-nightly.yml`) reconciles
@@ -18,7 +18,7 @@
     moved, so a refresh that changed nothing is visibly a no-op.
 
 .PARAMETER Scope
-    Refresh one knowledge folder only (for example `.tech` or `.ai`). Omit to refresh
+    Refresh one devbook folder only (for example `.tech` or `.ai`). Omit to refresh
     every adopted scope plus the repository-wide rollup.
 
 .PARAMETER Check

@@ -44,7 +44,7 @@ node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 Treat these JSON files as temporary evidence. Do not commit them unless the repository has
-explicitly adopted inventory evidence files; the durable knowledge remains the `.tech/*.md`
+explicitly adopted inventory evidence files; the durable record remains the `.tech/*.md`
 chapters and generated `_meta/*.json` indexes.
 
 ## Workflow

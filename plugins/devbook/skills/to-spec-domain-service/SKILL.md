@@ -20,7 +20,7 @@ no separate `Policy` chapter type; do not introduce one.
 The hard part of this pass is distinguishing a domain service from an
 application service. A domain service holds domain logic that has no natural
 aggregate home; an application service orchestrates transactions, authorization,
-and transport. The latter is not domain knowledge and does not get a chapter.
+and transport. The latter is not part of the domain and does not get a chapter.
 
 Read `assets/code-sync-protocol.md` before starting. It carries the counterpart
 resolution ladder, the evidence rules, the five-way drift verdict, the status

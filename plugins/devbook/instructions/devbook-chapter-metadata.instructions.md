@@ -170,7 +170,7 @@ never mixes them:
 The nested subfolders **drop the leading dot**. One dot on the parent already
 signals "hidden support directory" for everything inside it — the same reason
 `.github/workflows` is not `.github/.workflows`. `.devbook/.domain` is not a
-knowledge folder and resolves to nothing.
+devbook folder and resolves to nothing.
 
 Nothing else in this convention changes with the layout. An address is the
 chapter's real repository path, so a reference reads
@@ -299,7 +299,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   been estimated.
 - **roadmap** (optional) — list of roadmap item tags this chapter or file
   contributes to, e.g. `roadmap: [sync-service, mobile-mvp]`. This lets a
-  roadmap item gather its knowledge by tag instead of having to reference every
+  roadmap item gather its chapters by tag instead of having to reference every
   contributing chapter explicitly. Entries are **plain lowercase kebab-case
   slugs, not `<path>#<heading-slug>` references** — like `.domain`'s `aliases`
   and `.tech`'s `alternatives`, they stay node attributes and produce no graph
@@ -561,7 +561,7 @@ chapter.
 
 ## Where reading order comes from
 
-Files in a knowledge folder have an intended reading order that alphabetical
+Files in a devbook folder have an intended reading order that alphabetical
 sorting does not capture — `.domain` reads `domain` → `features` → `model`
 before `naming`, not the other way round, and ADR 10 comes after ADR 7 rather
 than after ADR 1.
@@ -629,7 +629,7 @@ The convention's own part of this lives in the `DIRECTORY_CONVENTION` table in
 ## Derived metadata index
 
 These metadata blocks are compiled into derived indexes by
-`.github/tools/devbook-meta/build.mjs` — one pair per knowledge folder plus
+`.github/tools/devbook-meta/build.mjs` — one pair per devbook folder plus
 a repository-wide rollup, placed per
 `devbook-derived-artifacts.instructions.md`:
 
@@ -654,6 +654,6 @@ node .github/tools/devbook-meta/build.mjs
 
 These are derived output — never edit them by hand. CI
 (`.github/workflows/devbook-meta.yml`) fails when a reference does not
-resolve or when a committed index is stale. Open the **Knowledge graph**
+resolve or when a committed index is stale. Open the **Reference graph**
 canvas (optionally scoped to one folder) to explore it visually. See
 the devbook-meta tooling README (`.github/tools/devbook-meta/README.md`) for the output shape.

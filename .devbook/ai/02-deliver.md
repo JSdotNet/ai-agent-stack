@@ -19,7 +19,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#flow-skill"]
 Task categories route to a `flow-<category>` skill that runs the category end to end.
 
 - **Used for** — every category of change to a repository that has the engine enabled:
-  `delivery` ships sixteen flows, five of them one per knowledge folder so an edit to
+  `delivery` ships sixteen flows, five of them one per devbook folder so an edit to
   `.devbook/` routes through `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, or
   `flow-ai` rather than `flow-fallback`. A run can report into a surface — `delivery-surface-dashboard` or
   `delivery-surface-collector` here, `delivery-surface-canvas` being a Copilot canvas this marketplace does not

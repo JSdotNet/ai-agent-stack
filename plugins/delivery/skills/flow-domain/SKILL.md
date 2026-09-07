@@ -22,7 +22,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.domain/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the knowledge convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the devbook convention's own sync, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the context's
   files in scope plus the context map, never the whole folder.
 - Note the cross-references and aliases elsewhere that the change may have to update.

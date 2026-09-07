@@ -1,4 +1,4 @@
-// Exercises escapeSequenceIssues against the corruption seen in a real knowledge corpus
+// Exercises escapeSequenceIssues against the corruption seen in a real devbook corpus
 // plus the legitimate uses that must NOT be flagged.
 import { escapeSequenceIssues } from "./metadata.mjs";
 
@@ -41,7 +41,7 @@ const cases = [
     {
         name: "a Windows path, which must not look like an escape",
         expect: false,
-        text: "Stored under `C:\\repos\\knowledge` on disk.\n",
+        text: "Stored under `C:\\repos\\devbook` on disk.\n",
     },
     {
         name: "a tab escape in an unformatted path is deliberately not matched",

@@ -1,6 +1,6 @@
 ---
 name: chapter-review
-description: 'Review one devbook chapter and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an ext.devbook-collaboration.open key and set the review state. The reviewer''s half of a hand-off. Use when: reviewing a knowledge chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
+description: 'Review one devbook chapter and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an ext.devbook-collaboration.open key and set the review state. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
 ---
 
 # chapter review

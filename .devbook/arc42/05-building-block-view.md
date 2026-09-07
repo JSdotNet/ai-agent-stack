@@ -232,7 +232,7 @@ every plugin.
 
 `scripts/stack-report.mjs` is the read-only half, run in place from the plugin root: it reads
 the catalog in both the working tree and the host's clone, the host's installed-plugin state,
-the three settings layers merged nearest-last, the stack config, the knowledge folders in both
+the three settings layers merged nearest-last, the stack config, the devbook folders in both
 layouts, and the engine's own `skills/` folder. A clone older than the source is why "already
 latest" is usually wrong, so the report prints both and the commit behind each.
 

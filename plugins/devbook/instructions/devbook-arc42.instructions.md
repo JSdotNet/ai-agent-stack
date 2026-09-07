@@ -22,7 +22,7 @@ deployable unit.
   specific documented constraint, decision, runtime view, deployment view, or
   glossary entry.
 
-## Relationship to other knowledge folders
+## Relationship to other devbook folders
 
 - `.domain` describes *what the domain is* (bounded contexts, aggregates,
   ubiquitous language). `.arc42` describes *how the system is built and runs*

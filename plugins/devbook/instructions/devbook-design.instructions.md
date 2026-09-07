@@ -1,9 +1,9 @@
 ---
 applyTo: ".design/**,.devbook/design/**"
-description: Structure and authoring rules for the design knowledge folder, holding UX principles, design tokens, interaction guidelines, accessibility rules, and component-library decisions.
+description: Structure and authoring rules for the design devbook folder, holding UX principles, design tokens, interaction guidelines, accessibility rules, and component-library decisions.
 ---
 
-# Design knowledge (`.design`)
+# Design documentation (`.design`)
 
 `.design` holds the product's design and UX guidelines: principles, design
 tokens, typography and layout rules, interaction guidelines, accessibility
@@ -41,7 +41,7 @@ chapters carry the rationale directly.
   touches visual design, interaction behavior, editing behavior, or
   accessibility — not by default.
 
-## Relationship to other knowledge folders
+## Relationship to other devbook folders
 
 - `.arc42` describes *how the system is built and runs*; `.design` describes
   *how it looks and behaves for the user*. Channel and stack facts live in

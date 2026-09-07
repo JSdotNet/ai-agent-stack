@@ -4,7 +4,7 @@ name: Devbook metadata nightly refresh
 # branch. Installed by the `devbook-sync` skill.
 #
 # The pull-request check (devbook-meta.yml) only *warns* when an index has
-# drifted, because forcing every knowledge pull request to regenerate the
+# drifted, because forcing every devbook pull request to regenerate the
 # indexes is what makes those files conflict on merge. This job is the other
 # half of that trade: refresh happens here, once, on a schedule, in a single
 # pull request nobody has to rebase.
@@ -81,7 +81,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch --force-create "$REFRESH_BRANCH"
           git add -- '*_meta/*.json'
-          git commit -m 'chore(knowledge): refresh derived _meta indexes'
+          git commit -m 'chore(devbook): refresh derived _meta indexes'
           git push --force origin "$REFRESH_BRANCH"
 
       # One pull request, reused. `gh pr create` fails when the head branch
@@ -91,10 +91,10 @@ jobs:
         if: steps.drift.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_TITLE: 'chore(knowledge): refresh derived _meta indexes'
+          PR_TITLE: 'chore(devbook): refresh derived _meta indexes'
           PR_BODY: |
             Scheduled refresh of the generated `_meta/graph.json` and
-            `_meta/index.json` artifacts, so knowledge pull requests do not have
+            `_meta/index.json` artifacts, so devbook pull requests do not have
             to carry them and conflict on merge.
 
             Generated output only — no authored Markdown is touched. Regenerate
@@ -112,5 +112,5 @@ jobs:
       - name: Fail if the generator reported errors
         if: steps.generate.outputs.status != '0'
         run: |
-          echo "::error::build.mjs exited ${{ steps.generate.outputs.status }} — the default branch has knowledge metadata errors. The index refresh above still ran."
+          echo "::error::build.mjs exited ${{ steps.generate.outputs.status }} — the default branch has devbook metadata errors. The index refresh above still ran."
           exit 1

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// build.mjs — CLI wrapper that writes the derived knowledge metadata artifacts.
+// build.mjs — CLI wrapper that writes the derived devbook metadata artifacts.
 //
 //   node .github/tools/devbook-meta/build.mjs           # every adopted scope
 //   node .github/tools/devbook-meta/build.mjs --check   # CI: verify only, write nothing
@@ -12,7 +12,7 @@
 //   _meta/index.json          the ordered reading outline
 //   _meta/annotations.json    the open-note index, from the annotation fences
 //   .tech/_meta/graph.json    the same set, scoped to .tech
-//   ...one set per knowledge folder the repository actually has
+//   ...one set per devbook folder the repository actually has
 //
 // Only folders present in the repository produce a scope, so a repository that
 // adopts just .domain and .arc42 never grows _meta folders for the rest.
@@ -56,7 +56,7 @@ const availableScopes = layout.folders.length ? [REPO_SCOPE, ...layout.folders] 
 
 if (!availableScopes.length) {
     console.error(
-        `No knowledge folders found under ${REPO_ROOT}. ` +
+        `No devbook folders found under ${REPO_ROOT}. ` +
             `Expected at least one of: ${DEVBOOK_FOLDERS.join(", ")} ` +
             `(flat layout), or ${NESTED_DEVBOOK_FOLDERS.join(", ")} (nested).`
     );

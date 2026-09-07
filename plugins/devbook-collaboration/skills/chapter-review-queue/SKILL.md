@@ -1,13 +1,13 @@
 ---
 name: chapter-review-queue
-description: 'Sweep a repository''s devbook folders for everything a review pass has left open — chapters awaiting a named reviewer, chapters with unresolved findings, chapters cleared and waiting for approval, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the knowledge folders".'
+description: 'Sweep a repository''s devbook folders for everything a review pass has left open — chapters awaiting a named reviewer, chapters with unresolved findings, chapters cleared and waiting for approval, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
 ---
 
 # chapter review queue
 
 ## Purpose
 
-Answer one question across every adopted knowledge folder: what is a person
+Answer one question across every adopted devbook folder: what is a person
 still owed. This is the only skill in this plugin that reads the folder rather
 than one chapter, because a queue is the one thing an address cannot give you.
 
@@ -21,7 +21,7 @@ chapter that never appears in the queue.
 
 1. **Find the adopted folders.** Read `adopted` from devbook's entry in
    `.github/ai-agent-stack.json` — the stamp, per `devbook`'s reconcile
-   protocol. Fall back to the knowledge folders present on disk when the
+   protocol. Fall back to the devbook folders present on disk when the
    repository has no stamp; do not ask.
 
 2. **Collect the `meta` blocks** in those folders. Prefer the derived index

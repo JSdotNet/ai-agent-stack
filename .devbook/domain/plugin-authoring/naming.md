@@ -80,6 +80,24 @@ type: term
 A host-executed action bound to a session event. The two hosts disagree on what a session-start
 hook may be, so the event, not the intent, decides the form it takes.
 
+## Devbook Folder
+
+```meta
+type: term
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#the-word-knowledge-is-retired", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+```
+
+One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
+`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block. A
+repository adopts any subset, in one of two layouts, and never mixes them.
+
+*Knowledge* was the common noun for these until 2026-09-07 and is not an alias: a convention
+with a name does not also need one. It is retired in prose and in identifiers alike, and what
+`_meta/graph.json` derives is the **reference graph**. The word survives only where it names a
+pre-rename file path or the external design artifact cited in `AGENTS.md`; see
+[the decision](../../arc42/09-architecture-decisions.md#the-word-knowledge-is-retired).
+
 ## Flow Skill
 
 ```meta
@@ -103,7 +121,7 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
 `orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds sixteen `flow-*` — five of them one per knowledge folder, since
+`delivery` holds sixteen `flow-*` — five of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
 and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
 `fleet-*`, and `stack-guide` holds three `stack-*`.

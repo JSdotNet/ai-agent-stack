@@ -184,22 +184,30 @@ path and hands over grounded input; no flow knows these skills exist.
 `.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
 `change brief`, `spec code drift`, `the code has an invariant the chapter omits`
 
-### Instructions (auto-applied)
+### Instructions
 
 | File | Pattern | Purpose |
 |------|---------|---------|
 | `devbook-chapter-metadata.instructions.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, and the `tests` test-case link format |
-| `devbook-domain.instructions.md` | `.domain/**` | Bounded-context structure and ubiquitous language |
-| `devbook-arc42.instructions.md` | `.arc42/**` | arc42 chapter, ADR, and TDR structure |
-| `devbook-tech.instructions.md` | `.tech/**` | Technology graph, versions, maturity ladder |
-| `devbook-design.instructions.md` | `.design/**` | Design guideline scope and token rules |
-| `devbook-ai.instructions.md` | `.ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
+| `devbook-domain.instructions.md` | `.domain/**`, `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
+| `devbook-arc42.instructions.md` | `.arc42/**`, `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
+| `devbook-tech.instructions.md` | `.tech/**`, `.devbook/tech/**` | Technology graph, versions, maturity ladder |
+| `devbook-design.instructions.md` | `.design/**`, `.devbook/design/**` | Design guideline scope and token rules |
+| `devbook-ai.instructions.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
 | `devbook-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
 | `devbook-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
-Every glob is scoped to the knowledge folders, so the plugin stays silent in
+Every glob carries both layouts — the five root dot-folders and their `.devbook/`
+nesting — and is scoped to the knowledge folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
+
+How a file reaches a session depends on the host. Copilot applies it from `applyTo`
+on every matching read. Claude has its own glob-scoped injection, `.claude/rules/`,
+but a plugin cannot ship it — there is no rules component and no `rules` key in
+`plugin.json` — so there the rules arrive through the session-start hook and through
+the skills that name the file by path. Both are shipped, which is why the table
+matters in either host.
 
 ### The `ext` namespace
 
@@ -366,10 +374,12 @@ build/
 
 Five layers, weakest to strongest:
 
-1. **Instructions** auto-apply on the governed paths in every repository where
-   the plugin is installed.
+1. **Instructions** govern the paths above in every repository where the plugin is
+   installed — applied from `applyTo` on the host that reads it, reached by path on
+   the host that does not.
 2. **The session-start hook** stops agents treating knowledge folders as baseline
-   context or hand-editing derived files.
+   context or hand-editing derived files, and is what carries the folder rules on the
+   host that cannot be handed a rules file by a plugin.
 3. **`meta` block rules** make every chapter's relationships explicit and
    checkable.
 4. **`build.mjs --check`** fails on unresolved references and schema violations.

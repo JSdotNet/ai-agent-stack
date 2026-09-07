@@ -152,7 +152,7 @@ verifies the checks pass after the push.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`.
+Follow the **Reporting Contract** in `resources/surface-contract.md`.
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 

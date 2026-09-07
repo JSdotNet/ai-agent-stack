@@ -122,7 +122,7 @@ re-reads.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`.
+Follow the **Reporting Contract** in `resources/surface-contract.md`.
 With no surface bound, skip the calls, say so once, and continue — the issues remain the
 source of truth.
 

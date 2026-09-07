@@ -5,8 +5,8 @@ description: 'Create a new service in an existing project — from an ad-hoc "we
 
 # Flow: Create Service in Existing Project
 
-Agent transitions follow `rules/flow-phases.md`; per-stage model choice
-follows `rules/flow-model-selection.md`.
+Agent transitions follow `resources/flow-phases.md`; per-stage model choice
+follows `resources/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -39,7 +39,7 @@ service boundary is itself an open architectural question: recommend `flow-creat
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`rules/flow-execution-model.md`. the `architecture` role when the boundary needs
+`resources/flow-execution-model.md`. the `architecture` role when the boundary needs
 review.
 
 ## Stage 1: Specification Intake
@@ -78,7 +78,7 @@ domain modeling belongs to `flow-domain`; route there rather than modeling here.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
+Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -88,7 +88,7 @@ recorded.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
+Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

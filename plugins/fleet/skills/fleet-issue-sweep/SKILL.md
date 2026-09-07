@@ -31,7 +31,7 @@ only so a past sweep can be re-read by hand.
 A sweep spans sessions that cannot see each other's conversations, and they coordinate through
 files, `gh` labels, and `claude agents`, never through conversation and never through a
 scheduled task. Read **Issue Sweep State Contract**
-(`rules/fleet-issue-sweep-contract.md`) before the first dispatch — it
+(`resources/fleet-issue-sweep-contract.md`) before the first dispatch — it
 owns the sweep directory layout, the manifest and result schemas, and the dispatch rules.
 
 ```text

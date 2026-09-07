@@ -50,7 +50,7 @@ and the **sweep directory**.
 
 When a sweep directory is given, this skill additionally writes
 `<sweep dir>/workers/<number>.json` as its last act, on **every** outcome — see the **Issue
-Sweep State Contract** (`rules/fleet-issue-sweep-contract.md`) for the
+Sweep State Contract** (`resources/fleet-issue-sweep-contract.md`) for the
 schema. The morning brief reads those files; a worker that writes nothing is indistinguishable
 from one that never ran, so write the file even when the news is bad.
 

@@ -14,8 +14,8 @@ Escalate only when the request is really a maintenance *policy* decision — sta
 major-version adoption, supported framework baselines. Recommend `flow-arc42` to record it,
 and ask the user.
 
-Agent transitions follow `rules/flow-phases.md`; per-stage model choice
-follows `rules/flow-model-selection.md`.
+Agent transitions follow `resources/flow-phases.md`; per-stage model choice
+follows `resources/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -61,7 +61,7 @@ and rollback boundaries, and the runtime validation target.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
+Code-modifying tier of `resources/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow. Build & Test
 covers the compatibility and pipeline checks for the updated dependencies.
@@ -73,7 +73,7 @@ user-facing behavior.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
+Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

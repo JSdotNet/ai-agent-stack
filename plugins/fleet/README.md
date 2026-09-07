@@ -24,7 +24,7 @@ add this working copy by path instead of by repository.
 
 They coordinate through files on disk, `gh` labels, and the host's session list — never through
 conversation, because no two of these sessions can see each other's. The layout, both schemas,
-and the dispatch rules live in `rules/fleet-issue-sweep-contract.md`.
+and the dispatch rules live in `resources/fleet-issue-sweep-contract.md`.
 
 ## Why it is its own plugin
 

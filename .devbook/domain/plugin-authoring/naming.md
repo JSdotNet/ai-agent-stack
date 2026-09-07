@@ -70,9 +70,22 @@ type: term
 A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
 `rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
 `.agents/rules/` an install writes hold the same names, so a rule referencing a sibling resolves in
-both. Inside a plugin no host applies one automatically, so every rule is referenced explicitly
-by the asset that depends on it; a repo-facing one also ships to the adopting repository
-through its plugin's install skill, which writes each host's wrapper there.
+both. Every plugin rule is delivered: no host applies one from inside a plugin, so it reaches a
+session only where the plugin's install skill has written it into a repository, with each host's
+wrapper beside it. Shared text an asset reads by path is a [contract](#contract), not a rule.
+
+## Contract
+
+```meta
+type: term
+```
+
+Reference an asset points at by path, as `resources/<name>.md`, carrying `name` and
+`description` and no scope of its own — the surface contract, the schedule catalog contract,
+the issue sweep state contract. It is loaded by the explicit reference and by nothing else, so
+a contract no skill or agent names is unreachable. It takes the rule budget, because it is the
+same kind of prose, and it stays over that budget by kind. Distinct from a
+[plugin rule](#plugin-rule), which exists to be installed somewhere else.
 
 ## Hook
 

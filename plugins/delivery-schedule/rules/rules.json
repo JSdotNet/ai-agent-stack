@@ -1,9 +1,0 @@
-{
-  "rules": {
-    "schedule-catalog-contract": {
-      "paths": [
-        "**/*.schedule.md"
-      ]
-    }
-  }
-}

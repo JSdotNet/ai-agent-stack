@@ -5,8 +5,8 @@ description: 'Run any change to .tech/ — the technology graph of platforms, ru
 
 # Flow: Technology Graph (`.tech/`)
 
-Agent transitions follow `rules/flow-phases.md`; per-stage model choice
-follows `rules/flow-model-selection.md`. What a chapter must look like is
+Agent transitions follow `resources/flow-phases.md`; per-stage model choice
+follows `resources/flow-model-selection.md`. What a chapter must look like is
 the repository's rule, not this flow's: the instruction files that govern the target path and
 the check the repository ships own structure, metadata, the status ladder, and the layer
 rules. This flow restates none of them.
@@ -56,13 +56,13 @@ continue.
 
 ## Final Phases (Shared)
 
-Documentation/config tier of `rules/flow-phases.md`, in order: Personal
+Documentation/config tier of `resources/flow-phases.md`, in order: Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
 them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
+Follow the **Reporting Contract** in `resources/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

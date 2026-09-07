@@ -18,7 +18,7 @@ concerned.
 ## Plugin Folder
 
 ```meta
-related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/naming.md#plugin", ".devbook/domain/plugin-authoring/naming.md#plugin-rule", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
 ```
 
 One folder per plugin, holding two manifests and the assets themselves:
@@ -28,7 +28,8 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `.claude-plugin/plugin.json` | Claude Code |
 | `.github/plugin/plugin.json` | Copilot |
 | `agents/`, `agents-internal/` | both |
-| `skills/`, `instructions/`, `resources/` | both |
+| `skills/`, `resources/` | both |
+| `rules/<name>.md`, `rules/rules.json` | neither host on its own |
 | `hooks/hooks.json` | Claude Code |
 | `hooks.json` | Copilot |
 | `mcp/<server>/` | Whatever the Claude manifest's `mcpServers` points at |
@@ -82,6 +83,15 @@ payload copied anywhere: `stack-guide` ships `stack-report.mjs`, which its read-
 from the plugin root. It is the only one left. The pair of identical
 `generate-diagram-svgs.ps1` scripts that used to sit in two specialist plugins — duplicated
 because neither plugin may name the other — left with them.
+
+A `rules/` folder is the one asset folder neither host applies on its own: no manifest here
+declares a rules key and neither host has a rules component, so a rule shipped inside a plugin
+fires only where a skill or an agent names it by path, or where the plugin's
+`<component>-install` writes it into a repository as one `.agents/rules/<name>.md` body and a
+wrapper per host. `rules/<name>.md` carries name and description and no scope of its own;
+`rules/rules.json` keys each rule by that name and holds its `paths` and the adopted folder
+that pulls it in — see
+[the decision](09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install).
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own

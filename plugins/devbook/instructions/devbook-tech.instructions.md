@@ -173,5 +173,5 @@ Omit every optional field that has no value (no `related: []`, no
 - A change of technology *decision* belongs in an ADR first; `.tech` records the
   outcome and links to it.
 - Do not add a new metadata field without updating this file (folder-specific)
-  or `chapter-metadata.instructions.md` (universal) first — the visualization
+  or `devbook-chapter-metadata.instructions.md` (universal) first — the visualization
   tooling depends on a fixed schema.

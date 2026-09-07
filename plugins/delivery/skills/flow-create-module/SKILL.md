@@ -29,7 +29,8 @@ derivation when it does not.
   touch.
 - Identify the governing instructions — the repository instructions bound to the
   `repo-instructions` slot, any matching `**/*.instructions.md`, and relevant guidelines or
-  ADRs via `jsdotnet-guidelines-mcpserver`.
+  ADRs — through the guidelines capability when one answers, the checked-in chapters
+  otherwise.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the module is really a separate deployable service, or needs a new

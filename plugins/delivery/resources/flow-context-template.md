@@ -39,7 +39,8 @@ aspire start
 
 ## MCP Servers
 
-- `jsdotnet-guidelines-mcpserver` — repository conventions and governed asset guidance.
+- `your-guidelines-server` — repository conventions and governed asset guidance; the server
+  that fills the guidelines capability, named by this repository.
 - `microsoft-learn` — official .NET, Azure, and Aspire documentation.
 - `playwright` — browser automation for QA validation.
 

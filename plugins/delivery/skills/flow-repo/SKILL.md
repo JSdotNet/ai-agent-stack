@@ -41,24 +41,25 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 3: MCP Configuration
 
-- Query `jsdotnet-guidelines-mcpserver` for the recommended server selection for this project
-  type.
+- Ask the guidelines capability for the recommended server selection for this project type,
+  or derive it from the project type when none answers.
 - Configure the servers in `.github/github-app.yml`, with their permissions and scopes: the
-  core three are `jsdotnet-guidelines-mcpserver`, `microsoft-learn`, and `playwright`; add
-  `jsdotnet-design-mcpserver` when the repository expects UX design flows.
+  guidelines server this repository adopts, `microsoft-learn`, and `playwright`; add a
+  design-guidelines server when the repository expects UX design flows. The repository names
+  the servers; this plugin never does.
 
-**MCP:** `jsdotnet-guidelines-mcpserver`
+**MCP:** the guidelines capability
 
 ## Stage 4: Repository Instructions
 
-- Query `jsdotnet-guidelines-mcpserver` for the coding standards and agent guidance for this
-  project type.
+- Retrieve the coding standards and agent guidance for this project type through the
+  guidelines capability, or derive them from the project type when none answers.
 - Create the repository agent instructions file bound to the `repo-instructions` slot: tech
   stack, conventions, key patterns, agent guidance.
 - Add the repo-level instruction files under `.github/instructions/`, using an
   asset-authoring skill when one is installed.
 
-**MCP:** `jsdotnet-guidelines-mcpserver`
+**MCP:** the guidelines capability
 
 ## Stage 5: Branch Protection
 
@@ -70,11 +71,12 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 6: Issue and PR Templates
 
-- Query `jsdotnet-guidelines-mcpserver` for the template structures and label conventions.
+- Retrieve the template structures and label conventions through the guidelines capability,
+  or use the host's defaults when none answers.
 - Create the issue templates and the PR template with its checklist.
 - Add `CODEOWNERS` to assign default reviewers per path, and configure the repository labels.
 
-**MCP:** `jsdotnet-guidelines-mcpserver`
+**MCP:** the guidelines capability
 
 ## Stage 7: Repository Governance *(optional)*
 

@@ -8,6 +8,11 @@ Every diagram below starts at the flow's own first stage. **Update Base** runs b
 every flow — the engine prepends that phase, so no diagram and no `SKILL.md` repeats it. See
 **Phase: Update Base** in `instructions/flow-phases.instructions.md`.
 
+The **MCP servers** column names capabilities resolved from the live tool list, never servers
+this plugin ships: *the guidelines capability* falls back inline to the repository's own
+instruction files when none answers. See **MCP Server Strategy** in
+`instructions/flow-execution-model.instructions.md`.
+
 ## flow-repo
 
 ```mermaid
@@ -31,10 +36,10 @@ flowchart TD
 |-------|--------|-------------|
 | Repository Creation (Manual) | — | — |
 | README | the `docs` role, default agent | — |
-| MCP Configuration | Default agent | `jsdotnet-guidelines-mcpserver`, `jsdotnet-design-mcpserver` *(enable for future UX flows)*, `microsoft-learn`, `playwright` |
-| Repository Instructions | Default agent | `jsdotnet-guidelines-mcpserver` |
+| MCP Configuration | Default agent | the guidelines capability, a design-guidelines server *(enable for future UX flows)*, `microsoft-learn`, `playwright` |
+| Repository Instructions | Default agent | the guidelines capability |
 | Branch Protection | Default agent | — |
-| Issue and PR Templates | Default agent | `jsdotnet-guidelines-mcpserver` |
+| Issue and PR Templates | Default agent | the guidelines capability |
 | Repository Governance | Default agent | — |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
@@ -62,9 +67,9 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| GitHub Folder Setup (Foundation) | the `implement` service | `jsdotnet-guidelines-mcpserver` |
+| GitHub Folder Setup (Foundation) | the `implement` service | the guidelines capability |
 | GitHub Actions Workflows | the `implement` service | — |
-| Specification & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Specification & Architecture Intake | the `architecture` role | the guidelines capability |
 | Tooling & Dependencies | the `implement` service | `microsoft-learn` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
@@ -94,8 +99,8 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
-| MVP Scope Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
+| MVP Scope Intake | the `architecture` role | the guidelines capability |
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
@@ -184,7 +189,7 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Goal & Guideline Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Goal & Guideline Retrieval | the `architecture` role | the guidelines capability |
 | Architecture Investigation | the `architecture` role | — |
 | Drafting & Review | the `architecture` role | — |
 | Personal Validation | — | — |
@@ -209,7 +214,7 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Context & Guideline Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Context & Guideline Retrieval | the `architecture` role | the guidelines capability |
 | Section Drafting | the `architecture` role | — |
 | Cross-Section Review | the `architecture` role | — |
 | Personal Validation | — | — |
@@ -234,7 +239,7 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Decision Context Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Decision Context Retrieval | the `architecture` role | the guidelines capability |
 | ADR Drafting | the `architecture` role | — |
 | Traceability Review | the `architecture` role | — |
 | Personal Validation | — | — |
@@ -259,7 +264,7 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Debt Context Retrieval | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Debt Context Retrieval | the `architecture` role | the guidelines capability |
 | TDR Drafting | the `architecture` role | — |
 | Risk & Follow-Up Review | the `architecture` role | — |
 | Personal Validation | — | — |
@@ -286,8 +291,8 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
-| Specification & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
+| Specification & Architecture Intake | the `architecture` role | the guidelines capability |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
@@ -316,7 +321,7 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
 | Bug Intake & Reproduction | the `implement` service, the `qa.run` provider (runtime repro) | — |
 | Root Cause Analysis | the `implement` service | — |
 | Implementation | the `implement` service | `microsoft-learn` |
@@ -348,15 +353,15 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
-| Structure & Architecture Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
+| Structure & Architecture Intake | the `architecture` role | the guidelines capability |
 | Refactor Planning | the `architecture` role, the `implement` service | — |
 | Implementation | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
+| Documentation Update | the `docs` role | the guidelines capability *(optional, governed docs only)* |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |
 
@@ -380,8 +385,8 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
+| Specification Intake | the `architecture` role | the guidelines capability |
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
@@ -411,8 +416,8 @@ flowchart TD
 
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | `jsdotnet-guidelines-mcpserver` |
-| Specification Intake | the `architecture` role | `jsdotnet-guidelines-mcpserver` |
+| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | the guidelines capability |
+| Specification Intake | the `architecture` role | the guidelines capability |
 | Implementation Planning | the `architecture` role | — |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `implement` service | `microsoft-learn` *(targeted remediation only)* |
@@ -448,13 +453,13 @@ flowchart TD
 | Phase | Roles & services | MCP servers |
 |-------|--------|-------------|
 | Routing Check | `flow-runner` agent | — |
-| Plan | The closest specialist agent for the task category | `jsdotnet-guidelines-mcpserver` *(when the task touches governed assets)* |
+| Plan | The closest specialist agent for the task category | the guidelines capability *(when the task touches governed assets)* |
 | Execute | The closest specialist agent for the task category | `microsoft-learn` *(targeted lookups only)* |
 | Review & Recommend | The closest specialist agent for the task category | — |
 | Build & Test | the `implement` service *(code-modifying change kind only)* | `microsoft-learn` *(targeted remediation only)* |
 | QA Validation | the `qa.run` provider, the runtime monitor, `aspire` *(code-modifying change kind only)* | `playwright` *(targeted validation when a runnable surface exists)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
-| Documentation Update | the `docs` role *(code-modifying change kind only)* | `jsdotnet-guidelines-mcpserver` *(optional, governed docs only)* |
+| Documentation Update | the `docs` role *(code-modifying change kind only)* | the guidelines capability *(optional, governed docs only)* |
 | Work Item Update | *(default)* | — |
 | Summary | `flow-runner` agent | — |

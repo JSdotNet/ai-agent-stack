@@ -5,8 +5,8 @@ description: 'Run any change to .domain/ — the context map, or a bounded conte
 
 # Flow: Domain Model (`.domain/`)
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`. What a chapter must look like is
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`. What a chapter must look like is
 the repository's rule, not this flow's: the instruction files that govern the target path and
 the check the repository ships own structure, metadata, templates, and status. This flow
 restates none of them.
@@ -22,7 +22,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.domain/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the devbook convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the devbook convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the context's
   files in scope plus the context map, never the whole folder.
 - Note the cross-references and aliases elsewhere that the change may have to update.
@@ -56,13 +56,13 @@ continue.
 
 ## Final Phases (Shared)
 
-Documentation/config tier of `instructions/flow-phases.instructions.md`, in order: Personal
+Documentation/config tier of `rules/flow-phases.md`, in order: Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
 them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

@@ -1,6 +1,6 @@
 # Reconcile protocol
 
-The shared detail behind `devbook-sync` and `devbook-check`: the stamp devbook
+The shared detail behind `devbook-install` and `devbook-check`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
@@ -35,7 +35,10 @@ one entry inside it and never edits another component's:
         ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
-        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true }
+        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true },
+        ".agents/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
+        ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true },
+        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.4.0", "hash": "sha256:e3f0…", "managed": true }
       },
       "migrations": [
         { "id": "006-drop-backlog", "applied": "2026-09-03" }
@@ -68,6 +71,9 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
+| `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
+| its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
+| the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
@@ -83,6 +89,15 @@ and is rewritten when the fresh rendering differs — adoption moved, or the tem
 Text that no longer matches the stamped hash is customized: reported, left alone. Nothing
 outside the markers is read or written. Absent `AGENTS.md` is created holding only the
 section; present without the markers, the section is appended at the end.
+
+The folder rules are the one asset materialized as a trio. A rule sitting in a plugin
+is read by no host automatically, and the globs in `rules/rules.json` name folders in
+this repository, the only place they resolve. So each rule lands as its own copy under
+`.agents/rules/<name>.md`, verbatim, with a wrapper per host beside it — `.claude/rules/`
+carrying `paths`, `.github/instructions/` carrying the same list comma-joined as
+`applyTo` — each frontmatter and a single sentence pointing at the rule. Which rules ship,
+and which adopted folder pulls each one in, is in `rules/rules.json`;
+`assets/rule-wrappers.md` carries the three templates and the reasons.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

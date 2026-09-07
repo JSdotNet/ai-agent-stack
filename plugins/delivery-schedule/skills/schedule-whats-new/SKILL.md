@@ -172,7 +172,7 @@ one entry per repo:
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`.
+Follow the **Reporting Contract** in `rules/surface-contract.md`.
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 

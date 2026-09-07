@@ -46,7 +46,7 @@ start at the chapter the question names, then follow `related` and `depends-on` 
 | Roles, surfaces, host slots, stamps, migrations | the matching section of that same chapter |
 | Which plugin category a plugin falls in | `.devbook/arc42/05-building-block-view.md` |
 | Why something is shaped the way it is | `.devbook/arc42/09-architecture-decisions.md` |
-| Extension points, gates, the config schema | `plugins/delivery/instructions/surface-contract.instructions.md` |
+| Extension points, gates, the config schema | `plugins/delivery/rules/surface-contract.md` |
 
 ## Answer rules
 
@@ -55,4 +55,4 @@ start at the chapter the question names, then follow `related` and `depends-on` 
   unset key takes the engine's documented default, and `null` is deliberately unbound.
 - Say when the clone is stale rather than reporting its versions as the newest.
 - Send writing elsewhere: `stack-init` and `stack-update` set a repository up, each
-  component's own sync skill materializes it. This skill only reads.
+  component's own install skill materializes it. This skill only reads.

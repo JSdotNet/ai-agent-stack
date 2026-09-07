@@ -20,11 +20,12 @@ apply.
 
 ## Why this is an asset and not an instruction
 
-An auto-applied instruction file needs an `applyTo` glob, and an honest glob for
-these rules would have to cover source and test trees — which would make the
-plugin speak in every repository that has not adopted the devbook
-convention. This file is therefore loaded on demand by the skills that need it,
-and the plugin stays silent everywhere else.
+A rule declares the paths it governs, and `devbook-install` puts it in the
+repository so both hosts apply it there. An honest `paths` list for these rules
+would have to cover source and test trees — which would make the plugin speak in
+every repository that has not adopted the devbook convention. This file is
+therefore loaded on demand by the skills that need it, and the plugin stays
+silent everywhere else.
 
 ## The two directions
 
@@ -54,7 +55,7 @@ reason it is allowed: a test identifier is *executable*, so an entry that stops
 resolving fails a run instead of quietly pointing at nothing. It is a record of
 what asserts a chapter, not a shortcut through the ladder below — a `tests`
 entry names a test, and the counterpart still has to be resolved by naming. See
-"Linking test cases" in `devbook-chapter-metadata.instructions.md`.
+"Linking test cases" in `devbook-chapter-metadata.md`.
 
 1. **`naming.md` aliases.** Look up the chapter's canonical term in
    `.domain/<context>/naming.md` and read its `aliases` field. Those entries are
@@ -155,7 +156,7 @@ and the one that most changes the quality of the resulting chapter.
 A capture pass has just done the work of finding which tests assert a chapter.
 That finding is worth keeping, so put it in the chapter's `tests` field as
 `<level>:<runner>:<selector>` entries — the format is in
-`devbook-chapter-metadata.instructions.md`.
+`devbook-chapter-metadata.md`.
 
 Two rules on top of the ones there:
 
@@ -253,7 +254,7 @@ the write to whatever flow covers the folder, resolved in this order:
 2. **The flow engine's own flow for the folder**, named after it — `flow-<folder>` —
    when an engine is installed.
 3. **Directly**, following that folder's `devbook-*.instructions.md` and
-   `devbook-chapter-metadata.instructions.md`, when no flow engine is installed at all.
+   `devbook-chapter-metadata.md`, when no flow engine is installed at all.
 
 Name the rung that answered, once, in the report. Whichever rung it is owns template
 conformance, metadata blocks, and the consistency review; this skill owns the evidence.

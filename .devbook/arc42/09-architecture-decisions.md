@@ -196,7 +196,7 @@ Consequence: a question here loses who asked it and cannot be replied to in plac
 happens in the pull request, and only the unresolved residue stays on the chapter.
 
 **Superseded in part, 2026-09-04.** `devbook` 1.1.0 ships the fence: the schema and placement
-rule in `devbook-annotations.instructions.md`, the parse and lint in `metadata.mjs`, the
+rule in `devbook-annotations.md`, the parse and lint in `metadata.mjs`, the
 derived `_meta/annotations.json`, and `annotations.mjs` as the one writer. So the premise this
 decision rested on — that L0 has not built it — no longer holds, and the reason to keep findings
 in `ext` is gone with it.
@@ -275,7 +275,7 @@ date: 2026-09-03
 related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
 
-One instruction file — `surface-contract.instructions.md` — holds the point set, the gates
+One instruction file — `surface-contract.md` — holds the point set, the gates
 mechanism, the stack config, the host slots, and the surface capability with its reporting
 contract. It replaces three files that came across from the two host plugins: the predecessor
 dashboard's contract, `dashboard-usage`, and `canvas-usage`.
@@ -425,7 +425,7 @@ Three consequences, and the second is the one to watch:
   `update-open-sessions` walks a host's own worktrees, so moving them would have moved the
   host-naming into the engine rather than out of the marketplace. `session-handoff` had the
   one real claim, and the engine already carried its procedure inline under **Session
-  Handoff** in `flow-execution-model.instructions.md` — which is now the only copy.
+  Handoff** in `flow-execution-model.md` — which is now the only copy.
 - **Every slot resolves unbound unless a repository binds it.** `repo-instructions` falls back
   to `AGENTS.md`, `model-override` to category defaults, `stage-delegation` to running stages
   inline, `surface` to file artifacts, `pr-lane` to no pull request. Three of the six are
@@ -434,7 +434,7 @@ Three consequences, and the second is the one to watch:
   session rather than declared anywhere. A repository that wants the old Claude answers writes
   three lines of config.
 - **The slot set outlives its binders.** It stays declared in
-  `surface-contract.instructions.md`, because what it buys is a shared asset that never grows
+  `surface-contract.md`, because what it buys is a shared asset that never grows
   an if-this-host clause, and a slot nobody binds still buys that.
 
 ## delivery-surface-canvas Ships the Canvas Only
@@ -633,12 +633,12 @@ the guide unreachable for anyone who installed the engine without the devbook co
 
 **The write skills stop at the engine keys.** `stack-init` and `stack-update` own `bindings`,
 `extensions`, `policy`, and `gates`, and every `components.<name>` stamp stays with that
-component's own sync skill — the rule [one config file, two kinds of key](#one-config-file-two-kinds-of-key)
-already states. Three things follow from it and all three are load-bearing: only the sync skill
+component's own install skill — the rule [one config file, two kinds of key](#one-config-file-two-kinds-of-key)
+already states. Three things follow from it and all three are load-bearing: only the install skill
 knows what it materialized, a plugin's payload and migration ledger live inside that plugin
 where a foreign skill has no supported path to them, and `devbook` has to keep installing
 itself to stay a foundation that works with only itself installed. So `stack-update`'s fourth
-step invokes `devbook-sync`; it never applies a migration or writes a ledger of its own.
+step invokes `devbook-install`; it never applies a migration or writes a ledger of its own.
 
 **It names a host's own paths, and that is a divergence taken on purpose.**
 [No host profile plugins](#no-host-profile-plugins) ended host-naming everywhere else in this
@@ -786,7 +786,7 @@ a prompt — and only the scheduler resolution knows which tool answers, resolve
 tool list the way a surface is, with none a normal outcome that prints the prompts for a
 person to paste. The one host fact the plugin writes down is the name of that tool and of the
 settings file a cloud session needs to load the marketplace, in the catalog contract, because
-a sync skill that could not say either would schedule nothing.
+a install skill that could not say either would schedule nothing.
 
 **Nothing personal reaches the repository.** Scheduler ids, the environment, and the model are
 account facts; matching on the schedule's name makes every operation idempotent without a
@@ -794,7 +794,7 @@ ledger, so the stamp records the selection and cadence overrides and nothing els
 same line the devbook stamp draws about installed plugin versions, drawn for the same reason.
 
 Consequence: **enabling `delivery-schedule` schedules nothing.** A repository selects through
-`schedule-sync`, which refuses a target whose plugin the repository's committed host settings
+`schedule-install`, which refuses a target whose plugin the repository's committed host settings
 do not enable. And a first run is the only proof that the cloud session loaded the marketplace
 at all — recorded as `trial` in [hosts](../tech/hosts.md#scheduled-cloud-sessions) until one
 has.
@@ -802,13 +802,13 @@ has.
 Consequence: **`components.routines` is now `components.schedule`.** The plugin that wrote the
 old key landed and merged the same day and never left `0.1.0`, so the rename ships without a
 migration rather than with one nothing would run. A repository that did stamp the old key
-renames it by hand and re-runs `schedule-sync`, which rewrites the entry either way.
+renames it by hand and re-runs `schedule-install`, which rewrites the entry either way.
 
 ## One Rule, One Wrapper Per Host
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#instruction-file"]
+related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset", ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
 ```
 
 Both hosts inject rules scoped to a path glob, and no single file can serve both: Claude reads
@@ -845,10 +845,12 @@ Three things follow, and each is deliberate:
   `plugin.json`, and a plugin-root `CLAUDE.md` is not loaded
   ([claude-code#21163](https://github.com/anthropics/claude-code/issues/21163)). Everything
   under `.agents/rules/` is repository-scoped: it serves people working *in* this repository,
-  never someone who installed a plugin from it. A plugin instruction file keeps `applyTo` and
-  keeps being reached by explicit path, and is not renamed to the neutral shape — its
-  filename and its glob are part of the plugin contract. That inconsistency is the price of
-  the plugin host having no rules component.
+  never someone who installed a plugin from it. A plugin instruction file keeps its filename
+  and its glob, both part of the plugin contract, but is authored in the same host-neutral
+  frontmatter as everything here. Reaching a *consumer* is the install skill's job, not the
+  wrapper's, and
+  [A Plugin's Rules Reach a Host Through the Install](#a-plugins-rules-reach-a-host-through-the-install)
+  settles how.
 - **A rule that already has one home both hosts read stays there.** The topic set is plugin
   authoring only.
 - **The root file is `AGENTS.md`, and each host gets a root wrapper pointing at it.**
@@ -887,13 +889,13 @@ related: [".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
 ```
 
 Nothing in the stack maintained a repository's root instruction file. `flow-repo` wrote it
-once, `devbook-sync` offered `assets/routing-snippet.md` for a person to merge, and the
+once, `devbook-install` offered `assets/routing-snippet.md` for a person to merge, and the
 session-start hook told every session the folder rules in the same words whether the
 repository had adopted one folder or five. So the one thing a repository's own instruction
 file should say about its devbook — which folders it keeps, where the rules for each are,
 and how the indexes are checked — was said nowhere on disk.
 
-`devbook-sync` now materializes that as one marker-fenced section of `AGENTS.md`, generated
+`devbook-install` now materializes that as one marker-fenced section of `AGENTS.md`, generated
 from the stamp's `adopted` list, and `devbook-check` reports it stale when that list has
 moved on. Three limits keep it inside the decisions already taken:
 
@@ -949,10 +951,10 @@ Three things enforce it, because prose alone decays across a long session:
 
 **The `AGENTS.md` section diverges from its template, in two lines.** `agents-section.md`
 names `./build/Update-DevbookIndex.ps1` and `.github/tools/devbook-meta/build.mjs`: correct in
-a repository that ran `devbook-sync`, wrong in the one that authors the convention and vendors
+a repository that ran `devbook-install`, wrong in the one that authors the convention and vendors
 the generator under `plugins/devbook/tools/`. The section here names this repository's real
 path and the schedule instead of the script. It was written by hand, so no stamp claims it and
-no reconcile will report it as customized; a later `devbook-sync` run over this repository
+no reconcile will report it as customized; a later `devbook-install` run over this repository
 would overwrite it with the template's paths, and that is the moment to make the template
 resolve the generator location the way `generatorPath` now does.
 
@@ -1048,7 +1050,7 @@ repository, resolved at run time, never a dependency — and the four-key story 
 the guide, and this chapter stays true.
 
 Consequence: a stage that wants a server it cannot name has to say which point it serves, and
-the mapping table in `flow-execution-model.instructions.md` is where that is decided once. The
+the mapping table in `flow-execution-model.md` is where that is decided once. The
 engine still names two servers by id, as defaults only, because `microsoft-learn` and
 `playwright` are public tools rather than plugins published from another marketplace; a
 repository that disagrees binds the point to `null`.
@@ -1098,7 +1100,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/dom
 ```
 
 `devbook` enforces what a devbook folder holds — the instruction files, the metadata schema,
-the check, the generator, the sync. `delivery` holds every flow, including one per devbook
+the check, the generator, the install. `delivery` holds every flow, including one per devbook
 folder: `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai`. The `devbook-flows`
 bridge is removed, and `flow-adr`, `flow-tdr`, `flow-architecture`, and `flow-arc42-content`
 are folded into `flow-arc42`.
@@ -1115,9 +1117,10 @@ Metadata Enforcement stage in each of its flows restated the rules `devbook`'s i
 files already state, against the one-file rule this repository holds its own authoring to.
 
 The reason no bridge is needed is that the rules reach a session through the host, not through
-a flow. Copilot applies an instruction file from its `applyTo` glob; `devbook-sync` materializes
-the same files into the repository's `.github/instructions/`, so any session reads them by
-path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
+a flow. An instruction file declares the paths it governs; `devbook-install` materializes
+the same files into the repository, as the pair
+[A Plugin's Rules Reach a Host Through the Install](#a-plugins-rules-reach-a-host-through-the-install)
+describes, so any session reads them by path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
 couple. The engine therefore names folders — `.arc42/`, `.domain/`, `.tech/`, `.design/`,
 `.ai/` — as it already did in its Documentation Update phase, and never the `devbook` plugin;
 `devbook` names the category "the engine's own flow for the folder" and never a skill, the way
@@ -1128,7 +1131,7 @@ the kind; load the instruction files that govern the target path; draft through 
 folder maps to — `architecture` for `.arc42` and `.tech`, `domain`, `ux`, and `docs` for
 `.ai`; run the repository's check with `--check` and never regenerate `_meta/`; close through
 the documentation tier. A folder flow in a repository that has not adopted the folder stops and
-says so, because adopting a folder is the convention's sync and not a flow's job.
+says so, because adopting a folder is the convention's own install and not a flow's job.
 
 Consequence: `flow-arc42` is the escalation target for a new decision, a cross-cutting
 redesign, a boundary question, and accepted debt alike, and the record's kind is settled inside
@@ -1204,3 +1207,115 @@ interchangeability, so a surface interchangeable with nothing does not carry it.
 folder is still waiting on takes the new name with it, and the blocker is unchanged: the three
 relative imports into `tools/devbook-meta/`, per
 [devbook Still Ships the Graph Canvas](#devbook-still-ships-the-graph-canvas).
+
+## A Plugin's Rules Reach a Host Through the Install
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-rule-one-wrapper-per-host", ".devbook/arc42/09-architecture-decisions.md#devbook-owns-one-section-of-agentsmd", ".devbook/domain/plugin-authoring/naming.md#plugin-rule"]
+```
+
+[One Rule, One Wrapper Per Host](#one-rule-one-wrapper-per-host) settled the repository half
+and left the plugin half on an assumption that does not hold: that `applyTo` "steers Copilot".
+It steers nothing from inside a plugin. Neither manifest has an `instructions` or `rules`
+key — no plugin here declares one — and neither host has a rules component, so a scoped rule
+shipped inside a plugin is auto-applied by *both* hosts equally: not at all. The seventeen
+files reached a session only where a skill or an agent named one by path.
+
+For the six that glob a path inside the plugin — `delivery`'s five over `skills/flow-*/SKILL.md`
+and `fleet`'s one — that costs nothing. Only a maintainer of this repository edits those, and
+`.agents/rules/skills.md` already wraps that glob for both hosts. `delivery-schedule`'s
+contract globs `**/*.schedule.md`, and all six of those files live in the plugin too, so it is
+the same kind and now has the same treatment in `.agents/rules/schedules.md`.
+
+The other ten are different in kind. `devbook`'s nine and `devbook-collaboration`'s one glob
+`.devbook/domain/**` and its siblings — paths in the *adopting* repository, the only place the
+glob can resolve. A rule that can only fire there has to be delivered there, and devbook
+already delivers: tools, workflows, and one section of `AGENTS.md`, hash-tracked in the stamp.
+So the rules join the asset table.
+
+Each ships as a trio, in the shape this repository already uses for its own rules:
+
+```
+plugins/devbook/rules/<name>.md          the rule. name + description, no scope of its own
+plugins/devbook/rules/rules.json         its paths, and which adopted folder pulls it in
+  └── .agents/rules/<name>.md            the rule, verbatim
+        ├── .claude/rules/<name>.md      paths verbatim → pointer
+        └── .github/instructions/<name>.instructions.md
+                                         applyTo = paths.join(",") → pointer
+```
+
+Four choices inside that, each with a reason:
+
+- **The file is named for what it becomes.** `instructions/<name>.instructions.md` was
+  Copilot's filename for a file Copilot does not read here. `rules/<name>.md` matches its
+  target, `.agents/rules/<name>.md`, character for character — so a rule that references a
+  sibling by bare filename resolves in the plugin *and* in every repository the install writes to,
+  with no rewrite at either end. That property is what makes the neutral copy cheap; under the
+  old naming it would have cost a rewrite of every cross-reference between the ten, which is
+  why a two-file shape with the body in `.github/instructions/` was reached for first and then
+  abandoned.
+- **The globs live in `rules/rules.json`, not the frontmatter.** A rule is content; its scope
+  and its adoption condition are delivery metadata the install skill reads. Splitting them makes the
+  rule a template with nothing host-shaped in it, and puts every rule's scope on one screen —
+  which the nine devbook rules needed, and which a hand-written prose table in
+  `rule-wrappers.md` had been standing in for. `install` joins `paths` in the same entry, so one
+  file answers both "where does this apply" and "who gets it".
+- **Verbatim, not trimmed to the adopted layout.** The globs carry both spellings, flat and
+  nested. Trimming is what the two workflows get, and it makes them customized from the first
+  reconcile onward — right for a workflow nobody ships twice, wrong for a rule that must keep
+  taking upgrades. A glob matching nothing applies nothing, so carrying both costs nothing.
+- **A wrapper per host, and neither host holding the body.** The alternative was to put the
+  rule in one host's folder and point the other at it, which buys one fewer file and picks a
+  favourite. Three files keep the invariant intact in both places: one copy of the rule, a
+  wrapper per host, and never a rule written in a wrapper. Because `applyTo` is exactly
+  `paths` comma-joined, the wrappers stay derivable and checkable — the bargain
+  [No Generated Sync Layer](#no-generated-sync-layer) already struck.
+
+**The frontmatter goes neutral with it.** All seventeen carried `applyTo`, which is Copilot's
+key and nothing else's, on files no host reads it from — it announced a host that was not
+reading and hid the one that could not. `check-assets.mjs` replaces its `instructions` pass
+with a `plugin rules` pass refusing `applyTo` or `paths` in a rule, a `name` that is not the
+filename, a missing `description`, a rule with no `rules.json` entry, an entry with no rule,
+and an empty `paths`.
+
+The cost is a rename across the marketplace: 309 references in 98 files, and
+`.agents/rules/instructions.md` becomes `plugin-rules.md` because it no longer describes
+instruction files. Nothing outside this repository had them yet — no release ever materialized
+one — so the rename is paid once, here, and `devbook`'s `UPGRADING.md` says so for anyone who
+hardcoded an old path.
+
+Consequence: devbook goes to `1.4.0` and reconcile installs twenty-seven files into a fully
+adopting repository. No migration: the contract version is untouched, and a new asset row is
+materialized by the phase that already exists. `devbook-collaboration` grows one too —
+`collaboration-install`, writing `components.collaboration` — because its rule is repo-facing
+in exactly the same way and `devbook` may not carry it: a plugin never installs the layer above
+it. That plugin's README no longer says it materializes nothing into a repository.
+
+## An Install Is Not a Sync
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#a-plugins-rules-reach-a-host-through-the-install"]
+```
+
+`<component>-sync` is now `<component>-install`. *Sync* names a two-way reconcile between
+peers, and nothing here is one: a plugin writes its payload into a repository, and the
+repository never writes back. What the word actually described — idempotent, plan-then-write,
+customized copies left alone — is true of an install as well, and the skills say it in their
+own prose.
+
+The rename lands with the folder rules and not before, because that is when the vocabulary
+started to cost something. `devbook-install` was materializing tooling; now it installs rules,
+and `rules/rules.json` carries a per-rule key saying which adopted folder pulls each one in.
+`"sync": "arc42"` on that key read like a direction of travel. `"install": "arc42"` reads like
+what it is.
+
+What keeps the name is what genuinely reconciles two sides that both change:
+`assets/code-sync-protocol.md`, where a chapter and the code it describes each move on their
+own and the skills report a five-way drift verdict between them. Ordinary English keeps it too
+— *keep in sync*, *sync-over-async*.
+
+Consequence: two skills renamed, the Stamp term reworded, and `devbook sync` kept as a trigger
+phrase in both so a session asking by the old name still lands. No stamp key changes, so no
+migration: `components.devbook` and `components.schedule` were never named after the skill.

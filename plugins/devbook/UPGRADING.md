@@ -5,7 +5,40 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
-## 1.4.0: the canvas extension is `devbook-graph`
+## 1.4.0: the folder rules reach both hosts, and the canvas is `devbook-graph`
+
+### The folder rules
+
+**Renamed assets; no migration.** 1.3.1 fixed the globs and said "nothing to re-sync — the
+globs travel with the plugin". They travel, but they arrive nowhere: no plugin manifest
+declares an instructions or rules key on either host, and there is no rules component, so a
+file sitting in the plugin is auto-applied by neither. Until now these rules reached a session
+only when a skill or an agent named one by path.
+
+`instructions/<name>.instructions.md` is therefore now `rules/<name>.md`, named for what it
+becomes, and its globs move out of the frontmatter into `rules/rules.json` beside it, keyed by
+name and carrying the adopted folder that pulls each rule in. A rule file is body plus `name`
+and `description`. **Anything that referenced one by its old path must be updated** — inside
+this plugin that is done, but a repository or another plugin that hardcoded
+`instructions/devbook-domain.instructions.md` will not resolve it any more.
+
+Reconcile now installs them, in the same shape `ai-agent-stack` uses for its own rules: the
+rule verbatim at `.agents/rules/<name>.md`, a `.claude/rules/<name>.md` wrapper carrying its
+`paths`, and a `.github/instructions/<name>.instructions.md` wrapper carrying the same list as
+`applyTo`. All three are hash-tracked like every other materialized file: customized copies are
+reported and left alone, and a folder dropped from `adopted` orphans its trio rather than
+deleting it. `assets/rule-wrappers.md` carries the templates.
+
+**`devbook-sync` is now `devbook-install`.** The skill is otherwise unchanged, and `devbook
+sync` still works as a trigger phrase; a script or document that invokes the skill by name
+needs the new one. `components.devbook` is untouched, so there is nothing to migrate.
+
+Run `devbook-install` once to pick the rules up. Nothing already on disk changes, and a
+repository that would rather keep reaching the plugin copies by path can take ownership of any
+of the three.
+
+### The canvas extension
+
 
 **A rename; no migration.** The extension folder, its `copilot-extension.json` name, and one
 of the two canvas ids change. `devbook-canvas` named the host mechanism, which put it beside
@@ -47,7 +80,7 @@ already matched either layout. Nothing to re-sync — the globs travel with the 
 
 ## 1.3.0: a section of `AGENTS.md`
 
-**Additive; no migration.** `devbook-sync` now writes one marker-fenced section of the
+**Additive; no migration.** `devbook-install` now writes one marker-fenced section of the
 repository's `AGENTS.md`, rendered from the adopted folders per `assets/agents-section.md`
 and keyed `AGENTS.md#devbook` in the stamp. A repository synced before 1.3.0 gains it as a
 plain `create` on its next reconcile: an absent `AGENTS.md` is created holding only the
@@ -170,7 +203,7 @@ Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
 other folder does. To adopt: re-sync `.github/tools/devbook-meta/` from this
-plugin, run `devbook-sync` (or create the folder by hand), add `.ai/**`
+plugin, run `devbook-install` (or create the folder by hand), add `.ai/**`
 to the CI workflow's `paths` filters, and route edits through the `.ai` write path.
 
 ## 0.11.0: invariants as a table
@@ -384,7 +417,7 @@ diff is the new fields and the bumped `schemaVersion`. Also install the two
 refresh assets that ship with this version — `assets/build/Update-DevbookIndex.ps1`
 and `assets/workflows/devbook-meta-nightly.yml` — and re-copy
 `assets/workflows/devbook-meta.yml`, whose staleness step now warns instead of
-failing. See `devbook-derived-artifacts.instructions.md` for the policy and
+failing. See `devbook-derived-artifacts.md` for the policy and
 for the freshness contract a runtime consumer of these indexes has to honour.
 
 ## Migrating to schema version 2
@@ -407,8 +440,8 @@ but `build.mjs --check` reports errors until it is migrated. Re-sync
    it — this step is about stripping *kind prefixes*, and that file never had
    one.
 2. **Add `type` to every `meta` block.** Values come from the folder's own
-   instructions file — `devbook-domain.instructions.md` for `.domain`,
-   `devbook-tech.instructions.md` for `.tech`. File-level blocks take a
+   instructions file — `devbook-domain.md` for `.domain`,
+   `devbook-tech.md` for `.tech`. File-level blocks take a
    file-level value (`domain`, `features`, `model`, …) matching the filename.
    `.arc42` and `.design` define no value set and take no `type`.
 3. **Promote Entity, Value Object, and Enum sub-chapters one level.** Delete

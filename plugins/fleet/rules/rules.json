@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "fleet-issue-sweep-contract": {
+      "paths": [
+        "skills/fleet-*/SKILL.md"
+      ]
+    }
+  }
+}

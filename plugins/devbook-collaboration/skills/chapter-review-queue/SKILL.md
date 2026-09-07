@@ -11,7 +11,7 @@ Answer one question across every adopted devbook folder: what is a person
 still owed. This is the only skill in this plugin that reads the folder rather
 than one chapter, because a queue is the one thing an address cannot give you.
 
-State keys are in `../../instructions/chapter-collaboration.instructions.md`.
+State keys are in `../../rules/chapter-collaboration.md`.
 
 This file exceeds the 40-line body budget on purpose: the routing table in step
 3 is one row per state a chapter can be waiting in, and a row left out is a

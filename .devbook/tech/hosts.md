@@ -47,8 +47,9 @@ type: platform
 related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"]
 ```
 
-Reads `.github/plugin/plugin.json` and `hooks.json`, applies instruction files from `applyTo`,
-and honours the `handoffs` key. The second reader every asset is authored for.
+Reads `.github/plugin/plugin.json` and `hooks.json`, applies a *repository's* instruction files
+from `applyTo` — never a plugin's, which it has no key for — and honours the `handoffs` key.
+The second reader every asset is authored for.
 
 ## Copilot Extension SDK
 

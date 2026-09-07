@@ -12,7 +12,7 @@ type: features
 
 ```meta
 type: feature
-related: [".devbook/domain/plugin-authoring/naming.md#agent", ".devbook/domain/plugin-authoring/naming.md#skill", ".devbook/domain/plugin-authoring/naming.md#instruction-file", ".devbook/domain/plugin-authoring/naming.md#hook"]
+related: [".devbook/domain/plugin-authoring/naming.md#agent", ".devbook/domain/plugin-authoring/naming.md#skill", ".devbook/domain/plugin-authoring/naming.md#plugin-rule", ".devbook/domain/plugin-authoring/naming.md#hook"]
 ```
 
 Write one file that both hosts load: an agent, a skill, an instruction file, or a hook. The

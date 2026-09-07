@@ -47,7 +47,8 @@ chapters carry the rationale directly.
   *how it looks and behaves for the user*. Channel and stack facts live in
   `.arc42` and `.tech` — `.design` links to them rather than restating them.
 - `.domain` describes *what the domain is*. `.design` does not define domain
-  concepts; it uses the ubiquitous language from `.domain/<context>/naming.md`.
+  concepts; it uses the ubiquitous language from the context's `term` chapters,
+  in `.domain/<context>/naming.md` or in its `domain.md`.
 - Work items link to the
   `.design` chapter they realize via `related`.
 

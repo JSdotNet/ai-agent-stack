@@ -55,7 +55,8 @@ here.
 If the repository has no `.domain/` folder, stop and run `devbook:install`
 first for the `.domain` adoption path. If the bounded context folder does not
 exist, stop — this skill does not create one. A context's `domain.md`,
-`features.md`, `model.md`, `dependencies.md`, and `naming.md` are created
+`features.md` or `skills.md`, `model.md`, `dependencies.md`, and the context's
+term chapters are created
 together by the `.domain` flow, and creating only `domain.md` leaves the folder
 malformed.
 

@@ -8,7 +8,8 @@ description: 'To-spec direction (capture), feature kind: read a shipped capabili
 ## Purpose
 
 A capability is shipped and reachable by users, and
-`.domain/<context>/features.md` does not describe it — or describes a
+`.domain/<context>/features.md` — or `skills.md`, where the context describes
+skills rather than product features — does not describe it, or describes a
 sub-feature breakdown the product has since outgrown. This skill runs the
 application and uses the feature, reads the implementation and its tests, states
 the capability in business language, and routes a grounded chapter through

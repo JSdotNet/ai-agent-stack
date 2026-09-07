@@ -67,7 +67,14 @@ const DIRECTORY_CONVENTION = {
     ".domain": { root: "context-map.md", first: [], last: [] },
     ".domain/*": {
         root: "domain.md",
-        first: ["features.md", "model.md", "flow.md", "dependencies.md", "naming.md"],
+        first: [
+            "skills.md",
+            "features.md",
+            "model.md",
+            "flow.md",
+            "dependencies.md",
+            "naming.md",
+        ],
         last: [],
     },
     ".tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },

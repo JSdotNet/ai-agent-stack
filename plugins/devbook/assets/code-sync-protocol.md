@@ -57,13 +57,15 @@ what asserts a chapter, not a shortcut through the ladder below — a `tests`
 entry names a test, and the counterpart still has to be resolved by naming. See
 "Linking test cases" in `devbook-chapter-metadata.md`.
 
-1. **`naming.md` aliases.** Look up the chapter's canonical term in
-   `.domain/<context>/naming.md` and read its `aliases` field. Those entries are
+1. **Term aliases.** Look up the chapter's canonical term in the context —
+   `.domain/<context>/naming.md`, or `domain.md`'s `## Ubiquitous Language`
+   grouping where the context keeps its terms there — and read its `aliases`
+   field. Search for the `term` chapter, never for the filename. Those entries are
    exactly the surface names the concept wears in code — class names, identifier
    names, snake_case id fields, a consumer context's local copy name. Search the
    repository for each alias. This is the intended path: `aliases` exists to
    make every synonym resolve back to one canonical concept.
-2. **The `.arc42` building-block view.** When `naming.md` has no entry, or the
+2. **The `.arc42` building-block view.** When no `term` chapter has an entry, or the
    kind is architectural rather than a domain term, read
    `.arc42/05-building-block-view.md` (and `07-deployment-view.md` for runtime
    and hosting units). Those chapters name the modules, containers, and
@@ -79,7 +81,7 @@ When resolution lands on more than one candidate, or on none, the verdict is
 `unresolved` (below). Do not pick the most plausible candidate silently, and do
 not widen the chapter to cover several candidates at once.
 
-When the counterpart resolves through rung 3 and the concept has no `naming.md`
+When the counterpart resolves through rung 3 and the concept has no term
 term yet, propose adding one with the discovered code name as an `alias`. That
 turns a one-off inference into a durable pairing for the next pass. Propose it —
 the write itself still routes through the folder's flow.
@@ -314,7 +316,8 @@ The brief has five parts, and a change category.
    the chapter states them. This is the part an implementer cannot recover from
    the code, and the part most often lost.
 3. **Ubiquitous language** — the canonical terms this change must use, with the
-   `aliases` from `naming.md` that map them onto existing code names. Naming an
+   `aliases` from the context's `term` chapters that map them onto existing code
+   names. Naming an
    alias here is what stops a new implementation inventing a fourth synonym.
 4. **Out of scope** — what this change deliberately does not do, including
    adjacent chapters that look related and are not. Written explicitly, because
@@ -355,7 +358,7 @@ scope, so a run's outcome is legible without reading the prose.
 
 | Chapter | Counterpart | Resolved via | Verdict | Evidence | Action |
 |---|---|---|---|---|---|
-| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | `naming.md` alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-domain` |
+| `.domain/order-management/domain.md#order` | `Order` in `src/Ordering.Domain/Order.cs` | term alias | `code-ahead` | Two guard clauses and 4 passing tests assert an invariant the chapter omits | Chapter updated via `flow-domain` |
 | `.domain/order-management/domain.md#refund` | not found | — | `unresolved` | No alias, no building-block match, no comparable naming | Reported; needs a decision on whether the concept is built |
 
 Column rules:
@@ -363,7 +366,7 @@ Column rules:
 - **Chapter** — the `<path>#<heading-slug>` reference, or the bare `<path>` for
   a file-level finding. Never a heading title on its own.
 - **Counterpart** — the code element and the file it lives in, or `not found`.
-- **Resolved via** — which rung of counterpart resolution matched: `naming.md`
+- **Resolved via** — which rung of counterpart resolution matched: a term
   alias, building-block view, observed convention, or `—`.
 - **Verdict** — one of the five, spelled exactly as above.
 - **Evidence** — what was read that settles it, specifically enough to re-check.

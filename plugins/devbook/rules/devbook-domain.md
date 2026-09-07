@@ -35,26 +35,54 @@ across `.domain`, ADRs, and code module names where practical.
   context-map.md
   <bounded-context-name>/
     domain.md
-    features.md
+    features.md      # what the context lets a user do, in business language
+    skills.md        # the alternative to features.md, for a repository whose
+                     # product is procedures rather than a running application
     model.md
     flow.md          # optional: when the context has lifecycle/process flows
+    flow.<name>.md   # optional: one flow, split out of flow.md when it is
+                     # large enough or invoked often enough to stand alone
     dependencies.md
-    naming.md
+    naming.md        # optional: the terms may live in domain.md instead
 ```
 
-When starting a new bounded context, create the folder and the standard files
-(`domain.md`, `features.md`, `model.md`, `dependencies.md`, `naming.md`) using
-the templates below, and add `flow.md` when the context has lifecycle or
-process flows.
+When starting a new bounded context, create the folder with `domain.md`,
+`model.md`, `dependencies.md`, and one of `features.md` or `skills.md`, using
+the templates below. Add `flow.md` when the context has lifecycle or process
+flows, and `naming.md` when its vocabulary is large enough to want a file of its
+own.
+
+**A context takes `features.md` or `skills.md`, never both.** They answer the
+same question — what does this context let someone do — for two different kinds
+of repository, so a context holding both has split one answer across two files.
+Pick per context, not per repository, though in practice a repository lands on
+one of them throughout.
+
+**`naming.md` is optional and its absence is not a missing file.** A context
+either gives its vocabulary a file or keeps the same `term` chapters at the end
+of `domain.md`; the chapter, its `type`, its `aliases`, and the `related` link
+to where the term is modelled are identical either way, and so is the address
+that resolves to it. Prefer the file where a context has enough terms that they
+would bury the model, and `domain.md` where a reader wants the vocabulary
+beside the thing it names.
+
+**`flow.<name>.md` splits one flow out of `flow.md`.** The suffix is the flow's
+own name — for a procedure the repository ships, its skill name, so
+`flow.flow-feature.md` sits beside `flow.flow-bug.md`. It carries `type: flow`
+like the file it came from, because it is the same kind of document at a
+smaller scope. Split when a flow is large enough that `flow.md` stops being
+readable, or when readers arrive looking for one flow rather than for the
+context's flows; keep `flow.md` for the flows that are still better read
+together, and drop it when every flow has been split out.
 
 Reading order comes from this convention, not from a metadata field and not from
 filenames. `context-map.md` is `.domain`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
-tree above — `features.md`, `model.md`, `flow.md`, `dependencies.md`,
-`naming.md`. Adding a context or a file needs no declaration anywhere; just
-regenerate `_meta/`. See `devbook-chapter-metadata.md`.
-
+tree above — `skills.md` or `features.md`, `model.md`, `flow.md`,
+`dependencies.md`, `naming.md`, then any `flow.<name>.md` in filename order.
+Adding a context or a file needs no declaration anywhere; just regenerate
+`_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
 
 - **context-map.md** — Strategic DDD view across bounded contexts at the
@@ -80,6 +108,20 @@ regenerate `_meta/`. See `devbook-chapter-metadata.md`.
 - **features.md** — The features and sub-features this bounded context
   supports, in business language. Group sub-features under their parent
   feature.
+- **skills.md** — The same question for a repository whose product is
+  procedures rather than a running application: one chapter per skill the
+  context ships, in the language of what the skill does for whoever runs it.
+  A skill *is* a feature here, so its chapters carry `type: feature` and
+  `type: sub-feature` like `features.md`'s — the file name says which kind of
+  repository is being described, and the chapter type stays the same because
+  the thing being described has not changed.
+  - One chapter per skill, headed by the skill's own name, so the chapter is
+    addressable by the name a user types.
+  - Group a skill's own stages or modes under it as sub-chapters; do not give a
+    stage a chapter of its own at `##` level.
+  - Describe what the skill lets someone do and what it guarantees, not how it
+    is implemented. Where it needs a diagram, that belongs in `flow.md` or in
+    its own `flow.<skill-name>.md`.
 - **model.md** — The structural domain model: relationships between
   aggregates, entities, and value objects, ideally as a Mermaid class diagram,
   plus relationship notes. Lifecycle/process flows live in `flow.md`, not
@@ -89,6 +131,13 @@ regenerate `_meta/`. See `devbook-chapter-metadata.md`.
   how work moves across the context over time. Moved out of `model.md` so
   `model.md` stays purely structural. Include only when the context actually
   has a flow. Its `##` sections do not carry metadata blocks.
+- **flow.<name>.md** — One flow, split out of `flow.md`. Same `type: flow`,
+  same rule that its `##` sections carry no metadata blocks, and the same
+  subject at a smaller scope. The suffix is the flow's own name; for a
+  procedure the repository ships, that is its skill name. Where the flow
+  belongs to a skill, the file and that skill's chapter in `skills.md` are two
+  halves of one subject — the chapter says what it does, the flow file draws
+  how it moves — and each carries a `related` reference to the other.
 - **dependencies.md** — Outbound dependencies on other bounded contexts or
   modules, and known inbound dependents.
   - Use explicit DDD relationship semantics (`ACL`, `Customer/Supplier`,
@@ -102,6 +151,14 @@ regenerate `_meta/`. See `devbook-chapter-metadata.md`.
   term to the chapter where it is modeled. This gives every synonym (code class
   name, id field, consumer-side copy) a single canonical concept.
 
+  **Optional.** A context may keep the same `term` chapters at the end of
+  `domain.md` instead, under a `## Ubiquitous Language` grouping heading. The
+  chapters are identical either way — same `type: term`, same `aliases`, same
+  `related` link to where the term is modelled — and only the path in front of
+  the anchor changes. Nothing outside the context should have to know which
+  layout was picked: resolve a term by searching the context for a `term`
+  chapter, never by assuming a filename.
+
 ## Folder rules
 
 These rules describe the persisted shape of `.domain` assets only. Authoring
@@ -110,20 +167,22 @@ instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
-  `features.md`, and every Term chapter in `naming.md` must carry a
+  `features.md` or `skills.md`, and every Term chapter — in `naming.md` or
+  under `domain.md`'s `## Ubiquitous Language` grouping — must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
 - Every file in `.domain` — `context-map.md` and, per bounded context,
-  `domain.md`, `features.md`, `model.md`, `flow.md` (when present),
-  `dependencies.md`, and `naming.md` — must also carry the file-level
+  `domain.md`, `features.md` or `skills.md`, `model.md`, `flow.md` and each
+  `flow.<name>.md` (when present), `dependencies.md`, and `naming.md` (when
+  present) — must also carry the file-level
   metadata block described in
   `devbook-chapter-metadata.md`, placed directly
   under the file's top-level `#` heading. This applies even to
-  `context-map.md`, `model.md`, `flow.md`, and `dependencies.md`, whose `##`
-  sections do not carry their own per-chapter blocks — the file-level block
-  is the only metadata those files carry.
+  `context-map.md`, `model.md`, `flow.md`, `flow.<name>.md`, and
+  `dependencies.md`, whose `##` sections do not carry their own per-chapter
+  blocks — the file-level block is the only metadata those files carry.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. This folder describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
@@ -144,19 +203,32 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `term` |
-  | File | `context-map`, `domain`, `features`, `model`, `flow`, `dependencies`, `naming` |
+  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `term` |
+  | File | `context-map`, `domain`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+
+  There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
+  `feature` and its stages are `sub-feature`s: the file already says which kind
+  of repository is being described, and a second vocabulary for the same
+  relationship would make every consumer of the graph branch on the filename to
+  learn nothing.
 
   Each file's `type` matches its filename: `domain.md` is `type: domain`,
-  `features.md` is `type: features`, and so on, with `context-map.md` at the
-  `.domain` root carrying `type: context-map`.
+  `features.md` is `type: features`, `skills.md` is `type: skills`, and so on,
+  with `context-map.md` at the `.domain` root carrying `type: context-map`. A
+  `flow.<name>.md` carries `type: flow`, because the suffix narrows the scope
+  and not the kind.
 - Heading text in `.domain` carries the **name only** — `## Order`, not
   `## Aggregate: Order`. Anchors are therefore slugs of the bare name
   (`.domain/order-management/domain.md#order`). The two exceptions are the
   `## Shared Value Objects` and `## Shared Enums` chapters, whose headings name
   a grouping rather than a single thing, so the descriptive text *is* the name.
+  `## Ubiquitous Language`, where a context keeps its terms in `domain.md`, is a
+  third of the same kind.
   File titles are the bounded-context name alone (`# Order Management`), with
-  the file's own `type` distinguishing the six files of a context.
+  the file's own `type` distinguishing the files of a context. A
+  `flow.<name>.md` is the one exception, and it is still not a kind in the
+  heading: the file title stays the context name and the flow's own name goes
+  in its `##` heading, exactly as it did inside `flow.md`.
 
   `context-map.md` is the one `.domain` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
@@ -176,8 +248,8 @@ instructions.
   A `.domain` folder written the old way (kind prefixes in headings, no `type`,
   `#### <Name>` sub-chapters under `### Entities`) is migrated with the steps in
   the devbook plugin README under "Migrating to schema version 2".
-- `features.md` Feature/Sub-feature chapters may carry an additional
-  `depends-on` field: a list of `<path>#<heading-slug>` references (see
+- `features.md` and `skills.md` Feature/Sub-feature chapters may carry an
+  additional `depends-on` field: a list of `<path>#<heading-slug>` references (see
   `devbook-chapter-metadata.md` for the reference
   format) to other features that must be delivered first, e.g.
   `depends-on: [.domain/order-management/features.md#refunds]`.
@@ -185,8 +257,8 @@ instructions.
   Value Objects/Enums) do not use `depends-on` — they describe standing
   structure, and their relationships belong in `model.md`/`dependencies.md` or
   the `related` field instead.
-- `features.md` Feature/Sub-feature chapters may carry an additional
-  `feature-flag` field: the key (or keys) of the application feature flag that
+- `features.md` and `skills.md` Feature/Sub-feature chapters may carry an
+  additional `feature-flag` field: the key (or keys) of the application feature flag that
   delivers this chapter in the running product, e.g. `feature-flag: inbox-pane`
   or, when several flags together deliver one chapter,
   `feature-flag: [inbox-pane, inbox-filters]`. One flag may equally appear on
@@ -194,7 +266,7 @@ instructions.
   application identifiers, not `<path>#<heading-slug>` references — the flag
   lives in the application's own catalog, not in this repository, so the field
   produces no graph edge and the key itself is never validated here. Omit the
-  field when the chapter has no flag. `domain.md` and `naming.md` chapters do
+  field when the chapter has no flag. `domain.md` chapters and `term` chapters do
   not use `feature-flag`: a flag delivers a capability, not a structural
   element or a term.
 
@@ -250,7 +322,7 @@ instructions.
   just to document process-manager behavior; keep that semantics in the
   relevant Domain Service chapter unless a separate structure is later decided
   explicitly.
-- `naming.md` Term chapters carry an `aliases` field: a list of
+- Term chapters carry an `aliases` field: a list of
   plain-string surface names the term is also known by (code class/identifier
   names, snake_case id fields, or a consumer context's local copy name).
   Unlike `related`/`depends-on`, `aliases` entries are plain strings, not
@@ -438,6 +510,27 @@ type: enum
 \`\`\`
 
 Values and what each one means in business terms, and which aggregates use it.
+
+## Ubiquitous Language
+
+\`\`\`meta
+status: draft
+type: ubiquitous-language
+\`\`\`
+
+> Present only where the context keeps its terms here rather than in
+> `naming.md`. A grouping heading, so its descriptive text *is* its name.
+
+### <Canonical Term>
+
+\`\`\`meta
+status: draft
+type: term
+aliases: [<AliasA>, <AliasB>]
+related: [.domain/<context>/domain.md#<heading-slug>]
+\`\`\`
+
+Definition of the term and, where useful, when each alias appears.
 ```
 
 The Entity, Value Object, and Enum sub-chapters sit directly under their
@@ -489,6 +582,48 @@ Description of the sub-feature and how it fits under the parent feature.
 ...
 
 ## <NextFeatureName>
+
+...
+```
+
+
+### skills.md
+
+The alternative to `features.md`, for a repository whose product is procedures.
+A skill is a feature here, so the chapter types are the same.
+
+```markdown
+# <Bounded Context Name>
+
+\`\`\`meta
+status: draft
+type: skills
+\`\`\`
+
+> One chapter per skill this bounded context ships, described by what it lets
+> someone do rather than by how it is implemented.
+
+## <skill-name>
+
+\`\`\`meta
+status: draft
+type: feature
+related: [.domain/<context>/flow.<skill-name>.md]
+\`\`\`
+
+What the skill does for whoever runs it, what it guarantees, and where it
+stops. Name the skill exactly as a user types it, so the anchor is the name.
+
+### <Stage or Mode Name>
+
+\`\`\`meta
+status: draft
+type: sub-feature
+\`\`\`
+
+One stage of the skill, or one mode it can run in.
+
+## <next-skill-name>
 
 ...
 ```
@@ -545,6 +680,35 @@ type: flow
 > through their states and how work moves across the context over time.
 > Complementary to `model.md` (structure) and `domain.md`
 > (responsibilities/invariants).
+
+## <Flow Name>
+
+\`\`\`mermaid
+<mermaid state/sequence/flow diagram>
+\`\`\`
+
+- Optional notes: transitions, emitted events, and which state is persisted
+  vs. which is a workflow-only phase.
+```
+
+
+### flow.<name>.md
+
+One flow split out of `flow.md`, with the same `type` and the same rule that its
+`##` sections carry no metadata blocks.
+
+```markdown
+# <Bounded Context Name>
+
+\`\`\`meta
+status: draft
+type: flow
+related: [.domain/<context>/skills.md#<skill-name>]
+\`\`\`
+
+> One flow: <what moves, and from where to where>. Structure is in
+> [model.md](model.md); what the skill does is in
+> [skills.md](skills.md#<skill-name>).
 
 ## <Flow Name>
 

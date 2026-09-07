@@ -8,7 +8,8 @@ disable-model-invocation: true
 
 ## Purpose
 
-A capability is described in `.domain/<context>/features.md` and agreed, and the
+A capability is described in `.domain/<context>/features.md` — or `skills.md`,
+where the context describes skills — and agreed, and the
 product does not offer it — or offers part of it, missing sub-features the
 chapter names. This skill reads the chapter and produces a **change brief**:
 outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus

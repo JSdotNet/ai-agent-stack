@@ -45,7 +45,7 @@ related: [".devbook/domain/plugin-authoring/naming.md#surface", ".devbook/arc42/
 
 The rendered view of something already true in the repository — a graph, a diagram, a document.
 A canvas is a projection: it reads generated or checked-in content and never becomes the source
-of it, so a viewer can be absent without any knowledge being lost.
+of it, so a viewer can be absent without anything being lost.
 
 `devbook-graph` renders `_meta/graph.json` from the same graph module the generator writes it
 with, which is what makes the live view and the committed index unable to disagree — a second

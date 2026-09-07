@@ -1,4 +1,4 @@
-// graph.mjs — derives the cross-folder knowledge graph from the `meta` blocks
+// graph.mjs — derives the cross-folder reference graph from the `meta` blocks
 // embedded in .arc42/, .domain/, .tech/, .design/, and .ai/.
 //
 // Markdown stays canonical; this produces the *derived* index. Output shape is
@@ -32,7 +32,7 @@ import {
     NESTED_ROOT,
 } from "./metadata.mjs";
 
-/** Every knowledge folder this convention recognizes. A repository adopts any subset. */
+/** Every devbook folder this convention recognizes. A repository adopts any subset. */
 export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `.${name}`);
 
 /**
@@ -214,7 +214,7 @@ function composeFileLabel(title, type) {
 }
 
 /**
- * Build the graph from every knowledge document.
+ * Build the graph from every devbook document.
  *
  * Nodes: one per file, one per heading that carries a `meta` block, plus any
  * structural heading that something actually references. Edges: `contains`
@@ -462,15 +462,15 @@ export async function buildGraph(repoRoot, folders = null) {
                             type: "contains",
                         });
                     } else {
-                        const insideKnowledge = folderKindForPath(targetPath) !== null;
+                        const insideDevbook = folderKindForPath(targetPath) !== null;
                         problems.push({
-                            severity: insideKnowledge ? "error" : "warning",
+                            severity: insideDevbook ? "error" : "warning",
                             path: node.path,
-                            message: insideKnowledge
+                            message: insideDevbook
                                 ? `${node.id} has \`${field}\` reference "${ref}" that does not resolve to any chapter, heading, or file.`
-                                : `${node.id} has \`${field}\` reference "${ref}" pointing outside the knowledge folders; recorded as an external node.`,
+                                : `${node.id} has \`${field}\` reference "${ref}" pointing outside the devbook folders; recorded as an external node.`,
                         });
-                        if (insideKnowledge) continue; // don't invent a node for a typo
+                        if (insideDevbook) continue; // don't invent a node for a typo
                         nodes.set(ref, {
                             id: ref,
                             label: ref,
@@ -519,7 +519,7 @@ function summarize(nodes, edges) {
  * `outOfScope: true` so a viewer can render them as stubs rather than pretend
  * they are part of the scope. Edges are kept when both ends survive.
  *
- * `scope` is a knowledge folder path (".tech") or "." for the whole repository.
+ * `scope` is a devbook folder path (".tech") or "." for the whole repository.
  */
 export function projectScope(graph, scope) {
     if (scope === REPO_SCOPE) {
@@ -567,7 +567,7 @@ export function projectScope(graph, scope) {
  * derived-artifacts convention.
  *
  * Pass a pre-built graph to project several scopes without re-reading disk.
- * `folders` is the set of knowledge folders this repository actually adopts,
+ * `folders` is the set of devbook folders this repository actually adopts,
  * so the repo-wide `sources` never claims a folder that is not there.
  */
 export async function buildGraphDocument(
@@ -603,7 +603,7 @@ export const SCOPES = [REPO_SCOPE, ...DEVBOOK_FOLDERS, ...NESTED_DEVBOOK_FOLDERS
 /**
  * The scopes a specific repository actually has, so a repo that adopts only
  * `.domain` and `.arc42` never gets `_meta/` folders for conventions it does
- * not use. Returns an empty array when no knowledge folder is present.
+ * not use. Returns an empty array when no devbook folder is present.
  */
 export async function discoverScopes(repoRoot) {
     const { folders } = await discoverLayout(repoRoot);
@@ -611,7 +611,7 @@ export async function discoverScopes(repoRoot) {
 }
 
 /**
- * Which knowledge folders this repository actually has, and in which layout.
+ * Which devbook folders this repository actually has, and in which layout.
  *
  * `folders` holds real repository paths, so a caller never has to know whether
  * it is looking at `.tech` or `.devbook/tech`. Both are probed because a

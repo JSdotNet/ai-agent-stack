@@ -1,12 +1,12 @@
 # Repository routing snippet
 
 The `devbook` plugin ships the *structure and authoring rules* for the
-knowledge folders. It deliberately does **not** ship repository routing policy —
+devbook folders. It deliberately does **not** ship repository routing policy —
 which flow skill, specialist agent, or MCP server a repository prefers
 is repository-specific, and belongs in that repository's own instruction files.
 
 Copy the relevant parts below into the target repository, then edit them to name
-the flows, agents, and MCP servers that repository actually has installed. Delete any knowledge folder the repository did not adopt.
+the flows, agents, and MCP servers that repository actually has installed. Delete any devbook folder the repository did not adopt.
 
 The plugin ships no flow of its own. The `delivery` engine ships one per folder —
 `flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai` — which the routes below
@@ -46,9 +46,9 @@ is routing only, and none of it goes inside that section's markers.
 ## For an MCP authority section
 
 ```markdown
-Checked-in knowledge folders are **task-scoped local fallbacks**, not default
+Checked-in devbook folders are **task-scoped local fallbacks**, not default
 context. Load `.arc42/`, `.domain/`, `.tech/`, `.design/`, or `.ai/` only
-when the selected flow or specialist agent needs that knowledge, and
+when the selected flow or specialist agent needs that context, and
 then prefer only the relevant chapter(s) over whole-folder reads.
 ```
 
@@ -83,7 +83,7 @@ Notes on that rule:
   reopened for `index.json`. To keep the reading outline readable while still
   excluding the large graph, narrow the rule to `Read(_meta/graph.json)`.
 
-Keep `_meta/` committed either way — the knowledge graph canvas and the CI drift
+Keep `_meta/` committed either way — the reference graph canvas and the CI drift
 check both read it from the repository.
 
 GitHub Copilot content exclusion is not an equivalent lever: it does not apply

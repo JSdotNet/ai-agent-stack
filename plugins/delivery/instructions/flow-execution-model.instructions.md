@@ -76,7 +76,7 @@ Defaults, for a point the repository leaves absent:
   browser surface.
 - Every other point: none. The stage grounds itself in the repository's own instruction
   files — the `repo-instructions` slot, matching `**/*.instructions.md`, and the checked-in
-  knowledge chapters and ADRs.
+  devbook chapters and ADRs.
 
 A bound server is matched from the live tool list by pattern at the stage that uses it, since
 a host may namespace it (`mcp__<id>__*`, or `mcp__plugin_<plugin>_<id>__*`). A server that

@@ -1,6 +1,6 @@
 ---
 name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate devbook folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -31,11 +31,11 @@ compressing a lookup table costs a repair, not a sentence.
    |------|---------|--------|
    | `0` | Every reference resolves, every block matches the schema | Go to step 4 |
    | `1` | One or more problems at `error` severity | Go to step 2 |
-   | `2` | No knowledge folder found | Wrong directory, or the repo has not adopted the convention — run `devbook-sync` instead |
+   | `2` | No devbook folder found | Wrong directory, or the repo has not adopted the convention — run `devbook-sync` instead |
 
    `--check` parses and reports without writing. Add `--root <path>` when running
    from outside the repository root, and `--scope <folder>` to narrow the run to
-   one knowledge folder.
+   one devbook folder.
 
 2. **Fix the reported problems.** Each problem names the file it came from.
    Common causes and the correct fix:

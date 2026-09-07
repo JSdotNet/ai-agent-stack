@@ -8,7 +8,7 @@ requires: [devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]
 ---
 
-Run `devbook-check` from the repository root over every adopted knowledge folder.
+Run `devbook-check` from the repository root over every adopted devbook folder.
 
 Fix what the check reports in the source Markdown, never under `_meta/`, re-run until it exits
 `0`, then refresh the derived indexes. If anything changed, open the pull request titled

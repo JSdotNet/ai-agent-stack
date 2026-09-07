@@ -1,7 +1,7 @@
 # devbook
 
 Encapsulates the `.arc42` / `.domain` / `.tech` / `.design` / `.ai`
-knowledge-folder convention: durable, cross-linked Markdown knowledge with
+devbook convention: durable, cross-linked Markdown chapters with
 machine-readable `meta` blocks, derived `_meta/` indexes, a graph canvas, and a
 CI check that keeps references honest.
 
@@ -16,7 +16,7 @@ path instead of by repository.
 
 ## What the convention is
 
-Each knowledge folder holds Markdown chapters. Every chapter carries a `meta`
+Each devbook folder holds Markdown chapters. Every chapter carries a `meta`
 block declaring its identity, status, number, date, its relationships to other
 chapters, and the test cases that assert what it claims. A generator walks the
 corpus and writes derived indexes under `_meta/`, which CI validates on every
@@ -59,7 +59,7 @@ migration are one idempotent operation — the stamp at
 marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
 protocol is in `assets/reconcile-protocol.md`.
 
-**Trigger keywords:** `devbook sync`, `set up devbook`, `adopt the knowledge
+**Trigger keywords:** `devbook sync`, `set up devbook`, `adopt the devbook
 folders`, `scaffold .arc42`, `scaffold .domain`, `set up .tech`,
 `upgrade devbook`, `run devbook migrations`
 
@@ -73,7 +73,7 @@ schema no longer defines, stale committed indexes — and hands the rest back to
 `devbook-sync`, which owns every write.
 
 **Trigger keywords:** `devbook check`, `devbook-meta failed`,
-`broken reference`, `stale _meta`, `validate knowledge folders`,
+`broken reference`, `stale _meta`, `validate devbook folders`,
 `build.mjs --check`
 
 ### Skill: `devbook-tech-update`
@@ -88,7 +88,7 @@ tooling before delegating graph authoring to the `.tech` write path.
 
 ### No flows
 
-This plugin ships the shape of a knowledge folder and never the procedure for changing one.
+This plugin ships the shape of a devbook folder and never the procedure for changing one.
 The instruction files below say what a chapter must look like, and the check says whether it
 does; how a change is carried — stages, roles, the approval gate, a pull request — is the
 delivery engine's, which ships one flow per folder and reads these rules from the repository.
@@ -96,7 +96,7 @@ With `devbook` alone, a folder edit follows the folder's instruction file direct
 
 ### Skills: `to-spec-<kind>` and `from-spec-<kind>`
 
-Two directions between a knowledge chapter and the code that implements it. The chapter is
+Two directions between a devbook chapter and the code that implements it. The chapter is
 the **spec**, which is what the `spec` in each name refers to — `<kind>` alone would be
 ambiguous, because an aggregate is both a chapter and a class.
 
@@ -143,7 +143,7 @@ A **domain service** is the deliberate exception: it is defined by coordinating
 across boundaries rather than living in one, so folding it into a boundary's pass
 would be backwards. It keeps its own pair, and owns the events it raises itself.
 
-**`to-spec-feature` runs the application.** `features.md` is the one knowledge
+**`to-spec-feature` runs the application.** `features.md` is the one chapter
 file written from the user's point of view, so that pass starts the app, walks
 the feature, and captures a screenshot per step — reading a controller tells you
 a route exists, while using the feature tells you what the product lets someone
@@ -151,7 +151,7 @@ do, in what order, with what wording. It prefers the repository's own runtime an
 QA workflow skills where the repository has any installed, runs
 only against a local or disposable environment, never exercises a destructive
 step to document it, and keeps the screenshots as report evidence rather than
-committing them to a knowledge folder.
+committing them to a devbook folder.
 
 **`naming.md` term chapters have no pair of their own.** They are written through
 the `.domain` write path, and populated incrementally by the capture passes: whenever one
@@ -195,10 +195,10 @@ path and hands over grounded input; no flow knows these skills exist.
 | `devbook-ai.instructions.md` | `.ai/**`, `.devbook/ai/**` | AI usage per flow stage, the adoption ladder, and the `.tech` boundary |
 | `devbook-annotations.instructions.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
 | `devbook-derived-artifacts.instructions.md` | `**/_meta/**` | Placement, naming, and envelope rules for generated files |
-| `devbook-naming.instructions.md` | knowledge folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
+| `devbook-naming.instructions.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
 Every glob carries both layouts — the five root dot-folders and their `.devbook/`
-nesting — and is scoped to the knowledge folders, so the plugin stays silent in
+nesting — and is scoped to the devbook folders, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
 How a file reaches a session depends on the host. Copilot applies it from `applyTo`
@@ -219,7 +219,7 @@ bump, and a migration in every consuming repository. See
 
 ### Extension: `devbook-graph`
 
-Two canvases. `devbook-graph` renders the knowledge graph — chapters as nodes,
+Two canvases. `devbook-graph` renders the reference graph — chapters as nodes,
 `related` / `depends-on` as edges — using the same graph code the
 generator writes, so the live view and the committed indexes never disagree. The
 node inspector lists a chapter's test links with the command that runs each one,
@@ -283,7 +283,7 @@ for technologies that do not appear in package manifests.
 
 ### Hook configuration
 
-- `hooks.json` adds a session-start guardrail: knowledge folders are task-scoped
+- `hooks.json` adds a session-start guardrail: devbook folders are task-scoped
   context rather than baseline context, `meta` blocks are mandatory on every
   chapter, and `_meta/` is never hand-edited.
 
@@ -377,7 +377,7 @@ Five layers, weakest to strongest:
 1. **Instructions** govern the paths above in every repository where the plugin is
    installed — applied from `applyTo` on the host that reads it, reached by path on
    the host that does not.
-2. **The session-start hook** stops agents treating knowledge folders as baseline
+2. **The session-start hook** stops agents treating devbook folders as baseline
    context or hand-editing derived files, and is what carries the folder rules on the
    host that cannot be handed a rules file by a plugin.
 3. **`meta` block rules** make every chapter's relationships explicit and
@@ -385,7 +385,7 @@ Five layers, weakest to strongest:
 4. **`build.mjs --check`** fails on unresolved references and schema violations.
 5. **The CI workflow** fails the pull request on broken references or a `meta`
    block that violates the schema. Drifted `_meta/` indexes are reported as a
-   warning, not a failure — making every knowledge pull request carry a
+   warning, not a failure — making every devbook pull request carry a
    regenerated index is what turns those files into merge conflicts. Refresh is
    deliberate instead: `build/Update-DevbookIndex.ps1` on demand, the nightly
    workflow on a schedule. A consumer that reads an index at runtime owes the

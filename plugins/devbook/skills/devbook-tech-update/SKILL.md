@@ -44,7 +44,7 @@ node plugins/devbook/tools/devbook-tech/frontend-packages.mjs --root .
 ```
 
 Treat these JSON files as temporary evidence. Do not commit them unless the repository has
-explicitly adopted inventory evidence files; the durable knowledge remains the `.tech/*.md`
+explicitly adopted inventory evidence files; the durable record remains the `.tech/*.md`
 chapters and generated `_meta/*.json` indexes.
 
 ## Workflow
@@ -81,7 +81,7 @@ chapters and generated `_meta/*.json` indexes.
    from `devbook-tech.instructions.md`.
 
 5. **Author through the `.tech` flow.** Route the actual `.tech/` edits through the
-   `.tech` flow unless this skill is already being run as part of that orchestration.
+   `.tech` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
 6. **Regenerate and validate indexes.** Run:

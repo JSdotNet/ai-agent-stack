@@ -17,7 +17,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_MARKETPLACE = 'jsdotnet';
-const KNOWLEDGE_FOLDERS = ['arc42', 'domain', 'tech', 'design', 'ai'];
+const DEVBOOK_FOLDERS = ['arc42', 'domain', 'tech', 'design', 'ai'];
 const ENGINE_KEYS = ['bindings', 'extensions', 'policy', 'gates'];
 const SERVICES = ['spec', 'implement', 'verify', 'app.start', 'qa.run', 'deliver'];
 const CHORES = ['session.start', 'flow.start', 'data.prepare', 'docs.update', 'flow.end'];
@@ -198,7 +198,7 @@ function buildPluginRows(catalogs, installed, enabled, marketplace) {
 function buildRepository(repoRoot) {
     const path = join(repoRoot, '.github', 'ai-agent-stack.json');
     const config = load('stack config', path);
-    const folders = KNOWLEDGE_FOLDERS.map((folder) => {
+    const folders = DEVBOOK_FOLDERS.map((folder) => {
         const flat = join(repoRoot, `.${folder}`);
         const nested = join(repoRoot, '.devbook', folder);
         if (existsSync(flat)) return { folder, layout: 'flat', path: `.${folder}/` };
@@ -335,7 +335,7 @@ function render(model) {
         }
     }
 
-    out.push('### Knowledge folders on disk');
+    out.push('### Devbook folders on disk');
     out.push('');
     out.push(table(
         ['Folder', 'Present as'],

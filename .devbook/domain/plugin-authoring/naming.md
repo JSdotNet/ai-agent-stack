@@ -80,6 +80,22 @@ type: term
 A host-executed action bound to a session event. The two hosts disagree on what a session-start
 hook may be, so the event, not the intent, decides the form it takes.
 
+## Devbook Folder
+
+```meta
+type: term
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#the-word-knowledge-is-retired", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+```
+
+One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
+`ai` — holding addressed Markdown **chapters**, each carrying a fenced `meta` block. A
+repository adopts any subset, in one of two layouts, and never mixes them.
+
+The convention's own name is the only noun for these; there is no common-noun synonym, because
+a convention that has a name does not need one. What `_meta/graph.json` derives from their
+`meta` blocks is the **reference graph**.
+
 ## Flow Skill
 
 ```meta
@@ -101,24 +117,13 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 | `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
 
-The word *orchestration* covered the first two at once, which is why it named neither well.
-`orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds sixteen `flow-*` — five of them one per knowledge folder, since
+Each prefix names one scope and no prefix names two, which is why none of them is called after
+*orchestration* — the word covers fan-out and single-session staging at once, and survives here
+only as the English description of what `fleet-` does. `delivery` holds sixteen `flow-*` — five
+of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
 and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
 `fleet-*`, and `stack-guide` holds three `stack-*`.
-
-`automation-` and `routine-` were the two halves of `schedule-` until 2026-09-07: the first
-named the procedure in `delivery`, the second the trigger in a plugin beside it. They were
-merged because they were the same subject split across two folders, and because the words are
-the two hosts' names for one capability — Routines in Claude Code, Automations in the GitHub
-Copilot app — so adopting either would have named a host. Both are recorded as aliases of
-[Schedule](#schedule) and neither survives as a prefix.
-
-A grep still finds the string, and never as a skill name: only the decision records that say
-what was renamed. `flow-runner`'s allowlist kept the `orch-dashboard` tool patterns for one
-release, and they went with the plugin that shipped that server. The dashboard renderer's
-last comment naming an old skill was reworded on 2026-09-05.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one
@@ -298,7 +303,7 @@ unbound, which is not the same as absent.
 
 No provider for any of them ships in this marketplace; see
 [Roles and Services](../../arc42/05-building-block-view.md#roles-and-services). `product` and
-`security` were never filled here and are `null`.
+`security` are `null`.
 
 The key is not the plugin's name, and a plugin whose name matches a key matches it by
 coincidence. A specialist filling a role also holds no flow control — no sequencing, no gate,
@@ -389,7 +394,7 @@ plugins it may name. A lower layer never names a higher one.
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
 | L1 extension | One foundation | `devbook-collaboration` |
-| L2b bridge | Two stacks at once, deliberately | none today; `devbook-flows` was one until [the flows moved](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) |
+| L2b bridge | Two stacks at once, deliberately | none |
 | L3 surface | Neither direction. Reads generated files | `devbook-graph` |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a

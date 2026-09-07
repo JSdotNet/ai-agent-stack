@@ -104,7 +104,7 @@ toolCall("Edit", { file_path: "src/OrderManagement/Rounding.cs" });
 const afterCode = await callTool("update_stage", { runId, stageName: "Implement", status: "done", output: "done" });
 check("code writes name the run and resolve the boundary", afterCode.sessionTitle, "code:order-management — Partial shipment rounding");
 
-// Documentation drift updates one knowledge chapter — not enough to outweigh two code files.
+// Documentation drift updates one devbook chapter — not enough to outweigh two code files.
 toolCall("Edit", { file_path: ".domain/order-management/domain.md" });
 const afterDrift = await callTool("update_stage", { runId, stageName: "Summary", status: "in_progress" });
 check("one drift edit does not flip the prefix", afterDrift.sessionTitle, "code:order-management — Partial shipment rounding");

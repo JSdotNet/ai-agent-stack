@@ -14,7 +14,7 @@ deployable unit.
 
 - `.arc42` is **not** baseline repository context. Load it only for architecture,
   ADR, blueprint, TDR, or explicit arc42 tasks, normally after routing through the
-  repository's architecture orchestration or an architecture specialist agent.
+  repository's architecture flow or an architecture specialist agent.
 - When `.arc42` is needed as task context, load only the relevant chapter(s) or
   sections instead of reading the whole folder by default.
 - For non-architecture implementation or documentation tasks, consult `.arc42`
@@ -22,7 +22,7 @@ deployable unit.
   specific documented constraint, decision, runtime view, deployment view, or
   glossary entry.
 
-## Relationship to other knowledge folders
+## Relationship to other devbook folders
 
 - `.domain` describes *what the domain is* (bounded contexts, aggregates,
   ubiquitous language). `.arc42` describes *how the system is built and runs*

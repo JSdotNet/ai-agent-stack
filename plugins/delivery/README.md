@@ -42,8 +42,8 @@ three outcomes: `approve` continues, `revise` re-runs that point with the human'
 hand one to a plugin. Personal Validation is the mandatory instance of that pattern, not a
 separate mechanism. `spec → gate → implement` is the highest-value one to turn on.
 
-**Bindings and policy.** Which plugin fills each role, which tracker the repository uses, and
-a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
+**Bindings and policy.** Which plugin fills each role, which tracker the repository uses,
+which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the verify retry budget, the gate revise
 budget, whether the flow commits its change set at each handback, whether a pull request is
 required.
 
@@ -57,7 +57,10 @@ All four live in `.github/ai-agent-stack.json`:
   },
   "gates": [{ "at": "spec", "when": "after", "purpose": "approval", "show": "artifact" }],
   "policy": { "qa.depth": "targeted", "verify.retryBudget": 2 },
-  "bindings": { "delivery.tracker": { "provider": "github" } }
+  "bindings": {
+    "delivery.tracker": { "provider": "github" },
+    "delivery.mcp": { "spec": ["your-guidelines-server"] }
+  }
 }
 ```
 

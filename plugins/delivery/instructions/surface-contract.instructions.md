@@ -39,6 +39,10 @@ and never edits another component's. `components` belongs to each component's ow
       "docs":         "your-docs-plugin",
       "product":      null,
       "security":     null
+    },
+    "delivery.mcp": {
+      "spec":        [ "your-guidelines-server" ],
+      "docs.update": [ "your-guidelines-server" ]
     }
   },
   "extensions": {
@@ -215,6 +219,14 @@ dependencies: one missing specialist must not demote every skill that names it.
   for a repository that plans work as Markdown. Operations: `find_item`, `read_item`,
   `create_item`, `comment`, `transition`, `link_change`. Unbound, a flow runs to its file
   artifacts and opens, comments on, and transitions nothing.
+- **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
+  the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
+  A stage resolves the servers of the point it serves from the live tool list, by pattern,
+  since a host may namespace them. A server that does not answer is reported once, and the
+  stage continues on the repository's own instruction files and chapters — it costs that
+  stage its grounding, never the run. An absent point takes the engine default in **MCP
+  Server Strategy** (`flow-execution-model.instructions.md`); `null` binds none. The engine
+  names no server of its own beyond those defaults, and no server is ever a dependency.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   verification, so it binds as the `implement` and `verify` services above rather than as an
   advisor a stage delegates a question to.

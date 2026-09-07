@@ -53,31 +53,38 @@ Discovery** below.
 
 ## MCP Server Strategy (Shared)
 
-This plugin ships no MCP server and names none by id. Every server below is a **capability**
-resolved from the live tool list at the stage that needs it — a host may namespace it, and the
-repository's own `.mcp.json` and instruction files say which server fills it. An absent
-capability is a normal outcome: the stage takes its stated fallback, records once that nothing
-answered, and continues. It never stops the run and never turns into an MCP setup task.
+This plugin ships no MCP server and requires none. A repository declares its servers in its
+own MCP configuration and binds them per extension point under `bindings["delivery.mcp"]` in
+`.github/ai-agent-stack.json` — see **Bindings** in `surface-contract.instructions.md`. A
+stage uses the servers bound to the point it serves:
 
-- **Guidelines** — repository standards, governed asset constraints, template conventions,
-  and existing decision context. Resolve any guideline server the repository declares — tools
-  that list, search, and fetch guides — from the live tool list. **Fallback, inline:** the
-  repository's own instruction files — the `repo-instructions` slot, matching
-  `**/*.instructions.md`, and the checked-in knowledge chapters and ADRs. A stage that reads
-  `**MCP:** the guidelines capability` means exactly this pair.
-- **Design guidelines** — the same shape, for UX-specific work only: wireframes, user flows,
-  and design artifacts. Do not use it for the architecture, ADR, TDR, or general
-  implementation phases unless a flow explicitly adds UX design work. Fallback: the
-  repository's design chapters.
-- Use `microsoft-learn` during implementation-focused phases when official
-  Microsoft/.NET/Azure/Aspire documentation or code samples are needed. Prefer targeted
-  lookups tied to the stack being changed; do not turn implementation phases back into
-  broad research passes.
-- Use `playwright` in QA Validation when browser-based scenarios or visual evidence are
-  required. Skip it when the validation mode is startup-only or the change has no browser
-  surface. QA Validation's required-tooling rule in `flow-phases.instructions.md` still
-  applies: a required server missing there marks that phase `blocked`, never the run.
-- Prefer the narrowest server that matches the phase. Do not query every server by default.
+| Stage | Point |
+| --- | --- |
+| Scope Discovery; every intake, retrieval, drafting, and review stage of a documentation/config flow | `spec` |
+| Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
+| Build & Test | `verify` |
+| QA Validation | `app.start`, `qa.run` |
+| Create Pull Request, Work Item Update | `deliver` |
+| Documentation Update | `docs.update` |
+| Update Base, Personal Validation, Summary | none |
+
+Defaults, for a point the repository leaves absent:
+
+- `implement` and `verify`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
+  lookups tied to the stack being changed — never a broad research pass.
+- `app.start` and `qa.run`: `aspire` and `playwright`, under the required-tooling rule in
+  `flow-phases.instructions.md`; not used when the depth is startup-only or the change has no
+  browser surface.
+- Every other point: none. The stage grounds itself in the repository's own instruction
+  files — the `repo-instructions` slot, matching `**/*.instructions.md`, and the checked-in
+  knowledge chapters and ADRs.
+
+A bound server is matched from the live tool list by pattern at the stage that uses it, since
+a host may namespace it (`mcp__<id>__*`, or `mcp__plugin_<plugin>_<id>__*`). A server that
+does not answer is a normal outcome: the stage falls back to the repository's own instruction
+files, records once that the server was absent, and continues. It never stops the run and
+never becomes an MCP setup task. QA's required tooling is the one place absence marks a phase
+`blocked` — still never the run. Query the servers the point names and no others.
 
 ## Execution Model (Shared)
 

@@ -472,10 +472,11 @@ verified on the Copilot host or not at all, which is the open half of the `trial
 
 ```meta
 date: 2026-09-04
-related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#gate", ".devbook/arc42/05-building-block-view.md#role-plugins", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#gate", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 ```
 
-A [role plugin](05-building-block-view.md#role-plugins) contributes expertise and artifacts. It
+A specialist filling a [role or a service](05-building-block-view.md#roles-and-services)
+contributes expertise and artifacts. It
 does not sequence stages, hold gates, spawn sessions, or delegate to other agents. Those belong
 to whatever consults it.
 
@@ -508,16 +509,17 @@ What stays is the part that is not control: an agent names its handoff targets i
 both hosts need that and Claude reads nothing else. It says a handoff is warranted and why.
 Whether that needs approval, and what happens to the artifact in between, is the caller's.
 
-Consequence: **a role plugin used bare is less guided than it was.** Run the `arc42` agent
+Consequence: **a specialist used bare is less guided than it was.** Run an architecture agent
 outside any flow and nothing prompts for approval before it writes. That is the honest trade —
 the guidance was never enforceable anyway, since an instruction file is a prompt and not a
 mechanism, and pretending otherwise is what made two of them contradict the assets shipped
 beside them. A repository that wants a checkpoint adds a gate, which the engine can see.
 
-**Completed, 2026-09-05.** The change that recorded this cleaned three agents and left five.
-`coding`, `documentation`, `profile`, `qa`, and `spec-builder` now carry no spawning or
-delegation tool and hold no approval question; `tools/check-assets.mjs` fails on any role
-agent that grows one back.
+**Completed, 2026-09-05.** The change that recorded this cleaned three agents and left five,
+none of them carrying a spawning or delegation tool or holding an approval question. Those
+five [left the marketplace](#the-specialists-leave-the-marketplace) on 2026-09-07;
+`tools/check-assets.mjs` still fails on any non-runner plugin's agent that carries one, which
+now guards assets added later rather than any shipping today.
 
 ## Budgets Are Disclosure Triggers, Not Gates
 
@@ -541,14 +543,14 @@ by accident:
 | `flow-*`, `phase-*`, `fleet-*`, `automation-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
 | `devbook-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
-| `flow-runner` and `qa` agents | Each is a session's main loop and carries its own invocation contract. |
+| The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
 
 For those kinds the reason is stated here, once, and not repeated at the top of a hundred
 files. The record's own evidence supports the split: the plugin that owns the rule meets it at
 a median of 28 lines, and the four that miss it by four to ten times are exactly the ones made
-of staged procedures and contracts. Everything else over budget — a role plugin's how-to
-skills, the pull-request lane, the two profile skills — is owed a trim or a reason line in the
-file, and `tools/check-assets.mjs --budgets` is the list.
+of staged procedures and contracts. Everything else over budget — at the time, a specialist's
+how-to skills, the pull-request lane, the two profile skills — is owed a trim or a reason line
+in the file, and `tools/check-assets.mjs --budgets` is the list.
 
 Consequence: the number in `CLAUDE.md` is a review prompt and not a gate the checker fails on.
 An asset that grows past its budget is asked what it disclosed and why, not refused. The debt
@@ -612,9 +614,11 @@ why `stack-guide` is a plugin of its own with an empty `dependencies` array rath
 inside `devbook`.
 
 The rule is about the dependency order, and naming is not depending. `delivery` already carries
-over two hundred `plugin:asset` references into seven [role plugins](05-building-block-view.md#role-plugins)
-it never declares, and a reference that resolves to nothing degrades one stage instead of
-failing a load. The guide is the same shape taken further: it names every plugin in the
+over two hundred `plugin:asset` references into seven specialist plugins it never declared,
+and a reference that resolves to nothing degrades one stage instead of failing a load. Those
+seven have since [left the marketplace](#the-specialists-leave-the-marketplace) and the
+references with them, but the shape the argument rests on is unchanged: the guide still names
+every plugin in the catalog and declares none. The guide is the same shape taken further: it names every plugin in the
 catalog, resolves
 each against what is on disk, and reports a plugin it cannot find as `not installed` — which is
 an answer, not a degradation. Nothing it names is loaded, so there is nothing to dangle.
@@ -649,6 +653,56 @@ plugin state, and on the other host the installed and enabled columns come back 
 which files it read and which were absent rather than inferring, so the failure mode is a
 visible blank rather than a confident wrong version — but a truthful answer there needs a host
 slot the engine does not have yet.
+
+## The Specialists Leave the Marketplace
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control", ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
+```
+
+`arc42`, `csharp-coding`, `qa`, `domain`, `ux`, `documentation`, and `spec-builder` are removed
+from this repository and published from a marketplace of their own. What stays is the
+convention, the engine, the bridges, the surfaces, and the guide.
+
+The split costs nothing structurally, which is the evidence that the boundary was already in
+the right place. None of the seven declared a dependency and nothing declared one on them; no
+module imported across the line; `tools/check-assets.mjs` and the `_meta` generator are driven
+by the marketplace file and the chapters, not by a plugin list. Deleting 177 of 371 tracked
+plugin files changed no mechanism.
+
+**The by-name references go with them.** `delivery` and `devbook-flows` carried over two
+hundred `plugin:asset` references into the seven, and [the guide's decision](#the-guide-names-every-plugin-and-depends-on-none)
+leans on exactly that: naming is not depending, and an unresolvable reference degrades one
+stage. So keeping them would have worked. They are de-named anyway, because *this* marketplace
+naming a plugin published from another one is a coupling nothing here can check: no manifest
+declares it, no test resolves it, and a rename on the other side would rot every reference
+silently. Every stage now names the point it fills — `arc42:arc42` became the `architecture`
+role, `csharp-coding:coding` the `implement` service, `qa:qa` the `app.start` or `qa.run`
+provider by stage — and a repository's `.github/ai-agent-stack.json` is the only place a
+specialist's name appears. The `**Skills:**` halves that reached inside a specialist are gone
+for the same reason: which skill a role uses is the role's business.
+
+The engine's own rule is restated to match. It names points, roles, and capabilities; a
+repository names the plugin that fills one. The worked examples in the surface contract, the
+`delivery` README, and the config test use `your-*` placeholder ids that satisfy the schema
+without naming anything, and the stack config template starts every role and service `null` —
+deliberately unbound, which the vocabulary already distinguishes from absent.
+
+Consequence: **`delivery` installed alone is now visibly capability-free at five roles and five
+services**, where before the defaults in the template quietly pointed at siblings in the same
+catalog. That is the honest state, and the same one a consuming repository was always in until
+it wrote its bindings. The cost is that a first-time user gets no worked binding to copy: the
+template shows the shape and the contract explains the id form, but which plugin to install is
+now a question this repository does not answer.
+
+Two smaller consequences. `tools/check-assets.mjs` still refuses flow-control tools on any
+non-runner plugin's agent, and no such agent ships here any more — the rule guards future
+assets rather than present ones. And the conciseness rule this repository holds its own
+authoring to came out of `spec-builder` and stayed, as `AUTHORING.md` beside `CLAUDE.md`: it
+governs authoring here, so a pointer into a marketplace this repository does not publish would
+have been the one dangling reference the rest of this change exists to remove. The departing
+plugin keeps its own copy, and the two are free to diverge — nothing here reads that one.
 
 ## Devbook Payload Named After Its Plugin
 

@@ -35,7 +35,7 @@ or a cross-cutting redesign: recommend `flow-adr` or `flow-architecture` and ask
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
+`instructions/flow-execution-model.instructions.md`. the `architecture` role only when architectural
 impact is suspected.
 
 ## Stage 1: Specification & Architecture Intake
@@ -45,14 +45,14 @@ impact is suspected.
 - Capture the implementation constraints and the affected integration points.
 - Define the local validation target for the approved change.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 2: Implementation
 
 - Write code to the repository's standards and patterns, test first.
 - Document the logic a reader cannot infer.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -61,7 +61,7 @@ QA Validation → Personal Validation → Create Pull Request → Documentation 
 Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright scenarios drawn from the
-acceptance criteria, `qa:qa-monitor` runtime monitoring, evidence recorded.
+acceptance criteria, runtime monitoring active throughout, evidence recorded.
 
 ## Surface Reporting
 

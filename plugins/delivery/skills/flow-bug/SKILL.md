@@ -36,7 +36,7 @@ architectural decision or a cross-cutting redesign: recommend `flow-feature`, `f
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
+`instructions/flow-execution-model.instructions.md`. the `architecture` role only when architectural
 impact is suspected.
 
 ## Stage 1: Bug Intake & Reproduction
@@ -45,7 +45,8 @@ impact is suspected.
 - Determine severity and impact, and which versions and users it reaches.
 - Record the reproduction with its logs and traces.
 
-**Agents:** `csharp-coding:coding`; `qa:qa` when reproduction needs the application running.
+**Agents:** the `implement` service; the `app.start` service when reproduction needs the
+application running.
 
 ## Stage 2: Root Cause Analysis
 
@@ -53,7 +54,7 @@ impact is suspected.
 - Check for related bugs sharing the pattern.
 - Reduce it to a minimal reproduction case, and document the findings for the fix.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Stage 3: Implementation
 
@@ -61,7 +62,7 @@ impact is suspected.
 - Implement the minimal fix that addresses the root cause, and make the test pass.
 - Add the regression tests that keep it fixed, and confirm nothing else broke.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -69,8 +70,8 @@ Code-modifying tier of `instructions/flow-phases.instructions.md`, in order: Bui
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
-A bug fix, so QA Validation is targeted: `qa:qa` re-runs the original reproduction steps plus
-the regression scenario under `qa:qa-monitor`. Capture evidence only on request, or when a
+A bug fix, so QA Validation is targeted: the `qa.run` provider re-runs the original reproduction
+steps plus the regression scenario under the runtime monitor. Capture evidence only on request, or when a
 failure needs it.
 
 ## Surface Reporting

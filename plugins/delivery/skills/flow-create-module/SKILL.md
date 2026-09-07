@@ -38,7 +38,7 @@ architectural decision, a new bounded context, or a cross-cutting redesign: reco
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` only when architectural
+`instructions/flow-execution-model.instructions.md`. the `architecture` role only when architectural
 impact is suspected.
 
 ## Stage 1: Specification Intake
@@ -49,7 +49,7 @@ impact is suspected.
 - Capture the public interfaces and consumers in the owning context's ubiquitous language.
 - Capture the acceptance criteria, non-functional requirements, and integration risks.
 
-**Agents:** `arc42:arc42`; `domain:domain` when the module introduces or crosses a bounded
+**Agents:** the `architecture` role; the `domain` role when the module introduces or crosses a bounded
 context — a module inside one existing context needs no domain pass.
 
 ## Stage 2: Implementation Planning
@@ -59,7 +59,7 @@ context — a module inside one existing context needs no domain pass.
 - Plan the integration points with existing modules and services.
 - Break the work into an incremental delivery checklist.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Implementation
 
@@ -67,7 +67,7 @@ context — a module inside one existing context needs no domain pass.
 - Implement the core functionality, then the dependency wiring and configuration.
 - Keep the change set incremental, so it stays reviewable.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -76,7 +76,7 @@ QA Validation → Personal Validation → Create Pull Request → Documentation 
 Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright checks on the new module's
-endpoints and flows, `qa:qa-monitor` runtime monitoring, evidence recorded.
+endpoints and flows, runtime monitoring active throughout, evidence recorded.
 
 ## Surface Reporting
 

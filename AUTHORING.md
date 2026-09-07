@@ -1,9 +1,12 @@
----
-applyTo: '**/*.agent.md,**/*.instructions.md,**/SKILL.md'
-description: Pruning rules and size budgets that keep authored customization assets short enough to stay predictable.
----
+# Authoring
 
-# Spec Conciseness Instructions
+Pruning rules and size budgets that keep authored assets short enough to stay predictable.
+[CLAUDE.md](CLAUDE.md) states the short form of these; this file is the full rule it points at.
+
+It arrived from the `spec-builder` plugin's `instructions/authoring/spec-conciseness.instructions.md`
+and stayed behind when that plugin
+[left the marketplace](.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace),
+because it governs authoring *here*.
 
 ## Purpose
 
@@ -13,9 +16,8 @@ description: Pruning rules and size budgets that keep authored customization ass
 ## Single Source Of Truth
 
 - State each rule in exactly one file. Everywhere else, link to that file by relative path.
-- Canonical sources: `dual-host-authoring.instructions.md` for the host contract, the
-  repository's own instruction files for repository-wide standards, and the matching
-  `create-*.instructions.md` for asset-specific rules.
+- Canonical sources: [CLAUDE.md](CLAUDE.md) for the dual-host contract and the repository's own
+  standards, and this file for conciseness.
 - Prefer a one-line pointer over a summary. A summary is a second copy that drifts.
 - The environment is a source of truth too: record what an author cannot find by looking —
   the unwritten convention, the reason behind a choice, the gotcha no config confesses.
@@ -43,6 +45,7 @@ lines; frontmatter such as an agent `tools` list does not count.
   the asset by branch so each path carries only what it needs.
 - Inline what every run needs; disclose behind a pointer what only some runs reach.
 - State the reason in the file when an asset genuinely must exceed its budget.
+- `node tools/check-assets.mjs --budgets` lists what is over. It reports, and never fails.
 
 ## Positive Phrasing
 

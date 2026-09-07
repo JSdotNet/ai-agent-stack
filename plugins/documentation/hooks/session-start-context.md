@@ -1,1 +1,0 @@
-For documentation and profile artifacts, preserve required structure and audience clarity. Ensure each artifact includes the core sections required by its instruction file and keep outputs concise, actionable, and evidence-based.

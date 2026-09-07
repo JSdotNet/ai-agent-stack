@@ -23,11 +23,13 @@ accessibility trees, and Aspire log pages are large, and every one read inline i
 every later turn of the run — through Personal Validation, the pull request, and the
 summary. Delegated, the owner session pays for the QA *result* instead of the QA *session*.
 
-- **Invoke `qa:qa` with a single `Agent` call** in the **same worktree** (never
+- **Invoke the `qa.run` provider with a single `Agent` call** in the **same worktree** (never
   `isolation: "worktree"` — an isolated checkout cannot see the change set under test or
   reach the running application), using the model resolved for this phase's category per
   `instructions/flow-model-selection.instructions.md`.
-- **Keep `qa:qa-monitor` a separate background agent.** Its own context window is the point:
+- **Keep the runtime monitor a separate background agent** — the log-and-trace watcher the
+  `qa.run` provider supplies alongside its scenario driver. Its own context window is the
+  point:
   log and trace polling is high-volume and low-value to retain, so it belongs anywhere other
   than the session that has to survive to Personal Validation. Merging monitoring into the
   QA agent, or running it inline, puts exactly that volume back into a context that keeps
@@ -61,7 +63,7 @@ follows:
   any repo-specific caveats it lists still apply.
 - **No runnable application** — when the repository declares
   `**Runnable application:** none`, mark this phase `skipped`, record that the repository
-  declares no runnable application, and attempt no startup, Playwright run, or `qa:qa`
+  declares no runnable application, and attempt no startup, Playwright run, or `qa.run`
   delegation.
 
 When the file is absent, a section is missing, or a value is unrecognized, fall back to the
@@ -72,18 +74,17 @@ behavior described below, note the fallback once, and continue.
 Before running a QA mode that depends on an MCP server, verify that the required MCP tooling
 is available: `playwright` for browser automation and any screenshot or video evidence, and
 `aspire` for log, trace, resource, or health evidence. The server configuration lives with
-the QA plugin — `qa:playwright-validation` for the Playwright MCP entry, `qa:aspire-log-monitor`
-for `aspire mcp init` / `aspire mcp start`. This phase only decides what to do when the
-tooling is missing.
+the bound `qa.run` provider, never here. This phase only decides what to do when the tooling
+is missing.
 
 The Playwright preflight is one live check, not a config inspection: navigate to the target
 page and take a screenshot before running scenarios. If that fails, screenshot and video
 capture are unavailable for this run — treat it per the selected QA depth below.
 
-When QA is delegated to `qa:qa` or `qa:qa-monitor`, verify availability in the target
-agent/session tool surface, not only in the parent flow session. The QA plugin
-declares the required `aspire` and `playwright` MCP servers and allowlists them at server
-granularity, so the child agent gets every tool of each server (Aspire's `list_resources`,
+When QA is delegated to the `qa.run` provider or the runtime monitor, verify availability in
+the target agent/session tool surface, not only in the parent flow session. A provider is
+expected to declare the required `aspire` and `playwright` MCP servers and to allowlist them
+at server granularity, so the child agent gets every tool of each server (Aspire's `list_resources`,
 `list_structured_logs`, `list_console_logs`, `list_traces`, `list_trace_structured_logs`, and
 Playwright's `browser_*`).
 
@@ -120,18 +121,16 @@ If required MCP tooling is unavailable:
 Applies when the repository does not declare a QA depth in `.claude/flow-context.md`.
 
 - **New functionality → QA validation with capture:**
-  1. **Run the application locally** via the `qa:qa` agent using the `aspire` /
-     `aspire-run` skill.
+  1. **Run the application locally** via the `app.start` service.
   2. **Execute the changed/affected scenarios with Playwright** — via the `playwright` MCP
-     server, `qa:qa` drives each scenario, capturing screenshot/video evidence per
+     server, the `qa.run` provider drives each scenario, capturing screenshot/video evidence per
      checkpoint and failure.
-  3. **Monitor runtime behavior continuously** — `qa:qa-monitor` watches Aspire logs,
-     traces, and metrics. Run `qa-monitor` as a background sub-agent
-     (the `Agent` tool with `run_in_background`) so monitoring runs
-     concurrently with Playwright validation; otherwise use the `qa` plugin's
-     `delegate-to-qa-monitor` skill for a same-session handoff.
+  3. **Monitor runtime behavior continuously** — the runtime monitor watches Aspire logs,
+     traces, and metrics. Run it as a background sub-agent (the `Agent` tool with
+     `run_in_background`) so monitoring runs concurrently with Playwright validation;
+     otherwise hand off in the same session, where the provider offers that.
   4. **Stop the monitor when the scenarios are done** — request its summary with
-     `SendMessage`, then end the background agent with `TaskStop`. `qa-monitor` polls until
+     `SendMessage`, then end the background agent with `TaskStop`. The monitor polls until
      told otherwise, so this phase must not be marked `done` while one is still running.
   5. **Record the QA result** with pass/fail per scenario and the captured evidence.
 
@@ -139,7 +138,7 @@ Applies when the repository does not declare a QA depth in `.claude/flow-context
   that shares it, per **Run This Phase In A Sub-Agent** — so it exercises the actual change
   set while its output stays out of the owner session's context.
 - **Bug fix or change to existing functionality → targeted QA validation without required capture:**
-  1. **Run the application locally** via the `aspire` / `aspire-run` skill and verify the
+  1. **Run the application locally** via the `app.start` service and verify the
      affected scenarios.
   2. **Use Playwright when it helps validate the flow**, but capture screenshot/video
      evidence only when explicitly requested or when a failure needs supporting evidence.
@@ -197,16 +196,12 @@ the evidence file is the record, and the surface renders it from disk on demand.
 
 ## Agents
 
-- `qa:qa`, `qa:qa-monitor` (recommended); falls back to `csharp-coding:coding`
-  running validation manually when the `qa` plugin is not installed, but only when manual
+- The `qa.run` provider and its runtime monitor (recommended); falls back to the `implement`
+  service running validation manually when `qa.run` is unbound, but only when manual
   validation can complete the selected QA depth correctly. Manual validation is not a
   substitute for required MCP-backed browser automation, evidence capture, or monitoring.
   Continue without a separate approval prompt before this phase unless required tooling is
   missing; missing required tooling blocks the phase and prompts the user.
-
-## Skills Used
-
-- `aspire`, `aspire-run`
 
 ## MCP Servers
 
@@ -227,7 +222,7 @@ the evidence file is the record, and the surface renders it from disk on demand.
 
 - Evidence paths reported to the surface are resolved **relative to the git worktree
   root** the flow runs in, and paths outside it are rejected.
-- A `qa-monitor` sub-agent launched with `isolation: "worktree"` runs in its own checkout,
+- A runtime-monitor sub-agent launched with `isolation: "worktree"` runs in its own checkout,
   so it must write evidence under the running worktree root, or its findings must be
   copied back before they are reported.
 - The running session reports all QA results; a sub-agent never calls surface tools

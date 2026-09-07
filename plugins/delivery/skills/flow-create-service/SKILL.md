@@ -39,7 +39,7 @@ service boundary is itself an open architectural question: recommend `flow-creat
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` when the boundary needs
+`instructions/flow-execution-model.instructions.md`. the `architecture` role when the boundary needs
 review.
 
 ## Stage 1: Specification Intake
@@ -54,7 +54,7 @@ review.
   language.
 - Set the acceptance criteria and operational expectations.
 
-**Agents:** `arc42:arc42`; `domain:domain` when the service introduces, splits, or renames a
+**Agents:** the `architecture` role; the `domain` role when the service introduces, splits, or renames a
 bounded context — a service wholly inside one existing context needs no domain pass. Full
 domain modeling belongs to `flow-domain`; route there rather than modeling here.
 
@@ -65,7 +65,7 @@ domain modeling belongs to `flow-domain`; route there rather than modeling here.
 - Define the configuration model — env vars, secrets, defaults.
 - Define the health checks and observability signals.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Implementation
 
@@ -74,7 +74,7 @@ domain modeling belongs to `flow-domain`; route there rather than modeling here.
 - Wire it into the host flow, such as the AppHost or service catalog.
 - Configure the dependencies it needs — database, queue, cache.
 
-**Agents:** `csharp-coding:coding` — **Skills:** `aspire`, when wiring resources into AppHost
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -83,7 +83,7 @@ QA Validation → Personal Validation → Create Pull Request → Documentation 
 Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright checks on the health
-endpoints and the critical service flows, `qa:qa-monitor` runtime monitoring, evidence
+endpoints and the critical service flows, runtime monitoring active throughout, evidence
 recorded.
 
 ## Surface Reporting

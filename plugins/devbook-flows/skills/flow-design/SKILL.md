@@ -1,13 +1,13 @@
 ---
 name: flow-design
-description: 'Run changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces devbook-design.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use ux:ux), UI implementation (use flow-feature or flow-bug), or UI dependency changes (use flow-update-packages).'
+description: 'Run changes to .design/ — UX principles, color tokens, typography and layout, interaction guidelines, accessibility, and component libraries. Use for any create/update/refresh of .design/README.md, design-principles.md, color-scheme.md, typography-and-layout.md, interaction-guidelines.md, accessibility.md, component-libraries.md, or another guideline file, including small rule additions. Grounds guidance in the repository''s authoritative design source and enforces devbook-design.instructions.md structure and devbook-chapter-metadata.instructions.md metadata blocks before saving. DO NOT USE FOR: wireframes, user flows, prototypes, and UI reviews (use the ux role), UI implementation (use flow-feature or flow-bug), or UI dependency changes (use flow-update-packages).'
 ---
 
 # Flow: Design Knowledge (`.design/`)
 
 Route every `.design/` change through this skill instead of editing the folder
 directly, so UX guidance stays grounded in the repository's authoritative design
-source, consistent with `ux:ux`'s expertise, and aligned with the
+source, consistent with the `ux` role's expertise, and aligned with the
 knowledge-folder structure and metadata conventions.
 
 ## Input Expectations
@@ -23,8 +23,8 @@ the existing `.design/` contents, and continue.
 ## Non-Goals
 
 - Wireframes, user flows, prototypes, and UI reviews — route those to
-  `ux:ux` directly (`ux-wireframe`, `ux-user-flow`,
-  `ux-design-review`).
+  the `ux` role directly, through whichever wireframe, user-flow, and UI-review
+  skills it ships.
 - UI implementation — route to `flow-feature` / `flow-bug`, which *consult*
   `.design/`.
 - Adding or pinning UI dependencies — route to `flow-update-packages`.
@@ -64,7 +64,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 
 ## Stage 3: Design Authoring
 
-- Hand off to `ux:ux` for the actual design decisions.
+- Hand off to the `ux` role for the actual design decisions.
 - Draft or refresh content following the structure and folder rules in
   `devbook-design.instructions.md`.
 - Apply the repository's own standing product rules on every edit — theme
@@ -74,7 +74,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
 - Keep rules prescriptive and testable; prefer tables and token names over
   prose, and reference tokens instead of repeating raw values.
 
-**Agents:** `ux:ux`
+**Agents:** the `ux` role
 
 ## Stage 4: Metadata & Cross-Reference Enforcement
 
@@ -93,7 +93,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   entry elsewhere (including in `.arc42/`) that references its
   old reference.
 
-**Agents:** `ux:ux`
+**Agents:** the `ux` role
 
 ## Stage 5: Consistency Review
 
@@ -112,7 +112,7 @@ bound in `.github/ai-agent-stack.json` resolves before the agent a stage names.
   `devbook-check`.
 - Summarize changed files/chapters for the user.
 
-**Agents:** `ux:ux`
+**Agents:** the `ux` role
 
 ## Final Phases (Shared)
 

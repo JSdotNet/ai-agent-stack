@@ -699,7 +699,7 @@ export function renderShell() {
       return i >= 0 ? s.slice(i + 1) : s;
     }
 
-    // Merges declared agents (e.g. "csharp-coding:coding") with observed ones
+    // Merges declared agents (e.g. "some-plugin:coding") with observed ones
     // (e.g. "coding") into one deduped, display-ready set. The redundant plugin
     // prefix is dropped so it reads "coding", unless two genuinely different
     // agents collapse to the same short name (two distinct prefixes), in which

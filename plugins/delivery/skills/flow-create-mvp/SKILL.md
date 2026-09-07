@@ -39,7 +39,7 @@ needs a new architectural decision or a documented target architecture first: re
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. `arc42:arc42` when the target
+`instructions/flow-execution-model.instructions.md`. the `architecture` role when the target
 architecture needs shaping.
 
 ## Stage 1: MVP Scope Intake
@@ -50,7 +50,7 @@ architecture needs shaping.
 - Record the feature priorities and delivery order, the dependencies and risks, and the
   validation target for the implementation run.
 
-**Agents:** `arc42:arc42`; `domain:domain` when the MVP defines a new domain rather than
+**Agents:** the `architecture` role; the `domain` role when the MVP defines a new domain rather than
 extending a documented one — vocabulary and context boundaries only, since full domain
 modeling belongs to `flow-domain`.
 
@@ -61,14 +61,14 @@ modeling belongs to `flow-domain`.
 - Plan the integration points with external services.
 - Define the local runtime validation strategy.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Implementation
 
 - Implement the core features test first.
 - Build the API endpoints and services, and integrate the frontend where there is one.
 
-**Agents:** `csharp-coding:coding`
+**Agents:** the `implement` service
 
 ## Final Phases (Shared)
 
@@ -77,7 +77,7 @@ QA Validation → Personal Validation → Create Pull Request → Documentation 
 Update → Summary. That file defines them; change them there, for every flow.
 
 New functionality, so QA Validation runs at full depth: Playwright smoke tests over the core
-user flows, `qa:qa-monitor` runtime monitoring, evidence recorded.
+user flows, runtime monitoring active throughout, evidence recorded.
 
 ## Surface Reporting
 

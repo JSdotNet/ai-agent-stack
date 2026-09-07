@@ -4,7 +4,7 @@ title: Merge review
 cadence: weekdays
 cron: "0 6 * * 1-5"
 target: delivery:automation-merge-review
-requires: [delivery, csharp-coding]
+requires: [delivery]
 tools: [Bash, Read, Glob, Grep, Skill]
 ---
 

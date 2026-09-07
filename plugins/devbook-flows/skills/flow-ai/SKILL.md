@@ -62,7 +62,7 @@ Three questions, in this order, before anything is written:
 
 State the placement decision and its reasoning before authoring.
 
-**Agents:** `spec-builder:spec-builder` when the change concerns harness assets
+**Agents:** an asset-authoring specialist when the change concerns harness assets
 themselves — an agent, skill, plugin, hook, or workflow this repository owns.
 Otherwise none.
 
@@ -86,7 +86,7 @@ Otherwise none.
   `status: retired` and a sentence on why.
 - Update the file-level metadata block on every touched file.
 
-**Agents:** `spec-builder:spec-builder` (harness assets) or none.
+**Agents:** an asset-authoring specialist (harness assets) or none.
 
 ## Stage 4: Map Sync & Review
 

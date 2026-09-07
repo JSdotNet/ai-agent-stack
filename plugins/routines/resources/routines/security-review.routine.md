@@ -4,7 +4,7 @@ title: Security review
 cadence: weekly
 cron: "0 4 * * 2"
 target: delivery:automation-security-review
-requires: [delivery, csharp-coding]
+requires: [delivery]
 tools: [Bash, Read, Glob, Grep, Skill]
 ---
 

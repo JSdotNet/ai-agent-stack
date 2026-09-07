@@ -254,7 +254,7 @@ function evidenceContentType(filePath) {
 const EVIDENCE_IMAGE_EXT = /\.(png|jpe?g|gif|webp)$/i;
 
 // Evidence lives in the git worktree the agent is operating in (e.g. `.qa-evidence/...`
-// or the qa plugin's `.wip/qa/<feature>/screenshots/...`), never in the dashboard's own
+// or a QA provider's own `.wip/qa/<feature>/screenshots/...`), never in the dashboard's own
 // state directory. Anything resolving outside that root is refused.
 async function resolveEvidencePath(relPath) {
     const root = worktreeRoot();

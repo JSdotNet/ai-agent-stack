@@ -20,7 +20,7 @@ related: [".devbook/domain/context-map.md#plugin-authoring", ".devbook/tech/host
 | Consumer (context/module) | DDD pattern | Integration mechanism | Contract | What it relies on |
 |---|---|---|---|---|
 | A consuming repository | Customer-Supplier, this context supplying | Install by `plugin@jsdotnet`; a sync skill copies payload and writes the stamp under `components.<name>` in `.github/ai-agent-stack.json` | Plugin name and version, the contract version, migration ids, the stack-config schema `delivery` ships | Names never renamed after release, migrations never rewritten, one component never writing another's key. |
-| The delivery engine and its bridges | Customer-Supplier, this context supplying | `plugin:asset` references from `delivery` and `devbook-flows` into the role plugins | The asset names those references spell | A reference that resolves to nothing costs a stage, not a load — which is why a role is bound, never depended on. |
+| A specialist marketplace | Customer-Supplier, this context supplying | Role and service bindings a consuming repository writes in `.github/ai-agent-stack.json`, naming a specialist plugin published elsewhere | The engine's closed point set and the provider-id form the schema accepts | Point names never renamed after release. Nothing here names a specialist, so a rename on their side costs a repository's binding, not an asset in this one. |
 
 ## Notes
 

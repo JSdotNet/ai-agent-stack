@@ -37,7 +37,7 @@ of how we chose to work — and points at the registered technology with
 |---|---|
 | "We use Claude Code, version X, `adopted`" | `.tech` |
 | "At Specify we draft knowledge chapters with the devbook skills, `trial`" | `.ai` |
-| "The `csharp-coding:coding` agent persona, and when we hand work to it" | `.ai` |
+| "The coding agent persona, and when we hand work to it" | `.ai` |
 | "Anthropic's API is a service dependency of the build pipeline" | `.tech` |
 | "Every agent-authored change is reviewed by a human before merge" | `.ai` |
 

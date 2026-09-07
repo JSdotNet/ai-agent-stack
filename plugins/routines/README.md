@@ -21,11 +21,11 @@ without its skill.
 
 | Routine | Cadence (UTC) | Runs | Needs | Lands as |
 |---|---|---|---|---|
-| `package-update` | Monday 04:00 | `automation-package-update`, minor and patch only | `delivery`, `csharp-coding` | A pull request |
-| `merge-review` | Weekdays 06:00 | `automation-merge-review`, up to 10 pull requests | `delivery`, `csharp-coding` | One comment per pull request |
+| `package-update` | Monday 04:00 | `automation-package-update`, minor and patch only | `delivery` | A pull request |
+| `merge-review` | Weekdays 06:00 | `automation-merge-review`, up to 10 pull requests | `delivery` | One comment per pull request |
 | `change-report` | Friday 15:00 | `automation-whats-new`, 7-day window | `delivery` | A `routine-report` issue |
 | `devbook-check` | Daily 03:00 | `devbook-check`, every adopted folder | `devbook` | A pull request when something was fixed |
-| `security-review` | Tuesday 04:00 | `automation-security-review`, all four layers | `delivery`, `csharp-coding` | One issue per new high finding |
+| `security-review` | Tuesday 04:00 | `automation-security-review`, all four layers | `delivery` | One issue per new high finding |
 | `tech-update` | Wednesday 04:00 | `devbook-tech-update`, every `.tech` layer | `devbook` | A draft pull request |
 
 Each is one file under `resources/routines/`, and every prompt starts with
@@ -62,7 +62,7 @@ the stamp, and the operations are in `instructions/routine-catalog-contract.inst
 
 ## Why it is its own plugin
 
-It names skills in `delivery`, `devbook`, and `csharp-coding`, and the layer rule says a lower
+It names skills in `delivery` and `devbook`, and the layer rule says a lower
 layer never names a higher one — so it cannot live in any of them, and declaring all of them
 as dependencies would make it a bridge nobody with one of them could install. Naming is not
 depending: a target that is not installed is reported and skipped, which is an answer.

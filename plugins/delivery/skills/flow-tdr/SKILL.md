@@ -1,6 +1,6 @@
 ---
 name: flow-tdr
-description: 'Run technical debt record creation. Uses the arc42:arc42 agent for debt documentation plus `jsdotnet-guidelines-mcpserver` to ground the record in project guidance and related decisions.'
+description: 'Run technical debt record creation. Routes debt documentation to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` to ground the record in project guidance and related decisions.'
 ---
 
 # Flow: Technical Debt Record
@@ -22,7 +22,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Capture the remediation boundaries for governed plugin or guidance assets.
 - Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** `arc42:arc42` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 2: TDR Drafting
 
@@ -31,7 +31,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Link the record to the retrieved guidance and related architecture artifacts.
 - Document the follow-up work that reduces or retires the debt.
 
-**Agents:** `arc42:arc42` — **Skills:** `create-technical-debt-record`
+**Agents:** the `architecture` role
 
 ## Stage 3: Risk & Follow-Up Review
 
@@ -39,7 +39,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Identify related ADR, blueprint, or arc42 follow-up.
 - Leave the TDR review-ready, with an actionable remediation path.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Final Phases (Shared)
 

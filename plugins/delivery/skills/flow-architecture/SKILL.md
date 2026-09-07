@@ -1,6 +1,6 @@
 ---
 name: flow-architecture
-description: 'Run general architecture work. Uses the arc42:arc42 agent directly plus `jsdotnet-guidelines-mcpserver` for governed asset guidance before edits.'
+description: 'Run general architecture work. Routes the work to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` for governed asset guidance before edits.'
 ---
 
 # Flow: Architecture Work
@@ -25,7 +25,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Capture the repository constraints that affect governed plugin or guidance assets.
 - Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** `arc42:arc42` — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 2: Architecture Investigation
 
@@ -34,7 +34,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Call out assumptions, risks, and open questions.
 - Align the recommendations with the retrieved guidance.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Stage 3: Drafting & Review
 
@@ -42,7 +42,7 @@ follows `instructions/flow-model-selection.instructions.md`.
 - Check it holds together across scope, constraints, risks, and traceability.
 - Leave it review-ready, with follow-up actions explicit where they exist.
 
-**Agents:** `arc42:arc42`
+**Agents:** the `architecture` role
 
 ## Final Phases (Shared)
 

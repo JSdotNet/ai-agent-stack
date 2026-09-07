@@ -69,60 +69,58 @@ the live view and the committed index cannot disagree. Nothing in `devbook` impo
 Those three imports are also the reason lifting the folder into its own plugin is more than a
 move — see [the decision](09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
 
-A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather
-than payload copied anywhere: `arc42` and `domain` each ship an identical
-`generate-diagram-svgs.ps1` that eight of their diagram skills invoke to render Mermaid beside
-the Markdown they wrote. Identical, and duplicated — the two plugins install independently and
-neither may name the other, so a shared copy would need a third plugin beneath both, which is
-more structure than one script earns.
+A `scripts/` folder holds an executable a skill in the same plugin runs in place, rather than
+payload copied anywhere: `stack-guide` ships `stack-report.mjs`, which its read-only skill runs
+from the plugin root. It is the only one left. The pair of identical
+`generate-diagram-svgs.ps1` scripts that used to sit in two specialist plugins — duplicated
+because neither plugin may name the other — left with them.
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
 `<component>-sync` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
 
-## Role Plugins
+## Roles and Services
 
 ```meta
-date: 2026-09-04
-related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#role", ".devbook/domain/plugin-authoring/naming.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace"]
 ```
 
-Seven plugins are where a specialist lives. A flow consults one by name and never depends on
-it: a role is bound per repository in `bindings["delivery.roles"]`, a service in
-`extensions`, and a missing one costs capability rather than loading.
+**No specialist plugin ships here.** Where a flow needs expertise it names a point, and a
+repository names the plugin that fills it: a role in `bindings["delivery.roles"]`, a service in
+`extensions`. The seven that used to live in this marketplace are
+[published from their own](09-architecture-decisions.md#the-specialists-leave-the-marketplace).
 
-| Plugin | Fills | Ships |
+| Point | Kind | What a provider brings |
 | --- | --- | --- |
-| `arc42` | role `architecture`, service `spec` | The `arc42` agent, the arc42 generator, ADR and TDR records, four diagram generators |
-| `csharp-coding` | services `implement`, `verify` | The `coding` agent and fourteen skills: TDD, refactoring, review, NuGet, Aspire, OpenTelemetry, Azure |
-| `qa` | role `qa`, services `app.start`, `qa.run` | The `qa` and `qa-monitor` agents, Aspire and Playwright MCP servers, evidence-carrying validation skills |
-| `domain` | role `domain` | The `domain` agent, context mapping, model design, four diagram generators |
-| `ux` | role `ux` | The `ux` agent, wireframes, user flows, design guidelines, UI review |
-| `documentation` | role `docs` | The `documentation` and `profile` agents, nine artifact skills including SVG infographics |
-| `spec-builder` | the asset-authoring lane | The `spec-builder` agent, five `create-*` skills, and the dual-host authoring contract |
+| `architecture` | role | arc42 sections, decision and debt records, C4, sequence, state and deployment diagrams |
+| `qa` | role | Running the app, driving browser scenarios, and reading logs and traces while they run |
+| `domain` | role | Bounded contexts, ubiquitous language, model and context-map design |
+| `ux` | role | Wireframes, user flows, design guidelines, UI review |
+| `docs` | role | How-to guides, explanations, articles, proposals, profiles |
+| `product`, `security` | role | Nothing here fills them, and nothing did. Both are `null` in the stack config template, which the vocabulary distinguishes from absent: deliberately unbound |
+| `spec` | service | The specification the rest of a flow builds on. Unbound, the flow-runner writes it inline |
+| `implement` | service | A change set and what was tested |
+| `verify` | service | Build and suite results. Default provider: `phase-build-test` |
+| `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-qa-validation` |
 
-None declares a dependency and none names a flow, which is why each installs alone and is
-useful without the engine: the `arc42` agent writes an ADR whether or not `flow-adr` is what
-asked for it. The coupling runs the other way and only by name — `delivery` and
-`devbook-flows` carry over two hundred `plugin:asset` references into these seven, and a reference that
-resolves to nothing degrades one stage rather than failing a load.
+A missing provider costs capability, not a load. `delivery` and `devbook-flows` used to carry
+over two hundred `plugin:asset` references naming the seven; every one is now the point it was
+filling, so the engine names no plugin it does not publish and there is nothing left to dangle.
+A repository's own binding is the only place a specialist's name appears.
 
-They also hold no flow control, which is what keeps that true in practice rather than only on
-paper — see [the decision](09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
+A role key is not a plugin name, and never becomes one. The role is the slot a flow asks for
+and the plugin is whatever is installed in it; binding the key to its current occupant would
+make the key un-rebindable, which is the one thing a binding must stay.
 
-A plugin's name is not its role key. `arc42` fills the `architecture` role, and the two names
-differ because they answer different questions: the role is the slot a flow asks for, the
-plugin is what happens to be installed in it. `domain` and `ux` matching their keys is a
-coincidence of good names, not a rule — binding a role key to the plugin currently filling it
-would make the key un-rebindable, which is the one thing a binding must stay.
+Implementation is not a role. It owns a phase, carries a toolchain, and loops with
+verification, so it binds as the `implement` and `verify` services instead — commonly to one
+provider, which is why model selection resolves those two per stage rather than per provider.
 
-`product` and `security` are the two roles nothing here fills. Both are `null` in the stack
-config template, which the vocabulary distinguishes from absent: deliberately unbound.
-
-Implementation is not a role, so `csharp-coding` binds as two services instead. It is also the
-only entry in the table whose language is in its name, which is the honest shape — the role is
-filled per repository by whatever toolchain that repository is written in.
+Nothing here holds flow control either, and that stays true now that no specialist ships from
+this marketplace: sequencing, gates, session spawning, and delegation belong to whatever
+consults a point — see [the decision](09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
 
 ## Surface Plugins
 
@@ -295,9 +293,12 @@ so a second sync updates rather than duplicates; `routine-status` reads runs and
 `routine-run` fires one. `tools/routine-catalog/check.mjs` fails a malformed entry, a cron
 that could fire more than hourly, or a target that is a flow.
 
-The plugin declares no dependency and names three — `delivery`, `devbook`, `csharp-coding` —
-which is the [guide's](#guide-plugin) shape for the guide's reason: naming is not depending,
-and a target that is not enabled is reported and skipped.
+The plugin declares no dependency and names two — `delivery` and `devbook` — which is the
+[guide's](#guide-plugin) shape for the guide's reason: naming is not depending, and a target
+that is not enabled is reported and skipped. It named a third until the specialists
+[left the marketplace](09-architecture-decisions.md#the-specialists-leave-the-marketplace):
+what a routine's target delegates to is a binding the consuming repository makes, not a plugin
+the routine can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.routines` of the [stack config](#stack-config), written by

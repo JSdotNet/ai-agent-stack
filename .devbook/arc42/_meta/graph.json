@@ -6,19 +6,19 @@
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 87,
-    "edges": 151,
+    "nodes": 88,
+    "edges": 158,
     "nodesByFolder": {
-      "arc42": 65,
+      "arc42": 66,
       "domain": 18,
       "tech": 4
     },
     "nodesByType": {
       "file": 9,
-      "chapter": 78
+      "chapter": 79
     },
     "nodesByKind": {
-      "none": 65,
+      "none": 66,
       "bounded-context": 1,
       "term": 15,
       "platform": 3,
@@ -27,13 +27,13 @@
       "naming": 1
     },
     "nodesByStatus": {
-      "active": 83,
+      "active": 84,
       "adopted": 2,
       "trial": 2
     },
     "edgesByType": {
-      "contains": 57,
-      "related": 94
+      "contains": 58,
+      "related": 100
     }
   },
   "problems": [],
@@ -131,20 +131,21 @@
       },
       {
         "data": {
-          "id": ".devbook/arc42/05-building-block-view.md#role-plugins",
-          "label": "Role Plugins",
+          "id": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "label": "Roles and Services",
           "type": "chapter",
           "folder": "arc42",
           "path": ".devbook/arc42/05-building-block-view.md",
-          "slug": "role-plugins",
+          "slug": "roles-and-services",
           "level": 2,
-          "line": 84,
+          "line": 83,
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-04",
+          "date": "2026-09-07",
           "related": [
             ".devbook/domain/plugin-authoring/naming.md#role",
-            ".devbook/domain/plugin-authoring/naming.md#extension-point"
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace"
           ]
         }
       },
@@ -157,7 +158,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 127,
+          "line": 125,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -176,7 +177,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "host-slots",
           "level": 2,
-          "line": 157,
+          "line": 155,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -195,7 +196,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "fan-out-state",
           "level": 2,
-          "line": 187,
+          "line": 185,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -214,7 +215,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "guide-plugin",
           "level": 2,
-          "line": 215,
+          "line": 213,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -234,7 +235,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "stack-config",
           "level": 2,
-          "line": 252,
+          "line": 250,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -253,7 +254,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "routine-plugin",
           "level": 2,
-          "line": 271,
+          "line": 269,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -273,7 +274,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 307,
+          "line": 308,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -626,7 +627,7 @@
           "related": [
             ".devbook/domain/plugin-authoring/naming.md#role",
             ".devbook/domain/plugin-authoring/naming.md#gate",
-            ".devbook/arc42/05-building-block-view.md#role-plugins",
+            ".devbook/arc42/05-building-block-view.md#roles-and-services",
             ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"
           ]
         }
@@ -640,7 +641,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "budgets-are-disclosure-triggers-not-gates",
           "level": 2,
-          "line": 522,
+          "line": 524,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -660,7 +661,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "four-arc42-chapters",
           "level": 2,
-          "line": 559,
+          "line": 561,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -680,7 +681,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "fan-out-is-its-own-plugin",
           "level": 2,
-          "line": 580,
+          "line": 582,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -700,7 +701,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "the-guide-names-every-plugin-and-depends-on-none",
           "level": 2,
-          "line": 602,
+          "line": 604,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -715,6 +716,28 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "label": "The Specialists Leave the Marketplace",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "the-specialists-leave-the-marketplace",
+          "level": 2,
+          "line": 657,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/arc42/05-building-block-view.md#roles-and-services",
+            ".devbook/domain/plugin-authoring/naming.md#role",
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+            ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
           "label": "Devbook Payload Named After Its Plugin",
           "type": "chapter",
@@ -722,7 +745,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-payload-named-after-its-plugin",
           "level": 2,
-          "line": 653,
+          "line": 707,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -743,7 +766,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "routines-are-their-own-plugin",
           "level": 2,
-          "line": 689,
+          "line": 743,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -765,7 +788,7 @@
           "path": ".devbook/arc42/09-architecture-decisions.md",
           "slug": "devbook-owns-one-section-of-agentsmd",
           "level": 2,
-          "line": 736,
+          "line": 790,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -864,7 +887,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "the-debt",
           "level": 2,
-          "line": 34,
+          "line": 51,
           "status": "active",
           "statusDeclared": false
         }
@@ -878,7 +901,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "origin",
           "level": 2,
-          "line": 52,
+          "line": 69,
           "status": "active",
           "statusDeclared": false
         }
@@ -892,7 +915,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 67,
+          "line": 85,
           "status": "active",
           "statusDeclared": false
         }
@@ -906,7 +929,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "impact",
           "level": 2,
-          "line": 89,
+          "line": 107,
           "status": "active",
           "statusDeclared": false
         }
@@ -920,7 +943,7 @@
           "path": ".devbook/arc42/tdr/1-body-budgets-unenforced.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 102,
+          "line": 120,
           "status": "active",
           "statusDeclared": false
         }
@@ -1620,9 +1643,9 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#role-plugins",
+          "id": "contains:.devbook/arc42/05-building-block-view.md->.devbook/arc42/05-building-block-view.md#roles-and-services",
           "source": ".devbook/arc42/05-building-block-view.md",
-          "target": ".devbook/arc42/05-building-block-view.md#role-plugins",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
           "type": "contains"
         }
       },
@@ -1860,6 +1883,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "source": ".devbook/arc42/09-architecture-decisions.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/09-architecture-decisions.md->.devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
           "source": ".devbook/arc42/09-architecture-decisions.md",
           "target": ".devbook/arc42/09-architecture-decisions.md#devbook-payload-named-after-its-plugin",
@@ -2076,17 +2107,25 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/05-building-block-view.md#role-plugins->.devbook/domain/plugin-authoring/naming.md#role",
-          "source": ".devbook/arc42/05-building-block-view.md#role-plugins",
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
           "target": ".devbook/domain/plugin-authoring/naming.md#role",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/05-building-block-view.md#role-plugins->.devbook/domain/plugin-authoring/naming.md#extension-point",
-          "source": ".devbook/arc42/05-building-block-view.md#role-plugins",
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
           "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/05-building-block-view.md#roles-and-services->.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "source": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "target": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
           "type": "related"
         }
       },
@@ -2452,9 +2491,9 @@
       },
       {
         "data": {
-          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/arc42/05-building-block-view.md#role-plugins",
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control->.devbook/arc42/05-building-block-view.md#roles-and-services",
           "source": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
-          "target": ".devbook/arc42/05-building-block-view.md#role-plugins",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
           "type": "related"
         }
       },
@@ -2575,6 +2614,46 @@
           "id": "related:.devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none->.devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
           "source": ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
           "target": ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/05-building-block-view.md#roles-and-services",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/05-building-block-view.md#roles-and-services",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/domain/plugin-authoring/naming.md#role",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/domain/plugin-authoring/naming.md#role",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace->.devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
+          "source": ".devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace",
+          "target": ".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet",
           "type": "related"
         }
       },

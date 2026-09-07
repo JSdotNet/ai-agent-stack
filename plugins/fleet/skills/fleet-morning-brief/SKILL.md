@@ -27,7 +27,7 @@ old one, or to catch up after time away.
 ## Reading the Sweep
 
 Read the **Issue Sweep State Contract**
-(`rules/fleet-issue-sweep-contract.md`) for the directory layout and
+(`resources/fleet-issue-sweep-contract.md`) for the directory layout and
 both schemas. In summary:
 
 ```bash

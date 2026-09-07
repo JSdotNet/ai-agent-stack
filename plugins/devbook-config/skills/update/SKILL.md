@@ -41,7 +41,7 @@ operation, and the report is what says which of them applies.
    against the config; take its checkout root from the report's catalog line, or the
    plugin's `installPath` from `--json`. An upgrade can retire a key, and an unknown key is
    an error rather than a silently absent setting. Fix against
-   `rules/surface-contract.md` in that same plugin.
+   `resources/surface-contract.md` in that same plugin.
 
 6. **Verify and report honestly.** Re-run the report and each component's own check skill.
    Name what was upgraded, what migrations ran, what was left customized, and anything

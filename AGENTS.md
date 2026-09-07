@@ -60,11 +60,13 @@ plugins/<name>/
   .github/plugin/plugin.json      Copilot manifest — same name, version, description
   agents/<role>.agent.md          frontmatter name must equal <role>
   skills/<skill>/SKILL.md
-  rules/<name>.md                 the rule; name and description only
+  rules/<name>.md                 a rule the install writes into a repository; name and
+                                  description only. Only a plugin that delivers rules has this
   rules/rules.json                its globs, keyed by name
   hooks/hooks.json                Claude hooks
   hooks.json                      Copilot hooks
-  resources/
+  resources/<name>.md             shared text an asset reads by path — a contract, a template.
+                                  A contract carries name and description; nothing else there does
   assets/  tools/                 payload a install skill copies into a repository
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
 ```
@@ -96,8 +98,8 @@ behaviour.
   consider running the suite". A softened rule is a rule that does not fire.
 - Cut what the model already does by default, and state each rule in exactly one file — point
   at it by relative path from everywhere else.
-- Body budgets: `SKILL.md` 40 lines, `rules/<name>.md` 60, `*.agent.md` 80. The budget is a
-  disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
+- Body budgets: `SKILL.md` 40 lines, a rule or a `resources/` contract 60, `*.agent.md` 80.
+  The budget is a disclosure trigger, not a hard limit: past it, move reference behind a pointer, split by
   branch, or state the reason in the file. Full rule: [AUTHORING.md](AUTHORING.md). Staged
   procedures, converters, schema and contract instruction files, and the `flow-runner` agent
   are long by kind, recorded once in `.devbook/arc42/09-architecture-decisions.md` rather than

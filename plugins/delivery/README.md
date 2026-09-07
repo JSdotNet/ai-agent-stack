@@ -109,11 +109,11 @@ categories it covers.
 |---|---|
 | `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
-| `rules/flow-phases.md` | Which phases each tier runs, and the opening and closing phases in full |
-| `rules/surface-contract.md` | Extension points, gates, the stack config, host slots, and the surface capability |
-| `rules/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
-| `rules/flow-model-selection.md` | Category → model resolution and the personal override |
-| `rules/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
+| `resources/flow-phases.md` | Which phases each tier runs, and the opening and closing phases in full |
+| `resources/surface-contract.md` | Extension points, gates, the stack config, host slots, and the surface capability |
+| `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
+| `resources/flow-model-selection.md` | Category → model resolution and the personal override |
+| `resources/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
 | `resources/config.schema.json` | The four engine-owned keys, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |

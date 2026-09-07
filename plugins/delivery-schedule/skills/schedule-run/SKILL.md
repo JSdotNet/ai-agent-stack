@@ -5,7 +5,7 @@ description: 'Fire one of this repository''s schedules now, outside its cadence,
 
 # schedule run
 
-The scheduler and the identity rule are in `rules/schedule-catalog-contract.md`.
+The scheduler and the identity rule are in `resources/schedule-catalog-contract.md`.
 
 ## Steps
 

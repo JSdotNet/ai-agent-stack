@@ -6,17 +6,17 @@
     ".devbook/domain"
   ],
   "stats": {
-    "nodes": 53,
-    "edges": 76,
+    "nodes": 56,
+    "edges": 80,
     "nodesByFolder": {
-      "domain": 37,
-      "arc42": 12,
+      "domain": 38,
+      "arc42": 14,
       "tech": 3,
       "ai": 1
     },
     "nodesByType": {
       "file": 7,
-      "chapter": 46
+      "chapter": 49
     },
     "nodesByKind": {
       "context-map": 1,
@@ -28,20 +28,20 @@
       "sub-feature": 6,
       "model": 1,
       "naming": 1,
-      "term": 20,
-      "none": 12,
+      "term": 21,
+      "none": 14,
       "platform": 2,
       "skill": 1,
       "protocol": 1
     },
     "nodesByStatus": {
-      "active": 49,
+      "active": 52,
       "adopted": 3,
       "trial": 1
     },
     "edgesByType": {
-      "contains": 31,
-      "related": 45
+      "contains": 32,
+      "related": 48
     }
   },
   "problems": [],
@@ -472,7 +472,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "fleet-skill",
           "level": 2,
-          "line": 121,
+          "line": 122,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -485,6 +485,27 @@
       },
       {
         "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "label": "Routine",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "routine",
+          "level": 2,
+          "line": 144,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/domain/plugin-authoring/naming.md#extension-point",
           "label": "Extension Point",
           "type": "chapter",
@@ -492,7 +513,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-point",
           "level": 2,
-          "line": 143,
+          "line": 165,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -511,7 +532,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "gate",
           "level": 2,
-          "line": 166,
+          "line": 188,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -530,7 +551,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "surface",
           "level": 2,
-          "line": 184,
+          "line": 206,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -551,7 +572,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "host-slot",
           "level": 2,
-          "line": 218,
+          "line": 240,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -571,7 +592,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "role",
           "level": 2,
-          "line": 238,
+          "line": 260,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -590,7 +611,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "tracker",
           "level": 2,
-          "line": 264,
+          "line": 286,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -606,7 +627,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "stamp",
           "level": 2,
-          "line": 276,
+          "line": 298,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -626,7 +647,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "migration",
           "level": 2,
-          "line": 295,
+          "line": 317,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -645,7 +666,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 313,
+          "line": 335,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -663,7 +684,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "layer",
           "level": 2,
-          "line": 324,
+          "line": 346,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -683,7 +704,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "extension-namespace",
           "level": 2,
-          "line": 346,
+          "line": 368,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -899,6 +920,50 @@
             ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
             ".devbook/domain/plugin-authoring/naming.md#layer",
             ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "label": "Routine Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/05-building-block-view.md",
+          "slug": "routine-plugin",
+          "level": 2,
+          "line": 271,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/05-building-block-view.md#stack-config"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 689,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
           ],
           "outOfScope": true
         }
@@ -1160,6 +1225,14 @@
           "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#fleet-skill",
           "source": ".devbook/domain/plugin-authoring/naming.md",
           "target": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/domain/plugin-authoring/naming.md->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/domain/plugin-authoring/naming.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
           "type": "contains"
         }
       },
@@ -1480,6 +1553,30 @@
           "id": "related:.devbook/domain/plugin-authoring/naming.md#fleet-skill->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
           "source": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
           "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/05-building-block-view.md#routine-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/naming.md#routine->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "type": "related"
         }
       },

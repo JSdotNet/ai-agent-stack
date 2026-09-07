@@ -6,36 +6,36 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 12,
-    "edges": 9,
+    "nodes": 15,
+    "edges": 12,
     "nodesByFolder": {
-      "ai": 8,
+      "ai": 9,
       "tech": 1,
-      "domain": 2,
-      "arc42": 1
+      "domain": 3,
+      "arc42": 2
     },
     "nodesByType": {
       "file": 4,
-      "chapter": 8
+      "chapter": 11
     },
     "nodesByKind": {
       "stage": 3,
       "practice": 2,
-      "skill": 2,
+      "skill": 3,
       "adoption-map": 1,
       "platform": 1,
-      "term": 2,
-      "none": 1
+      "term": 3,
+      "none": 2
     },
     "nodesByStatus": {
       "adopted": 4,
       "trial": 2,
-      "candidate": 3,
-      "active": 3
+      "candidate": 4,
+      "active": 5
     },
     "edgesByType": {
-      "contains": 4,
-      "related": 5
+      "contains": 5,
+      "related": 7
     }
   },
   "problems": [],
@@ -114,6 +114,24 @@
           "related": [
             ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
             ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/ai/02-deliver.md#scheduling",
+          "label": "Scheduling",
+          "type": "chapter",
+          "folder": "ai",
+          "path": ".devbook/ai/02-deliver.md",
+          "slug": "scheduling",
+          "level": 2,
+          "line": 65,
+          "status": "candidate",
+          "kind": "skill",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
           ]
         }
       },
@@ -204,7 +222,7 @@
           "path": ".devbook/domain/plugin-authoring/naming.md",
           "slug": "fleet-skill",
           "level": 2,
-          "line": 121,
+          "line": 122,
           "status": "active",
           "statusDeclared": false,
           "kind": "term",
@@ -236,6 +254,51 @@
           ],
           "outOfScope": true
         }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "label": "Routine",
+          "type": "chapter",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "slug": "routine",
+          "level": 2,
+          "line": 144,
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "term",
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "label": "Routines Are Their Own Plugin",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/09-architecture-decisions.md",
+          "slug": "routines-are-their-own-plugin",
+          "level": 2,
+          "line": 689,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-07",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#routine",
+            ".devbook/arc42/05-building-block-view.md#routine-plugin",
+            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
+            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
+            ".devbook/tech/hosts.md#claude-code-routines"
+          ],
+          "outOfScope": true
+        }
       }
     ],
     "edges": [
@@ -260,6 +323,14 @@
           "id": "contains:.devbook/ai/02-deliver.md->.devbook/ai/02-deliver.md#fan-out",
           "source": ".devbook/ai/02-deliver.md",
           "target": ".devbook/ai/02-deliver.md#fan-out",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/ai/02-deliver.md->.devbook/ai/02-deliver.md#scheduling",
+          "source": ".devbook/ai/02-deliver.md",
+          "target": ".devbook/ai/02-deliver.md#scheduling",
           "type": "contains"
         }
       },
@@ -300,6 +371,22 @@
           "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
           "source": ".devbook/ai/02-deliver.md#fan-out",
           "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/domain/plugin-authoring/naming.md#routine",
+          "source": ".devbook/ai/02-deliver.md#scheduling",
+          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "source": ".devbook/ai/02-deliver.md#scheduling",
+          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
           "type": "related"
         }
       },

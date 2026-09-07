@@ -1,6 +1,6 @@
 # Reconcile protocol
 
-The shared detail behind `devbook-sync` and `devbook-check`: the stamp devbook
+The shared detail behind `devbook-install` and `devbook-check`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 

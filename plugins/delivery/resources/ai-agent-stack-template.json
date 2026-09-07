@@ -24,7 +24,7 @@
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
     "app.start": null,
     "qa.run": null,
-    "docs.update": ["devbook:devbook-sync"],
+    "docs.update": ["devbook:devbook-install"],
     "flow.end": []
   },
   "policy": {

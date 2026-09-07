@@ -69,10 +69,10 @@ type: term
 
 A scoped rule set, as `rules/<name>.md`, with the paths it governs declared beside it in
 `rules/rules.json`. Named for the file it becomes: a plugin's `rules/` folder and the
-`.agents/rules/` a sync writes hold the same names, so a rule referencing a sibling resolves in
+`.agents/rules/` an install writes hold the same names, so a rule referencing a sibling resolves in
 both. Inside a plugin no host applies one automatically, so every rule is referenced explicitly
 by the asset that depends on it; a repo-facing one also ships to the adopting repository
-through its plugin's sync, which writes each host's wrapper there.
+through its plugin's install skill, which writes each host's wrapper there.
 
 ## Hook
 
@@ -333,7 +333,7 @@ it had when it landed, and the migration ledger. The same file's other top-level
 
 It records what the *repository* has taken on, never who installed what — that is per-user and
 would make the file wrong the moment a second person opened it. A plugin that materializes
-anything ships one `<component>-sync` that writes its own entry and one `<component>-check`
+anything ships one `<component>-install` that writes its own entry and one `<component>-check`
 that reads it, and neither touches another component's.
 
 ## Migration

@@ -28,7 +28,7 @@ contents, and continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.arc42/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the knowledge convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the knowledge convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the chapters
   in scope, plus the decision and debt chapters the change links to.
 - Settle the kind. A proposal, comparison, or target-architecture draft is a decision record

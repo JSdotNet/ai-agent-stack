@@ -1,6 +1,6 @@
 # The `AGENTS.md` section
 
-`devbook-sync` writes one section of the repository's `AGENTS.md`, between the two
+`devbook-install` writes one section of the repository's `AGENTS.md`, between the two
 markers below, and rewrites it on every reconcile while the text between them still
 matches the stamped hash. The rules — key, hash, customized, orphan — are in
 `reconcile-protocol.md` under **What devbook materializes**; this file is the template.
@@ -22,7 +22,7 @@ never goes inside them; that stays in `routing-snippet.md`, offered and never ap
 <!-- devbook:begin -->
 ## Knowledge folders
 
-Managed by `devbook-sync`. Edit outside these markers; an edit inside them makes the
+Managed by `devbook-install`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its knowledge as addressed Markdown chapters. Treat the folders as

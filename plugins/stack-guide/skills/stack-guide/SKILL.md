@@ -55,4 +55,4 @@ start at the chapter the question names, then follow `related` and `depends-on` 
   unset key takes the engine's documented default, and `null` is deliberately unbound.
 - Say when the clone is stale rather than reporting its versions as the newest.
 - Send writing elsewhere: `stack-init` and `stack-update` set a repository up, each
-  component's own sync skill materializes it. This skill only reads.
+  component's own install skill materializes it. This skill only reads.

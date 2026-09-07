@@ -1,6 +1,6 @@
 ---
 name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook-install. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -8,7 +8,7 @@ description: 'Check a repository against devbook without writing to it, and repa
 ## Purpose
 
 Check this repository against devbook and write nothing; then repair whatever
-the check reports. It is `devbook-sync`'s check-only half — the same three
+the check reports. It is `devbook-install`'s check-only half — the same three
 questions, asked without changing anything: does the authored Markdown satisfy
 the schema, is the migration ledger current, and does the stamp still describe
 what is on disk.
@@ -31,7 +31,7 @@ compressing a lookup table costs a repair, not a sentence.
    |------|---------|--------|
    | `0` | Every reference resolves, every block matches the schema | Go to step 4 |
    | `1` | One or more problems at `error` severity | Go to step 2 |
-   | `2` | No knowledge folder found | Wrong directory, or the repo has not adopted the convention — run `devbook-sync` instead |
+   | `2` | No knowledge folder found | Wrong directory, or the repo has not adopted the convention — run `devbook-install` instead |
 
    `--check` parses and reports without writing. Add `--root <path>` when running
    from outside the repository root, and `--scope <folder>` to narrow the run to
@@ -76,7 +76,7 @@ compressing a lookup table costs a repair, not a sentence.
 4. **Check the migration ledger.** Run `migrate.mjs --check --root <repo>` for
    every `migrations/<id>/` folder in the plugin, oldest first. An exit of `1` is
    hard drift: work the ledger says is done that the repository has not had. Do
-   not apply it here — `devbook-sync` owns the writing, and applying a migration
+   not apply it here — `devbook-install` owns the writing, and applying a migration
    outside phase 4 leaves the ledger describing something that did not happen.
    Report which migrations are outstanding and stop.
 
@@ -85,13 +85,13 @@ compressing a lookup table costs a repair, not a sentence.
 
    | Drift | Severity | Fix |
    |---|---|---|
-   | A migration the plugin's `contractVersion` requires is missing from the ledger | hard | Step 4 already reported it; run `devbook-sync` |
-   | A file the stamp says was materialized is gone | hard | Run `devbook-sync` to put it back |
-   | A folder exists on disk that `adopted` does not list, or the reverse | hard | Adoption changed without a reconcile; run `devbook-sync` |
-   | The `AGENTS.md` section is missing, or one of its markers is | hard | Run `devbook-sync` to write it back |
-   | No stamp at all | hard | The repository has never been reconciled; run `devbook-sync` |
+   | A migration the plugin's `contractVersion` requires is missing from the ledger | hard | Step 4 already reported it; run `devbook-install` |
+   | A file the stamp says was materialized is gone | hard | Run `devbook-install` to put it back |
+   | A folder exists on disk that `adopted` does not list, or the reverse | hard | Adoption changed without a reconcile; run `devbook-install` |
+   | The `AGENTS.md` section is missing, or one of its markers is | hard | Run `devbook-install` to write it back |
+   | No stamp at all | hard | The repository has never been reconciled; run `devbook-install` |
    | A materialized hash matches an older release | stale | Nothing is broken. An upgrade is available |
-   | The `AGENTS.md` section matches its stamped hash but not what `adopted` renders now | stale | Adoption or the template moved; run `devbook-sync` to rewrite it |
+   | The `AGENTS.md` section matches its stamped hash but not what `adopted` renders now | stale | Adoption or the template moved; run `devbook-install` to rewrite it |
    | A materialized hash matches nothing ever shipped | customized | Report it and leave it. Often deliberate — both workflows are edited on install |
    | The `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
 
@@ -129,7 +129,7 @@ rather than your branch tip — a reference can break when two branches land
 together even though each was clean on its own.
 
 If the generator itself is missing from the repository, install it by running
-`devbook-sync` rather than copying files ad hoc — a copy made by hand lands
+`devbook-install` rather than copying files ad hoc — a copy made by hand lands
 unstamped, and the next reconcile cannot tell it from a customized file.
 
 ## Do not
@@ -138,4 +138,4 @@ unstamped, and the next reconcile cannot tell it from a customized file.
 - Do not delete a chapter to resolve a dangling reference — repoint the reference.
 - Do not weaken or remove the CI workflow to get a pull request green.
 - Do not apply a migration from here, and do not edit the stamp. Both belong to
-  `devbook-sync`, which records what it did as it does it.
+  `devbook-install`, which records what it did as it does it.

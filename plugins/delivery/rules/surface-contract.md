@@ -25,7 +25,7 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 ## The Stack Config
 
 `.github/ai-agent-stack.json`, repo-scope and committed. The engine owns four top-level keys
-and never edits another component's. `components` belongs to each component's own sync skill.
+and never edits another component's. `components` belongs to each component's own install skill.
 
 ```json
 {

@@ -1,9 +1,9 @@
 ---
-name: devbook-sync
-description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
+name: devbook-install
+description: 'Reconcile a repository with devbook — adopt the .arc42/.domain/.tech/.design/.ai knowledge folders, install or refresh the devbook-meta generator and its CI checks, write devbook''s section of AGENTS.md, run outstanding schema migrations, and write the stamp. One idempotent operation covering first install, plugin upgrade, a change in which folders are adopted, and migration-only. Use when: adopting devbook, upgrading it, adding or dropping a knowledge folder, or a migration is outstanding. Triggers on: "devbook install", "install devbook", "devbook sync", "set up devbook", "adopt the knowledge folders", "scaffold .arc42", "scaffold .domain", "set up .tech", "set up .design", "track AI adoption", "upgrade devbook", "run devbook migrations".'
 ---
 
-# devbook sync
+# devbook install
 
 Reconcile this repository with the installed devbook release. Read
 `assets/reconcile-protocol.md` first: it carries the stamp shape, the asset

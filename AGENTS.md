@@ -65,7 +65,7 @@ plugins/<name>/
   hooks/hooks.json                Claude hooks
   hooks.json                      Copilot hooks
   resources/
-  assets/  tools/                 payload a sync skill copies into a repository
+  assets/  tools/                 payload a install skill copies into a repository
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
 ```
 
@@ -119,7 +119,7 @@ what you are editing.
 <!-- devbook:begin -->
 ## Knowledge folders
 
-Managed by `devbook-sync`. Edit outside these markers; an edit inside them makes the
+Managed by `devbook-install`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its knowledge as addressed Markdown chapters. Treat the folders as

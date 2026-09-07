@@ -22,7 +22,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.design/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the knowledge convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the knowledge convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load only the files in
   scope, and an `.arc42/` chapter only when the change depends on a documented constraint.
 - State the derived scope and goal before continuing.

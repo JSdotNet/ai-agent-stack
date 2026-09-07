@@ -4,7 +4,7 @@ A rule in `rules/` is read by no host while it sits in the plugin. There is no r
 either manifest and no rules component, and the globs in `rules/rules.json` name folders in
 the adopting repository, which is the only place they resolve.
 
-So `devbook-sync` installs them, in the same shape `ai-agent-stack` uses for its own rules:
+So `devbook-install` installs them, in the same shape `ai-agent-stack` uses for its own rules:
 one copy of the rule, and a wrapper per host pointing at it.
 
 ```
@@ -69,9 +69,9 @@ on this marketplace's own rules.
 
 `rules/rules.json` carries it, one entry per rule:
 
-- `sync: "<folder>"` — install the trio when that folder is in `adopted`.
-- `sync: "always"` — install it whenever any folder is adopted.
-- no `sync` key — never installed; that rule governs a path inside the plugin.
+- `install: "<folder>"` — install the trio when that folder is in `adopted`.
+- `install: "always"` — install it whenever any folder is adopted.
+- no `install` key — never installed; that rule governs a path inside the plugin.
 
 A folder dropped from `adopted` orphans its trio: reported, never deleted.
 

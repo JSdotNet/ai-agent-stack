@@ -18,7 +18,7 @@ instead of by repository.
 | Skill | Does |
 | --- | --- |
 | [`stack-guide`](skills/stack-guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/naming.md`, the arc42 chapters, and `delivery`'s surface contract. |
-| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own sync skill. |
+| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own install skill. |
 | [`stack-update`](skills/stack-update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
 
 `stack-` is a fifth prefix beside `flow-`, `fleet-`, `phase-`, and `schedule-`, and it means
@@ -52,8 +52,8 @@ node scripts/stack-report.mjs --root <repository>
   [layer](../../.devbook/domain/plugin-authoring/naming.md#layer) order rather than under it.
 - **Writing anything a component owns.** `stack-init` and `stack-update` write the four
   engine-owned keys and stop. Every `components.<name>` stamp stays with that component's own
-  sync skill, which is the only thing that knows what it materialized. That is also why
-  `devbook-sync` and `devbook-check` did not move here: `devbook` ships the payload, the
+  install skill, which is the only thing that knows what it materialized. That is also why
+  `devbook-install` and `devbook-check` did not move here: `devbook` ships the payload, the
   migrations, and the ledger, and a skill in this plugin has no supported path to any of them.
 
 ## Files

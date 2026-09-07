@@ -27,7 +27,7 @@ rule verbatim at `.agents/rules/<name>.md`, a `.claude/rules/<name>.md` wrapper 
 reported and left alone, and a folder dropped from `adopted` orphans its trio rather than
 deleting it. `assets/rule-wrappers.md` carries the templates.
 
-Run `devbook-sync` once to pick them up. Nothing already on disk changes, and a repository that
+Run `devbook-install` once to pick them up. Nothing already on disk changes, and a repository that
 would rather keep reaching the plugin copies by path can take ownership of any of the three.
 
 
@@ -54,7 +54,7 @@ already matched either layout. Nothing to re-sync — the globs travel with the 
 
 ## 1.3.0: a section of `AGENTS.md`
 
-**Additive; no migration.** `devbook-sync` now writes one marker-fenced section of the
+**Additive; no migration.** `devbook-install` now writes one marker-fenced section of the
 repository's `AGENTS.md`, rendered from the adopted folders per `assets/agents-section.md`
 and keyed `AGENTS.md#devbook` in the stamp. A repository synced before 1.3.0 gains it as a
 plain `create` on its next reconcile: an absent `AGENTS.md` is created holding only the
@@ -177,7 +177,7 @@ Like `roadmap` it is a plain-slug attribute and produces no graph edges.
 
 `schemaVersion` stays at 4 — `.ai` produces the same node and edge shapes every
 other folder does. To adopt: re-sync `.github/tools/devbook-meta/` from this
-plugin, run `devbook-sync` (or create the folder by hand), add `.ai/**`
+plugin, run `devbook-install` (or create the folder by hand), add `.ai/**`
 to the CI workflow's `paths` filters, and route edits through the `.ai` write path.
 
 ## 0.11.0: invariants as a table

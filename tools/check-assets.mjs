@@ -21,7 +21,7 @@
 //   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
 //                 description, no glob of its own, and an entry with globs in the
 //                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
-//                 Through the Sync")
+//                 Through the Install")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
 //                 and debt record 1)
@@ -260,17 +260,17 @@ if (await exists(SHARED_RULES)) {
 
 // ── plugin rules ────────────────────────────────────────────────────────────
 //
-// A plugin rule is a template a sync materializes into a repository, so it carries no
-// host's spelling of anything: `name` and `description` in the file, and the globs in
-// the plugin's rules/rules.json beside it, where the sync reads them (see the decision
-// "A Plugin's Rules Reach a Host Through the Sync").
+// A plugin rule is a template an install skill materializes into a repository, so it carries
+// no host's spelling of anything: `name` and `description` in the file, and the globs in
+// the plugin's rules/rules.json beside it, where that skill reads them (see the decision
+// "A Plugin's Rules Reach a Host Through the Install").
 
 for (const folder of await readdir(PLUGINS)) {
     const dir = path.join(PLUGINS, folder, "rules");
     if (!(await exists(dir))) continue;
     const mapPath = path.join(dir, "rules.json");
     if (!(await exists(mapPath))) {
-        error(`plugins/${folder}/rules: no rules.json, so the sync has no globs to derive from`);
+        error(`plugins/${folder}/rules: no rules.json, so the install has no globs to derive from`);
         continue;
     }
     const declared = (await json(mapPath)).rules ?? {};

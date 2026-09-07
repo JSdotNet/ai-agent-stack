@@ -1,6 +1,6 @@
 ---
 name: stack-update
-description: 'Bring a repository already on this marketplace forward — refresh the catalog, report which installed plugins are behind the newest published version, re-validate the engine-owned keys of .github/ai-agent-stack.json against the schema, and hand each adopted component its own sync skill so outstanding migrations run and stale files are re-materialized. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "stack update", "upgrade the stack", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating".'
+description: 'Bring a repository already on this marketplace forward — refresh the catalog, report which installed plugins are behind the newest published version, re-validate the engine-owned keys of .github/ai-agent-stack.json against the schema, and hand each adopted component its own install skill so outstanding migrations run and stale files are re-materialized. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "stack update", "upgrade the stack", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating".'
 ---
 
 # stack update
@@ -9,7 +9,7 @@ description: 'Bring a repository already on this marketplace forward — refresh
 
 Move a repository that is already set up onto the installed release. It is `stack-init`'s
 other half and owns the same four engine keys, with the same boundary: a
-`components.<name>` stamp is written by that component's own sync skill and by nothing
+`components.<name>` stamp is written by that component's own install skill and by nothing
 else. Run it whole every time — a version bump, a migration, and a config change are one
 operation, and the report is what says which of them applies.
 
@@ -28,7 +28,7 @@ operation, and the report is what says which of them applies.
    skill does not reach into the host's plugin cache.
 
 4. **Let each component reconcile itself.** For every component with a stamp, invoke that
-   component's own sync skill — `devbook:devbook-sync` — and let it run its outstanding
+   component's own install skill — `devbook:devbook-install` — and let it run its outstanding
    migrations oldest first, overwrite what is stale, leave what is customized, and rewrite
    its own stamp. A migration applied from here would leave the ledger describing something
    that did not happen.
@@ -46,6 +46,6 @@ operation, and the report is what says which of them applies.
 ## Do not
 
 - Do not write, edit, or remove a `components.<name>` key, and do not apply a component's
-  migration yourself. Both belong to that component's sync skill.
+  migration yourself. Both belong to that component's install skill.
 - Do not edit a generated file to make a check pass. Fix the source it was generated from.
 - Do not silently drop a key an upgrade retired — say it was removed and why.

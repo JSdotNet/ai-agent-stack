@@ -21,7 +21,7 @@ technology chapter by hand.
 - Target `.tech` scope. Default to every `.tech` layer that exists.
 - Optional focus, such as backend packages, frontend packages, tooling, deployment, or all.
 
-If the repository has no `.tech/` folder, stop and run `devbook-sync` first for the
+If the repository has no `.tech/` folder, stop and run `devbook-install` first for the
 `.tech` adoption path.
 
 ## Deterministic package inventories

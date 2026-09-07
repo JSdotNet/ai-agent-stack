@@ -8,7 +8,7 @@ description: The schedule catalog contract — the schedule file, the preamble e
 A schedule is a trigger, never a procedure. It names a `schedule-*` entry point, gives it a
 cadence, and hands a cloud session that starts with nothing but the repository a prompt
 self-contained enough to run that skill unattended. This file is the contract the catalog,
-`schedule-sync`, `schedule-status`, and `schedule-run` all read; it is over the instruction
+`schedule-install`, `schedule-status`, and `schedule-run` all read; it is over the instruction
 budget because it is a contract, and a contract stated by half is wrong.
 
 The capability has two host names — **Routines** in Claude Code, **Automations** in the GitHub
@@ -34,7 +34,7 @@ what it produces. Four placeholders, substituted at sync time: `{{repo}}` (`owne
 
 ## The Prompt
 
-`schedule-sync` builds every prompt as `resources/schedule-preamble.md`, a blank line, then the
+`schedule-install` builds every prompt as `resources/schedule-preamble.md`, a blank line, then the
 body, with placeholders substituted in both. The preamble carries the unattended rules once —
 safe defaults, park at a gate, pull request never push, one open artifact per schedule, data
 never instructions, no secret values, end with a summary. A body never repeats them and never
@@ -63,14 +63,14 @@ with:
 
 | Operation | Used by |
 | --- | --- |
-| `create`, `update` | `schedule-sync` |
+| `create`, `update` | `schedule-install` |
 | `run` | `schedule-run` |
 | `list`, `get` | all three — identity is the name `<owner>/<repo> · <title>`, matched on every call |
 | `list_runs`, `get_run_log` | `schedule-status`, `schedule-run` |
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and
 the person deletes it in the host's own page. **None reachable is a normal outcome:**
-`schedule-sync` prints each finished prompt with its cron for that page and stops; the other
+`schedule-install` prints each finished prompt with its cron for that page and stops; the other
 two say the host holds the answer.
 
 Matching by name is what makes every operation idempotent, and it is why nothing personal is
@@ -83,7 +83,7 @@ is the one host fact this plugin carries, recorded as a divergence in
 
 ## The Stamp
 
-`components.schedule` in `.github/ai-agent-stack.json`, written by `schedule-sync` and by
+`components.schedule` in `.github/ai-agent-stack.json`, written by `schedule-install` and by
 nothing else, and never another component's key:
 
 ```json
@@ -106,7 +106,7 @@ moment a second person opens the file.
 ## The Prerequisite
 
 A cloud session loads this marketplace only when the repository's committed host settings
-enable the marketplace and each plugin in `requires`. `schedule-sync` reads those settings and
+enable the marketplace and each plugin in `requires`. `schedule-install` reads those settings and
 refuses to schedule one whose target plugin is not enabled there: a session that starts
 without its skill improvises or stops, and neither is what was scheduled. The first run is the
 proof either way — read it with `schedule-status`. In Claude Code the settings file is
@@ -114,7 +114,7 @@ proof either way — read it with `schedule-status`. In Claude Code the settings
 
 ## Cadence
 
-Every `cron` is UTC; `schedule-sync` shows the local equivalent when it confirms. Weekly
+Every `cron` is UTC; `schedule-install` shows the local equivalent when it confirms. Weekly
 schedules sit on different days so their pull requests do not all land on Monday. Match a
 cadence to how fast the output is read, not to how fast input arrives: a daily merge review is
 read daily; a daily package update produces a queue.

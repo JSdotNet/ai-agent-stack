@@ -27,7 +27,7 @@ continue.
 ## Stage 1: Context Loading
 
 - Confirm the repository keeps `.ai/`, at the root or under `.devbook/`. If it does not,
-  stop and say so: adopting a folder is the knowledge convention's own sync, never a flow's.
+  stop and say so: adopting a folder is the knowledge convention's own install, never a flow's.
 - Load the instruction files that govern the target path, task-scoped. Load the adoption map
   plus only the stage files in scope.
 - State the derived scope and goal before continuing.

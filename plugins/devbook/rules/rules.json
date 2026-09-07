@@ -5,7 +5,7 @@
         ".ai/**",
         ".devbook/ai/**"
       ],
-      "sync": "ai"
+      "install": "ai"
     },
     "devbook-annotations": {
       "paths": [
@@ -16,14 +16,14 @@
         ".ai/**",
         ".devbook/**"
       ],
-      "sync": "always"
+      "install": "always"
     },
     "devbook-arc42": {
       "paths": [
         ".arc42/**",
         ".devbook/arc42/**"
       ],
-      "sync": "arc42"
+      "install": "arc42"
     },
     "devbook-chapter-metadata": {
       "paths": [
@@ -34,27 +34,27 @@
         ".ai/**",
         ".devbook/**"
       ],
-      "sync": "always"
+      "install": "always"
     },
     "devbook-derived-artifacts": {
       "paths": [
         "**/_meta/**"
       ],
-      "sync": "always"
+      "install": "always"
     },
     "devbook-design": {
       "paths": [
         ".design/**",
         ".devbook/design/**"
       ],
-      "sync": "design"
+      "install": "design"
     },
     "devbook-domain": {
       "paths": [
         ".domain/**",
         ".devbook/domain/**"
       ],
-      "sync": "domain"
+      "install": "domain"
     },
     "devbook-naming": {
       "paths": [
@@ -66,14 +66,14 @@
         ".devbook/**",
         "**/_meta/**"
       ],
-      "sync": "always"
+      "install": "always"
     },
     "devbook-tech": {
       "paths": [
         ".tech/**",
         ".devbook/tech/**"
       ],
-      "sync": "tech"
+      "install": "tech"
     }
   }
 }

@@ -1,9 +1,9 @@
 ---
-name: schedule-sync
+name: schedule-install
 description: 'Put this repository''s schedules from the catalog into the host''s scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app — creating or updating each selected one, disabling the rest, and recording the selection under components.schedule in .github/ai-agent-stack.json. Idempotent by name. Use when: setting up recurring unattended runs for a repository, scheduling routines or automations, changing a cadence, adding or removing one, or after upgrading this plugin.'
 ---
 
-# schedule sync
+# schedule install
 
 One idempotent operation for first setup, a changed selection, a changed cadence, and a plugin
 upgrade. Everything it reads and writes is in `rules/schedule-catalog-contract.md`.

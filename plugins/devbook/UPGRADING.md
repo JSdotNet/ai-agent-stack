@@ -5,6 +5,24 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 1.4.0: the folder rules reach both hosts
+
+**New assets; no migration.** 1.3.1 fixed the `applyTo` globs and said "nothing to re-sync —
+the globs travel with the plugin". They travel, but they arrive nowhere: no plugin manifest
+declares an `instructions` key on either host, and there is no rules component, so an
+instruction file sitting in the plugin is read automatically by neither. Until now these rules
+reached a session only when a skill or an agent named one by path.
+
+Reconcile now materializes them. Each instruction file lands twice in the repository — verbatim
+as `.github/instructions/<name>.instructions.md`, which Copilot applies from its own `applyTo`,
+and as a `.claude/rules/<name>.md` wrapper whose `paths` is that `applyTo` split on commas,
+which is how Claude applies it. Both are hash-tracked like every other materialized file:
+customized copies are reported and left alone, and a folder dropped from `adopted` orphans its
+pair rather than deleting it. `assets/rule-wrappers.md` carries the shape and the table.
+
+Run `devbook-sync` once to pick them up. Nothing already on disk changes, and a repository that
+would rather keep reaching the plugin copies by path can take ownership of either file.
+
 ## 1.3.2: the plugin names no flow
 
 **Prose only; no migration.** The per-folder flows now live in `delivery`, one per folder —

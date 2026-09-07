@@ -39,6 +39,9 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 
 ## Notes
 
+- The folder rules land in the repository as a pair per instruction file — the file
+  itself under `.github/instructions/`, a `paths` wrapper under `.claude/rules/` — so
+  both hosts apply them on a matching read. Shape and table: `assets/rule-wrappers.md`.
 - Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
   never from what is on disk. Report the file it landed in; whether a host reads
   or imports that file is the repository's to arrange.

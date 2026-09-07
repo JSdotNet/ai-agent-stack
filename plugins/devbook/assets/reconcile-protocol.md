@@ -35,7 +35,9 @@ one entry inside it and never edits another component's:
         ".github/tools/devbook-meta": { "from": "1.0.0", "hash": "sha256:9f2c…", "managed": true },
         ".github/workflows/devbook-meta.yml": { "from": "1.0.0", "hash": "sha256:41ab…", "managed": true },
         "build/Update-DevbookIndex.ps1": { "from": "0.15.0", "hash": "sha256:7e10…", "managed": false },
-        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true }
+        "AGENTS.md#devbook": { "from": "1.3.0", "hash": "sha256:c0de…", "managed": true },
+        ".github/instructions/devbook-arc42.instructions.md": { "from": "1.4.0", "hash": "sha256:b17e…", "managed": true },
+        ".claude/rules/devbook-arc42.md": { "from": "1.4.0", "hash": "sha256:5a1d…", "managed": true }
       },
       "migrations": [
         { "id": "006-drop-backlog", "applied": "2026-09-03" }
@@ -68,6 +70,8 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
+| `instructions/<name>.instructions.md` | `.github/instructions/<name>.instructions.md` | per `assets/rule-wrappers.md` |
+| the same file's `applyTo` | `.claude/rules/<name>.md` | per `assets/rule-wrappers.md` |
 
 Both workflows are edited on the way in — path filters trimmed to the adopted
 folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
@@ -83,6 +87,14 @@ and is rewritten when the fresh rendering differs — adoption moved, or the tem
 Text that no longer matches the stamped hash is customized: reported, left alone. Nothing
 outside the markers is read or written. Absent `AGENTS.md` is created holding only the
 section; present without the markers, the section is appended at the end.
+
+The folder rules are the one asset materialized as a pair. An instruction file sitting
+in a plugin is read by no host automatically, and its globs name paths in this
+repository, so each one lands twice: verbatim as `.github/instructions/<name>.instructions.md`,
+which Copilot applies from its own `applyTo`, and as a `.claude/rules/<name>.md` wrapper
+whose `paths` is that `applyTo` split on commas, which is how Claude applies it. Neither
+is edited on the way in. `assets/rule-wrappers.md` carries the wrapper template, the
+table of which file lands when, and why there is no third copy.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

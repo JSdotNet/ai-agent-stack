@@ -1,5 +1,5 @@
 ---
-applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**"
+applyTo: ".domain/**,.arc42/**,.tech/**,.design/**,.ai/**,.devbook/**"
 description: The annotation fence — a note on a chapter, written in the chapter as a second fenced block, with its schema, its placement rule, its lifecycle, and the rule that keeps an open question out of task context.
 ---
 

@@ -1,5 +1,5 @@
 ---
-applyTo: ".arc42/**,.domain/**,.tech/**,.design/**,.ai/**,**/_meta/**"
+applyTo: ".arc42/**,.domain/**,.tech/**,.design/**,.ai/**,.devbook/**,**/_meta/**"
 description: File and folder naming conventions inside knowledge folders, including dot-prefixed specification areas and underscore-prefixed tool-interpreted data.
 ---
 

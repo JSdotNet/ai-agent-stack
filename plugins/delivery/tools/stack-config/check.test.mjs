@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { checkStackConfig } from './check.mjs';
+import { checkLocalOverlay, checkStackConfig, mergeStackConfig } from './check.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const schema = JSON.parse(
@@ -132,4 +132,84 @@ test('a point takes a list of server ids, or null for deliberately none', () => 
 test('no model key exists anywhere in the engine-owned config', () => {
     assert.equal(check({ policy: { model: 'opus' } }).length, 1);
     assert.equal(check({ bindings: { 'delivery.model': 'opus' } }).length, 1);
+});
+
+// The local overlay — .devbook/config.local.json, gitignored, one machine's own.
+
+test('the overlay wins key by key and leaves its siblings standing', () => {
+    const merged = mergeStackConfig(
+        { policy: { 'qa.depth': 'targeted', 'verify.retryBudget': 2 } },
+        { policy: { 'qa.depth': 'startup-only' } },
+    );
+    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'verify.retryBudget': 2 });
+});
+
+test('the overlay merges into a nested binding without flattening its neighbours', () => {
+    const merged = mergeStackConfig(
+        { bindings: { 'delivery.roles': { qa: null, architecture: 'team-arch' } } },
+        { bindings: { 'delivery.roles': { qa: 'my-local-qa' } } },
+    );
+    assert.deepEqual(merged.bindings['delivery.roles'], {
+        qa: 'my-local-qa',
+        architecture: 'team-arch',
+    });
+});
+
+test('an array replaces rather than concatenating — half a chore list runs nothing sane', () => {
+    const merged = mergeStackConfig(
+        { extensions: { 'session.start': ['devbook:devbook-check', 'repo:a'] } },
+        { extensions: { 'session.start': ['repo:b'] } },
+    );
+    assert.deepEqual(merged.extensions['session.start'], ['repo:b']);
+});
+
+test('gates append, so an overlay can add a checkpoint and cannot spell removing one', () => {
+    const base = { gates: [{ at: 'spec', when: 'after', purpose: 'approval' }] };
+    const merged = mergeStackConfig(base, {
+        gates: [{ at: 'app.start', when: 'before', purpose: 'resource' }],
+    });
+    assert.equal(merged.gates.length, 2);
+    assert.equal(merged.gates[0].at, 'spec');
+
+    // The one that matters: an overlay naming an empty list still keeps every base gate.
+    assert.deepEqual(mergeStackConfig(base, { gates: [] }).gates, base.gates);
+});
+
+test('null in the overlay is deliberately unbound, never a delete', () => {
+    const merged = mergeStackConfig(
+        { bindings: { 'delivery.tracker': { provider: 'github' } } },
+        { bindings: { 'delivery.tracker': null } },
+    );
+    assert.equal(merged.bindings['delivery.tracker'], null);
+});
+
+test('the overlay never carries a component stamp', () => {
+    const errors = checkLocalOverlay({ components: { devbook: { pluginVersion: '2.0.0' } } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /repo-scope/);
+});
+
+test('the overlay may not touch what the repository produces', () => {
+    for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation']) {
+        const errors = checkLocalOverlay({ policy: { [key]: key === 'pr.required' ? false : 'full' } });
+        assert.equal(errors.length, 1, key);
+        assert.match(errors[0], /locked/);
+    }
+});
+
+test('an ordinary overlay is refused nothing', () => {
+    assert.deepEqual(
+        checkLocalOverlay({
+            policy: { 'qa.depth': 'startup-only', 'verify.retryBudget': 0 },
+            bindings: { 'delivery.roles': { qa: 'my-local-qa' } },
+            gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
+        }),
+        [],
+    );
+});
+
+test('an overlay is still schema-checked, so a typo in it is rejected by name', () => {
+    const errors = check({ policy: { 'qa.dpeth': 'full' } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown key "qa.dpeth"/);
 });

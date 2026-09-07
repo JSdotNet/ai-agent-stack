@@ -14,7 +14,7 @@ domain looks like" — complementary to `.arc42` (system architecture), `.tech`
 
 - `.domain` is **not** baseline repository context. Load it only for domain
   modeling, bounded-context, or ubiquitous-language tasks, normally after
-  routing through the repository's domain orchestration or a domain specialist
+  routing through the repository's domain flow or a domain specialist
   agent.
 - When `.domain` is needed as task context, load only the relevant bounded
   context's chapters instead of reading the whole folder by default.

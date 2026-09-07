@@ -34,7 +34,7 @@ chapters carry the rationale directly.
 
 - `.design` is **not** baseline repository context. Load it only for design,
   UX, or UI-implementation tasks, normally after routing through the
-  repository's design orchestration or a UX specialist agent.
+  repository's design flow or a UX specialist agent.
 - When `.design` is needed as task context, load only the relevant file(s)
   instead of reading the whole folder.
 - UI implementation work (feature or bug) consults `.design` when the change

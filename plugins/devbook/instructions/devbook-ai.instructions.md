@@ -182,7 +182,7 @@ What kind of thing the chapter describes. Required on every chapter.
 | `plugin` | A plugin whose contribution to this stage is worth naming as a unit. |
 | `mcp-server` | An MCP surface the flow depends on at this stage. |
 | `hook` | An automation that fires without anyone asking — the strongest form of adoption, and the one most worth recording. |
-| `workflow` | A multi-agent or multi-step orchestration. |
+| `workflow` | A multi-agent or multi-step procedure. |
 | `model` | A model choice that is a real decision at this stage, not the default. |
 | `concept` | An idea the practices rest on — context engineering, evaluation, prompt patterns. Belongs in `concepts.md`. |
 | `guardrail` | A limit or control: a review gate, a permission policy, what agents may not touch. |

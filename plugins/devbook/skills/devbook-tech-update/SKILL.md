@@ -81,7 +81,7 @@ chapters and generated `_meta/*.json` indexes.
    from `devbook-tech.instructions.md`.
 
 5. **Author through the `.tech` flow.** Route the actual `.tech/` edits through the
-   `.tech` flow unless this skill is already being run as part of that orchestration.
+   `.tech` flow unless this skill is already being run as part of that flow.
    Update chapter metadata, the Mermaid graph, and the layer table together.
 
 6. **Regenerate and validate indexes.** Run:

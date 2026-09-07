@@ -33,7 +33,7 @@ and the plugin stays silent everywhere else.
 | Starting point | Implementation exists | Chapter exists and is agreed |
 | Missing thing | The chapter | The implementation |
 | Reads | Source, tests, and the chapter as it stands | The chapter, plus code only to establish what is already there |
-| Writes | The chapter, through the folder's orchestration skill | A change brief, and nothing else |
+| Writes | The chapter, through the folder's flow | A change brief, and nothing else |
 | Never | Changes source or test code | Edits source trees, test trees, or the chapter's substance |
 
 A single request often needs both, in sequence: `to-spec-` what is built, then
@@ -81,7 +81,7 @@ not widen the chapter to cover several candidates at once.
 When the counterpart resolves through rung 3 and the concept has no `naming.md`
 term yet, propose adding one with the discovered code name as an `alias`. That
 turns a one-off inference into a durable pairing for the next pass. Propose it —
-the write itself still routes through the folder's orchestration skill.
+the write itself still routes through the folder's flow.
 
 ## Evidence rules
 
@@ -167,7 +167,7 @@ Two rules on top of the ones there:
   asserts nothing.
 
 Entries go in with the drafted content, so they route through the folder's
-orchestration skill along with everything else — a capture pass does not edit a
+flow along with everything else — a capture pass does not edit a
 chapter file directly, and that includes this field.
 
 A build pass writes no `tests` entries: the tests in its brief do not exist yet.
@@ -210,7 +210,7 @@ So:
   was found, not a ratified model.
 - An existing chapter's `status` is left exactly as it is. Capture changes the
   chapter's *content*; a status change is a separate, deliberate decision that
-  belongs to the folder's orchestration skill and the person running it.
+  belongs to the folder's flow and the person running it.
 - Never move a chapter to `active` because the code exists. `active` means "this
   is the current agreed model", and only a person agrees. In `.domain`,
   `.arc42`, and `.design` that move is spelled by *deleting* the `status` line,
@@ -218,7 +218,7 @@ So:
   a `draft` or `proposed` line in place rather than tidying it away.
 - Never move a chapter to `deprecated` because the code was deleted. Code being
   gone may mean the model was abandoned, or may mean it regressed. Report it as
-  `code-ahead` with the removal as the finding, and let the orchestration skill
+  `code-ahead` with the removal as the finding, and let the flow
   and the user decide.
 
 **Build must not build from an unsettled chapter without confirmation.** A
@@ -291,7 +291,7 @@ per-kind skills call that list out as required output.
 ### The brief itself
 
 A build skill produces a **change brief** and then stops. It does not name a
-code orchestration skill, does not choose an implementation approach, and does
+flow, does not choose an implementation approach, and does
 not touch a source or test tree. Handing the brief to whatever delivery flow the
 repository uses is the user's decision, made after reading it.
 
@@ -330,7 +330,7 @@ gap rather than emitting a vague brief.
 
 Whenever a capture pass results in a chapter being added, renamed, or re-linked,
 the derived indexes need regenerating. The write itself happens inside the
-orchestration skill; regeneration is part of closing the pass:
+flow; regeneration is part of closing the pass:
 
 ```bash
 node .github/tools/devbook-meta/build.mjs --scope <folder>

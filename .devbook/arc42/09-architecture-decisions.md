@@ -89,11 +89,10 @@ The layered design puts the five folder-writing skills — one per adopted folde
 `devbook-flows`, an L2b bridge depending on both `devbook` and `delivery`, and the graph
 renderer in `devbook-canvas`, an L3 surface. The flows have moved; the canvas has not.
 
-**The flow half is closed.** `orch-domain`, `orch-tech`, `orch-design`,
-`orch-arc42-content`, and `orch-ai` are now `flow-domain`, `flow-tech`, `flow-design`,
-`flow-arc42-content`, and `flow-ai` in `devbook-flows`, which declares both dependencies and
-is demoted without either. `orch-backlog` was not carried over: `.backlog` is gone, so the
-sixth flow the design named has nothing to write. Their dashboard references became the
+**The flow half is closed.** The five folder-writing skills are now `flow-domain`,
+`flow-tech`, `flow-design`, `flow-arc42-content`, and `flow-ai` in `devbook-flows`, which
+declares both dependencies and is demoted without either. The sixth the design named was for
+`.backlog`, which is gone, so it was not carried over and has nothing to write. Their dashboard references became the
 surface contract, and each declares its own documentation/config tier, because the engine
 never enumerates a skill in a layer above it. `devbook` now names no flow by name: its
 converters resolve the write path — repo-native skill, folder flow, `flow-fallback`, or the
@@ -277,8 +276,8 @@ related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
 
 One instruction file — `surface-contract.instructions.md` — holds the point set, the gates
 mechanism, the stack config, the host slots, and the surface capability with its reporting
-contract. It replaces three files that came across from the two host plugins:
-`orch-dashboard-contract`, `dashboard-usage`, and `canvas-usage`.
+contract. It replaces three files that came across from the two host plugins: the predecessor
+dashboard's contract, `dashboard-usage`, and `canvas-usage`.
 
 The layered design treats the surface capability and the extension points as separate concerns,
 and splitting them would honour "state each rule in exactly one file" more literally. They are
@@ -331,7 +330,7 @@ Consequence: **installing `delivery` alone gives no live run timeline at all.** 
 reports that no surface is bound, produces its file artifacts, and continues. That is now a
 choice rather than a gap — `delivery-surface-dashboard`, `delivery-surface-canvas`, and `delivery-surface-collector`
 ship beside the engine, and enabling one is what makes a run visible. The `flow-runner`
-allowlist carried the legacy `orch-dashboard` tool patterns beside the new ones for one
+allowlist carried the predecessor dashboard's tool patterns beside the new ones for one
 release; they went with the plugin that shipped that server.
 
 See [Three Surfaces, One Contract](#three-surfaces-one-contract) for what each of them
@@ -395,7 +394,7 @@ The same rule reaches into the run schema, in two renames the port made:
   of the gate mechanism, and a surface whose schema names it cannot record the decision of any
   other gate a repository adds.
 
-Consequence: a run file written by the old `orch-dashboard` does not read correctly here — the
+Consequence: a run file written by the predecessor dashboard does not read correctly here — the
 work item and the approval decision land in fields nothing looks at. Nothing migrates them,
 because the new plugins keep their own state directories and no run has been written to one
 yet. That is the one moment these renames are free.

@@ -120,8 +120,10 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | `stack-` | The stack itself rather than a unit of work: what is installed, what a repository has wired, and moving both forward. |
 
 The word *orchestration* covered the first two at once, which is why it named neither well.
-`orch-*` was the previous spelling of `flow-*` and no skill here carries it any more:
-`delivery` holds sixteen `flow-*` — five of them one per devbook folder, since
+`orch-` was the prefix it gave them, retired in favour of `flow-` and `fleet-`; it is recorded
+here so a consumer still holding an `orch-*` skill knows what replaced it, and it appears
+nowhere else in this repository — not as a skill name, a tool pattern, a comment, or a common
+noun. `delivery` holds sixteen `flow-*` — five of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
 and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
 `fleet-*`, and `stack-guide` holds three `stack-*`.
@@ -133,10 +135,11 @@ the two hosts' names for one capability — Routines in Claude Code, Automations
 Copilot app — so adopting either would have named a host. Both are recorded as aliases of
 [Schedule](#schedule) and neither survives as a prefix.
 
-A grep still finds the string, and never as a skill name: only the decision records that say
-what was renamed. `flow-runner`'s allowlist kept the `orch-dashboard` tool patterns for one
-release, and they went with the plugin that shipped that server. The dashboard renderer's
-last comment naming an old skill was reworded on 2026-09-05.
+The residue is gone. `flow-runner`'s allowlist carried the predecessor dashboard's tool
+patterns for one release and they went with the plugin that shipped that server; the dashboard
+renderer's last comment naming an old skill was reworded on 2026-09-05; and the decision
+records that narrated the rename no longer spell the old names. *Orchestration* survives as
+the English word for what `fleet-` does, and nowhere as a name.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

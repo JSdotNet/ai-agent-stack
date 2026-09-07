@@ -14,7 +14,7 @@ deployable unit.
 
 - `.arc42` is **not** baseline repository context. Load it only for architecture,
   ADR, blueprint, TDR, or explicit arc42 tasks, normally after routing through the
-  repository's architecture orchestration or an architecture specialist agent.
+  repository's architecture flow or an architecture specialist agent.
 - When `.arc42` is needed as task context, load only the relevant chapter(s) or
   sections instead of reading the whole folder by default.
 - For non-architecture implementation or documentation tasks, consult `.arc42`

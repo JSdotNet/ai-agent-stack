@@ -5,6 +5,17 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 1.3.2: the plugin names no flow
+
+**Prose only; no migration.** The per-folder flows now live in `delivery`, one per folder —
+`flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai` — and the `devbook-flows`
+bridge is no longer published. `devbook`'s README, manifests, session-start hook, routing
+snippet, and code-sync protocol stop naming any flow: a change routes through "the engine's
+own flow for the folder" when a flow engine is installed, and follows the instruction files
+directly when none is. A repository that had `devbook-flows` enabled disables it and enables
+`delivery` instead; the materialized files are untouched, so nothing to re-sync. The one
+materialized text that changes is the routing snippet, which is repository-owned once copied.
+
 ## 1.3.1: instruction globs cover the nested layout
 
 **A fix; no migration.** Schema version 7 taught the generator to resolve `.devbook/arc42`,

@@ -20,7 +20,7 @@ chapter that never appears in the queue.
 ## Steps
 
 1. **Find the adopted folders.** Read `adopted` from devbook's entry in
-   `.github/ai-agent-stack.json` — the stamp, per `devbook`'s reconcile
+   `.devbook/config.json` — the stamp, per `devbook`'s reconcile
    protocol. Fall back to the devbook folders present on disk when the
    repository has no stamp; do not ask.
 

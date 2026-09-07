@@ -267,11 +267,11 @@ leaves the other host's rows empty while the catalog half still answers.
 ## Stack Config
 
 ```meta
-date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#stamp", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook"]
 ```
 
-`.github/ai-agent-stack.json` is the one file a consuming repository commits for the whole
+`.devbook/config.json` is the one file a consuming repository commits for the whole
 stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
@@ -280,8 +280,12 @@ stack, and it holds two kinds of top-level key:
 | `components.<name>` | that component's own install skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
-`resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
+`resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
+
+It sits beside the devbook chapter folders and is read by every host, which is the whole reason
+it left `.github/` — see [the decision](09-architecture-decisions.md#the-stack-config-lives-in-devbook).
+Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
 
 ## Schedule Plugin
 

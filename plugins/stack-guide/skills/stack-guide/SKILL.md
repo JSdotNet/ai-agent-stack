@@ -24,7 +24,7 @@ node scripts/stack-report.mjs --root <repository>
 
 It prints, with the path every fact came from: the catalog and where it is checked out,
 each plugin's newest and installed version and whether it is enabled, this repository's
-`.github/ai-agent-stack.json` read out as roles, extension points, policy and gates, the
+`.devbook/config.json` read out as roles, extension points, policy and gates, the
 component stamps, which devbook folders exist, and the flows the engine on disk ships.
 `--json` gives the same model unrendered.
 

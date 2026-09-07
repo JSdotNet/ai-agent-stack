@@ -8,7 +8,7 @@ import { checkStackConfig } from './check.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const schema = JSON.parse(
-    readFileSync(join(HERE, '..', '..', 'resources', 'ai-agent-stack.schema.json'), 'utf8'),
+    readFileSync(join(HERE, '..', '..', 'resources', 'config.schema.json'), 'utf8'),
 );
 
 const check = (config) => checkStackConfig(config, schema);

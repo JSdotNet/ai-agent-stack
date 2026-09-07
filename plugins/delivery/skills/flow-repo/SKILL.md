@@ -47,7 +47,7 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 - Declare each server in the repository's own MCP configuration — `.mcp.json` for Claude
   Code, `.github/github-app.yml` for Copilot — with its permissions and scopes.
 - Bind each server to the extension points that use it under `bindings["delivery.mcp"]` in
-  `.github/ai-agent-stack.json`, creating the file with that key alone when it does not exist
+  `.devbook/config.json`, creating the file with that key alone when it does not exist
   yet (`flow-project` fills the rest), and validate it with `node tools/stack-config/check.mjs`.
   A point left out takes the engine default — **MCP Server
   Strategy** in `rules/flow-execution-model.md`.

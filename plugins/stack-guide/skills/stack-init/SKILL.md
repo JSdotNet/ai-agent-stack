@@ -1,6 +1,6 @@
 ---
 name: stack-init
-description: 'Set a repository up for this marketplace for the first time — decide which plugins it will actually use, write the engine-owned keys of .github/ai-agent-stack.json (bindings, extensions, policy, gates), validate them against the schema, and then hand each component its own install skill to materialize what it installs. Writes the engine keys only, never another component''s stamp. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "stack init", "set up the stack here", "adopt the delivery engine", "create ai-agent-stack.json", "wire up my flows", "onboard this repo".'
+description: 'Set a repository up for this marketplace for the first time — decide which plugins it will actually use, write the engine-owned keys of .devbook/config.json (bindings, extensions, policy, gates), validate them against the schema, and then hand each component its own install skill to materialize what it installs. Writes the engine keys only, never another component''s stamp. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "stack init", "set up the stack here", "adopt the delivery engine", "create config.json", "wire up my flows", "onboard this repo".'
 ---
 
 # stack init
@@ -16,7 +16,7 @@ did not do.
 ## Steps
 
 1. **Look before writing.** Run `node scripts/stack-report.mjs --root <repository>` from
-   this plugin's root. If it reports a `.github/ai-agent-stack.json` already present, stop
+   this plugin's root. If it reports a `.devbook/config.json` already present, stop
    and run `stack-update` instead — this skill is for the empty case.
 
 2. **Decide what this repository will actually use.** Ask; do not impose a default shape.
@@ -25,7 +25,7 @@ did not do.
    almost always better than a binding nobody maintains.
 
 3. **Write the engine keys.** Start from the delivery plugin's
-   `resources/ai-agent-stack-template.json` — take its checkout root from the report's
+   `resources/config-template.json` — take its checkout root from the report's
    catalog line, or the plugin's `installPath` from `--json` — and keep only the keys step
    2 chose. Read `rules/surface-contract.md` in that same plugin for
    what each point and gate means. Never put a model or a secret in this file.

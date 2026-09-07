@@ -24,7 +24,7 @@ a sibling declare it and the host enforces it.
 **No specialist ships here.** The `architecture`, `qa`, `domain`, `ux`, and `docs` roles and
 the `spec`, `implement`, `verify`, `app.start`, and `qa.run` services are points the engine
 declares and a repository fills, naming whichever specialist plugin it installed in
-`.github/ai-agent-stack.json`. Unbound, a flow loses that stage's expertise and runs on — a
+`.devbook/config.json`. Unbound, a flow loses that stage's expertise and runs on — a
 provider that does not resolve costs capability, never a load. The seven specialists that used
 to live here are [published from their own marketplace](.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace).
 

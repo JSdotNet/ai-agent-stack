@@ -5,6 +5,28 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 2.0.0: the stack config leaves `.github/`
+
+**Breaking; scripted migration `008-config-to-devbook`.** The file devbook writes its stamp
+into is now `.devbook/config.json`. It was `.github/ai-agent-stack.json`, and `.github/` is one
+host's folder for a file both hosts read.
+
+Only the location moved. `components.devbook` keeps its shape — `pluginVersion`,
+`contractVersion`, `adopted`, `materialized`, `migrations` — and no chapter, rule, or
+materialized asset changes. `contractVersion` moves to **8** because where the stamp is read
+from is part of the contract a repository is on.
+
+There is no fallback to the old path, so run the migration before anything else: until it does,
+`devbook-check` reports the repository as never reconciled and the delivery engine silently
+falls back to every default instead of the wiring the repository declared.
+
+```bash
+node migrate.mjs --check
+```
+
+It moves the file whole and refuses when both paths exist with different content, which is a
+merge only a person can make.
+
 ## 1.4.0: the folder rules reach both hosts, and the canvas is `devbook-graph`
 
 ### The folder rules

@@ -55,7 +55,7 @@ Reconciles a repository with the installed devbook release, in six phases:
 detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
 plugin upgrade, a change in which folders are adopted, and an outstanding
 migration are one idempotent operation — the stamp at
-`.github/ai-agent-stack.json` says which. Materialize also writes devbook's
+`.devbook/config.json` says which. Materialize also writes devbook's
 marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
 protocol is in `assets/reconcile-protocol.md`.
 
@@ -294,7 +294,7 @@ for technologies that do not appear in package manifests.
 
 | File | Purpose |
 |------|---------|
-| `assets/reconcile-protocol.md` | Shared rules for `devbook-install` and `devbook-check`: the stamp devbook writes into `.github/ai-agent-stack.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook-install` and `devbook-check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
 | `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-install`: fails on broken references, warns on drifted indexes |
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
@@ -315,9 +315,10 @@ for technologies that do not appear in package manifests.
 
 ```text
 migrations/
-└── 006-drop-backlog/
-    ├── MIGRATION.md   what, why, what breaks, appliesTo
-    └── migrate.mjs    idempotent; --check exits 1 while work remains
+├── 006-drop-backlog/
+│   ├── MIGRATION.md   what, why, what breaks, appliesTo
+│   └── migrate.mjs    idempotent; --check exits 1 while work remains
+└── 008-config-to-devbook/
 ```
 
 Rules that keep a ledger trustworthy:
@@ -340,7 +341,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **6**, covering the metadata schema a repository authors
+One number, currently **8**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -352,6 +353,12 @@ Version 6 removes `.backlog` and the `implements` field (breaking — migration
 `006-drop-backlog`), and adds the shared `approved` rung with `approved-by` /
 `approved-at`, and the `ext` namespace. Both additions are additive: a corpus
 written against 5 stays valid.
+
+Version 8 moves the file the stamp lives in from `.github/ai-agent-stack.json`
+to `.devbook/config.json` (breaking — migration `008-config-to-devbook`). The
+stamp's own shape is untouched; only where it is read from moved. A corpus of
+chapters is unaffected, which is why `appliesTo` names every folder and the
+migration reads none of them.
 
 ## Upgrade notes
 

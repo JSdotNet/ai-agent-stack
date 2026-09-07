@@ -40,7 +40,7 @@ aspire start
 ## MCP Servers
 
 - `your-guidelines-server` — repository conventions and governed asset guidance, bound to
-  `spec` and `docs.update` in `.github/ai-agent-stack.json`.
+  `spec` and `docs.update` in `.devbook/config.json`.
 - `microsoft-learn` — official .NET, Azure, and Aspire documentation.
 - `playwright` — browser automation for QA validation.
 

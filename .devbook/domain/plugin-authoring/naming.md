@@ -336,7 +336,7 @@ date: 2026-09-03
 related: [".devbook/domain/plugin-authoring/naming.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
-A component's entry under `components` in `.github/ai-agent-stack.json`, recording what that
+A component's entry under `components` in `.devbook/config.json`, recording what that
 plugin has materialized into the repository: the plugin version and contract version it is on,
 which features it adopted, every file copied in or marker-fenced section written with the hash
 it had when it landed, and the migration ledger. The same file's other top-level keys are the engine's — see

@@ -1,6 +1,6 @@
 ---
 name: surface-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .github/ai-agent-stack.json stack config, the host slots, and the surface capability a run reports and renders through.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .devbook/config.json stack config, the host slots, and the surface capability a run reports and renders through.
 ---
 
 # Surface Contract (Engine-Owned)
@@ -24,8 +24,11 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 
 ## The Stack Config
 
-`.github/ai-agent-stack.json`, repo-scope and committed. The engine owns four top-level keys
+`.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys
 and never edits another component's. `components` belongs to each component's own install skill.
+
+The path is a path, not a dependency: the engine reads that file whether or not the repository
+adopted a single devbook folder, and `devbook` being absent costs nothing here.
 
 ```json
 {
@@ -83,9 +86,9 @@ and never edits another component's. `components` belongs to each component's ow
 - **No secrets.** The file is committed. A credential pointer belongs in
   `.claude/flow-context.md`, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
-  four engine-owned keys against `resources/ai-agent-stack.schema.json` and exits non-zero on
+  four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself.
-  `resources/ai-agent-stack-template.json` is a filled-in starting point.
+  `resources/config-template.json` is a filled-in starting point.
 
 ## Extension Points
 

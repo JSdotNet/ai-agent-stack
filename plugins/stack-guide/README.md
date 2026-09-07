@@ -18,7 +18,7 @@ instead of by repository.
 | Skill | Does |
 | --- | --- |
 | [`stack-guide`](skills/stack-guide/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, `.devbook/domain/plugin-authoring/naming.md`, the arc42 chapters, and `delivery`'s surface contract. |
-| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own install skill. |
+| [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.devbook/config.json` for the first time, validates them, then hands each component its own install skill. |
 | [`stack-update`](skills/stack-update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
 | [`stack-adoption`](skills/stack-adoption/SKILL.md) | Reports where `.ai` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-ai`. Reads only. |
 
@@ -45,7 +45,7 @@ node scripts/stack-report.mjs --root <repository>
 | The marketplace catalog, in the working tree and in the host's clone | What the newest published version of each plugin is — and whether the clone is stale, which is the usual reason "already latest" is wrong |
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
-| `.github/ai-agent-stack.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
+| `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
 | The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 

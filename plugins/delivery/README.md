@@ -59,7 +59,7 @@ which MCP servers each extension point uses, and a closed set of switches — QA
 budget, whether the flow commits its change set at each handback, whether a pull request is
 required.
 
-All four live in `.github/ai-agent-stack.json`:
+All four live in `.devbook/config.json`:
 
 ```json
 {
@@ -76,7 +76,7 @@ All four live in `.github/ai-agent-stack.json`:
 }
 ```
 
-Copy `resources/ai-agent-stack-template.json` and validate with
+Copy `resources/config-template.json` and validate with
 `node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
 never become a silently absent setting.
 
@@ -114,7 +114,7 @@ categories it covers.
 | `rules/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `rules/flow-model-selection.md` | Category → model resolution and the personal override |
 | `rules/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
-| `resources/ai-agent-stack.schema.json` | The four engine-owned keys, as a schema |
-| `resources/ai-agent-stack-template.json` | A filled-in starting point to copy |
+| `resources/config.schema.json` | The four engine-owned keys, as a schema |
+| `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

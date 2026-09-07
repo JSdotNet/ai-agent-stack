@@ -37,7 +37,7 @@ those contracts; it does not re-decide them per skill.
    decision classes listed under **Escalation** in `flow-execution-model.md`,
    then invoke the named successor flow after user approval.
 3. **Resolve the stack config once per run.** Before `start_run`, read
-   `.github/ai-agent-stack.json` if present and resolve `bindings`, `extensions`, `policy`,
+   `.devbook/config.json` if present and resolve `bindings`, `extensions`, `policy`,
    and `gates` per **The Stack Config** in `surface-contract.md`. Persist the
    resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
    gate list with `set_run_context`. A bound MCP server is resolved from the live tool list

@@ -1,6 +1,6 @@
 ---
 name: stack-update
-description: 'Bring a repository already on this marketplace forward — refresh the catalog, report which installed plugins are behind the newest published version, re-validate the engine-owned keys of .github/ai-agent-stack.json against the schema, and hand each adopted component its own install skill so outstanding migrations run and stale files are re-materialized. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "stack update", "upgrade the stack", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating".'
+description: 'Bring a repository already on this marketplace forward — refresh the catalog, report which installed plugins are behind the newest published version, re-validate the engine-owned keys of .devbook/config.json against the schema, and hand each adopted component its own install skill so outstanding migrations run and stale files are re-materialized. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "stack update", "upgrade the stack", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating".'
 ---
 
 # stack update
@@ -22,7 +22,7 @@ operation, and the report is what says which of them applies.
 2. **Report the drift before changing anything.** From the report: rows saying
    `update available`, rows enabled but not installed, and rows installed but missing from
    the catalog. Show it and let the user choose. If the report finds no
-   `.github/ai-agent-stack.json`, this repository was never set up — run `stack-init`.
+   `.devbook/config.json`, this repository was never set up — run `stack-init`.
 
 3. **Update the plugins the user approves**, through the host's own plugin command. This
    skill does not reach into the host's plugin cache.

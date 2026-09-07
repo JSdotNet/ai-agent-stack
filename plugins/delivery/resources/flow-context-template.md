@@ -39,11 +39,12 @@ aspire start
 
 ## MCP Servers
 
-- `jsdotnet-guidelines-mcpserver` — repository conventions and governed asset guidance.
+- `your-guidelines-server` — repository conventions and governed asset guidance, bound to
+  `spec` and `docs.update` in `.github/ai-agent-stack.json`.
 - `microsoft-learn` — official .NET, Azure, and Aspire documentation.
 - `playwright` — browser automation for QA validation.
 
-<!-- Informational only; `.mcp.json` remains the source of truth. -->
+<!-- Informational only; `.mcp.json` declares the servers and `bindings["delivery.mcp"]` binds them per point. -->
 
 ## Healthy Startup
 

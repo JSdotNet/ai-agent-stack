@@ -1,6 +1,6 @@
 ---
 name: flow-tdr
-description: 'Run technical debt record creation. Routes debt documentation to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` to ground the record in project guidance and related decisions.'
+description: 'Run technical debt record creation. Routes debt documentation to the `architecture` role, grounded in the repository guidelines and related decisions.'
 ---
 
 # Flow: Technical Debt Record
@@ -17,12 +17,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Debt Context Retrieval
 
 - Clarify the debt item and affected scope.
-- Query `jsdotnet-guidelines-mcpserver` for standards, ADR context, and governed asset
-  constraints.
+- Retrieve standards, ADR context, and governed asset constraints from the repository's own
+  instruction files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the remediation boundaries for governed plugin or guidance assets.
-- Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role
 
 ## Stage 2: TDR Drafting
 

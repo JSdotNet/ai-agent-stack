@@ -41,24 +41,25 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 3: MCP Configuration
 
-- Query `jsdotnet-guidelines-mcpserver` for the recommended server selection for this project
-  type.
-- Configure the servers in `.github/github-app.yml`, with their permissions and scopes: the
-  core three are `jsdotnet-guidelines-mcpserver`, `microsoft-learn`, and `playwright`; add
-  `jsdotnet-design-mcpserver` when the repository expects UX design flows.
-
-**MCP:** `jsdotnet-guidelines-mcpserver`
+- Decide the MCP servers this repository will use, by project type: a standards or
+  guidelines server where the team runs one, `microsoft-learn` for a .NET stack, `aspire` and
+  `playwright` for a runnable application, a design server when UX design flows are expected.
+- Declare each server in the repository's own MCP configuration — `.mcp.json` for Claude
+  Code, `.github/github-app.yml` for Copilot — with its permissions and scopes.
+- Bind each server to the extension points that use it under `bindings["delivery.mcp"]` in
+  `.github/ai-agent-stack.json`, creating the file with that key alone when it does not exist
+  yet (`flow-project` fills the rest), and validate it with `node tools/stack-config/check.mjs`.
+  A point left out takes the engine default — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 
 ## Stage 4: Repository Instructions
 
-- Query `jsdotnet-guidelines-mcpserver` for the coding standards and agent guidance for this
-  project type.
+- Retrieve the coding standards and agent guidance for this project type from the MCP
+  servers bound to `spec`, or derive them from the project type when none is bound.
 - Create the repository agent instructions file bound to the `repo-instructions` slot: tech
   stack, conventions, key patterns, agent guidance.
 - Add the repo-level instruction files under `.github/instructions/`, using an
   asset-authoring skill when one is installed.
-
-**MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 5: Branch Protection
 
@@ -70,11 +71,10 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 6: Issue and PR Templates
 
-- Query `jsdotnet-guidelines-mcpserver` for the template structures and label conventions.
+- Retrieve the template structures and label conventions from the MCP servers bound to
+  `spec`, or use the host's defaults when none is bound.
 - Create the issue templates and the PR template with its checklist.
 - Add `CODEOWNERS` to assign default reviewers per path, and configure the repository labels.
-
-**MCP:** `jsdotnet-guidelines-mcpserver`
 
 ## Stage 7: Repository Governance *(optional)*
 

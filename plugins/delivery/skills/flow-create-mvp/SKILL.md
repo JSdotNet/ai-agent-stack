@@ -30,7 +30,7 @@ derivation when it does not.
 - Identify the target codebase or greenfield starting point, the dependencies, and the risks.
 - Identify the governing instructions — the repository instructions bound to the
   `repo-instructions` slot, any matching `**/*.instructions.md`, and relevant guidelines or
-  ADRs via `jsdotnet-guidelines-mcpserver`.
+  ADRs from the checked-in chapters and any MCP server bound to `spec`.
 - Record the derived scope and assumptions in the stage output, then continue to Stage 1.
 
 Escalate instead when the product direction itself is the open question, or when the MVP

@@ -212,6 +212,7 @@ function buildRepository(repoRoot) {
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
         roles: config?.bindings?.['delivery.roles'] ?? null,
+        mcp: config?.bindings?.['delivery.mcp'] ?? null,
         extensions: config?.extensions ?? null,
         policy: config?.policy ?? null,
         gates: config?.gates ?? null,
@@ -293,6 +294,10 @@ function render(model) {
         out.push(repo.roles
             ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v)]))
             : 'No `delivery.roles` binding - a flow consults no specialist by name.');
+        out.push('');
+        out.push(repo.mcp
+            ? table(['Point', 'MCP servers'], Object.entries(repo.mcp).map(([k, v]) => [`\`${k}\``, v === null ? '`null` - deliberately none' : v.map((s) => `\`${s}\``).join(', ')]))
+            : 'No `delivery.mcp` binding - every point takes the engine default MCP servers.');
         out.push('');
         out.push('### Extension points');
         out.push('');

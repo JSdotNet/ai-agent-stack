@@ -39,8 +39,11 @@ those contracts; it does not re-decide them per skill.
 3. **Resolve the stack config once per run.** Before `start_run`, read
    `.github/ai-agent-stack.json` if present and resolve `bindings`, `extensions`, `policy`,
    and `gates` per **The Stack Config** in `surface-contract.instructions.md`. Persist the
-   resolved point providers, role bindings, tracker, policy values, and gate list with
-   `set_run_context`. Report an unknown key by name and stop; report a malformed file once
+   resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
+   gate list with `set_run_context`. A bound MCP server is resolved from the live tool list
+   at the stage that uses it, per **MCP Server Strategy** in
+   `flow-execution-model.instructions.md`; one that does not answer is reported once and
+   never blocks the run. Report an unknown key by name and stop; report a malformed file once
    and continue with defaults. A missing file is normal and changes nothing.
 4. **Resolve model selection and repo context in the same step.** Resolve model selection
    from the current run instruction, the `model-override` slot, and the category families in

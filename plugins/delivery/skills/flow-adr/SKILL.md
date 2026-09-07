@@ -1,6 +1,6 @@
 ---
 name: flow-adr
-description: 'Run ADR creation. Routes decision documentation to the `architecture` role, plus `jsdotnet-guidelines-mcpserver` to retrieve relevant project guidance and existing ADR context first.'
+description: 'Run ADR creation. Routes decision documentation to the `architecture` role, grounded first in the repository guidelines and existing ADR context.'
 ---
 
 # Flow: Architectural Decision Record
@@ -17,12 +17,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Decision Context Retrieval
 
 - Clarify the decision statement and affected scope.
-- Query `jsdotnet-guidelines-mcpserver` for standards, governed asset constraints, and
-  existing decision context.
+- Retrieve standards, governed asset constraints, and existing decision context from the
+  repository's own instruction files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the constraints and decision drivers that govern the change.
-- Stop for MCP setup when the guideline tools are unavailable.
 
-**Agents:** the `architecture` role — **MCP:** `jsdotnet-guidelines-mcpserver`
+**Agents:** the `architecture` role
 
 ## Stage 2: ADR Drafting
 

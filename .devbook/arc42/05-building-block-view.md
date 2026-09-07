@@ -36,9 +36,11 @@ One folder per plugin, holding two manifests and the assets themselves:
 | `scripts/` | Whatever skill in the plugin invokes it, from the plugin root |
 | `assets/`, `tools/`, `migrations/` | nobody, until a skill copies them into a repository |
 
-Every plugin ships both manifests. The one exception was a host profile, which shipped only
-its own host's so the other host could not install a plugin whose every statement was about
-somewhere else; the profiles are gone, and the exception with them.
+A plugin ships the manifest of every host that can load something in it, which for almost every
+plugin here is both. `delivery-canvas` is the standing exception: a Copilot canvas extension
+and nothing else, so it carries the Copilot manifest alone and takes no marketplace entry —
+there is nothing in it for Claude to install. The exception is allowed on that test and no
+other, so a plugin holding one host-only asset still ships both.
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it

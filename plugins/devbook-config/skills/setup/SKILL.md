@@ -39,9 +39,13 @@ work this skill did not do.
    unknown key is an error, not a warning: a typo must never become a silently absent
    setting. Fix and re-run until it exits `0`.
 
+   Write no `.devbook/config.local.json` here. The overlay is gitignored and machine-scope,
+   so it is nobody's to create on somebody else's behalf; mention that it exists, and that
+   `resources/config.local-template.json` in the delivery plugin is where it starts.
+
 5. **Let each component install itself.** For every component this repository is adopting,
    invoke that component's own install skill and let it materialize its payload and write its
-   own stamp — `devbook:devbook-install` for the devbook folders. Do not copy a component's
+   own stamp — `devbook:install` for the devbook folders. Do not copy a component's
    files by hand: a copy made here lands unstamped, and the next reconcile cannot tell it
    from a file someone deliberately customized.
 
@@ -49,9 +53,14 @@ work this skill did not do.
    plainly what was set up, what was deliberately left unbound, and anything that ended
    failing. A setup that ends on a failing check is reported as failing, never as done.
 
+This skill is the empty case only. Everything about moving an already-configured repository
+forward — version drift, migrations, the fan-out across components — belongs to
+`devbook-config:update`, which runs the whole stack in one go.
+
 ## Do not
 
 - Do not write, edit, or remove a `components.<name>` key. It is not yours.
+- Do not write the local overlay. It is gitignored and belongs to whoever runs here.
 - Do not invent a policy switch, an extension point, or a gate purpose. All three sets are
   closed and declared by the engine; configuration chooses among behaviour it already has.
 - Do not remove a gate. Configuration may add one anywhere and may never take one away.

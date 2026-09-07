@@ -291,7 +291,7 @@ declares in one place, for the same reason the file itself is
 adopted a single devbook folder, and `devbook` uninstalled costs the engine nothing: reading a
 path is not naming a plugin, and no [layer](../domain/plugin-authoring/naming.md#layer) order
 is touched. What the folder means widens by one file — the chapters plus the wiring — and
-`devbook-install` still owns nothing but the chapter folders.
+`devbook:install` still owns nothing but the chapter folders.
 
 The filename drops the marketplace's name with the folder. `ai-agent-stack.json` was
 disambiguating inside `.github/`, where it sat among a host's own files; inside `.devbook/`
@@ -687,7 +687,7 @@ already states. Three things follow from it and all three are load-bearing: only
 knows what it materialized, a plugin's payload and migration ledger live inside that plugin
 where a foreign skill has no supported path to them, and `devbook` has to keep installing
 itself to stay a foundation that works with only itself installed. So `devbook-config:update`'s fourth
-step invokes `devbook-install`; it never applies a migration or writes a ledger of its own.
+step invokes `devbook:install`; it never applies a migration or writes a ledger of its own.
 
 **It names a host's own paths, and that is a divergence taken on purpose.**
 [No host profile plugins](#no-host-profile-plugins) ended host-naming everywhere else in this
@@ -843,7 +843,7 @@ ledger, so the stamp records the selection and cadence overrides and nothing els
 same line the devbook stamp draws about installed plugin versions, drawn for the same reason.
 
 Consequence: **enabling `delivery-schedule` schedules nothing.** A repository selects through
-`schedule-install`, which refuses a target whose plugin the repository's committed host settings
+`delivery-schedule:install`, which refuses a target whose plugin the repository's committed host settings
 do not enable. And a first run is the only proof that the cloud session loaded the marketplace
 at all — recorded as `trial` in [hosts](../tech/hosts.md#scheduled-cloud-sessions) until one
 has.
@@ -851,7 +851,7 @@ has.
 Consequence: **`components.routines` is now `components.schedule`.** The plugin that wrote the
 old key landed and merged the same day and never left `0.1.0`, so the rename ships without a
 migration rather than with one nothing would run. A repository that did stamp the old key
-renames it by hand and re-runs `schedule-install`, which rewrites the entry either way.
+renames it by hand and re-runs `delivery-schedule:install`, which rewrites the entry either way.
 
 ## One Rule, One Wrapper Per Host
 
@@ -938,13 +938,13 @@ related: [".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
 ```
 
 Nothing in the stack maintained a repository's root instruction file. `flow-repo` wrote it
-once, `devbook-install` offered `assets/routing-snippet.md` for a person to merge, and the
+once, `devbook:install` offered `assets/routing-snippet.md` for a person to merge, and the
 session-start hook told every session the folder rules in the same words whether the
 repository had adopted one folder or five. So the one thing a repository's own instruction
 file should say about its devbook — which folders it keeps, where the rules for each are,
 and how the indexes are checked — was said nowhere on disk.
 
-`devbook-install` now materializes that as one marker-fenced section of `AGENTS.md`, generated
+`devbook:install` now materializes that as one marker-fenced section of `AGENTS.md`, generated
 from the stamp's `adopted` list, and `devbook-check` reports it stale when that list has
 moved on. Three limits keep it inside the decisions already taken:
 
@@ -1000,10 +1000,10 @@ Three things enforce it, because prose alone decays across a long session:
 
 **The `AGENTS.md` section diverges from its template, in two lines.** `agents-section.md`
 names `./build/Update-DevbookIndex.ps1` and `.github/tools/devbook-meta/build.mjs`: correct in
-a repository that ran `devbook-install`, wrong in the one that authors the convention and vendors
+a repository that ran `devbook:install`, wrong in the one that authors the convention and vendors
 the generator under `plugins/devbook/tools/`. The section here names this repository's real
 path and the schedule instead of the script. It was written by hand, so no stamp claims it and
-no reconcile will report it as customized; a later `devbook-install` run over this repository
+no reconcile will report it as customized; a later `devbook:install` run over this repository
 would overwrite it with the template's paths, and that is the moment to make the template
 resolve the generator location the way `generatorPath` now does.
 
@@ -1166,7 +1166,7 @@ Metadata Enforcement stage in each of its flows restated the rules `devbook`'s i
 files already state, against the one-file rule this repository holds its own authoring to.
 
 The reason no bridge is needed is that the rules reach a session through the host, not through
-a flow. An instruction file declares the paths it governs; `devbook-install` materializes
+a flow. An instruction file declares the paths it governs; `devbook:install` materializes
 the same files into the repository, as the pair
 [A Plugin's Rules Reach a Host Through the Install](#a-plugins-rules-reach-a-host-through-the-install)
 describes, so any session reads them by path. A flow needs a governed folder to exist and nothing else, so there is no second stack to
@@ -1349,7 +1349,7 @@ hardcoded an old path.
 Consequence: devbook goes to `1.4.0` and reconcile installs twenty-seven files into a fully
 adopting repository. No migration: the contract version is untouched, and a new asset row is
 materialized by the phase that already exists. `devbook-collaboration` grows one too —
-`collaboration-install`, writing `components.collaboration` — because its rule is repo-facing
+`devbook-collaboration:install`, writing `components.collaboration` — because its rule is repo-facing
 in exactly the same way and `devbook` may not carry it: a plugin never installs the layer above
 it. That plugin's README no longer says it materializes nothing into a repository.
 
@@ -1381,6 +1381,81 @@ Consequence: two skills renamed, the Stamp term reworded, and `devbook sync` kep
 phrase in both so a session asking by the old name still lands. No stamp key changes, so no
 migration: `components.devbook` and `components.schedule` were never named after the skill.
 
+## Every Install Skill Is Called install
+
+```meta
+date: 2026-09-07
+related: [".devbook/domain/plugin-authoring/naming.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+```
+
+`devbook-install`, `collaboration-install`, and `schedule-install` are all `install`,
+addressed as `devbook:install`, `devbook-collaboration:install`, and
+`delivery-schedule:install`. [An install is not a sync](#an-install-is-not-a-sync) fixed the
+verb; this fixes what sits in front of it.
+
+Every one of those prefixes was its own plugin's name said twice, and the three said it in
+three different shapes — the plugin name in `devbook-install`, the stem in
+`collaboration-install` and `schedule-install`. `plugin:skill` addressing already carries the
+scope, which is exactly what
+[naming](../domain/plugin-authoring/naming.md#flow-skill) says makes a prefix redundant: a
+prefix marks a procedure's scope against its neighbours, and these have no neighbour to be
+marked against. Knowing one plugin's install skill now means knowing all of them.
+
+The cost is that four skills share a bare name, so a host routes on the `description` alone.
+Each keeps its old name as a trigger phrase, the way `devbook sync` was kept, so a session
+asking by the old name still lands.
+
+`devbook-check` keeps its prefix and is the visible inconsistency. It is not the install
+operation and nothing else in the marketplace is named against it, so renaming it would be
+churn for symmetry rather than for a rule.
+
+Consequence: three skills renamed, and unlike the sync rename this one **reaches committed
+files** — a repository names these ids under `extensions`, so `contractVersion` moves to 9 and
+`009-install-skill-ids` rewrites them, in the local overlay as well as the committed config.
+No stamp key changes; `components.devbook`, `components.collaboration`, and
+`components.schedule` were never named after the skill that writes them.
+
+## The Overlay May Add a Gate and Never Remove One
+
+```meta
+date: 2026-09-07
+related: [".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook", ".devbook/arc42/09-architecture-decisions.md#the-handback-is-the-commit-point"]
+```
+
+`.devbook/config.local.json` is a gitignored overlay over the four engine keys, merged over
+`.devbook/config.json`. It exists because the committed file had no way to say *on this
+machine*: running QA shallower than the team does meant editing the shared file and
+remembering not to commit it, which turns a personal preference into everyone's next merge
+conflict.
+
+The merge is ordinary — objects key by key with the overlay winning, arrays replaced whole
+because a chore list is an ordered whole — with one deliberate exception. **`gates` appends.**
+The overlay can add a checkpoint and has no syntax for removing one, so the invariant that
+[configuration may add a gate anywhere and never take one away](#one-config-file-two-kinds-of-key)
+survives a file that no reviewer will ever see.
+
+Three keys are refused by name for the same reason: `policy.pr.required`,
+`policy.qa.ceiling`, and `policy.gate.personalValidation`. The line between them and the rest
+is whether the key describes what this repository *produces* or how one machine *runs*. QA
+depth, role bindings, MCP servers, and budgets are the second kind and are yours. A ceiling is
+the repository's limit and depth is your choice inside it, which is why one is locked and its
+neighbour is not. `components` is refused outright: a stamp is repo-scope, and an overlay is
+the one file that is not.
+
+Stating it as a property rather than a list: **a gitignored file may not weaken what a
+reviewer sees.** Everything a reader of the committed config concludes about the gates a run
+passes, the pull request it opens, and the deepest QA it may reach stays true whatever any
+overlay says.
+
+The alternative was to trust the overlay completely, on the grounds that anyone who can write
+it can also edit the committed file. That argument fails on visibility rather than on
+capability: editing the committed file shows up in review, and this file never does.
+
+Consequence: `check.mjs` validates three times over — the overlay's refusals, the overlay
+alone, and the merged result, the last catching the pair that is only wrong together — and
+devbook renders a `.gitignore` block so the overlay is genuinely ignored in every adopting
+repository rather than in the ones that remembered.
+
 ## A Session-Start Hook Fires Only Where the Repository Adopted the Plugin
 
 ```meta
@@ -1397,8 +1472,12 @@ pushing routing toward skills the repository never adopted.
 Each `emit-session-context.mjs` now resolves the repository root and stays silent unless the
 repository opted in: it names the plugin in its own `enabledPlugins`, or it carries the assets
 the guidance is about — a devbook folder for `devbook` and `devbook-collaboration`,
-`.github/ai-agent-stack.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
-`delivery-schedule`. The explicit opt-in outranks the markers, so a repository that adopted a
+`.devbook/config.json` or `.claude/flow-context.md` for `delivery`, `fleet`, and
+`delivery-schedule`. Those three keep the pre-move `.github/ai-agent-stack.json` on the list
+beside the current path: a marker is an existence probe rather than a config read, so testing
+both is not the second supported path
+[the config move refused](#the-stack-config-lives-in-devbook), and it keeps a repository that
+has not run the 008 migration from losing its routing context. The explicit opt-in outranks the markers, so a repository that adopted a
 plugin but has written nothing yet still gets its guidance. Only `MARKERS` differs between the
 five copies; a plugin installs alone and may not import from a sibling, so the logic is
 duplicated rather than shared.

@@ -121,7 +121,7 @@ what you are editing.
 <!-- devbook:begin -->
 ## Devbook folders
 
-Managed by `devbook-install`. Edit outside these markers; an edit inside them makes the
+Managed by `devbook:install`. Edit outside these markers; an edit inside them makes the
 next reconcile report the section as customized and leave it alone.
 
 This repository keeps its devbook as addressed Markdown chapters. Treat the folders as
@@ -145,4 +145,10 @@ and never regenerate or commit them in a session — the `devbook-check` schedul
 refresh. Run the check before committing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check
+
+Two files here are yours alone, gitignored and absent by default. `AGENTS.local.md`
+holds instructions that apply on your machine only; read it when it exists and treat
+it as this file's last word. `.devbook/config.local.json` overlays the committed
+stack config the same way. Never commit either, and put no secret in them — gitignored
+is not private.
 <!-- devbook:end -->

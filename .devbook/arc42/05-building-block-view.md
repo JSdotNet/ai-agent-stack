@@ -271,7 +271,7 @@ derived from an install. Reporting drift is inside the plugin's subject; writing
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
 stays with that component's own install skill, which is the only thing that knows what it
-materialized — so `devbook-install` and `devbook-check` do not move here, and `devbook-config:setup`'s fifth
+materialized — so `devbook:install` and `devbook-check` do not move here, and `devbook-config:setup`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -327,7 +327,7 @@ carries the unattended rules every prompt starts with.
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `tech-update` | `devbook:devbook-tech-update` | weekly |
 
-Three skills read the catalog. `schedule-install` builds each prompt, resolves the scheduler from
+Three skills read the catalog. `delivery-schedule:install` builds each prompt, resolves the scheduler from
 the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
 <title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
@@ -343,7 +343,7 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`schedule-install` only. The environment, the model, and the scheduler ids are personal and live
+`delivery-schedule:install` only. The environment, the model, and the scheduler ids are personal and live
 in the scheduler; matching by name is what makes writing them down unnecessary.
 
 ## Asset Kinds

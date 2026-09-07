@@ -65,7 +65,7 @@ export { DEVBOOK_FOLDER_NAMES, NESTED_ROOT };
 // `statusDeclared: false` marking the entries where that happened. Version 4
 // was additive over 3, adding the `tests` field carrying the
 // `<level>:<runner>:<selector>` test identifiers a chapter or file declares.
-export const CONTRACT_VERSION = 8;
+export const CONTRACT_VERSION = 9;
 
 // What the derived artifacts stamp themselves with. The same number under the
 // name a consumer of `graph.json` / `index.json` reads it by: the schema those

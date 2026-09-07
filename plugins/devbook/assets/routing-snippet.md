@@ -14,7 +14,7 @@ name as the entry point for each folder. Without that engine, name the repositor
 `flow-*` skill or the folder's instruction files instead.
 
 The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
-`devbook-install` writes (`agents-section.md`), so do not restate them here. What follows
+`devbook:install` writes (`agents-section.md`), so do not restate them here. What follows
 is routing only, and none of it goes inside that section's markers.
 
 ## For a repository routing instructions file

@@ -7,7 +7,7 @@ remembers about a chapter lives under `ext.devbook-collaboration.*` in that
 chapter's own `meta` block — the opaque namespace devbook carries through
 untouched. It adds no field to devbook's schema and needs no devbook release of
 its own. The one thing it puts in a repository is its own rule, installed by
-[`collaboration-install`](skills/collaboration-install/SKILL.md) and stamped
+[`devbook-collaboration:install`](skills/install/SKILL.md) and stamped
 under `components.collaboration`.
 
 ## Installation
@@ -31,7 +31,7 @@ owes the next move:
 | `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state at all |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting |
 
-`collaboration-install` sits outside the pass: run it once when you enable the
+`devbook-collaboration:install` sits outside the pass: run it once when you enable the
 plugin, and again after an upgrade. It installs `rules/chapter-collaboration.md`
 as `.agents/rules/chapter-collaboration.md` with a wrapper per host beside it, so
 both Claude Code and Copilot apply the contract when either opens a chapter —

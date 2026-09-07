@@ -1,6 +1,6 @@
 ---
 name: surface-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .devbook/config.json stack config, the host slots, and the surface capability a run reports and renders through.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the .devbook/config.json stack config and its gitignored .devbook/config.local.json overlay, the host slots, and the surface capability a run reports and renders through.
 ---
 
 # Surface Contract (Engine-Owned)
@@ -89,6 +89,49 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself.
   `resources/config-template.json` is a filled-in starting point.
+
+### The local overlay
+
+`.devbook/config.local.json`, machine-scope and **gitignored**. Optional, absent by default,
+and the answer to the one thing the committed file cannot express: a setting true of your
+machine and nobody else's. Without it the only way to run QA shallower than the team does is
+to edit the committed file and remember not to commit it, which is how a personal preference
+becomes everyone's next merge conflict.
+
+It carries the same four keys, validated against the same schema, and merges over the
+committed file:
+
+| Shape | Merges by |
+| --- | --- |
+| Object | Key by key, the overlay winning. A sibling the overlay does not name is left standing. |
+| Array | Replaced whole. A chore list is an ordered whole, and half of one from each file is a run nobody wrote down. |
+| `gates` | **Appended.** The overlay can add a checkpoint and has no way of spelling the removal of one. |
+| `null` | A value — deliberately unbound — never a delete. |
+
+Four things it may not say, and the checker refuses each by name:
+
+| Refused | Because |
+| --- | --- |
+| `components` | A stamp is repo-scope and committed; an overlay is neither. |
+| `policy.pr.required` | What the repository produces, not how one machine runs it. |
+| `policy.qa.ceiling` | The ceiling is the repository's limit. `qa.depth` is your choice inside it. |
+| `policy.gate.personalValidation` | The mandatory gate. Already `const` in the schema, and named here so the refusal states the invariant rather than a type error. |
+
+That list is the whole safety story, and it is worth stating plainly: **a gitignored file must
+never be able to weaken what a reviewer sees.** Everything a reader of the committed config
+would conclude about the gates a run passes, the pull request it opens, and the deepest QA it
+may reach stays true no matter what any overlay says. What an overlay changes is the cost and
+the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
+zeroed retry budget, an extra checkpoint of your own.
+
+`check.mjs` finds the overlay beside the file it is given rather than taking a second path, and
+validates three times over: what the overlay may not say, whether it is well-typed alone, and
+whether the merged result still validates — the third catching the pair that is only wrong
+together. `resources/config.local-template.json` is a starting point.
+
+**Gitignored is not private.** No model and no secret, the same as the committed file: an
+overlay is read by every agent in your session and pasted into a bug report as readily as
+anything else.
 
 ## Extension Points
 

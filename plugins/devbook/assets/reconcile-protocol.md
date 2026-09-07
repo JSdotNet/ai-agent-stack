@@ -1,6 +1,6 @@
 # Reconcile protocol
 
-The shared detail behind `devbook-install` and `devbook-check`: the stamp devbook
+The shared detail behind `devbook:install` and `devbook-check`: the stamp devbook
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
@@ -71,6 +71,7 @@ file wrong the moment a second person opens the repository.
 | `assets/workflows/devbook-meta-nightly.yml` | `.github/workflows/devbook-meta-nightly.yml` | GitHub Actions present |
 | `assets/build/Update-DevbookIndex.ps1` | `build/Update-DevbookIndex.ps1` | always |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
+| the local-file list below | `.gitignore`, between `# devbook:begin` and `# devbook:end` | always |
 | `rules/<name>.md` | `.agents/rules/<name>.md` | per `rules/rules.json` |
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
@@ -98,6 +99,25 @@ carrying `paths`, `.github/instructions/` carrying the same list comma-joined as
 `applyTo` — each frontmatter and a single sentence pointing at the rule. Which rules ship,
 and which adopted folder pulls each one in, is in `rules/rules.json`;
 `assets/rule-wrappers.md` carries the three templates and the reasons.
+
+The `.gitignore` block is the second rendered asset, keyed `.gitignore#devbook` and
+following the `AGENTS.md` rules exactly — markers, hash of the text between them,
+rewritten while managed, reported and left alone once customized. It names the two
+files a repository keeps out of version control on every contributor's behalf:
+
+```gitignore
+# devbook:begin
+# Machine-scope, never committed. See AGENTS.md.
+AGENTS.local.md
+.devbook/config.local.json
+# devbook:end
+```
+
+Neither file is ever created by a reconcile. Ignoring a file is a decision the repository
+makes once for everybody; writing an empty one is a decision only its owner can make, and
+an empty overlay is worse than an absent one — it reads as a setting somebody chose. Absent
+`.gitignore` is created holding only the block; present without the markers, the block is
+appended at the end.
 
 `assets/routing-snippet.md` is never materialized. Routing policy is
 repository-specific and is offered for the user to merge, never applied silently — and

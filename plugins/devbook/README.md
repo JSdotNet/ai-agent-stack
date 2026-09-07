@@ -49,7 +49,7 @@ folder's `_meta/` is written beside its own chapters.
 
 ## Features
 
-### Skill: `devbook-install`
+### Skill: `devbook:install`
 
 Reconciles a repository with the installed devbook release, in six phases:
 detect, resolve, plan, migrate, materialize, stamp and verify. First install, a
@@ -70,7 +70,7 @@ three questions. Does the authored Markdown satisfy the schema, is the migration
 ledger current, does the stamp still describe what is on disk. Then repairs what
 it reports — broken references, missing or malformed `meta` blocks, fields the
 schema no longer defines, stale committed indexes — and hands the rest back to
-`devbook-install`, which owns every write.
+`devbook:install`, which owns every write.
 
 **Trigger keywords:** `devbook check`, `devbook-meta failed`,
 `broken reference`, `stale _meta`, `validate devbook folders`,
@@ -208,7 +208,7 @@ inside a plugin: there is no rules key in either manifest and no rules component
 plugin-root `CLAUDE.md` is not loaded either. A rule in the table above governs paths in
 *your* repository, and its globs can only resolve there.
 
-So `devbook-install` installs them — one copy of the rule, and a wrapper per host beside it,
+So `devbook:install` installs them — one copy of the rule, and a wrapper per host beside it,
 each in the folder that host already reads:
 
 ```
@@ -226,7 +226,7 @@ left alone, and dropping a folder from `adopted` orphans its trio rather than de
 it. The templates and the reasons are in
 [`assets/rule-wrappers.md`](assets/rule-wrappers.md).
 
-Until you run `devbook-install`, the rules still reach a session the way they always have:
+Until you run `devbook:install`, the rules still reach a session the way they always have:
 the session-start hook, and the skills that name one by path.
 
 ### The `ext` namespace
@@ -294,8 +294,8 @@ for technologies that do not appear in package manifests.
 
 | File | Purpose |
 |------|---------|
-| `assets/reconcile-protocol.md` | Shared rules for `devbook-install` and `devbook-check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook-install`: fails on broken references, warns on drifted indexes |
+| `assets/reconcile-protocol.md` | Shared rules for `devbook:install` and `devbook-check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`: fails on broken references, warns on drifted indexes |
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |
@@ -341,7 +341,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **8**, covering the metadata schema a repository authors
+One number, currently **9**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -353,6 +353,10 @@ Version 6 removes `.backlog` and the `implements` field (breaking — migration
 `006-drop-backlog`), and adds the shared `approved` rung with `approved-by` /
 `approved-at`, and the `ext` namespace. Both additions are additive: a corpus
 written against 5 stays valid.
+
+Version 9 renames the three install skills to `install` (breaking — migration
+`009-install-skill-ids`), which reaches a repository through the provider ids it
+names under `extensions`. No stamp key and no chapter changes.
 
 Version 8 moves the file the stamp lives in from `.github/ai-agent-stack.json`
 to `.devbook/config.json` (breaking — migration `008-config-to-devbook`). The
@@ -367,7 +371,7 @@ for the behaviour changes it does not script, are in [UPGRADING.md](UPGRADING.md
 
 ## Folder structure
 
-After running `devbook-install`, a repository that adopted everything has:
+After running `devbook:install`, a repository that adopted everything has:
 
 ```
 .arc42/
@@ -404,7 +408,7 @@ build/
 Five layers, weakest to strongest:
 
 1. **Instructions** govern the paths above in every repository that has run
-   `devbook-install`, which installs each one where both hosts already look. Before that,
+   `devbook:install`, which installs each one where both hosts already look. Before that,
    they are reached by path only.
 2. **The session-start hook** stops agents treating devbook folders as baseline
    context or hand-editing derived files, and is what carries the folder rules in a

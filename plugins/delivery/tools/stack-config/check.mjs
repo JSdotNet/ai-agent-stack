@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Validates the delivery-owned keys of .devbook/config.json against
-// resources/config.schema.json.
+// resources/config.schema.json, and merges the gitignored .devbook/config.local.json
+// over it when that file is present.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
 // setting. Keys the engine does not own — `components` and anything another component
@@ -8,15 +9,29 @@
 //
 //   node check.mjs [path-to-config.json]
 //
-// Exit 0 when the file is valid or absent, 1 when it is not.
+// The local sibling is found next to the path given, never passed separately: one config
+// has one overlay, and naming them independently invites checking a pair that never meet
+// at run time.
+//
+// Exit 0 when the files are valid or absent, 1 when they are not.
 
-import { readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'config.schema.json');
 const OWNED = ['bindings', 'extensions', 'policy', 'gates'];
+
+// What the overlay may not say. The committed file describes what this repository
+// produces; the overlay describes how one machine runs it, and these four are the first
+// kind wearing the second's clothes. Personal Validation is already `const` in the schema
+// and is listed anyway, so the refusal names the invariant rather than a type error.
+const LOCKED = [
+    'policy.gate.personalValidation',
+    'policy.pr.required',
+    'policy.qa.ceiling',
+];
 
 /** Resolve a local `#/...` pointer against the schema root. */
 function deref(node, root) {
@@ -105,32 +120,141 @@ export function checkStackConfig(config, schema) {
     return errors;
 }
 
-function main() {
-    const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
-    let raw;
-    try {
-        raw = readFileSync(target, 'utf8');
-    } catch {
-        console.log(`no stack config at ${target} — every point falls back to its default`);
-        return 0;
+function isPlainObject(value) {
+    return typeOf(value) === 'object';
+}
+
+/**
+ * What the overlay is forbidden from saying, independent of whether it is well-typed.
+ * Returns human-readable refusals; an empty array means the overlay is allowed to apply.
+ */
+export function checkLocalOverlay(local) {
+    const errors = [];
+
+    if ('components' in local) {
+        errors.push(
+            'components: a stamp is repo-scope and committed, and an overlay is neither. ' +
+                "Remove it — the owning component's install skill writes it.",
+        );
     }
 
-    let config;
+    for (const locked of LOCKED) {
+        const [top, ...rest] = locked.split('.');
+        const key = rest.join('.');
+        if (isPlainObject(local[top]) && key in local[top]) {
+            errors.push(
+                `${locked}: locked. It describes what this repository produces, not how one ` +
+                    'machine runs it, so it is set in the committed config or not at all.',
+            );
+        }
+    }
+
+    return errors;
+}
+
+/**
+ * Merge the overlay over the committed config.
+ *
+ * Objects merge key by key and the overlay wins. Arrays replace wholesale rather than
+ * concatenating, because an extension point's chore list is an ordered whole and half of
+ * one from each file is a run nobody wrote down. `gates` is the deliberate exception: it
+ * appends, so the overlay can add a checkpoint and has no way of spelling the removal of
+ * one. `null` in the overlay is a value — deliberately unbound — and never a delete.
+ */
+export function mergeStackConfig(base, local) {
+    const merged = { ...base };
+
+    for (const [key, value] of Object.entries(local)) {
+        if (key === 'gates') {
+            merged.gates = [...(base.gates ?? []), ...(value ?? [])];
+        } else if (isPlainObject(value) && isPlainObject(base[key])) {
+            merged[key] = mergeStackConfig(base[key], value);
+        } else {
+            merged[key] = value;
+        }
+    }
+
+    return merged;
+}
+
+/** Read and parse one config file. Returns null when absent, throws on bad JSON. */
+function readConfig(path) {
+    if (!existsSync(path)) return null;
     try {
-        config = JSON.parse(raw);
+        return JSON.parse(readFileSync(path, 'utf8'));
     } catch (error) {
-        console.error(`${target}: not valid JSON — ${error.message}`);
+        throw new Error(`${path}: not valid JSON — ${error.message}`);
+    }
+}
+
+/** `.devbook/config.json` -> `.devbook/config.local.json`. */
+function localSiblingOf(path) {
+    return join(dirname(path), basename(path).replace(/\.json$/, '.local.json'));
+}
+
+function report(label, errors) {
+    console.error(`${label}: ${errors.length} problem(s)`);
+    for (const error of errors) console.error(`  ${error}`);
+}
+
+function main() {
+    const target = resolve(process.argv[2] ?? join('.devbook', 'config.json'));
+    const localPath = localSiblingOf(target);
+    const schema = JSON.parse(readFileSync(SCHEMA_PATH, 'utf8'));
+
+    let config;
+    let local;
+    try {
+        config = readConfig(target);
+        local = readConfig(localPath);
+    } catch (error) {
+        console.error(error.message);
         return 1;
     }
 
-    const errors = checkStackConfig(config, JSON.parse(readFileSync(SCHEMA_PATH, 'utf8')));
-    if (errors.length === 0) {
-        console.log(`${target}: ok`);
+    if (config === null && local === null) {
+        console.log(`no stack config at ${target} — every point falls back to its default`);
         return 0;
     }
-    console.error(`${target}: ${errors.length} problem(s)`);
-    for (const error of errors) console.error(`  ${error}`);
-    return 1;
+    if (config === null) {
+        console.error(
+            `${localPath}: an overlay with nothing under it. Write ${target} first — the ` +
+                "overlay adjusts a repository's wiring and cannot stand in for it.",
+        );
+        return 1;
+    }
+
+    let failed = false;
+
+    const errors = checkStackConfig(config, schema);
+    if (errors.length) {
+        report(target, errors);
+        failed = true;
+    } else {
+        console.log(`${target}: ok`);
+    }
+
+    if (local === null) return failed ? 1 : 0;
+
+    // The overlay is checked three times over: what it may not say, whether it is
+    // well-typed on its own, and whether what it produces still validates. The third
+    // catches the pair that is only wrong together.
+    const refusals = checkLocalOverlay(local);
+    const localErrors = [...refusals, ...checkStackConfig(local, schema)];
+    if (localErrors.length) {
+        report(localPath, localErrors);
+        return 1;
+    }
+    console.log(`${localPath}: ok (overlay)`);
+
+    const mergedErrors = checkStackConfig(mergeStackConfig(config, local), schema);
+    if (mergedErrors.length) {
+        report(`${target} + ${basename(localPath)}`, mergedErrors);
+        return 1;
+    }
+    console.log(`merged: ok`);
+
+    return failed ? 1 : 0;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {

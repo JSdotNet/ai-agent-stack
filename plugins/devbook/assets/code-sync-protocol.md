@@ -20,7 +20,7 @@ apply.
 
 ## Why this is an asset and not an instruction
 
-A rule declares the paths it governs, and `devbook-install` puts it in the
+A rule declares the paths it governs, and `devbook:install` puts it in the
 repository so both hosts apply it there. An honest `paths` list for these rules
 would have to cover source and test trees — which would make the plugin speak in
 every repository that has not adopted the devbook convention. This file is

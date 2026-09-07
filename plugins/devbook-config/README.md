@@ -51,8 +51,27 @@ node scripts/report.mjs --root <repository>
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
+| `.devbook/config.local.json` | Whether this checkout carries a machine-scope overlay, and which engine keys it touches |
 | The devbook folders, flat and nested | Which of the five this repository adopted, and in which layout |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
+
+It also prints a **scope** verdict per plugin, which is what `devbook-config:update` fans out
+over. The three inputs are orthogonal — `installed` is a fact about this machine, `enabled`
+about this checkout, and the `components.<name>` stamp about the repository and everyone who
+shares it:
+
+| Scope | Installed | Enabled | Stamped | The run |
+| --- | --- | --- | --- | --- |
+| `reconcile` | yes | yes | yes | Runs its install skill |
+| `blocked` | no | – | yes | Reports and skips. **Never drops the stamp.** |
+| `frozen` | yes | no | yes | Reports; offers to enable |
+| `adoptable` | yes | yes | no | Asks once whether to adopt |
+| `available` | yes | no | no | One line |
+| `out-of-scope` | no | – | no | A footnote |
+
+`blocked` is the one worth stating twice: a stamp is committed and shared, and installed-ness
+is personal and per-machine, so a component this machine lacks is skipped and left stamped.
+Dropping the entry would un-adopt it for everyone on the next commit.
 
 `--json` prints the same model unrendered. `--marketplace <name>` reports a different catalog.
 

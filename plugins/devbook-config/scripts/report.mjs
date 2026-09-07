@@ -17,6 +17,36 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_MARKETPLACE = 'jsdotnet';
+
+// Which plugin owns each `components.<name>` stamp, and what reconciles it. The mapping is
+// not derivable — `collaboration` is written by `devbook-collaboration`, `schedule` by
+// `delivery-schedule` — and it is needed in the direction a manifest cannot answer: naming
+// the plugin behind a stamp whose plugin is not installed here. Hardcoding it is the same
+// bargain the rest of this script already takes, recorded at
+// 09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none.
+const COMPONENTS = {
+    devbook: { plugin: 'devbook', install: 'devbook:install' },
+    collaboration: { plugin: 'devbook-collaboration', install: 'devbook-collaboration:install' },
+    schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install' },
+};
+
+// The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
+// install refuses to run until `components.devbook` names an adopted folder, and
+// delivery-schedule checks its targets against the plugins this repository enables, so it
+// wants the settled state. Anything not named here follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery-schedule'];
+
+// What an update run does with each plugin. The three inputs are orthogonal: installed is a
+// fact about this machine, enabled about this checkout, stamped about the repository and
+// everyone who shares it.
+const SCOPE = {
+    reconcile: 'in scope - run its install skill',
+    blocked: 'stamped here, not installed on this machine',
+    frozen: 'stamped here, not enabled in this checkout',
+    adoptable: 'installed and enabled, never adopted here',
+    available: 'installed, not enabled, not adopted',
+    'out-of-scope': 'not installed and not adopted',
+};
 const DEVBOOK_FOLDERS = ['arc42', 'domain', 'tech', 'design', 'ai'];
 const ENGINE_KEYS = ['bindings', 'extensions', 'policy', 'gates'];
 const SERVICES = ['spec', 'implement', 'verify', 'app.start', 'qa.run', 'deliver'];
@@ -151,7 +181,7 @@ function skillNames(pluginRoot) {
     }
 }
 
-function buildPluginRows(catalogs, installed, enabled, marketplace) {
+function buildPluginRows(catalogs, installed, enabled, marketplace, components) {
     const latest = new Map();
     const described = new Map();
     for (const found of catalogs) {
@@ -183,13 +213,30 @@ function buildPluginRows(catalogs, installed, enabled, marketplace) {
             else if (diff < 0) state = `update available (${here.version} -> ${there.version})`;
             else state = `ahead of the catalog (${here.version} > ${there.version})`;
         }
+        // A stamp is repo-scope and committed; installed-ness is personal and per-machine.
+        // The two never overrule each other, which is why scope reads all three inputs and
+        // why nothing here ever proposes removing a stamp.
+        const stampName = Object.keys(COMPONENTS).find((c) => COMPONENTS[c].plugin === name);
+        const stamp = stampName ? (components?.[stampName] ?? null) : null;
+        const isEnabled = enabled ? Boolean(enabled[key]) : null;
+
+        let scope;
+        if (!here) scope = stamp ? 'blocked' : 'out-of-scope';
+        else if (isEnabled === false) scope = stamp ? 'frozen' : 'available';
+        else scope = stamp ? 'reconcile' : 'adoptable';
+
         return {
             name,
             latest: there?.version ?? '-',
             installed: here?.version ?? '-',
             installPath: here?.installPath ?? null,
-            enabled: enabled ? Boolean(enabled[key]) : null,
+            enabled: isEnabled,
             state,
+            scope,
+            scopeMeans: SCOPE[scope],
+            component: stampName ?? null,
+            installSkill: stampName ? COMPONENTS[stampName].install : null,
+            stampedVersion: stamp?.pluginVersion ?? null,
             description: described.get(name) ?? '',
         };
     });
@@ -208,9 +255,14 @@ function buildRepository(repoRoot) {
         return { folder, layout: null, path: null };
     });
 
+    const overlayPath = join(repoRoot, '.devbook', 'config.local.json');
+    const overlay = load('local overlay', overlayPath);
+
     return {
         path,
         legacyPath: legacy,
+        overlayPath: overlay ? overlayPath : null,
+        overlayKeys: overlay ? ENGINE_KEYS.filter((key) => key in overlay) : null,
         present: Boolean(config),
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
@@ -266,13 +318,14 @@ function render(model) {
     out.push('## Plugins');
     out.push('');
     out.push(table(
-        ['Plugin', 'Newest', 'Installed', 'Enabled', 'State'],
+        ['Plugin', 'Newest', 'Installed', 'Enabled', 'State', 'Scope'],
         model.plugins.map((p) => [
             `\`${p.name}\``,
             p.latest,
             p.installed,
             p.enabled === null ? '?' : p.enabled ? 'yes' : 'no',
             p.state,
+            p.scope,
         ]),
     ));
     out.push('');
@@ -281,11 +334,63 @@ function render(model) {
         out.push('');
     }
 
+    out.push('### Scope');
+    out.push('');
+    out.push('What an update run does with each row. `installed` is a fact about this machine, `enabled` about this checkout, and the `components.<name>` stamp about the repository and everyone who shares it.');
+    out.push('');
+    const seen = model.plugins.map((p) => p.scope);
+    out.push(table(
+        ['Scope', 'Means', 'Plugins'],
+        Object.entries(SCOPE)
+            .filter(([name]) => seen.includes(name))
+            .map(([name, means]) => [
+                `\`${name}\``,
+                means,
+                model.plugins.filter((p) => p.scope === name).map((p) => `\`${p.name}\``).join(', '),
+            ]),
+    ));
+    out.push('');
+
+    const rank = (p) => {
+        const i = RECONCILE_ORDER.indexOf(p.name);
+        return i === -1 ? RECONCILE_ORDER.length : i;
+    };
+    const reconcile = model.plugins
+        .filter((p) => p.scope === 'reconcile')
+        .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+    if (reconcile.length) {
+        out.push('Run these **in this order** — collaboration needs devbook adopted first, and schedule reads the settled enable state — and let each write its own stamp:');
+        out.push('');
+        for (const p of reconcile) {
+            const drift = p.stampedVersion && p.stampedVersion !== p.installed
+                ? ` (stamped ${p.stampedVersion}, installed ${p.installed})`
+                : '';
+            out.push(`- \`${p.installSkill}\`${drift}`);
+        }
+        out.push('');
+    }
+
+    const blocked = model.plugins.filter((p) => p.scope === 'blocked');
+    if (blocked.length) {
+        out.push(`**Stamped but not installed here:** ${blocked.map((p) => `\`${p.name}\``).join(', ')}. The repository adopted them and this machine cannot reconcile them. Skip them and leave every stamp exactly as it is — a stamp is committed and shared, so dropping one un-adopts the component for everyone.`);
+        out.push('');
+    }
+
+    const frozen = model.plugins.filter((p) => p.scope === 'frozen');
+    if (frozen.length) {
+        out.push(`**Stamped but not enabled in this checkout:** ${frozen.map((p) => `\`${p.name}\``).join(', ')}. Enable them here to reconcile them, or skip them; either way the stamp stands.`);
+        out.push('');
+    }
+
     const repo = model.repository;
     out.push('## This repository');
     out.push('');
     if (repo.legacyPath) {
         out.push(`\`${repo.legacyPath}\` is still present. The stack config moved to \`.devbook/config.json\`; nothing reads the old path any more, so move the file before anything else.`);
+        out.push('');
+    }
+    if (repo.overlayPath) {
+        out.push(`\`${repo.overlayPath}\` is present and overlays ${repo.overlayKeys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key'}. It is gitignored and machine-scope, so what it says is true of this checkout and of nobody else's - read the merged values, not the committed file alone.`);
         out.push('');
     }
     if (!repo.present) {
@@ -411,7 +516,14 @@ function main(argv) {
     const catalogs = resolveCatalogs(options.root, configDir, options.marketplace);
     const installed = resolveInstalled(configDir);
     const enabled = resolveEnabled(options.root, configDir);
-    const plugins = buildPluginRows(catalogs, installed, enabled, options.marketplace);
+    const repository = buildRepository(options.root);
+    const plugins = buildPluginRows(
+        catalogs,
+        installed,
+        enabled,
+        options.marketplace,
+        repository.components,
+    );
 
     const pluginRoot = (name) => plugins.find((p) => p.name === name)?.installPath
         ?? (catalogs[0] ? join(catalogs[0].root, 'plugins', name) : null);
@@ -424,7 +536,7 @@ function main(argv) {
         configDir,
         catalogs,
         plugins,
-        repository: buildRepository(options.root),
+        repository,
         deliverySkills: deliveryRoot ? skillNames(deliveryRoot) : null,
         scheduleSkills: scheduleRoot ? skillNames(scheduleRoot) : null,
         sources,

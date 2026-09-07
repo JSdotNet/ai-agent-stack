@@ -843,6 +843,13 @@ Consequence: eight authored files and fourteen wrappers where there were none, a
 the running host's wrapper loads, and only on a matching read. The cost is paid in file count
 and in a checker rule.
 
+That rule is `check-assets.mjs`'s `rules` pass, and it refuses six things: a shared file whose
+`name` does not match its filename or that carries no `paths`, a missing wrapper on either
+side, a Claude wrapper whose `paths` differ, a Copilot wrapper whose `applyTo` is not those
+paths comma-joined or whose `description` differs, a wrapper body past three lines, and a
+wrapper with no shared file behind it. The fifth is the one the layering actually rests on:
+a wrapper that grows a rule is how the second copy gets in.
+
 ## devbook Owns One Section of AGENTS.md
 
 ```meta

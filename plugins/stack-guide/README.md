@@ -21,7 +21,7 @@ instead of by repository.
 | [`stack-init`](skills/stack-init/SKILL.md) | Writes the engine-owned keys of a repository's `.github/ai-agent-stack.json` for the first time, validates them, then hands each component its own sync skill. |
 | [`stack-update`](skills/stack-update/SKILL.md) | The same file, moved forward: version drift, outstanding migrations, and a re-validated config. |
 
-`stack-` is a fourth prefix beside `flow-`, `fleet-`, `phase-`, and `automation-`, and it means
+`stack-` is a fifth prefix beside `flow-`, `fleet-`, `phase-`, and `schedule-`, and it means
 something none of those do: a procedure about the stack itself rather than about a unit of work.
 
 ## The report
@@ -40,7 +40,7 @@ node scripts/stack-report.mjs --root <repository>
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
 | `.github/ai-agent-stack.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
 | The knowledge folders, flat and nested | Which of the five this repository adopted, and in which layout |
-| The engine's `skills/` folder | Which `flow-*`, `phase-*`, and `automation-*` procedures the copy on disk ships |
+| The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 
 `--json` prints the same model unrendered. `--marketplace <name>` reports a different catalog.
 

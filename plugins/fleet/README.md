@@ -73,6 +73,6 @@ in each skill:
   surfaced to the user and excluded from pickup — never worked, never closed.
 - **Triage proposes; only an answer closes.** Unanswered is recorded as `unanswered` and
   re-proposed next sweep, never read as declined.
-- **Never start one of these mid-task.** Only a user turn, a routine prompt, or a sweep's own
+- **Never start one of these mid-task.** Only a user turn, a schedule's prompt, or a sweep's own
   dispatch prompt may, because each spawns sessions and claims backlog items that outlive the
   turn that asked.

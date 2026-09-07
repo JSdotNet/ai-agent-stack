@@ -20,7 +20,7 @@ apart.
 | [devbook](https://claude.ai/code/artifact/2229020b-18d3-4d4d-9613-de82be7add04) | The `.devbook/` convention: folders, the fenced `meta` block, addressing, reading order, the approval gate, the plugin family. |
 | [Knowledge Base Internals 2.0](https://claude.ai/code/artifact/63e86cb8-f258-4836-8cd4-5a32c6235fa0) | The schema underneath it: which fields become edges, each folder's status ladder and `type` set, the `tests` field, the converters. |
 | [Layered Plugin Stack](https://claude.ai/code/artifact/591deaa8-c29a-4159-8146-dcbbfba46f81) | How plugins couple: the four layers, dependency vs bridge vs surface, enabling a combination per repository. |
-| [The Rename Wave](https://claude.ai/code/artifact/aea8acf9-5335-4000-8e0f-450653349a90) | Naming and the host split: `flow-`, `fleet-`, `phase-`, `automation-`, and what belongs in the `delivery` plugin. |
+| [The Rename Wave](https://claude.ai/code/artifact/aea8acf9-5335-4000-8e0f-450653349a90) | Naming and the host split: `flow-`, `fleet-`, `phase-`, `schedule-`, and what belongs in the `delivery` plugin. |
 | [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19) | Annotations as a second fenced block in the chapter, their lifecycle, and what the app layer on top may not own. |
 | [devbook Retrieval](https://claude.ai/code/artifact/a50fc1f6-413d-4767-aad8-45be44c85107) | How knowledge is retrieved: the canon is walked, never searched; semantic search belongs over the `_inbox` intake only, as a capability that may be absent. |
 
@@ -39,7 +39,7 @@ resolve.
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only
 resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the
-`devbook-check` routine refreshes the indexes daily and opens a pull request when they moved.
+`devbook-check` schedule refreshes the indexes daily and opens a pull request when they moved.
 `.claude/settings.json` denies the folder to Claude Code's file tools, and the devbook section
 at the end of this file states the rule for Copilot, which has no equivalent lever. Full rule:
 `plugins/devbook/instructions/devbook-derived-artifacts.instructions.md`.
@@ -138,7 +138,7 @@ per `devbook-chapter-metadata.instructions.md`. Skip `annotation` fences when lo
 chapter as context: they hold review notes, not content.
 
 Files under any `_meta/` folder are generated tool input. Never read or hand-edit them,
-and never regenerate or commit them in a session — the `devbook-check` routine owns that
+and never regenerate or commit them in a session — the `devbook-check` schedule owns that
 refresh. Run the check before committing:
 
     node plugins/devbook/tools/devbook-meta/build.mjs --check

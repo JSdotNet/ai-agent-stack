@@ -294,8 +294,8 @@ the source of truth.
 ## Related Skills
 
 - `update-pr-branch`, `fix-pr-checks` — the per-PR remediations, usable standalone.
-- `start-session-from-issue`, `automation-bug-fix` — pick up the single issue whose work this
-  skill later takes to merge-ready.
+- `start-session-from-issue` — picks up the single issue whose work this skill later takes to
+  merge-ready. `schedule-bug-fix` (`delivery-schedule` plugin) does the same unattended.
 
 ## Notes
 

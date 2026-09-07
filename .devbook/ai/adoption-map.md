@@ -25,8 +25,10 @@ the same change that adds its file.
 ## Adoption Picture
 
 Stages in flow order, with the chapters that sit at each one. Shading is `status`. Scheduling
-reaches fan-out and the automations, never a flow — the missing edge to `Flow Skills` is the
-[decision](../arc42/09-architecture-decisions.md#routines-are-their-own-plugin), not an omission.
+reaches fan-out and the `schedule-*` entry points, never a flow — the missing edge to
+`Flow Skills` is the
+[decision](../arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin), not an
+omission.
 
 ```mermaid
 graph LR

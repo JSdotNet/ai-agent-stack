@@ -7,7 +7,7 @@ description: >
   brief. Use when: sweeping or triaging a backlog of open issues, or running a scheduled issue
   sweep. DO NOT USE FOR: a single issue (use start-session-from-issue with a human present,
   fleet-resolve-issue without one); never start a sweep mid-task — only a user turn or a
-  routine prompt may.
+  schedule's prompt may.
 ---
 
 # Fleet: Issue Sweep
@@ -159,7 +159,7 @@ scheduled for later. There is no later session anymore.
 ### Phase 2 — Triage
 
 6. Invoke the `Workflow` tool with the triage script beside this skill. The user turn or
-   routine prompt that asked for this sweep is the explicit opt-in the tool requires — a sweep
+   schedule's prompt that asked for this sweep is the explicit opt-in the tool requires — a sweep
    nobody asked for must not reach this step:
 
    ```text
@@ -350,7 +350,7 @@ the tool cadence.
   still working, not finished and waiting on something else. `finish_run` once the brief is
   written.
 
-## Running It as a Routine
+## Running It on a Schedule
 
 ```text
 Every weekday at 06:00, run fleet-issue-sweep for acme/store with base branch main

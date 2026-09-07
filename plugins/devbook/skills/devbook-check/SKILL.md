@@ -1,6 +1,6 @@
 ---
 name: devbook-check
-description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
+description: 'Check a repository against devbook without writing to it, and repair what it reports — broken metadata references, fields the schema no longer defines, missing meta blocks, outstanding migrations, stamp drift, a stale AGENTS.md section, and stale _meta indexes. The check-only half of devbook-sync. Use when: the devbook-meta check fails, CI warns about drifted indexes, references do not resolve, or a migration may be outstanding. Triggers on: "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "validate knowledge folders", "build.mjs --check".'
 ---
 
 # devbook check
@@ -88,9 +88,12 @@ compressing a lookup table costs a repair, not a sentence.
    | A migration the plugin's `contractVersion` requires is missing from the ledger | hard | Step 4 already reported it; run `devbook-sync` |
    | A file the stamp says was materialized is gone | hard | Run `devbook-sync` to put it back |
    | A folder exists on disk that `adopted` does not list, or the reverse | hard | Adoption changed without a reconcile; run `devbook-sync` |
+   | The `AGENTS.md` section is missing, or one of its markers is | hard | Run `devbook-sync` to write it back |
    | No stamp at all | hard | The repository has never been reconciled; run `devbook-sync` |
    | A materialized hash matches an older release | stale | Nothing is broken. An upgrade is available |
+   | The `AGENTS.md` section matches its stamped hash but not what `adopted` renders now | stale | Adoption or the template moved; run `devbook-sync` to rewrite it |
    | A materialized hash matches nothing ever shipped | customized | Report it and leave it. Often deliberate — both workflows are edited on install |
+   | The `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
 
    Fail on hard drift; report staleness and customization without failing. That
    split is the same one the CI workflow already makes about `_meta/`, and for

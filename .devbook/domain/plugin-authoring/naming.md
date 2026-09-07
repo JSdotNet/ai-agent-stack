@@ -123,7 +123,7 @@ only as the English description of what `fleet-` does. `delivery` holds sixteen 
 of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
 and two `phase-*`, `delivery-schedule` holds twelve `schedule-*`, `fleet` holds three
-`fleet-*`, and `stack-guide` holds three `stack-*`.
+`fleet-*`, and `stack-guide` holds four `stack-*`.
 
 A plugin takes its subsystem's stem; the things inside it are named for what they are. So
 `delivery`, `delivery-surface-dashboard`, and `delivery-surface-collector` are packages of one

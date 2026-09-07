@@ -10,17 +10,17 @@
     ".devbook/ai"
   ],
   "stats": {
-    "nodes": 130,
-    "edges": 281,
+    "nodes": 131,
+    "edges": 286,
     "nodesByFolder": {
       "arc42": 66,
-      "domain": 38,
+      "domain": 39,
       "tech": 14,
       "design": 3,
       "ai": 9
     },
     "nodesByType": {
-      "file": 23,
+      "file": 24,
       "chapter": 107
     },
     "nodesByKind": {
@@ -32,6 +32,7 @@
       "features": 1,
       "feature": 4,
       "sub-feature": 6,
+      "flow": 1,
       "model": 1,
       "naming": 1,
       "term": 21,
@@ -46,7 +47,7 @@
       "adoption-map": 1
     },
     "nodesByStatus": {
-      "active": 105,
+      "active": 106,
       "adopted": 13,
       "trial": 6,
       "draft": 2,
@@ -54,7 +55,7 @@
     },
     "edgesByType": {
       "contains": 107,
-      "related": 169,
+      "related": 174,
       "depends-on": 5
     }
   },
@@ -160,7 +161,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "roles-and-services",
           "level": 2,
-          "line": 83,
+          "line": 85,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -180,7 +181,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 125,
+          "line": 127,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -199,7 +200,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "host-slots",
           "level": 2,
-          "line": 155,
+          "line": 157,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -218,7 +219,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "fan-out-state",
           "level": 2,
-          "line": 185,
+          "line": 187,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -237,7 +238,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "guide-plugin",
           "level": 2,
-          "line": 213,
+          "line": 215,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-05",
@@ -257,7 +258,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "stack-config",
           "level": 2,
-          "line": 250,
+          "line": 252,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -276,7 +277,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "routine-plugin",
           "level": 2,
-          "line": 269,
+          "line": 271,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -296,7 +297,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 308,
+          "line": 310,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -1366,7 +1367,7 @@
           "path": ".devbook/domain/plugin-authoring/features.md",
           "slug": "declare-a-dependency",
           "level": 3,
-          "line": 60,
+          "line": 61,
           "status": "active",
           "statusDeclared": false,
           "kind": "sub-feature",
@@ -1385,7 +1386,7 @@
           "path": ".devbook/domain/plugin-authoring/features.md",
           "slug": "offer-a-plugin",
           "level": 2,
-          "line": 71,
+          "line": 72,
           "status": "active",
           "statusDeclared": false,
           "kind": "feature",
@@ -1404,7 +1405,7 @@
           "path": ".devbook/domain/plugin-authoring/features.md",
           "slug": "materialize-a-component",
           "level": 2,
-          "line": 82,
+          "line": 83,
           "status": "active",
           "statusDeclared": false,
           "kind": "feature",
@@ -1423,7 +1424,7 @@
           "path": ".devbook/domain/plugin-authoring/features.md",
           "slug": "stamp-the-repository",
           "level": 3,
-          "line": 92,
+          "line": 93,
           "status": "active",
           "statusDeclared": false,
           "kind": "sub-feature"
@@ -1438,10 +1439,29 @@
           "path": ".devbook/domain/plugin-authoring/features.md",
           "slug": "migrate-a-contract",
           "level": 3,
-          "line": 102,
+          "line": 103,
           "status": "active",
           "statusDeclared": false,
           "kind": "sub-feature"
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/domain/plugin-authoring/flow.md",
+          "label": "Plugin Authoring (flow)",
+          "type": "file",
+          "folder": "domain",
+          "path": ".devbook/domain/plugin-authoring/flow.md",
+          "status": "active",
+          "statusDeclared": false,
+          "kind": "flow",
+          "related": [
+            ".devbook/domain/plugin-authoring/naming.md#stamp",
+            ".devbook/domain/plugin-authoring/naming.md#migration",
+            ".devbook/domain/plugin-authoring/naming.md#extension-point",
+            ".devbook/domain/plugin-authoring/naming.md#gate",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder"
+          ]
         }
       },
       {
@@ -4088,6 +4108,46 @@
           "id": "related:.devbook/domain/plugin-authoring/features.md#materialize-a-component->.devbook/domain/plugin-authoring/naming.md#migration",
           "source": ".devbook/domain/plugin-authoring/features.md#materialize-a-component",
           "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#stamp",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#stamp",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#migration",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#migration",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#extension-point",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#extension-point",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/domain/plugin-authoring/naming.md#gate",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/domain/plugin-authoring/naming.md#gate",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/domain/plugin-authoring/flow.md->.devbook/arc42/05-building-block-view.md#plugin-folder",
+          "source": ".devbook/domain/plugin-authoring/flow.md",
+          "target": ".devbook/arc42/05-building-block-view.md#plugin-folder",
           "type": "related"
         }
       },

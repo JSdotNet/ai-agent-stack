@@ -7,6 +7,15 @@ type: naming
 The terms this repository trades in. Where a host uses a different word for the same thing, the
 host's word is recorded as an alias rather than adopted.
 
+**This registry is the shared kernel, so a term belongs here only when it is true of every
+plugin.** Where one plugin refines a kernel term into its own vocabulary, the refinement lives in
+that plugin's context and points back here — [Schedule](#schedule) is defined once as a kind of
+trigger and again, in four parts, in
+[Delivery Schedule's registry](../delivery-schedule/naming.md); [Flow Skill](#flow-skill) names a
+scope against its neighbours and [Delivery's registry](../delivery/naming.md#flow) says what one
+is made of. The two are never in tension: the kernel says what kind of thing it is, the context
+says how it behaves.
+
 ## Marketplace
 
 ```meta

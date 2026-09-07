@@ -31,7 +31,7 @@ turn. Run in a sub-agent it costs one summary instead.
 
 - **Invoke it with a single `Agent` call** in the **same worktree** (no `isolation`), using
   the model resolved for this phase's category per
-  `instructions/flow-model-selection.instructions.md`.
+  `rules/flow-model-selection.md`.
 - **Ask for a summary, never logs.** The sub-agent returns the structured **Outputs** below:
   results, counts, and the failing targets with the specific error lines that matter. It
   does not return build transcripts, full test output, or restated command invocations.
@@ -68,7 +68,7 @@ error that identifies it, not with the surrounding log.
 ## Dashboard Reporting
 
 - Report as the `Build & Test` stage via the shared **Reporting Contract** in
-  `instructions/surface-contract.instructions.md` (`update_stage` `in_progress` → `done`
+  `rules/surface-contract.md` (`update_stage` `in_progress` → `done`
   or `blocked`).
 
 ## Agents
@@ -84,4 +84,4 @@ error that identifies it, not with the surrounding log.
 
 ## Reference
 
-Phase definition: `instructions/flow-phases.instructions.md`.
+Phase definition: `rules/flow-phases.md`.

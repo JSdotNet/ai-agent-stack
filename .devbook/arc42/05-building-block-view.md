@@ -79,7 +79,7 @@ because neither plugin may name the other — left with them.
 
 The last row is the part no host reads. A plugin that installs something into a repository
 carries it as inert payload — templates, generators, migration scripts — and its own
-`<component>-sync` is what puts it there and records it in the
+`<component>-install` is what puts it there and records it in the
 [stamp](../domain/plugin-authoring/naming.md#stamp).
 
 ## Roles and Services
@@ -210,7 +210,7 @@ Two other things carry sweep state, and neither is a file this repository owns: 
 `ready-for-pickup` / `in-progress` / `needs-validation` labels on the tracker, which are what
 make a claim legible from GitHub alone, and the host's list of live background sessions, which
 is how a missing result file is told from a worker still running.
-`instructions/fleet-issue-sweep-contract.instructions.md` owns both schemas.
+`rules/fleet-issue-sweep-contract.md` owns both schemas.
 
 ## Guide Plugin
 
@@ -237,8 +237,8 @@ layouts, and the engine's own `skills/` folder. A clone older than the source is
 latest" is usually wrong, so the report prints both and the commit behind each.
 
 The two write skills stop at the [engine keys](#stack-config). Every `components.<name>` stamp
-stays with that component's own sync skill, which is the only thing that knows what it
-materialized — so `devbook-sync` and `devbook-check` do not move here, and `stack-init`'s fifth
+stays with that component's own install skill, which is the only thing that knows what it
+materialized — so `devbook-install` and `devbook-check` do not move here, and `stack-init`'s fifth
 step is to invoke them rather than to reimplement them.
 
 The report is also the one place a host's own paths are still named, which
@@ -262,7 +262,7 @@ stack, and it holds two kinds of top-level key:
 | Key | Owned by | Holds |
 | --- | --- | --- |
 | `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
-| `components.<name>` | that component's own sync skill | What the component materialized into the repository, and its migration ledger. |
+| `components.<name>` | that component's own install skill | What the component materialized into the repository, and its migration ledger. |
 
 Nobody writes another owner's key. `delivery` ships the schema for its four in
 `resources/ai-agent-stack.schema.json` and a checker that rejects an unknown key rather than
@@ -290,7 +290,7 @@ carries the unattended rules every prompt starts with.
 | `security-review` | `delivery-schedule:schedule-security-review` | weekly |
 | `tech-update` | `devbook:devbook-tech-update` | weekly |
 
-Three skills read the catalog. `schedule-sync` builds each prompt, resolves the scheduler from
+Three skills read the catalog. `schedule-install` builds each prompt, resolves the scheduler from
 the live tool list, and creates or updates each entry matched by name — `<owner>/<repo> ·
 <title>` — so a second sync updates rather than duplicates; `schedule-status` reads runs and
 logs back; `schedule-run` fires one. `tools/schedule-catalog/check.mjs` fails a malformed
@@ -306,7 +306,7 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`schedule-sync` only. The environment, the model, and the scheduler ids are personal and live
+`schedule-install` only. The environment, the model, and the scheduler ids are personal and live
 in the scheduler; matching by name is what makes writing them down unnecessary.
 
 ## Asset Kinds

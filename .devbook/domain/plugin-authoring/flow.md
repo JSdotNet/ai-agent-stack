@@ -48,14 +48,14 @@ missing key means *absent*, never *older*.
 ```mermaid
 stateDiagram-v2
     [*] --> NotAdopted
-    NotAdopted --> Materialized: sync copies payload, writes the component's stamp
-    Materialized --> Reconciling: sync runs again
+    NotAdopted --> Materialized: install copies payload, writes the component's stamp
+    Materialized --> Reconciling: install runs again
     Reconciling --> Materialized: every key resolves, hashes match
     Reconciling --> Drifted: a materialized file changed underneath
     Reconciling --> Pending: ledger is missing a migration id
     Pending --> Materialized: the migration runs, its id joins the ledger
     Pending --> Pending: the check still reports work
-    Drifted --> Materialized: a person resolves it, sync never overwriting silently
+    Drifted --> Materialized: a person resolves it, install never overwriting silently
     Materialized --> [*]: component removed
 ```
 

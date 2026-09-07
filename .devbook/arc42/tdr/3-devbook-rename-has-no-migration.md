@@ -13,7 +13,7 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/09-ar
 ```
 
 [Devbook Payload Named After Its Plugin](../09-architecture-decisions.md#devbook-payload-named-after-its-plugin)
-renamed six materialized paths. Five of them are things `devbook-sync` copies into a consuming
+renamed six materialized paths. Five of them are things `devbook-install` copies into a consuming
 repository and records in the stamp:
 
 | Old key in `materialized` | New key |
@@ -49,7 +49,7 @@ answer it.
 ```meta
 ```
 
-`devbook`, and every repository that ran `devbook-sync` before this release. `devbook-check`
+`devbook`, and every repository that ran `devbook-install` before this release. `devbook-check`
 reports the new paths missing and says nothing about the old ones. Migration `006-drop-backlog`
 is unaffected: it runs before the rename and was taught both workflow spellings rather than
 being rewritten.

@@ -13,16 +13,16 @@ Run a single `flow-*` flow end to end. This agent is the sequencer, tracker, and
 for the shared delivery phases, so ordering, surface reporting, and the Personal Validation
 gate are enforced in **one** place instead of being re-described in every `flow-*/SKILL.md`.
 
-The phases are defined by `instructions/flow-phases.instructions.md`, whose **Where Each Part
+The phases are defined by `rules/flow-phases.md`, whose **Where Each Part
 Lives** table names the file that owns each part. **That table's `Read it` column is
 binding.** Load a file when the run reaches the point the table names, and not before.
 Everything loaded stays in the prompt for the rest of the run, so reading ahead is not
 preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
-(`instructions/flow-model-selection.instructions.md`), the repository's optional runtime
-context file (`instructions/flow-repo-context.instructions.md`), and the resolution of the
-stack config and the surface (`instructions/surface-contract.instructions.md`). It applies
+(`rules/flow-model-selection.md`), the repository's optional runtime
+context file (`rules/flow-repo-context.md`), and the resolution of the
+stack config and the surface (`rules/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
 ## Expected Behavior
@@ -34,24 +34,24 @@ those contracts; it does not re-decide them per skill.
    Read them when they already exist; derive them from the request and the codebase and
    record the derived assumptions when they do not. Missing context is never grounds for
    stopping the run or letting the work proceed outside the flow. Escalate only for the
-   decision classes listed under **Escalation** in `flow-execution-model.instructions.md`,
+   decision classes listed under **Escalation** in `flow-execution-model.md`,
    then invoke the named successor flow after user approval.
 3. **Resolve the stack config once per run.** Before `start_run`, read
    `.github/ai-agent-stack.json` if present and resolve `bindings`, `extensions`, `policy`,
-   and `gates` per **The Stack Config** in `surface-contract.instructions.md`. Persist the
+   and `gates` per **The Stack Config** in `surface-contract.md`. Persist the
    resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
    gate list with `set_run_context`. A bound MCP server is resolved from the live tool list
    at the stage that uses it, per **MCP Server Strategy** in
-   `flow-execution-model.instructions.md`; one that does not answer is reported once and
+   `flow-execution-model.md`; one that does not answer is reported once and
    never blocks the run. Report an unknown key by name and stop; report a malformed file once
    and continue with defaults. A missing file is normal and changes nothing.
 4. **Resolve model selection and repo context in the same step.** Resolve model selection
    from the current run instruction, the `model-override` slot, and the category families in
-   `flow-model-selection.instructions.md`. There is no repository-level model override, and
+   `flow-model-selection.md`. There is no repository-level model override, and
    the stack config carries no model key. Resolve each family to the current latest
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether
-   `.claude/flow-context.md` exists — **read `flow-repo-context.instructions.md` only if it
+   `.claude/flow-context.md` exists — **read `flow-repo-context.md` only if it
    does.** When present, persist its startup command, AppHost path, base URLs,
    healthy-startup signals, credential pointer, QA depth, and any declared repo-native
    `flow-*` skills, and pass them to the stages that need them. A repo-native skill takes
@@ -69,7 +69,7 @@ those contracts; it does not re-decide them per skill.
    required operation errors is a tooling failure: mark the run blocked and report the error
    text rather than falling back to chat-only tracking.
 6. **Update the base before the flow's first stage.** Run **Update Base** per
-   `flow-phases.instructions.md`: fetch `policy.pr.base`, fast-forward a branch that carries
+   `flow-phases.md`: fetch `policy.pr.base`, fast-forward a branch that carries
    no commits of its own, and otherwise rebase its commits onto the fetched tip. A worktree is
    cut from the local checkout and never from the remote, so the branch starts stale whenever
    the local default branch is behind, and no later stage notices. Skip on a dirty tree, an
@@ -88,7 +88,7 @@ those contracts; it does not re-decide them per skill.
    the resolution has any effect: an inline stage runs on this session's model whatever its
    category says, and silently discards the choice.
 9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
-   `flow-phases.instructions.md`.
+   `flow-phases.md`.
 10. **Invoke the phase skills for the heavy phases, and run them in sub-agents.** Use
     `phase-build-test` and `phase-qa-validation` rather than re-describing build, test, or QA
     logic. Pass the change kind so QA depth is selected automatically, together with the
@@ -116,7 +116,7 @@ those contracts; it does not re-decide them per skill.
     mark the phase `skipped` when there is no change set. If a resumed run shows `pending`,
     re-run Personal Validation rather than trusting conversation memory. Then run
     **Documentation Update** and **Work Item Update** as defined in
-    `flow-phases.instructions.md`.
+    `flow-phases.md`.
 15. **Stay in one owner session and delegate deliberately.** Run the flow in the invoking
     session and keep sole ownership of the surface actions and the approval gate. Delegate
     build, test, browser execution, and large code changes to **sub-agents in the same
@@ -124,7 +124,7 @@ those contracts; it does not re-decide them per skill.
     only for genuinely concurrent long-running work such as a runtime log monitor, and
     require its evidence to land in this worktree. Whatever you background, you end: collect
     its summary with `SendMessage` and stop it with `TaskStop` in the phase that started it.
-    See **Delegation Order** in `flow-execution-model.instructions.md`.
+    See **Delegation Order** in `flow-execution-model.md`.
 16. **Track the run durably.** The run state the surface persists is the source of truth, not
     the conversation. Persist `changeKind`, `approval`, the resolved model, and the resolved
     stack config so a compacted or resumed session recovers the run's position and gate
@@ -135,7 +135,7 @@ those contracts; it does not re-decide them per skill.
     the headline total. Escalate the next heavy step to a sub-agent in the same worktree, and
     once delegation is no longer enough, **hand the run off to a fresh session** rather than
     running on until compaction interrupts it. See **Context and Token Insight** in
-    `surface-contract.instructions.md`.
+    `surface-contract.md`.
 18. **Hand off before compaction, not after.** A run is not obliged to finish in the session
     that started it. At the handoff threshold, persist the gating decisions, mark the run
     handed off with a note holding what is done, what is not, and the exact resume
@@ -149,7 +149,7 @@ those contracts; it does not re-decide them per skill.
 
 - **Single source of truth:** never copy phase prose into this agent or into a `flow-*`
   skill; edit the file that owns the phase. Never hardcode a per-stage model here or in a
-  skill; edit `flow-model-selection.instructions.md` instead.
+  skill; edit `flow-model-selection.md` instead.
 - **Configuration chooses among behaviour the engine implements.** A stack-config key never
   adds a stage. A repository that needs a different flow shape writes a repo-native `flow-*`
   skill.
@@ -180,7 +180,7 @@ those contracts; it does not re-decide them per skill.
 
 Pinned to `opus`: this is the one agent that must run under a fixed, known model to drive the
 rest of the process reliably. Every other agent a flow invokes leaves `model` unset, so the
-category resolved in `flow-model-selection.instructions.md` is the only value that applies.
+category resolved in `flow-model-selection.md` is the only value that applies.
 
 ## Handoffs
 
@@ -199,10 +199,10 @@ spawning one, and it is never itself spawned as a sub-agent.
 
 ## References
 
-- `instructions/flow-phases.instructions.md`
-- `instructions/flow-execution-model.instructions.md`
-- `instructions/surface-contract.instructions.md`
-- `instructions/flow-model-selection.instructions.md`
-- `instructions/flow-repo-context.instructions.md`
+- `rules/flow-phases.md`
+- `rules/flow-execution-model.md`
+- `rules/surface-contract.md`
+- `rules/flow-model-selection.md`
+- `rules/flow-repo-context.md`
 - `skills/phase-build-test/SKILL.md`
 - `skills/phase-qa-validation/SKILL.md`

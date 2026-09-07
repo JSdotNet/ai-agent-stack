@@ -42,7 +42,7 @@ node migrate.mjs --check
 ```
 
 `--check` exits `1` while work remains and `0` when the repository is clean; it
-writes nothing, and it is what CI and the plan phase of `devbook-sync` call.
+writes nothing, and it is what CI and the plan phase of `devbook-install` call.
 Drop the flag to apply. Running it twice changes nothing. Both forms take
 `--root <path>`, defaulting to the working directory.
 

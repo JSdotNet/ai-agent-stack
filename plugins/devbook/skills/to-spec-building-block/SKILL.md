@@ -42,7 +42,7 @@ here.
 - **Level depth.** How far down to decompose. Default to level 1 (containers)
   and level 2 (the blocks inside the containers that carry real responsibility).
 
-If `.arc42/` does not exist, stop and run `devbook-sync` for the `.arc42`
+If `.arc42/` does not exist, stop and run `devbook-install` for the `.arc42`
 adoption path. Create the file only if the chapter will have real content — the
 folder rules forbid scaffolding empty placeholders.
 
@@ -76,8 +76,8 @@ not copy.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `devbook-arc42.instructions.md`, and
-   `devbook-chapter-metadata.instructions.md`. Read
+   `devbook-arc42.md`, and
+   `devbook-chapter-metadata.md`. Read
    `.arc42/05-building-block-view.md` as it stands, plus
    `03-context-and-scope.md` for the system boundary. Load
    `.domain/context-map.md` only for the bounded-context alignment.
@@ -117,7 +117,7 @@ not copy.
    ask; never resolve it by overwriting the chapter.
 
 6. **Draft the chapter.** Write to the template in
-   `devbook-arc42.instructions.md`. The heading carries the bare name; the
+   `devbook-arc42.md`. The heading carries the bare name; the
    `meta` block carries `status` and no `type` — `.arc42` defines no `type`
    value set, and setting one is reported as a warning. A new chapter starts at
    `status: draft`; an existing chapter's `status` is left untouched. Include

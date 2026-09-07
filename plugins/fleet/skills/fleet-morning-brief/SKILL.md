@@ -27,7 +27,7 @@ old one, or to catch up after time away.
 ## Reading the Sweep
 
 Read the **Issue Sweep State Contract**
-(`instructions/fleet-issue-sweep-contract.instructions.md`) for the directory layout and
+(`rules/fleet-issue-sweep-contract.md`) for the directory layout and
 both schemas. In summary:
 
 ```bash
@@ -136,7 +136,7 @@ worker finished cleanly, and the result file is the record.
 8. Render the brief in chat. When output includes `file`, also write it to
    `<sweep dir>/brief.md`.
 9. When a delivery surface answering the render group is bound — resolved by pattern from the
-   live tool list per `surface-contract.instructions.md` (`delivery` plugin) — call
+   live tool list per `surface-contract.md` (`delivery` plugin) — call
    `render_markdown` with the brief so it opens as a readable document rather than scrolling
    past in the transcript. With none bound, the chat rendering and `brief.md` are the whole
    output, and that is a normal outcome.

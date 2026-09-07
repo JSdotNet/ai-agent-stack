@@ -13,8 +13,8 @@ short intake when approved notes exist, and derives them from the project type a
 repository when they do not. Missing notes are a reason to run Stage 3, never a reason to
 stop or to scaffold outside this flow.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`.
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -32,9 +32,9 @@ framework preferences, and the Aspire services to include.
   `implement`, and write the developer guidance under `.github/instructions/`.
 - Create the host's repository settings file for the repository-level plugin combination, and
   `.github/ai-agent-stack.json` for the bindings, extensions, policy, and gates. See **The
-  Stack Config** in `instructions/surface-contract.instructions.md`.
+  Stack Config** in `rules/surface-contract.md`.
 - Create `.claude/flow-context.md` so later flows know how to start and validate this
-  project, per `instructions/flow-repo-context.instructions.md` and the template at
+  project, per `rules/flow-repo-context.md` and the template at
   `resources/flow-context-template.md`. A repository with nothing to run declares that in the
   file rather than omitting it.
 
@@ -91,7 +91,7 @@ AppHost configuration, service discovery, and health checks.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `instructions/flow-phases.instructions.md`, in order: Build & Test →
+Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -107,7 +107,7 @@ which phase failed with the actual errors, fix, and re-run.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

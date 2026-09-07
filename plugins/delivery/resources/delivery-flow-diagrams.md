@@ -6,11 +6,11 @@ overview of stage order, approval gates, and PR handoff points.
 
 Every diagram below starts at the flow's own first stage. **Update Base** runs before it in
 every flow — the engine prepends that phase, so no diagram and no `SKILL.md` repeats it. See
-**Phase: Update Base** in `instructions/flow-phases.instructions.md`.
+**Phase: Update Base** in `rules/flow-phases.md`.
 
 The **MCP servers** column names the engine's default servers by id, and *servers bound to a
 point* for whatever the repository binds under `bindings["delivery.mcp"]` — none of which this
-plugin ships. See **MCP Server Strategy** in `instructions/flow-execution-model.instructions.md`.
+plugin ships. See **MCP Server Strategy** in `rules/flow-execution-model.md`.
 
 ## flow-repo
 

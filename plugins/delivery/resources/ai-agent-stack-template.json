@@ -1,5 +1,5 @@
 {
-  "$comment": "Copy the keys you need into .github/ai-agent-stack.json. Every key is optional; an absent key takes the engine's documented default. Roles and services start unbound: fill each with a provider id — `plugin:skill`, a bare `plugin` resolved through its role, or `repo:<skill>` — naming whichever specialist plugin you installed. A service that takes options is an object instead, e.g. { \"provider\": \"…\", \"host\": \"aspire\" }. delivery.mcp binds MCP servers per extension point by the id your own MCP configuration declares; a point left out takes the engine default. Validate with tools/stack-config/check.mjs. The contract is instructions/surface-contract.instructions.md. Never put a model or a secret in this file.",
+  "$comment": "Copy the keys you need into .github/ai-agent-stack.json. Every key is optional; an absent key takes the engine's documented default. Roles and services start unbound: fill each with a provider id — `plugin:skill`, a bare `plugin` resolved through its role, or `repo:<skill>` — naming whichever specialist plugin you installed. A service that takes options is an object instead, e.g. { \"provider\": \"…\", \"host\": \"aspire\" }. delivery.mcp binds MCP servers per extension point by the id your own MCP configuration declares; a point left out takes the engine default. Validate with tools/stack-config/check.mjs. The contract is rules/surface-contract.md. Never put a model or a secret in this file.",
   "bindings": {
     "delivery.tracker": { "provider": "github" },
     "delivery.roles": {
@@ -24,7 +24,7 @@
     "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
     "app.start": null,
     "qa.run": null,
-    "docs.update": ["devbook:devbook-sync"],
+    "docs.update": ["devbook:devbook-install"],
     "flow.end": []
   },
   "policy": {

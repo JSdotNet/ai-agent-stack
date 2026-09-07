@@ -115,8 +115,8 @@ up to that point and record the rest from code and tests.
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
-   `devbook-domain.instructions.md`, and
-   `devbook-chapter-metadata.instructions.md`. Read only the target context's
+   `devbook-domain.md`, and
+   `devbook-chapter-metadata.md`. Read only the target context's
    `features.md` and `naming.md`, plus `domain.md` for the aggregates the
    capability exercises.
 
@@ -186,7 +186,7 @@ up to that point and record the rest from code and tests.
    never resolve it by overwriting the chapter.
 
 7. **Draft the chapter.** Write to the template in
-   `devbook-domain.instructions.md`. The heading carries the bare name; the
+   `devbook-domain.md`. The heading carries the bare name; the
    `meta` block carries `status` and `type: feature` — or `type: sub-feature`
    for a chapter grouped under a parent. A new chapter starts at
    `status: draft`; an existing chapter's `status` is left untouched. Include

@@ -63,7 +63,7 @@ indexes have drifted.
 
 That is safe because a consumer reading these indexes at runtime is required to
 compare each entry's source file against the index it came from and re-read the
-entries that are newer. See `devbook-derived-artifacts.instructions.md` for
+entries that are newer. See `devbook-derived-artifacts.md` for
 both halves of the contract.
 
 ## Outputs

@@ -10,8 +10,8 @@ development project structure inside it belongs to `flow-project`, run next — 
 under `.github/instructions/`, the CI workflows, the AppHost and service scaffolding, the
 `src/`/`tests/` layout, and the build and run validation are its work, not this one's.
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`.
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -50,7 +50,7 @@ gh repo create <org>/<name> --description "<description>" --private --clone
   `.github/ai-agent-stack.json`, creating the file with that key alone when it does not exist
   yet (`flow-project` fills the rest), and validate it with `node tools/stack-config/check.mjs`.
   A point left out takes the engine default — **MCP Server
-  Strategy** in `instructions/flow-execution-model.instructions.md`.
+  Strategy** in `rules/flow-execution-model.md`.
 
 ## Stage 4: Repository Instructions
 
@@ -85,13 +85,13 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Final Phases (Shared)
 
-Documentation/config tier of `instructions/flow-phases.instructions.md`, in order: Personal
+Documentation/config tier of `rules/flow-phases.md`, in order: Personal
 Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
 them there, for every flow.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

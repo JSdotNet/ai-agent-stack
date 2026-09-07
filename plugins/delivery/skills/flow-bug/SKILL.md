@@ -5,8 +5,8 @@ description: 'Run bug resolution end to end — from an ad-hoc "this is broken" 
 
 # Flow: Bug Resolution
 
-Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
-follows `instructions/flow-model-selection.instructions.md`.
+Agent transitions follow `rules/flow-phases.md`; per-stage model choice
+follows `rules/flow-model-selection.md`.
 
 ## Input Expectations
 
@@ -36,7 +36,7 @@ and ask the user.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
 read-only search sub-agent per **Splitting Scope Discovery** in
-`instructions/flow-execution-model.instructions.md`. the `architecture` role only when architectural
+`rules/flow-execution-model.md`. the `architecture` role only when architectural
 impact is suspected.
 
 ## Stage 1: Bug Intake & Reproduction
@@ -66,7 +66,7 @@ application running.
 
 ## Final Phases (Shared)
 
-Code-modifying tier of `instructions/flow-phases.instructions.md`, in order: Build & Test →
+Code-modifying tier of `rules/flow-phases.md`, in order: Build & Test →
 QA Validation → Personal Validation → Create Pull Request → Documentation Update → Work Item
 Update → Summary. That file defines them; change them there, for every flow.
 
@@ -76,7 +76,7 @@ failure needs it.
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `instructions/surface-contract.instructions.md`. With no
+Follow the **Reporting Contract** in `rules/surface-contract.md`. With no
 surface bound, skip the calls, say so once, and continue — file artifacts remain the source
 of truth.
 

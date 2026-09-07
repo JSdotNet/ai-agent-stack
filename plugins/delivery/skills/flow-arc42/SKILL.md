@@ -5,8 +5,6 @@ description: 'Run arc42 architecture documentation. Routes section drafting to t
 
 # Flow: arc42 Documentation
 
-Guideline retrieval sits in this flow, so the architect agent stays independent of it.
-
 Agent transitions follow `instructions/flow-phases.instructions.md`; per-stage model choice
 follows `instructions/flow-model-selection.instructions.md`.
 
@@ -20,12 +18,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Context & Guideline Retrieval
 
 - Clarify the target sections and the documentation goal.
-- Retrieve standards, ADR context, and governed asset constraints through the guidelines
-  capability, or from the repository's own instruction files when none answers — **MCP
-  Server Strategy** in `instructions/flow-execution-model.instructions.md`.
+- Retrieve standards, ADR context, and governed asset constraints from the repository's own
+  instruction files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Collect the repository-specific constraints for governed plugin or guidance assets.
 
-**Agents:** the `architecture` role — **MCP:** the guidelines capability
+**Agents:** the `architecture` role
 
 ## Stage 2: Section Drafting
 

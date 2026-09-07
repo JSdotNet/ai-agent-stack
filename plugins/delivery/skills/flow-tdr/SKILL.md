@@ -17,12 +17,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Debt Context Retrieval
 
 - Clarify the debt item and affected scope.
-- Retrieve standards, ADR context, and governed asset constraints through the guidelines
-  capability, or from the repository's own instruction files when none answers — **MCP
-  Server Strategy** in `instructions/flow-execution-model.instructions.md`.
+- Retrieve standards, ADR context, and governed asset constraints from the repository's own
+  instruction files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the remediation boundaries for governed plugin or guidance assets.
 
-**Agents:** the `architecture` role — **MCP:** the guidelines capability
+**Agents:** the `architecture` role
 
 ## Stage 2: TDR Drafting
 

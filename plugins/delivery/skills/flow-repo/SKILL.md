@@ -41,25 +41,25 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 3: MCP Configuration
 
-- Ask the guidelines capability for the recommended server selection for this project type,
-  or derive it from the project type when none answers.
-- Configure the servers in `.github/github-app.yml`, with their permissions and scopes: the
-  guidelines server this repository adopts, `microsoft-learn`, and `playwright`; add a
-  design-guidelines server when the repository expects UX design flows. The repository names
-  the servers; this plugin never does.
-
-**MCP:** the guidelines capability
+- Decide the MCP servers this repository will use, by project type: a standards or
+  guidelines server where the team runs one, `microsoft-learn` for a .NET stack, `aspire` and
+  `playwright` for a runnable application, a design server when UX design flows are expected.
+- Declare each server in the repository's own MCP configuration — `.mcp.json` for Claude
+  Code, `.github/github-app.yml` for Copilot — with its permissions and scopes.
+- Bind each server to the extension points that use it under `bindings["delivery.mcp"]` in
+  `.github/ai-agent-stack.json`, creating the file with that key alone when it does not exist
+  yet (`flow-project` fills the rest), and validate it with `node tools/stack-config/check.mjs`.
+  A point left out takes the engine default — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 
 ## Stage 4: Repository Instructions
 
-- Retrieve the coding standards and agent guidance for this project type through the
-  guidelines capability, or derive them from the project type when none answers.
+- Retrieve the coding standards and agent guidance for this project type from the MCP
+  servers bound to `spec`, or derive them from the project type when none is bound.
 - Create the repository agent instructions file bound to the `repo-instructions` slot: tech
   stack, conventions, key patterns, agent guidance.
 - Add the repo-level instruction files under `.github/instructions/`, using an
   asset-authoring skill when one is installed.
-
-**MCP:** the guidelines capability
 
 ## Stage 5: Branch Protection
 
@@ -71,12 +71,10 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 
 ## Stage 6: Issue and PR Templates
 
-- Retrieve the template structures and label conventions through the guidelines capability,
-  or use the host's defaults when none answers.
+- Retrieve the template structures and label conventions from the MCP servers bound to
+  `spec`, or use the host's defaults when none is bound.
 - Create the issue templates and the PR template with its checklist.
 - Add `CODEOWNERS` to assign default reviewers per path, and configure the repository labels.
-
-**MCP:** the guidelines capability
 
 ## Stage 7: Repository Governance *(optional)*
 

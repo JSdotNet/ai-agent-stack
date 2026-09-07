@@ -28,9 +28,8 @@ framework preferences, and the Aspire services to include.
 
 - Initialize the `.github/` structure.
 - Generate the project guidelines — coding standards, git workflow, review guidelines,
-  release procedure — through the guidelines capability, or from the repository's own
-  conventions when none answers, and write the developer guidance under
-  `.github/instructions/`.
+  release procedure — from the repository's conventions and the MCP servers bound to
+  `implement`, and write the developer guidance under `.github/instructions/`.
 - Create the host's repository settings file for the repository-level plugin combination, and
   `.github/ai-agent-stack.json` for the bindings, extensions, policy, and gates. See **The
   Stack Config** in `instructions/surface-contract.instructions.md`.
@@ -39,7 +38,7 @@ framework preferences, and the Aspire services to include.
   `resources/flow-context-template.md`. A repository with nothing to run declares that in the
   file rather than omitting it.
 
-**Agents:** the `implement` service — **MCP:** the guidelines capability
+**Agents:** the `implement` service
 
 ## Stage 2: GitHub Actions Workflows
 
@@ -55,8 +54,8 @@ framework preferences, and the Aspire services to include.
 - Determine the target architecture: read the approved notes where they exist, otherwise
   derive the structure, service split, and technology choices from the project type and the
   repository's conventions.
-- Load the implementation context and repository constraints through the guidelines
-  capability, or from the repository's own instruction files when none answers.
+- Load the implementation context and repository constraints from the repository's own
+  instruction files and the MCP servers bound to `spec`.
 - Determine the API contracts and data model boundaries — the agreed ones as they stand, the
   rest derived at signature level.
 - Plan the integration points across services.
@@ -67,7 +66,7 @@ Escalate instead when the project needs a documented target architecture or a re
 decision in its own right: recommend `flow-architecture`, `flow-arc42`, or `flow-adr` and ask
 the user.
 
-**Agents:** the `architecture` role — **MCP:** the guidelines capability
+**Agents:** the `architecture` role
 
 ## Stage 4: Tooling & Dependencies
 

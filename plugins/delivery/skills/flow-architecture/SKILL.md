@@ -21,12 +21,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Goal & Guideline Retrieval
 
 - Clarify the objective and the expected output.
-- Retrieve standards and governed asset constraints through the guidelines capability, or
-  from the repository's own instruction files when none answers — **MCP Server Strategy** in
-  `instructions/flow-execution-model.instructions.md`.
+- Retrieve standards and governed asset constraints from the repository's own instruction
+  files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the repository constraints that affect governed plugin or guidance assets.
 
-**Agents:** the `architecture` role — **MCP:** the guidelines capability
+**Agents:** the `architecture` role
 
 ## Stage 2: Architecture Investigation
 

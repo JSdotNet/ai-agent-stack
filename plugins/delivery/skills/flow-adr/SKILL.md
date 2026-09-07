@@ -17,12 +17,12 @@ follows `instructions/flow-model-selection.instructions.md`.
 ## Stage 1: Decision Context Retrieval
 
 - Clarify the decision statement and affected scope.
-- Retrieve standards, governed asset constraints, and existing decision context through the
-  guidelines capability, or from the repository's own instruction files when none answers —
-  **MCP Server Strategy** in `instructions/flow-execution-model.instructions.md`.
+- Retrieve standards, governed asset constraints, and existing decision context from the
+  repository's own instruction files and the MCP servers bound to `spec` — **MCP Server
+  Strategy** in `instructions/flow-execution-model.instructions.md`.
 - Capture the constraints and decision drivers that govern the change.
 
-**Agents:** the `architecture` role — **MCP:** the guidelines capability
+**Agents:** the `architecture` role
 
 ## Stage 2: ADR Drafting
 

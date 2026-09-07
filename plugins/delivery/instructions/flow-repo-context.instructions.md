@@ -83,8 +83,9 @@ the seeded test account convention, or "anonymous, no auth required". See "Rules
 ### `## MCP Servers`
 
 The MCP servers this repository relies on during flow, named by their server IDs.
-This section is informational: the repository's `.mcp.json` and its own instruction files
-remain the source of truth, and the plugin does not own or configure them.
+This section is informational: the repository's `.mcp.json` declares the servers,
+`bindings["delivery.mcp"]` in `.github/ai-agent-stack.json` says which extension point uses
+which, and the plugin owns neither.
 
 ### `## Healthy Startup`
 

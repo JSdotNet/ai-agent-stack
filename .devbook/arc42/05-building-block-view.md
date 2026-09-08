@@ -28,7 +28,7 @@ not a manifest field but what each `dependencies` array says, read as a sentence
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 3.0.0"]
+        DEV["devbook 3.1.0"]
         DEL["delivery 2.1.0"]
         CFG["devbook-config 1.1.0"]
     end

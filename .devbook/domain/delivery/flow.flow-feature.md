@@ -29,11 +29,13 @@ flowchart TD
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Work Item Update"]
-    t2["Summary"]
+    t1["Documentation Update"]
+    t2["Work Item Update"]
+    t3["Summary"]
     g -->|approve| t0
     t0 --> t1
     t1 --> t2
+    t2 --> t3
     g -->|revise| s0
     g -->|decline| blocked(["Blocked"])
 ```

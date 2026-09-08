@@ -17,6 +17,7 @@ flowchart TD
     s0["Scope Discovery"]
     s1["MVP Scope Intake"]
     s2["Implementation Planning"]
+    s3["Implementation"]
     c0["Build & Test"]
     c1["QA Validation"]
     c2["Personal Validation"]
@@ -24,16 +25,19 @@ flowchart TD
     base --> s0
     s0 --> s1
     s1 --> s2
-    s2 --> c0
+    s2 --> s3
+    s3 --> c0
     c0 --> c1
     c1 --> c2
     c2 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Work Item Update"]
-    t2["Summary"]
+    t1["Documentation Update"]
+    t2["Work Item Update"]
+    t3["Summary"]
     g -->|approve| t0
     t0 --> t1
     t1 --> t2
+    t2 --> t3
     g -->|revise| s0
     g -->|decline| blocked(["Blocked"])
 ```

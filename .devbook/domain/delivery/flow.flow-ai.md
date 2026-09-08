@@ -16,21 +16,21 @@ flowchart TD
     s0["Context Loading"]
     s1["Placement & Boundary Check"]
     s2["Authoring"]
+    s3["Check & Review"]
     c0["Personal Validation"]
 
     base --> s0
     s0 --> s1
     s1 --> s2
-    s2 --> c0
+    s2 --> s3
+    s3 --> c0
     c0 --> g{"approve, revise, or decline"}
     t0["Create Pull Request"]
-    t1["Check & Review"]
-    t2["Work Item Update"]
-    t3["Summary"]
+    t1["Work Item Update"]
+    t2["Summary"]
     g -->|approve| t0
     t0 --> t1
     t1 --> t2
-    t2 --> t3
     g -->|revise| s0
     g -->|decline| blocked(["Blocked"])
 ```

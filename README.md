@@ -21,9 +21,9 @@ a sibling declare it and the host enforces it.
 | Unattended | `delivery-schedule` | Work that runs with nobody watching: nine `schedule-*` entry points that pick their own input and run a flow or a review, and six triggers a repository selects from and syncs into the host's scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app. |
 | Config | `devbook-config` | The repository's `.devbook/config.json` — written by `setup` before anything installs, moved forward by `update` — plus `guide`, which answers what this marketplace is, what you have installed against what is published, and how a repository has wired its roles, extension points, gates, and policy. |
 
-**No specialist ships here.** The `architecture`, `qa`, `domain`, `ux`, and `docs` roles and
-the `spec`, `implement`, `verify`, `app.start`, and `qa.run` services are points the engine
-declares and a repository fills, naming whichever specialist plugin it installed in
+**No specialist ships here.** The `architecture`, `qa`, `domain`, `ux`, `product`, `security`,
+and `docs` roles and the `spec`, `implement`, `verify`, `app.start`, `qa.run`, and `deliver`
+services are points the engine declares and a repository fills, naming whichever specialist plugin it installed in
 `.devbook/config.json`. Unbound, a flow loses that stage's expertise and runs on — a
 provider that does not resolve costs capability, never a load. The seven specialists that used
 to live here are [published from their own marketplace](.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace).

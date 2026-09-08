@@ -255,7 +255,7 @@ exists on the remote, never as free prose.
 A role, a tracker, and a host slot are bound per repository and are **never** plugin
 dependencies: one missing specialist must not demote every skill that names it.
 
-- **Roles.** `architecture`, `qa`, `domain`, `ux`, `product`, `security`. A skill names the
+- **Roles.** `architecture`, `qa`, `domain`, `ux`, `product`, `security`, `docs`. A skill names the
   role; `bindings["delivery.roles"]` says which plugin fills it. Every role reference states
   its fallback, so no flow is ever dead because a role is unbound — a stage reads
   *preferred: role `architecture`; fallback: inline, using the ADR template in

@@ -129,9 +129,10 @@ Applies when the repository does not declare a QA depth in `.claude/flow-context
      traces, and metrics. Run it as a background sub-agent (the `Agent` tool with
      `run_in_background`) so monitoring runs concurrently with Playwright validation;
      otherwise hand off in the same session, where the provider offers that.
-  4. **Stop the monitor when the scenarios are done** — request its summary with
-     `SendMessage`, then end the background agent with `TaskStop`. The monitor polls until
-     told otherwise, so this phase must not be marked `done` while one is still running.
+  4. **Stop the monitor when the scenarios are done** — request its summary, then end the
+     background agent. The monitor polls until told otherwise, so this phase must not be
+     marked `done` while one is still running. **Delegation Order** in
+     `resources/flow-execution-model.md` names the calls per host.
   5. **Record the QA result** with pass/fail per scenario and the captured evidence.
 
   Playwright execution stays in the running **worktree** — delegated to a sub-agent

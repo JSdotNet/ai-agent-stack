@@ -94,7 +94,7 @@ categories it covers.
   ever declared as a dependency — one missing specialist must not demote all 24 skills. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
-- **A tracker.** GitHub, Jira, or `.backlog/` chapters, whichever `delivery.tracker` names.
+- **A tracker.** GitHub, Jira, or Markdown chapters, whichever `delivery.tracker` names.
   Unbound, a flow runs to its file artifacts and opens nothing.
 - **A surface.** A dashboard, a canvas, and a headless collector are three implementations of
   one capability, resolved by pattern from the live tool list. **No surface bound is a normal

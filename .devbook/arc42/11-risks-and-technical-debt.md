@@ -21,6 +21,7 @@ related: [".devbook/arc42/tdr/README.md"]
 | [2. fleet names the Claude CLI directly](tdr/2-fleet-names-the-cli-directly.md) | 2026-09-03 | Medium | identified | `fleet` names a host's CLI although no asset here may name one, so on any other host a sweep dispatches nothing — and its manifest does not say so. |
 | [3. The devbook asset rename ships no migration](tdr/3-devbook-rename-has-no-migration.md) | 2026-09-05 | Medium | identified | The `knowledge-*` -> `devbook-*` rename moved payload paths with no migration to carry them, so a re-synced repository grows a second spelling of the same tooling. |
 | [4. delivery depends on devbook](tdr/4-delivery-depends-on-devbook.md) | 2026-09-07 | Medium | identified | `delivery` declares no dependency, yet five of its flows are named after devbook folders, restate devbook's schema rules, and run devbook's installed generator by path — and one binding has already drifted unnoticed. |
+| [5. The derived index is not optional](tdr/5-derived-index-is-not-optional.md) | 2026-09-08 | Medium | identified | devbook ships the derived `_meta/` index as foundation although nothing here reads it, its one consumer is another repository's app, and six foundation skills run the writer against the rule that forbids it. |
 
 Records 1 and 2 were carried out of chapter 9, where they had been written as decisions. Neither is one:
 each ends in options rather than a choice, which is the test for whether a record belongs

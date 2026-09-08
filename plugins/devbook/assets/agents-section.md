@@ -10,6 +10,21 @@ Render it from the stamp's `adopted` list, never from what happens to be on disk
 - Keep one table row per adopted folder and delete the others.
 - Replace `<prefix>` with `.` in the flat layout and `.devbook/` in the nested one —
   the generator reports which layout it found on every run.
+- Replace `<generator>` with the path `generatorPath` reports: the conventional
+  `.github/tools/devbook-meta/build.mjs` in a repository this materialized into, and a
+  repo-relative path in one that vendors the generator itself. Never write the
+  conventional path into a repository where it does not resolve.
+- Keep the `<refresh>` sentence that matches what was materialized. A repository holding
+  `build/Update-DevbookIndex.ps1` owes contributors both refresh paths, per
+  `devbook-derived-artifacts.md`:
+
+      Refresh them with `./build/Update-DevbookIndex.ps1`, or let the scheduled job
+      reconcile the default branch.
+
+  One that ships no `build/` keeps a single path, and a session is not it:
+
+      Never regenerate or commit them in a session — the scheduled job owns that refresh.
+
 - Change nothing else. A wording change belongs in this template, so every adopting
   repository gets it on its next reconcile.
 
@@ -44,9 +59,9 @@ per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a
 chapter as context: they hold review notes, not content.
 
 Files under any `_meta/` folder are generated tool input. Never read or hand-edit them.
-Refresh them with `./build/Update-DevbookIndex.ps1`, and run the check before committing:
+<refresh> Run the check before committing:
 
-    node .github/tools/devbook-meta/build.mjs --check
+    node <generator> --check
 
 Two files here are yours alone, gitignored and absent by default. `AGENTS.local.md`
 holds instructions that apply on your machine only; read it when it exists and treat

@@ -59,7 +59,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **No skill names Update Base.** The closing tier differs per skill, so a skill names its
   own; the opening phase is identical for every flow, so the flow-runner prepends it and
   there is nothing per-skill to say.
-- A skill lists its shared phases under a `### Final Phases (Shared)` heading and links
+- A skill lists its shared phases under a `## Final Phases (Shared)` heading and links
   here. This file is the source of truth; the skill only names which phases it runs and adds
   skill-specific notes, such as the QA scope.
 - No host auto-inlines an instruction file into a running skill, so each skill names its
@@ -257,8 +257,9 @@ documentation drifts out of date.
   set and no PR branch to update.
 - **Discover the documentation surface.** Read the target repository's own conventions — the
   `repo-instructions` file, any repository `*.instructions.md`, and the checked-in devbook
-  folders it governs (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`, `docs/`,
-  `README.md`) together with their per-chapter metadata format.
+  folders it governs (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/` — at the root or
+  under `.devbook/` — plus `docs/` and `README.md`) together with their per-chapter metadata
+  format.
 - **Decide whether documentation is now stale.** Compare the landed change set against that
   surface: did architecture, technology, deployment, a public API or contract,
   configuration, dependencies, or user-facing behavior change in a way the governed docs

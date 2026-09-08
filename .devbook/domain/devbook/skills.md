@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#devbook"]
 ```
 
-> Fourteen skills: three that own the convention in a repository, and eleven that cross the
+> Thirteen skills: three that own the convention in a repository, and ten that cross the
 > boundary between a chapter and the code implementing it. None of them is a flow — this context
 > ships the shape and the check, and the procedure for carrying a change belongs to the engine.
 

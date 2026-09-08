@@ -918,7 +918,7 @@ the folder routing table and the `_meta/` rule in front of both hosts, and a sec
 would be exactly what this layering exists to prevent. Where a rule already has one home that
 both hosts read, it keeps it.
 
-Consequence: six authored files and ten wrappers where there were none, against a `CLAUDE.md`
+Consequence: six authored files and twelve wrappers where there were none, against a `CLAUDE.md`
 that shrank from 154 lines to four. The context cost is lower, not higher — only the running
 host's wrapper loads, and only on a matching read. The cost is paid in file count and in a
 checker rule.

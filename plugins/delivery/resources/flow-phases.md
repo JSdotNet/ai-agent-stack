@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary).
+description: The shared phase contract every flow-* flow runs — which phases each tier runs and in what order, which file owns each part, and the full definition of the closing phases (the Personal Validation gate, Create Pull Request, Documentation Update, Work Item Update, Summary).
 ---
 
 # Flow Phases (Engine-Owned)
@@ -23,6 +23,7 @@ companion files so a run reads the part it is actually in.
 | **This file, through Update Base** | The phase tiers, and the opening Update Base phase in full | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Documentation Update, Work Item Update, Summary | **Only when the run reaches Personal Validation** — not at the start |
 | `skills/phase-build-test/SKILL.md` and `skills/phase-qa-validation/SKILL.md` | Build & Test and QA Validation, in full | When the flow-runner invokes them. It reads them itself, because it owns depth selection and the stage reporting; the sub-agent it delegates to receives the instruction, not the file |
+| `skills/phase-personal-validation/SKILL.md` | The Personal Validation **review handoff** — starting the app, the links, the what-to-check list — in full | When the run reaches Personal Validation, and again on every revise round. The flow-runner reads it itself: the phase runs inline and is never delegated |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -165,12 +166,31 @@ run before both.
 
 ## Phase: Personal Validation
 
-Every tier. This phase uses **no agent and no model** — it hands control back to the user
-and waits. It is the mandatory instance of the gate pattern in **Gates**
-(`surface-contract.md`), placed after `verify` with purpose `handoff`.
+Every tier. Two things happen here, and keeping them apart is the point: a **review handoff**
+that shows the person what to look at, and the **gate** that waits for their answer. The
+handoff is a procedure and repeats freely; the gate is mandatory and decides once per pass.
 
-- **Do not delegate to an agent and do not auto-approve.** Pause and wait for the user's
-  explicit decision.
+### The review handoff
+
+**Defined in `skills/phase-personal-validation/SKILL.md`** — bringing the application up and
+confirming its health, publishing the review links as clickable URLs, writing the what-to-check
+list, and presenting the code review and the recorded QA review all live there. It is invoked
+on the first handback and again on every revise round, because a revised change set is a new
+thing to look at.
+
+It uses **no agent and no model** and runs inline in the owner session: the links have to be
+clickable in the conversation the person is reading. It presents and never decides — nothing in
+it can approve, skip, or soften the gate below.
+
+### The gate
+
+The mandatory instance of the gate pattern in **Gates** (`surface-contract.md`), placed after
+`verify` with purpose `handoff`. A repository may declare further gates **in front of** this
+one — `{ "at": "verify", "when": "after", "purpose": "risk" }` is the usual shape — and that is
+the whole of what configuration may change here.
+
+- **Do not delegate to an agent and do not auto-approve.** Wait for the user's explicit
+  decision.
 - **Commit the change set before handing back, when `policy.commit.at` is `gate`.** One commit
   per handback, on the run's working branch, with a message derived from the run's scope
   record. This is then the flow's only commit point — no earlier stage commits. Stage what the
@@ -180,21 +200,11 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
   and create no empty commit. If the commit fails — a rejecting hook, a signing error — name
   the actual error in the stage output and hand back anyway: the user is present, and the
   failure is theirs to decide on. Under the default `manual` this phase commits nothing.
-- **Present the code review** of the change set for the user to read.
-- **Present the recorded QA review** — scenarios, pass/fail, monitoring findings, and any
-  captured evidence — when QA Validation ran.
-- **Start the application for the user** when the run produced a code change, using the
-  resolved repo context startup command or the command proven during QA Validation. Do not
-  stop at listing commands unless startup is impossible; if startup fails, block Personal
-  Validation with the actual failure and the recovery command.
-- **Publish quick review links** for the running target — the primary app URL, the runtime
-  dashboard, a health page, any route that needs review — as `links` on the stage, so the
-  user opens the review target directly instead of copying commands.
 - **Wait for explicit user approval** before any pull request is created.
 - **When the user requests changes**, record `approval: "rejected"` with the user's wording,
   reopen the appropriate implementation or specification stage in the same run, apply the
-  requested changes, then repeat Build & Test, QA Validation, and Personal Validation. The
-  run must not advance to Create Pull Request while a rejected decision is persisted.
+  requested changes, then repeat Build & Test, QA Validation, and the review handoff above.
+  The run must not advance to Create Pull Request while a rejected decision is persisted.
 - **When returning to Personal Validation after requested changes**, record
   `approval: "pending"` before the handoff, so the revised change set still requires
   explicit approval.
@@ -203,7 +213,9 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
   survives a session resume.
 - **Never let this gate be delegated to a plugin, or removed by configuration.** A gate a
   plugin can supply is not a gate. `policy.gate.personalValidation` may only be `required`;
-  the key exists so the stack config can state the fact, not soften it.
+  the key exists so the stack config can state the fact, not soften it. Splitting the handoff
+  into its own skill does not weaken this: the skill is what the person is shown, never what
+  decides.
 - **In an unattended run** — a scheduled `schedule-*` entry point, or a spawned worker session —
   this gate blocks: park the work with a handoff brief naming what is done and what is not,
   leave `approval` as `pending`, and stop. Never self-approve because no one answered.
@@ -212,7 +224,7 @@ and waits. It is the mandatory instance of the gate pattern in **Gates**
   steps away without deciding, shut down the runtime and any flow-owned browser windows
   under the same rules as **Create Pull Request**, leave `approval: "pending"`, and record
   in the stage output that the gate is still open and the app was stopped. A resumed run
-  restarts the app before asking again.
+  re-runs the review handoff before asking again.
 
 ## Phase: Create Pull Request
 

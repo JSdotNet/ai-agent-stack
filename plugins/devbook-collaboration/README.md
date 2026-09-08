@@ -66,7 +66,7 @@ list entry, and the rule that none of it is chapter content — is in
 ## What this release does not do
 
 Comments are still single-line findings in `ext`, not threads — and as of
-devbook 1.1.0 that is one release out of date. The
+devbook 3.1.0 that is several releases out of date. The
 [Layered Annotations](https://claude.ai/code/artifact/219b5bbb-8ea1-4ae2-8dbc-4cd10f4d6d19)
 design puts a threaded `annotation` fence in devbook itself, with authors,
 replies, quoted passages, and a sweep, and [devbook has now shipped

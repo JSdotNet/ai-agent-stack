@@ -318,7 +318,8 @@ migrations/
 ├── 006-drop-backlog/
 │   ├── MIGRATION.md   what, why, what breaks, appliesTo
 │   └── migrate.mjs    idempotent; --check exits 1 while work remains
-└── 008-config-to-devbook/
+├── 008-config-to-devbook/
+└── 009-install-skill-ids/
 ```
 
 Rules that keep a ledger trustworthy:

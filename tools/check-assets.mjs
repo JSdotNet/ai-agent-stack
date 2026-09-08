@@ -9,6 +9,8 @@
 //
 //   marketplace   every entry has a folder, every folder with a Claude manifest has an
 //                 entry, and name/version/description agree across the three files
+//   dependencies  a declared range contains the current version of the plugin it names,
+//                 so the combination the host resolves is reachable
 //   agents        name equals the filename, a description exists, a model pin is a value
 //                 Claude accepts, Skill is granted, and a role plugin's agent carries no
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
@@ -87,6 +89,7 @@ function rel(p) {
 
 const marketplace = await json(path.join(ROOT, ".claude-plugin", "marketplace.json"));
 const listed = new Map(marketplace.plugins.map((e) => [e.name, e]));
+const manifests = new Map();
 const folders = (await readdir(PLUGINS, { withFileTypes: true }))
     .filter((e) => e.isDirectory())
     .map((e) => e.name);
@@ -98,6 +101,7 @@ for (const [name, entry] of listed) {
     const claudePath = path.join(dir, ".claude-plugin", "plugin.json");
     if (!(await exists(claudePath))) { error(`${name}: listed in the marketplace but has no .claude-plugin/plugin.json`); continue; }
     const claude = await json(claudePath);
+    manifests.set(name, claude);
     for (const field of ["name", "version", "description"]) {
         if (claude[field] !== entry[field]) error(`${name}: ${field} differs between marketplace.json and .claude-plugin/plugin.json`);
     }
@@ -120,6 +124,41 @@ for (const [name, entry] of listed) {
     for (const f of agentFiles) if (!declared.has(f)) error(`${name}: ${f} is not listed under agents in the Claude manifest, so handoffs to it dangle`);
     for (const d of declared) if (!(await exists(path.join(dir, d)))) error(`${name}: Claude manifest lists ${d}, which does not exist`);
 }
+// ── declared dependencies ───────────────────────────────────────────────────
+// A range that excludes the current version of the plugin it names makes the
+// combination unreachable: the host resolves the dependency and finds nothing
+// legal to install. A range naming a plugin outside this marketplace is not
+// ours to resolve, so it is left alone.
+
+const order = (v) => v.split(".").map((n) => Number(n) || 0);
+const compare = (a, b) => {
+    const [x, y] = [order(a), order(b)];
+    for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1;
+    return 0;
+};
+const satisfies = (version, range) => range.trim().split(/\s+/).every((clause) => {
+    const m = /^(>=|<=|>|<|=)?(\d+\.\d+\.\d+)$/.exec(clause);
+    if (!m) return true; // an exotic clause is the host's business, not this lint's
+    const c = compare(version, m[2]);
+    switch (m[1] ?? "=") {
+        case ">=": return c >= 0;
+        case "<=": return c <= 0;
+        case ">": return c > 0;
+        case "<": return c < 0;
+        default: return c === 0;
+    }
+});
+
+for (const [name, claude] of manifests) {
+    for (const dep of claude.dependencies ?? []) {
+        const target = manifests.get(dep.name);
+        if (!target) continue;
+        if (!satisfies(target.version, dep.version)) {
+            error(`${name}: declares ${dep.name} ${dep.version}, which excludes ${dep.name} ${target.version} — the combination is unreachable`);
+        }
+    }
+}
+
 for (const folder of folders) {
     if (listed.has(folder)) continue;
     if (await exists(path.join(PLUGINS, folder, ".claude-plugin", "plugin.json"))) {

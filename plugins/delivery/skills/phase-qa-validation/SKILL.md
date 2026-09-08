@@ -59,8 +59,9 @@ follows:
   log signals, and do not report the declared benign warnings as failures.
 - **Test credentials** — follow the declared pointer to obtain credentials; the file never
   contains secrets.
-- **QA depth** — the declared depth overrides the automatic change-kind selection below, and
-  any repo-specific caveats it lists still apply.
+- **QA depth** — the declared depth overrides the automatic change-kind selection below but
+  yields to `policy.qa.depth` in the stack config, per the order in `surface-contract.md`. Any
+  repo-specific caveats it lists still apply.
 - **No runnable application** — when the repository declares
   `**Runnable application:** none`, mark this phase `skipped`, record that the repository
   declares no runnable application, and attempt no startup, Playwright run, or `qa.run`

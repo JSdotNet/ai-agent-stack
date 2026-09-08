@@ -146,8 +146,9 @@ the phase:
 - **Depth follows the change kind** the flow-runner persisted with `set_run_context`: new
   functionality gets Playwright QA with capture, a bug fix or a change to existing behavior
   gets targeted verification, a dependency update gets startup-only validation, and a change
-  with nothing to run is `skipped` with the reason recorded. `policy.qa.depth` in the stack
-  config overrides that selection, and `policy.qa.ceiling` caps how far it may escalate.
+  with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
+  `policy.qa.depth` and then `.claude/flow-context.md` outrank it, and `policy.qa.ceiling` caps
+  the result — the full order is in `surface-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire
   MCP server and it is unavailable, mark the phase `blocked`, name the missing server and
   the setup action, and stop before Personal Validation. Never complete this phase through a

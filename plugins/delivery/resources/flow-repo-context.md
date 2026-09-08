@@ -101,13 +101,14 @@ repo-specific caveats as bullets:
 
 | Value | Meaning |
 | --- | --- |
-| `playwright-qa` | Full Playwright validation with screenshot/video capture. |
+| `full` | Full Playwright validation with screenshot/video capture. |
 | `targeted` | Targeted verification of affected scenarios; capture only on failure or on request. |
 | `startup-only` | Start the application, confirm health and clean logs; no functional scenarios. |
 | `skipped` | Do not run QA validation for this repository. |
 
 The repository value overrides the change-kind default in
-`skills/phase-qa-validation/SKILL.md`. When the section is absent, that skill's automatic
+`skills/phase-qa-validation/SKILL.md` and yields to `policy.qa.depth` in the stack config,
+per the order in `surface-contract.md`. When the section is absent, that skill's automatic
 change-kind selection applies unchanged.
 
 ### `## Repo-Native Flow Skills`

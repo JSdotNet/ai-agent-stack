@@ -20,7 +20,8 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 3. **A lower layer never names a higher one, and the engine names no specialist.** It names
    points, roles, and capabilities; a repository names the plugin that fills one. No
    specialist, content plugin, or surface is ever modified to know about the engine, and the
-   `your-*` ids below are placeholders for whatever you installed, not plugins that exist.
+   `your-*` and `repo:*` ids below are placeholders — for whatever you installed, and for a
+   skill the repository writes itself. Every other id in an example names a skill that ships.
 
 ## The Stack Config
 
@@ -49,15 +50,15 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     }
   },
   "extensions": {
-    "session.start": [ "devbook:load-context" ],
+    "session.start": [ "devbook:devbook-check" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
     "verify":        "your-coding-plugin:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
     "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
     "qa.run":        { "provider": "your-qa-plugin:qa" },
-    "docs.update":   [ "devbook:sync-chapters" ],
-    "flow.end":      [ "delivery:capture-improvement" ]
+    "docs.update":   [ "repo:refresh-api-docs" ],
+    "flow.end":      [ "repo:capture-improvement" ]
   },
   "policy": {
     "qa.depth":               "targeted",

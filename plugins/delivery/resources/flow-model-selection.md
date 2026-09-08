@@ -80,7 +80,7 @@ whose **Typical Stages** names it.
 | **Implementation & Coding** | Implementation, module/service scaffolding, fixing a red build | the `implement` service | `opus` | Precise, tool-heavy code generation and TDD, where a subtle mistake costs a whole validation cycle. |
 | **Testing, QA & Monitoring** | Build & Test, QA Validation, runtime monitoring | the `qa` role, the `app.start` and `qa.run` services, the runtime monitor, the `verify` service *(running the suites, not fixing them)* | `sonnet` | Tool-heavy but procedural: running builds and suites, driving Playwright, and reading logs/traces reward throughput over deep reasoning. Diagnosing and fixing a failure is Implementation & Coding, and resolves to `opus` there. |
 | **Domain Design** | Bounded-context and boundary review during service/module creation | the `domain` role | `opus` | Boundary and ubiquitous-language decisions are expensive to reverse once code exists. |
-| **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Summary | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
+| **Documentation & Low-Complexity** | `flow-repo` documentation/README stages, Work Item Update | the `docs` role | `haiku` | Genuinely low-complexity formatting/writing — the one category where the lightweight model is the right match, not a cost shortcut. |
 | **Human-in-the-Loop** | Personal Validation | *(none)* | *(none)* | No agent and no model: this phase always hands control back to the user. |
 | **Fallback / Unclassified** | Any stage whose role or service is not yet listed above, and any `(default)` stage with no clear category match | *(any)* | *(session default)* | Let the session's own model run it until the entry is added to this table — safer than guessing a family for an uncategorized case. |
 
@@ -171,5 +171,5 @@ hardcodes a path. See **Host Slots** in `surface-contract.md`.
 | Category | Model |
 | --- | --- |
 | Implementation & Coding | sonnet |
-| Review | inherit |
+| Testing, QA & Monitoring | inherit |
 ```

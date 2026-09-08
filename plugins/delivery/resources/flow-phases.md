@@ -245,7 +245,8 @@ description as file artifacts, say so once, and continue.
 **Agents:** *(default)* — no dedicated agent runs this phase, so the flow-runner performs it
 directly under the category's resolved model.
 
-**Model Category:** Review.
+**Model Category:** none. The flow-runner performs this phase inline, so it runs on the
+session's own model — see `flow-model-selection.md`.
 
 ## Phase: Documentation Update
 
@@ -335,4 +336,5 @@ itself required.
 
 **Agents:** the `flow-runner` agent.
 
-**Model Category:** Documentation & Low-Complexity.
+**Model Category:** none. The flow-runner performs this phase inline, so it runs on the
+session's own model — see `flow-model-selection.md`.

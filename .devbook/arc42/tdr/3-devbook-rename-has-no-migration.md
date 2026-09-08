@@ -44,6 +44,11 @@ change that alters no schema. Whether the ledger should move for an asset rename
 question about the contract's meaning, not a mechanical step, and the rename was not allowed to
 answer it.
 
+**2026-09-08. The numbering above is spent.** `CONTRACT_VERSION` is 9, not 7:
+`008-config-to-devbook` and `009-install-skill-ids` took both ids for other changes while
+this record sat open. The migration it proposes is `010-devbook-names` at contract 10, and
+the options table below has been renumbered to match. Nothing else about the debt moved.
+
 ## Affected components
 
 ```meta
@@ -59,9 +64,9 @@ being rewritten.
 ```meta
 ```
 
-**A re-synced repository ends up with two spellings of the same tooling**, which is the outcome
-the plugin README explicitly tells adopters to avoid. Both workflows fire, both point at a
-generator, and the stale copy is the one nothing updates again.
+**A re-synced repository ends up with two spellings of the same tooling**, and nothing warns
+it will: neither the plugin README nor `UPGRADING.md` mentions the rename. Both workflows fire,
+both point at a generator, and the stale copy is the one nothing updates again.
 
 Nothing fails loudly. The new tooling works; the old tooling keeps working until the schema it
 was built against moves, and then it fails against a corpus the new generator accepts.
@@ -73,7 +78,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `008-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 8 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `010-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 10 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 
@@ -81,4 +86,6 @@ Take the first unless the contract's meaning is being settled separately, in whi
 second is what that settlement should produce.
 
 **Trigger:** before the next `devbook` release is offered to a repository that already adopted
-it — the rename is invisible until somebody re-syncs.
+it — the rename is invisible until somebody re-syncs. **Fired twice, unrepaired:** devbook
+2.0.0 and 3.0.0 have both shipped since this was logged, each with its own migration, and
+neither carried the rename.

@@ -42,11 +42,11 @@ Validation, and no unattended run can pass a gate.
 
 | Schedule | Cadence (UTC) | Runs | Needs | Lands as |
 |---|---|---|---|---|
-| `package-update` | Monday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule` | A pull request |
-| `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule` | One comment per pull request |
-| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule` | A `schedule-report` issue |
+| `package-update` | Monday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
+| `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
+| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-check` | Daily 03:00 | `devbook-check`, every adopted folder | `devbook` | A pull request when something was fixed |
-| `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule` | One issue per new high finding |
+| `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `tech-update` | Wednesday 04:00 | `devbook-tech-update`, every `.tech` layer | `devbook` | A draft pull request |
 
 Each is one file under `resources/schedules/`, and every prompt starts with

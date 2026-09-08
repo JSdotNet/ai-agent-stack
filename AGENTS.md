@@ -67,8 +67,13 @@ plugins/<name>/
   hooks.json                      Copilot hooks
   resources/<name>.md             shared text an asset reads by path — a contract, a template.
                                   A contract carries name and description; nothing else there does
-  assets/  tools/                 payload a install skill copies into a repository
+  mcp/<server>/                   an MCP server, declared under mcpServers in the Claude manifest
+  extensions/<name>/              a Copilot extension, declared in the Copilot manifest
+  assets/  tools/  scripts/       payload an install skill copies into a repository, and the
+                                  executables a skill or a check runs from the plugin itself
   migrations/<version>-<slug>/    MIGRATION.md plus an idempotent migrate.mjs --check
+  README.md                       what the plugin is. Every plugin has one
+  UPGRADING.md                    behaviour changes a consumer would notice, newest first
 ```
 
 A new plugin also needs an entry in `.claude-plugin/marketplace.json` — `name`, `source`

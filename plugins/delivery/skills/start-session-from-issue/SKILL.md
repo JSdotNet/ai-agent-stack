@@ -25,7 +25,7 @@ This skill starts **this** session's work from one issue. It does not prepare wo
 sessions, and it never spawns an agent to run the flow.
 
 A `flow-*` run needs its own session: it must be able to ask about what is ambiguous, hold
-the Personal Validation gate, and own its surface run. `AskUserQuestion` is foreground-only
+the Personal Validation gate, and own its surface run. Asking the user is foreground-only
 and a sub-agent has no user turn to wait for — see **Session Ownership** and **Sub-Agent
 Constraints** in `resources/flow-execution-model.md`. Scoping a run to one
 issue is what makes that work: this session is the owner session, so the flow is

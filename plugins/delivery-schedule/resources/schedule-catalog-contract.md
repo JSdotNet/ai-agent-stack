@@ -5,8 +5,9 @@ description: The schedule catalog contract — the schedule file, the preamble e
 
 # Schedule Catalog Contract
 
-A schedule is a trigger, never a procedure. It names a `schedule-*` entry point, gives it a
-cadence, and hands a cloud session that starts with nothing but the repository a prompt
+A schedule is a trigger, never a procedure. It names a schedulable skill — a `schedule-*`
+entry point, or another plugin's skill that picks its own input and reports, as the
+`devbook-check` and `tech-update` entries do — gives it a cadence, and hands a cloud session that starts with nothing but the repository a prompt
 self-contained enough to run that skill unattended. This file is the contract the catalog,
 `delivery-schedule:install`, `schedule-status`, and `schedule-run` all read; it is over the instruction
 budget because it is a contract, and a contract stated by half is wrong.
@@ -24,7 +25,7 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `title` | What the scheduler shows, as `<owner>/<repo> · <title>`. |
 | `cadence` | The intent in words: `daily`, `weekdays`, `weekly`. |
 | `cron` | Five fields, UTC, minimum interval one hour — so the minute field is one number, never `*` or a step. |
-| `target` | `<plugin>:<skill>` the prompt invokes. Never a `flow-*` skill. |
+| `target` | `<plugin>:<skill>` the prompt invokes. Any plugin's skill that runs unattended, never a `flow-*` one. |
 | `requires` | Plugins that must be enabled in the target repository: the target's own plugin and what the target delegates to. |
 | `tools` | The allowlist the session gets. `Skill` is what lets it reach the target; leave out what the target never needs. |
 

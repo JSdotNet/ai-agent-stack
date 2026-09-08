@@ -15,9 +15,10 @@ description: Defines the optional .claude/flow-context.md convention a consuming
 - Keep the file strictly about **runtime and validation context**. Model choice is personal
   and never comes from the repository (see `flow-model-selection.md`), and MCP
   server configuration stays in the repository's own `.mcp.json` and instruction files.
-- Interactive developer startup — the URL to open, and optionally sign-in and an area map —
-  may live here too. No plugin ships a start procedure any more, so this file is the only
-  place a repository writes it down.
+- Keep the file to **declared facts**. The *procedure* that acts on them — opening the front
+  end, signing in, landing on the area the branch changes — belongs to the repository's
+  `start` skill, seeded by `delivery:install` to `.agents/skills/start.md` and edited from
+  there. When the two disagree, this file is right.
 
 ## The File
 

@@ -39,7 +39,9 @@ flowchart TD
 
 - **The gate is the only place a run stops for a person, and configuration may only add more.**
   It sits before `deliver` and never inside it, so approval is a recorded decision rather than a
-  step a provider performs on its own behalf.
+  step a provider performs on its own behalf. What the person is *shown* there — the running
+  app, the links, the what-to-check list — is a phase skill and repeats on every revise round;
+  the decision itself is not, and cannot be configured away.
 - **`implement` and `verify` are the only cycle**, bounded by the retry budget rather than by
   the providers — which is why the two commonly bind to one provider and still resolve their
   model per stage.

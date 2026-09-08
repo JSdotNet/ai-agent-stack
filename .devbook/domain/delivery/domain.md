@@ -503,6 +503,12 @@ related: [".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/domain/de
 The mandatory gate every flow ends at, and an instance of the gate pattern rather than a second
 mechanism. It uses no agent and no model: it hands control back to the person and waits.
 
+Two parts, deliberately separate. The **review handoff** is a procedure — bring the application
+up, publish the links, say what to check by hand — and it repeats on every revise round, because
+a revised change set is a new thing to look at. The **gate** is the decision, and it happens once
+per pass. Splitting them lets the presentation be a phase skill without any of it becoming
+configurable: a repository may declare gates in front of this one and may never remove it.
+
 It is the thing [Fleet](../fleet/domain.md#park) trades away and the thing an unattended run
 parks at. Wherever a run cannot reach it, something else has to guarantee that nothing merges
 unread.

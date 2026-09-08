@@ -195,7 +195,7 @@ below, not a second mechanism.
 | `resource` | before `app.start` | Just the question — "only one runtime instance runs here, OK to start?" |
 | `cost` | before `qa.run` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
 | `risk` | after `verify` | What the change set actually touched — migrations, auth, a public contract. |
-| `handoff` | Personal Validation | The code review, the QA evidence, and the running application. |
+| `handoff` | Personal Validation | The code review, the QA evidence, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
 
 ### Three outcomes, not two
 

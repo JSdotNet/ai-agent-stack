@@ -89,23 +89,27 @@ those contracts; it does not re-decide them per skill.
    category says, and silently discards the choice.
 9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
    `flow-phases.md`.
-10. **Invoke the phase skills for the heavy phases, and run them in sub-agents.** Use
-    `phase-build-test` and `phase-qa-validation` rather than re-describing build, test, or QA
-    logic. Pass the change kind so QA depth is selected automatically, together with the
-    resolved repo context. Both are **delegated by default** — one `Agent` call each in the
-    same worktree, returning a summary rather than build logs or browser snapshots. Running
-    them inline is the single most expensive mistake available to a run. Reserve inline
-    execution for startup-only QA and for a host where `stage-delegation` resolves to nothing.
+10. **Invoke the phase skills rather than re-describing their logic.** `phase-build-test` and
+    `phase-qa-validation` own build, test, and QA; pass the change kind so QA depth is selected
+    automatically, together with the resolved repo context. Both are **delegated by default** —
+    one `Agent` call each in the same worktree, returning a summary rather than build logs or
+    browser snapshots. Running them inline is the single most expensive mistake available to a
+    run. Reserve inline execution for startup-only QA and for a host where `stage-delegation`
+    resolves to nothing. `phase-personal-validation` is the opposite case and is **never
+    delegated** — see step 12.
 11. **Enforce Build & Test first.** Never start QA Validation or Personal Validation on a red
     build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
 12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the point it attaches to and asks its question. `approve` continues; `revise`
     re-runs that point with the human's notes, bounded by `policy.gate.reviseBudget`;
-    `decline` marks the stage `blocked` and is never a silent skip. Personal Validation uses
-    **no agent and no model**: hand control back to the user, present the code review and the
-    recorded QA review, start the application for code changes, publish quick links to the
-    review target, and wait for explicit approval. Never auto-approve. Record every decision
-    with `set_run_context`.
+    `decline` marks the stage `blocked` and is never a silent skip. A repository may declare
+    gates in front of Personal Validation; it may never remove that one.
+    At Personal Validation, run `phase-personal-validation` **inline, in this session** — no
+    agent and no model — for the review handoff: the application up and healthy, the review
+    links published both on the stage and as clickable URLs in the conversation, the
+    what-to-check list, and the code and QA reviews. Then wait for explicit approval. **Run that
+    skill again on every revise round**, before asking again. Never auto-approve. Record every
+    decision with `set_run_context`.
 13. **Never complete a gate as a sub-agent.** This gate is why the agent runs as the
     session's main loop and is never spawned by another agent: a sub-agent has no user turn
     to hand control back to. If this agent finds itself without `AskUserQuestion` — the
@@ -186,8 +190,9 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 
 This agent delegates to whatever the stack config binds — the `implement`, `verify`,
 `app.start`, `qa.run`, `spec`, and `deliver` service providers, and the `architecture`, `qa`,
-`domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test` and
-`phase-qa-validation` skills directly. It hands a run off to a fresh session rather than
+`domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test`,
+`phase-qa-validation`, and `phase-personal-validation` skills directly — the first two
+delegated to a sub-agent, the third never. It hands a run off to a fresh session rather than
 spawning one, and it is never itself spawned as a sub-agent.
 
 ## Example Usage
@@ -206,3 +211,4 @@ spawning one, and it is never itself spawned as a sub-agent.
 - `resources/flow-repo-context.md`
 - `skills/phase-build-test/SKILL.md`
 - `skills/phase-qa-validation/SKILL.md`
+- `skills/phase-personal-validation/SKILL.md`

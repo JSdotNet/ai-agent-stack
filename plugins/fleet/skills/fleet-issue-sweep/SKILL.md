@@ -262,9 +262,9 @@ scheduled for later. There is no later session anymore.
 13. Filter `staleCandidates` to those at or above `closureConfidence`. Report the rest as
     low-confidence observations only — never as proposals.
 
-14. Present each proposal with its evidence and ask for a decision with `AskUserQuestion`,
-    batching them into one question per issue (at most four per call; run several calls when
-    there are more). Give each the issue number, title, staleness reason, and the evidence the
+14. Present each proposal with its evidence and ask the user to decide, batching the
+    proposals into one question per issue and at most four at a time, in as many rounds as
+    that takes. Give each the issue number, title, staleness reason, and the evidence the
     triage agent actually found.
 
     This session stays open on this question. That is deliberate: the workers are already

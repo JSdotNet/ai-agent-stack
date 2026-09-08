@@ -255,7 +255,7 @@ the write to whatever flow covers the folder, resolved in this order:
    plugin provides.
 2. **The flow engine's own flow for the folder**, named after it — `flow-<folder>` —
    when an engine is installed.
-3. **Directly**, following that folder's `devbook-*.instructions.md` and
+3. **Directly**, following that folder's `devbook-*.md` rule and
    `devbook-chapter-metadata.md`, when no flow engine is installed at all.
 
 Name the rung that answered, once, in the report. Whichever rung it is owns template

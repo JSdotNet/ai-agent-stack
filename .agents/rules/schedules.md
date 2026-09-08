@@ -13,8 +13,9 @@ the frontmatter table, the five-field UTC `cron` at one hour minimum, `requires`
 allowlist, and the four placeholders `delivery-schedule:install` substitutes. Read it before adding or
 editing an entry — the contract is the copy, and this wrapper is not a summary of it.
 
-A schedule is a trigger and never a procedure. The body names a `schedule-*` entry point and
-its inputs; the steps belong to the skill it names, and the unattended rules belong to
+A schedule is a trigger and never a procedure. The body names a schedulable skill and its
+inputs — a `schedule-*` entry point, or another plugin's skill that picks its own input and
+reports, as `devbook-check` and `tech-update` do; the steps belong to the skill it names, and the unattended rules belong to
 `resources/schedule-preamble.md`, which every prompt already carries. A body that restates
 either is the duplication the plugin exists to prevent — see
 [The Unattended Lane Is Its Own Plugin](../../.devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin).

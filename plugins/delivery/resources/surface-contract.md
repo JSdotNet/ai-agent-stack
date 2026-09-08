@@ -20,7 +20,8 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 3. **A lower layer never names a higher one, and the engine names no specialist.** It names
    points, roles, and capabilities; a repository names the plugin that fills one. No
    specialist, content plugin, or surface is ever modified to know about the engine, and the
-   `your-*` ids below are placeholders for whatever you installed, not plugins that exist.
+   `your-*` and `repo:*` ids below are placeholders — for whatever you installed, and for a
+   skill the repository writes itself. Every other id in an example names a skill that ships.
 
 ## The Stack Config
 
@@ -49,15 +50,15 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     }
   },
   "extensions": {
-    "session.start": [ "devbook:load-context" ],
+    "session.start": [ "devbook:devbook-check" ],
     "spec":          "your-architecture-plugin:draft-spec",
     "implement":     "your-coding-plugin:coding",
     "verify":        "your-coding-plugin:coding",
     "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
     "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
     "qa.run":        { "provider": "your-qa-plugin:qa" },
-    "docs.update":   [ "devbook:sync-chapters" ],
-    "flow.end":      [ "delivery:capture-improvement" ]
+    "docs.update":   [ "repo:refresh-api-docs" ],
+    "flow.end":      [ "repo:capture-improvement" ]
   },
   "policy": {
     "qa.depth":               "targeted",
@@ -249,12 +250,19 @@ Validation** (`flow-phases.md`). `manual` leaves committing to the user.
 `pr.base` is the one value that is neither enum nor number. Validate it as a git ref that
 exists on the remote, never as free prose.
 
+**QA depth resolves in one order, highest first:** `policy.qa.depth` here, then the
+`## QA Depth` section of `.claude/flow-context.md`, then `phase-qa-validation`'s change-kind
+selection. The first one present wins, and `policy.qa.ceiling` caps the result however it was
+reached. The config outranks the context file because it is the validated, versioned surface a
+repository commits; the context file describes the application, and says what to do when
+nothing above it decided. `qa.depth` may be overlaid per machine, `qa.ceiling` may not.
+
 ## Bindings
 
 A role, a tracker, and a host slot are bound per repository and are **never** plugin
 dependencies: one missing specialist must not demote every skill that names it.
 
-- **Roles.** `architecture`, `qa`, `domain`, `ux`, `product`, `security`. A skill names the
+- **Roles.** `architecture`, `qa`, `domain`, `ux`, `product`, `security`, `docs`. A skill names the
   role; `bindings["delivery.roles"]` says which plugin fills it. Every role reference states
   its fallback, so no flow is ever dead because a role is unbound — a stage reads
   *preferred: role `architecture`; fallback: inline, using the ADR template in

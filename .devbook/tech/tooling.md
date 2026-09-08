@@ -18,10 +18,11 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 
 What a plugin's executable parts run on: the `devbook` generator with its six test suites, the
 `devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
-checker and the tests behind it, two surface plugins' MCP servers with their HTTP viewers,
-telemetry hook, and `dev/` checks, the two canvas extensions with their own HTTP viewers, the
-command hook each plugin uses to emit session-start context, and this repository's own
-`tools/check-assets.mjs`. All of that is ESM against `node:`
+checker and the tests behind it, `delivery-schedule`'s catalog checker, `devbook-config`'s
+read-only report script, the two MCP-backed surfaces' servers — the dashboard's with its HTTP
+viewer, telemetry hook, and `dev/` checks, the collector's headless — the two canvas extensions
+with their own HTTP viewers, the command hook each plugin uses to emit session-start context,
+and this repository's own `tools/check-assets.mjs`. All of that is ESM against `node:`
 built-ins with no third-party dependency, which is why `npm install` is not a step anywhere in
 this repository.
 

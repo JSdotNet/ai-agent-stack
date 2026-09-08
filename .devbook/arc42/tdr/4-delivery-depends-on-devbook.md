@@ -49,7 +49,7 @@ record is about: the five folder flows still name devbook's paths, and no check 
 plugins, so the next payload-path rename still lands the way this one did.
 
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
-[the surface contract](../../../plugins/delivery/rules/surface-contract.md) says: the engine
+[the surface contract](../../../plugins/delivery/resources/surface-contract.md) says: the engine
 reads that file whether or not a single folder is adopted, and `devbook-config` owns it and
 declares no dependency either.
 
@@ -93,7 +93,7 @@ Nothing is broken today. The cost is everything a declared dependency would have
 stop at their first stage. No manifest field, and no line in the README's own dependency
 section, says which five.
 
-**Nothing versions.** `delivery-schedule` pins `delivery >=1.0.0 <2.0.0`. Nothing pins
+**Nothing versions.** `delivery-schedule` pins `delivery >=2.0.0 <3.0.0`. Nothing pins
 devbook's contract version, so devbook can and did make a breaking change — contract 6 dropped
 `.backlog` — without `delivery` noticing.
 

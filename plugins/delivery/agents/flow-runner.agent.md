@@ -186,7 +186,7 @@ category resolved in `flow-model-selection.md` is the only value that applies.
 
 This agent delegates to whatever the stack config binds — the `implement`, `verify`,
 `app.start`, `qa.run`, `spec`, and `deliver` service providers, and the `architecture`, `qa`,
-`domain`, `ux`, `product`, and `security` roles. It invokes the `phase-build-test` and
+`domain`, `ux`, `product`, `security`, and `docs` roles. It invokes the `phase-build-test` and
 `phase-qa-validation` skills directly. It hands a run off to a fresh session rather than
 spawning one, and it is never itself spawned as a sub-agent.
 

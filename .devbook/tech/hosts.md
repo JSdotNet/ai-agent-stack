@@ -79,7 +79,6 @@ status: trial
 type: platform
 date: 2026-09-07
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
-aliases: [Claude Code Routines, Copilot Automations]
 related: [".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
 ```
 

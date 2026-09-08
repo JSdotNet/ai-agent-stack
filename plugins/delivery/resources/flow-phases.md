@@ -59,7 +59,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **No skill names Update Base.** The closing tier differs per skill, so a skill names its
   own; the opening phase is identical for every flow, so the flow-runner prepends it and
   there is nothing per-skill to say.
-- A skill lists its shared phases under a `### Final Phases (Shared)` heading and links
+- A skill lists its shared phases under a `## Final Phases (Shared)` heading and links
   here. This file is the source of truth; the skill only names which phases it runs and adds
   skill-specific notes, such as the QA scope.
 - No host auto-inlines an instruction file into a running skill, so each skill names its
@@ -146,8 +146,9 @@ the phase:
 - **Depth follows the change kind** the flow-runner persisted with `set_run_context`: new
   functionality gets Playwright QA with capture, a bug fix or a change to existing behavior
   gets targeted verification, a dependency update gets startup-only validation, and a change
-  with nothing to run is `skipped` with the reason recorded. `policy.qa.depth` in the stack
-  config overrides that selection, and `policy.qa.ceiling` caps how far it may escalate.
+  with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
+  `policy.qa.depth` and then `.claude/flow-context.md` outrank it, and `policy.qa.ceiling` caps
+  the result — the full order is in `surface-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire
   MCP server and it is unavailable, mark the phase `blocked`, name the missing server and
   the setup action, and stop before Personal Validation. Never complete this phase through a
@@ -244,7 +245,8 @@ description as file artifacts, say so once, and continue.
 **Agents:** *(default)* — no dedicated agent runs this phase, so the flow-runner performs it
 directly under the category's resolved model.
 
-**Model Category:** Review.
+**Model Category:** none. The flow-runner performs this phase inline, so it runs on the
+session's own model — see `flow-model-selection.md`.
 
 ## Phase: Documentation Update
 
@@ -257,8 +259,9 @@ documentation drifts out of date.
   set and no PR branch to update.
 - **Discover the documentation surface.** Read the target repository's own conventions — the
   `repo-instructions` file, any repository `*.instructions.md`, and the checked-in devbook
-  folders it governs (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`, `docs/`,
-  `README.md`) together with their per-chapter metadata format.
+  folders it governs (`.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/` — at the root or
+  under `.devbook/` — plus `docs/` and `README.md`) together with their per-chapter metadata
+  format.
 - **Decide whether documentation is now stale.** Compare the landed change set against that
   surface: did architecture, technology, deployment, a public API or contract,
   configuration, dependencies, or user-facing behavior change in a way the governed docs
@@ -333,4 +336,5 @@ itself required.
 
 **Agents:** the `flow-runner` agent.
 
-**Model Category:** Documentation & Low-Complexity.
+**Model Category:** none. The flow-runner performs this phase inline, so it runs on the
+session's own model — see `flow-model-selection.md`.

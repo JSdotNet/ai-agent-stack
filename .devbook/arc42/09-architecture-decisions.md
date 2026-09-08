@@ -570,7 +570,8 @@ related: [".devbook/arc42/tdr/1-body-budgets-unenforced.md", ".devbook/domain/pl
 compliance and recommended restoring the disclosure rule `CLAUDE.md` had dropped in the port.
 This is that remediation, and one step past it.
 
-The budget stays, as what `spec-conciseness.instructions.md` already calls it: the trigger for
+The budget stays, as what the authoring rule — `spec-conciseness.instructions.md` then,
+`AUTHORING.md` since — already calls it: the trigger for
 a disclosure decision, not a hard limit. Past it, an author moves on-demand reference behind a
 pointer, splits the asset by branch, or states why it must be long. The step past the record's
 recommendation is where the reason is stated for the assets that are long by kind rather than
@@ -580,7 +581,7 @@ by accident:
 | --- | --- |
 | `flow-*`, `phase-*`, `fleet-*`, `schedule-*` skills | A staged procedure is read once per run and every stage of it is safety-critical prose — gate wording, what a stage returns, what happens when a step fails — which the terseness rule exempts. |
 | `to-spec-*` and `from-spec-*` converters | Each carries the full mapping between one chapter kind and code, and a mapping stated by half is wrong. |
-| `devbook-*.instructions.md`, `surface-contract`, `flow-*.instructions.md` | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
+| A plugin rule (`devbook-*.md`) and a `resources/` contract (`surface-contract.md`, `flow-*.md`, `schedule-catalog-contract.md`) — `*.instructions.md` when this was written | A schema or a contract is the single source the conciseness rule tells everything else to point at; it cannot itself be a pointer. |
 | The `flow-runner` agent | It is a session's main loop and carries its own invocation contract. |
 
 For those kinds the reason is stated here, once, and not repeated at the top of a hundred
@@ -610,8 +611,9 @@ to complete a set.
 There is no runtime here, so the runtime view (6), deployment view (7), and quality scenarios
 (10) would describe hosts this repository does not own. Constraints (2), context (3), and
 solution strategy (4) are carried by the domain folder's context map and dependencies and by
-the quality goals in chapter 1. Cross-cutting concepts (8) are the naming chapter, and the
-glossary (12) is `domain.md` itself.
+the quality goals in chapter 1. Cross-cutting concepts (8) and the glossary (12) are both `domain.md`: this repository keeps
+its terms under that file's `## Ubiquitous Language` grouping rather than in the optional
+`naming.md`, per [the domain reshape](#a-context-describes-its-skills-and-keeps-its-terms-in-domainmd).
 
 Consequence: a reader used to arc42 finds gaps in the numbering. The building-block view, the
 decisions, and the debt are where the substance is, and the numbering is kept so a later
@@ -1487,7 +1489,7 @@ run](#one-config-file-two-kinds-of-key), but it no longer carries the routing hi
 repository that runs flows on pure defaults, with neither the stack config nor an entry in its
 own `enabledPlugins`, now starts its sessions without the flow routing text. The flows are
 unchanged and still work there; only the unprompted nudge is gone, and the file that restores
-it is the one `stack-init` writes anyway.
+it is the one `devbook-config:setup` writes anyway.
 
 Copilot reads `hooks.json` at the plugin root, where a hook is `type: prompt` and cannot guard
 itself. That copy stays unconditional, which is why its opening sentence hedges where the

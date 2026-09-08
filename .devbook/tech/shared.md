@@ -28,8 +28,10 @@ related: [".devbook/domain/plugin-authoring/domain.md#mcp-server"]
 How a plugin ships tools rather than prose. A plugin-provided server is namespaced by its
 plugin, so the same server has two possible tool prefixes depending on how it was registered.
 
-Three servers ship here, one per surface plugin, each hand-written against the stdio transport:
-newline-delimited JSON-RPC 2.0 on stdin and stdout, no SDK and no dependency.
+Two servers ship here, one per MCP-backed surface — the dashboard and the collector — each
+hand-written against the stdio transport: newline-delimited JSON-RPC 2.0 on stdin and stdout,
+no SDK and no dependency. The third surface, the canvas, reaches its host as two Copilot
+extensions and ships no server at all.
 
 ## MCP Apps
 

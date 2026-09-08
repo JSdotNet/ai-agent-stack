@@ -25,10 +25,9 @@ in adoption, and a migration are one operation — the stamp says which.
 ## Creating a folder
 
 Each adopted folder gets its directory and one starting chapter with a valid
-`meta` block, written to the matching instruction file:
-`devbook-arc42`, `devbook-domain`, `devbook-tech`, `devbook-design`,
-`devbook-ai` `.instructions.md`. Required block fields are in
-`devbook-chapter-metadata.md`.
+`meta` block, written to the shape its rule states: `devbook-arc42.md`,
+`devbook-domain.md`, `devbook-tech.md`, `devbook-design.md`, `devbook-ai.md`.
+Required block fields are in `devbook-chapter-metadata.md`.
 
 `.ai` needs its stage set chosen before anything is written: ask which positions
 this repository's development flow actually has, create one numbered file per
@@ -39,9 +38,11 @@ folder itself and silently ignores the whole area; add a `!.ai/` negation.
 
 ## Notes
 
-- The folder rules land in the repository as a pair per instruction file — the file
-  itself under `.github/instructions/`, a `paths` wrapper under `.claude/rules/` — so
-  both hosts apply them on a matching read. Shape and table: `assets/rule-wrappers.md`.
+- The folder rules land in the repository as a trio per rule — the rule verbatim under
+  `.agents/rules/`, a `paths` wrapper under `.claude/rules/`, and an `applyTo` wrapper under
+  `.github/instructions/` — so both hosts apply them on a matching read. Which rules exist and
+  what each one's `paths` are is `rules/rules.json`, never a hardcoded list. Shape and table:
+  `assets/rule-wrappers.md`.
 - Render the `AGENTS.md` section from `adopted` per `assets/agents-section.md`,
   never from what is on disk. Report the file it landed in; whether a host reads
   or imports that file is the repository's to arrange.

@@ -250,6 +250,13 @@ Validation** (`flow-phases.md`). `manual` leaves committing to the user.
 `pr.base` is the one value that is neither enum nor number. Validate it as a git ref that
 exists on the remote, never as free prose.
 
+**QA depth resolves in one order, highest first:** `policy.qa.depth` here, then the
+`## QA Depth` section of `.claude/flow-context.md`, then `phase-qa-validation`'s change-kind
+selection. The first one present wins, and `policy.qa.ceiling` caps the result however it was
+reached. The config outranks the context file because it is the validated, versioned surface a
+repository commits; the context file describes the application, and says what to do when
+nothing above it decided. `qa.depth` may be overlaid per machine, `qa.ceiling` may not.
+
 ## Bindings
 
 A role, a tracker, and a host slot are bound per repository and are **never** plugin

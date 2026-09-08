@@ -42,7 +42,7 @@ named provider can no longer honour, and nothing caught it — which is the argu
 record rather than an argument about it.
 
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
-[the surface contract](../../../plugins/delivery/rules/surface-contract.md) says: the engine
+[the surface contract](../../../plugins/delivery/resources/surface-contract.md) says: the engine
 reads that file whether or not a single folder is adopted, and `devbook-config` owns it and
 declares no dependency either.
 

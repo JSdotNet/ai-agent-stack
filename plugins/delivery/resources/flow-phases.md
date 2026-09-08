@@ -294,7 +294,7 @@ commit lands on the pull request branch; otherwise the flow-runner performs it d
 
 Every tier. Runs after the pull request and any documentation update, before Summary. It
 speaks to whatever `bindings["delivery.tracker"]` names — GitHub issues, Jira tickets, or
-`.backlog/` chapters when devbook is the bound tracker.
+Markdown chapters in the folder a repository that plans work as Markdown names.
 
 - **Detect the originating work item** from the run's tracker metadata when available, then
   from the origin block a pickup skill recorded when it claimed the item and routed this

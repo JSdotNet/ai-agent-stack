@@ -340,7 +340,7 @@ GitHub Issue Update. The ported skills named GitHub in the phase itself, in the 
 one of them passes to `start_run`, and in their prose.
 
 A phase that names one implementation cannot be bound to another. `bindings["delivery.tracker"]`
-is the whole point: GitHub issues, Jira tickets, and `.backlog/` chapters are three
+is the whole point: GitHub issues, Jira tickets, and Markdown chapters are three
 implementations of `find_item`, `read_item`, `create_item`, `comment`, `transition`, and
 `link_change`, and a repository that plans work as Markdown has been doing the third all along.
 
@@ -425,7 +425,7 @@ The same rule reaches into the run schema, in two renames the port made:
 
 - `githubIssue` became `workItem`, and the stage the report hides when it is absent matches
   `Work Item Update` rather than `GitHub Issue Update`. A surface that only knows GitHub
-  cannot show a run tracked in Jira or in `.backlog/` chapters, which is exactly what
+  cannot show a run tracked in Jira or in Markdown chapters, which is exactly what
   [a tracker being a binding](#a-tracker-is-a-binding-not-a-phase-name) means.
 - `approval.personalValidation` became `approval.state`. Personal Validation is one instance
   of the gate mechanism, and a surface whose schema names it cannot record the decision of any

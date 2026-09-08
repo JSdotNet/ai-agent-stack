@@ -34,12 +34,19 @@ restated in `delivery`. It is the fault
 `devbook-flows` with — a Metadata Enforcement stage restating what devbook's instruction files
 already state — surviving the change that was supposed to remove it.
 
-**Drift that already happened.** `delivery.tracker` still admits `devbook` as a provider and
-describes it writing `.backlog/` chapters, in `surface-contract.md`, `flow-phases.md`, and the
+**Drift that already happened.** `delivery.tracker` admitted `devbook` as a provider and
+described it writing `.backlog/` chapters, in `surface-contract.md`, `flow-phases.md`, and the
 README. devbook's migration `006-drop-backlog` removed that folder: the generator recognizes
-five, and the `implements` field the folder carried is gone. The engine documents a binding its
-named provider can no longer honour, and nothing caught it — which is the argument for this
+five, and the `implements` field the folder carried is gone. The engine documented a binding its
+named provider could no longer honour, and nothing caught it — which is the argument for this
 record rather than an argument about it.
+
+**2026-09-08. That half is repaired.** The provider is `markdown` and names no plugin: chapters
+in whatever folder a repository that plans work as Markdown keeps them in. The capability the
+decision argued for survives — three implementations of one operation set — and the claim that
+devbook supplies the folder does not. What the repair does not touch is the coupling this
+record is about: the five folder flows still name devbook's paths, and no check spans the two
+plugins, so the next payload-path rename still lands the way this one did.
 
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
 [the surface contract](../../../plugins/delivery/rules/surface-contract.md) says: the engine
@@ -114,4 +121,5 @@ for one reason is the bridge this repository just finished removing.
 
 **Trigger:** the next time devbook moves a payload path, renames a folder, or bumps its
 contract — or the first request for a sixth folder flow, whichever comes first. Migration
-`006-drop-backlog` has already fired the first clause and is unrepaired.
+`006-drop-backlog` fired the first clause; its `.backlog/` half is repaired as of 2026-09-08,
+and the coupling it exposed is not.

@@ -50,14 +50,32 @@ The debt is unchanged in substance and now concentrated almost entirely in the e
 plus `fleet`. The largest four are `devbook`'s chapter-metadata and domain instruction files
 and `fleet`'s two sweep skills.
 
+**2026-09-08.** The budgeted kinds changed shape: `*.instructions.md` is now a plugin's
+`rules/<name>.md` plus the `resources/` contracts that carry a name and description, and
+`AUTHORING.md` states all three. `node tools/check-assets.mjs --budgets` reports against
+them on every run, so the "nothing checks" half of this record is closed — what is missing is
+enforcement, not measurement.
+
+| Kind | Within budget | Was |
+| --- | --- | --- |
+| `SKILL.md` | 6 of 61 | 11 of 64 |
+| rule or `resources/` contract | 2 of 17 | 2 of 17 |
+| `*.agent.md` | 0 of 1 | 0 of 1 |
+
+Skills lost ground because the five folder flows came into `delivery` with the
+`devbook-flows` merge, and each is a staged procedure. Eight of seventy-nine assets meet
+their budget.
+
 ## The debt
 
 ```meta
 ```
 
-[CLAUDE.md](../../../CLAUDE.md) states three body budgets — `SKILL.md` 40 lines,
+As logged, `CLAUDE.md` stated three body budgets — `SKILL.md` 40 lines,
 `*.instructions.md` 60, `*.agent.md` 80 — as bare thresholds, and every session-start hook
-restates them. Most of the repository does not meet them, and nothing checks.
+restated them. Most of the repository did not meet them, and nothing checked. The budgets are
+[AUTHORING.md](../../../AUTHORING.md)'s today, no hook repeats them, and `check-assets
+--budgets` measures them; see the dated entries above for what that changed.
 
 Measured on 2026-09-04 across the seventeen plugins shipping then, counting body lines after
 frontmatter:
@@ -89,8 +107,9 @@ so it was never applied.
 ```meta
 ```
 
-Eleven percent of skills meet the budget, and the split between them says where the rule
-travelled and where it did not:
+On that 2026-09-04 population, eleven percent of skills met the budget, and the split between
+them says where the rule travelled and where it did not — four of these seven plugins have
+since left this marketplace:
 
 | Plugin | Skills within 40 | Median |
 | --- | --- | --- |
@@ -132,6 +151,8 @@ others stand is how a review spends its credibility on the finding that will be 
 
 The first is recommended, and the third is what to do if it is deferred again.
 
-**Trigger:** the next time the root file's authoring rules are edited for any reason. Until then,
-cite the disclosure rule in review rather than a bare line count — an over-budget asset that
-never says why is the reviewable defect.
+**Trigger:** the next time the root file's authoring rules are edited for any reason. **Fired
+2026-09-07**, when those rules moved to `AUTHORING.md` and the disclosure rule came back with
+them — the recommended option, taken. What is left is the trimming, so cite the disclosure rule
+in review rather than a bare line count: an over-budget asset that never says why is the
+reviewable defect.

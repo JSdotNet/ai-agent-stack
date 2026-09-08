@@ -274,7 +274,7 @@ repository names the plugin that fills it: a role in `bindings["delivery.roles"]
 | `spec` | service | The specification the rest of a flow builds on. Unbound, the flow-runner writes it inline |
 | `implement` | service | A change set and what was tested |
 | `verify` | service | Build and suite results. Default provider: `phase-build-test` |
-| `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-qa-validation` |
+| `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-qa-validation`. `app.start` is normally filled by the seeded `repo:start`, and the evidence rules hold from `capture-contract.md` whichever provider answers |
 
 A missing provider costs capability, not a load. `delivery` and `devbook-flows` used to carry
 over two hundred `plugin:asset` references naming the seven; every one is now the point it was

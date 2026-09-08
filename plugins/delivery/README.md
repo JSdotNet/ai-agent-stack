@@ -87,11 +87,33 @@ either drops the prose or buries paragraphs in strings. A repository that genuin
 different flow shape writes a repo-native `flow-*` skill, which takes precedence for the
 categories it covers.
 
+## The two procedures the engine cannot write
+
+Configuration picks *which* provider runs. It cannot say how one product's application comes
+up, or where that product wants its screenshots — and those are prose, not switches.
+
+So `delivery:install` seeds two skills into the repository and hands them over:
+
+| Seed | Fills | The repository owns |
+|---|---|---|
+| `start` | the `app.start` point, as `repo:start` | the startup procedure, sign-in, the branch-to-area map |
+| `capture` | evidence capture inside QA Validation | the layout, the naming, the tooling |
+
+Each lands as one editable copy under `.agents/skills/` with a pointer wrapper per host. Edit
+the copy and it is yours: its hash matches no release, so every later reconcile reports it and
+leaves it alone. `assets/skill-wrappers.md` has the shape.
+
+Neither is a dependency, and this is the part worth being precise about: **the guardrail is
+the contract, not the skill.** `resources/capture-contract.md` says what is captured, when it
+is required, and that an unavailable capture blocks the stage rather than degrading it — and
+that holds with no capture skill, no `qa.run` provider, and no QA plugin installed. A missing
+seed changes who runs capture, never whether it runs.
+
 ## What it never depends on
 
 - **Specialist plugins.** An architecture, QA, domain, UX, product, security, or docs
   specialist is bound as a role per repository, and a coding one as a service. Neither is
-  ever declared as a dependency — one missing specialist must not demote all 24 skills. The
+  ever declared as a dependency — one missing specialist must not demote all 26 skills. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.
 - **A tracker.** GitHub, Jira, or Markdown chapters, whichever `delivery.tracker` names.
@@ -114,7 +136,10 @@ categories it covers.
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |
 | `resources/flow-repo-context.md` | The optional `.claude/flow-context.md` runtime convention |
+| `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/flow-context-template.md` | A filled-in `.claude/flow-context.md` to copy |
+| `assets/skills/` | The `start` and `capture` seeds `delivery:install` writes into a repository |
+| `assets/skill-wrappers.md` | How a seed lands: one editable copy, a pointer wrapper per host |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The twenty-four skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The twenty-five skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-feature
@@ -209,6 +209,18 @@ type: sub-feature
 A shallower depth is reported as the depth it was, never as validation that did not happen. This
 is the one guarantee that makes the other three depths usable at all.
 
+### Capture Evidence Without a QA Plugin
+
+```meta
+type: sub-feature
+related: [".devbook/arc42/09-architecture-decisions.md#the-engine-owns-the-capture-contract-the-repository-owns-the-procedure"]
+```
+
+The evidence rules are the engine's own contract, so they hold with no QA plugin, no `qa.run`
+binding, and no capture skill. Capture resolves to the repository's `capture` skill, then the
+provider's, then this phase driving it directly; a missing piece changes who captures, never
+whether capture happens.
+
 ## push-branch
 
 ```meta
@@ -269,3 +281,24 @@ related: [".devbook/domain/plugin-authoring/domain.md#tracker"]
 
 Turn active Azure Monitor alerts into tracked issues, so an incident becomes a work item the rest
 of this context already knows how to carry.
+
+## install
+
+```meta
+type: feature
+related: [".devbook/arc42/09-architecture-decisions.md#the-engine-owns-the-capture-contract-the-repository-owns-the-procedure"]
+```
+
+Write the two procedures the engine names but cannot author — `start`, how this repository's
+application comes up, and `capture`, how evidence of the feature being built is taken — into the
+repository as one editable copy with a pointer wrapper per host, and record what landed.
+
+### Hand the Procedure Over
+
+```meta
+type: sub-feature
+```
+
+Editing the installed copy is the intended path, not drift. Once its hash matches no release it is
+the repository's: reported on every later reconcile, never overwritten. The wrappers stay managed,
+so the name and description a phase matches on keep refreshing while the procedure does not.

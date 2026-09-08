@@ -80,7 +80,7 @@ is missing.
 
 The Playwright preflight is one live check, not a config inspection: navigate to the target
 page and take a screenshot before running scenarios. If that fails, screenshot and video
-capture are unavailable for this run — treat it per the selected QA depth below.
+capture are unavailable for this run — treat it per `resources/capture-contract.md`.
 
 When QA is delegated to the `qa.run` provider or the runtime monitor, verify availability in
 the target agent/session tool surface, not only in the parent flow session. A provider is
@@ -124,8 +124,10 @@ Applies when the repository does not declare a QA depth in `.claude/flow-context
 - **New functionality → QA validation with capture:**
   1. **Run the application locally** via the `app.start` service.
   2. **Execute the changed/affected scenarios with Playwright** — via the `playwright` MCP
-     server, the `qa.run` provider drives each scenario, capturing screenshot/video evidence per
-     checkpoint and failure.
+     server, the `qa.run` provider drives each scenario, capturing evidence per checkpoint
+     and failure per `resources/capture-contract.md`. Capture resolves to the repository's
+     `capture` skill first, then the provider's own, then this phase driving it directly;
+     name which answered. Capture is **required** here.
   3. **Monitor runtime behavior continuously** — the runtime monitor watches Aspire logs,
      traces, and metrics. Run it as a background sub-agent (the `Agent` tool with
      `run_in_background`) so monitoring runs concurrently with Playwright validation;
@@ -142,10 +144,10 @@ Applies when the repository does not declare a QA depth in `.claude/flow-context
 - **Bug fix or change to existing functionality → targeted QA validation without required capture:**
   1. **Run the application locally** via the `app.start` service and verify the
      affected scenarios.
-  2. **Use Playwright when it helps validate the flow**, but capture screenshot/video
-     evidence only when explicitly requested or when a failure needs supporting evidence.
-     When the selected verification requires Playwright or requested evidence, missing MCP
-     availability blocks QA instead of falling back to an incomplete manual check.
+  2. **Use Playwright when it helps validate the flow**, capturing on failure or on request
+     per `resources/capture-contract.md`. Where that contract makes capture required,
+     missing MCP availability blocks QA instead of falling back to an incomplete manual
+     check.
   3. **Record pass/fail and monitoring findings** for the affected scenarios.
 - **Dependency, package, framework, or SDK update with no functional change → startup-only
   validation:** start the application, confirm the Aspire dashboard and health endpoints report
@@ -208,29 +210,19 @@ the evidence file is the record, and the surface renders it from disk on demand.
 ## MCP Servers
 
 - `playwright` is required for browser automation, smoke/E2E execution of browser-facing
-  scenarios, and screenshot/video evidence capture. Evidence capture is required for new
-  functionality and whenever the user explicitly requests it.
-- A quick Playwright MCP preflight must navigate to a target page and save a screenshot
-  before scenario validation begins. If that fails, screenshot/video evidence capture is
-  unavailable and the phase must report the limitation or block according to the selected
-  QA depth.
+  scenarios, and evidence capture.
 - Aspire MCP is required when validation depends on Aspire resource state, logs, traces,
   metrics, or health evidence. Initialize/start it with `aspire mcp init` and
   `aspire mcp start` before validation, or block with a clear missing-monitoring report.
 - Missing required MCP tooling is a blocking prerequisite failure; stop and prompt the user
   for setup instead of completing QA through degraded fallback.
 
-## Evidence Location
-
-- Evidence paths reported to the surface are resolved **relative to the git worktree
-  root** the flow runs in, and paths outside it are rejected.
-- A runtime-monitor sub-agent launched with `isolation: "worktree"` runs in its own checkout,
-  so it must write evidence under the running worktree root, or its findings must be
-  copied back before they are reported.
-- The running session reports all QA results; a sub-agent never calls surface tools
-  itself.
-
 ## Reference
+
+Capture contract: `resources/capture-contract.md` — who captures, when it is required, what
+comes back, and what an unavailable capture does to this stage. It holds whether or not a
+`qa.run` provider or a repository `capture` skill exists, so read it before reporting any
+scenario that had visual evidence to give.
 
 Phase definition: `resources/flow-phases.md`.
 Repo context convention: `resources/flow-repo-context.md`.

@@ -105,10 +105,13 @@ later reversed is the part a reader most needs.
 | [56. Payload-Only Components Carry No Contract Version](56-payload-only-components-carry-no-contract-version.md) | 2026-09-09 |
 | [57. A Workflow Gates the Checks the Schedule Cannot](57-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 |
 | [58. The Runner Opens No Browser Pane](58-the-runner-opens-no-browser-pane.md) | 2026-09-09 |
+| [59. The Annotation Lifecycle Ends in devbook](59-the-annotation-lifecycle-ends-in-devbook.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the
-flows moved twice and the bridge is gone. [8](8-comments-are-findings-until-the-fence-lands.md)
-and [37](37-a-plugins-rules-reach-a-host-through-the-install.md) are superseded in part: the
-first lost the premise it rested on, the second lost only where a plugin-internal contract
-lives. Each names what replaced it, in its own body, under its own number.
+flows moved twice and the bridge is gone.
+[8](8-comments-are-findings-until-the-fence-lands.md) and
+[37](37-a-plugins-rules-reach-a-host-through-the-install.md) are superseded in part: the first
+lost the premise it rested on and is now closed as well, its migration shipped;
+the second lost only where a plugin-internal contract lives. Each names what replaced it, in
+its own body, under its own number.

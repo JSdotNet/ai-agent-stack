@@ -1,8 +1,10 @@
 // Exercises the four write operations against a throwaway fixture repository:
 // where `add` lands a note, that `reply` and `resolve` splice into the fence
-// already there rather than reserializing it, and that a swept note leaves no
-// trace behind. Every case re-lints the written file, because a writer that
-// produces something `--check` rejects is the failure that matters.
+// already there rather than reserializing it, that a swept note leaves no
+// trace behind, and that an ordinal means the same thing to all four once a
+// chapter has subchapters. Every case re-lints the written file, because a
+// writer that produces something `--check` rejects is the failure that
+// matters.
 import { mkdtemp, mkdir, writeFile, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -47,10 +49,10 @@ const check = (ok, name, detail) => {
     console.log(`${ok ? "PASS" : "FAIL"}  ${name}${ok || !detail ? "" : `\n        ${detail}`}`);
 };
 
-async function fixture() {
+async function fixture(source) {
     const root = await mkdtemp(path.join(tmpdir(), "devbook-annotations-"));
     await mkdir(path.join(root, ".arc42"), { recursive: true });
-    await writeFile(path.join(root, REL), SOURCE, "utf8");
+    await writeFile(path.join(root, REL), source, "utf8");
     return root;
 }
 
@@ -59,8 +61,8 @@ async function lint(root) {
     return validateDocument(REL, markdown).filter((issue) => issue.severity === "error");
 }
 
-async function run(name, body) {
-    const root = await fixture();
+async function run(name, body, source = SOURCE) {
+    const root = await fixture(source);
     try {
         await body(root);
         const errors = await lint(root);
@@ -172,6 +174,169 @@ await run("resolve a missing index", async (root) => {
     }
     check(threw, "resolve: an index that is not there refuses rather than editing something else");
 });
+
+// --- Nesting ---------------------------------------------------------------
+//
+// An ordinal counts within one heading, never across the parent's line range:
+// a fence under `### Bar` is Bar's first note, not `## Foo`'s second. `list`
+// has always read it that way, so every write operation must too.
+
+/** A parent chapter and a subchapter, each with a note on its own passage. */
+const nested = ({ parentNote = true } = {}) =>
+    [
+        "# Building Block View",
+        "",
+        FENCE + "meta",
+        "status: draft",
+        FENCE,
+        "",
+        "## Foo",
+        "",
+        FENCE + "meta",
+        "status: draft",
+        FENCE,
+        "",
+        "The parent passage.",
+        "",
+        ...(parentNote
+            ? [
+                  FENCE + "annotation",
+                  "author: jobsc",
+                  "date: 2026-09-02",
+                  "quote: The parent passage",
+                  "body: A note on Foo.",
+                  FENCE,
+                  "",
+              ]
+            : []),
+        "### Bar",
+        "",
+        FENCE + "meta",
+        "status: draft",
+        FENCE,
+        "",
+        "The subchapter passage.",
+        "",
+        FENCE + "annotation",
+        "author: jobsc",
+        "date: 2026-09-02",
+        "quote: The subchapter passage",
+        "body: A note on Bar.",
+        FENCE,
+        "",
+    ].join("\n");
+
+const FOO = `${REL}#foo`;
+const BAR = `${REL}#bar`;
+
+await run(
+    "nested list",
+    async (root) => {
+        const foo = await list(root, FOO);
+        check(
+            foo.length === 1 && foo[0].body === "A note on Foo.",
+            "list: a parent chapter shows its own note and not the subchapter's",
+            JSON.stringify(foo.map((thread) => thread.body))
+        );
+        const bar = await list(root, BAR);
+        check(
+            bar.length === 1 && bar[0].index === 1 && bar[0].body === "A note on Bar.",
+            "list: a subchapter numbers its notes from one",
+            JSON.stringify(bar.map((thread) => [thread.index, thread.body]))
+        );
+    },
+    nested()
+);
+
+await run(
+    "nested resolve --delete",
+    async (root) => {
+        await resolve(root, FOO, 1, { delete: true });
+        const markdown = await readFile(path.join(root, REL), "utf8");
+        check(
+            !markdown.includes("A note on Foo."),
+            "sweep: index 1 on the parent took the parent's own note"
+        );
+        check(markdown.includes("A note on Bar."), "sweep: it left the subchapter's note where it was");
+    },
+    nested()
+);
+
+await run(
+    "nested resolve past the end",
+    async (root) => {
+        let threw = false;
+        try {
+            await resolve(root, FOO, 2);
+        } catch {
+            threw = true;
+        }
+        check(threw, "resolve: index 2 on the parent refuses rather than reaching into the subchapter");
+        const [bar] = await list(root, BAR);
+        check(bar.status === "open", "resolve: the subchapter's note is untouched", bar.status);
+    },
+    nested()
+);
+
+// The reported failure: one note, under a subheading only. `list` on the
+// parent printed nothing while `resolve --delete` on it swept the subchapter's
+// note and exited 0.
+await run(
+    "nested resolve on an empty parent",
+    async (root) => {
+        const foo = await list(root, FOO);
+        check(foo.length === 0, "list: a parent with no notes of its own has none", String(foo.length));
+        let threw = false;
+        try {
+            await resolve(root, FOO, 1, { delete: true });
+        } catch {
+            threw = true;
+        }
+        check(threw, "sweep: index 1 on an empty parent refuses rather than deleting the subchapter's note");
+        const [bar] = await list(root, BAR);
+        check(bar?.body === "A note on Bar.", "sweep: the subchapter's note survives", JSON.stringify(bar));
+    },
+    nested({ parentNote: false })
+);
+
+await run(
+    "nested reply",
+    async (root) => {
+        await reply(root, BAR, 1, { author: "claude", date: "2026-09-03", body: "An answer." });
+        const [bar] = await list(root, BAR);
+        check(
+            bar.replies?.length === 1,
+            "reply: index 1 on the subchapter lands in the subchapter's own fence",
+            JSON.stringify(bar.replies)
+        );
+        const [foo] = await list(root, FOO);
+        check(!foo.replies, "reply: the parent's note gained nothing", JSON.stringify(foo.replies));
+    },
+    nested()
+);
+
+await run(
+    "nested resolve on a file address",
+    async (root) => {
+        let message = "";
+        try {
+            await resolve(root, REL, 1, { delete: true });
+        } catch (error) {
+            message = error.message;
+        }
+        check(
+            message.includes("ambiguous"),
+            "resolve: a file address where two chapters each have a note 1 refuses to guess",
+            message
+        );
+        const markdown = await readFile(path.join(root, REL), "utf8");
+        check(
+            markdown.includes("A note on Foo.") && markdown.includes("A note on Bar."),
+            "resolve: nothing was swept"
+        );
+    },
+    nested()
+);
 
 console.log(failed ? `\n${failed} case(s) failed.` : "\nAll cases passed.");
 process.exit(failed ? 1 : 0);

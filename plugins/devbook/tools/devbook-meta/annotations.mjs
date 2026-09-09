@@ -237,15 +237,44 @@ export async function add(repoRoot, address, note) {
     return { path: chapter.relPath, line: insertAfter + 2 };
 }
 
-function fenceFor(chapter, index) {
-    const blocks = blocksIn(chapter.lines, chapter.range[0], chapter.range[1]).filter(
-        (block) => block.kind === "annotation"
-    );
-    const block = blocks[index - 1];
-    if (!block) {
-        throw new Error(`No annotation ${index} in that chapter — it has ${blocks.length}.`);
+/**
+ * The annotation fences the addressed chapter owns, each carrying the ordinal
+ * `list` reports. An ordinal counts per heading, not over the chapter's line
+ * range: a fence under a subheading belongs to that subchapter, so a parent's
+ * ordinals never reach it — the same rule `parseAnnotations` numbers by.
+ */
+function annotationsIn(chapter) {
+    const ordinals = new Map();
+    const found = [];
+    let slug = null;
+    for (const block of blocksIn(chapter.lines, chapter.range[0], chapter.range[1])) {
+        if (block.kind === "heading") {
+            slug = slugifyLocal(block.text);
+            continue;
+        }
+        if (block.kind !== "annotation") continue;
+        const ordinal = (ordinals.get(slug ?? "") ?? 0) + 1;
+        ordinals.set(slug ?? "", ordinal);
+        found.push({ ...block, chapter: slug, ordinal });
     }
-    return block;
+    return chapter.slug ? found.filter((note) => note.chapter === chapter.slug) : found;
+}
+
+function fenceFor(chapter, index) {
+    const notes = annotationsIn(chapter);
+    const matches = notes.filter((note) => note.ordinal === index);
+    if (matches.length > 1) {
+        // A file address spans several chapters, and each numbers from one.
+        const where = matches.map((note) => `#${note.chapter ?? ""}`).join(", ");
+        throw new Error(
+            `Annotation ${index} is ambiguous in ${chapter.relPath} — an ordinal counts within ` +
+                `one chapter, and ${where} each have one. Address the chapter.`
+        );
+    }
+    if (!matches.length) {
+        throw new Error(`No annotation ${index} in that chapter — it has ${notes.length}.`);
+    }
+    return matches[0];
 }
 
 /**

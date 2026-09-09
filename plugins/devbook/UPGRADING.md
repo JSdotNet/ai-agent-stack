@@ -5,6 +5,24 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 3.2.0: a bounded context says who works with it
+
+**Additive; no migration.** `.domain/<context>/` gains `stakeholders.md`, carrying
+`type: actor` for a role that operates the context and `type: party` for someone the
+context acts toward without operating it. It reads directly after the context's root
+document, and `stakeholders` joins the file-level `type` set.
+
+Nothing is removed, so a corpus written against the current contract stays valid and
+`contractVersion` is unchanged at **9**. An existing context gains the file when someone
+writes it; its absence is not a missing file, and a context nobody operates directly never
+takes one.
+
+Two rules move with it. Another bounded context, module, or technical system is a
+dependency and stays in `dependencies.md` — a stakeholder chapter never restates an
+integration. And `to-spec-feature` now routes a role check or authorization attribute to
+the actor chapter's fourth beat rather than dropping it, while `from-spec-feature` carries
+the actor and its right into the change brief.
+
 ## 3.0.0: every install skill is called `install`
 
 **Breaking; scripted migration `009-install-skill-ids`.** `devbook-install` is now

@@ -30,8 +30,8 @@ replies:
     date: 2026-09-02
     body: No second scan — the rollup is a view over the same index.
 ext:
-  devbook-collaboration:
-    finding: open-1
+  your-plugin:
+    raised-in: 2026-09-02
 ```
 
 | Field | Required | Meaning |

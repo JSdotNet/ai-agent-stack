@@ -483,7 +483,7 @@ node, the approval gate showing the objections raised since `approved-at`.
         { "author": "claude/flow-arc42", "date": "2026-09-02", "body": "No second scan." }
       ],
       // Opaque: validated as a mapping of namespaces, never read into.
-      "ext": { "devbook-collaboration": { "finding": "open-1" } }
+      "ext": { "your-plugin": { "raised-in": "2026-09-02" } }
     }
   ]
 }

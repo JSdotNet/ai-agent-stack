@@ -2,6 +2,39 @@
 
 Behaviour changes a consumer would notice, newest first.
 
+## 2.4.0: the two pickup skills go through the tracker binding
+
+**Breaking in one place: a skill was renamed.** Nothing you have configured changes meaning,
+and no key moves.
+
+### `azure-sre-to-github-issue` is now `sre-alerts-to-work-items`
+
+The old id named the tracker in the skill's own identity, which
+`bindings["delivery.tracker"]` exists to prevent — see **A Tracker Is a Binding, Not a Phase
+Name** in the devbook. Azure is the alert *source* and stays in the name; GitHub was the
+tracker and is gone from it. If you invoke the skill by name from a schedule, a routine, or a
+repository's own instructions, update the id. Nothing else referenced it.
+
+### Both pickup skills name tracker operations, not `gh`
+
+`start-session-from-issue` and `sre-alerts-to-work-items` used `gh issue list`, `gh issue
+create`, and `gh issue edit` directly, and offered Jira only as a closing aside. They now
+name `find_item`, `read_item`, `create_item`, `comment`, and `transition`, resolved from
+`bindings["delivery.tracker"]` like every other tracker touchpoint in the engine.
+
+On a repository bound to `github` the behaviour is what it was: the operations resolve to the
+same GitHub calls. On one bound to `jira` or `markdown` the two skills work for the first
+time instead of assuming GitHub. With no tracker bound, `start-session-from-issue` stops —
+there is nothing to pick up — and `sre-alerts-to-work-items` reports the alerts it would have
+filed and creates nothing.
+
+Their inputs generalized with them: a repository in `owner/repo` became the target the bound
+tracker addresses, and an issue number became an item id. Both still accept what they did
+before when the binding is `github`.
+
+**Bindings → Tracker** in `resources/surface-contract.md` now says how any tracker operation
+resolves — the bound tracker's own tooling first, then the host's CLI for it.
+
 ## 2.3.0: the engine owns the capture contract, and seeds two procedures
 
 **Not breaking. Nothing you have configured changes meaning, and no key moves.**

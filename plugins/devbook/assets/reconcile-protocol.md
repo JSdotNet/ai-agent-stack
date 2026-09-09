@@ -22,7 +22,9 @@ materialize, stamp — every time.
 ## The stamp
 
 `.devbook/config.json`, repo-scope and committed. devbook owns exactly
-one entry inside it and never edits another component's:
+one entry inside it and never edits another component's — except where a
+devbook migration renames an id another component's entry spells, as
+`009-install-skill-ids` rewrites the install-skill ids under `extensions`:
 
 ```json
 {

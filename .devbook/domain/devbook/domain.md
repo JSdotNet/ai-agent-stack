@@ -39,16 +39,17 @@ top-level heading carries a block of its own describing the document as a whole.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
-| `type` is present wherever the folder defines a value set for the level | parse | untested |
+| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | untested |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
+| An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 
 ### Meta Block
 
@@ -78,6 +79,12 @@ A review note living in the chapter, in a second fenced block, beside the passag
 It has identity within its chapter — an index, an author, a body, and replies — and it inherits
 position as its anchor, git as its sync, the pull request as its review, and `git blame` as its
 authorship record.
+
+Its address is scoped to its own heading, not to the chapter's line range: the index counts
+only the notes under that heading, so a note under a subheading belongs to the subchapter and a
+parent's index never reaches it. Every operation that reads or writes a note counts the same
+way, because an index that means one thing to a reader and another to a writer resolves to the
+wrong note.
 
 An annotation is an open loop rather than a record: resolving one means deleting it. It is
 never chapter content, so a reader loading a chapter as task context skips every fence, and a
@@ -227,7 +234,9 @@ related: [".devbook/domain/devbook/domain.md#derived-index"]
 Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
 the annotation index for the repository and for each adopted folder. It is the only writer of
 `_meta/`, and the only thing that decides whether a problem is an error or a warning: an
-unresolved reference fails, a heading with no block is reported and tolerated.
+unresolved reference fails, a heading with no block is reported and tolerated. Every
+per-block rule reaches the gate through the schema validator the graph build calls per file
+(`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
 request and the daily `devbook-check` schedule opens a pull request when the output moved.

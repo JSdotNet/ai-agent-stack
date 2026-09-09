@@ -46,6 +46,12 @@ that had it enabled sees it reported as not installed and finds the same five un
 The L2b bridge row in the [layer table](../../domain/plugin-authoring/domain.md#layer) keeps its
 pattern and, for now, no example.
 
+`devbook`'s own assets came to the rule on 2026-09-09. `code-sync-protocol.md` and the
+session-start hook already stated the pattern; `assets/routing-snippet.md` did not — it named
+the engine outright and routed each folder through one of the five flows by name — and now
+states the same three rungs. The `flow-*` strings left in the plugin are sample values in
+example data, an annotation `author` and a report-table cell, and route nothing.
+
 What this argument covers is the rules. It does not cover the generator path the five folder
 flows name, the devbook rules they restate, or the folder names they are called after, so
 `delivery` depends on `devbook` while declaring nothing —

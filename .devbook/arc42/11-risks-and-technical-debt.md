@@ -53,8 +53,9 @@ that links out and does not restate.
 Both halves of the trigger it named had fired. Three decisions carried a supersession note —
 one outright, two in part — so the chain the split was being held for existed; and the count
 had grown faster than the file's readability, past forty-five to forty-six while this section
-still said forty-five. Six further decisions were owed at once. All fifty-two were split out
-that day, numbered, with this chapter's shape as the model:
+still said forty-five. All forty-six moved out that day, six further decisions were written,
+and a forty-seventh argued on `main` in parallel landed as a file on the merge — fifty-three
+records, numbered, with this chapter's shape as the model:
 [`adr/README.md`](adr/README.md) introduces the set, and chapter 9 is a table of links.
 
 Keep this section, and reopen it the moment either chapter starts restating what its record

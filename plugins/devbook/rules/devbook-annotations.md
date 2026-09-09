@@ -47,7 +47,8 @@ ext:
 
 A note carries no id: a reply is inside its fence and a promoted work item
 points at the chapter, so a thread is addressed as `<path>#<slug>` plus its
-ordinal in the chapter.
+ordinal among the notes under that heading alone — a note under a subheading
+is the subchapter's first note, never its parent's second.
 
 ## Position is the anchor
 

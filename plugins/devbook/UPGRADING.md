@@ -5,6 +5,21 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 3.1.1: the CI path filter is rendered per layout
+
+**A fix; no migration.** `assets/workflows/devbook-meta.yml` filtered `push` and
+`pull_request` on the five root dot-folders alone, so a repository on the nested layout
+never triggered the check on a chapter edit and had no gate at all — nothing said so,
+because a filter that matches nothing looks exactly like a quiet branch. Both filters now
+carry `<prefix>`, and `devbook:install` renders it: `.` in the flat layout, `.devbook/` in
+the nested one, per `assets/reconcile-protocol.md`. That keeps a flat repository's filter
+as tight as it was.
+
+Unlike the instruction globs of 1.3.1, this one does **not** travel with the plugin — the
+workflow is materialized and repository-owned, so a reconcile reports it customized and
+leaves it alone. A nested repository fixes its own copy: prefix the five folder rows with
+`.devbook/` in both filters. The nightly workflow is schedule-driven and unaffected.
+
 ## 3.0.0: every install skill is called `install`
 
 **Breaking; scripted migration `009-install-skill-ids`.** `devbook-install` is now

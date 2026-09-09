@@ -4,8 +4,9 @@
 // over it when that file is present.
 //
 // An unknown key is an error, not a warning: a typo must never become a silently absent
-// setting. Keys the engine does not own — `components` and anything another component
-// writes — are ignored here, because each component validates its own entry.
+// setting. That holds at the top level too: `components` is the one key the engine does not
+// own, each component validating its own entry there, so a top-level key that is neither
+// engine-owned nor `components` is a misspelling of one of them and is reported by name.
 //
 //   node check.mjs [path-to-config.json]
 //
@@ -21,7 +22,6 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'config.schema.json');
-const OWNED = ['bindings', 'extensions', 'policy', 'gates'];
 
 // What the overlay may not say. The committed file describes what this repository
 // produces; the overlay describes how one machine runs it, and these four are the first
@@ -80,7 +80,13 @@ function validate(value, schema, root, path, errors) {
         return errors.length === before;
     }
     if (schema.pattern && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) {
-        errors.push(`${path}: ${JSON.stringify(value)} does not match ${schema.pattern}`);
+        // A `title` names the shape in words. Say that instead of the regex where one exists:
+        // the point of the message is that the author can see what to write.
+        errors.push(
+            schema.title
+                ? `${path}: ${JSON.stringify(value)} is not ${schema.title}`
+                : `${path}: ${JSON.stringify(value)} does not match ${schema.pattern}`,
+        );
     }
     if (schema.minimum !== undefined && typeof value === 'number' && value < schema.minimum) {
         errors.push(`${path}: must be at least ${schema.minimum}`);
@@ -112,11 +118,41 @@ function validate(value, schema, root, path, errors) {
     return errors.length === before;
 }
 
+/**
+ * Which top-level keys the engine owns — read from the schema rather than restated here, so
+ * a key added to one is never missing from the other.
+ */
+function ownedKeys(schema) {
+    return Object.keys(schema.properties ?? {});
+}
+
+/**
+ * A `$`-prefixed key is a JSON annotation — `$schema`, and the `$comment` the template ships.
+ * It belongs to nobody and configures nothing, so it is neither owned nor unknown.
+ */
+function isAnnotation(key) {
+    return key.startsWith('$');
+}
+
 export function checkStackConfig(config, schema) {
     const errors = [];
-    for (const key of OWNED) {
+    const owned = ownedKeys(schema);
+
+    for (const key of owned) {
         if (key in config) validate(config[key], schema.properties[key], schema, key, errors);
     }
+
+    // Ownership, not a closed list: a component's entry lives under `components`, so anything
+    // else at this level is a misspelling. Matching on "not owned and not a component" keeps
+    // every component working without the engine knowing any of their names.
+    for (const key of Object.keys(config)) {
+        if (owned.includes(key) || key === 'components' || isAnnotation(key)) continue;
+        errors.push(
+            `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, and a ` +
+                'component owns its own entry under `components`. Nothing reads this one.',
+        );
+    }
+
     return errors;
 }
 

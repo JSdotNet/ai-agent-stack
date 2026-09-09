@@ -25,6 +25,11 @@ the naming wave. Numbers 47 and up are assigned as records are written. So the s
 related decisions and the `date` field carries the chronology — reading top to bottom follows an
 argument, not a timeline.
 
+A number is claimed when the record is written, and two branches writing at once claim
+different ones: 53 was argued as chapter 9's forty-seventh decision on `main` while 47 to 52
+were being written here, and took the next free number on the merge rather than displacing
+them.
+
 A number is never reused and never renumbered. A superseded decision keeps its number and says
 so in its own body, pointing at whatever replaced it, because the record of a choice that was
 later reversed is the part a reader most needs.
@@ -88,6 +93,7 @@ later reversed is the part a reader most needs.
 | [50. Personal Validation Is a Phase Skill, and the Gate Is Not](50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md) | 2026-09-09 |
 | [51. Raising a Pull Request Is Not a Skill](51-raising-a-pull-request-is-not-a-skill.md) | 2026-09-09 |
 | [52. Annotations Reach the Devbook Folders and Nothing Else](52-annotations-reach-the-devbook-folders-and-nothing-else.md) | 2026-09-09 |
+| [53. The Hard Gate Runs the Schema Validator](53-the-hard-gate-runs-the-schema-validator.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

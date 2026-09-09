@@ -80,7 +80,7 @@ filenames. `context-map.md` is `.domain`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
 tree above — `skills.md` or `features.md`, `model.md`, `flow.md`,
-`dependencies.md`, `domain.md`, then any `flow.<name>.md` in filename order.
+`dependencies.md`, `naming.md`, then any `flow.<name>.md` in filename order.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities

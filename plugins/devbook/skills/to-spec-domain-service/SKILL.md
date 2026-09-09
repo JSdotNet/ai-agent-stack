@@ -146,6 +146,8 @@ evidence either way.
 
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
+- Do not write an `annotation` fence. A capture records what the code does; an
+  open question about it belongs in review, not in a chapter this skill writes.
 - Do not drop a chapter's `status` line because the implementation exists. An
   omitted status means the resting value `active` — agreed — and code existing is
   not agreement that the code is the intended model.

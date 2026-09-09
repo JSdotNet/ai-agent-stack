@@ -1,50 +1,60 @@
 ---
 name: start-session-from-issue
 description: >
-  Start this session's work from a single GitHub issue: fetch the issues matching a filter,
-  select one, claim it, route it to the flow-* skill that matches its type, and run that
-  flow here. One issue per run, no extra sessions. Use when: picking up an issue
-  for implementation, pulling the next item off the backlog, or running a scheduled backlog
-  pickup.
+  Start this session's work from a single tracker work item — a GitHub issue, a Jira ticket, or
+  a Markdown chapter: fetch the items matching a filter, select one, claim it, route it to the
+  flow-* skill that matches its type, and run that flow here. One item per run, no extra
+  sessions. Use when: picking up an issue for implementation, pulling the next item off the
+  backlog, or running a scheduled backlog pickup.
 ---
 
-# Start Session from GitHub Issue
+# Start Session from a Work Item
 
 ## Purpose
 
-Turn one GitHub issue into work in progress. Fetch the open issues matching a filter, select
-a single issue, claim it, decide which `flow-*` flow its type calls for, and run
-that flow **in this session** with the issue context and origin metadata baked in.
+Turn one tracker work item into work in progress. Fetch the open items matching a filter, select
+a single item, claim it, decide which `flow-*` flow its type calls for, and run that flow **in
+this session** with the item context and origin metadata baked in.
 
 This is the generic counterpart to `schedule-bug-fix` in the `delivery-schedule` plugin: any
-filter, any issue type, routed to the matching flow rather than always `flow-bug`.
+filter, any item type, routed to the matching flow rather than always `flow-bug`.
 
-## One Issue Per Run
+## Tracker
 
-This skill starts **this** session's work from one issue. It does not prepare work for other
+Every read and write here goes through the tracker operations — `find_item`, `read_item`,
+`transition`, `comment` — resolved from `bindings["delivery.tracker"]`. See **Bindings →
+Tracker** in `resources/surface-contract.md` for how an operation resolves and what each
+provider maps an item to. Name the operation, never a provider's command.
+
+With no tracker bound there is nothing to pick up: say so and stop.
+
+## One Item Per Run
+
+This skill starts **this** session's work from one work item. It does not prepare work for other
 sessions, and it never spawns an agent to run the flow.
 
 A `flow-*` run needs its own session: it must be able to ask about what is ambiguous, hold
 the Personal Validation gate, and own its surface run. Asking the user is foreground-only
 and a sub-agent has no user turn to wait for — see **Session Ownership** and **Sub-Agent
 Constraints** in `resources/flow-execution-model.md`. Scoping a run to one
-issue is what makes that work: this session is the owner session, so the flow is
+item is what makes that work: this session is the owner session, so the flow is
 plan-first and gated for real.
 
-To work a second issue, run this skill again in another session. Each run claims a different
-issue, because the previous one is filtered out as in flight.
+To work a second item, run this skill again in another session. Each run claims a different
+item, because the previous one is filtered out as in flight.
 
 ## Inputs
 
-- GitHub repository in `owner/repo` format (required).
-- Issue filter — any combination of:
+- Target the bound tracker addresses items in — a repository, a project, or a folder, whichever
+  the binding names (default: the binding's own configured target).
+- Item filter — any combination of, dropping what the bound tracker has no field for:
   - Label(s): e.g. `bug`, `feature`, `sprint-42`.
-  - Milestone: milestone title or number.
-  - Assignee: GitHub username (`@me` for yourself).
+  - Milestone, sprint, or iteration: by title or number.
+  - Assignee, in the bound tracker's own user identity (`@me` for yourself).
   - State: `open` (default) or `all`.
-- Selection rule when the filter matches more than one issue: `oldest` (default),
+- Selection rule when the filter matches more than one item: `oldest` (default),
   `newest`, or `highest-priority` (by severity or priority label).
-- Selection override: an explicit issue number to work instead of the ranked pick (optional).
+- Selection override: an explicit item id to work instead of the ranked pick (optional).
 - Base branch to branch from (default: repository default branch).
 - Plan-first: `true` (default on an interactive run — the flow proposes its plan and
   waits for approval before implementing) or `false` (the flow's own stage gating
@@ -53,15 +63,10 @@ issue, because the previous one is filtered out as in flight.
 
 ## Workflow
 
-### Phase 1 — Fetch Matching Issues
+### Phase 1 — Fetch Matching Items
 
-1. List the issues matching the filter:
-
-   ```bash
-   gh issue list --repo <owner/repo> --state open --label "<label>" \
-     --assignee "<user>" --milestone "<milestone>" \
-     --json number,title,body,labels,assignees,milestone,url,createdAt
-   ```
+1. `find_item` with the filter, then `read_item` for each hit, so every candidate carries its
+   id, title, body, labels, assignees, milestone, URL, and creation time.
 
 2. If nothing matches, report that and stop.
 
@@ -71,17 +76,17 @@ issue, because the previous one is filtered out as in flight.
    work or restarts its own:
 
    - Labelled `in-progress`.
-   - A branch or worktree carries its issue number — `git --no-pager worktree list`,
+   - A branch or worktree carries its item id — `git --no-pager worktree list`,
      `git branch --all`.
    - An open pull request references it.
    - Assigned to somebody other than the current user.
 
 4. If every match is filtered out, say so and stop without claiming anything.
 
-### Phase 3 — Select One Issue
+### Phase 3 — Select One Item
 
 5. Apply the selection rule to the remaining candidates and take the **top one only**. When
-   the selection override names an issue number, take that one instead — and still apply the
+   the selection override names an item id, take that one instead — and still apply the
    Phase 2 in-flight check to it.
 
 6. Report the selection, the number of candidates deferred, and the runner-up, so the next
@@ -89,18 +94,18 @@ issue, because the previous one is filtered out as in flight.
 
 7. **Confirmation depends on whether a user is there.**
 
-   - **Interactive run:** ask the user to confirm the selected issue, or name a different
+   - **Interactive run:** ask the user to confirm the selected item, or name a different
      one. Do not proceed until they answer.
    - **Unattended run** (a scheduled run, no user turn available): proceed without
-     confirmation. The scope is one issue, the Phase 5 claim prevents a double pickup, and
+     confirmation. The scope is one item, the Phase 5 claim prevents a double pickup, and
      the flow still stops at Personal Validation before any pull request.
 
 ### Phase 4 — Route to an Flow
 
-8. Decide which `flow-*` skill the issue's type calls for. Read the issue body and labels,
-   not the labels alone — a mislabelled issue routes on what it actually asks for:
+8. Decide which `flow-*` skill the item's type calls for. Read the item body and labels,
+   not the labels alone — a mislabelled item routes on what it actually asks for:
 
-   | Issue is about | Flow |
+   | Item is about | Flow |
    |---|---|
    | A defect in existing behavior | `flow-bug` |
    | New or changed feature behavior, including small UI tweaks | `flow-feature` |
@@ -117,46 +122,37 @@ issue, because the previous one is filtered out as in flight.
    its own `flow-*` skills in the host's repo-native skill folder, and those take precedence for the
    categories they cover. `flow-fallback` is the last resort, not an escape hatch.
 
-   State the routing decision and its reason before acting on it. When the issue is too
+   State the routing decision and its reason before acting on it. When the item is too
    ambiguous to route, ask (interactive) or route to `flow-fallback` and say so (unattended).
 
 ### Phase 5 — Claim and Run
 
-9. Claim the issue before touching any code:
+9. Claim the item before touching any code: `transition` it to the bound tracker's in-progress
+   state, assign it to the current user, and mark it `in-progress` however that tracker records
+   a label. Create the state or the label first where the target does not have it yet.
 
-   ```bash
-   gh issue edit <number> --repo <owner/repo> --add-assignee "@me"
-   gh issue edit <number> --repo <owner/repo> --add-label "in-progress"
-   ```
-
-   Create the `in-progress` label first if the repository does not have it:
-
-   ```bash
-   gh label create "in-progress" --repo <owner/repo> --color "0075ca" \
-     --description "Issue is actively being worked on"
-   ```
-
-   If the claim fails, stop and report it. Never start work on an issue that could not be
+   If the claim fails, stop and report it. Never start work on an item that could not be
    claimed.
 
-10. Run the routed flow in **this session** with the context below. Pass the GitHub
-    origin as `githubIssue` to `start_run`, so the run reports its captured result and QA
-    report back to the issue.
+10. Run the routed flow in **this session** with the context below. Pass the origin as the run's
+    tracker metadata to `start_run`, so Work Item Update reports its captured result and QA
+    report back to this item.
 
     ```text
-    GitHub issue #<number>: "<issue title>"
+    Work item <id>: "<item title>"
 
-    GitHub issue origin:
-    Repository: <owner/repo>
-    Issue Number: <number>
-    Issue URL: <issue url>
+    Work item origin:
+    Tracker: <the provider bindings["delivery.tracker"] names>
+    Target: <repository, project, or folder>
+    Item Id: <id>
+    Item URL: <item url>
 
-    Issue description:
-    <issue body>
+    Item description:
+    <item body>
 
     Labels: <labels>
     Milestone: <milestone or "none">
-    Branch: <type>/<number>-<slug> from <base branch>
+    Branch: <type>/<id>-<slug> from <base branch>
     ```
 
 11. When plan-first is enabled, the flow's scope-discovery stage proposes its plan —
@@ -169,9 +165,9 @@ issue, because the previous one is filtered out as in flight.
     Validation, where the user reviews the recorded plan and the change it produced together,
     and no pull request is opened before that. Stop at the plan instead only when the run
     was explicitly configured to — for work where implementing on an unreviewed plan is the
-    expensive mistake, such as an architecture or migration issue.
+    expensive mistake, such as an architecture or migration item.
 
-12. **Never spawn an agent to run the flow**, and never pick up a second issue in
+12. **Never spawn an agent to run the flow**, and never pick up a second item in
     this run.
 
 ### Phase 6 — Summary
@@ -180,7 +176,7 @@ issue, because the previous one is filtered out as in flight.
 
     | Field | Value |
     |-------|-------|
-    | Issue worked | #42 — `Add login page` |
+    | Item worked | #42 — `Add login page` |
     | Routed to | `flow-feature` (feature behavior, labelled `feature`) |
     | Claimed | `@me`, `in-progress` |
     | Outcome | Plan recorded, implementation complete, awaiting Personal Validation |
@@ -195,39 +191,37 @@ Follow the **Reporting Contract** in `resources/surface-contract.md`.
 With no surface bound, skip the calls, say so once, and continue — file artifacts remain
 the source of truth.
 
-- `start_run` with `skillId: "start-session-from-issue"` and these stages: Fetch Matching Issues, Filter Out
-  Work Already In Flight, Select One Issue, Route to an Flow, Claim and Run,
+- `start_run` with `skillId: "start-session-from-issue"` and these stages: Fetch Matching Items,
+  Filter Out Work Already In Flight, Select One Item, Route to an Flow, Claim and Run,
   Summary.
-- The flow in Phase 5 opens its own run, with this run's `githubIssue` metadata
+- The flow in Phase 5 opens its own run, with this run's tracker metadata
   carried into its `start_run`. Reference that run id in the Claim and Run stage output
   rather than duplicating its stages here.
 
 ## Output
 
-- Exactly one issue selected, claimed, routed, and worked up to Personal Validation.
+- Exactly one work item selected, claimed, routed, and worked up to Personal Validation.
 - The routing decision and its reason, on the record.
 - The remaining candidates deferred, with the next run's pick named.
 - No extra sessions requested, and no agents spawned.
 
 ## Notes
 
-- To work several issues in parallel, launch several sessions yourself and run this skill
-  once in each — every run claims a different issue, so they do not collide. A separate
+- To work several items in parallel, launch several sessions yourself and run this skill
+  once in each — every run claims a different item, so they do not collide. A separate
   worktree per session keeps their change sets apart. Do not try to make one run cover
-  several issues.
-- Safe to run on a schedule: a run either starts one issue or is a clean no-op. Because the
-  claim happens before any code is written, an interrupted run leaves at most one issue
+  several items.
+- Safe to run on a schedule: a run either starts one item or is a clean no-op. Because the
+  claim happens before any code is written, an interrupted run leaves at most one item
   labelled `in-progress` with a branch to resume from.
-- Remove the `in-progress` label when an issue is abandoned, or later runs keep skipping it.
-- For Jira issues, replace the GitHub fetch with a Jira skill query using the same field
-  mapping (issue key, summary, description, labels).
+- Remove the `in-progress` label when an item is abandoned, or later runs keep skipping it.
 
 ## Related Skills
 
-- `schedule-bug-fix` (`delivery-schedule` plugin) — the same single-issue pickup narrowed to
-  `bug` issues, always routed to `flow-bug`, ranked by severity.
+- `schedule-bug-fix` (`delivery-schedule` plugin) — the same single-item pickup narrowed to
+  `bug` items, always routed to `flow-bug`, ranked by severity.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
 - **Session Handoff** in `resources/flow-execution-model.md` — hand this
   session's in-flight run to a fresh session when its context fills, rather than starting the
-  issue over.
+  item over.

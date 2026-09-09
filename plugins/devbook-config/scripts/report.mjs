@@ -27,14 +27,18 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install' },
     collaboration: { plugin: 'devbook-collaboration', install: 'devbook-collaboration:install' },
+    delivery: { plugin: 'delivery', install: 'delivery:install' },
     schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install' },
 };
 
 // The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
 // install refuses to run until `components.devbook` names an adopted folder, and
 // delivery-schedule checks its targets against the plugins this repository enables, so it
-// wants the settled state. Anything not named here follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery-schedule'];
+// wants the settled state. `delivery` is the one free position — its install reads the engine
+// keys and `.claude/flow-context.md` and no other component's stamp — and it sits before
+// schedule because schedule's targets call the procedures it seeds. Anything not named here
+// follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and
@@ -137,7 +141,11 @@ function resolveCatalogs(repoRoot, configDir, name) {
     return found;
 }
 
-/** Merge the enabled-plugin maps the host layers, nearest file last. */
+/**
+ * Merge the enabled-plugin maps the host layers, nearest file last, and keep the paths that
+ * answered. A warning about an unenabled binding has to name the settings file it read, so
+ * the paths travel with the map rather than being re-derived at render time.
+ */
 function resolveEnabled(repoRoot, configDir) {
     const files = [
         ['user settings', join(configDir, 'settings.json')],
@@ -145,14 +153,60 @@ function resolveEnabled(repoRoot, configDir) {
         ['local settings', join(repoRoot, '.claude', 'settings.local.json')],
     ];
     const merged = {};
-    let any = false;
+    const paths = [];
     for (const [what, path] of files) {
         const settings = load(what, path);
         if (!settings) continue;
-        any = true;
+        paths.push(path);
         Object.assign(merged, settings.enabledPlugins ?? {});
     }
-    return any ? merged : null;
+    return { plugins: paths.length ? merged : null, paths };
+}
+
+/**
+ * The plugin half of a role binding or an extension provider, or null when it names no
+ * plugin. A provider is `plugin`, `plugin:skill`, `{ provider }`, or `{ run }`; `repo:<skill>`
+ * is the repository's own skill and belongs to no plugin at all.
+ */
+function bindingPlugin(value) {
+    const id = typeof value === 'string'
+        ? value
+        : value && typeof value === 'object'
+            ? (value.provider ?? value.run)
+            : null;
+    if (typeof id !== 'string' || id.startsWith('repo:')) return null;
+    return id.split(':')[0] || null;
+}
+
+/**
+ * Every `delivery.roles` and `extensions` binding naming a plugin this checkout has not
+ * enabled. The engine promises this is a warning and never a failure - a binding is committed
+ * and shared, enablement is personal to this checkout, and a stage falls back to what its role
+ * reference states. See `resources/surface-contract.md` in the delivery plugin, under Bindings.
+ *
+ * Marketplace is stripped from the enabled key on purpose: a repository may bind a plugin from
+ * a marketplace this report does not read, and calling that unenabled would be a false alarm.
+ */
+function unenabledBindings(repository, enabled) {
+    if (!enabled) return null;
+    const on = new Set(
+        Object.entries(enabled).filter(([, value]) => value).map(([key]) => key.split('@')[0]),
+    );
+    const found = [];
+    const check = (where, key, value) => {
+        const named = (Array.isArray(value) ? value : [value]).map(bindingPlugin).filter(Boolean);
+        const missing = [...new Set(named)].filter((name) => !on.has(name));
+        if (missing.length) found.push({ where, key, plugins: missing });
+    };
+    for (const [role, value] of Object.entries(repository.roles ?? {})) {
+        check('delivery.roles', role, value);
+    }
+    for (const point of [...SERVICES, ...CHORES]) {
+        if (repository.extensions && point in repository.extensions) {
+            check('extensions', point, repository.extensions[point]);
+        }
+    }
+    return found;
 }
 
 /** Which versions of which plugins the host has on disk, per `name@marketplace`. */
@@ -383,6 +437,13 @@ function render(model) {
     }
 
     const repo = model.repository;
+    // A row carries its own flag so the table reads on its own; the section after the tables
+    // explains it once and names both files.
+    const warned = new Map((model.unenabled ?? []).map((w) => [`${w.where} ${w.key}`, w.plugins]));
+    const warn = (where, key) => {
+        const plugins = warned.get(`${where} ${key}`);
+        return plugins ? ` - **not enabled here:** ${plugins.map((n) => `\`${n}\``).join(', ')}` : '';
+    };
     out.push('## This repository');
     out.push('');
     if (repo.legacyPath) {
@@ -404,7 +465,7 @@ function render(model) {
         out.push(`Tracker: ${describeValue(repo.tracker ?? undefined)}`);
         out.push('');
         out.push(repo.roles
-            ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v)]))
+            ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v) + warn('delivery.roles', k)]))
             : 'No `delivery.roles` binding - a flow consults no specialist by name.');
         out.push('');
         out.push(repo.mcp
@@ -416,11 +477,30 @@ function render(model) {
         out.push(table(
             ['Point', 'Kind', 'Provider'],
             [
-                ...SERVICES.map((p) => [`\`${p}\``, 'service', describeValue(repo.extensions?.[p])]),
-                ...CHORES.map((p) => [`\`${p}\``, 'chore', describeValue(repo.extensions?.[p])]),
+                ...SERVICES.map((p) => [`\`${p}\``, 'service', describeValue(repo.extensions?.[p]) + warn('extensions', p)]),
+                ...CHORES.map((p) => [`\`${p}\``, 'chore', describeValue(repo.extensions?.[p]) + warn('extensions', p)]),
             ],
         ));
         out.push('');
+        if (model.unenabled === null && (repo.roles || repo.extensions)) {
+            out.push('No settings file was readable, so nothing is said about whether the plugins these bindings name are enabled here.');
+            out.push('');
+        } else if (model.unenabled?.length) {
+            out.push('### Bindings nobody has enabled');
+            out.push('');
+            out.push(`These bindings name a plugin this checkout has not enabled. It is a warning and never a failure: a binding is committed and shared, enablement is personal to this checkout, and a stage that cannot reach its plugin falls back to what its role reference states. Reconcile \`${repo.path}\` against ${model.enabledPaths.map((f) => `\`${f}\``).join(', ')} - enable the plugin here, or rebind the key there.`);
+            out.push('');
+            out.push(table(
+                ['Where', 'Key', 'Names', 'Not enabled'],
+                model.unenabled.map((w) => [
+                    `\`${w.where}\``,
+                    `\`${w.key}\``,
+                    describeValue(repo[w.where === 'delivery.roles' ? 'roles' : 'extensions']?.[w.key]),
+                    w.plugins.map((n) => `\`${n}\``).join(', '),
+                ]),
+            ));
+            out.push('');
+        }
         out.push('### Policy and gates');
         out.push('');
         out.push(repo.policy
@@ -520,7 +600,7 @@ function main(argv) {
     const plugins = buildPluginRows(
         catalogs,
         installed,
-        enabled,
+        enabled.plugins,
         options.marketplace,
         repository.components,
     );
@@ -537,6 +617,8 @@ function main(argv) {
         catalogs,
         plugins,
         repository,
+        enabledPaths: enabled.paths,
+        unenabled: unenabledBindings(repository, enabled.plugins),
         deliverySkills: deliveryRoot ? skillNames(deliveryRoot) : null,
         scheduleSkills: scheduleRoot ? skillNames(scheduleRoot) : null,
         sources,
@@ -550,4 +632,4 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     process.exit(main(process.argv.slice(2)));
 }
 
-export { compareVersions, buildPluginRows, buildRepository, parseArgs };
+export { compareVersions, buildPluginRows, buildRepository, bindingPlugin, unenabledBindings, parseArgs };

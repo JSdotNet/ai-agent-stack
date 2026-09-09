@@ -131,6 +131,8 @@ Write them out as invariants, with the token names.
 
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
+- Do not carry an `annotation` fence into the change brief. An open question is
+  a reason to stop at the gate, not a line item to implement.
 - Do not add, remove, or pin a dependency. Name the requirement; the change goes
   through the package-update workflow and is recorded in `.tech`.
 - Do not brief "adopt the library" without listing the replacement sites.

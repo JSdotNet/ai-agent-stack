@@ -76,7 +76,9 @@ decision is superseded.
 | [50. Personal Validation Is a Phase Skill, and the Gate Is Not](adr/50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md) | 2026-09-09 | The review handoff is `phase-personal-validation`; the approve/revise/decline gate stays with the runner, because flow control lives in one place. |
 | [51. Raising a Pull Request Is Not a Skill](adr/51-raising-a-pull-request-is-not-a-skill.md) | 2026-09-09 | The lane ships four skills and no `create-pull-request` — opening a PR is one command, and a skill for it would restate the host's own action. |
 | [52. Annotations Reach the Devbook Folders and Nothing Else](adr/52-annotations-reach-the-devbook-folders-and-nothing-else.md) | 2026-09-09 | A fence outside the five folders is inert and stays that way; a fence after a `mermaid` block annotates the diagram, deliberately. |
+| [53. The Hard Gate Runs the Schema Validator](adr/53-the-hard-gate-runs-the-schema-validator.md) | 2026-09-09 | `validateDocument` is the only implementation of the per-block metadata rules and nothing on the `--check` path called it; `buildGraph` now runs it once per file and the graph's own seven lint loops are removed. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both
-halves and six more decisions were owed. The content did not change in the move.
+halves and six more decisions were owed. The content did not change in the move. Record 53 was
+written inline on `main` the same day and landed here as a file.

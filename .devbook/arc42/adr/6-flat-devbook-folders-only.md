@@ -16,9 +16,9 @@ them, so a `.devbook/domain/…` address resolves to nothing.
 folder resolution now recognizes both prefixes. `folderKindForPath` strips an optional
 `.devbook/` and matches the five names either way, discovery probes both spellings and reports
 which layout it found, and everything downstream works off the path it is handed — so scopes,
-`_meta/` output paths, and references needed no change at all. Contract version 7, additive,
-no migration. `nested-layout.test.mjs` holds the same corpus written both ways and asserts the
-two produce the same nodes and the same edges.
+`_meta/` output paths, and references inside the generator needed no change. Contract version
+7, additive, no migration. `nested-layout.test.mjs` holds the same corpus written both ways
+and asserts the two produce the same nodes and the same edges.
 
 It cost more than the prose suggested in exactly one place: a repository containing *both*
 layouts. The generator now indexes both and raises an error saying addresses will not agree
@@ -30,3 +30,12 @@ What that gap actually hid is the argument for having closed it. The first real 
 missing `type` fields, and one `type` naming a kind the schema had no word for. A convention
 that cannot check the repository that ships it will accumulate exactly that, and reading is not a
 substitute — every one of those files had been read several times.
+
+Amended 2026-09-09. Everything that spelled the five root dot-folders literally *outside*
+the generator did need changing, and each was found on its own long after this was closed:
+the instruction globs in `devbook` 1.3.1, which applied every folder rule to nothing on a
+nested repository, and the CI path filter of `assets/workflows/devbook-meta.yml` in 3.1.1,
+which left one with no gate at all. Both fail the same way, which is why both went
+unnoticed — a glob matching nothing is indistinguishable from a quiet branch. What this
+decision should carry forward is the list of places that still name a folder literally, not
+the claim that the generator's own indifference to the layout settled it everywhere.

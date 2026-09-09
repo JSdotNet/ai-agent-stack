@@ -4,6 +4,12 @@ The shared detail behind `devbook:install` and `devbook-check`: the stamp devboo
 writes, the assets it materializes, and what each of the six phases actually
 does. Read it before running either skill; neither repeats it.
 
+Two other installs read one section of it. `delivery:install` and
+`devbook-collaboration:install` take **The stamp**'s two shared fields and its hash
+rules, and nothing else here describes them: the three fields beside those, the asset
+table, and the six phases are devbook's own. The reason is
+`.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
+
 ## One reconcile, four situations
 
 First install, a version upgrade, a change in which folders are adopted, and a
@@ -24,7 +30,12 @@ materialize, stamp — every time.
 `.devbook/config.json`, repo-scope and committed. devbook owns exactly
 one entry inside it and never edits another component's — except where a
 devbook migration renames an id another component's entry spells, as
-`009-install-skill-ids` rewrites the install-skill ids under `extensions`:
+`009-install-skill-ids` rewrites the install-skill ids under `extensions`.
+
+Five fields, and only devbook writes all five. Every component writes `pluginVersion`
+and what it put in the repository — a `materialized` map for one that copies files,
+its own selection key for one that does not. The other three belong to a component
+whose install rewrites content the repository authored, which is devbook alone:
 
 ```json
 {
@@ -58,6 +69,15 @@ devbook migration renames an id another component's entry spells, as
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
 | `migrations` | Append-only ledger. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. |
+
+`contractVersion`, `adopted`, and `migrations` are devbook's three; `pluginVersion`
+and `materialized` are everyone's. A component that only copies files it owns needs
+no ledger: a copy hashing to a release that component shipped is stale and gets
+replaced, which *is* the migration, and a copy hashing to nothing shipped is the
+repository's and is never overwritten, ledger or not. So `delivery` and
+`devbook-collaboration` stamp two fields, `delivery-schedule` stamps `pluginVersion`
+beside the selection it made in the host's own scheduler, and none of the three ships
+a `migrations/` folder or runs the six phases below.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the

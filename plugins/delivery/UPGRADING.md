@@ -7,7 +7,7 @@ Behaviour changes a consumer would notice, newest first.
 **Not breaking. Nothing you have configured changes meaning, and no key moves.**
 
 `flow-runner`'s tool allowlist named three ids for one host's own in-app browser pane. They
-are removed, per `.devbook/arc42/adr/56-the-runner-opens-no-browser-pane.md`: an allowlist
+are removed, per `.devbook/arc42/adr/57-the-runner-opens-no-browser-pane.md`: an allowlist
 reaches a pane only under a host's own tool name, and this marketplace names no host's
 capability.
 

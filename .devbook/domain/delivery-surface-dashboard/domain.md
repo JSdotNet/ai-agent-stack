@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+related: [".devbook/domain/context-map.md#delivery-surface-dashboard", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
 ```
 
 What this context is responsible for: that a run is visible while it happens, that what it shows

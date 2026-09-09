@@ -17,7 +17,7 @@ The one file a repository commits for the whole stack is now
 `.github/` is one host's folder, and both hosts read this file. `.devbook/`
 already holds the repository's own account of how it works, and the wiring it
 declares belongs beside the folders it adopted. The decision is
-`.devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook`
+`.devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md`
 in the marketplace.
 
 ## What breaks

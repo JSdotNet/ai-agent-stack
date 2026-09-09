@@ -79,4 +79,4 @@ classDiagram
   the open seam.** Devbook now ships a threaded fence with authors, replies, and quoted
   passages, which is what a finding wanted to be. Until this context moves, a repository with
   both installed has two places to leave a comment — see
-  [the decision](../../arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands).
+  [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).

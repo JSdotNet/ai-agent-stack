@@ -60,7 +60,7 @@ would then have two answers to what it produced.
 
 ```meta
 type: feature
-related: [".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names"]
+related: [".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md"]
 ```
 
 Answer `render_diagram` and `render_markdown`, and nothing else. Viewer navigation and view

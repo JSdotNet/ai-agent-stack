@@ -25,7 +25,7 @@ Every plugin that installs something now spells the operation the same way, so
 knowing one plugin's install skill means knowing all of them. The plugin half of
 `plugin:skill` already carries the scope, which is what made the prefix a second
 copy of the plugin name rather than information. The decision is
-`.devbook/arc42/09-architecture-decisions.md#every-install-skill-is-called-install`
+`.devbook/arc42/adr/39-every-install-skill-is-called-install.md`
 in the marketplace.
 
 ## What breaks

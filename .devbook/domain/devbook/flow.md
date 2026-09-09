@@ -2,7 +2,7 @@
 
 ```meta
 type: flow
-related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync"]
+related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/domain/devbook/domain.md#spec-converter", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md"]
 ```
 
 > How the terms in [model.md](model.md) move: a repository taking the convention on and

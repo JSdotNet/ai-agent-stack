@@ -23,7 +23,7 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 // `delivery-schedule` — and it is needed in the direction a manifest cannot answer: naming
 // the plugin behind a stamp whose plugin is not installed here. Hardcoding it is the same
 // bargain the rest of this script already takes, recorded at
-// 09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none.
+// `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install' },
     collaboration: { plugin: 'devbook-collaboration', install: 'devbook-collaboration:install' },

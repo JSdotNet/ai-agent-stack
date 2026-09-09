@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+related: [".devbook/domain/context-map.md#devbook", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
 ```
 
 What this context is responsible for: that a chapter can be addressed, that the reference
@@ -109,7 +109,7 @@ heading level.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+related: [".devbook/domain/plugin-authoring/domain.md#devbook-folder", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
 ```
 
 One of the five folders the convention governs, and the unit of adoption: a repository takes a
@@ -152,7 +152,7 @@ set and adding a sixth is a contract change rather than a folder.
 ```meta
 type: aggregate
 aliases: [graph, graph.json]
-related: [".devbook/arc42/09-architecture-decisions.md#automation-owns-the-_meta-refresh"]
+related: [".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
 Every chapter as a node and every `related` / `depends-on` entry as an edge, derived by walking
@@ -199,7 +199,7 @@ rather than maintained.
 
 ```meta
 type: domain-service
-related: [".devbook/domain/devbook/domain.md#reconcile", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync", ".devbook/arc42/09-architecture-decisions.md#every-install-skill-is-called-install"]
+related: [".devbook/domain/devbook/domain.md#reconcile", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md", ".devbook/arc42/adr/39-every-install-skill-is-called-install.md"]
 ```
 
 Brings a repository level with the installed release, in six phases — detect, resolve, plan,
@@ -309,7 +309,7 @@ type: ubiquitous-language
 type: term
 date: 2026-09-08
 aliases: [_meta, generated index, build output]
-related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/09-architecture-decisions.md#automation-owns-the-_meta-refresh"]
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md"]
 ```
 
 Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
@@ -342,7 +342,7 @@ that has not adopted the folder stops and says so.
 type: term
 date: 2026-09-08
 aliases: [install, upgrade, sync]
-related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/arc42/09-architecture-decisions.md#an-install-is-not-a-sync"]
+related: [".devbook/domain/devbook/domain.md#reconciler", ".devbook/arc42/adr/38-an-install-is-not-a-sync.md"]
 ```
 
 Bringing a repository level with the installed release in one idempotent operation covering

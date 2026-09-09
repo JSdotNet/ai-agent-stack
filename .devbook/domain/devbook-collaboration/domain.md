@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung"]
+related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/arc42/adr/7-approved-is-a-status-rung.md"]
 ```
 
 What this context is responsible for: that a chapter always says who owes the next move, and
@@ -87,7 +87,7 @@ state that obliges no one.
 ```meta
 type: domain-service
 aliases: [sign-off, agreed]
-related: [".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung"]
+related: [".devbook/arc42/adr/7-approved-is-a-status-rung.md"]
 ```
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,

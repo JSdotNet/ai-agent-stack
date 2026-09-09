@@ -16,18 +16,12 @@ import {
     folderKindForPath,
     resolveType,
     resolveStatus,
+    validateDocument,
     slugify,
-    typeIssues,
-    removedFieldIssues,
-    outlineFieldIssues,
     documentNumber,
-    escapeSequenceIssues,
-    testIssues,
-    approvalIssues,
     isExtensionField,
     parseAnnotations,
     resolveAnnotation,
-    annotationIssues,
     DEVBOOK_FOLDER_NAMES,
     NESTED_ROOT,
 } from "./metadata.mjs";
@@ -288,55 +282,14 @@ export async function buildGraph(repoRoot, folders = null) {
         if (fileOpenNotes) fileNode.openNotes = fileOpenNotes;
         nodes.set(fileNode.id, fileNode);
 
-        for (const issue of typeIssues(folder, "file", fileMeta)) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of testIssues(fileMeta)) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of approvalIssues(fileMeta)) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of removedFieldIssues(fileMeta)) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of outlineFieldIssues(relPath, fileMeta, "file")) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of escapeSequenceIssues(raw)) {
-            problems.push({
-                severity: issue.severity,
-                path: relPath,
-                message: `${relPath} ${issue.message}`,
-            });
-        }
-
-        for (const issue of annotationIssues(raw)) {
+        // The schema lint, over every block in the file at once. It is the only
+        // implementation of the per-block rules — the status ladders, the value
+        // shapes, the unrecognized-field sweep, a heading carrying no `meta`
+        // block at all — so the gate runs it here rather than leaving it to the
+        // editor extension, which not every author has open. Each issue keeps
+        // its own severity: a warning stays a warning, and only an error fails
+        // the run.
+        for (const issue of validateDocument(relPath, raw)) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,
@@ -392,46 +345,6 @@ export async function buildGraph(repoRoot, folders = null) {
             if (openNotes.get(chapter.slug)) node.openNotes = openNotes.get(chapter.slug);
             nodes.set(id, node);
             ancestors.push({ level: chapter.level, id });
-
-            for (const issue of typeIssues(folder, "chapter", chapter.meta)) {
-                problems.push({
-                    severity: issue.severity,
-                    path: relPath,
-                    message: `${id} ${issue.message}`,
-                });
-            }
-
-            for (const issue of testIssues(chapter.meta)) {
-                problems.push({
-                    severity: issue.severity,
-                    path: relPath,
-                    message: `${id} ${issue.message}`,
-                });
-            }
-
-            for (const issue of approvalIssues(chapter.meta)) {
-                problems.push({
-                    severity: issue.severity,
-                    path: relPath,
-                    message: `${id} ${issue.message}`,
-                });
-            }
-
-            for (const issue of removedFieldIssues(chapter.meta)) {
-                problems.push({
-                    severity: issue.severity,
-                    path: relPath,
-                    message: `${id} ${issue.message}`,
-                });
-            }
-
-            for (const issue of outlineFieldIssues(relPath, chapter.meta, "chapter")) {
-                problems.push({
-                    severity: issue.severity,
-                    path: relPath,
-                    message: `${id} ${issue.message}`,
-                });
-            }
 
             edges.push({
                 id: `contains:${parentId}->${id}`,

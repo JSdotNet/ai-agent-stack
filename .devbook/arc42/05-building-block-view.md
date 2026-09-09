@@ -339,7 +339,7 @@ host's own file, path, or capability named now.
 | --- | --- | --- |
 | `repo-instructions` | `bindings["delivery.slots"]` | `AGENTS.md` if present, else nothing |
 | `repo-flow-context` | `bindings["delivery.slots"]` | discovery |
-| `pr-lane` | `bindings["delivery.slots"]` | `deliver` writes file artifacts only |
+| `pr-lane` | `bindings["delivery.slots"]` | no pull request; `deliver` writes file artifacts only |
 | `stage-delegation` | the live session | stages run inline |
 | `surface` | the live tool list | file artifacts only |
 | `model-override` | nothing, deliberately | category defaults |

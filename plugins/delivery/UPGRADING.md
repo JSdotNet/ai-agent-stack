@@ -2,6 +2,27 @@
 
 Behaviour changes a consumer would notice, newest first.
 
+## 2.5.0: the pull request skills read the `pr-lane` slot
+
+**Not breaking. Nothing you have configured changes meaning, and no key moves.**
+
+`pr-merge-ready`, `update-pr-branch`, `fix-pr-checks`, `push-branch`, and `flow-repo` used to
+call `gh` directly, so a session without the CLI failed on a missing binary. Each now states
+the `pr-lane` slot read before its first command and degrades to *no pull request* — the
+default that slot has always documented:
+
+| Skill | With no lane bound |
+| --- | --- |
+| `pr-merge-ready` | Reports the branch and ends the pass |
+| `update-pr-branch` | Takes the base from the repository default and works from git alone |
+| `fix-pr-checks` | Says so and stops — the failing job logs were its whole input |
+| `push-branch` | Pushes, and drops the pull request status line |
+| `flow-repo` | Writes the settings as file artifacts and reports them as manual follow-up |
+
+With `gh` present nothing changes: the commands stay in the prose as the lane's `gh` spelling.
+Bind the lane explicitly under `bindings["delivery.slots"]` in `.devbook/config.json` to name
+a different pull-request CLI or API.
+
 ## 2.4.0: the two pickup skills go through the tracker binding
 
 **Breaking in one place: a skill was renamed.** Nothing you have configured changes meaning,

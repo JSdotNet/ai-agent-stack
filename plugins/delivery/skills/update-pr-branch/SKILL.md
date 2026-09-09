@@ -11,10 +11,19 @@ Integrate the latest base branch into a pull request branch, resolve every confl
 decision that preserves both sides' intent, re-run the project's validation, and push the
 result so the PR becomes mergeable again.
 
+## Pull Request Lane
+
+Every `gh pr` command below is one spelling of the `pr-lane` slot. Resolve the slot first and
+use whatever pull-request CLI or API the session offers for the same operation. Unbound, there
+is no pull request: take the base from the input or the repository default, integrate and push
+from git alone, and report the branch rather than a mergeable state. Never fail on a missing
+binary. The slot and its unbound default are in `resources/surface-contract.md`.
+
 ## Inputs
 
 - Pull request number or branch name (default: the PR for the current branch).
-- Base branch (default: the PR's own base from `gh pr view --json baseRefName`).
+- Base branch (default: the PR's own base through the lane, `gh pr view --json baseRefName`;
+  with no lane, the repository default branch).
 - Integration strategy: `merge` (default) or `rebase`.
 
 ## Strategy Selection

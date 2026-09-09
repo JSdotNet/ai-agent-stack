@@ -76,13 +76,19 @@ file wrong the moment a second person opens the repository.
 | its `paths` from `rules/rules.json` | `.claude/rules/<name>.md` | with the rule |
 | the same `paths`, comma-joined | `.github/instructions/<name>.instructions.md` | with the rule |
 
-Both workflows are edited on the way in — path filters trimmed to the adopted
-folders, the branch name corrected, the nightly `cron` and `REFRESH_BRANCH`
-chosen. That makes them customized from the first reconcile onward, which is the
+Both workflows are edited on the way in — the branch name corrected, the nightly
+`cron` and `REFRESH_BRANCH` chosen, and the two path filters of
+`devbook-meta.yml` rendered. Those filters carry `<prefix>`: replace it with `.`
+in the flat layout and `.devbook/` in the nested one — `build.mjs` prints which
+layout it found on every run — and drop the rows for folders `adopted` does not
+name. A `<prefix>` reaching `.github/` is a failed reconcile, not a cosmetic
+defect: the filter then matches nothing, so the check never fires and nothing
+reports its absence. Verify in phase 6 that none survived. This editing makes
+both files customized from the first reconcile onward, which is the
 intended outcome: their hash matches no shipped release, so reconcile reports
 them and leaves them alone.
 
-The `AGENTS.md` section is the one asset rendered rather than copied. It is generated
+The `AGENTS.md` section is rendered whole rather than copied at all. It is generated
 from the stamp's `adopted` list per `assets/agents-section.md`, keyed `AGENTS.md#devbook`,
 and its hash is of the text between the markers as devbook wrote it. Every reconcile
 renders it again and compares: text on disk still matching the stamped hash is managed,

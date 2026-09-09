@@ -381,6 +381,12 @@ instructions.
   chapter is carried by that term's `related` field instead. Omit `aliases`
   when the term has none.
 
+  **`aliases` is not restricted to `type: term`.** A term that is already a
+  chapter — an aggregate, an entity, a value object, an enum, a domain service,
+  a domain event — carries its aliases on that chapter, rather than earning a
+  duplicate `term` chapter beside it. Any chapter may carry the field; the
+  file-level block may not, like every other folder-specific field.
+
 ## Templates
 
 ### context-map.md

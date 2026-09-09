@@ -5,6 +5,35 @@ breaking change ships as a scripted migration under `migrations/` instead; these
 cover the releases that predate that ledger, and the behaviour changes it does not
 script.
 
+## 3.3.0: the validator checks where a field sits, not only what it says
+
+**No migration; `--check` may newly fail.** Four rules the folder rules already stated
+now reach `validateDocument`, so a corpus that passed the gate can start reporting.
+`contractVersion` is unchanged at **9** — nothing about the schema moved, only what is
+enforced.
+
+- A folder-specific field on the **file-level block** is an error. `depends-on`,
+  `aliases`, `feature-flag`, `version`, and `alternatives` describe a chapter; a document
+  states its own relationships through `related`. Move the field to the chapter it is
+  about, or delete it.
+- `.domain`'s `depends-on` and `feature-flag` on a chapter that is not a `feature` or
+  `sub-feature` is an error. A `domain.md` chapter describes standing structure and
+  relates through `model.md`, `dependencies.md`, or `related`. `aliases` is **not**
+  restricted this way — a term that is already an aggregate, service, event, or field
+  carries its aliases on that chapter, and `devbook-domain.md` now says so outright.
+- An `approved` chapter carrying an **open `kind: question` annotation** is an error: an
+  open question means the chapter is not agreed, so an approval standing over one is a
+  false record. Resolve and sweep the note, or take the approval off. An open question on
+  any other rung is still silent — that is the state the fence exists for.
+- `.ai` `stage` inside a stage file is a warning. The file already says the stage; delete
+  the field. It belongs in `concepts.md` and on anything else that spans the flow.
+
+Separately, heading anchors now keep letters and digits **outside ASCII**. `slugify`
+matched `\w`, so `## Café Ordering` yielded `caf-ordering` while GitHub renders
+`café-ordering`, and a `related` link written against the rendered anchor resolved to
+nothing. A repository with non-ASCII headings gains working anchors and its `_meta/`
+indexes change on the next generator run; one with ASCII headings sees no difference.
+
 ## 3.2.0: a bounded context says who works with it
 
 **Additive; no migration.** `.domain/<context>/` gains `stakeholders.md`, carrying

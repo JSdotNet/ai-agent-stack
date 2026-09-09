@@ -64,5 +64,5 @@ aspire start
 
 <!-- Optional. Omit this section when the repo defines no flow-* skills of its own. -->
 
-- `flow-backlog` — backlog and work-item flow for this repo.
-- `flow-domain` — domain model and ubiquitous language changes.
+- `flow-release` — cutting a release: version bump, changelog, tag.
+- `flow-migration` — database schema migrations and their rollback path.

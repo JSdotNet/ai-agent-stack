@@ -44,8 +44,8 @@ const full = [
     "    date: 2026-09-02",
     "    body: No second scan — the rollup is a view over the same index.",
     "ext:",
-    "  backlog:",
-    "    entry: 8f31c2",
+    "  devbook-collaboration:",
+    "    finding: open-1",
     FENCE,
 ].join("\n");
 
@@ -74,7 +74,7 @@ check(
     JSON.stringify(parsed.replies)
 );
 check(
-    parsed.ext && parsed.ext.backlog && parsed.ext.backlog.entry === "8f31c2",
+    parsed.ext && parsed.ext["devbook-collaboration"] && parsed.ext["devbook-collaboration"].finding === "open-1",
     "ext nests two levels deep and stays opaque",
     JSON.stringify(parsed.ext)
 );
@@ -190,7 +190,7 @@ const lints = [
     },
     {
         name: "ext that is not a mapping is an error",
-        markdown: minimal.replace("author: jobsc", "ext: backlog\nauthor: jobsc"),
+        markdown: minimal.replace("author: jobsc", "ext: devbook-collaboration\nauthor: jobsc"),
         errors: 1,
         warnings: 0,
     },

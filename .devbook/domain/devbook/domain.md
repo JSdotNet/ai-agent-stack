@@ -50,6 +50,10 @@ top-level heading carries a block of its own describing the document as a whole.
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
+| A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `.domain`'s `depends-on` and `feature-flag` sit on a `feature` or `sub-feature`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `.ai`'s `stage` is omitted inside a stage file, where the file already says it | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 
 ### Meta Block
 
@@ -280,7 +284,8 @@ aliases: [reference, anchor, path#slug]
 `<path>#<heading-slug>` for a chapter, or the bare `<path>` for a file: the repository-relative
 path plus a GitHub-style slug of the heading text. It is exactly what renders as the heading's
 link target, which is why it stays correct in any Markdown viewer and never has to be kept in
-sync by hand.
+sync by hand. "Exactly" includes letters and digits outside ASCII: `## Café Ordering` addresses
+as `café-ordering`, because an ASCII-only slug would agree with nothing the reader can click.
 
 Equal by value and derived from the content, so it is a re-identification rather than a rename
 when the heading changes. That is the cost the convention accepts in exchange for having no

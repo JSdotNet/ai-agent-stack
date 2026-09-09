@@ -28,6 +28,11 @@ The first fails on a manifest, agent, or hook shape a host rejects or a decision
 reports body budgets. The second fails on a chapter whose `meta` block or reference does not
 resolve.
 
+`.github/workflows/repo-checks.yml` runs both on every pull request, and a third beside them:
+`claude plugin validate --strict` over the marketplace and every plugin manifest, which is what
+catches an unknown manifest field or a bad dependency range. Run it locally before a manifest
+change. The workflow calls `--check` only and never refreshes `_meta/`.
+
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only
 resolvable by re-running the generator. Never regenerate or commit `_meta/` here — the

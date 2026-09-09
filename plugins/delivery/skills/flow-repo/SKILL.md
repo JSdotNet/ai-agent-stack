@@ -13,6 +13,14 @@ under `.github/instructions/`, the CI workflows, the AppHost and service scaffol
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
 follows `resources/flow-model-selection.md`.
 
+## GitHub Lane
+
+Stage 1 is manual. Every other `gh` command in this flow is one spelling of the `pr-lane` slot.
+Resolve the slot first and use whatever GitHub CLI or API the session offers for the same
+operation. Unbound, write the settings this flow would apply as file artifacts, report them as
+manual follow-up, and continue the remaining stages. Never fail on a missing binary. The slot
+and its unbound default are in `resources/surface-contract.md`.
+
 ## Input Expectations
 
 - Repository name, description, and visibility.
@@ -67,7 +75,7 @@ gh repo create <org>/<name> --description "<description>" --private --clone
   date, pushes restricted.
 - Configure the merge strategies, and auto-delete of head branches after merge.
 
-**Tools:** `gh api`
+**Tools:** the `pr-lane` slot — see **GitHub Lane** above.
 
 ## Stage 6: Issue and PR Templates
 

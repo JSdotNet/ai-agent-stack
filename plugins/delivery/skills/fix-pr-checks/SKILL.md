@@ -11,6 +11,14 @@ Take a pull request with red checks to green. The skill reads the actual failing
 rather than guessing, reproduces the failure locally where possible, fixes the root cause, and
 verifies the checks pass after the push.
 
+## Pull Request Lane
+
+Every `gh` command below is one spelling of the `pr-lane` slot. Resolve the slot first and use
+whatever pull-request CLI or API the session offers for the same operation. The failing job
+logs are the whole input here, so unbound there is nothing to diagnose: say once that no pull
+request lane is available and stop, rather than guessing at a fix. Never fail on a missing
+binary. The slot and its unbound default are in `resources/surface-contract.md`.
+
 ## Inputs
 
 - Pull request number (default: the PR for the current branch).

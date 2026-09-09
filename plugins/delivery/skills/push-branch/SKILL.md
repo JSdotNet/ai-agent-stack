@@ -12,6 +12,14 @@ lightweight alternative to opening a pull request for when the branch just needs
 on the remote — to back up work, to trigger CI, or because a pull request already exists
 and only needs the new commits.
 
+## Pull Request Lane
+
+The pull-request reporting in step 5 is one spelling of the `pr-lane` slot. Resolve the slot
+first and use whatever pull-request CLI or API the session offers for the same operation. The
+push itself is git and never needs the lane, so unbound: push, skip the pull request status,
+and say once that no pull request lane is available. Never fail on a missing binary. The slot
+and its unbound default are in `resources/surface-contract.md`.
+
 ## Inputs
 
 - None required. Everything is read from the repository.
@@ -96,7 +104,7 @@ gh pr view --json number,url,state 2>/dev/null
 gh pr checks 2>/dev/null
 ```
 
-Skip this step when `gh` is unavailable or unauthenticated — it is informational only.
+Skip this step when the lane is unbound or unauthenticated — it is informational only.
 
 ## Output
 

@@ -78,8 +78,9 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
 
 6. **Verify and report honestly.** Re-run the report and each component's own check skill.
    Name what was upgraded, what migrations ran, what was left customized, what was skipped and
-   under which scope, and anything still outstanding. An update that ends on a failing check is
-   reported as failing.
+   under which scope, and anything still outstanding. Pass on the report's *Bindings nobody has
+   enabled* section as the warning it is — enablement is personal to this checkout — and change
+   neither file for it. An update that ends on a failing check is reported as failing.
 
 ## Do not
 

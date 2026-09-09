@@ -117,7 +117,7 @@ change-kind selection applies unchanged.
 The `flow-*` skills this repository defines itself in the host's repo-native skill folder,
 which are invisible to the plugin and to the plugin-global routing hook. One bullet per skill, naming
 the skill and the task category it owns — for example
-`` `flow-backlog` — backlog and work-item flow ``.
+`` `flow-release` — cutting a release ``.
 
 A repo-native skill **takes precedence** over the plugin-provided skill for the categories it
 covers. Declaring them here lets the flow-runner learn them from the file it already reads

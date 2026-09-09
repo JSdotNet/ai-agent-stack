@@ -2,14 +2,15 @@
 
 ```meta
 date: 2026-09-09
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/15-three-surfaces-one-contract.md", ".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md", ".devbook/domain/plugin-authoring/domain.md#surface"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/15-three-surfaces-one-contract.md", ".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md", ".devbook/domain/plugin-authoring/domain.md#surface", ".devbook/arc42/adr/56-the-runner-opens-no-browser-pane.md"]
 ```
 
 `flow-runner`'s `tools` list names four exact MCP server ids — both spellings of
 `delivery-surface-dashboard` and both of `delivery-surface-collector` — although
 [the surface contract](../../../plugins/delivery/resources/surface-contract.md) resolves a
 surface by matching the contract's operation names against the live tool list and forbids
-matching by literal tool name. This is the one sanctioned exception, and it is forced.
+matching by literal tool name. This is the one sanctioned exception, and it is forced — where
+its argument stops is [record 56](56-the-runner-opens-no-browser-pane.md).
 
 **An allowlist cannot hold a pattern.** `tools` is an exact-match allowlist the host enforces
 before the agent runs, and `.agents/rules/agents.md` requires both spellings of every server

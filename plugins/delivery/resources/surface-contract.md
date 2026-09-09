@@ -398,14 +398,16 @@ A run the user cannot see is a run they cannot steer.
 
 1. **Inline panel.** Where the host renders the surface inline on its own, nothing further is
    needed — do not also open a browser tab.
-2. **Inline browser pane.** Otherwise, if the host exposes an in-app browser, open the
-   returned URL there so the surface sits beside the conversation. Resolve the exact tool name
-   from the live tool list, since a host may namespace or omit it.
-3. **Plain link.** With neither available, give the user the URL to open themselves.
+2. **Plain link.** Otherwise, give the user the URL to open themselves.
 
-Open it once — the page updates live, so re-opening on later stages just steals focus. Never
-block on it: failing to open the pane is a presentation problem, not a run problem. Report it,
-give the URL, and continue.
+**The runner never opens a browser pane.** A pane is one host's own capability, and an
+exact-match `tools` allowlist can only reach it under that host's own tool name, so
+`flow-runner` carries none. A host that renders the surface inline still does; a user who
+wants a pane opens the published link in one.
+
+Publish it once — the page updates live, so re-publishing on later stages is noise. Never
+block on it: the URL not reaching the user is a presentation problem, not a run problem.
+Report it and continue.
 
 ## Rendering Content
 

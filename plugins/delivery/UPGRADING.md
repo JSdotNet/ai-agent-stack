@@ -2,6 +2,21 @@
 
 Behaviour changes a consumer would notice, newest first.
 
+## 2.6.0: the runner opens no browser pane
+
+**Not breaking. Nothing you have configured changes meaning, and no key moves.**
+
+`flow-runner`'s tool allowlist named three ids for one host's own in-app browser pane. They
+are removed, per `.devbook/arc42/adr/56-the-runner-opens-no-browser-pane.md`: an allowlist
+reaches a pane only under a host's own tool name, and this marketplace names no host's
+capability.
+
+Inside a flow run, nothing opens by itself any more. The surface's dashboard is published as
+a link, and so is the application at Personal Validation — the review handoff already wrote
+its URLs into the conversation, so what changes is that the link is now the only way there.
+A host that renders the surface inline through MCP Apps is unaffected. Invoking your `start`
+skill yourself, outside a flow, still uses your session's own browser.
+
 ## 2.5.0: the pull request skills read the `pr-lane` slot
 
 **Not breaking. Nothing you have configured changes meaning, and no key moves.**

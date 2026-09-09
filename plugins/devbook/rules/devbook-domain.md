@@ -593,11 +593,11 @@ anchors nobody references.
 `### Invariants` under an Aggregate, and `### Payload`, `### Consumers`, and
 `### Published language rules` under a Domain Event, are structural
 sub-sections of that one chapter rather than addressable chapters, so they carry
-no metadata block. The generator skips a heading with no `meta` block instead
-of reporting it, so these four produce no output: a heading without a block is a
-structural heading, not a missing chapter. `## Rights` in `stakeholders.md` is
-the same case one level up — a structural section of the file rather than an
-addressable chapter — and is skipped the same way.
+no metadata block. `build.mjs --check` warns on each of them, as it does on
+every structural heading: the validator cannot know which headings a folder means
+to be addressable, so the warning is expected here and never driven to zero.
+`## Rights` in `stakeholders.md` is the same case one level up — a structural
+section of the file rather than an addressable chapter — and warns the same way.
 
 ### stakeholders.md
 

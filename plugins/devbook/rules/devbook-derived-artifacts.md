@@ -6,10 +6,9 @@ description: Convention for derived index artifacts — where generated, machine
 # Derived metadata artifacts (`_meta/`)
 
 Devbook folders keep **Markdown canonical and derived data generated**.
-Generated, machine-readable views of that Markdown — graphs, outlines, search
-indexes, rollups — are *derived metadata artifacts*, and they all follow one
-convention so a new one can be added anywhere without inventing placement or
-naming rules again.
+Generated, machine-readable views of that Markdown — graphs, outlines, rollups
+— are *derived metadata artifacts*, and they all follow one convention so a new
+one can be added anywhere without inventing placement or naming rules again.
 
 This convention is deliberately generic: it applies to any current or future
 generated artifact, not just the reference graph.

@@ -134,9 +134,9 @@ them, so a `.devbook/domain/…` address resolves to nothing.
 folder resolution now recognizes both prefixes. `folderKindForPath` strips an optional
 `.devbook/` and matches the five names either way, discovery probes both spellings and reports
 which layout it found, and everything downstream works off the path it is handed — so scopes,
-`_meta/` output paths, and references needed no change at all. Contract version 7, additive,
-no migration. `nested-layout.test.mjs` holds the same corpus written both ways and asserts the
-two produce the same nodes and the same edges.
+`_meta/` output paths, and references inside the generator needed no change. Contract version
+7, additive, no migration. `nested-layout.test.mjs` holds the same corpus written both ways
+and asserts the two produce the same nodes and the same edges.
 
 It cost more than the prose suggested in exactly one place: a repository containing *both*
 layouts. The generator now indexes both and raises an error saying addresses will not agree
@@ -148,6 +148,15 @@ What that gap actually hid is the argument for having closed it. The first real 
 missing `type` fields, and one `type` naming a kind the schema had no word for. A convention
 that cannot check the repository that ships it will accumulate exactly that, and reading is not a
 substitute — every one of those files had been read several times.
+
+Amended 2026-09-09. Everything that spelled the five root dot-folders literally *outside*
+the generator did need changing, and each was found on its own long after this was closed:
+the instruction globs in `devbook` 1.3.1, which applied every folder rule to nothing on a
+nested repository, and the CI path filter of `assets/workflows/devbook-meta.yml` in 3.1.1,
+which left one with no gate at all. Both fail the same way, which is why both went
+unnoticed — a glob matching nothing is indistinguishable from a quiet branch. What this
+decision should carry forward is the list of places that still name a folder literally, not
+the claim that the generator's own indifference to the layout settled it everywhere.
 
 ## approved Is a Status Rung
 
@@ -261,8 +270,13 @@ repository two places to disagree with itself about what is installed.
 `policy` keys are closed enums or numbers with documented defaults, so an absent key means the
 engine's own choice rather than undefined, and an unknown key is rejected by name rather than
 ignored — the same discipline `claude plugin validate --strict` applies to a manifest, which is
-what makes the file safe to hand-edit. `pr.base` is the single exception to the closed-enum
-rule and is validated as a git ref instead.
+what makes the file safe to hand-edit. The rejection reaches the top level too: the file has
+exactly two owners, so a top-level key that is neither engine-owned nor `components` is
+reported by name rather than left to take every default in silence. `pr.base` is the single
+exception to the closed-enum rule; the check validates it as a well-formed git ref name, and
+its existence on the remote is resolved at flow time by the stages that use it — Update Base
+fetches it, the pull-request lane opens against it — because a config check that reached for
+the network would fail offline and in a repository with no remote yet.
 
 Consequence: two components can conflict on the file itself when both write it in one session.
 Each writes only its own key, so the conflict is textual rather than semantic, but nothing
@@ -347,6 +361,15 @@ implementations of `find_item`, `read_item`, `create_item`, `comment`, `transiti
 Consequence: the stage name changed in 32 skills at once, so a run resumed from state written
 before this release finds a stage name that no longer matches. Nothing resumes across it,
 because nothing has run yet — which is the one moment this rename is free.
+
+The same rule reaches a skill's own id, and the two pickup skills were the last place it had
+not: `azure-sre-to-github-issue` became `sre-alerts-to-work-items` in `delivery` 2.4.0, and
+both it and `start-session-from-issue` now name the tracker operations rather than calling `gh`.
+Azure stays in the one name because it is the alert source, which is bound separately from the
+tracker the item lands in. An id is visible identity, so renaming one is not free the way a
+stage name was — but nothing referenced it beyond this repository's own README and devbook, and
+carrying a provider in the identity of a skill the binding exists to keep neutral costs more
+than the rename.
 
 ## delivery Ships No Surface
 
@@ -1198,6 +1221,12 @@ that had it enabled sees it reported as not installed and finds the same five un
 The L2b bridge row in the [layer table](../domain/plugin-authoring/domain.md#layer) keeps its
 pattern and, for now, no example.
 
+`devbook`'s own assets came to the rule on 2026-09-09. `code-sync-protocol.md` and the
+session-start hook already stated the pattern; `assets/routing-snippet.md` did not — it named
+the engine outright and routed each folder through one of the five flows by name — and now
+states the same three rungs. The `flow-*` strings left in the plugin are sample values in
+example data, an annotation `author` and a report-table cell, and route nothing.
+
 What this argument covers is the rules. It does not cover the generator path the five folder
 flows name, the devbook rules they restate, or the folder names they are called after, so
 `delivery` depends on `devbook` while declaring nothing —
@@ -1696,6 +1725,47 @@ Consequence: the two QA-plugin capture skills are removed there, and nine referr
 that plugin and `knowledge-base` repoint at the contract. `.claude/flow-context.md` also loses
 its unbacked claim to hold interactive startup — it holds declared facts, the `start` skill
 holds the procedure.
+
+## The Hard Gate Runs the Schema Validator
+
+```meta
+date: 2026-09-09
+related: [".devbook/domain/devbook/domain.md#index-generator", ".devbook/domain/devbook/domain.md#chapter"]
+```
+
+`validateDocument` is the only implementation of the per-block metadata rules — the status
+ladders, the value shapes, the unrecognized-field sweep, a heading carrying no `meta` block —
+and nothing on the `build.mjs --check` path called it. Its only callers were the tests and the
+editor extension. The graph build collected reference and containment problems, so an
+out-of-ladder `status`, a chapter reference pasted into `feature-flag`, and a heading with no
+block all exited `0` and merged. [The Index Generator](../domain/devbook/domain.md#index-generator)
+already claimed to decide error from warning across the whole schema; it decided it across two
+fields.
+
+`buildGraph` now calls the validator once per file and folds its issues into the returned
+problems with their own severity intact, so a warning stays a warning and only an error fails
+a pull request.
+
+**The seven per-block lint loops the graph ran itself are removed rather than kept beside the
+validator.** It covers every one of them at file and chapter level both, so keeping both would
+report each violation twice — and a gate that says everything twice is a gate people stop
+reading. The cost is that a message now anchors on `## Heading (line 42)` instead of the node
+id `<path>#<slug>`; the problem record still carries `path`, and a line number locates the
+block more precisely for whoever has to fix it.
+
+What the first full run over this repository found: **zero errors and 140 warnings, every one
+of them the same category** — a heading with no `meta` block. All 140 are legitimate structural
+headings. So no chapter needed correcting; the drift was wholly in the tool, and the sentence
+in `#index-generator` saying a blockless heading is "reported and tolerated" describes the
+behaviour only from here on.
+
+Consequence: that warning class cannot be driven to zero, because the validator cannot know
+which headings a folder means to be addressable — clearing it would mean adding `meta` blocks
+to headings that must not have them. It costs about 280 console lines per green run, counted
+once for the rollup scope and once for the folder's, and it is persisted into the `problems`
+array of every committed `graph.json`. It is kept because it is one of the three cases the gate
+was asked to report and it fails nothing; demoting it to an editor-only nudge is the obvious
+follow-up if the noise outweighs the catch.
 
 ## A Bounded Context Says Who Works With It
 

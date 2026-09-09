@@ -21,6 +21,41 @@ test('a component entry is left to its own component', () => {
     assert.deepEqual(check({ components: { devbook: { anything: true } } }), []);
 });
 
+test('a top-level key that is neither engine-owned nor a component is rejected by name', () => {
+    const errors = check({ polciy: { 'qa.depth': 'targeted' } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown top-level key "polciy"/);
+});
+
+test('a stray top-level key is caught even when everything owned is valid', () => {
+    const errors = check({ policy: { 'qa.depth': 'targeted' }, extenions: { spec: null } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown top-level key "extenions"/);
+});
+
+test('a JSON annotation belongs to nobody and is neither owned nor unknown', () => {
+    assert.deepEqual(check({ $schema: './config.schema.json', $comment: 'ours' }), []);
+});
+
+test('the shipped template validates as it stands', () => {
+    const template = JSON.parse(
+        readFileSync(join(HERE, '..', '..', 'resources', 'config-template.json'), 'utf8'),
+    );
+    assert.deepEqual(check(template), []);
+});
+
+test('pr.base takes a git ref name and refuses prose', () => {
+    assert.deepEqual(check({ policy: { 'pr.base': 'main' } }), []);
+    assert.deepEqual(check({ policy: { 'pr.base': 'release/2.0' } }), []);
+    for (const bad of ['the default branch', 'feature..old', 'main.lock', '/main', 'main/', '']) {
+        assert.ok(check({ policy: { 'pr.base': bad } }).length, bad);
+    }
+    assert.match(
+        check({ policy: { 'pr.base': 'the default branch' } })[0],
+        /is not a well-formed git ref name/,
+    );
+});
+
 test('the worked example from the surface contract validates', () => {
     assert.deepEqual(
         check({

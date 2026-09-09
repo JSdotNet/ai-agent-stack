@@ -134,6 +134,8 @@ an `open` invariant row, and never guessed.
 
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
+- Do not carry an `annotation` fence into the change brief. An open question is
+  a reason to stop at the gate, not a line item to implement.
 - Do not brief a feature whose `depends-on` prerequisites are themselves unbuilt
   without reporting the chain first.
 - Do not invent invariants for a feature. They come from the `related`

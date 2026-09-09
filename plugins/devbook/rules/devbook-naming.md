@@ -29,7 +29,10 @@ humans and tooling and stay unprefixed.
 Top-level devbook areas keep the leading-dot convention and are **not**
 renamed: `.arc42/`, `.domain/`, `.tech/`, `.design/`, `.ai/`. The dot marks
 a repository-level specification area; the underscore marks tool-interpreted
-data within one. Folders with a leading dot are for specifications.
+data within one. Folders with a leading dot are for specifications. Under the
+nested layout the dot sits on the `.devbook/` parent alone and the five drop
+theirs — `.devbook/domain/`, never `.devbook/.domain/`; see
+`devbook-chapter-metadata.md`.
 
 ## No redundant suffixes
 

@@ -112,3 +112,7 @@ flowchart LR
 - **An open invariant row does not stop a chapter being `active`**, and it does stop that one
   rule being built: the brief names it as needing a decision rather than briefing a rule nobody
   agreed.
+- **Each converter carries the annotation prohibition itself.** `to-spec-<kind>` never writes a
+  fence, `from-spec-<kind>` never carries one into a brief, and both say so in their own `Do not`
+  section. The session-start prompt states the reading rule; a writing rule has to be at the point
+  of use to survive the session that reaches it.

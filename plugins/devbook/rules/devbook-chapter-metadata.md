@@ -604,9 +604,9 @@ Per directory, `_meta/index.json` is generated like this:
 
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
-   `.domain`'s `features` → `model` → `flow` → `dependencies` → `naming`,
-   `.design`'s principles-then-tokens run, `.tech`'s `shared.md` first and
-   `tooling.md` last — with anything else filename-sorted in between.
+   `.domain`'s `stakeholders` → `skills` → `features` → `model` → `flow` →
+   `dependencies` → `naming`, `.design`'s principles-then-tokens run, `.tech`'s `shared.md`
+   first and `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by
    filename.**

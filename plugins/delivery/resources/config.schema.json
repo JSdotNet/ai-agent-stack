@@ -102,7 +102,13 @@
           "enum": ["gate", "manual"]
         },
         "pr.required": { "type": "boolean" },
-        "pr.base": { "type": "string", "minLength": 1 },
+        "pr.base": {
+          "title": "a well-formed git ref name",
+          "description": "The branch a pull request opens against. Checked here for the shape of a git ref name only — git-check-ref-format's rules, so free prose is rejected; whether the ref exists is resolved against the remote at flow time, by the stages that use it — Update Base fetches it, the pull-request lane opens against it.",
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?![./])(?!.*(?:/[.]|//|[.][.]|@[{]|[.]lock(?:/|$)))(?!.*[/.]$)[^\\s~^:?*[\\\\]+$"
+        },
         "phases.updateBase": { "type": "boolean" },
         "phases.documentationUpdate": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" }

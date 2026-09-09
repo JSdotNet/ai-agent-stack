@@ -4,6 +4,29 @@
 // Rendering uses CDN-hosted Cytoscape.js (core only, built-in `cose` layout)
 // so the extension itself stays dependency-free, matching render.mjs.
 
+import { DEVBOOK_FOLDER_NAMES } from "../../tools/devbook-meta/metadata.mjs";
+
+// One hue per folder, so a node's colour says which folder it came from and the
+// external colour stays reserved for what is genuinely outside the corpus. Keyed
+// by folder name and read through DEVBOOK_FOLDER_NAMES, so the day the schema
+// grows a folder this file fails to build rather than quietly rendering its nodes
+// as external.
+const FOLDER_HUES = {
+    arc42: "#0969da",
+    domain: "#8250df",
+    tech: "#bc4c00",
+    design: "#1a7f37",
+    ai: "#bf3989",
+};
+
+const folderColors = Object.fromEntries(
+    DEVBOOK_FOLDER_NAMES.map((name) => {
+        const hue = FOLDER_HUES[name];
+        if (!hue) throw new Error(`devbook-graph: no colour for the \`.${name}\` folder`);
+        return [`.${name}`, hue];
+    })
+);
+
 export function renderGraphPage({ scopes = ["."], scope = "." } = {}) {
     const scopeOptions = scopes
         .map(
@@ -80,11 +103,7 @@ export function renderGraphPage({ scopes = ["."], scope = "." } = {}) {
   </div>
 </div>
 <script>
-const FOLDER_COLORS = {
-  ".arc42": "#0969da",
-  ".domain": "#8250df",
-  ".tech": "#bc4c00",
-};
+const FOLDER_COLORS = ${JSON.stringify(folderColors)};
 const EXTERNAL_COLOR = "#57606a";
 const EDGE_COLORS = {
   "depends-on": "#bc4c00",

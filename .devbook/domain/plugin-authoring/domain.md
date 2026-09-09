@@ -161,7 +161,7 @@ Four neighbours share the vocabulary and are not interchangeable with it:
 | --- | --- |
 | `flow-` | One session, delegating to subagents. Never to another session. |
 | `fleet-` | Fan-out across sessions and worktrees. This one is orchestration. |
-| `phase-` | A shared step inside a flow — build and test, QA validation. Never invoked directly. |
+| `phase-` | A shared step inside a flow — build and test, QA validation, personal validation. Never invoked directly. |
 | `schedule-` | Work that runs with nobody watching: an entry point that picks its own input, and the three skills that put its trigger in the host's scheduler. |
 
 A prefix marks a procedure's scope against its neighbours, so a plugin whose skills all share
@@ -173,7 +173,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 only as the English description of what `fleet-` does. `delivery` holds sixteen `flow-*` — five
 of them one per devbook folder, since
 [flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
-and two `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
+and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
 `fleet` holds three
 `fleet-*`.
 

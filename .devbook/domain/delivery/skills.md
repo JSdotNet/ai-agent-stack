@@ -5,7 +5,7 @@ type: skills
 related: [".devbook/domain/context-map.md#delivery"]
 ```
 
-> The twenty-five skills this context ships, by what each lets someone do. Each `flow-*` chapter
+> The twenty-six skills this context ships, by what each lets someone do. Each `flow-*` chapter
 > names the page that draws its stages; the shared spine they all run is in [flow.md](flow.md).
 
 ## flow-feature
@@ -220,6 +220,38 @@ The evidence rules are the engine's own contract, so they hold with no QA plugin
 binding, and no capture skill. Capture resolves to the repository's `capture` skill, then the
 provider's, then this phase driving it directly; a missing piece changes who captures, never
 whether capture happens.
+
+## phase-personal-validation
+
+```meta
+type: feature
+related: [".devbook/domain/delivery/domain.md#phase", ".devbook/domain/delivery/domain.md#personal-validation"]
+```
+
+Hand the run back to a person to look at: bring the application up, publish the review links as
+clickable URLs, say what to check by hand, and present the code and QA reviews. It runs again on
+every revise round, because a revised change set is a new thing to look at.
+
+### Present, Never Decide
+
+```meta
+type: sub-feature
+related: [".devbook/domain/delivery/domain.md#gate"]
+```
+
+The phase produces the review; the approve / revise / decline decision after it belongs to the
+flow-runner. Nothing in the handoff can approve, skip, or soften that gate — which is what lets
+the presentation be a shared phase skill while the gate itself stays out of a repository's reach.
+
+### No Agent and No Model
+
+```meta
+type: sub-feature
+```
+
+It runs inline in the session the person is reading, because a subagent has no user turn to hand
+back to and a link nobody can click is not a handback. Starting the application is the phase's own
+job: a list of commands for the person to run is a failed handback rather than a shortcut.
 
 ## push-branch
 

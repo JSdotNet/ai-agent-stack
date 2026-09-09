@@ -1696,3 +1696,35 @@ Consequence: the two QA-plugin capture skills are removed there, and nine referr
 that plugin and `knowledge-base` repoint at the contract. `.claude/flow-context.md` also loses
 its unbacked claim to hold interactive startup — it holds declared facts, the `start` skill
 holds the procedure.
+
+## The Pull Request Skills Read the pr-lane Slot
+
+```meta
+date: 2026-09-09
+related: [".devbook/domain/delivery/domain.md#pull-request-lane", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins"]
+```
+
+`pr-lane` is declared in `surface-contract.md` and was read in exactly one place: the Create
+Pull Request phase in `flow-phases.md`. The four skills that are the [Pull Request
+Lane](../domain/delivery/domain.md#pull-request-lane) service — `pr-merge-ready`,
+`update-pr-branch`, `fix-pr-checks`, `push-branch` — went straight to `gh pr` in some fifteen
+calls, and `flow-repo` declared `gh api` as a stage tool. A slot the engine reads once and the
+skills ignore is not a slot; it is a comment above a hardcoded binary.
+
+Each of the five now states the slot read before its first command, and says what unbound means
+for it: `pr-merge-ready` reports the branch and ends the pass, `update-pr-branch` takes the base
+from the repository default and works from git alone, `fix-pr-checks` stops because the failing
+job logs were its whole input, `push-branch` pushes and drops the pull request status line,
+`flow-repo` writes the settings as file artifacts and reports them as manual follow-up. The
+commands stay in the prose as the lane's `gh` spelling — a slot is bound, never branched, so
+naming one spelling is not an if-this-host clause.
+
+**Recording `gh` as the lane's assumed provider was the alternative,** and it was refused. It is
+the cheaper edit — one record, no skill touched — but it spends a guarantee the slot had already
+made, and it makes a binary a dependency of five assets in a marketplace whose slots exist so
+that nothing is. [No Host Profile Plugins](#no-host-profile-plugins) already fixed the unbound
+answer at *no pull request*; this change makes the skills honour it.
+
+Consequence: the `Unbound` cell for `pr-lane` reads *no pull request* in both slot tables rather
+than naming `deliver` alone, because five readers now degrade under it and only one of them is
+`deliver`.

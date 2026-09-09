@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/domain/context-map.md#delivery", ".devbook/arc42/adr/9-the-point-set-is-closed.md"]
 ```
 
 What this context is responsible for: that one unit of work reaches a review-ready change
@@ -24,7 +24,7 @@ a flow may never do.
 ```meta
 type: aggregate
 aliases: [execution, session run]
-related: [".devbook/arc42/09-architecture-decisions.md#every-run-opens-with-update-base"]
+related: [".devbook/arc42/adr/31-every-run-opens-with-update-base.md"]
 ```
 
 One execution of one flow over one unit of work: the stages and their results, the prompts that
@@ -94,7 +94,7 @@ skipped stage reads as a decision nobody made.
 ```meta
 type: aggregate
 aliases: [flow skill, staged procedure]
-related: [".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery"]
+related: [".devbook/arc42/adr/34-flows-belong-to-delivery.md"]
 ```
 
 A staged procedure for one category of work, run start to finish in one session and ending at
@@ -147,7 +147,7 @@ stage the run has reached when the context gauge crosses its threshold.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/domain/plugin-authoring/domain.md#extension-point", ".devbook/arc42/adr/9-the-point-set-is-closed.md"]
 ```
 
 A named place in a flow where a repository plugs a provider in. The set is closed and declared
@@ -184,7 +184,7 @@ provider gaining the authority to change an outcome without anybody re-reading t
 
 ```meta
 type: aggregate
-related: [".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/arc42/09-architecture-decisions.md#the-overlay-may-add-a-gate-and-never-remove-one"]
+related: [".devbook/domain/plugin-authoring/domain.md#gate", ".devbook/arc42/adr/40-the-overlay-may-add-a-gate-and-never-remove-one.md"]
 ```
 
 A human checkpoint attached to an extension point: it presents that point's output and asks a
@@ -222,7 +222,7 @@ inferred from silence.
 ```meta
 type: aggregate
 aliases: [config.json, delivery config]
-related: [".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 `.devbook/config.json`, and specifically the four keys this context owns — `bindings`,
@@ -274,7 +274,7 @@ because an open one would be a stage definition wearing a shorter name.
 ```meta
 type: domain-service
 aliases: [runner, sequencer]
-related: [".devbook/arc42/09-architecture-decisions.md#the-handback-is-the-commit-point"]
+related: [".devbook/arc42/adr/30-the-handback-is-the-commit-point.md"]
 ```
 
 The one agent this context ships: it sequences a flow's stages, prepends Update Base, resolves
@@ -309,7 +309,7 @@ writes file artifacts only and opens nothing.
 
 ```meta
 type: domain-event
-related: [".devbook/domain/delivery/domain.md#run", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+related: [".devbook/domain/delivery/domain.md#run", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
 ```
 
 Published when a run begins, in the `delivery.surface.lifecycle@1` language. The publisher does

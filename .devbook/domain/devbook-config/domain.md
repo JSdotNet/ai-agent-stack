@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: domain
-related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md"]
 ```
 
 What this context is responsible for: that a repository's stack configuration exists before
@@ -84,7 +84,7 @@ dropping the entry would un-adopt it for everyone on the next commit.
 
 ```meta
 type: aggregate
-related: [".devbook/domain/delivery/domain.md#stack-config", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+related: [".devbook/domain/delivery/domain.md#stack-config", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md"]
 ```
 
 The four keys this context writes into `.devbook/config.json` — `bindings`, `extensions`,
@@ -201,7 +201,7 @@ type: ubiquitous-language
 type: term
 date: 2026-09-08
 aliases: [bindings, extensions, policy, gates]
-related: [".devbook/domain/devbook-config/domain.md#engine-configuration", ".devbook/arc42/09-architecture-decisions.md#one-config-file-two-kinds-of-key"]
+related: [".devbook/domain/devbook-config/domain.md#engine-configuration", ".devbook/arc42/adr/10-one-config-file-two-kinds-of-key.md"]
 ```
 
 One of the four top-level keys of `.devbook/config.json` that the engine owns and this context

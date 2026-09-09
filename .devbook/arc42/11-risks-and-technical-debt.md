@@ -7,7 +7,7 @@ related: [".devbook/arc42/tdr/README.md", ".devbook/arc42/09-architecture-decisi
 
 What this repository owes, and what it is exposed to. Records live in
 [`tdr/`](tdr/README.md) and are linked from here rather than restated, the same way
-[chapter 9](09-architecture-decisions.md) is meant to relate to `adr/`.
+[chapter 9](09-architecture-decisions.md) relates to [`adr/`](adr/README.md).
 
 ## Technical Debt
 
@@ -43,15 +43,20 @@ register invites the scaffolding this convention asks authors not to write.
 ## Known Gaps in This Chapter Set
 
 ```meta
+related: [".devbook/arc42/adr/README.md"]
 ```
 
-`adr/` does not exist. All forty-five decisions sit inline in
-[chapter 9](09-architecture-decisions.md), which the convention describes as a chapter that
-links out and does not restate. That is tolerable while one file holds them and a reader can
-still find one by heading; it stops being tolerable when a decision needs its own number, date,
-and supersession chain. Split them out then, and this chapter's shape is the model.
+None open. This section held one until 2026-09-09: `adr/` did not exist, and every decision sat
+inline in [chapter 9](09-architecture-decisions.md), which the convention describes as a chapter
+that links out and does not restate.
 
-Forty-five is past where that argument starts to strain, and both halves of the trigger have
-now fired. Three decisions carry a supersession note — one outright, two in part — so the
-chain the split was being held for exists; and the count has grown faster than the file's
-readability. The next reader to lose a decision in it is the last signal there will be.
+Both halves of the trigger it named had fired. Three decisions carried a supersession note —
+one outright, two in part — so the chain the split was being held for existed; and the count
+had grown faster than the file's readability, past forty-five to forty-six while this section
+still said forty-five. All forty-six moved out that day, six further decisions were written,
+and three more argued on `main` in parallel landed as files on the merge — fifty-five records,
+numbered, with this chapter's shape as the model:
+[`adr/README.md`](adr/README.md) introduces the set, and chapter 9 is a table of links.
+
+Keep this section, and reopen it the moment either chapter starts restating what its record
+folder holds.

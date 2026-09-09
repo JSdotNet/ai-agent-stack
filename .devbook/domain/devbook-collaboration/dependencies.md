@@ -39,4 +39,4 @@ related: [".devbook/domain/context-map.md#devbook-collaboration", ".devbook/doma
 - **One relationship is missing on purpose and is now out of date.** Devbook ships a threaded
   annotation fence that does what a single-line finding was reaching for, and this context has
   not moved to it. The migration is one pass; see
-  [the decision](../../arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands).
+  [the decision](../../arc42/adr/8-comments-are-findings-until-the-fence-lands.md).

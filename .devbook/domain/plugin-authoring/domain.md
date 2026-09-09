@@ -43,7 +43,7 @@ type: ubiquitous-language
 
 ```meta
 type: term
-related: [".devbook/arc42/09-architecture-decisions.md#marketplace-named-jsdotnet"]
+related: [".devbook/arc42/adr/1-marketplace-named-jsdotnet.md"]
 ```
 
 A repository that offers plugins for installation, identified by the `name` in
@@ -133,7 +133,7 @@ hook may be, so the event, not the intent, decides the form it takes.
 ```meta
 type: term
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md#the-word-knowledge-is-retired", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only"]
+related: [".devbook/arc42/adr/35-the-word-knowledge-is-retired.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md"]
 ```
 
 One of the five folders the `devbook` convention governs — `arc42`, `domain`, `tech`, `design`,
@@ -172,7 +172,7 @@ Each prefix names one scope and no prefix names two, which is why none of them i
 *orchestration* — the word covers fan-out and single-session staging at once, and survives here
 only as the English description of what `fleet-` does. `delivery` holds sixteen `flow-*` — five
 of them one per devbook folder, since
-[flows belong to delivery](../../arc42/09-architecture-decisions.md#flows-belong-to-delivery) —
+[flows belong to delivery](../../arc42/adr/34-flows-belong-to-delivery.md) —
 and three `phase-*`, `delivery-schedule` holds eleven `schedule-*` beside a bare `install`, and
 `fleet` holds three
 `fleet-*`.
@@ -183,9 +183,9 @@ subsystem while `flow-feature` and `phase-build-test` are the procedures inside 
 why a surface is `delivery-surface-dashboard` and never `flow-dashboard`. A surface that answers
 a contract other surfaces answer carries the contract word after the stem and the
 implementation after that, so the three are read as one kind from the marketplace list alone;
-see [the decision](../../arc42/09-architecture-decisions.md#surfaces-carry-the-surface-word).
+see [the decision](../../arc42/adr/33-surfaces-carry-the-surface-word.md).
 A surface interchangeable with nothing does not — see
-[the decision](../../arc42/09-architecture-decisions.md#devbooks-canvas-carries-no-surface-word).
+[the decision](../../arc42/adr/36-devbooks-canvas-carries-no-surface-word.md).
 `fleet` is its own stem, not a package inside `delivery`, because fan-out is a different
 subsystem.
 
@@ -194,7 +194,7 @@ subsystem.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
 ```
 
 A procedure that turns one queue into work across several sessions, each in its own worktree —
@@ -217,7 +217,7 @@ that cannot demonstrate itself never reaches one.
 type: term
 date: 2026-09-07
 aliases: [routine, automation]
-related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#flow-skill", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
 ```
 
 A trigger that fires a procedure the stack already ships, in a cloud session that starts with
@@ -244,7 +244,7 @@ A schedule names an entry point, a `fleet-*` skill, or a read-and-report skill, 
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed"]
+related: [".devbook/arc42/adr/9-the-point-set-is-closed.md"]
 ```
 
 A named place in a flow where a repository plugs a provider in. The set is closed and declared
@@ -285,7 +285,7 @@ it never self-approves.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/domain/plugin-authoring/domain.md#mcp-server"]
+related: [".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/domain/plugin-authoring/domain.md#mcp-server"]
 ```
 
 Where work becomes visible or recorded, and nothing else. A dashboard, a canvas, and a headless
@@ -302,22 +302,22 @@ Three ship here. `delivery-surface-dashboard` answers all three groups, `deliver
 render only, and `delivery-surface-collector` lifecycle and export only. Each declares exactly
 the tool names its groups name and nothing more, which is what makes one substitutable for
 another. See
-[the decision](../../arc42/09-architecture-decisions.md#three-surfaces-one-contract).
+[the decision](../../arc42/adr/15-three-surfaces-one-contract.md).
 
 A surface is not required to be an MCP server. `delivery-surface-canvas` is a Copilot canvas and
 nothing else, so its two operations arrive as canvas actions rather than namespaced tools —
 which is why the contract matches operation names and never a transport. See
-[the decision](../../arc42/09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only).
+[the decision](../../arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md).
 
 The fourth, `devbook-graph`, renders the reference graph `_meta/graph.json` produces, and opens
 a single chapter beside its parsed `meta` block in a second canvas, `devbook-chapter`. It
 answers no operation group and substitutes for nothing, which is why it takes devbook's stem
 and the thing it draws rather than the surface word — see
-[the decision](../../arc42/09-architecture-decisions.md#devbooks-canvas-carries-no-surface-word).
+[the decision](../../arc42/adr/36-devbooks-canvas-carries-no-surface-word.md).
 It is packaged inside the `devbook` plugin folder rather than alone, and imports that plugin's
 generator modules by relative path — no host resolves the two together, so this is a source
 coupling to undo, not a dependency to declare. See
-[the decision](../../arc42/09-architecture-decisions.md#devbook-still-ships-the-graph-canvas).
+[the decision](../../arc42/adr/5-devbook-still-ships-the-graph-canvas.md).
 
 ### Host Slot
 
@@ -360,7 +360,7 @@ No provider for any of them ships in this marketplace; see
 The key is not the plugin's name, and a plugin whose name matches a key matches it by
 coincidence. A specialist filling a role also holds no flow control — no sequencing, no gate,
 no session spawning, no delegation — because all four belong to whatever consults it. See
-[the decision](../../arc42/09-architecture-decisions.md#a-role-plugin-holds-no-flow-control).
+[the decision](../../arc42/adr/19-a-role-plugin-holds-no-flow-control.md).
 
 Implementation is not a role. It owns a phase, carries a toolchain, and loops with
 verification, so it binds as the `implement` and `verify` services instead.
@@ -418,7 +418,7 @@ repository.
 
 ```meta
 type: term
-related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/09-architecture-decisions.md#an-mcp-server-is-bound-per-point"]
+related: [".devbook/tech/shared.md#model-context-protocol", ".devbook/arc42/adr/32-an-mcp-server-is-bound-per-point.md"]
 ```
 
 A tool server a plugin ships and declares in its manifest. Its tools are namespaced by
@@ -429,14 +429,14 @@ The engine requires none. A repository declares its servers in its own MCP confi
 binds them per extension point under `bindings["delivery.mcp"]`; a bound server is resolved
 from the live tool list the way a surface is, and one that does not answer costs a stage its
 grounding, never the run. See
-[the decision](../../arc42/09-architecture-decisions.md#an-mcp-server-is-bound-per-point).
+[the decision](../../arc42/adr/32-an-mcp-server-is-bound-per-point.md).
 
 ### Layer
 
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#plugin", ".devbook/arc42/adr/2-one-folder-per-plugin.md"]
 ```
 
 A plugin's position in the dependency order, and the only thing that decides which other
@@ -458,7 +458,7 @@ tool list and no-ops when absent, so nothing may declare one.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/adr/8-comments-are-findings-until-the-fence-lands.md"]
 ```
 
 The seam a higher layer stores state through without a release of the layer beneath it: a

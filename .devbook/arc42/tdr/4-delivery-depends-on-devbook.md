@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin", ".devbook/arc42/09-architecture-decisions.md#the-stack-config-lives-in-devbook", ".devbook/domain/plugin-authoring/domain.md#layer"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/adr/34-flows-belong-to-delivery.md", ".devbook/arc42/adr/2-one-folder-per-plugin.md", ".devbook/arc42/adr/11-the-stack-config-lives-in-devbook.md", ".devbook/domain/plugin-authoring/domain.md#layer"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -30,7 +30,7 @@ addressed by name from a plugin that claims not to know it exists.
 **Restated rules.** Each of the five requires the `meta` block, forbids writing the `approved`
 rung, and forbids regenerating `_meta/` in the run. Those are three of devbook's own rules,
 restated in `delivery`. It is the fault
-[Flows Belong to Delivery](../09-architecture-decisions.md#flows-belong-to-delivery) charged
+[Flows Belong to Delivery](../adr/34-flows-belong-to-delivery.md) charged
 `devbook-flows` with — a Metadata Enforcement stage restating what devbook's instruction files
 already state — surviving the change that was supposed to remove it.
 

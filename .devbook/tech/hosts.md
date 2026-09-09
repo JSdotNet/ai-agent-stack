@@ -44,7 +44,7 @@ costs the dispatch, not the triage — see
 ```meta
 status: adopted
 type: platform
-related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"]
+related: [".devbook/arc42/adr/3-one-authored-copy-per-asset.md"]
 ```
 
 Reads `.github/plugin/plugin.json` and `hooks.json`, applies a *repository's* instruction files
@@ -79,7 +79,7 @@ status: trial
 type: platform
 date: 2026-09-07
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
-related: [".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
+related: [".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
 ```
 
 Cron-scheduled cloud sessions: a name, a five-field UTC expression at one hour minimum, a

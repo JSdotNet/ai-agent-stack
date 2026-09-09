@@ -3,7 +3,7 @@
 ```meta
 index: root
 type: context-map
-related: [".devbook/arc42/09-architecture-decisions.md#one-plugin-one-bounded-context", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
+related: [".devbook/arc42/adr/44-one-plugin-one-bounded-context.md", ".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 **One plugin, one bounded context.** A plugin is the unit a host installs, versions, and can
@@ -12,7 +12,7 @@ which is what a bounded context has to be before it earns a folder here. Nine fo
 the nine plugin folders under `plugins/`, name for name, plus
 [Plugin Authoring](#plugin-authoring), the only one that is not a plugin: it is the language
 the other nine are written in. See
-[the decision](../arc42/09-architecture-decisions.md#one-plugin-one-bounded-context).
+[the decision](../arc42/adr/44-one-plugin-one-bounded-context.md).
 
 This repository ships authoring assets rather than a running product, so a *user* here is a
 host that loads an asset and a repository that installs one. Both sit outside every boundary,
@@ -152,7 +152,7 @@ context at once, which is what a shared kernel means and why it stays small.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/devbook/domain.md", ".devbook/arc42/09-architecture-decisions.md#flat-devbook-folders-only", ".devbook/arc42/09-architecture-decisions.md#flows-belong-to-delivery"]
+related: [".devbook/domain/devbook/domain.md", ".devbook/arc42/adr/6-flat-devbook-folders-only.md", ".devbook/arc42/adr/34-flows-belong-to-delivery.md"]
 ```
 
 Addressed Markdown chapters and the schema underneath them: the `meta` block, the status
@@ -164,7 +164,7 @@ code that implements it. It ships the shape and the check, and never a flow.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/devbook-collaboration/domain.md", ".devbook/arc42/09-architecture-decisions.md#approved-is-a-status-rung", ".devbook/arc42/09-architecture-decisions.md#comments-are-findings-until-the-fence-lands"]
+related: [".devbook/domain/devbook-collaboration/domain.md", ".devbook/arc42/adr/7-approved-is-a-status-rung.md", ".devbook/arc42/adr/8-comments-are-findings-until-the-fence-lands.md"]
 ```
 
 Who owes the next move on a chapter: request a review, record findings and a verdict, and run
@@ -176,7 +176,7 @@ writes beside.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/devbook-config/domain.md", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+related: [".devbook/domain/devbook-config/domain.md", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md"]
 ```
 
 What this stack is, what this machine has, and how this repository is wired — the only context
@@ -187,7 +187,7 @@ writes the four engine-owned keys of the stack config and never a component's st
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/delivery/domain.md", ".devbook/arc42/09-architecture-decisions.md#the-point-set-is-closed", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/delivery/domain.md", ".devbook/arc42/adr/9-the-point-set-is-closed.md", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
 One unit of work, carried from a request to a review-ready change inside one session: the
@@ -199,7 +199,7 @@ boundary, and so is fan-out.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/fleet/domain.md", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"]
+related: [".devbook/domain/fleet/domain.md", ".devbook/arc42/05-building-block-view.md#fan-out-state", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md"]
 ```
 
 A backlog turned into parallel work across sessions and worktrees — the one thing a flow may
@@ -210,7 +210,7 @@ prove itself parks instead of passing a gate nobody is there to answer.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/delivery-schedule/domain.md", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/09-architecture-decisions.md#the-unattended-lane-is-its-own-plugin"]
+related: [".devbook/domain/delivery-schedule/domain.md", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/adr/26-the-unattended-lane-is-its-own-plugin.md"]
 ```
 
 Work that runs with nobody watching: entry points that pick their own input, and the catalog of
@@ -221,7 +221,7 @@ is what asks; the entry point is what runs.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/delivery-surface-dashboard/domain.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"]
+related: [".devbook/domain/delivery-surface-dashboard/domain.md", ".devbook/arc42/05-building-block-view.md#surface-plugins", ".devbook/arc42/adr/15-three-surfaces-one-contract.md"]
 ```
 
 The live view of a run, and the only implementation that measures rather than accepts what it
@@ -232,7 +232,7 @@ hooks. It answers all three capability groups.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/delivery-surface-canvas/domain.md", ".devbook/arc42/09-architecture-decisions.md#delivery-surface-canvas-ships-the-canvas-only", ".devbook/tech/hosts.md#copilot-extension-sdk"]
+related: [".devbook/domain/delivery-surface-canvas/domain.md", ".devbook/arc42/adr/18-delivery-surface-canvas-ships-the-canvas-only.md", ".devbook/tech/hosts.md#copilot-extension-sdk"]
 ```
 
 Two viewers and nothing else: Mermaid rendered live and Markdown rendered live, beside the
@@ -243,7 +243,7 @@ one plugin here that ships a single host's manifest.
 
 ```meta
 type: bounded-context
-related: [".devbook/domain/delivery-surface-collector/domain.md", ".devbook/arc42/09-architecture-decisions.md#a-surface-declares-only-the-contracts-tool-names"]
+related: [".devbook/domain/delivery-surface-collector/domain.md", ".devbook/arc42/adr/16-a-surface-declares-only-the-contracts-tool-names.md"]
 ```
 
 A run recorded rather than watched: stage status, gate decisions, QA evidence paths, and the

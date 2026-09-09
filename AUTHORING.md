@@ -5,7 +5,7 @@ Pruning rules and size budgets that keep authored assets short enough to stay pr
 
 It arrived from the `spec-builder` plugin's `instructions/authoring/spec-conciseness.instructions.md`
 and stayed behind when that plugin
-[left the marketplace](.devbook/arc42/09-architecture-decisions.md#the-specialists-leave-the-marketplace),
+[left the marketplace](.devbook/arc42/adr/24-the-specialists-leave-the-marketplace.md),
 because it governs authoring *here*.
 
 ## Purpose

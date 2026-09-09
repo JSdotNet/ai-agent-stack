@@ -10,7 +10,7 @@ related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/01-in
 **2026-09-05.** The first option below was taken: the root instruction file carries the
 disclosure rule again and points at [AUTHORING.md](../../../AUTHORING.md) — that file is
 `AGENTS.md` since 2026-09-07 — and
-[a decision](../09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates) states
+[a decision](../adr/20-budgets-are-disclosure-triggers-not-gates.md) states
 the reason once for the four kinds that are long by nature. What remains is the assets outside
 those kinds, which still owe a trim or a reason line; `tools/check-assets.mjs --budgets` lists
 them.
@@ -33,7 +33,7 @@ procedures, converters, schema and contract files, the runner agents — plus `f
 three skills stay long for the reason the options table gives.
 
 **2026-09-07.** The seven specialist plugins
-[left the marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace),
+[left the marketplace](../adr/24-the-specialists-leave-the-marketplace.md),
 taking most of the short assets with them, and `spec-conciseness.instructions.md` stayed as
 [AUTHORING.md](../../../AUTHORING.md). Nothing was trimmed or grown; the population changed:
 
@@ -92,7 +92,7 @@ frontmatter:
 ```
 
 The three numbers came from `spec-conciseness.instructions.md` in the `spec-builder` plugin.
-That plugin [left this marketplace](../09-architecture-decisions.md#the-specialists-leave-the-marketplace)
+That plugin [left this marketplace](../adr/24-the-specialists-leave-the-marketplace.md)
 on 2026-09-07 and the rule stayed, as [AUTHORING.md](../../../AUTHORING.md). It
 opens its budget table with "the budget is the trigger for a disclosure decision, not a hard
 limit" and closes it with "state the reason in the file when an asset genuinely must exceed its

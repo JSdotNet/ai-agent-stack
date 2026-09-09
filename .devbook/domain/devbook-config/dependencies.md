@@ -2,7 +2,7 @@
 
 ```meta
 type: dependencies
-related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none"]
+related: [".devbook/domain/context-map.md#devbook-config", ".devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md"]
 ```
 
 > What this context depends on and who depends on it. It names every plugin in the marketplace and

@@ -26,7 +26,7 @@ value is a single copy per asset — nothing to keep two variants of, nothing th
 
 ```meta
 type: sub-feature
-related: [".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"]
+related: [".devbook/arc42/adr/3-one-authored-copy-per-asset.md"]
 ```
 
 Carry both hosts' tool ids in one allowlist, pin only a model both accept, and restate in
@@ -37,7 +37,7 @@ does not apply by itself.
 
 ```meta
 type: sub-feature
-related: [".devbook/arc42/09-architecture-decisions.md#budgets-are-disclosure-triggers-not-gates", ".devbook/arc42/tdr/1-body-budgets-unenforced.md"]
+related: [".devbook/arc42/adr/20-budgets-are-disclosure-triggers-not-gates.md", ".devbook/arc42/tdr/1-body-budgets-unenforced.md"]
 ```
 
 Keep an asset short enough that a model attends to all of it, and say why in the file when it
@@ -66,7 +66,7 @@ plugin whose whole payload belongs to one host ships that host's alone.
 
 ```meta
 type: sub-feature
-related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"]
+related: [".devbook/domain/plugin-authoring/domain.md#layer", ".devbook/arc42/adr/2-one-folder-per-plugin.md"]
 ```
 
 Name the lower layer a plugin cannot work without, with a version range, so the host makes an

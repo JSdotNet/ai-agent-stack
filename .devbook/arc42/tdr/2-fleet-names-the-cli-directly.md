@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-03
-related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins", ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin", ".devbook/tech/hosts.md#claude-code-cli"]
+related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/domain/plugin-authoring/domain.md#host-slot", ".devbook/arc42/adr/17-no-host-profile-plugins.md", ".devbook/arc42/adr/22-fan-out-is-its-own-plugin.md", ".devbook/tech/hosts.md#claude-code-cli"]
 ```
 
 **Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
@@ -17,7 +17,7 @@ and runs its resolution stages through the `Workflow` tool.
 
 That breaks a rule this repository has already written down, and the rule has since
 tightened. The host profiles were the one place a host's own file, path, or capability could
-be named; [they are gone](../09-architecture-decisions.md#no-host-profile-plugins), so no
+be named; [they are gone](../adr/17-no-host-profile-plugins.md), so no
 asset here may name one. `fleet` still does.
 
 ## Origin

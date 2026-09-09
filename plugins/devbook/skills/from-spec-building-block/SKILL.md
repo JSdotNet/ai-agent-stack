@@ -125,6 +125,8 @@ Where the change is a move or a split rather than an addition, the category is
 
 - Do not edit the chapter. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
+- Do not carry an `annotation` fence into the change brief. An open question is
+  a reason to stop at the gate, not a line item to implement.
 - Do not brief a behaviour change alongside a structural one. Say explicitly
   that behaviour is unchanged, and keep it that way.
 - Do not omit the negative dependency checks. Without them the structure erodes.

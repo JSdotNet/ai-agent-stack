@@ -83,8 +83,10 @@ that removed it and the change that answered it.
 | gone | Swept. | Forever. The prose change is the record. |
 
 Sweeping is a step, not a hope: delete every resolved fence before the branch
-merges. A permanent note is a smell — if an aside is worth keeping, it is
-prose, and it belongs in the chapter as prose.
+merges. `devbook:annotation-sweep` is that step, over `annotations.mjs sweep`
+— chapter-scoped, so a person sees what is about to go. A permanent note is a
+smell: if an aside is worth keeping, it is prose, and it belongs in the chapter
+as prose.
 
 ## An annotation is not chapter content
 

@@ -309,7 +309,7 @@ is the normal case and never a gap.
 | `model-override` | Where a user's personal model preferences live | Category defaults |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which surface plugin provides the capabilities below | No surface; file artifacts only |
-| `pr-lane` | The pull-request CLI or API | `deliver` produces file artifacts only |
+| `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |
 
 **Behavioural divergence is a capability, not a host.** `stage-delegation` asks whether
 sub-agents exist, not which host is running, so a stage declares an optional delegation hint

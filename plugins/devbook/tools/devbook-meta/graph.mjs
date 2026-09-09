@@ -309,6 +309,28 @@ export async function buildGraph(repoRoot, folders = null) {
             const parentId = ancestors.length ? ancestors[ancestors.length - 1].id : relPath;
 
             const id = `${relPath}#${chapter.slug}`;
+
+            // An anchor is claimed by any heading, structural ones included, so
+            // this runs before the fence guard below. The first heading keeps
+            // it — that is the one GitHub leaves unsuffixed — and the later one
+            // is dropped rather than overwriting it.
+            //
+            // Only a collision with a chapter on either side is reported. A
+            // chapter that cannot be addressed is the error; two structural
+            // headings sharing an anchor is the ordinary shape of a chapter
+            // file (`### Invariants` under each aggregate), and those are
+            // materialized on demand, never referenced by accident.
+            if (headingIndex.has(id)) {
+                if (chapter.meta || nodes.has(id)) {
+                    problems.push({
+                        severity: "error",
+                        path: relPath,
+                        message: `Duplicate chapter anchor "${id}" — two headings slugify identically, so a reference to it is ambiguous. The first heading keeps the anchor; the one on line ${chapter.line} is dropped from the graph and cannot be addressed.`,
+                    });
+                }
+                continue;
+            }
+
             headingIndex.set(id, {
                 id,
                 label: chapter.text,
@@ -322,14 +344,6 @@ export async function buildGraph(repoRoot, folders = null) {
             });
 
             if (!chapter.meta) continue; // structural heading, not an addressable chapter
-
-            if (nodes.has(id)) {
-                problems.push({
-                    severity: "error",
-                    path: relPath,
-                    message: `Duplicate chapter anchor "${id}" — two headings slugify identically, so references to it are ambiguous.`,
-                });
-            }
 
             const node = {
                 id,

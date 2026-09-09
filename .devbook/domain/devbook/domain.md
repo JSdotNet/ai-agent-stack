@@ -177,6 +177,7 @@ rewrite the same JSON, and the conflict is only resolvable by re-running the gen
 |---|---|---|
 | One node per heading that carries a `meta` fence, and none per heading without one | graph build | untested |
 | An edge exists only where a reference field resolves; an unresolved one is an error, not a dangling edge | graph build | untested |
+| Two headings that slugify identically claim one anchor: the first keeps it, the later one is dropped, and the collision is an error where either is a chapter | graph build | `unit:node:plugins/devbook/tools/devbook-meta/anchor-collision.test.mjs` |
 | `roadmap`, `aliases`, `alternatives`, `tests`, and `ext.*` stay node attributes and produce no edge | graph build | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
 | Output is deterministic — no timestamps — so a clean `git diff` proves the indexes are current | emit | untested |
 | A session never writes `_meta/`; the scheduled refresh owns it | convention | open — nothing enforces it but the host's deny list and this rule |
@@ -284,6 +285,18 @@ sync by hand.
 Equal by value and derived from the content, so it is a re-identification rather than a rename
 when the heading changes. That is the cost the convention accepts in exchange for having no
 stored ids to reconcile.
+
+Because nothing is assigned, two headings in one file that slugify identically claim one
+address. The **first** keeps it — the one GitHub leaves unsuffixed — and the later one is
+dropped rather than overwriting it; last-writer-wins would silently move an address. A heading
+carrying no `meta` block claims its anchor the same way, so the rule is about headings, not
+about chapters.
+
+The graph reports the collision where a chapter is on either side of it, because a chapter that
+cannot be addressed is a chapter that has left the graph. Two structural headings sharing an
+anchor is not reported: it is the ordinary shape of a chapter file, where every aggregate
+carries its own `### Invariants`, and such a heading is only ever materialized when something
+cites it.
 
 ### Test Reference
 

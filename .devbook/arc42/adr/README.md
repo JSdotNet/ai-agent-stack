@@ -26,9 +26,10 @@ related decisions and the `date` field carries the chronology — reading top to
 argument, not a timeline.
 
 A number is claimed when the record is written, and two branches writing at once claim
-different ones: 53 was argued as chapter 9's forty-seventh decision on `main` while 47 to 52
-were being written here, and took the next free number on the merge rather than displacing
-them.
+different ones: 53, 54, and 55 were argued as chapter 9's forty-seventh, forty-eighth, and
+forty-ninth decisions on `main` while 47 to 52 were being written here, and took the next free
+numbers on the merge rather than displacing them. So the split's own boundary — 46 — is the
+last point at which the number and the position in chapter 9 agreed.
 
 A number is never reused and never renumbered. A superseded decision keeps its number and says
 so in its own body, pointing at whatever replaced it, because the record of a choice that was
@@ -94,6 +95,8 @@ later reversed is the part a reader most needs.
 | [51. Raising a Pull Request Is Not a Skill](51-raising-a-pull-request-is-not-a-skill.md) | 2026-09-09 |
 | [52. Annotations Reach the Devbook Folders and Nothing Else](52-annotations-reach-the-devbook-folders-and-nothing-else.md) | 2026-09-09 |
 | [53. The Hard Gate Runs the Schema Validator](53-the-hard-gate-runs-the-schema-validator.md) | 2026-09-09 |
+| [54. The Pull Request Skills Read the pr-lane Slot](54-the-pull-request-skills-read-the-pr-lane-slot.md) | 2026-09-09 |
+| [55. A Bounded Context Says Who Works With It](55-a-bounded-context-says-who-works-with-it.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

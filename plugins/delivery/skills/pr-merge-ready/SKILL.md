@@ -20,6 +20,14 @@ already merge-ready is reported and left alone, so the skill is safe to run on a
 A pull request that does not exist yet is reported, not created. Raising the PR stays a
 deliberate decision, taken outside this skill.
 
+## Pull Request Lane
+
+Every `gh pr` command below is one spelling of the `pr-lane` slot. Resolve the slot first and
+use whatever pull-request CLI or API the session offers for the same operation. Unbound, there
+is no pull request to read or score: report the branch, say once that no pull request lane is
+available, and end the pass. Never fail on a missing binary. The slot and its unbound default
+are in `resources/surface-contract.md`.
+
 ## One Pull Request Per Pass
 
 Each pass works **one** pull request. It never spawns an agent per PR and never asks for a

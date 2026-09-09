@@ -93,7 +93,7 @@ followed, so a scoped graph stays about its own folder.
 | `graph.mjs` | Graph construction, scope discovery, and scope projection. Imported by the CLI *and* by the `devbook-graph` canvas, so the written indexes and the live view can never disagree. |
 | `outline.mjs` | Outline generation: root-document resolution (`index: root`, else the `DIRECTORY_CONVENTION` table), numbered ordering, and the per-file lede and diagram count a list view needs. |
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
-| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, plus a CLI over the same four functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. |
+| `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, `sweep`, plus a CLI over the same five functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. `sweep` is the bulk half of `resolve --delete`: it takes every resolved fence in an addressed chapter, bottom-up, and no open one. |
 | `build.mjs` | CLI wrapper: writes all three artifacts per scope, prints stats, exits non-zero on errors. |
 | `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs`, `field-scope.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, the four write operations, and the field-scope sub-rules. |
 

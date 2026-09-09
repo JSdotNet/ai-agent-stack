@@ -78,6 +78,14 @@ shares it:
 is personal and per-machine, so a component this machine lacks is skipped and left stamped.
 Dropping the entry would un-adopt it for everyone on the next commit.
 
+It cross-references the bindings against that same enabled set. A `delivery.roles` or
+`extensions` row naming a plugin nobody has enabled is flagged in place and collected under
+**Bindings nobody has enabled**, which names both files — the config that binds it and the
+settings that do not enable it. It is a warning and never a failure: `delivery`'s
+[surface contract](../delivery/resources/surface-contract.md) makes an unreachable role a
+fallback rather than a stop, and enablement is personal to one checkout while a binding is
+committed and shared.
+
 `--json` prints the same model unrendered. `--marketplace <name>` reports a different catalog.
 
 ## What it never depends on

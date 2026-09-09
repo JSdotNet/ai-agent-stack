@@ -270,8 +270,13 @@ repository two places to disagree with itself about what is installed.
 `policy` keys are closed enums or numbers with documented defaults, so an absent key means the
 engine's own choice rather than undefined, and an unknown key is rejected by name rather than
 ignored — the same discipline `claude plugin validate --strict` applies to a manifest, which is
-what makes the file safe to hand-edit. `pr.base` is the single exception to the closed-enum
-rule and is validated as a git ref instead.
+what makes the file safe to hand-edit. The rejection reaches the top level too: the file has
+exactly two owners, so a top-level key that is neither engine-owned nor `components` is
+reported by name rather than left to take every default in silence. `pr.base` is the single
+exception to the closed-enum rule; the check validates it as a well-formed git ref name, and
+its existence on the remote is resolved at flow time by the stages that use it — Update Base
+fetches it, the pull-request lane opens against it — because a config check that reached for
+the network would fail offline and in a repository with no remote yet.
 
 Consequence: two components can conflict on the file itself when both write it in one session.
 Each writes only its own key, so the conflict is textual rather than semantic, but nothing
@@ -356,6 +361,15 @@ implementations of `find_item`, `read_item`, `create_item`, `comment`, `transiti
 Consequence: the stage name changed in 32 skills at once, so a run resumed from state written
 before this release finds a stage name that no longer matches. Nothing resumes across it,
 because nothing has run yet — which is the one moment this rename is free.
+
+The same rule reaches a skill's own id, and the two pickup skills were the last place it had
+not: `azure-sre-to-github-issue` became `sre-alerts-to-work-items` in `delivery` 2.4.0, and
+both it and `start-session-from-issue` now name the tracker operations rather than calling `gh`.
+Azure stays in the one name because it is the alert source, which is bound separately from the
+tracker the item lands in. An id is visible identity, so renaming one is not free the way a
+stage name was — but nothing referenced it beyond this repository's own README and devbook, and
+carrying a provider in the identity of a skill the binding exists to keep neutral costs more
+than the rename.
 
 ## delivery Ships No Surface
 
@@ -1784,3 +1798,13 @@ answer at *no pull request*; this change makes the skills honour it.
 Consequence: the `Unbound` cell for `pr-lane` reads *no pull request* in both slot tables rather
 than naming `deliver` alone, because five readers now degrade under it and only one of them is
 `deliver`.
+
+**The lane stops one step short of what the tracker binding now asks of a skill,** and the gap
+is deliberate. `main` landed the rule that *a skill names the operation and never the
+provider's command* while this change was open, and rewrote the two pickup skills onto
+`find_item`, `read_item`, and the rest. The lane cannot follow yet, because a binding declares
+an operation vocabulary and a slot does not: `pr-lane` resolves to "the pull-request CLI or
+API" and names no operations for a skill to call instead of `gh pr checks`. Giving it one —
+`open_pr`, `read_pr`, `list_checks`, `read_check_logs` — widens the contract and is its own
+decision, not a line in this one. Until then the two shapes differ on purpose: the tracker
+names operations, the lane names a slot and one spelling under it.

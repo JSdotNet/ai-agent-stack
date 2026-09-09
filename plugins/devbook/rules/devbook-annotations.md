@@ -30,8 +30,8 @@ replies:
     date: 2026-09-02
     body: No second scan — the rollup is a view over the same index.
 ext:
-  backlog:
-    entry: 8f31c2
+  devbook-collaboration:
+    finding: open-1
 ```
 
 | Field | Required | Meaning |
@@ -100,6 +100,20 @@ before, so the discipline is explicit, the same way `_meta/` has one:
 - `to-spec-<kind>` never writes one. `from-spec-<kind>` never carries one into
   a change brief. An open question is a reason to stop at the gate, not a line
   item to implement.
+
+## An open question means the chapter is not agreed
+
+The scope is the `question` kind, open, and nothing wider. A `comment`, a
+`suggestion`, or a `flag` is somebody's remark about a chapter that stands; an
+unanswered question is a hole in the chapter itself, so it outranks whatever
+`status` says.
+
+`--check` does not report one. An open question is the state the fence exists
+for and it is legal for the length of a branch, so a gate that failed on every
+one would teach everybody to ignore it. What `--check` does report, as an
+error, is the contradiction: a chapter on the `approved` rung carrying an open
+question, where a person has signed for content that still has an unanswered
+question in it. Resolve and sweep the note, or take the approval off.
 
 ## Writing one
 

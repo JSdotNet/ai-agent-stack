@@ -9,7 +9,7 @@ name: Repository checks
 # indexes. `--check` reads them and reports; the refresh stays with the
 # `devbook-check` schedule, which is what
 # .devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md decided and
-# .devbook/arc42/adr/56-a-workflow-gates-the-checks-the-schedule-cannot.md
+# .devbook/arc42/adr/57-a-workflow-gates-the-checks-the-schedule-cannot.md
 # narrows.
 #
 # No path filters, deliberately. Every folder here is authored assets that one

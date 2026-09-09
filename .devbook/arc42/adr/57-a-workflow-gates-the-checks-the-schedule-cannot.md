@@ -1,4 +1,4 @@
-# 56. A Workflow Gates the Checks the Schedule Cannot
+# 57. A Workflow Gates the Checks the Schedule Cannot
 
 ```meta
 date: 2026-09-09

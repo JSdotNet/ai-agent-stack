@@ -34,15 +34,24 @@ try {
         "utf8"
     );
 
-    // A chapter reference pasted into `feature-flag`, which takes application
-    // flag keys and produces no edge — so the graph build alone never sees it.
-    // Plus a structural heading with no block, which is legal and stays a
-    // warning.
+    // A structural heading with no block, which is legal and stays a warning.
     await writeFile(
         path.join(repoRoot, ".domain", "ordering", "domain.md"),
         `# Ordering\n\n${fence("type: domain\n")}\n## Order\n\n` +
-            `${fence("type: aggregate\nfeature-flag: [.domain/ordering/domain.md#order]\n")}\n` +
+            `${fence("type: aggregate\n")}\n` +
             `Prose.\n\n### Notes\n\nProse.\n`,
+        "utf8"
+    );
+
+    // A chapter reference pasted into `feature-flag`, which takes application
+    // flag keys and produces no edge — so the graph build alone never sees it.
+    // Written on a `feature` chapter, where the field is in scope, so the only
+    // thing wrong with it is the value.
+    await writeFile(
+        path.join(repoRoot, ".domain", "ordering", "features.md"),
+        `# Ordering Features\n\n${fence("type: features\n")}\n## Refunds\n\n` +
+            `${fence("type: feature\nfeature-flag: [.domain/ordering/domain.md#order]\n")}\n` +
+            `Prose.\n`,
         "utf8"
     );
 

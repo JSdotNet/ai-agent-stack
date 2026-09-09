@@ -69,9 +69,11 @@ stateDiagram-v2
 - **`approved` is of what was read, not of the heading.** It drops the moment the content
   changes, and `approved-by` and `approved-at` are written and deleted in the same change as
   the rung.
-- **An open annotation is orthogonal to all of this.** A chapter carrying one is not agreed
-  whatever its status says, which is why a reader in review mode reads the fences and a reader
-  loading task context skips them.
+- **An open question is orthogonal to all of this.** A chapter carrying an open `kind: question`
+  fence is not agreed whatever its status says, which is why a reader in review mode reads the
+  fences and a reader loading task context skips them. The other kinds are remarks about a
+  chapter that stands. `--check` reports only the contradiction — an `approved` chapter carrying
+  an open question — because an open question is legal for the length of a branch.
 
 ## Catching Up With the Code
 

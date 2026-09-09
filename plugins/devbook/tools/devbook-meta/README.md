@@ -95,7 +95,7 @@ followed, so a scoped graph stays about its own folder.
 | `annotations-index.mjs` | Derives `annotations.json` from the fences: the open-note index every reader comes off, so no reader needs the writer and no reader parses Markdown twice. |
 | `annotations.mjs` | The only writer of an annotation fence — `list`, `add`, `reply`, `resolve`, plus a CLI over the same four functions. Edits are surgical, so a field a later version adds survives a write by one that does not know it. |
 | `build.mjs` | CLI wrapper: writes all three artifacts per scope, prints stats, exits non-zero on errors. |
-| `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, and the four write operations. |
+| `escape-lint.test.mjs`, `tests-field.test.mjs`, `annotations.test.mjs`, `annotations-write.test.mjs`, `field-scope.test.mjs` | Self-contained checks — `node <file>` — over the escape-sequence lint, `tests` parsing and its run-command mapping, the annotation grammar and placement rule, the four write operations, and the field-scope sub-rules. |
 
 This folder is self-contained — copy it into a repository as
 `.github/tools/devbook-meta/` and it runs with no other files installed.
@@ -285,6 +285,10 @@ each expects, without building a command.
 | A `tests` entry whose level is outside `unit`, `integration`, `e2e` | error |
 | A `tests` entry that is a `<path>#<slug>` chapter reference rather than a test identifier | error |
 | A `tests` entry naming a runner the tooling has no command for | warning |
+| A folder-specific field (`depends-on`, `aliases`, `feature-flag`, `version`, `alternatives`) on the file-level block | error |
+| `.domain` `depends-on` or `feature-flag` on a chapter that is not a `feature` or `sub-feature` | error |
+| An `approved` chapter carrying an open `kind: question` annotation | error |
+| `.ai` `stage` on a block inside a stage file, where the file already says it | warning |
 | A directory missing the root document its folder convention names | warning |
 
 ### Literal escape sequences

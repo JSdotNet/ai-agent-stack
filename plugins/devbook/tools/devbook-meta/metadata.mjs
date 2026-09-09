@@ -296,6 +296,50 @@ const FOLDER_EXTRA_FIELDS = {
     ai: ["depends-on", "stage"],
 };
 
+// The folder-specific fields that describe a chapter and never a document, per
+// devbook-chapter-metadata.md: "a file's overall relationships are expressed
+// through `related` only". A file has no dependencies, no version, no feature
+// flag and no aliases — the chapters inside it do.
+//
+// `stage` is deliberately absent: a `.ai` file *does* have a stage, and its own
+// rule governs where it may say so.
+const CHAPTER_ONLY_EXTRA_FIELDS = [
+    "depends-on",
+    "aliases",
+    "feature-flag",
+    "version",
+    "alternatives",
+];
+
+// Which chapters inside a folder may carry one of that folder's extra fields.
+// `FOLDER_EXTRA_FIELDS` says the field exists in the folder; this says which
+// `type` values may carry it.
+//
+// The scopes are the folder rules restated. Worth enforcing rather than
+// trusting, because a mis-scoped field here is silently wrong rather than
+// visibly wrong: `depends-on` on an aggregate generates a real graph edge the
+// model never claimed.
+//
+// A field a folder rule scopes only by *convention* stays out of this table.
+// `.domain`'s `aliases` is the case in point: the rule gives it to `term`
+// chapters, but a term that is already an aggregate, service, event, or field
+// carries its aliases on that chapter rather than earning a duplicate `term`
+// chapter beside it, so the field is legal on any chapter and only the
+// file-level prohibition above applies.
+const FIELD_TYPE_SCOPE = {
+    // `.domain`: delivery order and the feature flag both belong to a
+    // capability. `domain.md` chapters describe standing structure and relate
+    // through `model.md`, `dependencies.md`, and `related` instead.
+    domain: {
+        "depends-on": ["feature", "sub-feature"],
+        "feature-flag": ["feature", "sub-feature"],
+    },
+    arc42: {},
+    tech: {},
+    design: {},
+    ai: {},
+};
+
 /** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
     const normalized = String(relPath).replace(/\\/g, "/");
@@ -459,11 +503,17 @@ export function parseDocument(markdown) {
 // remaining whitespace character with a hyphen — it does *not* collapse runs.
 // "Organizational & Process Constraints" therefore anchors as
 // "organizational--process-constraints" (double hyphen where the & was).
+//
+// What survives the strip is letters, digits, and underscores in *any* script,
+// which is why the class is `\p{L}\p{N}_` under the `u` flag and not `\w`:
+// `\w` is ASCII-only, so "Café Ordering" would slug to "caf-ordering" here
+// while GitHub renders "café-ordering", and a `related` link written against
+// one lands somewhere the reader is not.
 export function slugify(text) {
     return text
         .toLowerCase()
         .trim()
-        .replace(/[^\w\s-]/g, "")
+        .replace(/[^\p{L}\p{N}_\s-]/gu, "")
         .replace(/\s/g, "-");
 }
 
@@ -895,6 +945,49 @@ export function outlineFieldIssues(relPath, meta, level) {
 }
 
 /**
+ * Lint where a folder-specific field may sit: on a chapter rather than the
+ * file-level block, and on the chapter `type` values its folder rule names.
+ *
+ * Exported alongside `typeIssues` and reported by the graph build for the same
+ * reason: the field parses, so nothing else in the pipeline objects, and the
+ * only thing that catches it is a rule that knows which blocks may carry it.
+ */
+export function fieldScopeIssues(folder, blockLevel, meta) {
+    const issues = [];
+    if (!meta) return issues;
+
+    const folderFields = FOLDER_EXTRA_FIELDS[folder];
+    if (!folderFields) return issues;
+
+    if (blockLevel === "file") {
+        for (const field of CHAPTER_ONLY_EXTRA_FIELDS) {
+            if (!folderFields.includes(field) || meta[field] == null) continue;
+            issues.push({
+                severity: "error",
+                message: `has \`${field}\` on the file-level block, where it describes a chapter that is not there — a document states its own relationships through \`related\` only. See devbook-chapter-metadata.md.`,
+            });
+        }
+        return issues;
+    }
+
+    // A chapter with no resolvable `type` is left alone: `typeIssues` has
+    // already reported that, and guessing a scope from a missing type would
+    // report one mistake twice.
+    const declared = resolveType(folder, meta);
+    if (declared === null) return issues;
+
+    for (const [field, allowed] of Object.entries(FIELD_TYPE_SCOPE[folder] ?? {})) {
+        if (meta[field] == null || allowed.includes(declared)) continue;
+        issues.push({
+            severity: "error",
+            message: `has \`${field}\` on a chapter of type "${declared}" — .${folder} scopes the field to ${allowed.map((value) => `\`${value}\``).join(" and ")} chapters. See devbook-${folder}.md.`,
+        });
+    }
+
+    return issues;
+}
+
+/**
  * Lint the approval record: `status: approved` plus `approved-by` and
  * `approved-at`.
  *
@@ -1010,6 +1103,26 @@ export function validateDocument(relPath, markdown) {
         });
     }
 
+    // Where an open question sits, keyed by the line of the heading it is
+    // attached to. Position is the anchor, so a note under `### Sub` is Sub's
+    // question and never its parent's — the same rule the annotation grammar
+    // states, applied here rather than re-derived.
+    const openQuestions = new Map();
+    for (const note of parseAnnotations(markdown)) {
+        const fields = note.fields ?? {};
+        const kindOf = fields.kind ?? "comment";
+        const statusOf = fields.status ?? "open";
+        if (kindOf !== "question" || statusOf !== "open") continue;
+        if (!note.chapter || openQuestions.has(note.chapter.line)) continue;
+        openQuestions.set(note.chapter.line, note.line);
+    }
+
+    // Whether this document is one of `.ai`'s stage files, which is what makes
+    // a chapter's own `stage` field a restatement. Read from the file-level
+    // `type` rather than the filename: the numbering convention is the
+    // repository's, the declared role is the schema's.
+    const fileIsStage = kind === "ai" && resolveType(kind, fileMeta) === "stage";
+
     for (const chapter of chapters) {
         const label = `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line})`;
         if (!chapter.meta) {
@@ -1063,6 +1176,11 @@ export function validateDocument(relPath, markdown) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
+        // Which of the folder's own fields this particular block may carry.
+        for (const issue of fieldScopeIssues(kind, blockLevel, chapter.meta)) {
+            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
         // A feature flag key names an application feature in the consuming
         // repository, whose constants this tooling cannot see — so the key
         // itself is deliberately never validated. What is checked is that it is
@@ -1097,13 +1215,25 @@ export function validateDocument(relPath, markdown) {
         // apply at. Like `roadmap`, the entries are slugs naming something in
         // the consuming repository — here its own stage files — so only the
         // shape is checked, never the vocabulary.
+        //
+        // Inside a stage file the field is a restatement: the file already
+        // says the stage, and a chapter that writes it too gives the reader
+        // two places to look and the next rename two places to update. The fix
+        // is deletion, so the entries' shape is not worth a second message.
         if (kind === "ai" && chapter.meta.stage != null) {
-            for (const slug of toList(chapter.meta.stage)) {
-                if (!ROADMAP_TAG_PATTERN.test(slug)) {
-                    issues.push({
-                        severity: "warning",
-                        message: `${label} has \`stage\` entry "${slug}" — a stage is a lowercase kebab-case slug naming one of this repository's \`.ai\` stage files, not a path or free text.`,
-                    });
+            if (fileIsStage) {
+                issues.push({
+                    severity: "warning",
+                    message: `${label} has \`stage\` in a stage file, where the file already says the stage — omit the field. It belongs in \`concepts.md\` and on anything else that spans the flow.`,
+                });
+            } else {
+                for (const slug of toList(chapter.meta.stage)) {
+                    if (!ROADMAP_TAG_PATTERN.test(slug)) {
+                        issues.push({
+                            severity: "warning",
+                            message: `${label} has \`stage\` entry "${slug}" — a stage is a lowercase kebab-case slug naming one of this repository's \`.ai\` stage files, not a path or free text.`,
+                        });
+                    }
                 }
             }
         }
@@ -1132,6 +1262,19 @@ export function validateDocument(relPath, markdown) {
         // the record is checked.
         for (const issue of approvalIssues(chapter.meta)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
+        // An open question means the chapter is not agreed, so an approval
+        // standing over one is a false record: a person signed for content
+        // that still has an unanswered question in it. Reported here, and only
+        // here — an open question on any other rung is the state the fence
+        // exists for, and a gate that warned on every one would be teaching
+        // people to ignore it.
+        if (chapter.meta.status === APPROVED_STATUS && openQuestions.has(chapter.line)) {
+            issues.push({
+                severity: "error",
+                message: `${label} states \`status: ${APPROVED_STATUS}\` while carrying an open \`kind: question\` annotation (line ${openQuestions.get(chapter.line)}) — an open question means the chapter is not agreed. Resolve and sweep the note, or take the approval off.`,
+            });
         }
 
         for (const issue of removedFieldIssues(chapter.meta)) {

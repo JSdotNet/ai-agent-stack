@@ -104,6 +104,7 @@ later reversed is the part a reader most needs.
 | [55. A Bounded Context Says Who Works With It](55-a-bounded-context-says-who-works-with-it.md) | 2026-09-09 |
 | [56. Payload-Only Components Carry No Contract Version](56-payload-only-components-carry-no-contract-version.md) | 2026-09-09 |
 | [57. A Workflow Gates the Checks the Schedule Cannot](57-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 |
+| [58. The Runner Opens No Browser Pane](58-the-runner-opens-no-browser-pane.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

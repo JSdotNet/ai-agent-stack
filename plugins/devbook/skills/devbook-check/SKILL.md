@@ -43,7 +43,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Problem | Cause | Fix |
    |---------|-------|-----|
    | Unresolved reference | A `related`, `depends-on`, or `refines` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
-   | Missing `meta` block | A chapter was added without one | Add a block per `devbook-chapter-metadata.md` |
+   | Missing file-level `meta` block | The top-level `#` heading has no block, or the file has no `#` heading at all | Add the heading and its block per `devbook-chapter-metadata.md` |
+   | Heading with no `meta` block | A heading carries no block (warning) | Add one if it is an addressable chapter for this folder. A structural section heading is legal and stays a warning — this one never fails the run |
    | Malformed `meta` block | Wrong field name, wrong value shape, or bad fencing | Correct it against `devbook-chapter-metadata.md` |
    | Removed schema field | An `order` field left over from before reading order moved to the folder convention | Delete the field. If the generated order is then wrong, give the documents a `number` or mark the entry point `index: root` |
    | Duplicate `number` | Two documents in one directory claim the same number | Renumber one of them, in its filename or its `number` field, so each number identifies one document |
@@ -58,6 +59,11 @@ compressing a lookup table costs a repair, not a sentence.
    | Missing `status` | A `.tech` or `.ai` block with no `status` — those folders rate, so absence states nothing | Add `status` from the folder's ladder. In `.domain`, `.arc42`, and `.design` an absent `status` is correct and means the resting value `active` |
    | Resting `status` stated explicitly | A `.domain`, `.arc42`, or `.design` block writes `status: active`, which is what an absent field already says (warning) | Delete the line. If the block is then empty, keep the empty `meta` fence — it is what makes the heading an addressable chapter |
    | Missing `type` | A `.domain`, `.tech`, or `.ai` block with no `type`, or a heading still carrying a kind prefix | Add `type` from the folder's value set and strip the prefix from the heading |
+   | Chapter reference in `feature-flag` | A `<path>#<slug>` pasted into a field that takes application flag keys and produces no edge | Write the flag key the application defines. A link to a chapter belongs in `related` |
+   | Bad `effort` value | A list, a fraction, a negative number, or a word such as "large" | Write a single non-negative integer — `effort` is a story-point estimate the tooling totals |
+   | Bad `roadmap` or `stage` entry | A path, free text, or anything that is not a lowercase kebab-case slug (warning) | Write the slug. Both name something in the consuming repository, so only the shape is checked, never the vocabulary |
+   | Unrecognized field | A field the folder's schema does not define, usually a typo (warning) | Correct the name against `devbook-chapter-metadata.md`, or move it under `ext.<namespace>` if it is an extension's own state |
+   | Empty or null field value | A field set to `[]` or `null` (warning) | Delete the line. An absence is spelled by omitting the field, never by writing it empty |
    | Malformed `tests` entry | Not `<level>:<runner>:<selector>`, an unknown level, or a chapter reference pasted into `tests` | Rewrite the entry per "Linking test cases" in `devbook-chapter-metadata.md`. A link to another chapter belongs in `related` |
    | Unmapped test runner | A `tests` entry names a runner the tooling has no command for, so nothing can offer to run it (warning) | Leave it if the runner is genuinely what runs the test; add its command to `TEST_RUNNERS` in `.github/tools/devbook-meta/metadata.mjs` to make it runnable |
    | Literal escape sequence in body text | A `` `r`n `` or `\n` was written instead of a line break, usually by a tool writing the file through a shell | Replace it with a real line break. Check whether a heading was glued onto the previous line and silently stopped being a heading |

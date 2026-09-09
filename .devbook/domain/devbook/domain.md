@@ -39,10 +39,10 @@ top-level heading carries a block of its own describing the document as a whole.
 
 | Rule | Enforced at | Evidence |
 |---|---|---|
-| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
-| `type` is present wherever the folder defines a value set for the level | parse | untested |
+| `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | untested |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
@@ -227,7 +227,9 @@ related: [".devbook/domain/devbook/domain.md#derived-index"]
 Walks the corpus once and projects it per scope, emitting the reference graph, the outline, and
 the annotation index for the repository and for each adopted folder. It is the only writer of
 `_meta/`, and the only thing that decides whether a problem is an error or a warning: an
-unresolved reference fails, a heading with no block is reported and tolerated.
+unresolved reference fails, a heading with no block is reported and tolerated. Every
+per-block rule reaches the gate through the schema validator the graph build calls per file
+(`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
 request and the daily `devbook-check` schedule opens a pull request when the output moved.

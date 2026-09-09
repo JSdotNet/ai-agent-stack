@@ -295,7 +295,7 @@ for technologies that do not appear in package manifests.
 | File | Purpose |
 |------|---------|
 | `assets/reconcile-protocol.md` | Shared rules for `devbook:install` and `devbook-check`: the stamp devbook writes into `.devbook/config.json`, which files it materializes where, the four situations one reconcile covers, and what each of the six phases does |
-| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`: fails on broken references, warns on drifted indexes |
+| `assets/workflows/devbook-meta.yml` | CI workflow template materialized by `devbook:install`, its path filters rendered to the layout and the adopted folders: fails on broken references, warns on drifted indexes |
 | `assets/workflows/devbook-meta-nightly.yml` | Scheduled index refresh; opens one pull request when the output drifted, nothing when it did not |
 | `assets/build/Update-DevbookIndex.ps1` | On-demand index refresh, with `-Scope` and `-Check`; reports which index files moved |
 | `assets/agents-section.md` | Template for devbook's marker-fenced section of `AGENTS.md`: rendered from the adopted folders on every reconcile, rewritten only while it still matches the stamped hash |

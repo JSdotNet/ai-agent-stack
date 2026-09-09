@@ -35,6 +35,7 @@ across `.domain`, ADRs, and code module names where practical.
   context-map.md
   <bounded-context-name>/
     domain.md
+    stakeholders.md  # who operates this context, and who it acts toward
     features.md      # what the context lets a user do, in business language
     skills.md        # the alternative to features.md, for a repository whose
                      # product is procedures rather than a running application
@@ -47,16 +48,34 @@ across `.domain`, ADRs, and code module names where practical.
 ```
 
 When starting a new bounded context, create the folder with `domain.md`,
-`model.md`, `dependencies.md`, and one of `features.md` or `skills.md`, using
-the templates below. Add `flow.md` when the context has lifecycle or process
-flows, and `naming.md` when its vocabulary is large enough to want a file of its
-own.
+`stakeholders.md`, `model.md`, `dependencies.md`, and one of `features.md` or
+`skills.md`, using the templates below. Add `flow.md` when the context has
+lifecycle or process flows, and `naming.md` when its vocabulary is large enough
+to want a file of its own.
 
 **A context takes `features.md` or `skills.md`, never both.** They answer the
 same question — what does this context let someone do — for two different kinds
 of repository, so a context holding both has split one answer across two files.
 Pick per context, not per repository, though in practice a repository lands on
 one of them throughout.
+
+**`stakeholders.md` says who; the rest of the context says what.** No other
+chapter states which role the someone in "the case worker files a request" is.
+This file is that record, and it carries two chapter types. An `actor` operates
+the system inside this context — it has an account, it needs a right, and it
+issues the actions the feature chapters describe. A `party` is a person or
+organization the context acts toward or models without operating it: a creditor
+answering a request, a bank receiving a file, a judge whose ruling unblocks a
+case. Actors first, then parties, with no grouping headings — `type` already
+says which is which.
+
+It is a stakeholder file and deliberately not a persona file. An `actor` is the
+EventStorming and Domain Storytelling actor, the role that issues a command:
+ubiquitous language, stable, and something an invariant can depend on. A persona
+is a UX archetype of goals and frustrations, is none of those things, and belongs
+in `.design` where a repository wants one. A context nobody operates directly —
+a library, or one reached only by another context — omits the file, and its
+absence is not a missing file.
 
 **`naming.md` is optional and its absence is not a missing file.** A context
 either gives its vocabulary a file or keeps the same `term` chapters at the end
@@ -79,8 +98,9 @@ Reading order comes from this convention, not from a metadata field and not from
 filenames. `context-map.md` is `.domain`'s root document and is read first,
 followed by the bounded contexts in alphabetical order; inside a context,
 `domain.md` is the root document and the rest read in the order listed in the
-tree above — `skills.md` or `features.md`, `model.md`, `flow.md`,
-`dependencies.md`, `domain.md`, then any `flow.<name>.md` in filename order.
+tree above — `stakeholders.md`, `skills.md` or `features.md`, `model.md`,
+`flow.md`, `dependencies.md`, `naming.md`, then any `flow.<name>.md` in
+filename order.
 Adding a context or a file needs no declaration anywhere; just regenerate
 `_meta/`. See `devbook-chapter-metadata.md`.
 ## File responsibilities
@@ -105,6 +125,32 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Value Objects and Enums **shared across multiple aggregates** within the
     context get their own separate chapter — do not duplicate them under each
     aggregate that uses them.
+- **stakeholders.md** — Who works with this bounded context: one chapter per
+  role or party, headed by its name alone, with `type` carrying which of the two
+  it is.
+  - **`type: actor`** — a human role that operates the system inside this
+    context. Four beats, in order, skipping any the context has no answer for:
+    who it is, in one sentence, naming the term the screens use where it differs
+    from the model term; what it does here, in business language, with `related`
+    pointing at the feature chapters those actions live in; what the model holds
+    it to, named only where the model actually records the role — a required
+    field, an audit trail, a recorded submitter; and which right it needs, and
+    where that right is configured.
+  - **`type: party`** — a person or organization the context acts toward or
+    models without operating it. Three beats: who it is, what the context needs
+    from it or does toward it, and how it appears in the model.
+  - A beat the repository cannot answer is left out and recorded as an
+    `annotation` fence, never filled in with a plausible sentence. "Nobody has
+    stated which right this needs" is information; an invented right is not.
+  - Another bounded context, a module, or a technical system is a dependency and
+    belongs in `dependencies.md`. Name a bank or a portal here only as the
+    organization the domain corresponds with, and leave its contract to
+    `dependencies.md`. A tenant is not a stakeholder either: it appears as the
+    administrator role that changes settings.
+  - Rights are stated here, not argued. Why a right is split — separation of
+    duties, four eyes — is a modeling decision and belongs in a decision record.
+    A context whose rights need a screen-to-right matrix closes the file with one
+    `## Rights` section carrying that table.
 - **features.md** — The features and sub-features this bounded context
   supports, in business language. Group sub-features under their parent
   feature.
@@ -145,6 +191,10 @@ Adding a context or a file needs no declaration anywhere; just regenerate
     integration prose.
   - For each relationship, document DDD pattern, integration mechanism,
     contract, and why/what the dependency relies on.
+  - A `stakeholders.md` chapter never restates one of these relationships:
+    another bounded context, a module, or a technical system is a dependency,
+    not a stakeholder. One file describes a relationship, so the two have no way
+    of contradicting each other.
 - **naming.md** — The context's ubiquitous-language naming registry: one
   chapter per key term, headed by the canonical term itself. Surface synonyms
   are recorded in the `aliases` metadata field; a `related` reference links the
@@ -167,16 +217,17 @@ instructions.
 - Every Aggregate, Domain Service, Domain Event, Shared Value Objects, and
   Shared Enums chapter in `domain.md`, every Entity/Value Object/Enum
   sub-chapter inside an Aggregate, every Feature/Sub-feature chapter in
-  `features.md` or `skills.md`, and every Term chapter — in `naming.md` or
+  `features.md` or `skills.md`, every Actor and Party chapter in
+  `stakeholders.md`, and every Term chapter — in `naming.md` or
   under `domain.md`'s `## Ubiquitous Language` grouping — must carry a
   metadata block as described in
   `devbook-chapter-metadata.md`. `type` is required; `status` is
   optional here (see below); the optional cross-folder tags (`related`) and
   issue link (`issue`) are included only when they have a value.
 - Every file in `.domain` — `context-map.md` and, per bounded context,
-  `domain.md`, `features.md` or `skills.md`, `model.md`, `flow.md` and each
-  `flow.<name>.md` (when present), `dependencies.md`, and `naming.md` (when
-  present) — must also carry the file-level
+  `domain.md`, `stakeholders.md`, `features.md` or `skills.md`, `model.md`,
+  `flow.md` and each `flow.<name>.md` (when present), `dependencies.md`, and
+  `naming.md` (when present) — must also carry the file-level
   metadata block described in
   `devbook-chapter-metadata.md`, placed directly
   under the file's top-level `#` heading. This applies even to
@@ -203,8 +254,8 @@ instructions.
 
   | Level | Values |
   |---|---|
-  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `term` |
-  | File | `context-map`, `domain`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | Chapter | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `actor`, `party`, `term` |
+  | File | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
 
   There is no `skill` chapter type, deliberately. A skill in `skills.md` is a
   `feature` and its stages are `sub-feature`s: the file already says which kind
@@ -543,7 +594,63 @@ anchors nobody references.
 `### Published language rules` under a Domain Event, are structural
 sub-sections of that one chapter rather than addressable chapters, so they carry
 no metadata block. `build.mjs --check` reports each as a heading with no `meta`
-block; that warning is expected for these four headings.
+block; that warning is expected for these four headings. `## Rights` in
+`stakeholders.md` is the same case one level up — a structural section of the
+file rather than an addressable chapter — and is reported the same way.
+
+### stakeholders.md
+
+```markdown
+# <Bounded Context Name>
+
+\`\`\`meta
+status: draft
+type: stakeholders
+\`\`\`
+
+> Who works with this bounded context: the roles that operate it, then the
+> parties it acts toward. Another bounded context, module, or technical system
+> is a dependency and belongs in `dependencies.md`, never here.
+
+## <Role Name>
+
+\`\`\`meta
+status: draft
+type: actor
+related: [.domain/<context>/features.md#<heading-slug>]
+\`\`\`
+
+Who this role is, in one sentence, naming the term the screens use where it
+differs from the model term.
+
+What it does in this context, in business language, pointing at the feature
+chapters those actions live in.
+
+What the model holds it to: the required field, audit trail, or recorded
+submitter where the model actually records the role.
+
+Which right it needs, and where that right is configured.
+
+## <Party Name>
+
+\`\`\`meta
+status: draft
+type: party
+\`\`\`
+
+Who this party is, what the context needs from it or does toward it, and how it
+appears in the model.
+
+## Rights
+
+| Action | <Role> | <Role> |
+|---|---|---|
+| <what can be done> | <the right it needs, or —> | <the right it needs, or —> |
+```
+
+The `## Rights` section is present only where the context's rights want a matrix.
+It is the file's one structural section: it carries no metadata block, and it
+comes last.
 
 ### features.md
 

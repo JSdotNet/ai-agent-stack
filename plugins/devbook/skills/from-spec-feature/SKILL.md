@@ -54,6 +54,7 @@ is already there:
 | `feature-flag` | The named flag key existing and gating the capability | The application flag catalog and the flag checks in code |
 | `depends-on` | Every prerequisite feature already delivered before this one starts | The referenced chapters and their own counterparts |
 | `related` domain chapters | The aggregates, events, and services the capability exercises, present and correct | `domain.md` and its counterparts |
+| The actor that issues it | The role an actor chapter points at this feature with, holding the right that chapter states | `stakeholders.md` and the repository's own authorization configuration |
 
 Check `depends-on` before anything else. A feature whose prerequisites are
 themselves unbuilt cannot be briefed as one change: report the prerequisite
@@ -67,13 +68,21 @@ rows of those chapters' `### Invariants` tables, so quote them row by row with
 each row's `Enforced at` point, and leave `open` rows out of the invariants list
 — report them as decisions the feature depends on.
 
+The actor comes from `stakeholders.md` where the context has one: an actor
+chapter pointing at this feature names the role that issues it and the right
+that role needs, and the brief carries both, so the build authorizes the
+capability rather than meeting the question afterwards. An actor whose right the
+chapter leaves open is a decision the feature depends on — reported exactly like
+an `open` invariant row, and never guessed.
+
 ## Workflow
 
 1. **Load governed context.** Read `assets/code-sync-protocol.md`,
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read the target chapter, its
    `###` sub-feature chapters, every chapter named in `depends-on`, the
-   `related` `domain.md` chapters, and the context's `domain.md`.
+   `related` `domain.md` chapters, the context's `domain.md`, and its
+   `stakeholders.md` where it has one.
 
 2. **Apply the status gate.** Above. Do not proceed past a `draft`, `proposed`,
    or `deprecated` chapter without the stated confirmation.

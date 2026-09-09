@@ -2,7 +2,7 @@
 name: flow-runner
 description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports through whichever delivery surface is bound, and enforces the agentless Personal Validation gate before any pull request.'
 model: opus
-tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__Claude_Browser__preview_start', 'mcp__Claude_Browser__tabs_context', 'mcp__Claude_Browser__navigate']
+tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector']
 ---
 
 # Flow Runner Agent
@@ -60,7 +60,8 @@ those contracts; it does not re-decide them per skill.
 5. **Bind the surface and open it once.** Resolve each surface capability by pattern from the
    live tool list, in the priority order in the surface contract, and record which
    implementation answered. With a lifecycle capability bound, call its open operation once
-   per session and show it in the host's inline browser rather than only printing the link.
+   per session and publish the returned URL in the conversation — this agent carries no
+   browser tool, per **Surfacing the surface** in `surface-contract.md`.
    Then call `start_run` with the skill's `skillId` and the full ordered stage list —
    **Update Base** first, then the skill's own stages, then its tier's closing phases — and the
    `changeKind` when known; `resumed: true` means continue from the first stage that is not

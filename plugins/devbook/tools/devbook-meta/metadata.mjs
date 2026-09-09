@@ -94,11 +94,18 @@ const TYPE_BY_FOLDER = {
             "domain-event",
             "feature",
             "sub-feature",
+            // `stakeholders.md`: who operates this context, and who it acts
+            // toward. An actor is the EventStorming and Domain Storytelling
+            // actor — the role that issues a command — and never a persona,
+            // which is a UX archetype and belongs in `.design`.
+            "actor",
+            "party",
             "term",
         ],
         file: [
             "context-map",
             "domain",
+            "stakeholders",
             "features",
             "skills",
             "model",

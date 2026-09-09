@@ -55,6 +55,7 @@ The feature chapter's parts and the code that evidences each one:
 | `feature-flag` | The flag key actually checked in code to gate this capability. One key, or several when several flags together deliver the chapter |
 | `depends-on` | Other features in `features.md` that must be delivered before this one — established from a genuine ordering constraint, not from a code reference |
 | `related` | The `domain.md` aggregates, events, and services the capability exercises |
+| Authorization | The role check or authorization attribute gating the capability. Evidence about the **actor**, not about the feature: it is the fourth beat of an actor chapter in `stakeholders.md`, and never a line in `features.md` |
 
 The `feature-flag` link is an **identity** link only: it says this chapter and
 that flag are the same capability. It is deliberately **not** a status mapping.
@@ -119,7 +120,7 @@ up to that point and record the rest from code and tests.
    `devbook-domain.md`, and
    `devbook-chapter-metadata.md`. Read only the target context's
    `features.md` and `domain.md`, plus `domain.md` for the aggregates the
-   capability exercises.
+   capability exercises and `stakeholders.md` where the context has one.
 
 2. **Resolve the counterpart.** Work the resolution ladder from the protocol:
    `domain.md` aliases first, then `.arc42/05-building-block-view.md`, then the
@@ -128,11 +129,19 @@ up to that point and record the rest from code and tests.
 
 3. **Read the implementation and its tests.** Trace the reachable user-facing
    paths — endpoints, screens, commands, scheduled jobs — and the flag checks
-   that gate them, then read the tests that describe the behaviour in user
-   terms. Acceptance and end-to-end test names are often the best available
+   and role checks that gate them, then read the tests that describe the
+   behaviour in user terms. Acceptance and end-to-end test names are often the best available
    statement of a capability in business language. Apply the protocol's evidence
    rules without exception: code that executes and tests that pass are evidence;
    comments, TODOs, doc comments, and disabled tests are not.
+
+   A role check or authorization attribute on one of those paths is the right an
+   **actor** needs — the fourth beat of that actor's chapter in
+   `.domain/<context>/stakeholders.md`, and the one beat this pass can establish
+   from code. Carry it into the same routed write. Where no actor chapter names
+   the role, report the missing actor instead: an actor chapter needs three beats
+   a role check cannot supply, and filling them in is how a stakeholder page
+   starts describing a system rather than a domain.
 
    Then mine the unit tests, per **Unit tests are first-class evidence** in the
    protocol, for:
@@ -226,6 +235,10 @@ up to that point and record the rest from code and tests.
   not agreement that the code is the intended model.
 - Do not write endpoints, controllers, components, or table names into
   `features.md`. It is business language.
+- Do not write an authorization rule into `features.md`. Which right a role
+  needs is that role's fourth beat in `stakeholders.md`.
+- Do not create an actor chapter from a role check alone. Report the role and
+  let the chapter be written where its other three beats can be answered.
 - Do not infer the chapter's `status` from the feature flag's maturity, or the
   flag's state from the chapter's `status`. The link is identity only.
 - Do not set `depends-on` from a code reference or a shared aggregate. It

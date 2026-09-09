@@ -21,10 +21,11 @@ already treat as an addressable unit:
   carry their own metadata block; they are not covered by their parent
   Aggregate's block.
 - `.domain/<context>/features.md` — each Feature and Sub-feature.
-- `.domain/<context>/domain.md`, or `domain.md`'s `## Ubiquitous Language`
-  grouping where the context has no `domain.md` — each `Term` chapter.
+- `.domain/<context>/naming.md`, or `domain.md`'s `## Ubiquitous Language`
+  grouping where the context has no `naming.md` — each `Term` chapter.
 - `.domain/<context>/skills.md` — each Feature and Sub-feature, where the
   context describes skills rather than product features.
+- `.domain/<context>/stakeholders.md` — each Actor and each Party.
 - `.arc42/<nn>-<name>.md` — the file's top-level chapter, and any ## section
   inside it that is independently trackable.
 - `.tech/<layer>.md` — each `## <Technology Name>` chapter (one graph node per
@@ -266,7 +267,7 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
 
   | Folder | Chapter values | File values |
   |---|---|---|
-  | `.domain` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `term` | `context-map`, `domain`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
+  | `.domain` | `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `actor`, `party`, `term` | `context-map`, `domain`, `stakeholders`, `features`, `skills`, `model`, `flow`, `dependencies`, `naming` |
   | `.tech` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `.ai` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
 
@@ -603,8 +604,8 @@ Per directory, `_meta/index.json` is generated like this:
 
 3. **Otherwise the folder convention orders it**: that folder's prescribed files
    in the sequence its instructions file documents in its **Structure** block —
-   `.domain`'s `skills` → `features` → `model` → `flow` → `dependencies` →
-   `naming`, `.design`'s principles-then-tokens run, `.tech`'s `shared.md`
+   `.domain`'s `stakeholders` → `skills` → `features` → `model` → `flow` →
+   `dependencies` → `naming`, `.design`'s principles-then-tokens run, `.tech`'s `shared.md`
    first and `tooling.md` last — with anything else filename-sorted in between.
 
 4. **A directory that is neither numbered nor covered by a convention sorts by

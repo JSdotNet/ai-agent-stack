@@ -8,10 +8,12 @@ is repository-specific, and belongs in that repository's own instruction files.
 Copy the relevant parts below into the target repository, then edit them to name
 the flows, agents, and MCP servers that repository actually has installed. Delete any devbook folder the repository did not adopt.
 
-The plugin ships no flow of its own. The `delivery` engine ships one per folder —
-`flow-arc42`, `flow-domain`, `flow-tech`, `flow-design`, `flow-ai` — which the routes below
-name as the entry point for each folder. Without that engine, name the repository's own
-`flow-*` skill or the folder's instruction files instead.
+The plugin ships no flow of its own, and names none. A folder's write goes to the flow that
+covers that folder, resolved the way `code-sync-protocol.md` resolves it: a repo-native
+`flow-*` skill first, then the flow engine's own flow for the folder, named after it —
+`flow-<folder>` — when an engine is installed, and directly under the folder's instruction
+files when no engine is installed at all. Substitute the skill names the target repository
+actually has as you copy the routes below.
 
 The task-scoped rule and the `_meta/` rule are in the section of `AGENTS.md` that
 `devbook:install` writes (`agents-section.md`), so do not restate them here. What follows
@@ -22,21 +24,23 @@ is routing only, and none of it goes inside that section's markers.
 ```markdown
 ## Context loading by flow and agent
 
+Every edit to a devbook folder routes through the flow that covers that folder: a
+repo-native `flow-*` skill first, then the flow engine's `flow-<folder>`, and directly
+under the folder's instruction files when no engine is installed. Say which one answered.
+
 - Architecture, arc42, blueprint, ADR, and TDR workflows may load `.arc42/` as
   working context, but should load only the chapter(s) relevant to the requested
-  scope. Route every `.arc42/` change — a chapter, a decision record, a debt record —
-  through `flow-arc42`.
+  scope. Every `.arc42/` change routes that way — a chapter, a decision record, and
+  a debt record alike.
 - Domain modeling workflows may load `.domain/` as working context, but should
-  load only the relevant bounded-context chapters. Route `.domain/` edits through
-  `flow-domain`.
+  load only the relevant bounded-context chapters.
 - Design and UX workflows may load `.design/`, and stack, dependency, or upgrade
-  workflows may load `.tech/` — in both cases only the relevant file(s). Route
-  edits through `flow-design` and `flow-tech`.
+  workflows may load `.tech/` — in both cases only the relevant file(s).
 - Workflows about how the team works with AI — adopting a tool into the flow,
   changing a practice, reviewing adoption — may load `.ai/`, but should load
-  `adoption-map.md` plus only the stage file(s) in scope. Route `.ai/` edits
-  through `flow-ai`. Agents do not read `.ai/` to decide how to do their own
-  current task: it records a way of working, it does not instruct one.
+  `adoption-map.md` plus only the stage file(s) in scope. Agents do not read `.ai/`
+  to decide how to do their own current task: it records a way of working, it does
+  not instruct one.
 - Non-architecture implementation, bug-fix, package-update, documentation, and UX
   flows should not load `.arc42/` by default. Consult it only when the user
   explicitly asks for architecture context or when implementation depends on a
@@ -94,6 +98,6 @@ workspace-search noise for interactive use.
 
 ## Documentation-drift checkpoint
 
-Repositories that run a delivery flow should check these folders
+Repositories that run a flow engine should check these folders
 for staleness after a change lands, and update them in the same pull request
 when architecture, technology, design, domain behavior, or planned work moved.

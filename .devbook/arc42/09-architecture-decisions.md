@@ -79,6 +79,7 @@ decision is superseded.
 | [53. The Hard Gate Runs the Schema Validator](adr/53-the-hard-gate-runs-the-schema-validator.md) | 2026-09-09 | `validateDocument` is the only implementation of the per-block metadata rules and nothing on the `--check` path called it; `buildGraph` now runs it once per file and the graph's own seven lint loops are removed. |
 | [54. The Pull Request Skills Read the pr-lane Slot](adr/54-the-pull-request-skills-read-the-pr-lane-slot.md) | 2026-09-09 | The slot was read in one place and the four lane skills went straight to `gh pr`; each now states the slot read before its first command and what unbound means for it. |
 | [55. A Bounded Context Says Who Works With It](adr/55-a-bounded-context-says-who-works-with-it.md) | 2026-09-09 | `stakeholders.md` joins the starter set with `type: actor` and `type: party` — the EventStorming actor, not a UX persona, and not a second file. |
+| [56. A Workflow Gates the Checks the Schedule Cannot](adr/56-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 | The three checks run on every pull request; the schedule cannot block a merge, and `--check` never regenerates, so record 29's refresh rule stands. |
 
 Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both

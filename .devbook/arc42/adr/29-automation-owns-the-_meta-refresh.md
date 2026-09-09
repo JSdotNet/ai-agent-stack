@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-09-07
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/28-devbook-owns-one-section-of-agentsmd.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/adr/28-devbook-owns-one-section-of-agentsmd.md", ".devbook/arc42/adr/56-a-workflow-gates-the-checks-the-schedule-cannot.md"]
 ```
 
 The derived-artifacts convention says a repository owes contributors two refresh paths: an
@@ -41,3 +41,10 @@ where it was not. An adopting repository still gets the two refresh paths the co
 of it; this one keeps its single path. The section here was written by hand, so no stamp claims
 it and no reconcile reports it as customized — but a later `devbook:install` run over this
 repository now renders the paths it actually has instead of overwriting them.
+
+**Narrowed by [record 56](56-a-workflow-gates-the-checks-the-schedule-cannot.md) on
+2026-09-09.** "This repository ships neither" was an observation about the refresh, and it read
+as a standing bar on workflows. It is not one: `.github/workflows/repo-checks.yml` now runs the
+three checks on every pull request. The rule above is untouched — that workflow calls `--check`
+and nothing else, so it never regenerates, never commits `_meta/`, and the refresh is still
+`devbook-check`'s alone.

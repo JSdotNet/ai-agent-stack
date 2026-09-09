@@ -97,6 +97,7 @@ later reversed is the part a reader most needs.
 | [53. The Hard Gate Runs the Schema Validator](53-the-hard-gate-runs-the-schema-validator.md) | 2026-09-09 |
 | [54. The Pull Request Skills Read the pr-lane Slot](54-the-pull-request-skills-read-the-pr-lane-slot.md) | 2026-09-09 |
 | [55. A Bounded Context Says Who Works With It](55-a-bounded-context-says-who-works-with-it.md) | 2026-09-09 |
+| [56. A Workflow Gates the Checks the Schedule Cannot](56-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

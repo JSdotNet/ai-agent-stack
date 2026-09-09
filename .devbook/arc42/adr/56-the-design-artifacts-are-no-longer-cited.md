@@ -36,6 +36,12 @@ is dropped; nothing in the section now points outside the repository. A single c
 page may return later as one row — what does not return is the six-way split, or a citation
 that outranks the code it describes.
 
+The one citation living outside `AGENTS.md` goes in the same wave:
+`devbook-collaboration`'s release note cited *Layered Annotations* for a design
+`devbook` has since shipped, so it points at
+[the rule](../../../plugins/devbook/rules/devbook-annotations.md) instead. No link to any of
+the six remains in the repository.
+
 Consequence: the second exception in
 [The Word Knowledge Is Retired](35-the-word-knowledge-is-retired.md) closes with this record.
 The word survived there only because the citation carried the page's title, and the citation is

@@ -88,7 +88,9 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   `.claude/flow-context.md`, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks the
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
-  the first problem. It ignores `components`, which each component validates itself.
+  the first problem. It ignores `components`, which each component validates itself, and
+  rejects by name any *other* top-level key — the only two owners are the engine and a
+  component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
 
 ### The local overlay

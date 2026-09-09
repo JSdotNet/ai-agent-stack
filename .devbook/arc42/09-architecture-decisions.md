@@ -261,8 +261,10 @@ repository two places to disagree with itself about what is installed.
 `policy` keys are closed enums or numbers with documented defaults, so an absent key means the
 engine's own choice rather than undefined, and an unknown key is rejected by name rather than
 ignored — the same discipline `claude plugin validate --strict` applies to a manifest, which is
-what makes the file safe to hand-edit. `pr.base` is the single exception to the closed-enum
-rule and is validated as a git ref instead.
+what makes the file safe to hand-edit. The rejection reaches the top level too: the file has
+exactly two owners, so a top-level key that is neither engine-owned nor `components` is
+reported by name rather than left to take every default in silence. `pr.base` is the single
+exception to the closed-enum rule and is validated as a git ref instead.
 
 Consequence: two components can conflict on the file itself when both write it in one session.
 Each writes only its own key, so the conflict is textual rather than semantic, but nothing

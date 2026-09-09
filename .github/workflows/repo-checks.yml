@@ -1,0 +1,76 @@
+name: Repository checks
+
+# The three checks this repository's own assets have to pass. Two of them are
+# the pre-commit pair named in AGENTS.md; the third is the strict plugin
+# validator, which is the only thing that catches an unknown manifest field or
+# a bad dependency range, and which nothing ran automatically before.
+#
+# This workflow never regenerates and never commits the derived `_meta/`
+# indexes. `--check` reads them and reports; the refresh stays with the
+# `devbook-check` schedule, which is what
+# .devbook/arc42/adr/29-automation-owns-the-_meta-refresh.md decided and
+# .devbook/arc42/adr/56-a-workflow-gates-the-checks-the-schedule-cannot.md
+# narrows.
+#
+# No path filters, deliberately. Every folder here is authored assets that one
+# of the three checks reads, and a filter that silently matches nothing leaves
+# the repository with no gate and no error saying so.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repo-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Assets, devbook metadata, and plugin manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Both scripts import only stable `node:` builtins, so the runner image's
+      # Node is enough and no setup-node pin is needed.
+      - name: Check manifest, agent, and hook shapes
+        run: node tools/check-assets.mjs
+
+      - name: Check devbook metadata and references
+        run: node plugins/devbook/tools/devbook-meta/build.mjs --check
+
+      # Deliberately unpinned. The validator earns its place by knowing the
+      # host's current manifest schema, so pinning it would freeze the one
+      # thing it is here to catch. The cost is that a CLI release can turn this
+      # red without a change in this repository.
+      - name: Install the Claude Code CLI
+        run: npm install --global --no-fund --no-audit @anthropic-ai/claude-code
+
+      # `validate` is a local schema check: it needs no API key and no config
+      # directory. Every manifest is reported before the step fails, so one bad
+      # plugin does not hide the next.
+      - name: Validate the marketplace and every plugin manifest
+        run: |
+          set -uo pipefail
+          shopt -s nullglob
+          manifests=(plugins/*/.claude-plugin/plugin.json)
+          if [ ${#manifests[@]} -eq 0 ]; then
+            echo "::error::No plugin manifests found under plugins/*/.claude-plugin/ — the checkout is wrong."
+            exit 1
+          fi
+          status=0
+          claude plugin validate --strict . || status=1
+          for manifest in "${manifests[@]}"; do
+            plugin="${manifest%/.claude-plugin/plugin.json}"
+            claude plugin validate --strict "$plugin" || status=1
+          done
+          exit $status

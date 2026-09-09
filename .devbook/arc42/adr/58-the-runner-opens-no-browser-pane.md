@@ -1,4 +1,4 @@
-# 57. The Runner Opens No Browser Pane
+# 58. The Runner Opens No Browser Pane
 
 ```meta
 date: 2026-09-09

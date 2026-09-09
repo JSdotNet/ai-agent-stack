@@ -61,13 +61,14 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
 
 4. **Fan out, in the report's order.** For each `reconcile` row, invoke that component's own
    install skill — `devbook:install`, then `devbook-collaboration:install`, then
-   `delivery-schedule:install` — and let it run its migrations oldest first, overwrite what is
-   stale, leave what is customized, and rewrite its own stamp.
+   `delivery:install`, then `delivery-schedule:install` — and let it run its migrations oldest
+   first, overwrite what is stale, leave what is customized, and rewrite its own stamp.
 
-   The order is load-bearing: collaboration's install refuses to run until `components.devbook`
-   names an adopted folder, and schedule checks its targets against what the repository
-   enables. Each is **required**: a failure does not abort the rest, and does make the whole
-   run report as failing.
+   The order is load-bearing at both ends: collaboration's install refuses to run until
+   `components.devbook` names an adopted folder, and schedule checks its targets against what
+   the repository enables. `delivery:install` re-seeds the `start` and `capture` copies and
+   depends on no other component. Each is **required**: a failure does not abort the rest, and
+   does make the whole run report as failing.
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
    against the config; take its checkout root from the report's catalog line, or the plugin's

@@ -27,14 +27,18 @@ const DEFAULT_MARKETPLACE = 'jsdotnet';
 const COMPONENTS = {
     devbook: { plugin: 'devbook', install: 'devbook:install' },
     collaboration: { plugin: 'devbook-collaboration', install: 'devbook-collaboration:install' },
+    delivery: { plugin: 'delivery', install: 'delivery:install' },
     schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install' },
 };
 
 // The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
 // install refuses to run until `components.devbook` names an adopted folder, and
 // delivery-schedule checks its targets against the plugins this repository enables, so it
-// wants the settled state. Anything not named here follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery-schedule'];
+// wants the settled state. `delivery` is the one free position — its install reads the engine
+// keys and `.claude/flow-context.md` and no other component's stamp — and it sits before
+// schedule because schedule's targets call the procedures it seeds. Anything not named here
+// follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-collaboration', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and

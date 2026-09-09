@@ -37,8 +37,8 @@ const SOURCE = [
     "quote: one indexed range read",
     "body: An existing thread.",
     "ext:",
-    "  backlog:",
-    "    entry: 8f31c2",
+    "  devbook-collaboration:",
+    "    finding: open-1",
     FENCE,
     "",
 ].join("\n");
@@ -111,7 +111,7 @@ await run("reply", async (root) => {
     const [thread] = await list(root, ADDRESS);
     check(thread.replies?.length === 1, "reply: the thread gained one reply", JSON.stringify(thread.replies));
     check(
-        thread.ext?.backlog?.entry === "8f31c2",
+        thread.ext?.["devbook-collaboration"]?.finding === "open-1",
         "reply: splicing left the ext namespace untouched",
         JSON.stringify(thread.ext)
     );

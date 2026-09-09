@@ -18,17 +18,28 @@ import { fileURLToPath } from 'node:url';
 
 const DEFAULT_MARKETPLACE = 'jsdotnet';
 
-// Which plugin owns each `components.<name>` stamp, and what reconciles it. The mapping is
-// not derivable — `collaboration` is written by `devbook-collaboration`, `schedule` by
-// `delivery-schedule` — and it is needed in the direction a manifest cannot answer: naming
-// the plugin behind a stamp whose plugin is not installed here. Hardcoding it is the same
-// bargain the rest of this script already takes, recorded at
-// `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
+// Which plugin owns each `components.<name>` stamp, what reconciles it, and whether it is
+// contract-versioned. The mapping is not derivable — `collaboration` is written by
+// `devbook-collaboration`, `schedule` by `delivery-schedule` — and it is needed in the
+// direction a manifest cannot answer: naming the plugin behind a stamp whose plugin is not
+// installed here. Hardcoding it is the same bargain the rest of this script already takes,
+// recorded at `.devbook/arc42/adr/23-the-guide-names-every-plugin-and-depends-on-none.md`.
+//
+// `contract: false` is not "has not got round to it". Only a component whose install rewrites
+// content the repository authored takes a contract version and a ledger; one that copies files
+// it owns whole has hash-matching as its whole migration mechanism. So three of these four will
+// never carry those fields, and the table below says `payload-only` rather than leaving a gap
+// that reads like drift. See
+// `.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.
 const COMPONENTS = {
-    devbook: { plugin: 'devbook', install: 'devbook:install' },
-    collaboration: { plugin: 'devbook-collaboration', install: 'devbook-collaboration:install' },
-    delivery: { plugin: 'delivery', install: 'delivery:install' },
-    schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install' },
+    devbook: { plugin: 'devbook', install: 'devbook:install', contract: true },
+    collaboration: {
+        plugin: 'devbook-collaboration',
+        install: 'devbook-collaboration:install',
+        contract: false,
+    },
+    delivery: { plugin: 'delivery', install: 'delivery:install', contract: false },
+    schedule: { plugin: 'delivery-schedule', install: 'delivery-schedule:install', contract: false },
 };
 
 // The order the reconcile list is run in, and it is not cosmetic: devbook-collaboration's
@@ -336,6 +347,27 @@ function table(headers, rows) {
     return lines.join('\n');
 }
 
+/**
+ * What a component's entry says it put in the repository: the files it copied, the features it
+ * adopted, or - for one that writes into a personal scheduler rather than into the repository -
+ * the selection it made. Each component names its own selection key, so this reads whichever is
+ * there instead of insisting on one word for four different kinds of choice.
+ */
+function describeStamp(stamp) {
+    const parts = [];
+    const files = stamp?.materialized && typeof stamp.materialized === 'object'
+        ? Object.keys(stamp.materialized).length
+        : null;
+    if (files !== null) parts.push(files === 1 ? '1 file' : `${files} files`);
+    if (Array.isArray(stamp?.adopted)) parts.push(`adopted \`${stamp.adopted.join('`, `')}\``);
+    if (Array.isArray(stamp?.enabled)) {
+        parts.push(stamp.enabled.length
+            ? `enabled \`${stamp.enabled.join('`, `')}\``
+            : 'nothing enabled');
+    }
+    return parts.join('; ') || '-';
+}
+
 function describeValue(value) {
     if (value === null) return '`null` - deliberately unbound';
     if (value === undefined) return 'unset - engine default';
@@ -515,15 +547,37 @@ function render(model) {
             out.push('### Component stamps');
             out.push('');
             out.push(table(
-                ['Component', 'Contract', 'Adopted', 'Ledger entries'],
-                Object.entries(repo.components).map(([name, stamp]) => [
-                    `\`${name}\``,
-                    stamp?.contractVersion ?? stamp?.version ?? '-',
-                    Array.isArray(stamp?.adopted) ? stamp.adopted.join(', ') : '-',
-                    Array.isArray(stamp?.migrations) ? String(stamp.migrations.length) : '-',
-                ]),
+                ['Component', 'Stamped', 'Records', 'Contract', 'Ledger'],
+                Object.entries(repo.components).map(([name, stamp]) => {
+                    // null for a component this script has never heard of: read its fields and
+                    // report what is there, rather than calling it payload-only on no evidence.
+                    const versioned = COMPONENTS[name]?.contract ?? null;
+                    return [
+                        `\`${name}\``,
+                        stamp?.pluginVersion ?? '-',
+                        describeStamp(stamp),
+                        versioned === false
+                            ? 'payload-only'
+                            : String(stamp?.contractVersion ?? stamp?.version ?? '-'),
+                        versioned === false
+                            ? 'payload-only'
+                            : Array.isArray(stamp?.migrations) ? String(stamp.migrations.length) : '-',
+                    ];
+                }),
             ));
             out.push('');
+            if (Object.keys(repo.components).some((name) => COMPONENTS[name]?.contract === false)) {
+                out.push([
+                    '`payload-only` is the shape, not a gap. A component that only copies files it',
+                    'owns needs no contract version and no ledger: a copy still hashing to a release',
+                    'that component shipped is stale and its install replaces it, and a copy hashing to',
+                    'nothing shipped belongs to the repository and is never overwritten either way.',
+                    'Only `devbook` rewrites content the repository authored, so only `devbook` carries',
+                    'the other three fields -',
+                    '`.devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md`.',
+                ].join(' '));
+                out.push('');
+            }
         }
     }
 
@@ -632,4 +686,4 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     process.exit(main(process.argv.slice(2)));
 }
 
-export { compareVersions, buildPluginRows, buildRepository, bindingPlugin, unenabledBindings, parseArgs };
+export { compareVersions, buildPluginRows, buildRepository, bindingPlugin, describeStamp, unenabledBindings, parseArgs };

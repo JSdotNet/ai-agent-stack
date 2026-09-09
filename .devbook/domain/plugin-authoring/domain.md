@@ -382,13 +382,17 @@ because it enabled the flows.
 ```meta
 type: term
 date: 2026-09-03
-related: [".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config"]
+related: [".devbook/domain/plugin-authoring/domain.md#migration", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/56-payload-only-components-carry-no-contract-version.md"]
 ```
 
-A component's entry under `components` in `.devbook/config.json`, recording what that
-plugin has materialized into the repository: the plugin version and contract version it is on,
-which features it adopted, every file copied in or marker-fenced section written with the hash
-it had when it landed, and the migration ledger. The same file's other top-level keys are the engine's — see
+A component's entry under `components` in `.devbook/config.json`, recording what that plugin
+put in the repository: the plugin version it is on, and every file copied in or marker-fenced
+section written with the hash it had when it landed. A component whose install rewrites content
+the repository authored carries three fields more — the contract version, which features it
+adopted, and the [migration](#migration) ledger — and `devbook` is
+[the only one](../../arc42/adr/56-payload-only-components-carry-no-contract-version.md). One
+that writes no files stamps its own selection in place of the file map. The same file's other
+top-level keys are the engine's — see
 [Stack Config](../../arc42/05-building-block-view.md#stack-config).
 
 It records what the *repository* has taken on, never who installed what — that is per-user and

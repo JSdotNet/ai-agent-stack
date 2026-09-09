@@ -21,7 +21,7 @@ no pick, it is [debt](../tdr/README.md).
 
 Records 1 to 46 came out of [chapter 9](../09-architecture-decisions.md) in the order they sat
 in it, which was thematic: the marketplace, then the folder convention, then the engine, then
-the naming wave. Numbers 47 and up will be assigned as records are written. So the sequence groups
+the naming wave. Numbers 47 and up are assigned as records are written. So the sequence groups
 related decisions and the `date` field carries the chronology — reading top to bottom follows an
 argument, not a timeline.
 
@@ -82,6 +82,12 @@ later reversed is the part a reader most needs.
 | [44. One Plugin, One Bounded Context](44-one-plugin-one-bounded-context.md) | 2026-09-08 |
 | [45. A Context Describes Its Skills, and Keeps Its Terms in domain.md](45-a-context-describes-its-skills-and-keeps-its-terms-in-domainmd.md) | 2026-09-08 |
 | [46. The Engine Owns the Capture Contract; the Repository Owns the Procedure](46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md) | 2026-09-08 |
+| [47. The Runner Names the Surface Servers It Can Reach](47-the-runner-names-the-surface-servers-it-can-reach.md) | 2026-09-09 |
+| [48. Three Folders Rest at `active`](48-three-folders-rest-at-active.md) | 2026-09-09 |
+| [49. The Role Set Has Seven Members](49-the-role-set-has-seven-members.md) | 2026-09-09 |
+| [50. Personal Validation Is a Phase Skill, and the Gate Is Not](50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md) | 2026-09-09 |
+| [51. Raising a Pull Request Is Not a Skill](51-raising-a-pull-request-is-not-a-skill.md) | 2026-09-09 |
+| [52. Annotations Reach the Devbook Folders and Nothing Else](52-annotations-reach-the-devbook-folders-and-nothing-else.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

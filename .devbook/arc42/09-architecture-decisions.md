@@ -70,7 +70,13 @@ decision is superseded.
 | [44. One Plugin, One Bounded Context](adr/44-one-plugin-one-bounded-context.md) | 2026-09-08 | `.devbook/domain` holds one context per plugin folder, plus `plugin-authoring` as the shared kernel. |
 | [45. A Context Describes Its Skills, and Keeps Its Terms in domain.md](adr/45-a-context-describes-its-skills-and-keeps-its-terms-in-domainmd.md) | 2026-09-08 | What a bounded context looks like when the product is procedures rather than a running application. |
 | [46. The Engine Owns the Capture Contract; the Repository Owns the Procedure](adr/46-the-engine-owns-the-capture-contract-the-repository-owns-the-procedure.md) | 2026-09-08 | The evidence rules move into `delivery`, so the phase that guarantees evidence no longer depends on a QA plugin published elsewhere. |
+| [47. The Runner Names the Surface Servers It Can Reach](adr/47-the-runner-names-the-surface-servers-it-can-reach.md) | 2026-09-09 | The one sanctioned exception to resolving a surface by operation name: an exact-match `tools` allowlist cannot hold a pattern, and a fourth surface is unreachable until someone adds a line to the runner. |
+| [48. Three Folders Rest at `active`](adr/48-three-folders-rest-at-active.md) | 2026-09-09 | `status` is optional in `.domain`, `.arc42`, and `.design` and required in `.tech` and `.ai`, because only the editorial folders have a value worth omitting. |
+| [49. The Role Set Has Seven Members](adr/49-the-role-set-has-seven-members.md) | 2026-09-09 | `docs` is a role, because the Documentation Update phase runs in nine flows and every other candidate owner was wrong for it. |
+| [50. Personal Validation Is a Phase Skill, and the Gate Is Not](adr/50-personal-validation-is-a-phase-skill-and-the-gate-is-not.md) | 2026-09-09 | The review handoff is `phase-personal-validation`; the approve/revise/decline gate stays with the runner, because flow control lives in one place. |
+| [51. Raising a Pull Request Is Not a Skill](adr/51-raising-a-pull-request-is-not-a-skill.md) | 2026-09-09 | The lane ships four skills and no `create-pull-request` — opening a PR is one command, and a skill for it would restate the host's own action. |
+| [52. Annotations Reach the Devbook Folders and Nothing Else](adr/52-annotations-reach-the-devbook-folders-and-nothing-else.md) | 2026-09-09 | A fence outside the five folders is inert and stays that way; a fence after a `mermaid` block annotates the diagram, deliberately. |
 
-All forty-six were written inline in this chapter and moved to `adr/` on 2026-09-09, when
+Records 1 to 46 were written inline in this chapter and moved to `adr/` on 2026-09-09, when
 [chapter 11's own argument](11-risks-and-technical-debt.md) for the split had fired on both
-halves. The content did not change in the move.
+halves and six more decisions were owed. The content did not change in the move.

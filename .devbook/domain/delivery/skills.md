@@ -272,15 +272,16 @@ Start this session's work from one tracker item: fetch what matches a filter, se
 route it to the flow its type calls for, and run that flow here. One item per run, with a person
 present — which is what separates it from the fan-out lane.
 
-## azure-sre-to-github-issue
+## sre-alerts-to-work-items
 
 ```meta
 type: feature
 related: [".devbook/domain/plugin-authoring/domain.md#tracker"]
 ```
 
-Turn active Azure Monitor alerts into tracked issues, so an incident becomes a work item the rest
-of this context already knows how to carry.
+Turn active Azure Monitor alerts into tracked work items, so an incident becomes something the
+rest of this context already knows how to carry. Azure is the alert source; where the item lands
+is the tracker binding's answer, not this skill's.
 
 ## install
 

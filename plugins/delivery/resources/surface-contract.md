@@ -273,6 +273,9 @@ dependencies: one missing specialist must not demote every skill that names it.
   the repository names, for one that plans work as Markdown. Operations: `find_item`, `read_item`,
   `create_item`, `comment`, `transition`, `link_change`. Unbound, a flow runs to its file
   artifacts and opens, comments on, and transitions nothing.
+  Every operation resolves the same way, reported once when it first does: the bound tracker's
+  own tooling first — an installed tracker plugin skill or MCP integration — then the host's
+  CLI for that tracker. A skill names the operation and never the provider's command.
 - **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
   the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
   A stage resolves the servers of the point it serves from the live tool list, by pattern,

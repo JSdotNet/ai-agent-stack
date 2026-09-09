@@ -37,7 +37,8 @@ resolves — the bound tracker's own tooling first, then the host's CLI for it.
 
 ## 2.3.0: the engine owns the capture contract, and seeds two procedures
 
-**Not breaking. Nothing you have configured changes meaning, and no key moves.**
+**Nothing you have configured changes meaning, and no key moves.** Two checks get stricter —
+see *The config check* below.
 
 ### Capture no longer depends on a QA plugin
 
@@ -75,6 +76,23 @@ managed, so the name and description a phase matches on keep refreshing.
 
 Running it is not required. Skipping it leaves the engine exactly where it was: `app.start`
 falls back to `phase-qa-validation`, and capture runs from the contract.
+
+### The config check catches two things it used to wave through
+
+`node tools/stack-config/check.mjs` now fails on a **top-level** key that is neither
+engine-owned nor `components`. `polciy` used to validate clean and take every default in
+silence, which is the one failure the whole "unknown key is rejected" rule exists to prevent.
+The test is ownership, not a list: `components` and each component's entry under it are
+untouched, and a `$schema` or `$comment` annotation is still allowed.
+
+If your config carries a stray top-level key, the check reports it by name and exits 1. Fix
+the spelling or move the key under `components.<name>`; nothing was reading it.
+
+`policy["pr.base"]` is now checked against the shape of a git ref name, so `"the default
+branch"` is refused where any non-empty string used to pass. Whether the ref *exists* is still
+resolved at flow time — Update Base fetches it, the pull-request lane opens against it — and
+the check never touches the network. The contract and the decision that both claimed the check
+resolved it now say so.
 
 ### `.claude/flow-context.md` is facts only
 

@@ -44,6 +44,18 @@ test('the shipped template validates as it stands', () => {
     assert.deepEqual(check(template), []);
 });
 
+test('pr.base takes a git ref name and refuses prose', () => {
+    assert.deepEqual(check({ policy: { 'pr.base': 'main' } }), []);
+    assert.deepEqual(check({ policy: { 'pr.base': 'release/2.0' } }), []);
+    for (const bad of ['the default branch', 'feature..old', 'main.lock', '/main', 'main/', '']) {
+        assert.ok(check({ policy: { 'pr.base': bad } }).length, bad);
+    }
+    assert.match(
+        check({ policy: { 'pr.base': 'the default branch' } })[0],
+        /is not a well-formed git ref name/,
+    );
+});
+
 test('the worked example from the surface contract validates', () => {
     assert.deepEqual(
         check({

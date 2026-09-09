@@ -80,7 +80,13 @@ function validate(value, schema, root, path, errors) {
         return errors.length === before;
     }
     if (schema.pattern && typeof value === 'string' && !new RegExp(schema.pattern).test(value)) {
-        errors.push(`${path}: ${JSON.stringify(value)} does not match ${schema.pattern}`);
+        // A `title` names the shape in words. Say that instead of the regex where one exists:
+        // the point of the message is that the author can see what to write.
+        errors.push(
+            schema.title
+                ? `${path}: ${JSON.stringify(value)} is not ${schema.title}`
+                : `${path}: ${JSON.stringify(value)} does not match ${schema.pattern}`,
+        );
     }
     if (schema.minimum !== undefined && typeof value === 'number' && value < schema.minimum) {
         errors.push(`${path}: must be at least ${schema.minimum}`);

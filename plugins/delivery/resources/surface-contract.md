@@ -249,8 +249,11 @@ stage commits** and every `implement` provider is briefed to leave committing to
 The mechanics — one commit per handback, a new commit per revise round — are in **Personal
 Validation** (`flow-phases.md`). `manual` leaves committing to the user.
 
-`pr.base` is the one value that is neither enum nor number. Validate it as a git ref that
-exists on the remote, never as free prose.
+`pr.base` is the one value that is neither enum nor number. The check validates its *shape* —
+a well-formed git ref name, so free prose is rejected by pattern — and nothing more. Whether
+that ref exists is resolved against the remote at flow time — Update Base fetches it, the
+pull-request lane opens against it — because a config check that reached for the network would
+fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then the
 `## QA Depth` section of `.claude/flow-context.md`, then `phase-qa-validation`'s change-kind

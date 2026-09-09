@@ -30,7 +30,7 @@ owes the next move:
 |---|---|---|
 | `chapter-handoff` | The author | `review: requested` and the reviewer's name, plus a brief to send |
 | `chapter-review` | The reviewer | One annotation fence per finding, and `review: changes-requested`, or `review: cleared` with none open |
-| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state at all |
+| `chapter-approve` | Whoever approves | devbook's `status: approved` with `approved-by` and `approved-at` — and no collaboration state and no resolved note left on the chapter |
 | `chapter-review-queue` | Anyone | Nothing. It reads the folders and reports what is waiting |
 
 Sweeping the answered notes is `devbook:annotation-sweep`, before the branch

@@ -20,9 +20,11 @@ related: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 
 - **Used for** — nothing here yet. It is the only way to check an asset actually triggers when
   it should, which no amount of reading the description settles.
-- **Adopted by** — nobody. What is checked today is the loadable half: `claude plugin validate
-  --strict` on every manifest, `tools/check-assets.mjs` over the manifests, agents, and hooks,
-  the Node suites, and the generator's `--check` over `.devbook/`.
+- **Adopted by** — nobody. What is checked today is the loadable half, and since 2026-09-09
+  `.github/workflows/repo-checks.yml` runs three of it on every pull request: `claude plugin
+  validate --strict` over the marketplace and every plugin manifest, `tools/check-assets.mjs`
+  over the manifests, agents, and hooks, and the generator's `--check` over `.devbook/`. The
+  Node suites under `plugins/*/tools/` are the half nothing runs — by hand or otherwise.
 - **Evidence** — none yet. The first plugin to get a suite is the first thing to evaluate; the
   candidates are the `flow-*` and `devbook-*` skills, whose descriptions are the triggers a
   session routes on.

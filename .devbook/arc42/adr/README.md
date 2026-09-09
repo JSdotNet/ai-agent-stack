@@ -28,8 +28,13 @@ argument, not a timeline.
 A number is claimed when the record is written, and two branches writing at once claim
 different ones: 53, 54, and 55 were argued as chapter 9's forty-seventh, forty-eighth, and
 forty-ninth decisions on `main` while 47 to 52 were being written here, and took the next free
-numbers on the merge rather than displacing them. So the split's own boundary — 46 — is the
-last point at which the number and the position in chapter 9 agreed.
+numbers on the merge rather than displacing them. It happened again the same day: 57 was
+written as 56 on its own branch and took 57 when it merged behind `main`'s 56, which was
+already in the index. So the split's own boundary — 46 — is the last point at which the number
+and the position in chapter 9 agreed.
+
+The rule below is about a number that has landed. A number claimed on an unmerged branch has
+not, and the branch that arrives second moves rather than displacing what is already indexed.
 
 A number is never reused and never renumbered. A superseded decision keeps its number and says
 so in its own body, pointing at whatever replaced it, because the record of a choice that was
@@ -98,6 +103,7 @@ later reversed is the part a reader most needs.
 | [54. The Pull Request Skills Read the pr-lane Slot](54-the-pull-request-skills-read-the-pr-lane-slot.md) | 2026-09-09 |
 | [55. A Bounded Context Says Who Works With It](55-a-bounded-context-says-who-works-with-it.md) | 2026-09-09 |
 | [56. Payload-Only Components Carry No Contract Version](56-payload-only-components-carry-no-contract-version.md) | 2026-09-09 |
+| [57. A Workflow Gates the Checks the Schedule Cannot](57-a-workflow-gates-the-checks-the-schedule-cannot.md) | 2026-09-09 |
 
 Three records carry a supersession note and stay where they are.
 [5](5-devbook-still-ships-the-graph-canvas.md) is superseded outright on its flow half — the

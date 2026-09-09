@@ -216,6 +216,8 @@ unsettled sub-chapter, and leave it out of the invariants list.
 
 - Do not edit the chapters. Building a chapter does not change it — if the
   chapter is wrong, that is a `conflict` or a `code-ahead` verdict, not an edit.
+- Do not carry an `annotation` fence into the change brief. An open question is
+  a reason to stop at the gate, not a line item to implement.
 - Do not apply the status gate once for the whole aggregate. Sub-chapters settle
   independently.
 - Do not summarize the invariants by reference. Write each one out; the

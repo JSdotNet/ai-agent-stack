@@ -34,8 +34,15 @@ check("devbook folder wins its own prefix", await titleFor("Add Fulfilment aggre
 check("arc42", await titleFor("Runtime view refresh", [write(".arc42/06-runtime-view.md")]), "arc42 — Runtime view refresh");
 check("tech", await titleFor("Pin Aspire 9", [edit(".tech/backend.md")]), "tech — Pin Aspire 9");
 check("design", await titleFor("Dense table tokens", [edit(".design/color-scheme.md")]), "design — Dense table tokens");
-check("backlog", await titleFor("Split checkout epic", [edit(".backlog/epic-checkout.md")]), "backlog — Split checkout epic");
+check("ai", await titleFor("Record the review stage", [edit(".ai/03-review.md")]), "ai — Record the review stage");
 check("anything else is code", await titleFor("Rounding fix", [edit("src/Shipping/Rate.cs")]), "code — Rounding fix");
+check("a retired folder is just code", await titleFor("Split checkout epic", [edit(".backlog/epic-checkout.md")]), "code — Split checkout epic");
+
+console.log("\n— nested layout —");
+check("nested folder classifies as its own kind", await titleFor("Runtime view refresh", [write(".devbook/arc42/06-runtime-view.md")]), "arc42 — Runtime view refresh");
+check("nested domain chapter still names its context", await titleFor("Add Fulfilment aggregate", [write(".devbook/domain/order-management/domain.md")]), "domain:order-management — Add Fulfilment aggregate");
+check("nested generated indexes do not count", await titleFor("Regenerate", [write(".devbook/domain/_meta/index.json")]), null);
+check("the parent folder alone is not a devbook write", await titleFor("Config", [edit(".devbook/config.json")]), "code — Config");
 
 console.log("\n— bounded context —");
 check("code path matched to a declared context", await titleFor("Partial shipment rounding", [edit("src/OrderManagement/Shipment.cs")]), "code:order-management — Partial shipment rounding");

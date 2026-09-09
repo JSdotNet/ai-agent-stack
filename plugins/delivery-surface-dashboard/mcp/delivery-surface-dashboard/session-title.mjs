@@ -18,13 +18,23 @@ import path from "node:path";
 // the tie-break rank: a run that wrote the same number of files to two destinations is named
 // after the rarer one, because "this session touched the domain model" is the more surprising
 // fact and the one worth finding again.
+//
+// The five folders are the set `DEVBOOK_FOLDER_NAMES` in the devbook plugin's
+// `tools/devbook-meta/metadata.mjs` defines. It is restated rather than imported: this plugin
+// is a surface and declares no dependency, so it must name a folder it is shown without
+// requiring the plugin that owns the convention to be installed. The rank below is this
+// file's own and deliberately not that constant's order.
 const FOLDER_PREFIXES = [
     [".domain", "domain"],
     [".arc42", "arc42"],
     [".tech", "tech"],
     [".design", "design"],
-    [".backlog", "backlog"],
+    [".ai", "ai"],
 ];
+
+// The nested layout puts every folder under one `.devbook/` parent whose subfolders drop the
+// dot. Stripping the parent is what lets both layouts classify through the table above.
+const NESTED_ROOT = ".devbook";
 
 const DOMAIN_PREFIX = "domain";
 const CODE_PREFIX = "code";
@@ -110,16 +120,28 @@ async function knownContexts(run, cwd) {
     if (Array.isArray(destinations.contexts)) return destinations.contexts;
     let contexts = [];
     if (typeof cwd === "string" && cwd) {
-        try {
-            const entries = await readdir(path.join(cwd, ".domain"), { withFileTypes: true });
-            contexts = entries.filter((e) => e.isDirectory() && !e.name.startsWith("_")).map((e) => e.name);
-        } catch {
-            // No `.domain` folder, or unreadable. Boundaries simply stay unresolved.
-            contexts = [];
+        // Whichever layout the repository picked. A repository never mixes the two, so the
+        // first of these that reads is the one it uses.
+        for (const dir of [path.join(cwd, ".domain"), path.join(cwd, NESTED_ROOT, "domain")]) {
+            try {
+                const entries = await readdir(dir, { withFileTypes: true });
+                contexts = entries.filter((e) => e.isDirectory() && !e.name.startsWith("_")).map((e) => e.name);
+                break;
+            } catch {
+                // No such folder, or unreadable. Boundaries simply stay unresolved.
+                contexts = [];
+            }
         }
     }
     destinations.contexts = contexts;
     return contexts;
+}
+
+// `.devbook/domain/billing/domain.md` to `.domain/billing/domain.md`, so everything downstream
+// — the prefix table and the boundary in `segments[1]` — sees one shape.
+function unnest(segments) {
+    if (segments[0] !== NESTED_ROOT || segments.length < 2) return segments;
+    return [`.${segments[1]}`, ...segments.slice(2)];
 }
 
 function prefixFor(segments) {
@@ -161,10 +183,11 @@ export async function recordDestination(run, { toolName, input, cwd }) {
     }
     if (!WRITE_TOOLS.has(toolName)) return;
 
-    const segments = toSegments(input && input.file_path, cwd);
-    if (!segments) return;
+    const raw = toSegments(input && input.file_path, cwd);
+    if (!raw) return;
     // Derived indexes are generated output; a run that regenerated them is not *about* them.
-    if (segments.includes("_meta")) return;
+    if (raw.includes("_meta")) return;
+    const segments = unnest(raw);
 
     const prefix = prefixFor(segments);
     // Boundaries are tallied per prefix, not globally: the boundary shown has to belong to the

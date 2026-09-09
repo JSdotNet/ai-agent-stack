@@ -279,6 +279,8 @@ service raises it.
 
 - Do not write `.domain/` files directly — the write routes through
   the `.domain` flow.
+- Do not write an `annotation` fence. A capture records what the code does; an
+  open question about it belongs in review, not in a chapter this skill writes.
 - Do not skip the unit tests. They are where the invariants and the ubiquitous
   language are stated most precisely, and a pass that reads only production code
   will under-record both.

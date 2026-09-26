@@ -1,6 +1,6 @@
 ---
 name: schedule-weekly-cost-analysis
-description: 'Analyse the token usage the delivery-surface-dashboard recorded for the week''s flow runs, surface the top actionable cost-reduction tips, and produce a concise report.'
+description: 'Analyse the token usage the bound delivery surface recorded for the week''s flow runs, surface the top actionable cost-reduction tips, and produce a concise report.'
 disable-model-invocation: true
 ---
 
@@ -20,12 +20,10 @@ to reduce cost without sacrificing quality.
 - Output format: `summary` (default — top tips only) or `full` (all tips with spend breakdown).
 - Cost tip limit: top `5` tips (default, configurable).
 
-## Skill Dependencies
+## Tools
 
-This skill has no hard skill dependencies, but pairs well with:
-
-- **`suggestion-review`** — can be invoked on high-cost skill or agent files to propose
-  prompt-trimming opportunities that reduce token consumption.
+The bound delivery surface's `list_runs` and `get_run`, and nothing else: a scheduled
+session starts with the two delivery plugins.
 
 ## Workflow
 
@@ -69,9 +67,8 @@ This skill has no hard skill dependencies, but pairs well with:
    | Metric | Value |
    |--------|-------|
    | Total tokens | <n> |
-   | Estimated cost | $<n> |
-   | Most expensive model | <model> (<pct>% of spend) |
-   | Most expensive agent type | <agent> (<pct>% of spend) |
+   | Most expensive model | <model> (<pct>% of tokens) |
+   | Most expensive agent type | <agent> (<pct>% of tokens) |
 
    ### Top Cost-Reduction Tips
 
@@ -87,14 +84,14 @@ This skill has no hard skill dependencies, but pairs well with:
 
 6. If `output-format` is `full`, append:
    - Per-model token and cost breakdown table.
-   - All tips returned by Chronicle (not just the top-N).
+   - Every tip, not just the top-N.
    - Session-level or agent-level breakdown table if available.
 
 ### Phase 4 — Follow-Up (Optional)
 
-7. Ask the user whether to act on any of the repository-specific actions:
-   - If prompt trimming is recommended for a specific skill: offer to invoke `suggestion-review`
-     on that file.
+7. Unattended, the repository-specific actions stand in the report for a person to take.
+   Run by hand, offer to act on any of them — trimming the prompt of a skill named as
+   high-cost, moving a low-complexity agent to a cheaper tier.
 
 ## Surface Reporting
 

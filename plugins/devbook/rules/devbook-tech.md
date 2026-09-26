@@ -67,8 +67,9 @@ last — the order shown in the tree above. See
     carries a file-level block only (same rule as `.devbook/domain/context-map.md`).
   - It is `tech/`'s root document, so it is the first file read in the folder.
 - **`_meta/*.json`** — Derived, generated indexes for this folder.
-  Never hand-edited; see `devbook-derived-artifacts.md`
-  and the devbook-meta tooling README (`.devbook/_tools/devbook-meta/README.md`).
+  Never hand-edited; the rule for them comes with the layered plugin that commits the
+  index, and the output shape is in the devbook-meta tooling README
+  (`.devbook/_tools/devbook-meta/README.md`).
 - **`<layer>.md`** — One `## <Technology Name>` chapter per technology used (or
   under consideration) in that layer. Each chapter is an addressable node in
   the graph and carries a chapter metadata block.

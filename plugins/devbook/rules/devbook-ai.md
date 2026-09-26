@@ -109,7 +109,7 @@ nothing in the picture.
 - **concepts.md** — The ideas the practices rest on. A concept carries `stage`
   where it applies at particular stages and omits it when it applies throughout.
 - **`_meta/*.json`** — Derived, generated indexes for this folder. Never
-  hand-edited; see `devbook-derived-artifacts.md`.
+  hand-edited; the rule for them comes with the layered plugin that commits the index.
 
 ## The loop picture
 
@@ -291,4 +291,5 @@ domain chapter beside it.
 
 - `devbook-chapter-metadata.md` — required `meta` block fields.
 - `devbook-tech.md` — the technology registry `ai/` links into.
-- `devbook-derived-artifacts.md` (a layered plugin's rule) — rules for `_meta/`.
+- The rule for `_meta/` — delivered by the layered plugin that commits the index, where
+  a repository has adopted it.

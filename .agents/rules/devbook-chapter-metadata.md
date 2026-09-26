@@ -747,7 +747,7 @@ These metadata blocks are checked by `.devbook/_tools/devbook-meta/build.mjs`,
 which builds the reference graph and the reading outline to do it. A layered
 plugin may ask the same tool to write them, with `--write`, as derived indexes —
 one set per devbook folder plus a repository-wide rollup, placed per that
-plugin's `devbook-derived-artifacts.md`:
+plugin's own rule for `_meta/`:
 
 ```text
 .devbook/_meta/graph.json          # reference graph, all adopted folders

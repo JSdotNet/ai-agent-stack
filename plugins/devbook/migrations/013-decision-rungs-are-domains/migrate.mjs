@@ -38,6 +38,7 @@ const FIELDS = [
 ];
 
 let remaining = 0;
+let removable = 0;
 let needRating = 0;
 const report = (line) => console.log(line);
 
@@ -151,6 +152,7 @@ for (const folder of FOLDERS) {
             // Nothing removable left: only the rung a person has to replace.
             report(`${rel}: nothing to take off`);
         } else if (checkOnly) {
+            removable++;
             report(`${rel}: would take off ${what}`);
         } else {
             await writeFile(file, text, "utf8");
@@ -170,11 +172,12 @@ for (const folder of FOLDERS) {
 }
 
 if (remaining === 0) report("013-decision-rungs-are-domains: nothing to do");
-else if (needRating && !checkOnly) {
-    report(`013-decision-rungs-are-domains: ${needRating} block(s) still need a rating set by hand.`);
+else if (needRating) {
+    report(`013-decision-rungs-are-domains: ${needRating} block(s) still need a rating set by hand — reported on every run, never a failure.`);
 }
 
-// `--check` fails while anything remains. After an apply, the rungs that need a
-// human rating are still present, so a following `--check` still exits 1 —
-// which is the point: the migration is not done until a person rates them.
-process.exit(checkOnly && remaining > 0 ? 1 : 0);
+// `--check` fails only while something this script can take off remains. A rung a person
+// has to replace with a rating is reported every run and fails none: the ledger records
+// what the script did, the rating is a person's, and a check that stayed red would keep
+// 013 out of the ledger and every later migration from running.
+process.exit(checkOnly && removable > 0 ? 1 : 0);

@@ -62,12 +62,14 @@ skipped and named, never forced.
    | `Aspire.Hosting.Redis` | `AppHost/AppHost.csproj` | `9.0.0` | `9.1.0` | minor | Update |
    | `delivery` | plugin | `0.1.0` | `0.2.0` | plugin | Report only |
 
-5. If `update-strategy` is `major`, highlight all major bumps and ask for explicit confirmation
-   before including them. Stop here if dry-run is `true`.
+5. If `update-strategy` is `major`, highlight all major bumps. Run by hand, ask for explicit
+   confirmation before including them; unattended, leave them out and list them in the
+   summary — the preamble's safe answer. Stop here if dry-run is `true`.
 
 ### Phase 2 — Apply Updates
 
-6. Create a new branch named `chore/nuget-updates-<YYYY-MM-DD>`.
+6. Create the branch the preamble names, `schedule/package-update/<YYYY-MM-DD>`, or, run by
+   hand, one the person names.
 
 7. **NuGet updates**, for each package:
    - For solutions using `Directory.Packages.props`: update `<PackageVersion>` entries there.
@@ -93,12 +95,13 @@ skipped and named, never forced.
     If tests fail, revert the failing package update, record it as **Skipped (test failure)**,
     and continue with the remaining packages.
 
-### Phase 4 — Personal Validation
+### Phase 4 — Decide
 
-11. Present the audit table (Phase 1) and the build/test results (Phase 3) to the
-    user and **wait for explicit approval before opening a pull request**. If
-    approval is withheld, stop here and record the outcome — never open the PR
-    before personal validation.
+11. Unattended, there is nobody to ask: the preamble decides. Go on to Phase 5 with the
+    pull request ready for review when build and tests passed and draft when anything was
+    skipped. Run by hand, present the audit table (Phase 1) and the build and test results
+    (Phase 3) to the person and wait for their yes before opening it; withheld, stop here
+    and record the outcome.
 
 ### Phase 5 — Pull Request
 
@@ -112,9 +115,12 @@ skipped and named, never forced.
     - Plugins: <n> behind (reported, not updated)
     ```
 
-13. After approval, push the branch and open a PR:
-    - **Title:** `chore: NuGet package updates <YYYY-MM-DD>`
-    - **Body:** the audit table from Phase 1 with each row marked Updated or Skipped.
+13. Push the branch and open the pull request, updating one a previous run left open on
+    the same branch prefix rather than opening a second:
+    - **Title:** what the trigger says; `chore(deps): weekly package update <YYYY-MM-DD>`
+      by default.
+    - **Body:** the audit table from Phase 1 with each row marked Updated or Skipped, and
+      every skipped package with the version it would have moved to.
     - **Labels:** `dependencies`, `automated`.
 
 ### Phase 6 — Summary
@@ -136,7 +142,7 @@ With no surface bound, skip the calls, say so once, and continue — file artifa
 the source of truth.
 
 - `start_run` with `skillId: "schedule-package-update"` and these stages: Audit, Apply
-  Updates, Verify, Personal Validation, Pull Request, Summary.
+  Updates, Verify, Decide, Pull Request, Summary.
 
 ## Output
 
@@ -146,7 +152,8 @@ the source of truth.
 
 ## Notes
 
-- Major version bumps are opt-in; always confirm with the user before applying them.
+- Major version bumps are opt-in: run by hand, confirm with the person first; unattended,
+  they are listed and left out.
 - Packages that break tests are skipped and flagged, not force-updated.
 - Run this skill weekly to keep dependency debt low.
 - The Aspire phase is skipped automatically when no `.AppHost` project is present.

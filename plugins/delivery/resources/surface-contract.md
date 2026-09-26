@@ -84,7 +84,8 @@ that surface's own `runId`:
   each per **Surfacing the Surface** below; a page updates itself live, so it is opened once and
   left open. Then call `start_run` on each with the skill's `skillId`, the full ordered stage list (its own stages
   followed by the shared phase names for its tier), the `changeKind` when known, and
-  `sessionId` from the `session-id` host slot (`engine-contract.md`) when it is bound.
+  `sessionId` from the `session-id` host slot (`engine-contract.md`) when it is bound. A
+  `title` is optional; a surface takes the `skillId` for one when none is sent.
   `start_run` reattaches to an existing `in_progress` run for the same skill and returns
   `resumed: true`; continue from the first stage that is not `done` instead of restarting.
   Surfaces may disagree — one resumed, one fresh: continue from the furthest stage any of

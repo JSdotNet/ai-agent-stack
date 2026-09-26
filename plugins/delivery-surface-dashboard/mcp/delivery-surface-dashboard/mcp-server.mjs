@@ -717,12 +717,15 @@ const tools = [
                     description: "The host's own id for the agent session driving this run. Recorded in the run's sessionIds; a reattached run appends it beside the earlier ids rather than replacing them.",
                 },
             },
-            required: ["skillId", "title", "stages"],
+            required: ["skillId", "stages"],
         },
         handler: async (input) => {
-            const { skillId, title, stages, originalPrompt, promptHistory, workItem, changeKind, resume, sessionId } = input;
-            if (!skillId || !title || !Array.isArray(stages) || stages.length === 0) {
-                throw new ToolError("skillId, title, and a non-empty stages[] are required.");
+            const { skillId, stages, originalPrompt, promptHistory, workItem, changeKind, resume, sessionId } = input;
+            // The surface contract sends skillId and the stage list; a title is the caller's
+            // courtesy, and the skill id stands in for it.
+            const title = typeof input.title === "string" && input.title.trim() ? input.title : skillId;
+            if (!skillId || !Array.isArray(stages) || stages.length === 0) {
+                throw new ToolError("skillId and a non-empty stages[] are required.");
             }
             if (changeKind && !VALID_CHANGE_KINDS.includes(changeKind)) {
                 throw new ToolError(`changeKind must be one of ${VALID_CHANGE_KINDS.join(", ")}`);

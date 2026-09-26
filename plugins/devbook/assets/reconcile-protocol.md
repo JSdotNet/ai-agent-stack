@@ -70,6 +70,16 @@ whose install rewrites content the repository authored, which is devbook alone:
 | `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
+
+**Hash rules**, so a stamp written on one machine reads the same on another:
+
+- A file: `sha256:` over its UTF-8 content with every CRLF read as LF, so a checkout's
+  line-ending setting never turns a shipped copy into a customized one.
+- A folder (`.devbook/_tools/<tool>`): `sha256:` over the concatenation, for each file under
+  it in sorted POSIX relative-path order, of the relative path, a newline, the file's content
+  as above, and a newline.
+- A section (`AGENTS.md#<name>`): the file rule over the lines between the two marker lines,
+  markers excluded, ending in one newline.
 | `migrations` | Append-only ledger of `{ "id", "applied" }` entries, one per migration folder run, oldest first. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. An entry outlives its folder: a major release drops the folders below the floor, and the ledger keeps recording that they ran. |
 
 `contractVersion`, `adopted`, and `migrations` are devbook's three; `pluginVersion`

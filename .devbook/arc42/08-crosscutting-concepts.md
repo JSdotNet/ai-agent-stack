@@ -366,7 +366,8 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc4
 
 A component's entry under `components` in `.devbook/config.json`, recording what that plugin
 put in the repository: the plugin version it is on, and every file copied in or marker-fenced
-section written with the hash it had when it landed. A component whose install rewrites content
+section written with the hash it had when it landed, computed by the hash rules in devbook's
+reconcile protocol. A component whose install rewrites content
 the repository authored carries three fields more — the contract version, which features it
 adopted, and the [migration](#migration) ledger — and `devbook` is
 [the only one](adr/install.md). One that writes no files stamps its own selection in place of

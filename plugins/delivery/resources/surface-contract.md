@@ -96,7 +96,11 @@ that surface's own `runId`:
   id beside the earlier ones, never replacing them and never recording one twice. A surface
   that ignores the argument stays conformant.
 - **Persist gating state** with `set_run_context`: the `changeKind` as soon as it is
-  determined, the `approval` decision recorded at every gate, and the resolved model.
+  determined, the `approval` decision recorded at every gate, and, as its `context` object,
+  what the runner resolved — the model, point providers, role bindings, tracker, per-point
+  MCP servers, policy values, and gate list — so a resumed session reads it back from
+  `get_run` instead of resolving again. A surface stores the object verbatim and merges a
+  later call over it key by key; a caller may pass only what changed.
 - **Before each stage**, `update_stage` with `status: "in_progress"`; **after each stage**,
   again with `done`, `blocked`, or `skipped` and an `output` summary. The stage's completion
   count increments on every transition to `done`, so repeated passes after requested changes

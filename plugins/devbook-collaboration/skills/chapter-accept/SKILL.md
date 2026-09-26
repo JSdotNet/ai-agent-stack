@@ -75,8 +75,8 @@ terseness.
 
    `accepted-by` is the person who just chose it, never you. Take
    `accepted-hash` from `chapter-hash.mjs <path#slug>` and never compute it
-   yourself; write it where the repository's other chapters carry a
-   fingerprint, and omit it where they do not. `accepted-at` is today and is
+   yourself; leave it out only where the repository's other accepted chapters
+   deliberately carry none, and say so — a first acceptance writes it. `accepted-at` is today and is
    never before `approved-at`.
 
 5. **Report** the chapter, who accepted it, the day, and what evidence they saw.

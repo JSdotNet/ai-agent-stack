@@ -92,10 +92,10 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    ```
 
    `approved-by` is the person who just chose it, never the reviewer by default
-   and never you. Write `approved-hash` where the repository's other approved
-   chapters carry one, taking the value from
-   `chapter-hash.mjs <path#slug>` and never computing it yourself; omit it
-   where they do not. In the same change, delete `review`, `reviewer`, and
+   and never you. Write `approved-hash`, taking the value from
+   `chapter-hash.mjs <path#slug>` and never computing it yourself; leave it
+   out only where the repository's other approved chapters deliberately carry
+   none, and say so — a first approval writes it. In the same change, delete `review`, `reviewer`, and
    `review-at` from the chapter and sweep its resolved notes —
    `annotations.mjs sweep --chapter <path#slug>`. The decision is now the
    record, and both the review state and an answered note are stale by

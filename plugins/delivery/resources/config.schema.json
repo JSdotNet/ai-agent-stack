@@ -31,7 +31,11 @@
                   ]
                 },
                 "project": { "type": "string" },
-                "repository": { "type": "string" }
+                "repository": { "type": "string" },
+                "folder": {
+                  "type": "string",
+                  "description": "For the markdown provider: the folder, relative to the repository root, whose chapters are the work items."
+                }
               },
               "additionalProperties": false
             }

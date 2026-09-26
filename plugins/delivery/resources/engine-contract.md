@@ -322,8 +322,8 @@ dependencies: one missing specialist must not demote every skill that names it.
   `instructions/`*. A role bound to a plugin nobody has enabled is a warning naming both
   files, not a failure.
 - **Tracker.** `bindings["delivery.tracker"]` names the work-item system: `github` resolves
-  items to issues, `jira` to tickets in a named project, `markdown` to chapters in a folder
-  the repository names, for one that plans work as Markdown, and `backlog` to entries in the
+  items to issues, `jira` to tickets in a named project, `markdown` to chapters in the folder
+  its `folder` key names, for a repository that plans work as Markdown, and `backlog` to entries in the
   Backlog desktop application. Operations: `find_item`, `read_item`, `create_item`, `comment`,
   `transition`, `link_change`. Unbound, a flow runs to its file artifacts and opens, comments
   on, and transitions nothing.

@@ -2,7 +2,7 @@
 
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: sixteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, thirteen trigger files that fire one on a cadence, and three skills that put those
+report, thirteen trigger files that fire one on a cadence, and four skills that put those
 triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -94,7 +94,7 @@ open issue without a window: the rows a person has not decided fold into the nex
 | `schedule-status` | Lists them with their last runs, what each published, and the log where one failed |
 | `schedule-run` | Fires one now and reports the run |
 
-All three resolve the scheduler from the live tool list, match by the name
+All four resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
 the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 

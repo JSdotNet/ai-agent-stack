@@ -471,7 +471,7 @@ Finds whatever the live session exposes that turns a name, a cron expression, a 
 a prompt into a scheduled session — the [scheduler](../12-glossary.md#scheduler) — and creates,
 updates, disables, reads, or fires an entry through it.
 
-Invocation semantics: command-invoked, by the three catalog skills. **No scheduler is a normal
+Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
 outcome:** the operation reports it and stops without failing anything, the same shape a surface
 takes.
 
@@ -545,7 +545,7 @@ How a trigger becomes a run, and where that run stops.
 ```meta
 ```
 
-Three skills read the catalog, and all three resolve the scheduler rather than naming one. No
+Four skills read the catalog, and all four resolve the scheduler rather than naming one. No
 scheduler is a normal outcome at every step below.
 
 ```mermaid
@@ -645,7 +645,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the twelve schedules
+**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

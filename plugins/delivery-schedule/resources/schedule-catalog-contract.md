@@ -67,7 +67,7 @@ the fourth is the one every skill here starts with:
 | --- | --- |
 | `create`, `update` | `delivery-schedule:init`, `delivery-schedule:update` |
 | `run` | `schedule-run` |
-| `list`, `get` | all three — identity is the name `<owner>/<repo> · <title>`, matched on every call |
+| `list`, `get` | all four — identity is the name `<owner>/<repo> · <title>`, matched on every call |
 | `list_runs`, `get_run_log` | `schedule-status`, `schedule-run` |
 
 There is no delete. A schedule that leaves the selection is `update`d to `enabled: false`, and

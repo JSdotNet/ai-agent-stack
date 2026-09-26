@@ -471,5 +471,36 @@ await run(
     nested()
 );
 
+// A heading with a letter outside ASCII slugs the way the checker and the index
+// slug it, so the address `annotations.json` reports is the one `add` and `list` take.
+const ACCENTED = [
+    "# Übersicht",
+    "",
+    FENCE + "meta",
+    "status: draft",
+    FENCE,
+    "",
+    "## Übersicht der Teile",
+    "",
+    FENCE + "meta",
+    "status: draft",
+    FENCE,
+    "",
+    "Ein Absatz.",
+    "",
+].join("\n");
+
+await run(
+    "add and list by a non-ASCII slug",
+    async (root) => {
+        const address = `${REL}#übersicht-der-teile`;
+        await add(root, address, { after: "Ein Absatz.", author: "jobsc", date: "2026-09-27", body: "Eine Notiz." });
+        const threads = await list(root, address);
+        check(threads.length === 1, "add: the slug the checker reports addresses the chapter", String(threads.length));
+        check(threads[0]?.chapter === "übersicht-der-teile", "list: the note carries that same slug", threads[0]?.chapter);
+    },
+    ACCENTED
+);
+
 console.log(failed ? `\n${failed} case(s) failed.` : "\nAll cases passed.");
 process.exit(failed ? 1 : 0);

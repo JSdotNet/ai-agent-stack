@@ -31,6 +31,7 @@ import {
     resolveAnnotation,
     annotationKinds,
     annotationStatuses,
+    slugify,
 } from "./metadata.mjs";
 
 const FENCE = "```";
@@ -58,7 +59,7 @@ function chapterRange(lines, slug) {
         const heading = /^(#{1,6})\s+(.*)$/.exec(lines[i]);
         if (!heading) continue;
         if (start === -1) {
-            if (slugifyLocal(heading[2].trim()) === slug) {
+            if (slugify(heading[2].trim()) === slug) {
                 start = i;
                 level = heading[1].length;
             }
@@ -70,15 +71,6 @@ function chapterRange(lines, slug) {
     return [start, lines.length];
 }
 
-// Kept local rather than imported so this module's slug never drifts from the
-// one `parseAnnotations` reports addresses with — both mirror GitHub's anchors.
-function slugifyLocal(text) {
-    return text
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, "")
-        .replace(/\s/g, "-");
-}
 
 const FENCE_LINE = /^(\s*)(`{3,}|~{3,})\s*([^\s`~]*)\s*$/;
 
@@ -256,7 +248,7 @@ function annotationsIn(chapter) {
     let slug = null;
     for (const block of blocksIn(chapter.lines, chapter.range[0], chapter.range[1])) {
         if (block.kind === "heading") {
-            slug = slugifyLocal(block.text);
+            slug = slugify(block.text);
             continue;
         }
         if (block.kind !== "annotation") continue;

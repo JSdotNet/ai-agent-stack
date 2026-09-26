@@ -3,8 +3,8 @@ name: pr-merge-ready
 description: >
   Take one pull request to merge-ready: score it against the merge-ready checklist and clear
   its blockers using update-pr-branch and fix-pr-checks and working its review threads itself. One PR per pass,
-  worked in this session. Built to run repeatedly under /loop as a PR babysitter, picking the
-  next PR each pass. Use when: getting your pull request ready for merge, watching CI on it,
+  worked in this session. Built to be repeated, one pass per pull request, by whatever
+  repetition the host offers, picking the next PR each pass. Use when: getting your pull request ready for merge, watching CI on it,
   or running a scheduled pull request sweep.
 ---
 
@@ -38,8 +38,8 @@ second session.
 Remediation is real work in a working tree: it resolves conflicts, edits code, and pushes.
 Two of those running at once in the same session interleave into each other, and handing them
 to background agents puts the merge decision somewhere that cannot ask the user for it. So
-the pass picks one PR, clears what it can, and reports what the next pass should take. Under
-`/loop`, consecutive passes rotate through the queue — that is how a backlog of PRs gets
+the pass picks one PR, clears what it can, and reports what the next pass should take.
+Repeated, consecutive passes rotate through the queue — that is how a backlog of PRs gets
 cleared without ever needing more than this session.
 
 ## Scope
@@ -151,8 +151,8 @@ A pull request is merge-ready when all of these hold:
 
    Name the runner-up in the report, so the next pass's pick is predictable.
 
-5. If no pull request is in scope, report that and end the pass. Under `/loop` this is a
-   no-op tick.
+5. If no pull request is in scope, report that and end the pass. On a repeated pass this
+   is a no-op tick.
 
 ### Phase 2 — Score
 
@@ -196,7 +196,7 @@ A pull request is merge-ready when all of these hold:
 ### Phase 3 — Confirm
 
 8. Ask the user to confirm the planned action. Do not proceed without confirmation on the
-   first pass of a `/loop`; on later passes, re-confirm only when the plan changes shape (a
+   first pass; on later passes, re-confirm only when the plan changes shape (a
    different PR was selected, or the primary blocker changed category).
 
 9. On an unattended run with no user turn available, proceed with the remediation but stop
@@ -257,15 +257,10 @@ A pull request is merge-ready when all of these hold:
     needs a human (secrets, reviewer approval, or a design decision inside a conflict), and
     whether the working tree is reclaimable because the PR landed.
 
-## Loop Mode
+## Repeat Mode
 
-This skill is written to be the body of a `/loop`, one pull request per pass:
-
-```bash
-claude "/loop 15m /pr-merge-ready"
-```
-
-Under `/loop`:
+This skill is written to be repeated, one pull request per pass, by whatever repetition the
+host offers inside a session — an interval, a re-run — and names none of them. On each pass:
 
 - Re-select the pull request every pass with target `next`. Branches and PRs appear and
   disappear between passes, so never carry a stale selection or scoring table forward.
@@ -278,11 +273,10 @@ Under `/loop`:
 - Track consecutive no-progress passes per PR. After **3** passes with the same primary
   blocker and no state change, report that PR as stuck and exclude it from selection until
   the user intervenes.
-- Stop the loop once every one of your open PRs is merge-ready, stuck, or waiting on a human.
+- Stop repeating once every one of your open PRs is merge-ready, stuck, or waiting on a human.
 
-For an unattended schedule, use the `schedule` skill instead of `/loop` so the sweep survives
-session restarts. A scheduled pass is still one pull request — the schedule provides the
-repetition, not extra sessions.
+For an unattended sweep, a schedule provides the repetition and survives session restarts. A
+scheduled pass is still one pull request, never extra sessions.
 
 ## Surface Reporting
 
@@ -293,7 +287,7 @@ the source of truth.
 - `start_run` with `skillId: "pr-merge-ready"` and these stages: Select the Pull Request, Score, Confirm,
   Remediate, Merge Decision, Report.
   Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
-- Under `/loop`, start a new run per pass so each pass is separately traceable.
+- When repeated, start a new run per pass so each pass is separately traceable.
 
 ## Output
 

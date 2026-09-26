@@ -18,8 +18,8 @@ Turn one tracker work item into work in progress. Fetch the open items matching 
 a single item, claim it, decide which `flow-*` flow its type calls for, and run that flow **in
 this session** with the item context and origin metadata baked in.
 
-This is the generic counterpart to `schedule-bug-fix` in the `delivery-schedule` plugin: any
-filter, any item type, routed to the matching flow rather than always a defect.
+This is the attended counterpart of `schedule-issue-sweep` in the `delivery-schedule` plugin: any
+filter, any item type, routed to the matching flow, in this session.
 
 ## Tracker
 
@@ -218,8 +218,8 @@ the source of truth.
 
 ## Related Skills
 
-- `schedule-bug-fix` (`delivery-schedule` plugin) — the same single-item pickup narrowed to
-  `bug` items, always routed to `flow-code` as a defect, ranked by severity.
+- `schedule-issue-sweep` (`delivery-schedule` plugin) — the unattended counterpart: the same
+  tracker, one issue at a time, every pull request a draft.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
 - **Session Handoff** in `resources/flow-execution-model.md` — hand this

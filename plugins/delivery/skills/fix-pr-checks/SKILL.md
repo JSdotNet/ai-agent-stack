@@ -83,10 +83,10 @@ binary. The slot and its unbound default are in `resources/engine-contract.md`.
    | Flaky test | passes on re-run, timing or ordering dependent | Re-run once, then report and propose a stabilisation |
    | Lint / format | style rule violation | Run the project's formatter, then fix the remainder |
    | Merge conflict / behind base | `mergeStateStatus` is `DIRTY` or `BEHIND` | Hand off to `update-pr-branch` |
-   | Workflow definition | YAML, action version, or permission error | Hand off to `github-actions` |
+   | Workflow definition | YAML, action version, or permission error | Fix the definition in place: correct the YAML, pin the action, grant the permission |
    | Secret / credential | missing secret, expired token, OIDC failure | Report to the user — do not attempt to supply credentials |
    | Infrastructure | runner outage, registry 5xx, network timeout | Re-run once, then report |
-   | Security scan | new vulnerability or secret detected | Hand off to `fix-security-issue` (plugin: `aikido`) when installed |
+   | Security scan | new vulnerability or secret detected | Fix the vulnerability as code; a detected secret is removed and reported for rotation, never re-supplied |
 
 6. When a failure is caused by an out-of-date base rather than by the PR's own changes, run
    `update-pr-branch` first and re-check before fixing anything.
@@ -185,8 +185,6 @@ the source of truth.
 - `pr-merge-ready` — score one pull request against the merge-ready checklist and clear its blockers, one PR per pass.
 - `phase-build-test` — the shared build-and-test procedure the `flow-*` flows run
   before a PR exists.
-- `github-actions` (plugin: `github`) — when the workflow definition itself is wrong.
-- `fix-security-issue` (plugin: `aikido`) — security-scan failures.
 
 ## Notes
 

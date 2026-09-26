@@ -63,7 +63,8 @@ criteria. Never upgrade over an unrecorded red baseline, and never decline the r
 
 ## Stage 3: Implementation
 
-- Update through each ecosystem's own manager: the `nuget-manager` skill for NuGet, the
+- Update through each ecosystem's own manager: `dotnet` for NuGet (`dotnet list package
+  --outdated`, then the version in `Directory.Packages.props` or the `.csproj`), the
   package manager for npm, the `dotnet` CLI for the SDK — in the planned batches.
 - For a framework upgrade, upgrade the host integrations and the service references that
   follow them, and resolve the breaking changes in configuration and wiring.

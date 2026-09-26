@@ -2,7 +2,7 @@
 name: pr-merge-ready
 description: >
   Take one pull request to merge-ready: score it against the merge-ready checklist and clear
-  its blockers using update-pr-branch, fix-pr-checks, and pr-remarks-review. One PR per pass,
+  its blockers using update-pr-branch and fix-pr-checks and working its review threads itself. One PR per pass,
   worked in this session. Built to run repeatedly under /loop as a PR babysitter, picking the
   next PR each pass. Use when: getting your pull request ready for merge, watching CI on it,
   or running a scheduled pull request sweep.
@@ -86,9 +86,9 @@ This skill sequences the following skills:
 - **`update-pr-branch`** (this plugin) — merges or rebases the base branch into the PR branch
   and resolves conflicts.
 - **`fix-pr-checks`** (this plugin) — reads failing job logs, reproduces, fixes, pushes.
-- **`pr-remarks-review`** (plugin: `review`, optional) — works through unresolved reviewer
-  comments.
-- **`fix-security-issue`** (plugin: `aikido`, optional) — security-scan check failures.
+- Review threads are worked here, with no helper: read each unresolved thread, make the
+  change or answer it in a reply, and leave resolving the thread to the reviewer. A
+  security-scan failure is one of `fix-pr-checks`'s failure classes.
 
 The two same-plugin skills always ship together with this one. The optional cross-plugin
 dependencies degrade gracefully: when one is missing, perform its phase directly and note the
@@ -165,8 +165,8 @@ A pull request is merge-ready when all of these hold:
    | Behind base | `mergeStateStatus: BEHIND` | `update-pr-branch` |
    | Failing checks | any rollup entry `FAILURE` / `TIMED_OUT` / `CANCELLED` | `fix-pr-checks` |
    | Checks running | any entry `IN_PROGRESS` / `QUEUED` | wait — re-check next pass |
-   | Changes requested | `reviewDecision: CHANGES_REQUESTED` | `pr-remarks-review` |
-   | Unresolved threads | open threads on the PR | `pr-remarks-review` |
+   | Changes requested | `reviewDecision: CHANGES_REQUESTED` | work the review threads |
+   | Unresolved threads | open threads on the PR | work the review threads |
    | Awaiting review | `reviewDecision: REVIEW_REQUIRED` | ping reviewers — no code action |
    | Draft | `isDraft: true` and nothing else blocking | `gh pr ready <number>` |
    | Blocking label | `do-not-merge` / `blocked` / `wip` | none — respect it and end the pass |
@@ -306,7 +306,7 @@ the source of truth.
 
 - `update-pr-branch`, `fix-pr-checks` — the per-PR remediations, usable standalone.
 - `start-session-from-issue` — picks up the single issue whose work this skill later takes to
-  merge-ready. `schedule-bug-fix` (`delivery-schedule` plugin) does the same unattended.
+  merge-ready. `schedule-issue-sweep` (`delivery-schedule` plugin) does the pickup unattended.
 
 ## Notes
 

@@ -744,13 +744,18 @@ function render(model) {
     out.push('');
 
     if (model.deliverySkills || model.scheduleSkills) {
-        const grouped = { flow: [], phase: [], schedule: [], other: [] };
+        const grouped = { flow: [], phase: [], schedule: [], other: [], scheduleOther: [] };
         for (const skill of model.deliverySkills ?? []) {
             if (skill.startsWith('flow-')) grouped.flow.push(skill);
             else if (skill.startsWith('phase-')) grouped.phase.push(skill);
             else grouped.other.push(skill);
         }
-        for (const skill of model.scheduleSkills ?? []) grouped.schedule.push(skill);
+        // Only a schedule-* skill is an entry point; init, update, and the two that read the
+        // scheduler are the plugin's own, and a chapter quoting the true count is not drift.
+        for (const skill of model.scheduleSkills ?? []) {
+            if (skill.startsWith('schedule-')) grouped.schedule.push(skill);
+            else grouped.scheduleOther.push(skill);
+        }
         out.push('## Procedures the plugins on disk ship');
         out.push('');
         out.push(table(
@@ -760,6 +765,7 @@ function render(model) {
                 ['`phase-*`', '`delivery`', grouped.phase.length, grouped.phase.join(', ') || '-'],
                 ['other', '`delivery`', grouped.other.length, grouped.other.join(', ') || '-'],
                 ['`schedule-*`', '`delivery-schedule`', grouped.schedule.length, grouped.schedule.join(', ') || '-'],
+                ['other', '`delivery-schedule`', grouped.scheduleOther.length, grouped.scheduleOther.join(', ') || '-'],
             ],
         ));
         out.push('');

@@ -96,6 +96,18 @@ await run("add chapter-level", async (root) => {
     check(threads[0].index === 1, "add: chapter-level lands first in document order", String(threads[0].index));
 });
 
+await run("add refuses what the checker would reject", async (root) => {
+    const refused = async (note) => {
+        try { await add(root, ADDRESS, note); return false; } catch { return true; }
+    };
+    check(await refused({ kind: "rant", author: "a", body: "b" }), "add: an unknown kind is refused");
+    check(await refused({ author: "a" }), "add: a note with no body is refused");
+    check(await refused({ body: "b" }), "add: a note with no author is refused");
+    let replyRefused = false;
+    try { await reply(root, ADDRESS, 1, { author: "a" }); } catch { replyRefused = true; }
+    check(replyRefused, "reply: a reply with no body is refused");
+});
+
 await run("add --after with no match", async (root) => {
     let threw = false;
     try {

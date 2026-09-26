@@ -132,6 +132,16 @@ function blocksIn(lines, start, end) {
 }
 
 /** Serialize a note as fence lines, omitting whatever the defaults already say. */
+// The only writer of a fence writes only what the checker accepts: a known kind, an
+// author, and a body. A fence `--check` would reject is refused before anything is read.
+function requireNote({ kind, author, body }) {
+    if (kind !== undefined && kind !== null && !annotationKinds().includes(kind)) {
+        throw new Error(`Unknown annotation kind "${kind}" — one of ${annotationKinds().join(", ")}.`);
+    }
+    if (typeof author !== "string" || !author.trim()) throw new Error("--author is required: a note names who raised it.");
+    if (typeof body !== "string" || !body.trim()) throw new Error("--body is required: a note with nothing to say is not written.");
+}
+
 export function renderAnnotation({ kind, status, author, date, quote, body }) {
     const out = [FENCE + "annotation"];
     if (kind && kind !== "comment") out.push(`kind: ${kind}`);
@@ -197,6 +207,7 @@ function noteAddress(note, relPath) {
  * annotates the chapter as a whole.
  */
 export async function add(repoRoot, address, note) {
+    requireNote(note);
     const chapter = await loadChapter(repoRoot, address);
     const { lines, range } = chapter;
     const blocks = blocksIn(lines, range[0], range[1]);
@@ -281,6 +292,7 @@ function fenceFor(chapter, index) {
  * the block that is already there and leaves every other line untouched.
  */
 export async function reply(repoRoot, address, index, { author, date, body }) {
+    requireNote({ author, body });
     const chapter = await loadChapter(repoRoot, address);
     const block = fenceFor(chapter, index);
     const { lines } = chapter;

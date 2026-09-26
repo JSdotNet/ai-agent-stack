@@ -342,7 +342,7 @@ related: [".devbook/arc42/12-glossary.md#report"]
 ```
 
 Answers one question about this marketplace from what is on disk: what devbook, the engine, the
-extensions, the surfaces, and the fan-out lane are and how they fit; which version of each
+extensions, the surfaces, and the unattended lane are and how they fit; which version of each
 plugin is installed against the newest published; which are enabled. The `ask` skill is its
 entry.
 

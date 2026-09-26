@@ -72,8 +72,10 @@ record work this skill did not do.
 
 6. **Let each adopted component initialize itself.** For every component chosen in step 2,
    invoke that component's own `init` and let it materialize its payload and write its
-   own stamp — `devbook:init` for the devbook folders, `devbook-procedures:init` for
-   the repository's `start`, `show`, `capture`, `debug`, and `estimate` skills. Answer
+   own stamp, in the order the report's reconcile list gives — `devbook:init` for the
+   devbook folders, `devbook-derived:init` for the committed index, `devbook-procedures:init`
+   for the repository's `start`, `show`, `capture`, `debug`, and `estimate` skills,
+   `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
    that one's adoption question from the engine keys just written: `extensions.app.start` of
    `null` drops `start`, `show`, and `debug`; `policy.qa.depth` of `skipped` drops `capture`
    and `show`; no engine key answers `estimate`, so ask it. Do not copy a component's files

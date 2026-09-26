@@ -411,10 +411,12 @@ flowchart TD
     idOnly --> fanout
     fanout --> devbookInstall["devbook:init"]
     fanout --> derivedInstall["devbook-derived:init"]
+    fanout --> proceduresInstall["devbook-procedures:init"]
     fanout --> deliveryInstall["delivery:init"]
     fanout --> scheduleInstall["delivery-schedule:init"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
     derivedInstall --> stamps
+    proceduresInstall --> stamps
     deliveryInstall --> stamps
     scheduleInstall --> stamps
     stamps --> done(["Configured, and every component stamped by its owner"])

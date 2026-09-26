@@ -1,7 +1,6 @@
 ---
 name: flow-runner
 description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request.'
-model: opus
 tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'TaskStop', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog', 'mcp__Claude_Browser__preview_start']
 ---
 
@@ -200,8 +199,10 @@ those contracts; it does not re-decide them per skill.
 
 ## Model
 
-Pinned to `opus`: this is the one agent that must run under a fixed, known model to drive the
-rest of the process reliably. Every other agent a flow invokes leaves `model` unset, so the
+Prefers `opus`, recorded here rather than pinned: a `model` pin is a value one host refuses
+to load, per the hosts decision in the repository's devbook, and this is the one agent that
+should run under a fixed, known model to drive the rest of the process reliably — choose it
+when starting the session. Every other agent a flow invokes leaves `model` unset, so the
 category resolved in `flow-model-selection.md` is the only value that applies.
 
 ## Handoffs

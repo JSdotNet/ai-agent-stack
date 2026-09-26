@@ -11,9 +11,9 @@ description: Defines the model-selection categories the flow-runner uses to pick
   chooses a model for every step of a `flow-*` run. Every specialist agent a flow delegates
   to — whichever plugin a repository bound to a role or a service — is expected to carry no
   `model` in its own frontmatter for this reason: pinning a model on the agent itself would
-  create a second, conflicting source of truth. Only `flow-runner.agent.md` pins its own
-  model, because it is the one agent that must run under a fixed, known model to reliably
-  drive the rest of the process.
+  create a second, conflicting source of truth. Only `flow-runner.agent.md` records its own
+  preference, in its `## Model` section rather than a pin one host refuses, because it is the
+  one agent that should run under a fixed, known model to reliably drive the rest of the process.
 - Define the categories **once** so a maintainer edits this file instead of re-describing
   model choice in every `flow-*/SKILL.md`.
 - Let an individual user override model choice outside the repository, and let a consuming

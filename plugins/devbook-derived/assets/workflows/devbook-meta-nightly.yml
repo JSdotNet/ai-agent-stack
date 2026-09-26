@@ -3,7 +3,7 @@ name: Devbook metadata nightly refresh
 # Reconciles the committed _meta indexes with the Markdown on the default
 # branch. Installed by the `devbook-derived:init` skill.
 #
-# The pull-request check (devbook-meta.yml) only *warns* when an index has
+# The pull-request drift check (devbook-meta-drift.yml) only *warns* when an index has
 # drifted, because forcing every devbook pull request to regenerate the
 # indexes is what makes those files conflict on merge. This job is the other
 # half of that trade: refresh happens here, once, on a schedule, in a single

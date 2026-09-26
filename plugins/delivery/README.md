@@ -35,7 +35,8 @@ deliberately leave out, so they can stay execution rules.
 
 A flow never leaves its session, and nothing in this marketplace spawns one. Work that runs
 with nobody watching — the `schedule-*` entry points and the triggers that fire them, the
-issue sweep among them — is a different subsystem and lives in `delivery-schedule`.
+issue sweep among them — is a different subsystem one layer up, in the plugin that owns the
+unattended lane.
 
 ## How a repository shapes a flow
 

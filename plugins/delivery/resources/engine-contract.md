@@ -262,7 +262,7 @@ first makes `revise` mean "write the specification again".
 
 ### Unattended runs
 
-Many runs are unattended: `delivery-schedule`'s `schedule-*` entry points fire on a cadence,
+Many runs are unattended: a higher layer's `schedule-*` entry points fire on a cadence,
 and a spawned worker session has no user turn. A gate that waits for a human would deadlock all of
 them, so `unattended` defaults to `block`, and `block` means **park with a handoff brief** —
 what is done, what is not, the exact resume invocation — not "wait forever". An unattended run

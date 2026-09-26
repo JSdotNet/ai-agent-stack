@@ -300,7 +300,7 @@ the source of truth.
 
 - `update-pr-branch`, `fix-pr-checks` — the per-PR remediations, usable standalone.
 - `start-session-from-issue` — picks up the single issue whose work this skill later takes to
-  merge-ready. `schedule-issue-sweep` (`delivery-schedule` plugin) does the pickup unattended.
+  merge-ready. A higher layer's issue sweep does the pickup unattended.
 
 ## Notes
 

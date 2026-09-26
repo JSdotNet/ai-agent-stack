@@ -228,8 +228,8 @@ mechanism; background sub-agents remain reserved for concurrent monitoring.
   described under **Delegation Order**.
 - **One item per run, and never a fan-out.** A skill that works from a queue of issues or
   pull requests selects **one** item, claims it, and runs the flow for it in its own
-  session, as `start-session-from-issue`, `pr-merge-ready`, and the `schedule-*` entry points
-  of `delivery-schedule` do. An
+  session, as `start-session-from-issue`, `pr-merge-ready`, and a higher layer's `schedule-*`
+  entry points do. An
   `flow-*` run does not prepare work for other sessions and does not spawn them: it owns a
   run, a Personal Validation gate, and a user turn, none of which survives being
   split across sessions mid-flow. Parallelism across items comes from the **user**
@@ -237,7 +237,7 @@ mechanism; background sub-agents remain reserved for concurrent monitoring.
   concurrent runs do not collide.
 
   This is a rule about **flows**, not a statement that sessions cannot be created.
-  They can: a scheduled trigger becomes a fresh session, which is how `delivery-schedule`
+  They can: a scheduled trigger becomes a fresh session, which is how the unattended lane
   runs its entry points. No skill in this marketplace spawns one from inside a run, and the
   mechanism stays unavailable to `flow-*` skills in particular, because a spawned session
   starts with no memory of the run that spawned it — so a flow handed across one would lose

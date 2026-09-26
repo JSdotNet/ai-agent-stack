@@ -18,7 +18,7 @@ Turn one tracker work item into work in progress. Fetch the open items matching 
 a single item, claim it, decide which `flow-*` flow its type calls for, and run that flow **in
 this session** with the item context and origin metadata baked in.
 
-This is the attended counterpart of `schedule-issue-sweep` in the `delivery-schedule` plugin: any
+This is the attended counterpart of the unattended issue sweep a higher layer ships: any
 filter, any item type, routed to the matching flow, in this session.
 
 ## Tracker
@@ -218,8 +218,8 @@ the source of truth.
 
 ## Related Skills
 
-- `schedule-issue-sweep` (`delivery-schedule` plugin) — the unattended counterpart: the same
-  tracker, one issue at a time, every pull request a draft.
+- The unattended issue sweep a higher layer ships — the same tracker, one issue at a time,
+  every pull request a draft.
 - `pr-merge-ready` — takes the pull request behind the finished work to merge-ready, one PR
   per pass.
 - **Session Handoff** in `resources/flow-execution-model.md` — hand this

@@ -179,7 +179,7 @@ those contracts; it does not re-decide them per skill.
   Validation, then stop at Personal Validation before any pull request.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
   for a decision the run does not own. There is no fan-out over issues or PRs anywhere: the
-  pickup skills select a single item per run, and the unattended sweep in `delivery-schedule`
+  pickup skills select a single item per run, and an unattended sweep one layer up
   works its items one at a time in its own session. Nothing nests a flow inside another agent.
 - **Sub-agents report decisions up; they never prompt.** When a sub-agent returns an open
   question rather than a result, this agent asks the user — and never lets a sub-agent guess

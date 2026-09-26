@@ -394,7 +394,8 @@ which rewrites the skill ids a stack config binds — in the committed config an
 overlay layers — now that every `install` is `init` and `update` and `check` is `validate`;
 the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 `invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
-reference to them.
+reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
+files by kind and takes the `#### Scenario:` cases off an `### Invariant:`.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -430,7 +431,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **17**, covering the metadata schema a repository authors
+One number, currently **18**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin

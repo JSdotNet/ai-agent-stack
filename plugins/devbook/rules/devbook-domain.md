@@ -519,19 +519,26 @@ instructions.
   `domain.invariants.md#invariant-an-order-cannot-be-confirmed-twice`. No other
   `domain/` heading may take a prefix on the strength of this one; the
   exception is bought by an external format, not by taste.
-  File titles are the bounded-context name alone (`# Order Management`), with
-  the file's own `type` distinguishing the files of a context. A split file is
-  no exception: its title stays the context name and the chapter's own name
-  goes in its `##` heading, exactly as it did inside the file it came from.
+  A file's title names what the page holds; the folder names the context. A
+  menu that lists pages by title would otherwise show the context name on every
+  entry with nothing to tell them apart. `context.md` alone is titled by the
+  bounded-context name (`# Order Management`), because the context is what it
+  holds. Every other base file is titled by its kind — `# Domain`, `# Actors`,
+  `# Features`, `# Skills`, `# Model`, `# Flows`, `# Dependencies` — and a
+  split file by the chapter it holds: `domain.order.md` and `model.order.md`
+  are `# Order`, `features.checkout.md` is `# Checkout`, and a
+  `flow.<name>.md` takes the flow's name. The chapter keeps its `##` heading
+  and block exactly as they stood in the file it came from. A page the
+  convention does not name is titled by its subject. Write the title in the
+  language the folder is written in: `# Actoren` is `# Actors`.
 
-  The behaviour files are the exception: `requirements.md` and
-  `requirements.<name>.md` are titled `# Requirements`, and
-  `domain.invariants.md` and `domain.<name>.invariants.md` `# Invariants`. They
-  sit beside the pages they belong to, and a menu that lists pages by title
-  would otherwise show the context name three times over with nothing to tell
-  them apart. The folder names the context; the title names the kind. A
-  behaviour file still titled by its context validates;
-  `018-behaviour-titles` retitles it.
+  The behaviour files stay titled by kind, split or not: `requirements.md` and
+  `requirements.<name>.md` are `# Requirements`, and `domain.invariants.md` and
+  `domain.<name>.invariants.md` `# Invariants`, because each reads beside the
+  page it belongs to. A behaviour file still titled by its context validates;
+  `018-behaviour-titles` retitles it. No other file carries a title the check
+  reads, so one still titled by its context validates too; retitle it when the
+  file is next edited, never by a sweep.
 
   `context-map.md` is the one `domain/` file that is not about a single bounded
   context, so it has no context name to carry. Prefer titling it after the
@@ -830,7 +837,7 @@ describes, one heading level down.
 ### domain.md
 
 ```markdown
-# <Bounded Context Name>
+# Domain
 
 \`\`\`meta
 status: draft
@@ -1014,7 +1021,7 @@ Only once the actor chapters have outgrown `context.md`; then every one of them
 moves here.
 
 ```markdown
-# <Bounded Context Name>
+# Actors
 
 \`\`\`meta
 status: draft
@@ -1081,7 +1088,7 @@ comes last.
 ### features.md
 
 ```markdown
-# <Bounded Context Name>
+# Features
 
 \`\`\`meta
 status: draft
@@ -1130,7 +1137,7 @@ The alternative to `features.md`, for a repository whose product is procedures.
 A skill is a feature here, so the chapter types are the same.
 
 ```markdown
-# <Bounded Context Name>
+# Skills
 
 \`\`\`meta
 status: draft
@@ -1278,7 +1285,7 @@ the promise is checked.
 ### model.md
 
 ```markdown
-# <Bounded Context Name>
+# Model
 
 \`\`\`meta
 status: draft
@@ -1316,7 +1323,7 @@ classDiagram
 ### flow.md
 
 ```markdown
-# <Bounded Context Name>
+# Flows
 
 \`\`\`meta
 status: draft
@@ -1342,7 +1349,8 @@ type: flow
 ### <file>.<name>.md
 
 One chapter split out of its file, under that file's template: the file-level
-block carries the base file's `type`, and the chapter follows as it stood there.
+block carries the base file's `type`, the title names the chapter, and the chapter
+follows as it stood there.
 `domain.order.md` is the `## <AggregateName>` section of the `domain.md`
 template under a `type: domain` file block; `features.checkout.md` and
 `skills.<skill-name>.md` the same for one feature or skill;
@@ -1352,7 +1360,7 @@ template under a `type: domain` file block; `features.checkout.md` and
 the `model.md` template narrowed to one aggregate. A `flow.<name>.md`:
 
 ```markdown
-# <Bounded Context Name>
+# <Flow Name>
 
 \`\`\`meta
 status: draft
@@ -1380,7 +1388,7 @@ Only once the dependency tables have outgrown `context.md`'s `## Dependencies`
 section; then the section moves here whole.
 
 ```markdown
-# <Bounded Context Name>
+# Dependencies
 
 \`\`\`meta
 status: draft

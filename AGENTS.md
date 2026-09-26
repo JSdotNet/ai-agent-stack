@@ -26,8 +26,8 @@ Before committing, run the checker and the generator over this repository's own 
 node tools/check-assets.mjs && node plugins/devbook/tools/devbook-meta/build.mjs --check
 ```
 
-The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids, and
-reports body budgets. The second fails on a chapter whose `meta` block or reference does not
+The first fails on a manifest, agent, or hook shape a host rejects or a decision forbids —
+the schedule catalog included, through its own checker — and reports body budgets. The second fails on a chapter whose `meta` block or reference does not
 resolve.
 
 `.github/workflows/repo-checks.yml` runs both on every pull request, and a third beside them:

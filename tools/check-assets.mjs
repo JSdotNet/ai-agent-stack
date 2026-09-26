@@ -34,6 +34,9 @@
 //   skills        every plugins/*/skills/<name>/SKILL.md opens with the line that reports
 //                 its plugin name and version from the manifest beside it (see the
 //                 decision "Every Skill Opens With Its Plugin Version")
+//   catalog       delivery-schedule's schedule catalog passes its own checker,
+//                 plugins/delivery-schedule/tools/schedule-catalog/check.mjs, run from here
+//                 so the pull-request gate covers a trigger that targets a flow
 //   vendored      .devbook/_tools/devbook-meta/ and devbook-tech/, where present, are
 //                 byte-identical over LF to plugins/devbook/tools/ (see the decision
 //                 "Install")
@@ -44,6 +47,7 @@
 // Dependency-free ESM against node: built-ins, like everything else executable here.
 
 import { readdir, readFile, stat } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -525,6 +529,22 @@ for (const file of await walk(PLUGINS)) {
     if (lines > BUDGETS[key]) over.push({ file: rel(file), lines, budget: BUDGETS[key] });
 }
 over.sort((a, b) => b.lines / b.budget - a.lines / a.budget);
+
+// ── schedule catalog ────────────────────────────────────────────────────────
+//
+// The catalog has its own checker in the plugin that owns it; running it here is what
+// puts it on the pull-request gate, which nothing else does.
+
+{
+    const catalog = path.join(PLUGINS, "delivery-schedule", "tools", "schedule-catalog", "check.mjs");
+    if (await exists(catalog)) {
+        const run = spawnSync(process.execPath, [catalog], { cwd: ROOT, encoding: "utf8" });
+        if (run.status !== 0) {
+            const lines = `${run.stdout}\n${run.stderr}`.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+            error(`schedule catalog: ${lines.join(" | ")}`);
+        }
+    }
+}
 
 // ── report ──────────────────────────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-09-18
+date: 2026-09-26
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -108,10 +108,24 @@ sentence of why, and `Enforced at:`. Only a requirement is warned for having no 
 its scenarios stay, because OpenSpec reads them and a promise to someone outside the model is
 checked by a case. Scenarios already under an invariant are tolerated rather than stripped: the
 text is the author's, and dropping it by script would lose what no one asked to lose. The same
-contract titles the behaviour files by kind — `# Requirements`, `# Invariants` — where every
-other `domain/` file carries the context name, because a menu that lists pages by title showed
-the context three times with nothing to tell them apart; `018-behaviour-titles` retitles them.
-Both came from a consumer's pilot, which ran them first as local deviations.
+contract titles the behaviour files by kind — `# Requirements`, `# Invariants` — because a
+menu that lists pages by title showed the context three times with nothing to tell them apart;
+`018-behaviour-titles` retitles them. Both came from a consumer's pilot, which ran them first
+as local deviations.
+
+**A title names what the page holds.** Contract 18 fixed the menu for two files and left the
+cause in place for every other: `domain.md`, `actors.md`, each split, each flow still carried
+the context name, so a context of seventy files listed the same word seventy times, and a
+viewer that labels and sorts pages by title — the consumer's spec-manager does — could not be
+read. The consumer had already stopped following it, titling by kind and by subject. The folder
+names the context, so the title is spent on the page: `context.md` by the context, because the
+context is what it holds; every other base file by its kind; a split file by the chapter it
+holds; a page the convention does not name by its subject; `context-map.md` by the product as
+before. It ships no contract and no migration. A title is not an address — an anchor is a
+slug of a `##` heading and never of the `#` — and the check reads no title, so a file titled
+the old way validates and resolves exactly as before; retitling is editorial, done when the
+file is next touched. The generator's file label keeps its `(<kind>)` suffix, which now tells
+a split from its base where it once told the context's files from each other.
 
 **Invariants are a subpage of their domain page.** Contract 14 gave invariants a file of their
 own, `invariants.md`, which split on its own schedule as `invariants.<name>.md`, so the rules
@@ -226,6 +240,10 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
   `feature-setting` type for the setting that enables a capability, which would split settings
   by the shape of their value; folding `actors.md` and `dependencies.md` by migration, which is
   a reading and not a rewrite.
+- Titling every `domain/` file by its context and exempting more files one by one, as contract
+  18 did for two; a context-qualified title (`# Order Management — Domain`), which repeats what
+  the folder says; a migration retitling every file, which would rewrite authored text to fix
+  what no check reads.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -237,6 +255,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-26 | A `domain/` file's title names what the page holds: `context.md` the context, every other base file its kind, a split file its chapter, an unnamed page its subject, `context-map.md` the product. The context-name title is no longer the rule. No contract, no migration: the check reads no title and an anchor never derives from one, so an old title validates. |
 | 2026-09-25 | An `### Invariant:` carries no `#### Scenario:` — a claim, its rejection code, and `Enforced at:`, proved by its `unit` test; a missing scenario warns on a requirement only, and one an older invariant carries is tolerated. `requirements.md` is titled `# Requirements` and an invariants subpage `# Invariants`. Contract 18, migration 018, which retitles. |
 | 2026-09-25 | Invariants are a subpage of their domain page: `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split `domain.<name>.md`, typed `invariants` by the trailing suffix and read directly after the page. A chapter whose aggregate sits on another page is a warning; the old `invariants.md` and `invariants.<name>.md` validate with a warning for one release. Requirements keep `requirements.md`. Contract 17, migration 017. |
 | 2026-09-24 | A `bounded-context` chapter in `context-map.md` records how the context ships with `deployment`: `service`, a deployable of its own, or `module`, inside a modular monolith. The context's `context.md` carries the same value on its file-level block, and where the chapter's `related` names that file the graph build holds the two equal. The host is named through `related` to its building block, never a second field. Contract 16, additive, no migration. |

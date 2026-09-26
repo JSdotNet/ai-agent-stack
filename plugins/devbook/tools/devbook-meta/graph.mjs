@@ -310,10 +310,10 @@ function applyMeta(node, meta, folder) {
 /**
  * Compose a file node's display label.
  *
- * Heading text carries the name only, so every file in a `.domain` bounded
- * context is titled with the bare context name — six nodes sharing one label.
- * The file's `type` disambiguates them, and is left off when the title already
- * says it ("Context Map" + `context-map`).
+ * A `domain/` file is titled by what it holds, so a split file's title is its
+ * chapter's name and an older file's may still be the context's. The file's
+ * `type` says which kind of page it is, and is left off when the title already
+ * says it ("Domain" + `domain`, "Context Map" + `context-map`).
  */
 function composeFileLabel(title, type) {
     if (!type || slugify(title) === type) return title;

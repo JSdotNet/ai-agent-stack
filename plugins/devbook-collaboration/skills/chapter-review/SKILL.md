@@ -78,12 +78,13 @@ lens is a review that misses the finding.
    `comment` otherwise.
 
 6. **Write the verdict** into the chapter's `meta` block. Set `review-at` to
-   today and `reviewer` to yourself as the reviewer of record:
+   today, and `reviewer` to whoever owes the next move — that is what devbook's
+   rule says the field means, and what the queue reads:
 
    | Outcome | Write |
    |---|---|
-   | An open fence remains | `review: changes-requested` |
-   | None does | `review: cleared` |
+   | An open fence remains | `review: changes-requested`, `reviewer` the author |
+   | None does | `review: cleared`, `reviewer` the approver when the request named one, else remove it |
 
    `cleared` says the chapter is ready for a person to approve. It is not the
    approval — see `chapter-approve`.

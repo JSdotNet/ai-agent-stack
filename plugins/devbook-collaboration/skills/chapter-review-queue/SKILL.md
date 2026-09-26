@@ -45,9 +45,9 @@ chapter that never appears in the queue.
    | Acceptance lapsed | `status: accepted` and the chapter's content changed after `accepted-at` | Whoever accepted it |
    | Stale approval | `status: approved` and the chapter's content changed after `approved-at` | Whoever approved it |
    | Objected to since approval | `status: approved` with an open note dated after `approved-at` | Whoever approved it |
-   | Changes requested | `review: changes-requested` | The author |
+   | Changes requested | `review: changes-requested` | `reviewer`, which names the author |
    | Awaiting review | `review: requested` | `reviewer` |
-   | Awaiting approval | `review: cleared` | Whoever approves |
+   | Awaiting approval | `review: cleared` | `reviewer` when set, else whoever approves |
    | Awaiting acceptance | `status: approved`, signed and unchanged | Whoever accepts the built work |
    | Rung outside `domain/` | Either decision rung, or any of its six fields, on a chapter in another folder | Whoever wrote it — devbook's check reports it |
    | Unsigned approval | `status: approved` with no `approved-by` or `approved-at` | Whoever approved it |

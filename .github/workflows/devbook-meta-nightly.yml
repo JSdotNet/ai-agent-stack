@@ -66,12 +66,14 @@ jobs:
       - name: Detect drift
         id: drift
         run: |
-          if git diff --quiet -- '*_meta/*.json'; then
+          # git status, not git diff: an index written for the first time is untracked,
+          # and diff would call the tree current while the new file sat unseen.
+          if [ -z "$(git status --porcelain -- '*_meta/*.json')" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Derived indexes are current. Nothing to do."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git --no-pager diff --stat -- '*_meta/*.json'
+            git status --short -- '*_meta/*.json'
           fi
 
       - name: Push the refresh branch

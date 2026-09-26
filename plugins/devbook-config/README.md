@@ -75,6 +75,7 @@ shares it:
 | `blocked` | no | – | yes | Reports and skips. **Never drops the stamp.** |
 | `frozen` | yes | no | yes | Reports; offers to enable |
 | `adoptable` | yes | yes | no | Asks once whether to adopt; runs its `init` on a yes |
+| `enabled` | yes | yes | none by design | One line: a plugin that stamps nothing was adopted by enabling it |
 | `available` | yes | no | no | One line |
 | `out-of-scope` | no | – | no | A footnote |
 

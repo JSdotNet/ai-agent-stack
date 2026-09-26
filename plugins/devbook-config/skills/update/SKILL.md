@@ -32,6 +32,7 @@ stamp about the repository and everyone who shares it.
 | `blocked` | Report it, skip it, **change nothing**. |
 | `frozen` | Report it; offer to enable it here. Skip if declined. |
 | `adoptable` | Ask once whether to adopt; on a yes, run its `init`. Never impose. |
+| `enabled` | One line. It stamps nothing by design — a surface, the review plugin, this one — so enabling it was the adoption. |
 | `available` | One line. |
 | `out-of-scope` | A footnote. |
 

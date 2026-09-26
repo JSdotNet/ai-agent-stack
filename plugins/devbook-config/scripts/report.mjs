@@ -62,6 +62,7 @@ const SCOPE = {
     blocked: 'stamped here, not installed on this machine',
     frozen: 'stamped here, not enabled in this checkout',
     adoptable: 'installed and enabled, never adopted here',
+    enabled: 'installed and enabled; stamps nothing by design, so nothing to reconcile',
     available: 'installed, not enabled, not adopted',
     'out-of-scope': 'not installed and not adopted',
 };
@@ -310,7 +311,9 @@ function buildPluginRows(catalogs, installed, enabled, marketplace, components) 
         let scope;
         if (!here) scope = stamp ? 'blocked' : 'out-of-scope';
         else if (isEnabled === false) scope = stamp ? 'frozen' : 'available';
-        else scope = stamp ? 'reconcile' : 'adoptable';
+        // A plugin with no stamp to write — a surface, the review plugin, this one — is
+        // never 'adoptable': there is no init to offer, and enabling it was the adoption.
+        else scope = stamp ? 'reconcile' : stampName ? 'adoptable' : 'enabled';
 
         return {
             name,
@@ -461,6 +464,11 @@ function describeStamp(stamp) {
         parts.push(stamp.enabled.length
             ? `enabled \`${stamp.enabled.join('`, `')}\``
             : 'nothing enabled');
+    }
+    // A hand-written entry — the dashboard's sessionNaming, per
+    // .devbook/arc42/adr/configuration.md — carries none of the stamp fields; name what it does carry.
+    if (!parts.length && stamp && typeof stamp === 'object' && Object.keys(stamp).length) {
+        parts.push('hand-written: ' + Object.keys(stamp).map((k) => '`' + k + '`').join(', '));
     }
     return parts.join('; ') || '-';
 }
@@ -697,7 +705,7 @@ function render(model) {
                     const versioned = COMPONENTS[name]?.contract ?? null;
                     return [
                         `\`${name}\``,
-                        stamp?.pluginVersion ?? '-',
+                        stamp?.pluginVersion ?? (COMPONENTS[name] ? '-' : 'no stamp'),
                         describeStamp(stamp),
                         versioned === false
                             ? 'payload-only'

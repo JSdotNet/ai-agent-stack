@@ -140,7 +140,7 @@ skill changes who runs capture, never whether it runs.
   | `delivery-surface-backlog` — the Backlog desktop app, while it is open | yes | no | when Backlog lists it |
   | `delivery-surface-canvas` — Copilot canvas actions | no | yes | no |
 - **A host.** A shared skill names a *slot* — `repo-instructions`, `model-override`,
-  `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
+  `stage-delegation`, `surface`, `pr-lane`, `session-id` — which a repository may bind,
   or which takes its documented unbound default. A slot is bound, never branched.
 
 ## Files

@@ -12,6 +12,11 @@ Run a single `flow-*` flow end to end. This agent is the sequencer, tracker, and
 for the shared delivery phases, so ordering, surface reporting, and the Personal Validation
 gate are enforced in **one** place instead of being re-described in every `flow-*/SKILL.md`.
 
+A run enters here by invoking a `flow-*` skill in a session that runs as this agent —
+chosen as the session's agent before the flow is invoked, never spawned by another. A flow
+invoked in a session running as no agent still runs under every rule here, inline, with the
+same gates; what it lacks is the surface reporting and telemetry this agent owns.
+
 The phases are defined by `resources/flow-phases.md`, whose **Where Each Part
 Lives** table names the file that owns each part. **That table's `Read it` column is
 binding.** Load a file when the run reaches the point the table names, and not before.

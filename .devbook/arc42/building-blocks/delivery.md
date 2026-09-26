@@ -37,7 +37,7 @@ repository conforms to.
 | `start-session-from-issue`, `sre-alerts-to-work-items` | skills, tracker entry points | A person, through the bound tracker |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `flow-runner` | agent | Command-invoked once per run by a flow, holding the session for the run's length |
+| `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
 

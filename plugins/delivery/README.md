@@ -2,6 +2,8 @@
 
 The host-neutral delivery engine. It carries a unit of work from a request to a validated,
 review-ready change — delivery in the continuous-delivery sense, stopping short of deploy.
+A run starts by invoking a `flow-*` skill in a session running as the `flow-runner` agent;
+a flow invoked without it runs inline under the same rules and gates.
 
 ## Installation
 

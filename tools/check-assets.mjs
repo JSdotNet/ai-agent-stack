@@ -129,6 +129,10 @@ for (const [name, entry] of listed) {
         for (const field of ["name", "version", "description"]) {
             if (copilot[field] !== claude[field]) error(`${name}: ${field} differs between the Claude and Copilot manifests`);
         }
+        // A dependency declared on one host and not the other is enforced on one host only.
+        if (JSON.stringify(copilot.dependencies ?? null) !== JSON.stringify(claude.dependencies ?? null)) {
+            error(`${name}: dependencies differ between the Claude and Copilot manifests`);
+        }
         // Copilot loads only what the manifest names, and a named path must exist.
         for (const key of ["skills", "hooks", "agents", "extensions"]) {
             const value = copilot[key];

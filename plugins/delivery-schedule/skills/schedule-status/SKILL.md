@@ -17,7 +17,9 @@ Read-only. The scheduler, the identity rule, and the stamp are in
 2. **Resolve the scheduler** from the live tool list. None: say the host's own page holds the
    answer, list the selection from the stamp, and stop.
 3. **List** and keep the entries named `<owner>/<repo> · …`. For each, `list_runs`. For the
-   most recent run that failed or parked, and for the run the user asked about, `get_run_log`.
+   most recent run that failed or parked, and for the run the user asked about, `get_run_log`
+   where the scheduler has one; a scheduler with only `list_runs` is reported from that, and
+   the report says so.
 4. **Cross-check what a run published** with `gh`: an open pull request on `schedule/<name>/`,
    an open issue labelled `schedule-report`.
 5. **Report** one table: schedule, cron, enabled, last run with its outcome, what it published

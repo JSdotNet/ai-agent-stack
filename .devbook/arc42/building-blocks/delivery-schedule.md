@@ -390,7 +390,9 @@ and why a trigger can be created, disabled, and re-created without touching what
 
 The values it holds:
 
-- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC. Hourly is
+- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC; a local
+  scheduler evaluates it in the machine's own timezone, so the sync converts it and reports
+  both. Hourly is
   the ceiling: anything that could fire more often is rejected, because an unattended run that
   overlaps its own previous run has no way to notice it is doing so. A repository changes a
   cadence in its own selection rather than in the catalog, which is what keeps the shipped
@@ -400,10 +402,11 @@ The values it holds:
   present. Three kinds are admissible — an [entry point](#entry-point), a fan-out skill, a
   read-and-report skill — and one is not: a flow ends at a gate, and an unattended run parks
   where a gate would be, so scheduling a flow schedules a park.
-- **Prompt** — a value object. What the cloud session is given, assembled from the shared
+- **Prompt** — a value object. What the scheduled session is given, assembled from the shared
   [preamble](../12-glossary.md#preamble) and the schedule's own task half. It has to be
   self-contained: the session starts with nothing but the repository, so anything the prompt
-  does not say is not available to be remembered.
+  does not say is not available to be remembered. A local scheduler's prompt gains one
+  paragraph in front, which makes a fresh worktree stand in for the fresh checkout.
 
 ### Entry Point
 

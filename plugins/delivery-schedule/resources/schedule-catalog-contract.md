@@ -59,9 +59,9 @@ merged, approved, closed, or deleted by a scheduled run.
 ## The Scheduler
 
 Resolved from the live tool list by capability and never by a hardcoded name: a tool that
-creates a scheduled cloud session from a name, a cron expression, a repository, a tool
-allowlist, and a prompt. Seven operations, and the fourth is the one every skill here starts
-with:
+creates a scheduled session from a name, a cron expression, and a prompt — and, where the
+scheduler is a cloud one, a repository and a tool allowlist as well. Seven operations, and
+the fourth is the one every skill here starts with:
 
 | Operation | Used by |
 | --- | --- |
@@ -74,6 +74,19 @@ There is no delete. A schedule that leaves the selection is `update`d to `enable
 the person deletes it in the host's own page. **None reachable is a normal outcome:**
 `delivery-schedule:update` prints each finished prompt with its cron for that page and stops; the other
 two say the host holds the answer.
+
+**Two shapes of scheduler, one catalog.** A cloud scheduler takes the repository and the
+tool allowlist as parameters, evaluates `cron` in UTC, and starts the session on a fresh
+checkout — the shape the preamble describes. A local scheduler runs the session on this
+machine in a working folder, takes neither parameter, and evaluates `cron` in the machine's
+own timezone. `delivery-schedule:update` reads which one it has from the create operation's
+parameters and adapts the prompt, never the catalog. For a local scheduler it converts the
+catalog's UTC cron to the machine's timezone and reports both side by side, sets the working
+folder to the repository's checkout, and prepends one paragraph to the prompt: "This is a
+local run: work in a fresh worktree of `{{base}}` under a temporary folder, never in the
+checkout itself, and remove the worktree when the run ends." That keeps the preamble's fresh
+checkout true. A scheduler with no `get_run_log` or `get` answers `schedule-status` and
+`schedule-run` from `list_runs` alone, and the skill says which it had.
 
 Matching by name is what makes every operation idempotent, and it is why nothing personal is
 written into the repository: scheduler ids live in the scheduler only, and the environment the

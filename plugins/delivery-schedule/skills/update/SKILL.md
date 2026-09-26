@@ -38,7 +38,10 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 6. **Create or update.** For each selected schedule, build the prompt — preamble, blank line,
    body, placeholders substituted — then `list` and match on `<owner>/<repo> · <title>`:
    `update` on a match, `create` otherwise, with the cron (the stamp's override when it has
-   one), the tools, the repository, and `enabled: true`. Then set `enabled: false` on every
+   one), the tools, the repository, and `enabled: true`. A local scheduler — *Two shapes of
+   scheduler* in the contract — takes the cron converted to this machine's timezone, the
+   checkout as its working folder, and the local-run paragraph in front of the prompt; the
+   report shows the catalog's cron beside the converted one. Then set `enabled: false` on every
    entry carrying this repository's name prefix that is no longer selected, and say that
    deleting one is done on the host's own page.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —

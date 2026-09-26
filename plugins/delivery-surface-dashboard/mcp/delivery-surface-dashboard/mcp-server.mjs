@@ -102,8 +102,8 @@ const baseDir = runsDir();
 
 // Serializes read-modify-write access per runId so two tool calls issued back-to-back
 // cannot race each other and silently drop an update. The telemetry hook is a separate
-// process and writes through the same store; its updates are append-only into `insights`
-// and `tokenUsage`, so the worst case is a lost telemetry sample, never a lost stage.
+// process the lock cannot see; it re-reads the run before writing and carries over only
+// the fields it owns, so the worst case is a lost telemetry sample, never a lost stage.
 const runLocks = new Map();
 function withRunLock(runId, fn) {
     const prev = runLocks.get(runId) || Promise.resolve();

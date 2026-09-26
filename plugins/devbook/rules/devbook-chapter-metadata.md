@@ -461,7 +461,7 @@ A chapter that is estimated and carried by a roadmap item therefore reads:
 ## Offline Sync Queue
 
 \`\`\`meta
-status: ready
+status: draft
 effort: 8
 roadmap: [sync-service, mobile-mvp]
 related: [.devbook/domain/sync/features.md#offline-sync]

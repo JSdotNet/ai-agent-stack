@@ -50,7 +50,7 @@ those contracts; it does not re-decide them per skill.
    `extensions`, `policy`, and `gates` from that document, and name in the run summary which
    `layers` were present. Persist the
    resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
-   gate list with `set_run_context`, as its `context` object. A bound MCP server is resolved from the live tool list
+   gate list with `set_run_context`, as its `runContext` object. A bound MCP server is resolved from the live tool list
    at the stage that uses it, per **MCP Server Strategy** in
    `flow-execution-model.md`; one that does not answer is reported once and
    never blocks the run. Report an unknown key by name and stop; report a malformed file once

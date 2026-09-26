@@ -842,7 +842,7 @@ const tools = [
     {
         name: "set_run_context",
         description:
-            "Persist run-level context that must survive a session resume or compaction: the change kind driving stage depth, the approval decision recorded at a human gate, the session-handoff marker, and the resolved run context (model, bindings, policy, gates) as 'context'. Call with approval 'approved' only after the user explicitly approves.",
+            "Persist run-level context that must survive a session resume or compaction: the change kind driving stage depth, the approval decision recorded at a human gate, the session-handoff marker, and the resolved run context (model, bindings, policy, gates) as 'runContext'. Call with approval 'approved' only after the user explicitly approves.",
         inputSchema: {
             type: "object",
             properties: {
@@ -863,7 +863,7 @@ const tools = [
                     type: "string",
                     description: "What the next session needs: what is finished, what is not, the paths it needs, and the exact invocation to resume with.",
                 },
-                context: {
+                runContext: {
                     type: "object",
                     additionalProperties: true,
                     description:
@@ -872,12 +872,12 @@ const tools = [
             },
             required: ["runId"],
         },
-        handler: async ({ runId, changeKind, approval, approvalNote, handoff, handoffNote, context }) => {
+        handler: async ({ runId, changeKind, approval, approvalNote, handoff, handoffNote, runContext }) => {
             if (changeKind && !VALID_CHANGE_KINDS.includes(changeKind)) {
                 throw new ToolError(`changeKind must be one of ${VALID_CHANGE_KINDS.join(", ")}`);
             }
-            if (context !== undefined && (context === null || typeof context !== "object" || Array.isArray(context))) {
-                throw new ToolError("context must be an object");
+            if (runContext !== undefined && (runContext === null || typeof runContext !== "object" || Array.isArray(runContext))) {
+                throw new ToolError("runContext must be an object");
             }
             if (approval && !VALID_APPROVAL_STATES.includes(approval)) {
                 throw new ToolError(`approval must be one of ${VALID_APPROVAL_STATES.join(", ")}`);
@@ -887,7 +887,7 @@ const tools = [
                 const run = await readRun(baseDir, runId);
                 if (!run) throw new ToolError(`No run with id ${runId}`);
                 if (changeKind) run.changeKind = changeKind;
-                if (context) run.context = { ...(run.context || {}), ...context };
+                if (runContext) run.runContext = { ...(run.runContext || {}), ...runContext };
                 if (approval) {
                     run.approval = {
                         state: approval,
@@ -908,7 +908,7 @@ const tools = [
                 // clearing the stamp here would make it look advanced and defeat the marker.
                 if (handoff !== true) clearIdle(run);
                 await writeRun(baseDir, run);
-                result = { changeKind: run.changeKind || null, approval: run.approval || null, handoff: run.handoff || null, context: run.context || null };
+                result = { changeKind: run.changeKind || null, approval: run.approval || null, handoff: run.handoff || null, runContext: run.runContext || null };
             });
             bus.emit("update");
             return result || { ok: true };

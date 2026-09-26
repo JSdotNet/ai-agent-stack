@@ -428,16 +428,6 @@ await run("sweep with nothing resolved", async (root) => {
     check(threads.length === 1, "sweep: the open note is still there", String(threads.length));
 });
 
-await run("sweep an unknown status", async (root) => {
-    let threw = false;
-    try {
-        await sweep(root, ADDRESS, { status: "closed" });
-    } catch {
-        threw = true;
-    }
-    check(threw, "sweep: a status outside the closed set refuses rather than deleting nothing quietly");
-});
-
 await run(
     "sweep is chapter-scoped",
     async (root) => {

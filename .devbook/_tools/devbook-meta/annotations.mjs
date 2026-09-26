@@ -6,7 +6,7 @@
 //                                                             --author <who> --body <text> [--kind question]
 //   node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
 //   node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
-//   node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug> [--status resolved]
+//   node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug>
 //
 // Several channels legitimately write a note — a person in an editor, a skill,
 // the desktop app, a device with no clone queuing one for later — and they all
@@ -377,10 +377,10 @@ export async function resolve(repoRoot, address, index, { delete: sweep = false 
  * Deletes bottom-up, so a fence earlier in the file still sits where the sweep
  * found it by the time its turn comes.
  */
-export async function sweep(repoRoot, address, { status = "resolved" } = {}) {
-    if (!annotationStatuses().includes(status)) {
-        throw new Error(`Unknown annotation status "${status}" — one of ${annotationStatuses().join(", ")}.`);
-    }
+export async function sweep(repoRoot, address) {
+    // Only a resolved note is ever swept: an open one is somebody waiting, and there is
+    // no option to take it, so no caller can sweep it by mistake.
+    const status = "resolved";
     const chapter = await loadChapter(repoRoot, address);
     const { lines } = chapter;
 
@@ -421,7 +421,7 @@ const USAGE = `annotations.mjs — read and write annotation fences
           [--kind ${annotationKinds().join("|")}] [--date YYYY-MM-DD]
   reply   --chapter <path#slug> --index <n> --author <who> --body <text> [--date YYYY-MM-DD]
   resolve --chapter <path#slug> --index <n> [--delete]
-  sweep   --chapter <path#slug> [--status ${annotationStatuses().join("|")}]
+  sweep   --chapter <path#slug>
 
   --root <dir>   repository root (default: the working directory)`;
 
@@ -487,9 +487,7 @@ async function main(argv) {
             return 0;
         }
         case "sweep": {
-            const result = await sweep(repoRoot, address, {
-                status: optionValue(args, "--status") ?? "resolved",
-            });
+            const result = await sweep(repoRoot, address);
             for (const note of result.swept) {
                 console.log(`swept   ${result.path}#${note.chapter ?? ""} #${note.index} — ${note.author}, ${note.date}`);
             }

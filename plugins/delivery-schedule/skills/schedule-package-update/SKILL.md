@@ -19,18 +19,21 @@ verify the build and tests still pass, then open a pull request with the changes
 - Target branch for the PR (default: repository default branch).
 - Dry-run mode: `true` previews what would change without writing files (default: `false`).
 
-## Skill Dependencies
+## Tools
 
-This skill sequences the following installed skills:
-
-- **`nuget-manager`** — lists outdated NuGet packages and applies version bumps safely via the `dotnet` CLI. Handles both individual `.csproj` files and `Directory.Packages.props` (Central Package Management).
-- **`aspire`** — when the solution contains an `.AppHost` project, checks whether `Aspire.Hosting.*` and `Aspire.*` client integration packages have new versions and whether any configuration or API changes are required after an upgrade.
+The `dotnet` CLI alone: a scheduled session starts with the two delivery plugins and nothing
+else, so the procedure is carried here in full. `dotnet list package --outdated` is the
+inventory, `Directory.Packages.props` or the `.csproj` is where a version moves, and
+`dotnet restore` after each batch catches a conflict early. Aspire packages
+(`Aspire.Hosting.*`, `Aspire.*`) are inventoried the same way; an API or configuration change
+a new Aspire version needs shows up as a build failure in Phase 3, where the package is
+skipped and named, never forced.
 
 ## Workflow
 
 ### Phase 1 — Audit
 
-1. Use the `nuget-manager` skill to list all outdated NuGet packages:
+1. List all outdated NuGet packages:
 
    ```bash
    dotnet list package --outdated
@@ -46,9 +49,9 @@ This skill sequences the following installed skills:
    are behind — plugin installation itself is interactive, so this step reports, it does not
    apply.
 
-3. Detect whether an `.AppHost` project exists. If so, use the `aspire` skill to cross-check
-   all `Aspire.Hosting.*` and `Aspire.*` packages against the latest releases and flag
-   any hosting or client integration packages that are behind.
+3. Detect whether an `.AppHost` project exists. If so, cross-check all `Aspire.Hosting.*`
+   and `Aspire.*` packages against the outdated listing and flag any hosting or client
+   integration packages that are behind.
 
 4. Present an audit table:
 
@@ -66,14 +69,14 @@ This skill sequences the following installed skills:
 
 6. Create a new branch named `chore/nuget-updates-<YYYY-MM-DD>`.
 
-7. **NuGet updates**: follow the `nuget-manager` skill procedure for each package:
+7. **NuGet updates**, for each package:
    - For solutions using `Directory.Packages.props`: update `<PackageVersion>` entries there.
    - For per-project packages: edit `<PackageReference Version="..." />` in the `.csproj`.
    - Run `dotnet restore` after each batch to catch dependency conflicts early.
 
-8. **Aspire updates**: if Aspire packages were flagged, use the `aspire` skill to apply any
-   configuration or API changes required by the new version (for example, renamed integration
-   packages or updated `AddResource` signatures).
+8. **Aspire updates**: if Aspire packages were flagged, bump them the same way. A renamed
+   integration package or a changed `AddResource` signature surfaces as a build failure in
+   Phase 3 and is handled there: the package is skipped and named, never patched around.
 
 9. **Plugin updates**: list the plugins found to be behind and tell the user to update them
    from the plugin manager; do not attempt to install plugins from this skill.

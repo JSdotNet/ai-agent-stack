@@ -62,6 +62,7 @@ flowchart TB
     DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
+    DEL -.->|"flow-project runs devbook-config:init"| CFG
 ```
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is

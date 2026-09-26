@@ -32,7 +32,7 @@ chapter that never appears in the queue.
    Markdown file for its `meta` fences and its `annotation` fences and read
    those fences only. The review triad, `status`, `approved-by`, and
    `approved-at` live in the `meta` fence; a note's address, status, and kind
-   live in the `annotation` fence, and `annotations.mjs list --chapter <address>`
+   live in the `annotation` fence, and `node .devbook/_tools/devbook-meta/annotations.mjs list --chapter <address>`
    reads them for one chapter. Never build the queue from `_meta/`: it is
    generated tool input, carries no review or approval field, and a session is
    denied reading it.
@@ -55,7 +55,7 @@ chapter that never appears in the queue.
 
    For the two lapse rows, prefer the chapter's own fingerprint: where it
    carries `approved-hash` or `accepted-hash`, compare it with
-   `chapter-hash.mjs <path#slug>` — different
+   `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` — different
    is stale, exactly, with no git and no caveat. Only where it carries none,
    fall back to comparing `approved-at` with the last commit that touched the
    chapter's own lines — `git log -1 --format=%ad --date=short -L` over its

@@ -30,7 +30,7 @@ which the authoring rules exempt from terseness: a fragment here is what turns
 ## Steps
 
 1. **Show the chapter itself**, not a summary of it, together with its current
-   `review` state and every open note on it — `annotations.mjs list --chapter
+   `review` state and every open note on it — `node .devbook/_tools/devbook-meta/annotations.mjs list --chapter
    <path#slug> --status open`, each with its author, date, kind, and body,
    ordered by kind: questions, then flags, then suggestions and comments. When
    the chapter carries `approved-at`, mark every note dated after it as
@@ -56,7 +56,7 @@ which the authoring rules exempt from terseness: a fragment here is what turns
    are what the person weighs. State them and let them choose.
 
    **Unchanged** in the last row is established, not assumed: where the chapter
-   carries `approved-hash`, compare it with `chapter-hash.mjs <path#slug>` —
+   carries `approved-hash`, compare it with `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` —
    equal is unchanged, different is a lapsed approval and step 4 is a new
    decision. Where it carries none, say that you are reading the file's history
    rather than the chapter's content, and that a chapter in a busy file reads
@@ -93,11 +93,11 @@ which the authoring rules exempt from terseness: a fragment here is what turns
 
    `approved-by` is the person who just chose it, never the reviewer by default
    and never you. Write `approved-hash`, taking the value from
-   `chapter-hash.mjs <path#slug>` and never computing it yourself; leave it
+   `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` and never computing it yourself; leave it
    out only where the repository's other approved chapters deliberately carry
    none, and say so — a first approval writes it. In the same change, delete `review`, `reviewer`, and
    `review-at` from the chapter and sweep its resolved notes —
-   `annotations.mjs sweep --chapter <path#slug>`. The decision is now the
+   `node .devbook/_tools/devbook-meta/annotations.mjs sweep --chapter <path#slug>`. The decision is now the
    record, and both the review state and an answered note are stale by
    construction on an approved chapter; devbook's check refuses review state
    on an approved chapter.

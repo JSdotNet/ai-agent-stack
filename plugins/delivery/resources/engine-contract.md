@@ -97,7 +97,9 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
-- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`
+- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`,
+  run from the repository root — the default target is `.devbook/config.json` under the
+  working directory, and a run from the plugin's own folder finds none and prints defaults —
   validates and then prints one JSON document — `{ target, layers, config }` — where
   `config` is the committed file with every present overlay below merged over it, and
   `layers` names each overlay path and whether it exists. That document is the effective

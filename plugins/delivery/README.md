@@ -76,7 +76,9 @@ All four live in `.devbook/config.json`:
 ```
 
 Copy `resources/config-template.json` and validate with
-`node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
+`node tools/stack-config/check.mjs <path>` — the default target is `.devbook/config.json`
+under the working directory, so name the file when running from the plugin's folder. An
+unknown key is rejected, not ignored: a typo must
 never become a silently absent setting. The checker also merges the overlays a machine keeps
 over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
 (`%APPDATA%\devbook`, `~/.config/devbook`) for every repository and for this one's `id`,

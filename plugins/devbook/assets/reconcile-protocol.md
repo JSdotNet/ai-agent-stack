@@ -23,7 +23,7 @@ skill runs them: `devbook:init` where there is no stamp and refuses where there 
 | New repository | no stamp file | It asks which folders to adopt. Everything after is identical. |
 | New plugin version | stamped `pluginVersion` below the installed one | Runs the migration delta; re-materializes stale assets. |
 | Adoption changed | `adopted` differs from what is on disk | Materializes what is newly needed; orphans what nothing claims. |
-| Migration only | stamped `contractVersion` below the plugin's | Ledger forward, no asset movement. |
+| Migration only | a shipped migration id absent from the ledger | Ledger forward, no asset movement. |
 
 None of these is a separate procedure. Detect, resolve, plan, migrate,
 materialize, stamp — every time.
@@ -66,7 +66,7 @@ whose install rewrites content the repository authored, which is devbook alone:
 | Field | Means |
 |---|---|
 | `pluginVersion` | The devbook release that last reconciled this repository. |
-| `contractVersion` | The schema contract the repository is on. Migrations key off this, not off `pluginVersion`, which is why most upgrades reconcile to nothing. |
+| `contractVersion` | The schema contract the repository is on, for reporting. A migration runs on its id being absent from the ledger, never on a version comparison — which is why most upgrades reconcile to nothing. |
 | `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |

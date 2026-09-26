@@ -655,7 +655,7 @@ const tools = [
             type: "object",
             properties: {
                 runId: { type: "string" },
-                format: { type: "string", enum: ["md"], description: "Markdown. The only format this surface writes." },
+                format: { type: "string", enum: ["md", "html"], description: "md is what this surface writes. html is accepted so a caller asking for it gets Markdown and a note saying so, rather than a schema refusal." },
                 outputPath: { type: "string", description: "Optional absolute or worktree-relative path to write to." },
             },
             required: ["runId"],

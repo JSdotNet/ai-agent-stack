@@ -5,7 +5,7 @@ description: Common per-chapter and per-file metadata convention for domain/, ar
 
 # Chapter and file metadata
 
-`domain/`, `arc42/`, `tech/`, `design/`, and `ai/` are intended to be read by a
+`domain/`, `arc42/`, `tech/`, `design/`, and `ai/` are intended to be read by
 visualization and indexing tooling, not just by humans. To make that
 possible, every **chapter** in these folders carries a small, parseable
 metadata block directly under its heading, in a fenced `meta` (YAML) code

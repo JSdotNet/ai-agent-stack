@@ -8,7 +8,7 @@ description: Structure and authoring rules for the technology devbook folder, ho
 `tech/` is the durable record of **which technologies this project itself is
 built with, and how they depend on each other** — the technology graph. It is
 complementary to `arc42/` (system architecture), `domain/` (domain model), and
-and the rest of the devbook folders.
+the rest of the devbook folders.
 
 `tech/` answers "what do we build on, at which version, with what maturity, and
 what depends on what". `arc42/` stays the place for *why* an architecture looks
@@ -21,7 +21,7 @@ the way it does; `tech/` links back to it rather than restating rationale.
 > `tech/` is also the **registry for AI tooling** — Claude Code, an MCP server,
 > a model provider — with its version and its maturity here. How that tooling is
 > actually used across the development flow, and how far that use has been
-> adopted, is `ai/`. A `ai/` chapter points at the `tech/` chapter with
+> adopted, is `ai/`. An `ai/` chapter points at the `tech/` chapter with
 > `depends-on`; the reverse link is never written. See
 > `devbook-ai.md`.
 

@@ -375,7 +375,8 @@ is what turns a heading into a node, so deleting it as noise silently drops the 
 the graph and out of every reference pointing at it.
 
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
+`roadmap`, `date`, `tests`, `number`, `index`, and the review triad — `review`, `reviewer`,
+`review-at` — are devbook's, with the six decision fields
 — `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
 `accepted-hash` — scoped to `domain/` beside the rungs that write them;
 each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced

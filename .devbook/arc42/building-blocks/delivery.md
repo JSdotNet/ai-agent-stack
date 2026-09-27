@@ -24,7 +24,7 @@ flow shares.
 related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate"]
 ```
 
-Fourteen skills, one agent, one hook, and the contracts under `resources/` that everything a
+Fifteen skills, one agent, one hook, and the contracts under `resources/` that everything a
 repository plugs in answers to. No rule, no MCP server, no extension, no workflow: the engine
 is reached by invoking a flow, and everything else it exposes is a contract another block or a
 repository conforms to.
@@ -1148,7 +1148,7 @@ it never depends on — one row below says that is not the whole truth.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here, and the kernel is what "packaged" means. |
-| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fourteen skills. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
+| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fifteen skills. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
 | A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill` provider | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
@@ -1171,7 +1171,7 @@ it never depends on — one row below says that is not the whole truth.
 | A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
 
 - **Every binding row is a dependency this block refused to declare, and each refusal has the
-  same reason:** a missing provider must cost capability rather than a load. Twenty-four
+  same reason:** a missing provider must cost capability rather than a load. Fifteen
   skills demoted because one specialist is absent is the failure mode the whole indirection
   exists to prevent.
 - **The undeclared devbook row is the exception, and it is exceptional in the wrong

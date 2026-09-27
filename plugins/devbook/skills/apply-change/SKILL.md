@@ -25,7 +25,7 @@ context where the kind has one, and the repository root.
 1. Load the protocol, the kind's file, and its folder rule. Read the chapter,
    everything the kind's file says comes with it, and nothing more.
 2. Apply the status gate, per chapter where the kind has sub-chapters:
-   `approved` and `active` proceed; `draft` or `proposed` stops to confirm —
+   `accepted`, `approved`, and `active` proceed; `draft` or `proposed` stops to confirm —
    say what the chapter claims and that it is not agreed, then ask whether to
    build it as written or settle it first; `deprecated` stops.
 3. Resolve the counterpart by the protocol's ladder; record the rung. This

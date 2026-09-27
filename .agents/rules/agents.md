@@ -22,4 +22,5 @@ paths:
   `.agents/rules/plugin-rules.md`.
 
 Body budget 80 lines: [AUTHORING.md](../../AUTHORING.md). `node tools/check-assets.mjs`
-enforces the frontmatter and tool rules above.
+enforces the name, description, model, `Skill`, flow-control, and handoff rules above; the
+MCP spellings and the instruction-file references are the author's to check.

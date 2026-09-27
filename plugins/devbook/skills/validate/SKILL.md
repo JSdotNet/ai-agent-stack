@@ -47,7 +47,7 @@ compressing a lookup table costs a repair, not a sentence.
 
    | Problem | Cause | Fix |
    |---------|-------|-----|
-   | Unresolved reference | A `related`, `depends-on`, or `refines` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
+   | Unresolved reference | A `related` or `depends-on` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
    | Missing file-level `meta` block | The top-level `#` heading has no block, or the file has no `#` heading at all | Add the heading and its block per `devbook-chapter-metadata.md` |
    | Heading with no `meta` block | A heading carries no block (warning) | Add one if it is an addressable chapter for this folder. A structural section heading is legal and stays a warning — this one never fails the run |
    | Malformed `meta` block | Wrong field name, wrong value shape, or bad fencing | Correct it against `devbook-chapter-metadata.md` |

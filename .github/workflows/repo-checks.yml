@@ -1,16 +1,17 @@
 name: Repository checks
 
-# The three checks this repository's own assets have to pass. Two of them are
-# the pre-commit pair named in AGENTS.md; the third is the strict plugin
+# The four checks this repository's own assets have to pass. Two of them are
+# the pre-commit pair named in AGENTS.md; the third runs the tools' own tests,
+# which nothing ran automatically before; the fourth is the strict plugin
 # validator, which is the only thing that catches an unknown manifest field or
-# a bad dependency range, and which nothing ran automatically before.
+# a bad dependency range.
 #
 # This workflow never regenerates and never commits the derived `_meta/`
 # indexes. `--check` reads them and reports; the refresh stays with the
 # `devbook-validate` schedule, per .devbook/arc42/adr/checks-and-indexes.md.
 #
 # No path filters, deliberately. Every folder here is authored assets that one
-# of the three checks reads, and a filter that silently matches nothing leaves
+# of the four checks reads, and a filter that silently matches nothing leaves
 # the repository with no gate and no error saying so.
 
 on:
@@ -31,19 +32,33 @@ concurrency:
 
 jobs:
   checks:
-    name: Assets, devbook metadata, and plugin manifests
+    name: Assets, devbook metadata, tool tests, and plugin manifests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      # Both scripts import only stable `node:` builtins, so the runner image's
-      # Node is enough and no setup-node pin is needed.
+      # The scripts and their tests import only stable `node:` builtins, so the
+      # runner image's Node is enough and no setup-node pin is needed.
       - name: Check manifest, agent, and hook shapes
         run: node tools/check-assets.mjs
 
       - name: Check devbook metadata and references
         run: node plugins/devbook/tools/devbook-meta/build.mjs --check
+
+      # The files are listed, never the folder: `node --test <dir>` loads
+      # nothing on Windows, and a glob over one folder misses a test added in a
+      # new one without saying so. In a git pathspec `*` crosses `/`, so these
+      # two patterns reach every depth.
+      - name: Run the tool tests
+        run: |
+          set -uo pipefail
+          mapfile -t tests < <(git ls-files -- 'plugins/*.test.mjs' 'tools/*.test.mjs')
+          if [ ${#tests[@]} -eq 0 ]; then
+            echo "::error::No *.test.mjs files found under plugins/ or tools/ — the checkout is wrong."
+            exit 1
+          fi
+          node --test "${tests[@]}"
 
       # Deliberately unpinned. The validator earns its place by knowing the
       # host's current manifest schema, so pinning it would freeze the one

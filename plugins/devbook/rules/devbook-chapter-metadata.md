@@ -477,7 +477,8 @@ capability is covered end to end, and a viewer can offer to run the thing.
 ### Why a test link and not a code link
 
 This schema deliberately has **no field linking a chapter to a source path** —
-see "Counterpart resolution" in `assets/code-sync-protocol.md`, shared by
+see "Counterpart resolution" in the devbook plugin's `assets/code-sync-protocol.md` — never
+materialized into a repository — shared by
 `capture-specs`, `apply-change`, and `verify-change`. A path in a metadata block rots on the first refactor
 and gives no signal when it does, so a chapter and its implementation are paired
 through naming instead.

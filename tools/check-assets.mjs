@@ -5,7 +5,7 @@
 //   node tools/check-assets.mjs --budgets  # also list every asset over its body budget
 //
 // Checks what the removed sync generator used to lint and what a reviewer is otherwise
-// expected to catch by eye across seventeen plugins:
+// expected to catch by eye across the plugins here:
 //
 //   marketplace   every entry has a folder, every folder with a Claude manifest has an
 //                 entry, and name/version/description agree across the three files

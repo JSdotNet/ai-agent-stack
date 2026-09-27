@@ -121,7 +121,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // pages by title can tell them from the context's other pages. A file still
 // titled by its context validates; `migrations/018-behaviour-titles/`
 // retitles it, because reconcile never touches an authored file.
-export const CONTRACT_VERSION = 18;
+//
+// Version 19 lets an invariants chapter pair with the `## Shared Value
+// Objects` or `## Shared Enums` grouping, so a shared type's own rules sit
+// beside it in `domain.invariants.md` instead of under an aggregate that
+// happens to use it. It only widens what `related` may name: nothing written
+// under 18 stops validating, and no migration is owed.
+export const CONTRACT_VERSION = 19;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -193,11 +199,18 @@ const SWITCH_TARGET_KIND = { "feature-flag": "feature-flag", setting: "setting" 
 //
 // A domain service is in the `invariants` row because it enforces rules of its
 // own; what it *reacts* to is a requirement of whatever reacts, and lands in
-// the `requirements` row through that feature. The check asks for one entry of
-// the right kind and no more: a chapter may link onward to anything else.
+// the `requirements` row through that feature. The `## Shared Value Objects`
+// and `## Shared Enums` groupings are there because they hold what belongs to
+// no single aggregate, and the rules a shared type enforces belong to it too:
+// pinned under one aggregate that uses the type they read as that aggregate's,
+// and copied under each they are the duplicate the prose side forbids. The
+// groupings live on `domain.md`, which never splits, so their rules land in
+// `domain.invariants.md` and the placement check below needs nothing more.
+// The check asks for one entry of the right kind and no more: a chapter may
+// link onward to anything else.
 const RELATED_TARGET_KINDS = {
     requirements: ["feature", "sub-feature"],
-    invariants: ["aggregate", "domain-service"],
+    invariants: ["aggregate", "domain-service", "shared-value-objects", "shared-enums"],
 };
 
 // The authored `type` field is emitted under the node key `kind`, because

@@ -165,7 +165,9 @@ belongs beside, one rule per chapter: a requirement with the scenarios that prov
 invariant with the unit test that does. Neither is a kind of
 its own: a feature's promises are that feature's pass and an aggregate's rules are that
 aggregate's, because a rule captured apart from the thing it constrains is a rule decided
-twice. The split follows who is held to it — a promise made outside the model is a
+twice. A shared value object's or enum's rules are its grouping's, in `domain.invariants.md`,
+because the type belongs to no one aggregate and pinning them under one decides them for all.
+The split follows who is held to it — a promise made outside the model is a
 requirement, what a type guarantees is an invariant — and that is also what fixes the level
 each is proved at.
 

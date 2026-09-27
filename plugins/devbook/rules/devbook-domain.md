@@ -367,7 +367,10 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   `related` reference to the aggregate chapter on that page; the aggregate
   chapter points back. A chapter whose aggregate is on another page is reported
   as a warning. A domain service that enforces rules of its own gets a chapter
-  here too, pointing at its `domain-service` chapter.
+  here too, pointing at its `domain-service` chapter, and so does each shared
+  grouping whose types enforce rules of their own — a `## Shared Value Objects`
+  or `## Shared Enums` chapter in `domain.invariants.md`, pointing at the
+  grouping on `domain.md`, which points back.
   - **`type: invariant`** — one `### Invariant: <name>` chapter per rule: one
     sentence stating a claim that is either true or false, in the domain's own
     words, with the rejection code in parentheses where the type has one
@@ -382,6 +385,10 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - `tests` on an invariant chapter are `unit`.
   - The rules an owned Entity or Value Object enforces are chapters here too,
     under the aggregate that owns it; `Enforced at:` names the type.
+  - The rules a **shared** Value Object or Enum enforces sit under the
+    `## Shared Value Objects` or `## Shared Enums` chapter of
+    `domain.invariants.md`, never under an aggregate that uses the type and
+    never copied under each; `Enforced at:` names the type.
 - **model.md** — The structural domain model: relationships between
   aggregates, entities, and value objects, ideally as a Mermaid class diagram,
   plus relationship notes. Lifecycle/process flows live in `flow.md`, not
@@ -1273,6 +1280,30 @@ Enforced at: <constructor | <Transition>() | all mutations | open>
 ## <NextAggregateName>
 
 ...
+
+## Shared Value Objects
+
+\`\`\`meta
+status: draft
+type: invariants
+related: [.devbook/domain/<context>/domain.md#shared-value-objects]
+\`\`\`
+
+> The invariants of the value objects more than one aggregate uses. Only
+> `domain.invariants.md` carries this chapter, and `## Shared Enums` the same
+> way, because the groupings live on `domain.md`.
+
+### Invariant: <the rule, as a short name>
+
+\`\`\`meta
+status: draft
+type: invariant
+tests: unit:dotnet:<Ordering.Domain.Tests.IbanTests.TheRule>
+\`\`\`
+
+<One rule of the shared type> (`<rejection-code>`).
+
+Enforced at: constructor (<SharedValueObjectName>)
 ```
 
 An invariant carries no scenario. Given/When/Then in the aggregate's event terms

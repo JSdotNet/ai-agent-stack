@@ -7,7 +7,7 @@ rules, the brief contract, and the report table; this file carries the kind.
 
 | | |
 |---|---|
-| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in the invariants subpage, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant` |
+| Chapters | The root's `##` chapter, `type: aggregate`; every `###` it owns, `type: entity`, `value-object`, `enum`; the `## Shared Value Objects` and `## Shared Enums` groupings; every `## <EventName>` it raises, `type: domain-event`; and in the invariants subpage, the root's `## <AggregateName>` chapter, `type: invariants`, with every `### Invariant:` under it, `type: invariant`, plus the `## Shared Value Objects` or `## Shared Enums` chapter of `domain.invariants.md` for the rules a shared type it draws from enforces |
 | File | `.devbook/domain/<context>/domain.md` and its subpage `domain.invariants.md`, or the `domain.<name>.md` the chapters were split into and its `domain.<name>.invariants.md` |
 | Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` |
 | Context to load | The target context's `domain.md` and `domain.invariants.md`, `.devbook/domain/context-map.md`, and the dependency tables — `context.md`'s `## Dependencies`, or `dependencies.md` once split out — for the published-language entries event consumers rely on. Never the whole `domain/` folder |
@@ -153,7 +153,12 @@ sub-sections of one chapter and carry no `meta` blocks.
 The rules draft to the `domain.invariants.md` template, in the subpage of the page the aggregate is on, in the same pass and the same
 plan: one `## <AggregateName>` chapter whose `related` names the
 aggregate chapter, the aggregate chapter's `related` naming it back, and one
-`### Invariant:` chapter per rule, with no `#### Scenario:` under it.
+`### Invariant:` chapter per rule, with no `#### Scenario:` under it. A rule a
+shared value object or enum enforces is the shared type's, not this
+aggregate's: it drafts under the `## Shared Value Objects` or `## Shared Enums`
+chapter of `domain.invariants.md`, whose `related` names the grouping on
+`domain.md`, and a later pass over another aggregate that uses the type finds it
+there rather than adding a copy.
 
 ## Applying — `apply-change`
 

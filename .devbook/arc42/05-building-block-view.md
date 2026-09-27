@@ -108,7 +108,7 @@ One folder per plugin, holding two manifests and the assets themselves:
 | --- | --- |
 | `.claude-plugin/plugin.json` | Claude Code |
 | `.github/plugin/plugin.json` | Copilot |
-| `agents/`, `agents-internal/` | both |
+| `agents/` | both |
 | `skills/`, `resources/` | both |
 | `rules/<name>.md`, `rules/rules.json` | neither host on its own; an install delivers them |
 | `hooks/hooks.json` | Claude Code |

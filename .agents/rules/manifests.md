@@ -9,8 +9,8 @@ paths:
 
 # Manifests
 
-In the Claude manifest, list agent files explicitly under `agents`, including
-`agents-internal/` ones, or handoff targets dangle. Omit `skills` and `hooks`: Claude scans
+In the Claude manifest, list agent files explicitly under `agents`, or handoff
+targets dangle. Omit `skills` and `hooks`: Claude scans
 `skills/` and loads `hooks/hooks.json` already, and naming the hooks file makes the plugin
 fail with "Duplicate hooks file detected". Declare MCP servers under `mcpServers`.
 

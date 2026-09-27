@@ -46,7 +46,7 @@ flowchart TD
 | Tooling & Dependencies | the `implement` service | `microsoft-learn` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
@@ -83,7 +83,7 @@ flowchart TD
 | Security Validation | the `implement` service | — |
 | New Feature Adoption *(framework upgrade)* | the `implement` service, the `architecture` role | `microsoft-learn` |
 | Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(smoke checks for a framework upgrade; otherwise only when new user-facing behavior is introduced)* |
+| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(smoke checks for a framework upgrade; otherwise only when new user-facing behavior is introduced)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
@@ -151,7 +151,7 @@ flowchart TD
 | Reproduction & Root Cause *(defect)* | the `implement` service, the `app.start` service | `aspire` |
 | Implementation | the `implement` service | `microsoft-learn` |
 | Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor, `aspire` | `playwright` *(capture for new functionality only)* |
+| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(capture for new functionality only)* |
 | Personal Validation | — | — |
 | Create Pull Request | *(default)* | — |
 | Verification | the `verify` provider, or *(default)* | servers bound to `verify` |

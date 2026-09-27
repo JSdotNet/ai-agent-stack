@@ -993,6 +993,22 @@ export function scenarioCount(chapters, index) {
 }
 
 /**
+ * Whether the heading at `index` is a `Scenario:` one level under a
+ * `requirement` chapter — a case of that rule, found by its text, and so a
+ * section rather than a chapter that owes a block.
+ */
+function isScenarioOf(chapters, index, folder) {
+    const heading = chapters[index];
+    if (!SCENARIO_HEADING.test(heading.text)) return false;
+    for (let i = index - 1; i >= 0; i--) {
+        if (chapters[i].level < heading.level) {
+            return chapters[i].level === heading.level - 1 && resolveType(folder, chapters[i].meta) === "requirement";
+        }
+    }
+    return false;
+}
+
+/**
  * Coverage warnings for one behaviour chapter — a `requirement` or an
  * `invariant`. Every other type returns nothing.
  *
@@ -1695,8 +1711,9 @@ export function validateDocument(relPath, markdown) {
         const label = `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line})`;
         if (!chapter.meta) {
             // Level-1 heading already reported above as the file-level block;
-            // a structural document's headings are sections by rule.
-            if (chapter.level > 1 && !structural) {
+            // a structural document's headings are sections by rule, and so
+            // is a `#### Scenario:` directly under a `requirement`.
+            if (chapter.level > 1 && !structural && !isScenarioOf(chapters, index, kind)) {
                 issues.push({
                     severity: "warning",
                     message: `${label} has no \`meta\` block. Add one if this heading is an addressable chapter for this folder.`,

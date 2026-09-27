@@ -31,7 +31,7 @@ both places without a rewrite.
 Nothing is edited on the way in, and no glob is trimmed to the folders this repository
 adopted. A glob that matches nothing applies nothing, while a trimmed file matches no release
 devbook shipped — so the next reconcile would report it customized and never refresh it
-again. That is the right outcome for the two workflows and the wrong one here.
+again. That is the right outcome for the workflow and the wrong one here.
 
 ## The two wrappers
 
@@ -43,7 +43,6 @@ Frontmatter and one sentence each, never a second copy of the rule.
 ---
 paths:
   - ".devbook/arc42/**"
-  - ".devbook/arc42/**"
 ---
 
 Read `.agents/rules/devbook-arc42.md` and follow it before editing this file.
@@ -54,7 +53,7 @@ Read `.agents/rules/devbook-arc42.md` and follow it before editing this file.
 
 ```markdown
 ---
-applyTo: '.devbook/arc42/**,.devbook/arc42/**'
+applyTo: '.devbook/arc42/**'
 description: Structure and authoring rules for the arc42 architecture documentation folder.
 ---
 

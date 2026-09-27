@@ -8,10 +8,10 @@
 // devbook-chapter-metadata.md) into a structured side panel plus
 // a lightweight metadata lint.
 //
-// Kept intentionally self-contained: rendering is client-side via
-// CDN-hosted `marked`/`mermaid` (see render.mjs); metadata parsing/lint is
-// hand-written in metadata.mjs to avoid a YAML dependency for this small,
-// fixed schema.
+// Rendering is client-side via CDN-hosted `marked`/`mermaid` (see render.mjs); the
+// metadata parser and lint are devbook's own modules, loaded from the materialized checker
+// (or from the plugin's tools/ in this marketplace's checkout) so the live view and the
+// check never disagree.
 
 import { createServer } from "node:http";
 import { readFile, access } from "node:fs/promises";
@@ -221,7 +221,7 @@ const session = await joinSession({
             id: "devbook-graph",
             displayName: "Reference graph",
             description:
-                "Obsidian-style force-directed view of the reference graph derived from the `meta` blocks in .devbook/{arc42,domain,tech}. Open it scoped to one folder (e.g. tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
+                "Obsidian-style force-directed view of the reference graph derived from the `meta` blocks in every adopted devbook folder under .devbook/. Open it scoped to one folder (e.g. tech) or repository-wide, with folder colouring, status shading, filters, and neighbourhood inspection.",
             inputSchema: {
                 type: "object",
                 properties: {
@@ -327,7 +327,7 @@ const session = await joinSession({
                 {
                     name: "validate_metadata",
                     description:
-                        "Lint the currently displayed document's chapter/file `meta` blocks against chapter-metadata.instructions.md and return the issue list (also shown in the side panel).",
+                        "Lint the currently displayed document's chapter/file `meta` blocks against devbook's chapter metadata rule and return the issue list (also shown in the side panel).",
                     handler: async (ctx) => {
                         const entry = instances.get(ctx.instanceId);
                         if (!entry || !entry.state.relPath) {

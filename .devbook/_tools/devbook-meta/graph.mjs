@@ -530,6 +530,15 @@ export async function buildGraph(repoRoot, folders = null) {
                         message: `${node.id} has \`${field}\` reference "${ref}" that resolves to a ${targetKind ? `\`${targetKind}\` chapter` : "heading or file"}, not a \`${expectedKind}\` chapter — point it at the switch's own chapter in the context's \`context.md\`.`,
                     });
                 }
+                // tech/ points depends-on at tech/ alone; a relation to another folder is
+                // `related`, per the tech rule.
+                if (field === "depends-on" && node.folder === "tech" && folderKindForPath(targetPath) !== "tech") {
+                    problems.push({
+                        severity: "warning",
+                        path: node.path,
+                        message: `${node.id} has \`depends-on\` reference "${ref}" outside tech/; tech/ uses \`related\` for a chapter in another folder.`,
+                    });
+                }
                 edges.push({
                     id: `${edgeType}:${node.id}->${ref}`,
                     source: node.id,
@@ -738,7 +747,7 @@ export async function discoverScopes(repoRoot) {
  *
  * `folders` holds the real repository paths under `.devbook/`. `stray` lists
  * any of the five spelled as a root-level dot-folder — the layout this
- * convention no longer supports (record 80). A stray folder is reported by the
+ * convention no longer supports (the chapter-schema decision). A stray folder is reported by the
  * graph build and never indexed, so a repository that has not moved yet learns
  * it from an error rather than from a quiet half-corpus.
  */

@@ -18,6 +18,19 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `delivery-surface-dashboard` with `/plugin`. Nothing else is required: the server
 is plain Node with no npm dependencies, and it starts on the first tool call.
 
+## On Copilot
+
+The Copilot manifest carries no key for an MCP server, so a Copilot session reaches this one
+through the repository's own MCP configuration — an entry in `.mcp.json` or `.vscode/mcp.json`
+naming the installed plugin's path:
+
+```json
+{ "servers": { "delivery-surface-dashboard": { "command": "node", "args": ["<plugin path>/mcp/delivery-surface-dashboard/mcp-server.mjs"] } } }
+```
+
+Registered that way it surfaces under the bare `mcp__delivery-surface-dashboard__*` spelling, the
+second shape the engine's surface contract matches.
+
 ## What it implements
 
 The three surface capability groups, all of them:
@@ -130,6 +143,9 @@ outside it is refused. The HTML export inlines evidence images as `data:` URIs, 
 exported report stays readable after the worktree is gone.
 
 ## Developing it
+
+`manifest.json` and `.mcpbignore` beside the server describe the `.mcpb` bundle target; the tool
+list in `manifest.json` is kept by hand and mirrors `tools[]` in `mcp-server.mjs`.
 
 ```bash
 node dev/session-title-test.mjs

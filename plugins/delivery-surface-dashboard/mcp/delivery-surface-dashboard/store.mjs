@@ -6,7 +6,7 @@
 // Reads/writes are simple whole-file JSON round-trips; run counts per project
 // are small (tens, not thousands) so this needs no indexing.
 
-import { mkdir, readdir, readFile, writeFile, rm } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile, rm, rename } from "node:fs/promises";
 import path from "node:path";
 
 function fileFor(baseDir, runId) {
@@ -19,11 +19,11 @@ export async function ensureDir(baseDir) {
 
 export async function writeRun(baseDir, run) {
     await ensureDir(baseDir);
+    // Write beside, then rename over: a reader never finds the file missing between a
+    // delete and a rewrite, which is what made a run vanish under a concurrent get_run.
     const tmp = fileFor(baseDir, run.id) + ".tmp";
     await writeFile(tmp, JSON.stringify(run, null, 2), "utf8");
-    await rm(fileFor(baseDir, run.id), { force: true });
-    await writeFile(fileFor(baseDir, run.id), JSON.stringify(run, null, 2), "utf8");
-    await rm(tmp, { force: true });
+    await rename(tmp, fileFor(baseDir, run.id));
     return run;
 }
 

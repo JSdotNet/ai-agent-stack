@@ -45,7 +45,7 @@ it to the stage list; no skill names it. The rest of the tier runs after those s
 - **`flow-code`** has no fixed tier: it runs the code-modifying tier when Scope Discovery
   determines a code-modifying change kind, and the documentation/config tier otherwise, and
   reports the resolved tier's phase names in `start_run`.
-- **A `flow-*` skill shipped by a bridge plugin declares its own tier** in its own body,
+- **A repo-native `flow-*` skill declares its own tier** in its own body,
   and reads this file and its companions by name. The engine never enumerates a skill in a
   layer above it, so a tier is not something it can assign from here.
 - **Session Handoff belongs to no tier.** It is an interrupt, not a step: it fires whenever

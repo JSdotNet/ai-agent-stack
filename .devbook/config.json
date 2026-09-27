@@ -122,12 +122,12 @@
         },
         ".devbook/_tools/devbook-meta": {
           "from": "1.9.0",
-          "hash": "sha256:372777c305e8d5206247a4c5290f0ef7180b46f8d2e6e85598c387a84aed185b",
+          "hash": "sha256:2b9245f60580b7e9bd374ad9c2a05593606dacaeab75c5b48b90e688cc50dc50",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
           "from": "1.8.0",
-          "hash": "sha256:5d9845fd9d18183e032047cdb11bbe63c8f8d70a1a05292464c30f4c9f6504dc",
+          "hash": "sha256:4f2c6639b00be75e38556639321a68133c12d76e828fa425a6fc0c0056bb0ad8",
           "managed": true
         },
         ".github/instructions/devbook-ai.instructions.md": {

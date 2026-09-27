@@ -112,7 +112,8 @@ test("forwards a lifecycle call with the bearer token and passes the answer thro
     const p = proxy({ ...settingsHome(null), BACKLOG_MCP_PORT: String(backlog.port), BACKLOG_MCP_TOKEN: "env-token" });
     try {
         const res = await p.call("start_run", { skillId: "flow-code", stages: ["Scope"] });
-        assert.deepEqual(JSON.parse(res.result.content[0].text), { echoed: "start_run", arguments: { skillId: "flow-code", stages: ["Scope"] } });
+        // The one argument the proxy adds: a title Backlog wants and the contract never sends.
+        assert.deepEqual(JSON.parse(res.result.content[0].text), { echoed: "start_run", arguments: { skillId: "flow-code", stages: ["Scope"], title: "flow-code" } });
         assert.ok(backlog.requests.every((r) => r.headers.authorization === "Bearer env-token"));
         assert.deepEqual(backlog.requests.map((r) => r.msg.method), ["initialize", "notifications/initialized", "tools/call"]);
     } finally {

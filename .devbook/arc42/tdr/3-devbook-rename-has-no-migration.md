@@ -77,6 +77,11 @@ proposal is `017-devbook-names` at contract 17; the table below says so.
 [the chapter schema record](../adr/chapter-schema.md). The proposal is `019-devbook-names` at
 contract 19; the table below says so.
 
+**2026-09-27. The paths above are the 2026-09-05 shape.** The layout has been `.devbook/_tools/`
+since [the chapter schema record](../adr/chapter-schema.md) closed the second one, and the
+skills are `init`, `update`, and `validate`. The table records what the rename moved then;
+the migration owed is the same one under today's names.
+
 ## Affected components
 
 ```meta

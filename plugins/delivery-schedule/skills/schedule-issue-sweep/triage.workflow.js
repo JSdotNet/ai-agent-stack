@@ -259,6 +259,14 @@ overlap you can name, and no verdict where you cannot.`,
 }
 
 const conflicting = (conflicts.verdicts || []).filter((v) => v.conflicts)
+
+function setAsideReason(r) {
+  const c = r.classification || {}
+  if (Array.isArray(c.missingInfo) && c.missingInfo.length) return 'needs info'
+  if (c.duplicateOf) return 'duplicate'
+  if (r.changeKind === 'none') return 'nothing to change'
+  return null
+}
 log(`Conflict scan: ${conflicting.length} of ${live.length} candidate(s) collide with work in flight.`)
 
 // ---------------------------------------------------------------------------
@@ -277,7 +285,16 @@ return {
     confidence: s.confidence,
   })),
   conflictVerdicts: conflicts.verdicts || [],
+  // Only an issue the sweep can resolve as it stands: not colliding with work in flight,
+  // not waiting on the reporter, not a duplicate, and with something to change. The rest
+  // are set aside with their reason — Phase 3 just told the reporter what is missing, and
+  // resolving the same issue in Phase 5 would contradict that comment.
   readyForPickup: live
     .filter((r) => !conflicting.some((c) => c.number === r.number))
+    .filter((r) => !setAsideReason(r))
     .map((r) => ({ number: r.number, changeKind: r.changeKind, likelyPaths: r.likelyPaths || [] })),
+  setAside: live
+    .filter((r) => !conflicting.some((c) => c.number === r.number))
+    .filter((r) => setAsideReason(r))
+    .map((r) => ({ number: r.number, reason: setAsideReason(r) })),
 }

@@ -85,7 +85,7 @@ const DIRECTORY_CONVENTION = {
             "dependencies.md",
         ],
         last: [],
-        split: ["domain.md", "features.md", "skills.md", "model.md", "flow.md"],
+        split: ["domain.md", "requirements.md", "features.md", "skills.md", "model.md", "flow.md"],
         subpage: { suffix: "invariants", of: ["domain.md"] },
     },
     "tech": { root: "technology-graph.md", first: ["shared.md"], last: ["tooling.md"] },

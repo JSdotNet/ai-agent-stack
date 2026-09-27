@@ -1,6 +1,6 @@
 ---
 name: flow-model-selection
-description: Defines the model-selection categories the flow-runner uses to pick a model for each flow step, the Claude alias to pick per category, and how personal and team configuration can override those defaults.
+description: Defines the model-selection categories the flow-runner uses to pick a model for each flow step, the model alias to pick per category, and how personal and team configuration can override those defaults.
 ---
 
 # Flow Model Selection (Flow-Owned)
@@ -11,9 +11,9 @@ description: Defines the model-selection categories the flow-runner uses to pick
   chooses a model for every step of a `flow-*` run. Every specialist agent a flow delegates
   to — whichever plugin a repository bound to a role or a service — is expected to carry no
   `model` in its own frontmatter for this reason: pinning a model on the agent itself would
-  create a second, conflicting source of truth. Only `flow-runner.agent.md` pins its own
-  model, because it is the one agent that must run under a fixed, known model to reliably
-  drive the rest of the process.
+  create a second, conflicting source of truth. Only `flow-runner.agent.md` records its own
+  preference, in its `## Model` section rather than a pin one host refuses, because it is the
+  one agent that should run under a fixed, known model to reliably drive the rest of the process.
 - Define the categories **once** so a maintainer edits this file instead of re-describing
   model choice in every `flow-*/SKILL.md`.
 - Let an individual user override model choice outside the repository, and let a consuming
@@ -38,8 +38,9 @@ the run, not as a harmless simplification.
 
 ## Use Aliases, Never Version-Pinned IDs
 
-- Claude Code accepts the aliases `opus`, `sonnet`, `haiku`, and `fable` wherever a model is
-  named — the `Agent` tool's `model` parameter and an agent's frontmatter `model`. Each
+- The host takes the aliases `opus`, `sonnet`, `haiku`, and `fable` wherever a model is
+  named — a delegation call's model parameter and an agent's frontmatter `model` — which is
+  the one host fact the `model-override` slot carries (`engine-contract.md`). Each
   alias resolves to the current release of that family, so this file names the alias and
   never needs an edit when a new version ships.
 - Do not write an exact model ID (for example `claude-opus-5`) into this file's category
@@ -58,7 +59,7 @@ the run, not as a harmless simplification.
 | `opus` | The strongest reasoning: architecture and design trade-offs, code review judgment, anything where a wrong call is expensive. |
 | `sonnet` | Strong general-purpose work at lower cost: prose-heavy drafting, planning, most tool-heavy execution. |
 | `haiku` | Genuinely low-complexity, high-volume formatting and writing tasks. |
-| `fable` | Available in this session's model list; not assigned to a category by default. |
+| `fable` | Not assigned to a category by default; pick it per category in the override file. |
 
 ## Categories
 

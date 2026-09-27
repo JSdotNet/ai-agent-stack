@@ -16,6 +16,19 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `delivery-surface-collector` with `/plugin`. Plain Node, no npm dependencies, no
 listening socket.
 
+## On Copilot
+
+The Copilot manifest carries no key for an MCP server, so a Copilot session reaches this one
+through the repository's own MCP configuration — an entry in `.mcp.json` or `.vscode/mcp.json`
+naming the installed plugin's path:
+
+```json
+{ "servers": { "delivery-surface-collector": { "command": "node", "args": ["<plugin path>/mcp/delivery-surface-collector/mcp-server.mjs"] } } }
+```
+
+Registered that way it surfaces under the bare `mcp__delivery-surface-collector__*` spelling, the
+second shape the engine's surface contract matches.
+
 ## What it implements
 
 Two of the three capability groups, and deliberately not the third:
@@ -81,6 +94,9 @@ QA scenarios with their evidence paths, runtime monitoring findings, the handoff
 and the summary.
 
 ## Developing it
+
+`manifest.json` and `.mcpbignore` beside the server describe the `.mcpb` bundle target; the tool
+list in `manifest.json` is kept by hand and mirrors `tools[]` in `mcp-server.mjs`.
 
 ```bash
 node dev/collector-test.mjs

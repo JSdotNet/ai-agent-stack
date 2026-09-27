@@ -73,7 +73,7 @@ addressed `plugin:init` and `plugin:update`, because the plugin name already car
 
 **`devbook-config` is the front door; a component's own pair is hidden from the menu.**
 `devbook-config:init` and `devbook-config:update` fan out to every adopted component's pair,
-so a menu listing both the orchestrator and six component pairs offered two ways to do one
+so a menu listing both the orchestrator and five component pairs offered two ways to do one
 thing and no hint which to pick. The pairs of `devbook`, `delivery`, `devbook-derived`, and
 `devbook-procedures` carry `user-invocable: false`: gone from the `/` menu, still invocable by
 the model, which is what the fan-out needs — `disable-model-invocation` would be the opposite

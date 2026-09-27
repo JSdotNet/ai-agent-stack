@@ -380,7 +380,8 @@ is what turns a heading into a node, so deleting it as noise silently drops the 
 the graph and out of every reference pointing at it.
 
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
+`roadmap`, `date`, `tests`, `number`, `index`, and the review triad — `review`, `reviewer`,
+`review-at` — are devbook's, with the six decision fields
 — `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
 `accepted-hash` — scoped to `domain/` beside the rungs that write them;
 each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
@@ -850,8 +851,8 @@ left silent without the next payload-path rename landing the way `.backlog` did.
 record holds the four remediation options; the first — name the coupling in prose and stop
 restating this block's rules — is the one to take.
 
-**Nothing here names a flow.** This block ships the shape and the check; how a chapter change
-is carried is the engine's, and the two meet only in a repository that installed both.
+**Nothing here ships a flow.** The engine's flows appear in this block only as the routing a
+repository's session-start hook performs; how a chapter change is carried is the engine's, and the two meet only in a repository that installed both.
 
 The checker, the fence writer, and the `tech/` inventory are this block's, and so are `validate`,
 `annotation-sweep`, and `tech-update`. The canvas is not: it is `devbook-derived`'s and loads

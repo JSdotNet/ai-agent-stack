@@ -20,31 +20,32 @@ automatically implement the best candidate and open a pull request.
 - Language / ecosystem: auto-detected from repository content.
 - Dry-run mode: `true` lists findings only, no implementation (default: `false`).
 
-## Skill Dependencies
+## Checklist
 
-This skill sequences the following installed skills:
+Carried here because a scheduled session starts with the two delivery plugins and nothing
+else. The scan looks for:
 
-- **`code-optimization`** — drives the performance checklist scan (allocations, async, LINQ,
-  I/O, database patterns) and produces scored findings.
-- **`code-review`** — used alongside `code-optimization` to catch correctness risks in the
-  proposed change before it is committed.
-- **`delegate-to-coding`** — delegates the actual implementation of the winning finding to the
-  coding agent once the finding is approved.
-- **`tdd`** — wraps the implementation in a Red-Green-Refactor cycle: write a failing benchmark
-  or test that exposes the issue, then fix it, then verify the test passes.
-- **`aspire-logging`** — when the project runs under .NET Aspire, queries structured logs to
-  identify slow requests or high-allocation paths that should be prioritised.
+- **Allocation** — an object, closure, or array created inside a hot loop; string
+  concatenation in a loop; a value type boxed on a hot path.
+- **Async** — sync-over-async (`.Result`, `.Wait()`), an `async void`, a
+  `CancellationToken` not passed through.
+- **LINQ and collections** — a query enumerated more than once, `ToList()` inside a loop,
+  `Count()` where `Any()` was meant, a lookup done by linear scan.
+- **I/O and database** — an N+1 query, a read without a bound, a connection or stream opened
+  per item, a file read whole where a stream would do.
+
+Where the project runs under .NET Aspire, its structured logs name the slow requests and the
+high-allocation paths first; read them before scanning.
 
 ## Workflow
 
 ### Phase 1 — Scan for Findings
 
-1. If .NET Aspire is in use, use the `aspire-logging` skill to pull recent structured logs and
+1. If .NET Aspire is in use, read its recent structured logs and
    surface endpoints or operations with high latency or allocation counts. Use these as
    priority hints for the scan.
 
-2. Use the `code-optimization` skill to analyse the codebase against its full performance
-   checklist (allocation reduction, async efficiency, LINQ and collections, I/O and database).
+2. Scan the codebase against the **Checklist** above.
 
 3. Collect raw findings. For each finding, record:
    - File and line range.
@@ -71,23 +72,23 @@ This skill sequences the following installed skills:
 7. Highlight the top-ranked finding (row 1) as the **implementation candidate**.
    Stop here if dry-run is `true`.
 
-8. Ask the user to confirm:
-   - Proceed with implementing finding #1, or
-   - Select a different finding by number.
+8. Unattended, finding #1 is the candidate. Run by hand, ask the person to confirm it or
+   to pick a different finding by number.
 
 ### Phase 3 — Implement the Winning Finding
 
-9. Use the `tdd` skill to implement the fix in a Red-Green-Refactor cycle:
+9. Implement the fix in a Red-Green-Refactor cycle:
    a. Write a benchmark or test that exposes the performance issue (Red).
-   b. Apply the fix identified by `code-optimization` (Green).
+   b. Apply the fix the finding names (Green).
    c. Run `dotnet test` to verify the fix is correct and nothing regresses (Refactor / verify).
 
-10. Use the `code-review` skill to review the change before committing:
+10. Review the change before committing, against the checklist in
+    `../schedule-merge-review/SKILL.md`:
     - Confirm no correctness regressions.
-    - Confirm the fix matches the `code-optimization` checklist guidance.
+    - Confirm the fix matches the **Checklist** item it addresses.
 
-11. Create a branch named `perf/<category>-<short-description>` (for example,
-    `perf/linq-avoid-repeated-enumeration`).
+11. Create the branch the preamble names, `schedule/performance-review/<YYYY-MM-DD>`, or,
+    run by hand, one the person names.
 
 12. Commit with message:
 
@@ -100,16 +101,18 @@ This skill sequences the following installed skills:
     Impact score: <n>/5 | Effort score: <n>/5
     ```
 
-### Phase 4 — Personal Validation
+### Phase 4 — Decide
 
-13. Present the top-10 findings table (Phase 2), the implemented fix, and the
-    test/benchmark results to the user and **wait for explicit approval before
-    opening a pull request**. If approval is withheld, stop here and record the
-    outcome — never open the PR before personal validation.
+13. Unattended, the preamble decides: go on to Phase 5 with the pull request ready for
+    review when the tests and the benchmark passed and draft otherwise. Run by hand, present
+    the top-10 findings table (Phase 2), the implemented fix, and the test and benchmark
+    results to the person and wait for their yes before opening it; withheld, stop here and
+    record the outcome.
 
 ### Phase 5 — Pull Request
 
-14. After approval, push the branch and open a PR:
+14. Push the branch and open the pull request, updating one a previous run left open on
+    the same branch prefix rather than opening a second:
     - **Title:** `perf: <short description>`
     - **Body:**
       - Full top-10 findings table from Phase 2.
@@ -133,8 +136,8 @@ With no surface bound, skip the calls, say so once, and continue — file artifa
 the source of truth.
 
 - `start_run` with `skillId: "schedule-performance-review"` and these stages: Scan for
-  Findings, Present Findings, Implement the Winning Finding, Personal
-  Validation, Pull Request, Summary.
+  Findings, Present Findings, Implement the Winning Finding, Decide, Pull
+  Request, Summary.
 
 ## Output
 

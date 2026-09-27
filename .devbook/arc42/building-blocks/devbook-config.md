@@ -163,6 +163,7 @@ classDiagram
         blocked
         frozen
         adoptable
+        enabled
         available
         out-of-scope
     }
@@ -246,10 +247,13 @@ The parts it owns:
 - **Fact Source** — a value object. The path a fact was read from, carried with the fact. It is
   what makes an answer checkable rather than authoritative, and it is why an absent file produces
   an empty row with a named source instead of silence.
-- **Scope Verdict** — an enum, also called reconcile, blocked, frozen, adoptable, available,
-  out-of-scope. What an update does with one component: `reconcile`, `blocked`, `frozen`,
-  `adoptable`, `available`, `out-of-scope`. It is derived from three orthogonal inputs —
-  installed, enabled, stamped — and never from a version comparison. `blocked` is the one worth
+- **Scope Verdict** — an enum, also called reconcile, blocked, frozen, adoptable, enabled,
+  available, out-of-scope. What an update does with one component: `reconcile`, `blocked`,
+  `frozen`, `adoptable`, `enabled`, `available`, `out-of-scope`. It is derived from three
+  orthogonal inputs — installed, enabled, stamped — and from whether the plugin has a stamp
+  to write at all, never from a version comparison. `enabled` is the verdict for a plugin
+  that stamps nothing by design — a surface, the review plugin, this one — where enabling it
+  was the adoption and there is no `init` to offer. `blocked` is the one worth
   stating twice. A stamp is committed and shared while installed-ness is personal and
   per-machine, so a component this machine lacks is skipped and **left stamped**: dropping the
   entry would un-adopt it for everyone on the next commit.
@@ -338,7 +342,7 @@ related: [".devbook/arc42/12-glossary.md#report"]
 ```
 
 Answers one question about this marketplace from what is on disk: what devbook, the engine, the
-extensions, the surfaces, and the fan-out lane are and how they fit; which version of each
+extensions, the surfaces, and the unattended lane are and how they fit; which version of each
 plugin is installed against the newest published; which are enabled. The `ask` skill is its
 entry.
 
@@ -407,10 +411,12 @@ flowchart TD
     idOnly --> fanout
     fanout --> devbookInstall["devbook:init"]
     fanout --> derivedInstall["devbook-derived:init"]
+    fanout --> proceduresInstall["devbook-procedures:init"]
     fanout --> deliveryInstall["delivery:init"]
     fanout --> scheduleInstall["delivery-schedule:init"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
     derivedInstall --> stamps
+    proceduresInstall --> stamps
     deliveryInstall --> stamps
     scheduleInstall --> stamps
     stamps --> done(["Configured, and every component stamped by its owner"])
@@ -448,7 +454,9 @@ flowchart TD
     installed2 -->|no| outOfScope["out-of-scope - a footnote"]
     installed2 -->|yes| enabled2{"Enabled?"}
     enabled2 -->|no| available["available - one line"]
-    enabled2 -->|yes| adoptable["adoptable - ask once whether to adopt"]
+    enabled2 -->|yes| hasInit{"Ships an init?"}
+    hasInit -->|yes| adoptable["adoptable - ask once whether to adopt"]
+    hasInit -->|no| enabledScope["enabled - one line, nothing to reconcile"]
 ```
 
 - **`blocked` never drops the stamp.** A stamp is committed and shared; installed-ness is personal
@@ -468,7 +476,7 @@ flowchart TD
 related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-It names every plugin in the marketplace and its `dependencies` array is empty — devbook
+It names every plugin in the marketplace and it declares no `dependencies` — devbook
 included. That is the whole shape of it.
 
 ### Outbound

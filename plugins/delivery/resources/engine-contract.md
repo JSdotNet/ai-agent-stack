@@ -97,7 +97,9 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
   `resources/config-template.json` is a filled-in starting point.
-- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`
+- **Read it through the checker, never by hand.** `node tools/stack-config/check.mjs --print`,
+  run from the repository root — the default target is `.devbook/config.json` under the
+  working directory, and a run from the plugin's own folder finds none and prints defaults —
   validates and then prints one JSON document — `{ target, layers, config }` — where
   `config` is the committed file with every present overlay below merged over it, and
   `layers` names each overlay path and whether it exists. That document is the effective
@@ -260,7 +262,7 @@ first makes `revise` mean "write the specification again".
 
 ### Unattended runs
 
-Many runs are unattended: `delivery-schedule`'s `schedule-*` entry points fire on a cadence,
+Many runs are unattended: a higher layer's `schedule-*` entry points fire on a cadence,
 and a spawned worker session has no user turn. A gate that waits for a human would deadlock all of
 them, so `unattended` defaults to `block`, and `block` means **park with a handoff brief** —
 what is done, what is not, the exact resume invocation — not "wait forever". An unattended run
@@ -320,8 +322,8 @@ dependencies: one missing specialist must not demote every skill that names it.
   `instructions/`*. A role bound to a plugin nobody has enabled is a warning naming both
   files, not a failure.
 - **Tracker.** `bindings["delivery.tracker"]` names the work-item system: `github` resolves
-  items to issues, `jira` to tickets in a named project, `markdown` to chapters in a folder
-  the repository names, for one that plans work as Markdown, and `backlog` to entries in the
+  items to issues, `jira` to tickets in a named project, `markdown` to chapters in the folder
+  its `folder` key names, for a repository that plans work as Markdown, and `backlog` to entries in the
   Backlog desktop application. Operations: `find_item`, `read_item`, `create_item`, `comment`,
   `transition`, `link_change`. Unbound, a flow runs to its file artifacts and opens, comments
   on, and transitions nothing.

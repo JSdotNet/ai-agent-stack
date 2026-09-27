@@ -87,7 +87,10 @@ scheduler tool the session exposes, and reads their runs and logs back. Claude C
 page Routines and the GitHub Copilot app calls it Automations; the tool is resolved from the
 live tool list, so the plugin names neither.
 
-`trial`: nothing in this repository has fired one. The unverified part is not the API — it is
+`trial`: the scheduler this machine exposes is a local one — it runs on the machine, in a
+working folder, on local time — and the routines for this repository were created against it
+with a hand-adapted prompt before the catalog contract described that shape. The unverified
+part is not the API — it is
 whether a cloud session loads this marketplace from the repository's committed settings, and a
 session that starts without its skill has scheduled nothing. Its absence costs the cadence,
 never the procedure: every target runs by hand exactly as before.

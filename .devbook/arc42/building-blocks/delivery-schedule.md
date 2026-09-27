@@ -48,7 +48,7 @@ Run `devbook:validate` over every adopted folder, fix what it reports in the cha
 the committed indexes where `devbook-derived` keeps them, and land one pull request — or a
 schedule-report issue when `devbook-config:doctor`, where installed, finds the installation
 needs a person. The daily `devbook-validate`
-trigger's target: the catalog names a schedule skill, never a foundation skill directly.
+trigger's target: the catalog names a `schedule-*` entry point or, as with `prose-check`, a read-and-report skill that picks its own input, and never a flow.
 
 ### schedule-devbook-verify
 
@@ -390,7 +390,9 @@ and why a trigger can be created, disabled, and re-created without touching what
 
 The values it holds:
 
-- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC. Hourly is
+- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC; a local
+  scheduler evaluates it in the machine's own timezone, so the sync converts it and reports
+  both. Hourly is
   the ceiling: anything that could fire more often is rejected, because an unattended run that
   overlaps its own previous run has no way to notice it is doing so. A repository changes a
   cadence in its own selection rather than in the catalog, which is what keeps the shipped
@@ -400,10 +402,11 @@ The values it holds:
   present. Three kinds are admissible — an [entry point](#entry-point), a fan-out skill, a
   read-and-report skill — and one is not: a flow ends at a gate, and an unattended run parks
   where a gate would be, so scheduling a flow schedules a park.
-- **Prompt** — a value object. What the cloud session is given, assembled from the shared
+- **Prompt** — a value object. What the scheduled session is given, assembled from the shared
   [preamble](../12-glossary.md#preamble) and the schedule's own task half. It has to be
   self-contained: the session starts with nothing but the repository, so anything the prompt
-  does not say is not available to be remembered.
+  does not say is not available to be remembered. A local scheduler's prompt gains one
+  paragraph in front, which makes a fresh worktree stand in for the fresh checkout.
 
 ### Entry Point
 
@@ -468,7 +471,7 @@ Finds whatever the live session exposes that turns a name, a cron expression, a 
 a prompt into a scheduled session — the [scheduler](../12-glossary.md#scheduler) — and creates,
 updates, disables, reads, or fires an entry through it.
 
-Invocation semantics: command-invoked, by the three catalog skills. **No scheduler is a normal
+Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
 outcome:** the operation reports it and stops without failing anything, the same shape a surface
 takes.
 
@@ -542,7 +545,7 @@ How a trigger becomes a run, and where that run stops.
 ```meta
 ```
 
-Three skills read the catalog, and all three resolve the scheduler rather than naming one. No
+Four skills read the catalog, and all four resolve the scheduler rather than naming one. No
 scheduler is a normal outcome at every step below.
 
 ```mermaid
@@ -628,7 +631,7 @@ capability — a divergence taken on purpose.
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
-| A bound tracker | Binding, never a dependency | Pull requests from dated branches, issues labelled `schedule-report` | The engine's tracker binding | Publishing is how an unattended run reaches a person, and which system holds it is the repository's choice. |
+| GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, issues labelled `schedule-report` | The preamble's publishing rules | Publishing is how an unattended run reaches a person; this lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
 | A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; everything personal about a schedule stays in the scheduler or in a machine's own overlay. |
 
@@ -642,7 +645,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the twelve schedules
+**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

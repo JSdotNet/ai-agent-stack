@@ -23,23 +23,23 @@ issues in one step.
 - Create GitHub issues for high-priority findings: `true` (default) or `false`.
 - Target repository for issues: `owner/repo` (defaults to current repository).
 
-## Skill Dependencies
+## Layers
 
-This skill sequences the following installed skills:
+Carried here because a scheduled session starts with the two delivery plugins and nothing
+else:
 
-- **`todo-review`** — collects and prioritises all TODO comments, open checklist items, and
-  unresolved placeholders in the codebase.
-- **`suggestion-review`** — performs a future-improvement scan that surfaces quick wins,
-  next-iteration ideas, and longer-term opportunities ranked by value vs effort.
-- **`code-review`** — runs the structured C# .NET review checklist (correctness, SOLID,
-  async patterns, security, test coverage, naming) and reports findings by severity.
-- **`create-github-issue`** — converts approved high-priority findings into tracked GitHub issues.
+- **TODO review** — every `TODO`, `FIXME`, `HACK`, and `NOTE` comment and every unchecked
+  checklist item in a documentation file, found with `grep`.
+- **Suggestion review** — a scan for structural, quality, coverage, and extensibility
+  improvements, each with an effort and a risk.
+- **Code review** — the checklist in `../schedule-merge-review/SKILL.md`.
+- `gh` for the issues this skill opens.
 
 ## Workflow
 
 ### Phase 1 — TODO Review
 
-1. Use the `todo-review` skill across the configured scope to:
+1. Over the configured scope:
    - Collect all TODO comments (`// TODO`, `// FIXME`, `// HACK`, `// NOTE`).
    - Collect open checklist items in documentation files.
    - Classify each item: **High**, **Medium**, or **Low** priority.
@@ -47,7 +47,7 @@ This skill sequences the following installed skills:
 
 ### Phase 2 — Suggestion Review
 
-2. Use the `suggestion-review` skill across the configured scope to:
+2. Over the configured scope:
    - Identify structural, quality, coverage, and extensibility improvements.
    - Estimate effort (small / medium / large) and risk (low / medium / high) per suggestion.
    - Rank suggestions by value-to-effort ratio.
@@ -55,7 +55,7 @@ This skill sequences the following installed skills:
 
 ### Phase 3 — Code Review
 
-3. Use the `code-review` skill across the configured scope to run the full checklist:
+3. Run the code-review checklist over the configured scope:
    - Correctness (null guards, logic, return values).
    - SOLID compliance.
    - Async/await patterns (no sync-over-async, CancellationToken propagation).
@@ -84,8 +84,10 @@ This skill sequences the following installed skills:
 ### Phase 5 — Issue Creation (Optional)
 
 7. Present the findings that match the configured severity filter.
-8. Ask the user to confirm which findings should become GitHub issues.
-9. For each approved finding, use the `create-github-issue` skill to create an issue with:
+8. Unattended, every finding at or above the severity filter becomes an issue, updating an
+   open one with the same title rather than opening a second. Run by hand, ask the person
+   which findings should.
+9. For each, `gh issue create` with:
    - **Title:** `[Review] <finding summary>`
    - **Body:** finding detail, file and line, layer (TODO / Suggestion / Code Review),
      severity, and recommended action.
@@ -119,8 +121,8 @@ the source of truth.
 
 ## Notes
 
-- Each review layer can be run independently by invoking its skill directly; this skill
-  runs all three in sequence and merges the output.
+- Each layer can be run on its own by naming it in the layers input; the default runs all
+  three in sequence and merges the output.
 - Run this skill weekly or before each release to maintain a healthy codebase baseline.
-- For non-.NET repositories, the `code-review` layer's checklist items that are .NET-specific
-  (async patterns, `dotnet test`) should be adapted to the project's actual ecosystem.
+- For a repository that is not .NET, drop the checklist items that are .NET-specific
+  (`dotnet test`) and keep the rest.

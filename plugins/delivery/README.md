@@ -2,6 +2,8 @@
 
 The host-neutral delivery engine. It carries a unit of work from a request to a validated,
 review-ready change — delivery in the continuous-delivery sense, stopping short of deploy.
+A run starts by invoking a `flow-*` skill in a session running as the `flow-runner` agent;
+a flow invoked without it runs inline under the same rules and gates.
 
 ## Installation
 
@@ -20,6 +22,7 @@ instead of by repository.
 | `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-validation`, `phase-personal-validation` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
+| `init`, `update` (2) | The engine's stamp under `components.delivery`, written once and moved forward; hidden from the menu and reached through `devbook-config` |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
 One flow, `flow-spec`, carries a change to any of the five devbook folders — `arc42/`,
@@ -35,7 +38,8 @@ deliberately leave out, so they can stay execution rules.
 
 A flow never leaves its session, and nothing in this marketplace spawns one. Work that runs
 with nobody watching — the `schedule-*` entry points and the triggers that fire them, the
-issue sweep among them — is a different subsystem and lives in `delivery-schedule`.
+issue sweep among them — is a different subsystem one layer up, in the plugin that owns the
+unattended lane.
 
 ## How a repository shapes a flow
 
@@ -76,7 +80,9 @@ All four live in `.devbook/config.json`:
 ```
 
 Copy `resources/config-template.json` and validate with
-`node tools/stack-config/check.mjs`. An unknown key is rejected, not ignored: a typo must
+`node tools/stack-config/check.mjs <path>` — the default target is `.devbook/config.json`
+under the working directory, so name the file when running from the plugin's folder. An
+unknown key is rejected, not ignored: a typo must
 never become a silently absent setting. The checker also merges the overlays a machine keeps
 over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
 (`%APPDATA%\devbook`, `~/.config/devbook`) for every repository and for this one's `id`,
@@ -138,7 +144,7 @@ skill changes who runs capture, never whether it runs.
   | `delivery-surface-backlog` — the Backlog desktop app, while it is open | yes | no | when Backlog lists it |
   | `delivery-surface-canvas` — Copilot canvas actions | no | yes | no |
 - **A host.** A shared skill names a *slot* — `repo-instructions`, `model-override`,
-  `stage-delegation`, `surface`, `pr-lane` — which a repository may bind,
+  `stage-delegation`, `surface`, `pr-lane`, `session-id` — which a repository may bind,
   or which takes its documented unbound default. A slot is bound, never branched.
 
 ## Files
@@ -155,6 +161,8 @@ skill changes who runs capture, never whether it runs.
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
+| `resources/config.local-template.json` | A starting point for the personal overlay, copied outside the repository |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
+| `hooks/hooks.json`, `hooks.json`, `hooks/session-start-context.md` | The session-start routing guidance: a guarded command hook for Claude Code, a prompt hook for Copilot, one text |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

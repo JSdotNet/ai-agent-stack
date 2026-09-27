@@ -7,7 +7,8 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-b
 Responsible for one thing: that a repository has, by name, the five procedures every
 repository has and no plugin can write — `start`, how its application comes up; `show`, how
 the feature being built is put in front of a reviewer; `capture`, how evidence is taken;
-`debug`, how a cause is found inside the running application — and that each one's goal reads
+`debug`, how a cause is found inside the running application; `estimate`, how work is sized
+against the repository's own finished work — and that each one's goal reads
 the same in every repository while how it is done never does.
 
 Inside the block: the five seeds and their goals, the wrapper per host that carries a goal, the
@@ -65,7 +66,7 @@ related: [".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook
 Also called: procedure skill, repository skill, seeded skill.
 
 One of five named things a repository knows how to do and a plugin cannot: `start`, `show`,
-`capture`, `debug`. In a repository it is three files — the body at
+`capture`, `debug`, `estimate`. In a repository it is three files — the body at
 `.agents/skills/<name>.md`, and a wrapper per host at `.claude/skills/<name>/SKILL.md` and
 `.github/skills/<name>/SKILL.md` — and one stamp entry per file under
 `components.devbook-procedures.materialized`. The body is seeded once and is the repository's

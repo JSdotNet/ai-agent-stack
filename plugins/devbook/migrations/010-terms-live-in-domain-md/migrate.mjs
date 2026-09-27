@@ -19,7 +19,7 @@ const rootIndex = args.indexOf("--root");
 const ROOT = path.resolve(rootIndex !== -1 ? args[rootIndex + 1] : process.cwd());
 
 // The five folders under `.devbook/`, the one layout the convention has
-// (record 80). A reference into `naming.md` can sit in any of them, so every
+// (the chapter-schema decision). A reference into `naming.md` can sit in any of them, so every
 // folder that exists is scanned for references.
 const FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
 const CANDIDATES = FOLDER_NAMES.map((name) => `.devbook/${name}`);

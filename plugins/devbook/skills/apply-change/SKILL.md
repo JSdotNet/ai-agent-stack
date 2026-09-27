@@ -1,7 +1,6 @@
 ---
 name: apply-change
 description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way capture-specs hands a chapter to the folder flow. Covers six kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, the building block view in arc42/, a component guideline in design/. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs), or checking drift without changing anything (verify-change).'
-disable-model-invocation: true
 ---
 
 # apply-change
@@ -26,7 +25,7 @@ context where the kind has one, and the repository root.
 1. Load the protocol, the kind's file, and its folder rule. Read the chapter,
    everything the kind's file says comes with it, and nothing more.
 2. Apply the status gate, per chapter where the kind has sub-chapters:
-   `approved` and `active` proceed; `draft` or `proposed` stops to confirm —
+   `accepted`, `approved`, and `active` proceed; `draft` or `proposed` stops to confirm —
    say what the chapter claims and that it is not agreed, then ask whether to
    build it as written or settle it first; `deprecated` stops.
 3. Resolve the counterpart by the protocol's ladder; record the rung. This

@@ -1,6 +1,6 @@
 ---
 name: validate
-description: 'Validate a repository''s devbook corpus without writing a generated file, and repair what it reports in the chapters — broken metadata references, malformed or missing meta blocks, fields the schema no longer defines, and stale _meta indexes. Asks about the chapters only, never about the installation: stamp drift and outstanding migrations are not this skill''s question. Use when: the devbook-meta check fails, CI warns about drifted indexes, or references do not resolve. Triggers on: "devbook validate", "validate devbook folders", "devbook check", "devbook-meta failed", "broken reference", "stale _meta", "build.mjs --check".'
+description: 'Validate a repository''s devbook corpus without writing a generated file, and repair what it reports in the chapters — broken metadata references, malformed or missing meta blocks, and fields the schema no longer defines. Asks about the chapters only, never about the installation: stamp drift and outstanding migrations are not this skill''s question. Use when: the devbook-meta check fails or references do not resolve. Triggers on: "devbook validate", "validate devbook folders", "devbook check", "devbook-meta failed", "broken reference", "build.mjs --check".'
 ---
 
 # devbook validate
@@ -36,7 +36,7 @@ compressing a lookup table costs a repair, not a sentence.
    |------|---------|--------|
    | `0` | Every reference resolves, every block matches the schema | Done |
    | `1` | One or more problems at `error` severity | Go to step 2 |
-   | `2` | No devbook folder found under `.devbook/` | Wrong directory, the repo has not adopted the convention — run `devbook:init` — or its folders sit at the repository root, which the message names: move them under `.devbook/` |
+   | `2` | No devbook folder found under `.devbook/`, or `--scope` names one the repository has not adopted | Wrong directory or wrong scope, the repo has not adopted the convention — run `devbook:init` — or its folders sit at the repository root, which the message names: move them under `.devbook/` |
 
    `--check` parses and reports without writing. Add `--root <path>` when running
    from outside the repository root, and `--scope <folder>` to narrow the run to
@@ -47,7 +47,7 @@ compressing a lookup table costs a repair, not a sentence.
 
    | Problem | Cause | Fix |
    |---------|-------|-----|
-   | Unresolved reference | A `related`, `depends-on`, or `refines` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
+   | Unresolved reference | A `related` or `depends-on` target was renamed, moved, or never existed | Repoint the reference at the real chapter, or remove it if the relationship is gone. Never delete the target to silence the error. |
    | Missing file-level `meta` block | The top-level `#` heading has no block, or the file has no `#` heading at all | Add the heading and its block per `devbook-chapter-metadata.md` |
    | Heading with no `meta` block | A heading carries no block (warning) | Add one if it is an addressable chapter for this folder. A structural section heading is legal and stays a warning — this one never fails the run |
    | Malformed `meta` block | Wrong field name, wrong value shape, or bad fencing | Correct it against `devbook-chapter-metadata.md` |

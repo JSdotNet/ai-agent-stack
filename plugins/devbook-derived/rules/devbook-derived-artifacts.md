@@ -96,12 +96,11 @@ payload:
 - **One generator, one artifact per scope.** A generator that produces several
   scopes writes each to its own `_meta/`; it does not merge them into one
   file.
-- **CI blocks on source errors, warns on staleness.** Every derived artifact
-  needs a workflow, and that workflow fails on anything wrong in the *authored*
-  Markdown — an unresolvable reference, a block that violates the schema — because
-  those are real errors that do not fix themselves. It also regenerates the
-  artifact and compares it against the committed copy, but reports a difference
-  as a warning. Making every pull request carry a regenerated artifact is what
+- **CI blocks on source errors, warns on staleness — in two workflows.** devbook's own
+  check fails on anything wrong in the *authored* Markdown — an unresolvable reference, a
+  block that violates the schema — because those are real errors that do not fix
+  themselves. This plugin's drift workflow regenerates the artifact beside it and compares
+  it against the committed copy, and reports a difference as a warning. Making every pull request carry a regenerated artifact is what
   turns derived files into merge conflicts: two branches that each edit one
   chapter both rewrite the same index, and the only way to resolve the JSON is
   to re-run the generator — busywork on a file whose only correct content is
@@ -128,8 +127,8 @@ payload:
 2. Add the generator under `.devbook/_tools/<tool-name>/`, with a README.
 3. Emit the required envelope and keep the output deterministic.
 4. Write it to `<scope>/_meta/<artifact>.<format>`.
-5. Add a CI workflow that runs the generator's validation and fails on it, and
-   that regenerates-and-diffs the artifact but only warns when it differs.
+5. Beside the generator's own failing check, add a workflow that regenerates and diffs
+   the artifact and only warns when it differs.
 6. Wire it into both refresh paths: the on-demand command a contributor runs in
    their branch, and the scheduled job that reconciles the default branch.
 7. Reference it from the instructions file of the folder it describes.

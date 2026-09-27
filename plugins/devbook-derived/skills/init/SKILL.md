@@ -8,6 +8,8 @@ user-invocable: false
 
 Open the reply with `devbook-derived@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+This file exceeds the 40-line body budget on purpose: it is the asset table and the edits made on the way in, and a table stated by half installs half.
+
 Materialize the refresh paths the way `devbook` materializes its rules: copy what is stale,
 report what is customized, stamp what landed. Read `devbook`'s
 `assets/reconcile-protocol.md` first for **The stamp**'s two shared fields, the hash rules,
@@ -30,14 +32,16 @@ derive with — run `devbook:init` first.
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook-derived:begin -->` and `<!-- devbook-derived:end -->` | always |
 | `rules/devbook-derived-artifacts.md` and its `paths` | `.agents/rules/`, `.claude/rules/`, `.github/instructions/` — the trio devbook's `assets/rule-wrappers.md` describes | always |
 
-Both workflows are edited on the way in — branch name, the nightly `cron` and
-`REFRESH_BRANCH`, and the path filters trimmed to the adopted folders. The edit makes both
-files customized from the first run, which is intended.
+Both workflows are edited on the way in — the nightly's `cron` and `REFRESH_BRANCH`, the
+drift workflow's branch name and its path filters trimmed to the adopted folders. The edit
+makes both files customized from the first run, which is intended.
 
 The `AGENTS.md` section is rendered whole from `assets/agents-section.md`, appended after
 devbook's section, keyed `AGENTS.md#devbook-derived`, and follows devbook's marker rules —
 rewritten while its text still hashes to what this plugin wrote, reported and left alone once
-it does not. Never write inside devbook's markers.
+it does not. Never write inside devbook's markers. A repository that edits the section has
+taken it over: the next reconcile finds it hashing to nothing this plugin rendered, reports
+it as customized, and leaves it, and `managed: false` in the stamp records that choice.
 
 Offer the `.claude/settings.json` deny rule from `assets/settings-snippet.md`; nothing else
 enforces the `_meta/` rule mechanically. Never apply it silently.

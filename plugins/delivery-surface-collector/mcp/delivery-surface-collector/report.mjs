@@ -91,6 +91,9 @@ export function renderReportMarkdown(run) {
         const note = run.approval.note ? ` — ${run.approval.note}` : "";
         lines.push(`- **Approval:** ${run.approval.state}${decidedAt}${note}`);
     }
+    if (run.runContext && Object.keys(run.runContext).length) {
+        lines.push(`- **Run context:** \`${JSON.stringify(run.runContext)}\``);
+    }
     if (hasWorkItem(run)) {
         const item = run.workItem;
         const label = item.title || item.number || item.url;

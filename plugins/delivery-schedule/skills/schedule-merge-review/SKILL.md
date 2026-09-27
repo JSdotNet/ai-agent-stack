@@ -24,9 +24,27 @@ approval and the merge stay with a person, which is what makes this safe to run 
 
 ## Skill Dependencies
 
-- **`code-review`** — the structured review checklist run over each diff. For a repository
-  that is not .NET, keep the ecosystem-neutral items and drop the `dotnet`-specific ones.
+- The **Checklist** below, carried here because a scheduled session starts with the two
+  delivery plugins and nothing else; a repository that ships a richer review procedure in
+  its own skills folder runs that one as well.
 - `gh` CLI, already authenticated in the session, for every GitHub read and the one write.
+
+## Checklist
+
+For each diff:
+
+- **Correctness** — a branch the change does not handle, an off-by-one, a null or empty
+  case, a return value ignored, a resource opened and not closed.
+- **Behaviour** — a public contract changed without every caller, a default silently moved,
+  an error swallowed or turned into a success.
+- **Concurrency** — shared state written without a lock, an async call not awaited, a
+  cancellation ignored.
+- **Security** — input trusted at a public entry point, a string-built query, authorization
+  missing on a new endpoint, a secret in source or in a log line.
+- **Tests** — new behaviour with no test, a test changed to pass rather than to cover, a
+  suite skipped.
+- **Readability** — a name that says less than the one it replaced, dead code left behind,
+  a comment the code no longer matches.
 
 ## Hard Constraints
 
@@ -68,7 +86,7 @@ approval and the merge stay with a person, which is what makes this safe to run 
    gh pr view <number> --repo <owner>/<repo> --json mergeable,mergeStateStatus,reviewRequests,closingIssuesReferences
    ```
 
-5. Run the `code-review` checklist over the diff. Classify each finding **Blocking**,
+5. Run the **Checklist** over the diff. Classify each finding **Blocking**,
    **Important**, or **Suggestion**, with file and line.
 
 6. Add the merge-state findings: failing or pending checks, `mergeStateStatus` of `BEHIND` or

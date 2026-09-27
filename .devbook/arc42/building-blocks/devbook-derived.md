@@ -25,7 +25,7 @@ file.
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Two skills, one rule, two workflows, and one extension. Everything else this block does at run
+Three skills, one rule, two workflows, and one extension. Everything else this block does at run
 time is a workflow or a script passing `--write` to devbook's checker.
 
 | Interface | Kind | Reached by |

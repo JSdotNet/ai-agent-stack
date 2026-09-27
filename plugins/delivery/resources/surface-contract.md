@@ -32,7 +32,10 @@ capability is split by operation group, because an implementation may answer par
   plugged in as a surface by being named one, and never by answering a name.
   A surface may arrive as a host canvas instead of an MCP server, and then the operation names
   are canvas actions: open the canvas once and invoke the action through whatever the host
-  exposes for that. Canvas actions are matched by operation name.
+  exposes for that. Canvas actions are matched by operation name. On the Copilot CLI that
+  is its three canvas tools — list the capabilities, open a canvas, invoke an action — which
+  is why the runner's allowlist carries `list_canvas_capabilities`, `open_canvas`, and
+  `invoke_canvas_action`.
 - **A group is answered when its operation names are listed.** Resolve a group as absent until
   they are: a group an implementation promises is not a bound one.
 - **The preference order is `bindings["delivery.surface"]`** — a list of `delivery-surface-*`
@@ -84,7 +87,8 @@ that surface's own `runId`:
   each per **Surfacing the Surface** below; a page updates itself live, so it is opened once and
   left open. Then call `start_run` on each with the skill's `skillId`, the full ordered stage list (its own stages
   followed by the shared phase names for its tier), the `changeKind` when known, and
-  `sessionId` from the `session-id` host slot (`engine-contract.md`) when it is bound.
+  `sessionId` from the `session-id` host slot (`engine-contract.md`) when it is bound. A
+  `title` is optional; a surface takes the `skillId` for one when none is sent.
   `start_run` reattaches to an existing `in_progress` run for the same skill and returns
   `resumed: true`; continue from the first stage that is not `done` instead of restarting.
   Surfaces may disagree — one resumed, one fresh: continue from the furthest stage any of
@@ -96,7 +100,11 @@ that surface's own `runId`:
   id beside the earlier ones, never replacing them and never recording one twice. A surface
   that ignores the argument stays conformant.
 - **Persist gating state** with `set_run_context`: the `changeKind` as soon as it is
-  determined, the `approval` decision recorded at every gate, and the resolved model.
+  determined, the `approval` decision recorded at every gate, and, as its `runContext` object,
+  what the runner resolved — the model, point providers, role bindings, tracker, per-point
+  MCP servers, policy values, and gate list — so a resumed session reads it back from
+  `get_run` instead of resolving again. A surface stores the object verbatim and merges a
+  later call over it key by key; a caller may pass only what changed.
 - **Before each stage**, `update_stage` with `status: "in_progress"`; **after each stage**,
   again with `done`, `blocked`, or `skipped` and an `output` summary. The stage's completion
   count increments on every transition to `done`, so repeated passes after requested changes

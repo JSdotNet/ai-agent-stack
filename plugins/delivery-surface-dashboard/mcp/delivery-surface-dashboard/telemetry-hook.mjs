@@ -311,6 +311,14 @@ async function main() {
 
     const active = await readActive();
     if (!active.runId) {
+        // A repository this plugin has never recorded a run in gets no state folder from a
+        // hook that fires in every session on the machine: with no runs directory there is
+        // nothing a later run could absorb, so leave nothing behind.
+        try {
+            await stat(runsDir());
+        } catch {
+            return;
+        }
         // Nothing to attribute telemetry to. Still advance the transcript cursor so a run
         // started later does not absorb the whole earlier conversation as its first stage.
         await skipToTranscriptEnd(sessionId, telemetry, payload.transcript_path);
@@ -404,7 +412,17 @@ async function main() {
 
     // The run is persisted before the warning is emitted: the latch that keeps a threshold
     // from re-announcing on every later tool call lives in the run file.
-    await writeRun(baseDir, run);
+    //
+    // This hook is its own process, so the server may have written a stage update while the
+    // transcript was being folded. Re-read the run and carry over only what this hook owns —
+    // insights, token usage, the context gauge — so a stage the server just marked done is
+    // never reverted by a stale copy.
+    const fresh = await readRun(baseDir, run.id);
+    const target = fresh || run;
+    target.insights = run.insights;
+    target.tokenUsage = run.tokenUsage;
+    target.context = run.context;
+    await writeRun(baseDir, target);
     await writeTelemetry(sessionId, updated);
     if (pressure) emitContextPressure(pressure);
 }

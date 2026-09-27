@@ -130,11 +130,11 @@ For each topic in the configured Topics list:
 
    ### Anthropic Announcements
 
-   #### <commit title / contributed asset> — <date> (<author>)
+   #### <announcement title> — <date>
 
-   <1-2 sentence summary of what was added, updated, or fixed>
+   <1-2 sentence summary of what was announced>
 
-   Commit: <url>
+   Source: <url>
 
    ---
    ```
@@ -161,7 +161,8 @@ For each topic in the configured Topics list:
 
 ### Phase 3 — Follow-Up (Optional)
 
-7. After presenting the digest, ask whether to act on any notable item:
+7. Unattended, the digest is the output and each item that calls for work is named in it.
+   Run by hand, ask whether to act on any notable item:
    - If an Aspire release contains breaking changes: offer to invoke `flow-update-packages`
      as a framework upgrade to assess impact on the current solution.
    - If a Claude Code release introduces a new capability relevant to the configured

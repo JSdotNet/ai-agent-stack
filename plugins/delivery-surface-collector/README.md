@@ -95,6 +95,9 @@ and the summary.
 
 ## Developing it
 
+`manifest.json` and `.mcpbignore` beside the server describe the `.mcpb` bundle target; the tool
+list in `manifest.json` is kept by hand and mirrors `tools[]` in `mcp-server.mjs`.
+
 ```bash
 node dev/collector-test.mjs
 ```

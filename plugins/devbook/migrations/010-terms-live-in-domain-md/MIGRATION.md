@@ -24,7 +24,7 @@ the file, and rewrites every reference that pointed into it.
 
 The ubiquitous language is the model. A registry that names what the model
 already names is a second copy, and it goes stale on the side nobody reads —
-which is what the merge behind record 45 found: twenty-eight of seventy-three
+which is what the merge behind the chapter-schema decision found: twenty-eight of seventy-three
 terms restated a chapter beside them. Record 45 made the file optional and
 stopped using it; this finishes the move, so that resolving a term never has
 to ask which of two layouts a context picked. The decision is

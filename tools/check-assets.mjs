@@ -42,7 +42,7 @@
 //                 "Install")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
 //                 an error (see the decision "Budgets Are Disclosure Triggers, Not Gates"
-//                 and debt record 1)
+//                 and debt record 1-body-budgets-unenforced)
 //
 // Dependency-free ESM against node: built-ins, like everything else executable here.
 

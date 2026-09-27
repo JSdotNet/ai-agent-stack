@@ -38,7 +38,7 @@ const FOLDER_PREFIXES = [
 ];
 
 // Every devbook folder lives under one `.devbook/` parent whose subfolders drop the dot
-// (record 80). Stripping the parent is what lets a path classify through the table above,
+// (the chapter-schema decision). Stripping the parent is what lets a path classify through the table above,
 // which keeps the dotted names the convention calls the folders by.
 const DEVBOOK_ROOT = ".devbook";
 

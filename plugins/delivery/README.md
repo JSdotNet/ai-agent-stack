@@ -22,6 +22,7 @@ instead of by repository.
 | `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-validation`, `phase-personal-validation` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
+| `init`, `update` (2) | The engine's stamp under `components.delivery`, written once and moved forward; hidden from the menu and reached through `devbook-config` |
 | Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
 
 One flow, `flow-spec`, carries a change to any of the five devbook folders — `arc42/`,
@@ -160,6 +161,8 @@ skill changes who runs capture, never whether it runs.
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
+| `resources/config.local-template.json` | A starting point for the personal overlay, copied outside the repository |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
+| `hooks/hooks.json`, `hooks.json`, `hooks/session-start-context.md` | The session-start routing guidance: a guarded command hook for Claude Code, a prompt hook for Copilot, one text |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |

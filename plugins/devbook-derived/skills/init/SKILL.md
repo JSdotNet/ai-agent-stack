@@ -37,7 +37,9 @@ files customized from the first run, which is intended.
 The `AGENTS.md` section is rendered whole from `assets/agents-section.md`, appended after
 devbook's section, keyed `AGENTS.md#devbook-derived`, and follows devbook's marker rules —
 rewritten while its text still hashes to what this plugin wrote, reported and left alone once
-it does not. Never write inside devbook's markers.
+it does not. Never write inside devbook's markers. A repository that edits the section has
+taken it over: the next reconcile finds it hashing to nothing this plugin rendered, reports
+it as customized, and leaves it, and `managed: false` in the stamp records that choice.
 
 Offer the `.claude/settings.json` deny rule from `assets/settings-snippet.md`; nothing else
 enforces the `_meta/` rule mechanically. Never apply it silently.

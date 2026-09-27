@@ -17,10 +17,6 @@ Render it from devbook's stamp, never from disk:
       Refresh them with `./build/Update-DevbookIndex.ps1`, or let the scheduled job
       reconcile the default branch.
 
-  One that ships no `build/` keeps a single path, and a session is not it:
-
-      Never regenerate or commit them in a session — the scheduled job owns that refresh.
-
 - Change nothing else. A wording change belongs in this template.
 
 ```markdown

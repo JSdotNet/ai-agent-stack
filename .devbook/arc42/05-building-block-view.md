@@ -346,7 +346,7 @@ That capture is Claude-only, and structurally so rather than by omission. It shi
 `hooks/hooks.json` and no root `hooks.json`, because the hook reads the session transcript and
 writes the run store — work a Copilot `type: prompt` hook cannot do. So the substitutability the
 table describes holds per capability group and not per host: a Copilot run bound to this plugin
-gets the same lifecycle tools and the same panels, with the telemetry figures absent rather than
+through the repository's own MCP configuration gets the same lifecycle tools and the same panels, with the telemetry figures absent rather than
 wrong. Nothing in the contract names telemetry, which is why this costs a column and not a
 group.
 

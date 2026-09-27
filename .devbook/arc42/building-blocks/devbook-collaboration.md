@@ -70,7 +70,7 @@ related: [".devbook/arc42/building-blocks/devbook-collaboration.md#approval", ".
 ```
 
 Record that a person read this chapter and approved it, in devbook's own rung with a
-signature and a date, and clear this block's namespace and the chapter's resolved notes in the
+signature and a date, and delete the review triad and sweep the chapter's resolved notes in the
 same change.
 
 An open `kind: question` note blocks it outright: devbook's check reports an approval standing
@@ -294,7 +294,7 @@ related: [".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotation
 Also called: sign-off, agreed.
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,
-and clears this block's namespace in the same change.
+and deletes the review triad in the same change.
 
 Invocation semantics: command-invoked, and never anything else. It is the one operation here
 that writes a field this block does not own, so it runs only where a person chose it in that

@@ -58,7 +58,7 @@ chapter that never appears in the queue.
    `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` — different
    is stale, exactly, with no git and no caveat. Only where it carries none,
    fall back to comparing `approved-at` with the last commit that touched the
-   chapter's own lines — `git log -1 --format=%ad --date=short -L` over its
+   chapter's own lines — `git log -1 --format=%ad --date=short -L <start>,<end>:<file>` over its
    heading range, or the file's last commit when the range is unclear. Say
    which of the three you used; a file-level answer over-reports a chapter in a
    busy file, and reporting it as exact would be wrong.

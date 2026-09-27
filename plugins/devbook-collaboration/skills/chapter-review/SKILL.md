@@ -69,7 +69,7 @@ lens is a review that misses the finding.
    yourself, `--after` naming the passage when it is about one:
 
    ```
-   node .devbook/_tools/devbook-meta/annotations.mjs add --chapter <path#slug>        --after "<the passage>" --kind question --author <you> --body "<the finding>"
+   node .devbook/_tools/devbook-meta/annotations.mjs add --chapter <path#slug> --after "<the passage>" --kind question --author <you> --body "<the finding>"
    ```
 
    `--kind question` when the chapter cannot be judged until somebody answers;

@@ -42,7 +42,8 @@ jobs:
 
       - name: Report drift in the committed indexes
         run: |
-          node .devbook/_tools/devbook-meta/build.mjs --write
+          # devbook-meta.yml already fails on a broken reference; this job only warns.
+          node .devbook/_tools/devbook-meta/build.mjs --write || true
           # git status, not git diff: an index written for the first time is untracked.
           if [ -n "$(git status --porcelain -- '*_meta/*.json')" ]; then
             echo "::warning::Derived _meta indexes have drifted. This does not block the merge — the nightly refresh reconciles it. To refresh this branch now: ./build/Update-DevbookIndex.ps1"

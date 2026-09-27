@@ -143,6 +143,19 @@ chapters. The old names validate with a warning for one release, and
 `017-invariants-under-domain` moves them, because a moved path is broken in every repository
 until a script moves it.
 
+**A shared type's rules pair with its grouping.** Contract 14 let an invariants chapter pair
+with an `aggregate` or a `domain-service`, and nothing else. A value object or enum more than
+one aggregate uses lives under `## Shared Value Objects` or `## Shared Enums` on `domain.md`
+precisely because it belongs to no aggregate, so its own rules — an IBAN normalised and
+MOD-97-checked in its constructor — had nowhere to pair: a consumer pinned them under one
+aggregate that happened to use the type, where a reader meets context-wide rules as that
+aggregate's, and another context in the same repository recorded none. Contract 19 adds the two
+grouping kinds to the pairing, and nothing more. `entity` and `value-object` stay out: an owned
+type's rules already sit under the aggregate that owns it, and a pairing of their own would give
+one rule two homes. The placement warning needs no change, because the groupings live on
+`domain.md`, which never splits, so their chapter can only sit in `domain.invariants.md`. Only
+widening what `related` may name, it owes no migration.
+
 **A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
 `model.md`, and
 `flow.md` each grow with the context, and a reader looking for one aggregate should not have
@@ -255,6 +268,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-27 | An invariants chapter may pair with the `## Shared Value Objects` or `## Shared Enums` grouping, so a shared type's own rules sit in `domain.invariants.md` beside it instead of under an aggregate that uses it; owned entities and value objects keep their rules under their aggregate. Contract 19, additive, no migration. |
 | 2026-09-26 | A `domain/` file's title names what the page holds: `context.md` the context, every other base file its kind, a split file its chapter, an unnamed page its subject, `context-map.md` the product. The context-name title is no longer the rule. No contract, no migration: the check reads no title and an anchor never derives from one, so an old title validates. |
 | 2026-09-25 | An `### Invariant:` carries no `#### Scenario:` — a claim, its rejection code, and `Enforced at:`, proved by its `unit` test; a missing scenario warns on a requirement only, and one an older invariant carries is tolerated. `requirements.md` is titled `# Requirements` and an invariants subpage `# Invariants`. Contract 18, migration 018, which retitles. |
 | 2026-09-25 | Invariants are a subpage of their domain page: `domain.invariants.md`, and `domain.<name>.invariants.md` beside a split `domain.<name>.md`, typed `invariants` by the trailing suffix and read directly after the page. A chapter whose aggregate sits on another page is a warning; the old `invariants.md` and `invariants.<name>.md` validate with a warning for one release. Requirements keep `requirements.md`. Contract 17, migration 017. |

@@ -484,7 +484,10 @@ rewrites every reference into them. The old names validate with a warning for on
 code, and `Enforced at:`, proved by its `unit` test — so only a requirement is warned for
 having none, and a scenario an older invariant carries is tolerated. It titles the behaviour
 files by kind, `# Requirements` and `# Invariants`, and ships as `018-behaviour-titles`,
-which retitles them; an old title still validates.
+which retitles them; an old title still validates. 19 lets an `invariants` chapter pair with the
+`shared-value-objects` or `shared-enums` grouping as well, so a shared type's own rules sit in
+`domain.invariants.md` beside it; it only widens what `related` may name, and ships no
+migration.
 
 ## Folder structure
 

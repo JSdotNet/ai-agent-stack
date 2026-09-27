@@ -614,7 +614,7 @@ function render(model) {
     }
     for (const layer of repo.overlays.filter((l) => l.present)) {
         const touches = layer.keys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key';
-        const ext = layer.ext.length ? `, and carries \`ext.${layer.ext.join('`, `ext.')}\` for the plugins of those names` : '';
+        const ext = layer.ext.length ? `, and carries \`ext.${layer.ext.join('`, `ext.')}\` for the components of those names` : '';
         const scope = {
             user: 'true of this user in every repository',
             repository: `true of this user in the repository whose id is \`${repo.id}\``,

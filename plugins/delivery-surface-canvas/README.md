@@ -13,8 +13,10 @@ content belongs to a different implementation of the same contract.
 A Copilot plugin, and only that. It ships no Claude manifest and is not listed in
 `.claude-plugin/marketplace.json`, because a canvas panel is the one thing it needs and
 Claude Code has none — there, `delivery-surface-dashboard` answers the render capability. Install
-it the way the Copilot CLI installs a plugin; the extension is plain Node with no npm
-dependencies beyond the SDK the CLI resolves itself, and starts when the canvas opens.
+it with the Copilot CLI's plugin install command, pointed at this folder or at the
+marketplace checkout; the extension is plain Node with no npm dependencies beyond the SDK
+the CLI resolves itself. Its local transport listens on 127.0.0.1 from the moment the
+extension loads, before any canvas opens.
 
 ## What it implements
 

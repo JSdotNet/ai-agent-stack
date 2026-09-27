@@ -530,6 +530,15 @@ export async function buildGraph(repoRoot, folders = null) {
                         message: `${node.id} has \`${field}\` reference "${ref}" that resolves to a ${targetKind ? `\`${targetKind}\` chapter` : "heading or file"}, not a \`${expectedKind}\` chapter — point it at the switch's own chapter in the context's \`context.md\`.`,
                     });
                 }
+                // tech/ points depends-on at tech/ alone; a relation to another folder is
+                // `related`, per the tech rule.
+                if (field === "depends-on" && node.folder === "tech" && folderKindForPath(targetPath) !== "tech") {
+                    problems.push({
+                        severity: "warning",
+                        path: node.path,
+                        message: `${node.id} has \`depends-on\` reference "${ref}" outside tech/; tech/ uses \`related\` for a chapter in another folder.`,
+                    });
+                }
                 edges.push({
                     id: `${edgeType}:${node.id}->${ref}`,
                     source: node.id,

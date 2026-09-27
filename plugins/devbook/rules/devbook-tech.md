@@ -160,8 +160,8 @@ Omit every optional field that has no value (no `related: []`, no
 - Every technology appears exactly **once**, in the layer that owns it. If two
   layers use the same technology, document it in `shared.md` and point at it
   with `depends-on` from the layer chapters.
-- `depends-on` must reference an existing `tech/` chapter. Do not point it at
-  `arc42/`/`domain/` — use `related` for those.
+- `depends-on` must reference an existing `tech/` chapter; the check warns on one that
+  points elsewhere. Do not point it at `arc42/`/`domain/` — use `related` for those.
 - Keep `technology-graph.md`'s Mermaid diagram in sync with the `depends-on`
   edges in the layer files whenever a node or edge is added, removed, or
   renamed, and run the check in the same change:

@@ -98,6 +98,10 @@ const annotations = await collectAnnotations(REPO_ROOT, folders);
 let errorCount = 0;
 const printed = { folders, scopes: {} };
 
+// A repository-wide problem projects into every scope's document and the rollup; it is
+// printed and counted once.
+const reported = new Set();
+
 async function emit(outPath, document, summary) {
     if (!checkOnly) {
         const absoluteOut = path.resolve(REPO_ROOT, outPath);
@@ -106,6 +110,8 @@ async function emit(outPath, document, summary) {
     }
     log(`${checkOnly ? "checked" : "wrote  "} ${outPath.padEnd(26)} ${summary}`);
     for (const problem of document.problems) {
+        if (reported.has(problem.message)) continue;
+        reported.add(problem.message);
         log(`  [${problem.severity}] ${problem.message}`);
         if (problem.severity === "error") errorCount++;
     }

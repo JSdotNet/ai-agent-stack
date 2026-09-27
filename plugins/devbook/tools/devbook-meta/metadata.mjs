@@ -1619,12 +1619,14 @@ export function validateDocument(relPath, markdown) {
 
     const { fileTitle, fileMeta, chapters } = parseDocument(markdown);
     for (const issue of escapeSequenceIssues(markdown)) {
-        issues.push({ severity: issue.severity, message: `${relPath} ${issue.message}` });
+        // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
+        issues.push({ severity: issue.severity, message: issue.message });
     }
     // Annotations are authored Markdown in the same file, so they are linted
     // here rather than by a second pass a repository could forget to run.
     for (const issue of annotationIssues(markdown)) {
-        issues.push({ severity: issue.severity, message: `${relPath} ${issue.message}` });
+        // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
+        issues.push({ severity: issue.severity, message: issue.message });
     }
     const allowedStatus = STATUS_BY_FOLDER[kind];
     const resting = restingStatusFor(kind);

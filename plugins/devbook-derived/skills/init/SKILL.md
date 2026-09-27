@@ -30,9 +30,9 @@ derive with — run `devbook:init` first.
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook-derived:begin -->` and `<!-- devbook-derived:end -->` | always |
 | `rules/devbook-derived-artifacts.md` and its `paths` | `.agents/rules/`, `.claude/rules/`, `.github/instructions/` — the trio devbook's `assets/rule-wrappers.md` describes | always |
 
-Both workflows are edited on the way in — branch name, the nightly `cron` and
-`REFRESH_BRANCH`, and the path filters trimmed to the adopted folders. The edit makes both
-files customized from the first run, which is intended.
+Both workflows are edited on the way in — the nightly's `cron` and `REFRESH_BRANCH`, the
+drift workflow's branch name and its path filters trimmed to the adopted folders. The edit
+makes both files customized from the first run, which is intended.
 
 The `AGENTS.md` section is rendered whole from `assets/agents-section.md`, appended after
 devbook's section, keyed `AGENTS.md#devbook-derived`, and follows devbook's marker rules —

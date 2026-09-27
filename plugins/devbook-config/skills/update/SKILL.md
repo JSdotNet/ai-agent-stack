@@ -7,6 +7,8 @@ description: 'Move a repository''s whole configured stack forward in one run —
 
 Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+This file exceeds the 40-line body budget on purpose: it is one staged procedure over every component — look, plan, fan out, re-validate — and the scope table is what keeps a stamp from being dropped.
+
 ## Purpose
 
 One skill for the whole stack. It is `devbook-config:init`'s other half — init writes the

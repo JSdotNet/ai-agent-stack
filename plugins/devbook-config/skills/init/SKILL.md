@@ -7,6 +7,8 @@ description: 'Set a repository up for this marketplace for the first time — de
 
 Open the reply with `devbook-config@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+This file exceeds the 40-line body budget on purpose: it is one staged procedure — look, decide, write, validate, fan out — and a stage stated by half writes a config by half.
+
 ## Purpose
 
 Turn a repository with no stack config into one the engine can run in. This runs **before any

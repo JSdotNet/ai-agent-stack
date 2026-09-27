@@ -62,6 +62,7 @@ const SCOPE = {
     blocked: 'stamped here, not installed on this machine',
     frozen: 'stamped here, not enabled in this checkout',
     adoptable: 'installed and enabled, never adopted here',
+    enabled: 'installed and enabled; stamps nothing by design, so nothing to reconcile',
     available: 'installed, not enabled, not adopted',
     'out-of-scope': 'not installed and not adopted',
 };
@@ -310,7 +311,9 @@ function buildPluginRows(catalogs, installed, enabled, marketplace, components) 
         let scope;
         if (!here) scope = stamp ? 'blocked' : 'out-of-scope';
         else if (isEnabled === false) scope = stamp ? 'frozen' : 'available';
-        else scope = stamp ? 'reconcile' : 'adoptable';
+        // A plugin with no stamp to write — a surface, the review plugin, this one — is
+        // never 'adoptable': there is no init to offer, and enabling it was the adoption.
+        else scope = stamp ? 'reconcile' : stampName ? 'adoptable' : 'enabled';
 
         return {
             name,
@@ -429,6 +432,8 @@ function buildRepository(repoRoot) {
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
         roles: config?.bindings?.['delivery.roles'] ?? null,
         mcp: config?.bindings?.['delivery.mcp'] ?? null,
+        surface: config?.bindings?.['delivery.surface'] ?? null,
+        slots: config?.bindings?.['delivery.slots'] ?? null,
         mcpServers: mcpServers(repoRoot, config?.bindings?.['delivery.mcp']),
         extensions: config?.extensions ?? null,
         policy: config?.policy ?? null,
@@ -461,6 +466,11 @@ function describeStamp(stamp) {
         parts.push(stamp.enabled.length
             ? `enabled \`${stamp.enabled.join('`, `')}\``
             : 'nothing enabled');
+    }
+    // A hand-written entry — the dashboard's sessionNaming, per
+    // .devbook/arc42/adr/configuration.md — carries none of the stamp fields; name what it does carry.
+    if (!parts.length && stamp && typeof stamp === 'object' && Object.keys(stamp).length) {
+        parts.push('hand-written: ' + Object.keys(stamp).map((k) => '`' + k + '`').join(', '));
     }
     return parts.join('; ') || '-';
 }
@@ -604,7 +614,7 @@ function render(model) {
     }
     for (const layer of repo.overlays.filter((l) => l.present)) {
         const touches = layer.keys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key';
-        const ext = layer.ext.length ? `, and carries \`ext.${layer.ext.join('`, `ext.')}\` for the plugins of those names` : '';
+        const ext = layer.ext.length ? `, and carries \`ext.${layer.ext.join('`, `ext.')}\` for the components of those names` : '';
         const scope = {
             user: 'true of this user in every repository',
             repository: `true of this user in the repository whose id is \`${repo.id}\``,
@@ -636,6 +646,14 @@ function render(model) {
         out.push('### Roles and tracker');
         out.push('');
         out.push(`Tracker: ${describeValue(repo.tracker ?? undefined)}`);
+        out.push('');
+        out.push(Array.isArray(repo.surface)
+            ? `Surfaces, in binding order: ${repo.surface.map((s) => `\`${s}\``).join(', ') || 'none'}`
+            : 'No `delivery.surface` binding - every installed surface records the run; usually set per machine in an overlay.');
+        out.push('');
+        out.push(repo.slots && typeof repo.slots === 'object' && Object.keys(repo.slots).length
+            ? table(['Slot', 'Bound to'], Object.entries(repo.slots).map(([k, v]) => [`\`${k}\``, describeValue(v)]))
+            : 'No `delivery.slots` binding - every host slot takes its documented default.');
         out.push('');
         out.push(repo.roles
             ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v) + warn('delivery.roles', k)]))
@@ -697,7 +715,7 @@ function render(model) {
                     const versioned = COMPONENTS[name]?.contract ?? null;
                     return [
                         `\`${name}\``,
-                        stamp?.pluginVersion ?? '-',
+                        stamp?.pluginVersion ?? (COMPONENTS[name] ? '-' : 'no stamp'),
                         describeStamp(stamp),
                         versioned === false
                             ? 'payload-only'
@@ -736,13 +754,18 @@ function render(model) {
     out.push('');
 
     if (model.deliverySkills || model.scheduleSkills) {
-        const grouped = { flow: [], phase: [], schedule: [], other: [] };
+        const grouped = { flow: [], phase: [], schedule: [], other: [], scheduleOther: [] };
         for (const skill of model.deliverySkills ?? []) {
             if (skill.startsWith('flow-')) grouped.flow.push(skill);
             else if (skill.startsWith('phase-')) grouped.phase.push(skill);
             else grouped.other.push(skill);
         }
-        for (const skill of model.scheduleSkills ?? []) grouped.schedule.push(skill);
+        // Only a schedule-* skill is an entry point; init, update, and the two that read the
+        // scheduler are the plugin's own, and a chapter quoting the true count is not drift.
+        for (const skill of model.scheduleSkills ?? []) {
+            if (skill.startsWith('schedule-')) grouped.schedule.push(skill);
+            else grouped.scheduleOther.push(skill);
+        }
         out.push('## Procedures the plugins on disk ship');
         out.push('');
         out.push(table(
@@ -752,6 +775,7 @@ function render(model) {
                 ['`phase-*`', '`delivery`', grouped.phase.length, grouped.phase.join(', ') || '-'],
                 ['other', '`delivery`', grouped.other.length, grouped.other.join(', ') || '-'],
                 ['`schedule-*`', '`delivery-schedule`', grouped.schedule.length, grouped.schedule.join(', ') || '-'],
+                ['other', '`delivery-schedule`', grouped.scheduleOther.length, grouped.scheduleOther.join(', ') || '-'],
             ],
         ));
         out.push('');

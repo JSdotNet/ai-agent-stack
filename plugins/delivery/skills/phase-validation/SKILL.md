@@ -94,9 +94,9 @@ and only one is a real outage:
   per call — Aspire renamed its query tools from `get_*` to `list_*` and dropped metrics
   entirely. Resolve the current name from the tool list; this is not a missing server.
 - **Wrong prefix in an allowlist.** A plugin-provided MCP server is namespaced with its
-  plugin, so the QA servers surface as `mcp__plugin_qa_aspire__*` and
-  `mcp__plugin_qa_playwright__*`, and only as `mcp__aspire__*` / `mcp__playwright__*` when
-  registered directly in a repository's MCP configuration. An allowlist naming the wrong form
+  plugin, and only a server registered directly in a repository's MCP configuration surfaces
+  under its bare id — the two shapes `flow-execution-model.md` gives for a bound server. An
+  allowlist naming the wrong form
   matches nothing, and the child agent loses every tool of that server while the parent
   session still has them.
 

@@ -2,7 +2,7 @@
 name: sre-alerts-to-work-items
 description: >
   Create work items from active Azure Monitor SRE alerts, in whatever tracker the repository
-  binds — GitHub issues, Jira tickets, or Markdown chapters.
+  binds — GitHub issues, Jira tickets, Backlog entries, or Markdown chapters.
   Use when: triaging Azure alerts, translating SRE incidents to tracked work,
   syncing Azure Monitor findings to the backlog, bulk item creation from an alert feed.
 ---

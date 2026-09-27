@@ -27,9 +27,8 @@ re-reads.
 
 ## Skill Dependencies
 
-- **`code-review`** — its security checklist items (input validation, parameterised queries,
-  no secrets in source, authorization on every entry point) run over the scope in the code
-  layer.
+- The security items under **Phase 4 — Code**, carried here because a scheduled session
+  starts with the two delivery plugins and nothing else.
 - `gh` CLI for issue reads and writes; `dotnet` and `npm` where the repository uses them.
 
 ## Hard Constraints
@@ -86,7 +85,7 @@ re-reads.
 
 ### Phase 4 — Code
 
-6. Run the `code-review` checklist's security items over the scope: unvalidated input at
+6. Run these security items over the scope: unvalidated input at
    public entry points, string-built queries, authorization missing on an endpoint or handler,
    insecure deserialization, and secrets read from source instead of configuration. Classify
    each **High**, **Medium**, or **Low** by reachability from an untrusted input.

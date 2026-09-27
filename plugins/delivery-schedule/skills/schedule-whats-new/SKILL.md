@@ -27,8 +27,8 @@ is enriched with any Jira ticket or GitHub issue reference it can be traced back
   when a Jira MCP tool is not available to fetch live ticket data).
 - First-run look-back window: number of days of merged-PR history to report when a repo has no
   prior checkpoint (default: `7`).
-- State file path (optional; default: `.github/delivery/whats-new.json` relative to the
-  repository this skill is run from — i.e. the control repo, not the tracked repos).
+- State file path (optional; default: `<config dir>/whats-new/<owner>-<repo>.json`, outside
+  every repository: a checkpoint is a fact about this machine's last run, never about the tree).
 
 ## Skill Dependencies
 
@@ -39,7 +39,7 @@ when no Jira tool is available.
 
 ## State Model
 
-Maintain one JSON file (path from Inputs, default `.github/delivery/whats-new.json`) with
+Maintain one JSON file (path from Inputs, default under `<config dir>/whats-new/`) with
 one entry per repo:
 
 ```json

@@ -129,6 +129,12 @@ try {
 
     const context = await call("set_run_context", { runId: run.runId, approval: "approved", approvalNote: "Ship it." });
     check("the gate decision is persisted, gate-agnostically", context.approval.state === "approved", JSON.stringify(context.approval));
+    const resolved = await call("set_run_context", { runId: run.runId, runContext: { model: "opus", tracker: "github", policy: { "qa.depth": "skipped" } } });
+    check("the resolved run context is stored verbatim", resolved.runContext.model === "opus" && resolved.runContext.policy["qa.depth"] === "skipped", JSON.stringify(resolved.runContext));
+    const merged = await call("set_run_context", { runId: run.runId, runContext: { model: "sonnet" } });
+    check("a later context merges over the earlier one, key by key", merged.runContext.model === "sonnet" && merged.runContext.tracker === "github", JSON.stringify(merged.runContext));
+    const readBack = await call("get_run", { runId: run.runId });
+    check("get_run returns the stored context", readBack.runContext && readBack.runContext.tracker === "github", JSON.stringify(readBack.runContext));
 
     // --- the handoff round trip ---------------------------------------------
     await call("update_stage", { runId: run.runId, stageName: "Summary", status: "in_progress" });

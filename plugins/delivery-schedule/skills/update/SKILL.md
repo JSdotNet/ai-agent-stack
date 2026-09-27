@@ -31,14 +31,17 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 4. **Resolve the scheduler** from the live tool list, per the contract. None: print every
    finished prompt with its cron for the host's own page, then continue at step 7.
 5. **Read `ext.schedule`** — `environment` and `model` — from `config.ext.schedule` in the
-   output of `node tools/stack-config/check.mjs --print`, run from the delivery plugin's root,
-   and ask once for whichever is absent. Both are personal: they go to the scheduler and never into the repository. Offer
+   output of the delivery plugin's `tools/stack-config/check.mjs --print`, run from the
+   repository root, and ask once for whichever is absent. Both are personal: they go to the scheduler and never into the repository. Offer
    to remember an answer under `ext.schedule` in the user layer, `<config dir>/config.local.json`;
    write that key alone, leaving the rest of the file as it is.
 6. **Create or update.** For each selected schedule, build the prompt — preamble, blank line,
    body, placeholders substituted — then `list` and match on `<owner>/<repo> · <title>`:
    `update` on a match, `create` otherwise, with the cron (the stamp's override when it has
-   one), the tools, the repository, and `enabled: true`. Then set `enabled: false` on every
+   one), the tools, the repository, and `enabled: true`. A local scheduler — *Two shapes of
+   scheduler* in the contract — takes the cron converted to this machine's timezone, the
+   checkout as its working folder, and the local-run paragraph in front of the prompt; the
+   report shows the catalog's cron beside the converted one. Then set `enabled: false` on every
    entry carrying this repository's name prefix that is no longer selected, and say that
    deleting one is done on the host's own page.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —

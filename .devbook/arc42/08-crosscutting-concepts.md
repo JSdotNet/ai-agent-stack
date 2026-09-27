@@ -366,7 +366,8 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc4
 
 A component's entry under `components` in `.devbook/config.json`, recording what that plugin
 put in the repository: the plugin version it is on, and every file copied in or marker-fenced
-section written with the hash it had when it landed. A component whose install rewrites content
+section written with the hash it had when it landed, computed by the hash rules in devbook's
+reconcile protocol. A component whose install rewrites content
 the repository authored carries three fields more — the contract version, which features it
 adopted, and the [migration](#migration) ledger — and `devbook` is
 [the only one](adr/install.md). One that writes no files stamps its own selection in place of
@@ -430,7 +431,7 @@ plugins it may name. A lower layer never names a higher one.
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
 | L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration` |
 | L2b bridge | Two stacks at once, deliberately | none |
-| L3 surface | Neither direction. Reads generated files | none — `devbook-graph` ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
+| L3 surface | Neither direction, and never declared: resolved from the live tool list | the four `delivery-surface-*` plugins — a surface is not a layer, as the sentence below says; `devbook-graph` is not one either, ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
 The layer is not a field in any manifest — it is what the `dependencies` array says, read as a
 sentence. A surface is not a layer in the dependency sense at all: it is resolved from the live

@@ -23,7 +23,7 @@ skill runs them: `devbook:init` where there is no stamp and refuses where there 
 | New repository | no stamp file | It asks which folders to adopt. Everything after is identical. |
 | New plugin version | stamped `pluginVersion` below the installed one | Runs the migration delta; re-materializes stale assets. |
 | Adoption changed | `adopted` differs from what is on disk | Materializes what is newly needed; orphans what nothing claims. |
-| Migration only | stamped `contractVersion` below the plugin's | Ledger forward, no asset movement. |
+| Migration only | a shipped migration id absent from the ledger | Ledger forward, no asset movement. |
 
 None of these is a separate procedure. Detect, resolve, plan, migrate,
 materialize, stamp — every time.
@@ -66,10 +66,20 @@ whose install rewrites content the repository authored, which is devbook alone:
 | Field | Means |
 |---|---|
 | `pluginVersion` | The devbook release that last reconciled this repository. |
-| `contractVersion` | The schema contract the repository is on. Migrations key off this, not off `pluginVersion`, which is why most upgrades reconcile to nothing. |
+| `contractVersion` | The schema contract the repository is on, for reporting. A migration runs on its id being absent from the ledger, never on a version comparison — which is why most upgrades reconcile to nothing. |
 | `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
+
+**Hash rules**, so a stamp written on one machine reads the same on another:
+
+- A file: `sha256:` over its UTF-8 content with every CRLF read as LF, so a checkout's
+  line-ending setting never turns a shipped copy into a customized one.
+- A folder (`.devbook/_tools/<tool>`): `sha256:` over the concatenation, for each file under
+  it in sorted POSIX relative-path order, of the relative path, a newline, the file's content
+  as above, and a newline.
+- A section (`AGENTS.md#<name>`): the file rule over the lines between the two marker lines,
+  markers excluded, ending in one newline.
 | `migrations` | Append-only ledger of `{ "id", "applied" }` entries, one per migration folder run, oldest first. An entry may carry `"result": "not-applicable"` instead of `applied` where the migration's `appliesTo` names no adopted folder. An entry outlives its folder: a major release drops the folders below the floor, and the ledger keeps recording that they ran. |
 
 `contractVersion`, `adopted`, and `migrations` are devbook's three; `pluginVersion`
@@ -79,7 +89,9 @@ replaced, which *is* the migration, and a copy hashing to nothing shipped is the
 repository's and is never overwritten, ledger or not. So a payload-only component
 stamps two fields — or `pluginVersion` alone beside whatever selection it recorded
 elsewhere — and neither ships a `migrations/` folder nor runs the six phases below. A
-plugin that materializes nothing stamps nothing.
+plugin that materializes nothing stamps nothing. A hand-written entry under `components` —
+a surface's `sessionNaming`, per the configuration decision in the repository's devbook — is
+that component's key, not a stamp: nothing reconciles it, and no plugin writes it.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the

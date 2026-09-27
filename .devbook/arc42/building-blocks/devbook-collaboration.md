@@ -70,7 +70,7 @@ related: [".devbook/arc42/building-blocks/devbook-collaboration.md#approval", ".
 ```
 
 Record that a person read this chapter and approved it, in devbook's own rung with a
-signature and a date, and clear this block's namespace and the chapter's resolved notes in the
+signature and a date, and delete the review triad and sweep the chapter's resolved notes in the
 same change.
 
 An open `kind: question` note blocks it outright: devbook's check reports an approval standing
@@ -186,8 +186,8 @@ classDiagram
     ChapterReview --> Reviewer : names one
     ChapterReview --> ReviewState : is in
     Approval --> ChapterReview : clears
-    Approval --> MetaBlock : writes status, approved-by, approved-at
-    Acceptance --> MetaBlock : writes status, accepted-by, accepted-at
+    Approval --> MetaBlock : writes status, approved-by, approved-at, approved-hash
+    Acceptance --> MetaBlock : writes status, accepted-by, accepted-at, accepted-hash
     Acceptance --> Approval : stands on
     ReviewQueue --> ChapterReview : reads many, writes none
 ```
@@ -294,7 +294,7 @@ related: [".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotation
 Also called: sign-off, agreed.
 
 The decision that writes devbook's own `approved` rung, with `approved-by` and `approved-at`,
-and clears this block's namespace in the same change.
+and deletes the review triad in the same change.
 
 Invocation semantics: command-invoked, and never anything else. It is the one operation here
 that writes a field this block does not own, so it runs only where a person chose it in that
@@ -462,7 +462,7 @@ stateDiagram-v2
     ChangesRequested --> Requested: author revises and hands back
     Cleared --> Requested: content changed again
     Cleared --> Approved: chapter-approve, a person chooses it
-    ChangesRequested --> Approved: an approver overrides, findings cleared with the rest
+    ChangesRequested --> Approved: an approver overrides — open notes stay on the chapter, and an open question refuses it
     Approved --> NoState: content changes, and rung, signature and date come off
     Approved --> ChangesRequested: chapter-approve lifts the rung over notes raised since it
     NoState --> [*]

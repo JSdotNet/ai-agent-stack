@@ -68,7 +68,8 @@ the user it will rewrite the branch, and never on a branch someone else is worki
    git --no-pager status --short
    ```
 
-   If there are uncommitted changes, stop and ask the user to commit or stash first.
+   If there are uncommitted changes, stop and ask the user to commit them, or to set them
+   aside as a temporary commit — never a stash, whose stack is shared across worktrees.
 
 3. Fetch the base:
 

@@ -17,8 +17,8 @@
 //      not read back as live.
 
 // A gate legitimately waits on a human, so the threshold has to be longer
-// than a lunch break and shorter than a night. SessionEnd covers the common case exactly;
-// this is the backstop for a session left open.
+// than a lunch break and shorter than a night. This collector sees no session end, so the
+// threshold is the whole signal.
 export const DEFAULT_IDLE_AFTER_MS = 4 * 60 * 60 * 1000;
 
 export function idleAfterMs() {

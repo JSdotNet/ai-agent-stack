@@ -189,7 +189,7 @@ related: [".devbook/arc42/12-glossary.md#canvas", ".devbook/tech/hosts.md#copilo
 Registers the two canvases, serves the viewer pages on a loopback origin at an ephemeral port,
 and pushes view changes to the open page.
 
-Event-triggered — it starts when a canvas opens. It is a service rather than behaviour on
+Event-triggered — it listens from extension load. It is a service rather than behaviour on
 [View](#view) because it is the one part of this block that knows a host exists, and keeping
 that knowledge in one place is what lets the viewers themselves stay plain pages.
 
@@ -202,7 +202,7 @@ server.
 | --- | --- | --- |
 | It registers exactly the two canvases, and pushes view changes to the open page | canvas registration | untested |
 | Viewer pages are served on a loopback origin at an ephemeral port | server start | untested |
-| The transport starts when a canvas opens, never before | extension start | untested |
+| The transport listens on 127.0.0.1 from the moment the extension loads | extension start | untested |
 
 ## Runtime
 

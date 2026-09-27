@@ -279,12 +279,15 @@ const tools = [
                     description: "The host's own id for the agent session driving this run. Recorded in the run's sessionIds; a reattached run appends it beside the earlier ids rather than replacing them.",
                 },
             },
-            required: ["skillId", "title", "stages"],
+            required: ["skillId", "stages"],
         },
         handler: async (input) => {
-            const { skillId, title, stages, originalPrompt, promptHistory, workItem, changeKind, resume, sessionId } = input;
-            if (!skillId || !title || !Array.isArray(stages) || stages.length === 0) {
-                throw new ToolError("skillId, title, and a non-empty stages[] are required.");
+            const { skillId, stages, originalPrompt, promptHistory, workItem, changeKind, resume, sessionId } = input;
+            // The surface contract sends skillId and the stage list; a title is the caller's
+            // courtesy, and the skill id stands in for it.
+            const title = typeof input.title === "string" && input.title.trim() ? input.title : skillId;
+            if (!skillId || !Array.isArray(stages) || stages.length === 0) {
+                throw new ToolError("skillId and a non-empty stages[] are required.");
             }
             if (changeKind && !VALID_CHANGE_KINDS.includes(changeKind)) {
                 throw new ToolError(`changeKind must be one of ${VALID_CHANGE_KINDS.join(", ")}`);
@@ -389,7 +392,7 @@ const tools = [
     {
         name: "set_run_context",
         description:
-            "Persist run-level context that must survive a session resume or compaction: the change kind driving stage depth, the approval decision recorded at a human gate, and the session-handoff marker. Call with approval 'approved' only after the user explicitly approves.",
+            "Persist run-level context that must survive a session resume or compaction: the change kind driving stage depth, the approval decision recorded at a human gate, the session-handoff marker, and the resolved run context (model, bindings, policy, gates) as 'runContext'. Call with approval 'approved' only after the user explicitly approves.",
         inputSchema: {
             type: "object",
             properties: {
@@ -410,12 +413,21 @@ const tools = [
                     type: "string",
                     description: "What the next session needs: what is finished, what is not, the paths it needs, and the exact invocation to resume with.",
                 },
+                runContext: {
+                    type: "object",
+                    additionalProperties: true,
+                    description:
+                        "What the runner resolved for this run and a resumed session must read back rather than resolve again: the model, point providers, role bindings, tracker, per-point MCP servers, policy values, and gate list. Stored verbatim and returned by get_run. Merged shallowly over what is already stored, so pass only the keys that changed.",
+                },
             },
             required: ["runId"],
         },
-        handler: async ({ runId, changeKind, approval, approvalNote, handoff, handoffNote }) => {
+        handler: async ({ runId, changeKind, approval, approvalNote, handoff, handoffNote, runContext }) => {
             if (changeKind && !VALID_CHANGE_KINDS.includes(changeKind)) {
                 throw new ToolError(`changeKind must be one of ${VALID_CHANGE_KINDS.join(", ")}`);
+            }
+            if (runContext !== undefined && (runContext === null || typeof runContext !== "object" || Array.isArray(runContext))) {
+                throw new ToolError("runContext must be an object");
             }
             if (approval && !VALID_APPROVAL_STATES.includes(approval)) {
                 throw new ToolError(`approval must be one of ${VALID_APPROVAL_STATES.join(", ")}`);
@@ -425,6 +437,7 @@ const tools = [
                 const run = await readRun(baseDir, runId);
                 if (!run) throw new ToolError(`No run with id ${runId}`);
                 if (changeKind) run.changeKind = changeKind;
+                if (runContext) run.runContext = { ...(run.runContext || {}), ...runContext };
                 if (approval) {
                     run.approval = {
                         state: approval,
@@ -445,7 +458,7 @@ const tools = [
                 // clearing the stamp here would make it look advanced and defeat the marker.
                 if (handoff !== true) clearIdle(run);
                 await writeRun(baseDir, run);
-                result = { changeKind: run.changeKind || null, approval: run.approval || null, handoff: run.handoff || null };
+                result = { changeKind: run.changeKind || null, approval: run.approval || null, handoff: run.handoff || null, runContext: run.runContext || null };
             });
             return result || { ok: true };
         },
@@ -642,7 +655,7 @@ const tools = [
             type: "object",
             properties: {
                 runId: { type: "string" },
-                format: { type: "string", enum: ["md"], description: "Markdown. The only format this surface writes." },
+                format: { type: "string", enum: ["md", "html"], description: "md is what this surface writes. html is accepted so a caller asking for it gets Markdown and a note saying so, rather than a schema refusal." },
                 outputPath: { type: "string", description: "Optional absolute or worktree-relative path to write to." },
             },
             required: ["runId"],

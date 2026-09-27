@@ -21,7 +21,8 @@ record off:
 - In `tech/` and `ai/`, where `status` is a required rating with no resting value, the
   original rating was overwritten when the rung was written and **cannot be recovered**. The
   migration does not invent one: it deletes the six fields, leaves `status` in place, and
-  reports the chapter so a person rates it. `--check` keeps exiting `1` until they do.
+  reports the chapter so a person rates it. `--check` reports them on every run and does
+  not fail on them: the ledger records what the script did, and the rating is a person's.
 - The six fields are deleted wherever they appear outside `domain/`, in every folder.
 
 Inside `.devbook/domain/` nothing is touched.

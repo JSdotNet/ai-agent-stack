@@ -18,8 +18,8 @@ The three review fields and their meanings are devbook's — `review`,
 first.
 
 This file exceeds the 40-line body budget on purpose: the brief in step 4 is a
-four-row lookup, and a reviewer who is handed three of the four rows starts by
-asking for the fourth.
+five-row lookup, and a reviewer who is handed four of the five rows starts by
+asking for the fifth.
 
 ## Steps
 
@@ -43,7 +43,7 @@ asking for the fourth.
    on one reviewer. Leave every open note from an earlier pass where it is; a
    finding is resolved by answering it, not by handing the chapter on.
 
-4. **Build the brief** and give it to the user as the message to send. Four
+4. **Build the brief** and give it to the user as the message to send. Five
    parts, in this order, and nothing else:
 
    | Part | Content |

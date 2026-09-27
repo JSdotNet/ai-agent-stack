@@ -43,7 +43,7 @@ terseness.
    |---|---|
    | An open `kind: question` fence remains | Which questions are open, and that this chapter **cannot** be accepted over one — devbook's check reports it as an error |
    | No `approved-by` or `approved-at` | The chapter was never approved. An acceptance stands on an approval; route to `chapter-approve` first |
-   | `approved-hash` no longer matches `chapter-hash.mjs <path#slug>` | The approval has lapsed, so there is nothing current to accept against. Re-approve first |
+   | `approved-hash` no longer matches `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` | The approval has lapsed, so there is nothing current to accept against. Re-approve first |
    | The evidence did not run, or ran red | What failed, verbatim. A red suite is not a reason to accept and not a reason to refuse — it is what the person weighs |
    | `status: accepted` already, fingerprint unchanged | It is already accepted; there is nothing to decide |
 
@@ -74,9 +74,9 @@ terseness.
    ```
 
    `accepted-by` is the person who just chose it, never you. Take
-   `accepted-hash` from `chapter-hash.mjs <path#slug>` and never compute it
-   yourself; write it where the repository's other chapters carry a
-   fingerprint, and omit it where they do not. `accepted-at` is today and is
+   `accepted-hash` from `node .devbook/_tools/devbook-meta/chapter-hash.mjs <path#slug>` and never compute it
+   yourself; leave it out only where the repository's other accepted chapters
+   deliberately carry none, and say so — a first acceptance writes it. `accepted-at` is today and is
    never before `approved-at`.
 
 5. **Report** the chapter, who accepted it, the day, and what evidence they saw.

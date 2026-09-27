@@ -28,7 +28,7 @@ repository, after `devbook:init` — there is nothing to derive until a folder i
 | `rules/devbook-derived-artifacts.md` | Placement, naming, and envelope rules for everything under `_meta/`, installed as a trio so both hosts apply it |
 | `assets/agents-section.md` | The plugin's own marker-fenced section of `AGENTS.md`: the `_meta/` rule and the refresh paths |
 | `assets/settings-snippet.md` | The `Read(_meta/**)` deny rule for `.claude/settings.json`, offered and never applied |
-| `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rebuilt from disk on open, with a node inspector that lists a chapter's test links; and one chapter beside its parsed `meta` block. It loads devbook's `graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at runtime and bundles no copy |
+| `extensions/devbook-graph/` | Two Copilot canvases: the reference graph, rebuilt from disk on open, with a node inspector that lists a chapter's test links; and one chapter beside its parsed `meta` block. It loads devbook's `graph.mjs`, `outline.mjs`, and `metadata.mjs` from `.devbook/_tools/devbook-meta/` at runtime — or from `plugins/devbook/tools/devbook-meta/` in this marketplace's own checkout — and bundles no copy |
 | `hooks/` | A session-start guardrail: `_meta/` is tool input, never regenerated in a session |
 
 ## Skills
@@ -48,7 +48,8 @@ plugins: `.devbook/arc42/adr/checks-and-indexes.md`.
 
 ## Refresh
 
-Never in a session. Two branches that each touch one chapter both rewrite the same JSON,
+Never in a session, with one exception: `refresh`, when a person asks for this branch's index
+to be current, committed on its own. Two branches that each touch one chapter both rewrite the same JSON,
 and the conflict is only resolvable by re-running the generator — so refresh is
 `./build/Update-DevbookIndex.ps1` on demand, or the nightly workflow on the default branch,
 and a pull request that only edits chapters carries no regenerated index. The drift

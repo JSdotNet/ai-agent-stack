@@ -22,9 +22,8 @@
     }
   ],
   "ext": {
-    "schedule": {
-      "environment": "cloud",
-      "model": "sonnet"
+    "your-plugin": {
+      "your-key": "what that plugin remembers about this machine"
     }
   }
 }

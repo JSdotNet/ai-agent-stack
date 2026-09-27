@@ -16,6 +16,19 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `delivery-surface-backlog` with `/plugin`. Plain Node, no npm dependencies, no
 listening socket of its own.
 
+## On Copilot
+
+The Copilot manifest carries no key for an MCP server, so a Copilot session reaches this one
+through the repository's own MCP configuration — an entry in `.mcp.json` or `.vscode/mcp.json`
+naming the installed plugin's path:
+
+```json
+{ "servers": { "delivery-surface-backlog": { "command": "node", "args": ["<plugin path>/mcp/delivery-surface-backlog/mcp-server.mjs"] } } }
+```
+
+Registered that way it surfaces under the bare `mcp__delivery-surface-backlog__*` spelling, the
+second shape the engine's surface contract matches.
+
 It needs the Backlog desktop app **open, with its MCP server switched on** and its Sessions
 area enabled. The plugin finds it the way Backlog's own `backlog-tools` hooks do:
 
@@ -77,6 +90,9 @@ Telemetry is not forwarded from here. Backlog already receives tool and token ev
 `backlog-tools` plugin's own hook.
 
 ## Developing it
+
+`manifest.json` and `.mcpbignore` beside the server describe the `.mcpb` bundle target; the tool
+list in `manifest.json` is kept by hand and mirrors `tools[]` in `mcp-server.mjs`.
 
 ```bash
 node --test mcp/delivery-surface-backlog/dev/proxy-test.mjs

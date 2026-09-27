@@ -179,6 +179,7 @@ test('null binds a role deliberately, which is not the same as absent', () => {
 
 test('the tracker provider set is closed', () => {
     assert.deepEqual(check({ bindings: { 'delivery.tracker': { provider: 'jira', project: 'FIN' } } }), []);
+    assert.deepEqual(check({ bindings: { 'delivery.tracker': { provider: 'markdown', folder: 'work' } } }), []);
     assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'trello' } } }).length, 1);
 });
 

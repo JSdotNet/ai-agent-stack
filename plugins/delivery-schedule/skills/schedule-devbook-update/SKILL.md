@@ -29,7 +29,7 @@ is a pull request a person reviews instead.
    - which `reconcile` rows to run: all of them, **except `delivery-schedule:update`** — it
      writes to the scheduler and the host settings, and only a person's own turn changes a
      schedule; list it as a person's step when its stamp is behind;
-   - `frozen` or `adoptable`: skip; a seeded file or a customized copy: keep the repository's;
+   - `frozen`, `adoptable`, or `enabled`: skip; a seeded file or a customized copy: keep the repository's;
      `devbook-config:local`: never offered.
 2. **Land.** If the tree changed, open a **draft** pull request titled
    `chore(devbook): stack update <YYYY-MM-DD>`: the stamps before and after, each migration

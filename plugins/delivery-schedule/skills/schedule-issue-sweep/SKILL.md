@@ -185,7 +185,10 @@ at `high` confidence, and nothing lowers that.
 
 12. **`maxResolve: 0`:** skip to Phase 6. Otherwise rank `readyForPickup` — severity first
     (`critical` > `high` > `medium` > `low`, counting the labels Phase 3 just wrote), then
-    oldest `createdAt` — and take the top `maxResolve`. Report the rest as deferred.
+    oldest `createdAt` — and take the top `maxResolve`. Report the rest as deferred, and
+    the `setAside` rows — waiting on the reporter, a duplicate, nothing to change — as set
+    aside with their reason: an issue Phase 3 marked needs-info is never resolved in the
+    same run.
 
 13. For each selected issue, in order, and never two at once:
 

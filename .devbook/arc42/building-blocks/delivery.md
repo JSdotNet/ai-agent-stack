@@ -24,7 +24,7 @@ flow shares.
 related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate"]
 ```
 
-Fourteen skills, one agent, one hook, and the contracts under `resources/` that everything a
+Fifteen skills, one agent, one hook, and the contracts under `resources/` that everything a
 repository plugs in answers to. No rule, no MCP server, no extension, no workflow: the engine
 is reached by invoking a flow, and everything else it exposes is a contract another block or a
 repository conforms to.
@@ -37,7 +37,7 @@ repository conforms to.
 | `start-session-from-issue`, `sre-alerts-to-work-items` | skills, tracker entry points | A person, through the bound tracker |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `flow-runner` | agent | Command-invoked once per run by a flow, holding the session for the run's length |
+| `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `flow-model-selection.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound provider, and `devbook-config`, by path or by name |
 
@@ -709,10 +709,11 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc4
 
 A value object held by more than one aggregate. A name a shared asset reads instead of a
 host's own file: `repo-instructions`, `model-override`, `stage-delegation`, `surface`,
-`pr-lane`. A slot is bound or it takes its documented unbound default, and it is never
-branched on — an asset carrying an if-this-host clause has not used a slot.
+`pr-lane`, `session-id`. A slot is bound or it takes its documented unbound default, and it is
+never branched on — an asset carrying an if-this-host clause has not used a slot.
 
-Two of the five are answered by the live session rather than by configuration, which is what
+Three of the six — `stage-delegation`, `surface`, `session-id` — are answered by the live
+session rather than by configuration, which is what
 keeps the hosts from re-diverging the moment one gains what the other has. Unbound is the
 resting state of the whole set.
 
@@ -928,7 +929,8 @@ flowchart TD
     t0 --> t1
     t1 --> t2
     t2 --> t3
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 
@@ -1048,7 +1050,8 @@ flowchart TD
     g -->|approve| t0
     t0 --> t1
     t1 --> t2
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 
@@ -1113,7 +1116,8 @@ flowchart TD
     t0 --> t1
     t1 --> t2
     t2 --> t3
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 
@@ -1148,7 +1152,7 @@ it never depends on — one row below says that is not the whole truth.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like everything else here, and the kernel is what "packaged" means. |
-| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fourteen skills. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
+| [devbook](devbook.md#dependencies) | **Undeclared** | `flow-spec` is named for the folders and expects every chapter to carry devbook's `meta` block | None, on either side | Three of four flows work with devbook absent, so it is not an L1 extension; declaring it would demote all fifteen skills. Logged as [debt record 4](../tdr/4-delivery-depends-on-devbook.md). |
 | A bound role provider | Binding, never a dependency | Named in `bindings["delivery.roles"]`, consulted by name | The role key and the fallback each reference states | One missing advisor must not demote every skill that names it. No provider for any role ships in this marketplace. |
 | A bound tracker | Binding, never a dependency | Named in `bindings["delivery.tracker"]` — GitHub, Jira, Markdown chapters, Backlog entries, or a `plugin:skill` provider | One set of operations behind one name | No repository should end up with Jira installed because it enabled the flows. Unbound, a flow runs to its file artifacts and opens nothing. |
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
@@ -1171,7 +1175,7 @@ it never depends on — one row below says that is not the whole truth.
 | A repo-native `flow-*` skill | Open Host Service | Declares its own tier and reads the phase contracts by name | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md` | That the phase and point vocabulary is stable, and that a repo-native skill takes precedence for the categories it covers. |
 
 - **Every binding row is a dependency this block refused to declare, and each refusal has the
-  same reason:** a missing provider must cost capability rather than a load. Twenty-four
+  same reason:** a missing provider must cost capability rather than a load. Fifteen
   skills demoted because one specialist is absent is the failure mode the whole indirection
   exists to prevent.
 - **The undeclared devbook row is the exception, and it is exceptional in the wrong

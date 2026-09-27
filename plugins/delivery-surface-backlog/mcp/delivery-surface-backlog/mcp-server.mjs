@@ -148,9 +148,15 @@ async function handleMessage(msg) {
         case "tools/list":
             respond(id, { tools: await listTools() });
             return;
-        case "tools/call":
-            await callTool(id, params && params.name, (params && params.arguments) || {});
+        case "tools/call": {
+            const args = (params && params.arguments) || {};
+            // The surface contract sends no title; Backlog wants one, so the skill id stands in.
+            if (params && params.name === "start_run" && args.skillId && !(typeof args.title === "string" && args.title.trim())) {
+                args.title = args.skillId;
+            }
+            await callTool(id, params && params.name, args);
             return;
+        }
         default:
             respondError(id, -32601, `Method not found: ${method}`);
     }

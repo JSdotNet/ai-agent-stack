@@ -19,18 +19,21 @@ verify the build and tests still pass, then open a pull request with the changes
 - Target branch for the PR (default: repository default branch).
 - Dry-run mode: `true` previews what would change without writing files (default: `false`).
 
-## Skill Dependencies
+## Tools
 
-This skill sequences the following installed skills:
-
-- **`nuget-manager`** — lists outdated NuGet packages and applies version bumps safely via the `dotnet` CLI. Handles both individual `.csproj` files and `Directory.Packages.props` (Central Package Management).
-- **`aspire`** — when the solution contains an `.AppHost` project, checks whether `Aspire.Hosting.*` and `Aspire.*` client integration packages have new versions and whether any configuration or API changes are required after an upgrade.
+The `dotnet` CLI alone: a scheduled session starts with the two delivery plugins and nothing
+else, so the procedure is carried here in full. `dotnet list package --outdated` is the
+inventory, `Directory.Packages.props` or the `.csproj` is where a version moves, and
+`dotnet restore` after each batch catches a conflict early. Aspire packages
+(`Aspire.Hosting.*`, `Aspire.*`) are inventoried the same way; an API or configuration change
+a new Aspire version needs shows up as a build failure in Phase 3, where the package is
+skipped and named, never forced.
 
 ## Workflow
 
 ### Phase 1 — Audit
 
-1. Use the `nuget-manager` skill to list all outdated NuGet packages:
+1. List all outdated NuGet packages:
 
    ```bash
    dotnet list package --outdated
@@ -46,9 +49,9 @@ This skill sequences the following installed skills:
    are behind — plugin installation itself is interactive, so this step reports, it does not
    apply.
 
-3. Detect whether an `.AppHost` project exists. If so, use the `aspire` skill to cross-check
-   all `Aspire.Hosting.*` and `Aspire.*` packages against the latest releases and flag
-   any hosting or client integration packages that are behind.
+3. Detect whether an `.AppHost` project exists. If so, cross-check all `Aspire.Hosting.*`
+   and `Aspire.*` packages against the outdated listing and flag any hosting or client
+   integration packages that are behind.
 
 4. Present an audit table:
 
@@ -57,23 +60,25 @@ This skill sequences the following installed skills:
    | `Newtonsoft.Json` | `src/Api/Api.csproj` | `13.0.1` | `13.0.3` | patch | Update |
    | `Microsoft.Extensions.Logging` | `Directory.Packages.props` | `8.0.0` | `9.0.0` | major | Confirm |
    | `Aspire.Hosting.Redis` | `AppHost/AppHost.csproj` | `9.0.0` | `9.1.0` | minor | Update |
-   | `delivery` | plugin | `0.1.0` | `0.2.0` | plugin | Report only |
+   | `delivery` | plugin | `1.8.0` | `1.9.0` | plugin | Report only |
 
-5. If `update-strategy` is `major`, highlight all major bumps and ask for explicit confirmation
-   before including them. Stop here if dry-run is `true`.
+5. If `update-strategy` is `major`, highlight all major bumps. Run by hand, ask for explicit
+   confirmation before including them; unattended, leave them out and list them in the
+   summary — the preamble's safe answer. Stop here if dry-run is `true`.
 
 ### Phase 2 — Apply Updates
 
-6. Create a new branch named `chore/nuget-updates-<YYYY-MM-DD>`.
+6. Create the branch the preamble names, `schedule/package-update/<YYYY-MM-DD>`, or, run by
+   hand, one the person names.
 
-7. **NuGet updates**: follow the `nuget-manager` skill procedure for each package:
+7. **NuGet updates**, for each package:
    - For solutions using `Directory.Packages.props`: update `<PackageVersion>` entries there.
    - For per-project packages: edit `<PackageReference Version="..." />` in the `.csproj`.
    - Run `dotnet restore` after each batch to catch dependency conflicts early.
 
-8. **Aspire updates**: if Aspire packages were flagged, use the `aspire` skill to apply any
-   configuration or API changes required by the new version (for example, renamed integration
-   packages or updated `AddResource` signatures).
+8. **Aspire updates**: if Aspire packages were flagged, bump them the same way. A renamed
+   integration package or a changed `AddResource` signature surfaces as a build failure in
+   Phase 3 and is handled there: the package is skipped and named, never patched around.
 
 9. **Plugin updates**: list the plugins found to be behind and tell the user to update them
    from the plugin manager; do not attempt to install plugins from this skill.
@@ -90,12 +95,13 @@ This skill sequences the following installed skills:
     If tests fail, revert the failing package update, record it as **Skipped (test failure)**,
     and continue with the remaining packages.
 
-### Phase 4 — Personal Validation
+### Phase 4 — Decide
 
-11. Present the audit table (Phase 1) and the build/test results (Phase 3) to the
-    user and **wait for explicit approval before opening a pull request**. If
-    approval is withheld, stop here and record the outcome — never open the PR
-    before personal validation.
+11. Unattended, there is nobody to ask: the preamble decides. Go on to Phase 5 with the
+    pull request ready for review when build and tests passed and draft when anything was
+    skipped. Run by hand, present the audit table (Phase 1) and the build and test results
+    (Phase 3) to the person and wait for their yes before opening it; withheld, stop here
+    and record the outcome.
 
 ### Phase 5 — Pull Request
 
@@ -109,9 +115,12 @@ This skill sequences the following installed skills:
     - Plugins: <n> behind (reported, not updated)
     ```
 
-13. After approval, push the branch and open a PR:
-    - **Title:** `chore: NuGet package updates <YYYY-MM-DD>`
-    - **Body:** the audit table from Phase 1 with each row marked Updated or Skipped.
+13. Push the branch and open the pull request, updating one a previous run left open on
+    the same branch prefix rather than opening a second:
+    - **Title:** what the trigger says; `chore(deps): weekly package update <YYYY-MM-DD>`
+      by default.
+    - **Body:** the audit table from Phase 1 with each row marked Updated or Skipped, and
+      every skipped package with the version it would have moved to.
     - **Labels:** `dependencies`, `automated`.
 
 ### Phase 6 — Summary
@@ -124,7 +133,7 @@ This skill sequences the following installed skills:
     | `Newtonsoft.Json` | `13.0.1` | `13.0.3` | ✅ Updated |
     | `xunit` | `2.6.0` | `2.7.0` | ⚠️ Skipped (test failure) |
     | `Aspire.Hosting.Redis` | `9.0.0` | `9.1.0` | ✅ Updated |
-    | `delivery` | — | — | ✅ Reinstalled |
+    | `delivery` | `1.8.0` | `1.9.0` | ℹ️ Behind (reported, not updated) |
 
 ## Surface Reporting
 
@@ -133,7 +142,7 @@ With no surface bound, skip the calls, say so once, and continue — file artifa
 the source of truth.
 
 - `start_run` with `skillId: "schedule-package-update"` and these stages: Audit, Apply
-  Updates, Verify, Personal Validation, Pull Request, Summary.
+  Updates, Verify, Decide, Pull Request, Summary.
 
 ## Output
 
@@ -143,7 +152,8 @@ the source of truth.
 
 ## Notes
 
-- Major version bumps are opt-in; always confirm with the user before applying them.
+- Major version bumps are opt-in: run by hand, confirm with the person first; unattended,
+  they are listed and left out.
 - Packages that break tests are skipped and flagged, not force-updated.
 - Run this skill weekly to keep dependency debt low.
 - The Aspire phase is skipped automatically when no `.AppHost` project is present.

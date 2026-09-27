@@ -81,6 +81,11 @@ contract 19; the table below says so.
 pairing in [the chapter schema record](../adr/chapter-schema.md), with no migration. The
 proposal is `020-devbook-names` at contract 20; the table below says so.
 
+**2026-09-27. The paths above are the 2026-09-05 shape.** The layout has been `.devbook/_tools/`
+since [the chapter schema record](../adr/chapter-schema.md) closed the second one, and the
+skills are `init`, `update`, and `validate`. The table records what the rename moved then;
+the migration owed is the same one under today's names.
+
 ## Affected components
 
 ```meta

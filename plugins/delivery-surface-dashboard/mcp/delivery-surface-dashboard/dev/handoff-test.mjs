@@ -82,6 +82,10 @@ try {
         handoffNote: "Export endpoint written, tests not run yet. Resume with: the same skill and title",
     });
     check("set_run_context marks the handoff", handed.handoff && handed.handoff.pending === true, JSON.stringify(handed.handoff));
+    const resolved = await call("set_run_context", { runId, runContext: { model: "opus", gates: ["deliver"] } });
+    check("set_run_context stores the resolved context for the resumer", resolved.runContext && resolved.runContext.model === "opus", JSON.stringify(resolved.runContext));
+    const readBack = await call("get_run", { runId });
+    check("get_run returns the stored context", readBack.runContext && readBack.runContext.gates[0] === "deliver", JSON.stringify(readBack.runContext));
     check("handoff records the stage in flight", handed.handoff && handed.handoff.stage === "Implementation", handed.handoff && handed.handoff.stage);
 
     // The owning session ends: this is what stamps idleSince in real use.

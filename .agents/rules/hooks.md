@@ -39,5 +39,6 @@ Copilot reads `hooks.json` at the plugin root instead, where hooks are `type: pr
 event names are camelCase (`sessionStart`, `preToolUse`). Both files are authored whenever the
 hook can do its work as a prompt. One that must read an event payload or write a file cannot,
 and has no Copilot counterpart: it ships `hooks/hooks.json` alone, as the dashboard's telemetry
-hook does. A prompt hook cannot guard itself either, so a Copilot `sessionStart` prompt stays
-unconditional and hedges the opening sentence its Claude counterpart can decide.
+hook does. A prompt hook cannot guard itself either, so the shared text opens hedged — "in a repository
+that has adopted …" — and the Claude hook's guard decides whether it is emitted at all; the
+Copilot prompt is that same text, unconditional.

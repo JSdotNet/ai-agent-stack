@@ -78,7 +78,7 @@ async function markdownUnder(relDir, found = []) {
     for (const entry of entries) {
         const rel = path.posix.join(relDir, entry.name);
         if (entry.isDirectory()) {
-            if (entry.name !== "_meta") await markdownUnder(rel, found);
+            if (!entry.name.startsWith("_")) await markdownUnder(rel, found); // _meta, _tools: never chapters
         } else if (entry.name.endsWith(".md")) found.push(rel);
     }
     return found;

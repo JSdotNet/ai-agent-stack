@@ -244,7 +244,7 @@ names its category's flow and hands over grounded input. No flow knows these
 skills exist.
 
 **Trigger keywords:** `document what we built`, `capture from code`,
-`.domain is stale`, `build the aggregate we agreed`, `build this chapter`,
+`domain/ is stale`, `build the aggregate we agreed`, `build this chapter`,
 `change brief`, `spec code drift`, `is the chapter still true`,
 `the code has an invariant the chapter omits`
 
@@ -334,6 +334,7 @@ node .devbook/_tools/devbook-meta/annotations.mjs list --chapter .devbook/arc42/
 node .devbook/_tools/devbook-meta/annotations.mjs add  --chapter <path#slug> --after "<quote>" --author <who> --body <text>
 node .devbook/_tools/devbook-meta/annotations.mjs reply   --chapter <path#slug> --index <n> --author <who> --body <text>
 node .devbook/_tools/devbook-meta/annotations.mjs resolve --chapter <path#slug> --index <n> [--delete]
+node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug>
 ```
 
 `annotations.mjs` is the only writer of an annotation fence — the CLI above and
@@ -394,7 +395,8 @@ which rewrites the skill ids a stack config binds — in the committed config an
 overlay layers — now that every `install` is `init` and `update` and `check` is `validate`;
 the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 `invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
-reference to them.
+reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
+files by kind and takes the `#### Scenario:` cases off an `### Invariant:`.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -430,7 +432,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **17**, covering the metadata schema a repository authors
+One number, currently **18**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -445,7 +447,7 @@ previous contract stops validating, so there is no state for a script to move.
 
 1.0.0 shipped at 9. The number counts schema shapes rather than releases and was not
 restarted with the version: a derived artifact stamped 9 before the reset still follows
-the contract a 1.0.0 generator writes. 10 removed the glossary file type from `.domain`,
+the contract a 1.0.0 generator writes. 10 removed the glossary file type from `domain/`,
 and ships as `010-terms-live-in-domain-md`. 11 adds `context.md` as a bounded context's
 root — the boundary, its feature flags and settings, and its actors and dependencies until
 they outgrow it — and turns a feature's `feature-flag` from a bare key into a reference to
@@ -454,10 +456,10 @@ retires the checkout layer of the stack-config overlay and the `.gitignore` bloc
 existed for it — the stamp's `materialized` no longer carries `.gitignore#devbook` — and
 ships as `012-no-checkout-overlay`. 13 adds the optional `approved-hash`
 fingerprint over a chapter's content, the `accepted` rung above `approved` with
-`accepted-by`, `accepted-at`, and `accepted-hash`, and a `.domain` bounded
+`accepted-by`, `accepted-at`, and `accepted-hash`, and a `domain/` bounded
 context's freedom to carry a page the convention does not name, whose
 file-level `type` is its own filename. It also confines both rungs and their
-six fields to `.domain`, which is breaking, so it ships as
+six fields to `domain/`, which is breaking, so it ships as
 `013-decision-rungs-are-domains`. 14 gives a bounded context
 `requirements.md` and `invariants.md`, with the chapter types `requirements`,
 `requirement`, `invariants`, and `invariant` and the two matching file types;

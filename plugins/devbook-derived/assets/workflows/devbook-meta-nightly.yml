@@ -3,7 +3,7 @@ name: Devbook metadata nightly refresh
 # Reconciles the committed _meta indexes with the Markdown on the default
 # branch. Installed by the `devbook-derived:init` skill.
 #
-# The pull-request check (devbook-meta.yml) only *warns* when an index has
+# The pull-request drift check (devbook-meta-drift.yml) only *warns* when an index has
 # drifted, because forcing every devbook pull request to regenerate the
 # indexes is what makes those files conflict on merge. This job is the other
 # half of that trade: refresh happens here, once, on a schedule, in a single
@@ -66,12 +66,14 @@ jobs:
       - name: Detect drift
         id: drift
         run: |
-          if git diff --quiet -- '*_meta/*.json'; then
+          # git status, not git diff: an index written for the first time is untracked,
+          # and diff would call the tree current while the new file sat unseen.
+          if [ -z "$(git status --porcelain -- '*_meta/*.json')" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Derived indexes are current. Nothing to do."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git --no-pager diff --stat -- '*_meta/*.json'
+            git status --short -- '*_meta/*.json'
           fi
 
       - name: Push the refresh branch

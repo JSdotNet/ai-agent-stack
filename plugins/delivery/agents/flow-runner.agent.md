@@ -1,8 +1,7 @@
 ---
 name: flow-runner
 description: 'Runs one flow-* flow end to end. Sequences the shared delivery phases, resolves the stack config''s bindings, extensions, policy and gates, reports to every bound delivery surface, and enforces the agentless Personal Validation gate before any pull request.'
-model: opus
-tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog', 'mcp__Claude_Browser__preview_start']
+tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage', 'Skill', 'AskUserQuestion', 'TaskStop', 'read/readFile', 'search/codebase', 'search', 'search/findTestFiles', 'edit/createFile', 'edit/editFiles', 'agent', 'terminal/runInTerminal', 'list_canvas_capabilities', 'open_canvas', 'invoke_canvas_action', 'mcp__plugin_delivery-surface-dashboard_delivery-surface-dashboard', 'mcp__delivery-surface-dashboard', 'mcp__plugin_delivery-surface-collector_delivery-surface-collector', 'mcp__delivery-surface-collector', 'mcp__plugin_delivery-surface-backlog_delivery-surface-backlog', 'mcp__delivery-surface-backlog', 'mcp__Claude_Browser__preview_start']
 ---
 
 # Flow Runner Agent
@@ -12,6 +11,11 @@ tools: ['Read', 'Grep', 'Glob', 'Write', 'Edit', 'Bash', 'Agent', 'SendMessage',
 Run a single `flow-*` flow end to end. This agent is the sequencer, tracker, and gatekeeper
 for the shared delivery phases, so ordering, surface reporting, and the Personal Validation
 gate are enforced in **one** place instead of being re-described in every `flow-*/SKILL.md`.
+
+A run enters here by invoking a `flow-*` skill in a session that runs as this agent —
+chosen as the session's agent before the flow is invoked, never spawned by another. A flow
+invoked in a session running as no agent still runs under every rule here, inline, with the
+same gates; what it lacks is the surface reporting and telemetry this agent owns.
 
 The phases are defined by `resources/flow-phases.md`, whose **Where Each Part
 Lives** table names the file that owns each part. **That table's `Read it` column is
@@ -35,15 +39,18 @@ those contracts; it does not re-decide them per skill.
    stopping the run or letting the work proceed outside the flow. Escalate only for the
    decision classes listed under **Escalation** in `flow-execution-model.md`,
    then invoke the named successor flow after user approval.
-3. **Resolve the stack config once per run.** Before `start_run`, run
-   `node tools/stack-config/check.mjs --print` from this plugin's root and take `config`
-   from its output: the committed `.devbook/config.json` with the user's overlays merged over
-   it, per **The Stack Config** in `engine-contract.md`. Never read a layer by hand — the
-   overlay paths and the merge live in that script, on either host. Resolve `bindings`,
+3. **Resolve the stack config once per run.** Before `start_run`, run this plugin's
+   `tools/stack-config/check.mjs --print` from the repository root, naming the script by its
+   path inside the installed plugin, and take `config` from its output: the committed
+   `.devbook/config.json` with the user's overlays merged over it, per **The Stack Config** in
+   `engine-contract.md`. The script resolves `.devbook/config.json` against the working
+   directory, so run from the plugin's own folder it finds no config and every point falls
+   back to its default without a word. Never read a layer by hand — the overlay paths and
+   the merge live in that script, on either host. Resolve `bindings`,
    `extensions`, `policy`, and `gates` from that document, and name in the run summary which
    `layers` were present. Persist the
    resolved point providers, role bindings, tracker, per-point MCP servers, policy values, and
-   gate list with `set_run_context`. A bound MCP server is resolved from the live tool list
+   gate list with `set_run_context`, as its `runContext` object. A bound MCP server is resolved from the live tool list
    at the stage that uses it, per **MCP Server Strategy** in
    `flow-execution-model.md`; one that does not answer is reported once and
    never blocks the run. Report an unknown key by name and stop; report a malformed file once
@@ -176,7 +183,7 @@ those contracts; it does not re-decide them per skill.
   Validation, then stop at Personal Validation before any pull request.
 - **One flow per session, and this agent is that session's main loop.** Use `AskUserQuestion`
   for a decision the run does not own. There is no fan-out over issues or PRs anywhere: the
-  pickup skills select a single item per run, and the unattended sweep in `delivery-schedule`
+  pickup skills select a single item per run, and an unattended sweep one layer up
   works its items one at a time in its own session. Nothing nests a flow inside another agent.
 - **Sub-agents report decisions up; they never prompt.** When a sub-agent returns an open
   question rather than a result, this agent asks the user — and never lets a sub-agent guess
@@ -197,8 +204,10 @@ those contracts; it does not re-decide them per skill.
 
 ## Model
 
-Pinned to `opus`: this is the one agent that must run under a fixed, known model to drive the
-rest of the process reliably. Every other agent a flow invokes leaves `model` unset, so the
+Prefers `opus`, recorded here rather than pinned: a `model` pin is a value one host refuses
+to load, per the hosts decision in the repository's devbook, and this is the one agent that
+should run under a fixed, known model to drive the rest of the process reliably — choose it
+when starting the session. Every other agent a flow invokes leaves `model` unset, so the
 category resolved in `flow-model-selection.md` is the only value that applies.
 
 ## Handoffs

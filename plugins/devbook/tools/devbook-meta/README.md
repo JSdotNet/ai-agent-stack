@@ -35,7 +35,8 @@ The repository root defaults to the working directory. Only devbook folders
 that actually exist under `.devbook/` produce a scope, so a repository that
 adopts just `domain/` and `arc42/` never grows `_meta/` folders for the rest.
 `--scope` takes `tech`, `tech/`, or `.devbook/tech` for the same scope. The
-generator exits `2` when no devbook folder is present at all, and a root-level
+generator exits `2` when no devbook folder is present at all or when `--scope` names one
+the repository has not adopted, and a root-level
 `tech/` is reported as an error and never indexed — the only layout is
 `.devbook/`.
 

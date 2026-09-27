@@ -32,7 +32,10 @@ capability is split by operation group, because an implementation may answer par
   plugged in as a surface by being named one, and never by answering a name.
   A surface may arrive as a host canvas instead of an MCP server, and then the operation names
   are canvas actions: open the canvas once and invoke the action through whatever the host
-  exposes for that. Canvas actions are matched by operation name.
+  exposes for that. Canvas actions are matched by operation name. On the Copilot CLI that
+  is its three canvas tools — list the capabilities, open a canvas, invoke an action — which
+  is why the runner's allowlist carries `list_canvas_capabilities`, `open_canvas`, and
+  `invoke_canvas_action`.
 - **A group is answered when its operation names are listed.** Resolve a group as absent until
   they are: a group an implementation promises is not a bound one.
 - **The preference order is `bindings["delivery.surface"]`** — a list of `delivery-surface-*`

@@ -127,7 +127,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // beside it in `domain.invariants.md` instead of under an aggregate that
 // happens to use it. It only widens what `related` may name: nothing written
 // under 18 stops validating, and no migration is owed.
-export const CONTRACT_VERSION = 19;
+//
+// Version 20 gives `.design` its one chapter type, `requirement`: a rule a
+// component keeps or breaks, as a `### Requirement:` with `#### Scenario:`
+// cases under the component's chapter, held to `e2e` by the coverage warning.
+// Every other `.design` chapter stays untyped, so nothing written under 19
+// stops validating, and no migration is owed.
+export const CONTRACT_VERSION = 20;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

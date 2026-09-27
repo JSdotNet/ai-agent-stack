@@ -138,10 +138,10 @@ const RESTING_STATUS_BY_FOLDER = {
 // the name alone, so anchors are slugs of the bare name.
 //
 // A folder whose lists are empty defines no kind distinction of its own: in
-// `.arc42` and `.design` the only such distinction (chapter vs section) is
-// already carried by heading level, so inventing
-// values there would restate the document structure. `type` is omitted in those
-// folders and reported when used.
+// `.arc42` the only such distinction (chapter vs section) is already carried
+// by heading level, so inventing values there would restate the document
+// structure. `type` is omitted there and reported when used. `.design` is the
+// same apart from its one `requirement` kind.
 const TYPE_BY_FOLDER = {
     domain: {
         chapter: [
@@ -243,8 +243,17 @@ const TYPE_BY_FOLDER = {
         file: ["adoption-map", "stage", "concepts"],
     },
     arc42: { chapter: [], file: [] },
-    design: { chapter: [], file: [] },
+    // `.design` defines one kind and nothing else: a rule a component either
+    // keeps or breaks is a `### Requirement:` under the component's chapter,
+    // typed so a tool that reads OpenSpec reads it. Every other `.design`
+    // chapter is a guideline and stays untyped — see `OPTIONAL_TYPE_FOLDERS`.
+    design: { chapter: ["requirement"], file: [] },
 };
+
+// Folders whose value set marks out a few chapters rather than classifying
+// every one. A block there may omit `type`, and a declared one must still be
+// in the set.
+const OPTIONAL_TYPE_FOLDERS = ["design"];
 
 // `.tech` spelled this concept `kind` before `type` was unified across folders.
 // The old name keeps working so an existing repository is not broken by a
@@ -374,16 +383,29 @@ const DEVBOOK_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
 // no expectation, and that stays true: these two kinds are checked because the
 // file they live in *is* the claim about their level, so a mismatch means one
 // of the two is wrong.
+//
+// Keyed by folder, then type: `.design`'s `requirement` is a rule a component
+// keeps or breaks on screen, so it is held to a different level than a
+// bounded context's.
 const BEHAVIOUR_TEST_LEVELS = {
-    requirement: {
-        levels: ["e2e", "integration"],
-        reason:
-            "a requirement is proved `e2e` — it promises something to someone outside the model, so what proves it is the product driven the way that someone drives it — or `integration` where it is a policy no user triggers",
+    domain: {
+        requirement: {
+            levels: ["e2e", "integration"],
+            reason:
+                "a requirement is proved `e2e` — it promises something to someone outside the model, so what proves it is the product driven the way that someone drives it — or `integration` where it is a policy no user triggers",
+        },
+        invariant: {
+            levels: ["unit"],
+            reason:
+                "an invariant is proved `unit` — it is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is not asserting the guarantee",
+        },
     },
-    invariant: {
-        levels: ["unit"],
-        reason:
-            "an invariant is proved `unit` — it is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is not asserting the guarantee",
+    design: {
+        requirement: {
+            levels: ["e2e"],
+            reason:
+                "a design requirement is proved `e2e` — a component keeps or breaks it in what the user sees and operates, so what proves it is the rendered component driven by keyboard or pointer, or compared by a visual test",
+        },
     },
 };
 
@@ -819,6 +841,7 @@ export function typeIssues(folder, blockLevel, meta, fileBase = null) {
     const declared = resolveType(folder, meta);
     if (allowed.length) {
         if (declared === null) {
+            if (OPTIONAL_TYPE_FOLDERS.includes(folder)) return issues;
             issues.push({
                 severity: "error",
                 message: `is missing required \`type\`. Expected one of: ${allowed.join(", ")}.`,
@@ -1010,7 +1033,8 @@ function isScenarioOf(chapters, index, folder) {
 
 /**
  * Coverage warnings for one behaviour chapter — a `requirement` or an
- * `invariant`. Every other type returns nothing.
+ * `invariant` in `.domain`, a `requirement` in `.design`. Every other type
+ * returns nothing.
  *
  * All of these are warnings, deliberately. Each reports a chapter that is
  * incomplete rather than wrong, and an error would be counter-productive in
@@ -1022,8 +1046,8 @@ function isScenarioOf(chapters, index, folder) {
  * Messages are sentence fragments beginning with a verb, matching `typeIssues`,
  * so each caller can prefix its own subject.
  */
-export function behaviourIssues(type, meta, scenarios = 0) {
-    const expected = BEHAVIOUR_TEST_LEVELS[type];
+export function behaviourIssues(type, meta, scenarios = 0, folder = "domain") {
+    const expected = BEHAVIOUR_TEST_LEVELS[folder]?.[type];
     if (!expected) return [];
     const issues = [];
 
@@ -1756,7 +1780,8 @@ export function validateDocument(relPath, markdown) {
 
         // `type` records what kind of thing this chapter or file is, in the
         // vocabulary its folder defines. Folders that define no vocabulary
-        // (`.arc42`, `.design`) omit the field entirely.
+        // (`.arc42`) omit the field entirely; `.design` types only its
+        // requirement chapters.
         const blockLevel = chapter.level === 1 ? "file" : "chapter";
         for (const issue of typeIssues(kind, blockLevel, chapter.meta, fileBase)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
@@ -1906,11 +1931,12 @@ export function validateDocument(relPath, markdown) {
         // coverage warnings — see `behaviourIssues`. Whether the chapter's
         // `related` reaches the prose half it belongs to is the graph build's
         // to say, since only it can resolve across files.
-        if (kind === "domain" && blockLevel === "chapter") {
+        if (blockLevel === "chapter") {
             for (const issue of behaviourIssues(
                 resolveType(kind, chapter.meta),
                 chapter.meta,
-                scenarioCount(chapters, index)
+                scenarioCount(chapters, index),
+                kind
             )) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }

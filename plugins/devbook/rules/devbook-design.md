@@ -98,6 +98,37 @@ filename after them. See `devbook-chapter-metadata.md`.
   the adopted result is recorded in `tech/`.
 - Keep all `design/` content in English.
 
+## Requirements
+
+A rule a component either keeps or breaks — a keyboard path, a token it must
+consume, an accessibility threshold — is a `### Requirement:` chapter under that
+component's own chapter, `type: requirement`, one SHALL sentence, with
+`#### Scenario:` cases beneath it and `tests` naming what proves it. The reason
+is `devbook-domain.md`'s: the heading shape is OpenSpec's, so a tool that reads
+OpenSpec reads these rules without being taught anything.
+
+```markdown
+### Requirement: Reorder by keyboard
+
+\`\`\`meta
+type: requirement
+tests: e2e:playwright:tests/sortable.spec.ts#reorders by keyboard
+\`\`\`
+
+The sortable list SHALL let every item be moved without a pointer.
+
+#### Scenario: Move an item down
+
+- **When** an item has focus and the person presses Alt+ArrowDown
+- **Then** the item moves one place down and keeps focus
+```
+
+A design requirement is proved `e2e`: the rendered component driven by
+keyboard or pointer, or compared by a visual test. A requirement with no
+scenario, or whose `tests` reach no `e2e`, is reported as a coverage warning.
+Guidance a component cannot break on its own — a principle, a rationale, a
+comparison — stays prose in the component chapter.
+
 ## Metadata
 
 Every `design/` file and every `##` chapter carries a metadata block per
@@ -121,10 +152,10 @@ makes it a system — so writing `active` on every chapter marks nothing, and th
 one `draft` colour token stops standing out. Writing `status: active` explicitly
 is reported.
 
-`design/` defines no `type` field either, so a settled chapter's block ends up
-empty. **Keep the empty `meta` fence** — it is what makes the heading an
-addressable chapter, and deleting it drops the chapter out of the derived graph
-and out of every reference pointing at it.
+`type` is `requirement` on a requirement chapter and absent everywhere else, so
+a settled guideline's block ends up empty. **Keep the empty `meta` fence** — it
+is what makes the heading an addressable chapter, and deleting it drops the
+chapter out of the derived graph and out of every reference pointing at it.
 
 `design/` defines no folder-specific relation fields — use `related` (and
 `issue` when tracked) only.

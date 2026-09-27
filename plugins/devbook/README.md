@@ -173,7 +173,7 @@ where the folder defines no `type`:
 | `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
-| `design-component` | `.devbook/design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
+| `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence
@@ -489,7 +489,10 @@ files by kind, `# Requirements` and `# Invariants`, and ships as `018-behaviour-
 which retitles them; an old title still validates. 19 lets an `invariants` chapter pair with the
 `shared-value-objects` or `shared-enums` grouping as well, so a shared type's own rules sit in
 `domain.invariants.md` beside it; it only widens what `related` may name, and ships no
-migration.
+migration. 20 gives `design/` its one `type`, `requirement`: a rule a component keeps or
+breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
+warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
+ships no migration.
 
 ## Folder structure
 

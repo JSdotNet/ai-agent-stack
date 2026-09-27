@@ -60,7 +60,8 @@ Prose for this chapter starts here.
 ```
 
 `type` is the only universally required field, and only in the three folders
-that define a value set for it (`domain/`, `tech/`, `ai/`). `status` is
+that classify every chapter with it (`domain/`, `tech/`, `ai/`); `design/`
+types its requirement chapters and nothing else. `status` is
 required per folder: mandatory in `tech/` and `ai/`, optional in
 `domain/`, `arc42/`, and `design/`, where leaving it out means the content is
 at rest — see the `status` entry under **Fields**. Optional fields (`related`,
@@ -68,9 +69,9 @@ at rest — see the `status` entry under **Fields**. Optional fields (`related`,
 are included only when they have a value; empty collections and null values are
 omitted rather than written out.
 
-**The `meta` fence stays even when the block ends up empty.** In `arc42/` and
-`design/` there is no `type` field, so a resting chapter with no
-relations has nothing left to write:
+**The `meta` fence stays even when the block ends up empty.** In `arc42/`, and
+on every `design/` chapter but a requirement, there is no `type` field, so a
+resting chapter with no relations has nothing left to write:
 
 ```markdown
 ## <Chapter Heading>
@@ -108,6 +109,10 @@ Anchors are therefore slugs of the bare name —
 Headings that name a **grouping** rather than a thing keep their descriptive
 text, because that text *is* the group's name: `## Shared Value Objects` is
 correct, with `type: shared-value-objects`.
+
+`### Requirement:`, `### Invariant:`, and `#### Scenario:` keep their prefix,
+in `domain/` and, for requirements, in `design/`: the heading shape is
+OpenSpec's, and a tool that reads OpenSpec finds them by it.
 
 ## File-level metadata block
 
@@ -338,19 +343,24 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   and file-level blocks alike, with a separate value set for each level where
   the folder distinguishes them.
 
-  Three folders define a value set:
+  Four folders define a value set:
 
   | Folder | Chapter values | File values |
   |---|---|---|
   | `domain/` | `bounded-context`, `aggregate`, `entity`, `value-object`, `enum`, `shared-value-objects`, `shared-enums`, `ubiquitous-language`, `domain-service`, `domain-event`, `feature`, `sub-feature`, `requirements`, `requirement`, `invariants`, `invariant`, `feature-flag`, `setting`, `user`, `organisation`, `technical`, `term` | `context-map`, `context`, `domain`, `actors`, `features`, `skills`, `requirements`, `invariants`, `model`, `flow`, `dependencies`, or an additional page's own filename |
   | `tech/` | `language`, `runtime`, `framework`, `library`, `package`, `tool`, `service`, `platform`, `protocol`, `format` | none |
   | `ai/` | `practice`, `agent`, `skill`, `plugin`, `mcp-server`, `hook`, `workflow`, `model`, `concept`, `guardrail` | `adoption-map`, `stage`, `concepts` |
+  | `design/` | `requirement` | none |
 
-  `arc42/` and `design/` deliberately define **no** value set. Their only kind
-  distinction — chapter vs section — is already carried by heading level, so a `type` field there would restate the document
-  structure rather than add anything. Omit it in those folders, per the same
-  omit-when-empty discipline that governs the optional fields; setting it is
-  reported as a warning.
+  `arc42/` deliberately defines **no** value set. Its only kind distinction —
+  chapter vs section — is already carried by heading level, so a `type` field
+  there would restate the document structure rather than add anything. Omit it,
+  per the same omit-when-empty discipline that governs the optional fields;
+  setting it is reported as a warning.
+
+  `design/`'s one value marks out chapters rather than classifying every one: a
+  `### Requirement:` under a component is `type: requirement`, per
+  `devbook-design.md`, and every other `design/` chapter omits `type`.
 
   In `tech/` this field was previously spelled `kind`. The old name still parses
   so an existing repository is not broken by a generator sync, but it reports a
@@ -672,7 +682,7 @@ chapter.
   rule reaches `status` in `domain/`, `arc42/`, and `design/`, where the resting
   value `active` is what an absent field says: a settled chapter with no
   relations, no estimate, and no issue shows only `type` where the folder
-  defines one — and in `arc42/` and `design/`, which define none, an empty
+  defines one — and in `arc42/`, and on a `design/` guideline, an empty
   fence. Keep the fence; it is what makes the heading addressable.
 
 ## Where reading order comes from

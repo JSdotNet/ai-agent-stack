@@ -12,7 +12,7 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 Keep a repository's devbook honest with nobody watching: broken references and schema
 violations are fixed in the chapters, and the committed indexes are the one refresh
-[the checks and indexes record](../../../../.devbook/arc42/adr/checks-and-indexes.md) allows —
+the checks-and-indexes decision in the repository's devbook allows —
 a scheduled run, never a session beside a chapter edit.
 
 ## Inputs

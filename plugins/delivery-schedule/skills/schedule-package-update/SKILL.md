@@ -60,7 +60,7 @@ skipped and named, never forced.
    | `Newtonsoft.Json` | `src/Api/Api.csproj` | `13.0.1` | `13.0.3` | patch | Update |
    | `Microsoft.Extensions.Logging` | `Directory.Packages.props` | `8.0.0` | `9.0.0` | major | Confirm |
    | `Aspire.Hosting.Redis` | `AppHost/AppHost.csproj` | `9.0.0` | `9.1.0` | minor | Update |
-   | `delivery` | plugin | `0.1.0` | `0.2.0` | plugin | Report only |
+   | `delivery` | plugin | `1.8.0` | `1.9.0` | plugin | Report only |
 
 5. If `update-strategy` is `major`, highlight all major bumps. Run by hand, ask for explicit
    confirmation before including them; unattended, leave them out and list them in the
@@ -133,7 +133,7 @@ skipped and named, never forced.
     | `Newtonsoft.Json` | `13.0.1` | `13.0.3` | ✅ Updated |
     | `xunit` | `2.6.0` | `2.7.0` | ⚠️ Skipped (test failure) |
     | `Aspire.Hosting.Redis` | `9.0.0` | `9.1.0` | ✅ Updated |
-    | `delivery` | — | — | ✅ Reinstalled |
+    | `delivery` | `1.8.0` | `1.9.0` | ℹ️ Behind (reported, not updated) |
 
 ## Surface Reporting
 

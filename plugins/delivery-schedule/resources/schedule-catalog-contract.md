@@ -110,7 +110,7 @@ and by nothing else, and never another component's key:
 {
   "components": {
     "schedule": {
-      "pluginVersion": "0.1.0",
+      "pluginVersion": "1.0.0",
       "enabled": ["package-update", "merge-review", "devbook-validate"],
       "overrides": { "merge-review": { "cron": "0 7 * * 1-5" } }
     }

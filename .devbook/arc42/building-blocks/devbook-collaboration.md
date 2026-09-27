@@ -462,7 +462,7 @@ stateDiagram-v2
     ChangesRequested --> Requested: author revises and hands back
     Cleared --> Requested: content changed again
     Cleared --> Approved: chapter-approve, a person chooses it
-    ChangesRequested --> Approved: an approver overrides; open notes stay on the chapter, and an open question refuses it
+    ChangesRequested --> Approved: an approver overrides — open notes stay on the chapter, and an open question refuses it
     Approved --> NoState: content changes, and rung, signature and date come off
     Approved --> ChangesRequested: chapter-approve lifts the rung over notes raised since it
     NoState --> [*]

@@ -89,7 +89,9 @@ replaced, which *is* the migration, and a copy hashing to nothing shipped is the
 repository's and is never overwritten, ledger or not. So a payload-only component
 stamps two fields — or `pluginVersion` alone beside whatever selection it recorded
 elsewhere — and neither ships a `migrations/` folder nor runs the six phases below. A
-plugin that materializes nothing stamps nothing.
+plugin that materializes nothing stamps nothing. A hand-written entry under `components` —
+a surface's `sessionNaming`, per the configuration decision in the repository's devbook — is
+that component's key, not a stamp: nothing reconciles it, and no plugin writes it.
 
 What the stamp deliberately does not record: which plugins are installed, at what
 version, by whom. That is personal and user-scope, and putting it here makes the

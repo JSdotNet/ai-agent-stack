@@ -311,6 +311,14 @@ async function main() {
 
     const active = await readActive();
     if (!active.runId) {
+        // A repository this plugin has never recorded a run in gets no state folder from a
+        // hook that fires in every session on the machine: with no runs directory there is
+        // nothing a later run could absorb, so leave nothing behind.
+        try {
+            await stat(runsDir());
+        } catch {
+            return;
+        }
         // Nothing to attribute telemetry to. Still advance the transcript cursor so a run
         // started later does not absorb the whole earlier conversation as its first stage.
         await skipToTranscriptEnd(sessionId, telemetry, payload.transcript_path);

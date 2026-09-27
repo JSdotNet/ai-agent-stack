@@ -65,7 +65,7 @@ no mechanism, which is the evidence the boundary was already right. `delivery` c
 hundred `plugin:asset` references into them, and naming is not depending — but this marketplace
 naming a plugin published from another is a coupling nothing here can check. Every stage names
 the point it fills, and a repository's config is the only place a specialist's name appears, so
-`delivery` alone is visibly capability-free at five roles and five services.
+`delivery` alone is visibly capability-free at seven roles and seven services.
 
 **Flows belong to `delivery`.** `devbook` enforces what a folder holds; the engine holds the
 flow for each folder. The bridge that once held them was not a bridge: both foundations named

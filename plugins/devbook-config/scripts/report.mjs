@@ -432,6 +432,8 @@ function buildRepository(repoRoot) {
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
         roles: config?.bindings?.['delivery.roles'] ?? null,
         mcp: config?.bindings?.['delivery.mcp'] ?? null,
+        surface: config?.bindings?.['delivery.surface'] ?? null,
+        slots: config?.bindings?.['delivery.slots'] ?? null,
         mcpServers: mcpServers(repoRoot, config?.bindings?.['delivery.mcp']),
         extensions: config?.extensions ?? null,
         policy: config?.policy ?? null,
@@ -644,6 +646,14 @@ function render(model) {
         out.push('### Roles and tracker');
         out.push('');
         out.push(`Tracker: ${describeValue(repo.tracker ?? undefined)}`);
+        out.push('');
+        out.push(Array.isArray(repo.surface)
+            ? `Surfaces, in binding order: ${repo.surface.map((s) => `\`${s}\``).join(', ') || 'none'}`
+            : 'No `delivery.surface` binding - every installed surface records the run; usually set per machine in an overlay.');
+        out.push('');
+        out.push(repo.slots && typeof repo.slots === 'object' && Object.keys(repo.slots).length
+            ? table(['Slot', 'Bound to'], Object.entries(repo.slots).map(([k, v]) => [`\`${k}\``, describeValue(v)]))
+            : 'No `delivery.slots` binding - every host slot takes its documented default.');
         out.push('');
         out.push(repo.roles
             ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v) + warn('delivery.roles', k)]))

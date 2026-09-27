@@ -186,8 +186,8 @@ classDiagram
     ChapterReview --> Reviewer : names one
     ChapterReview --> ReviewState : is in
     Approval --> ChapterReview : clears
-    Approval --> MetaBlock : writes status, approved-by, approved-at
-    Acceptance --> MetaBlock : writes status, accepted-by, accepted-at
+    Approval --> MetaBlock : writes status, approved-by, approved-at, approved-hash
+    Acceptance --> MetaBlock : writes status, accepted-by, accepted-at, accepted-hash
     Acceptance --> Approval : stands on
     ReviewQueue --> ChapterReview : reads many, writes none
 ```

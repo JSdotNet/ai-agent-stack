@@ -7,6 +7,8 @@ description: 'Refresh a repository technology graph from deterministic package i
 
 Open the reply with `devbook@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
+This file exceeds the 40-line body budget on purpose: it is a staged procedure whose inventory, review, and write stages each name the script and the flag a run needs, and a flag stated by half runs nothing.
+
 ## Purpose
 
 Update a repository's `tech/` technology graph from repeatable evidence. Package-derived

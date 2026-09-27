@@ -48,7 +48,8 @@ plugins: `.devbook/arc42/adr/checks-and-indexes.md`.
 
 ## Refresh
 
-Never in a session. Two branches that each touch one chapter both rewrite the same JSON,
+Never in a session, with one exception: `refresh`, when a person asks for this branch's index
+to be current, committed on its own. Two branches that each touch one chapter both rewrite the same JSON,
 and the conflict is only resolvable by re-running the generator — so refresh is
 `./build/Update-DevbookIndex.ps1` on demand, or the nightly workflow on the default branch,
 and a pull request that only edits chapters carries no regenerated index. The drift

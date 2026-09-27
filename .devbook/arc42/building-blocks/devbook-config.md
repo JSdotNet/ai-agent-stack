@@ -476,7 +476,7 @@ flowchart TD
 related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-It names every plugin in the marketplace and its `dependencies` array is empty — devbook
+It names every plugin in the marketplace and it declares no `dependencies` — devbook
 included. That is the whole shape of it.
 
 ### Outbound

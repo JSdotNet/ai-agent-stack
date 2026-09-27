@@ -76,7 +76,7 @@ the engine names folders and never the `devbook` plugin. What remains real and u
 
 **The guide is its own plugin.** A skill that explains the stack must name every part of it,
 and a lower layer never names a higher one; both cannot hold in one plugin, so `devbook-config`
-has an empty `dependencies` array and stays reachable with `devbook` absent. Its write skills
+declares no `dependencies` and stays reachable with `devbook` absent. Its write skills
 stop at the engine keys and invoke `devbook:init` or `devbook:update` for the stamp. It names a host's own
 plugin directories on purpose: where a plugin is installed is a fact about a host and nothing
 else, and no slot exists for it.

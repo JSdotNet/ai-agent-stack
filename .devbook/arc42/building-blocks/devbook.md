@@ -846,8 +846,8 @@ left silent without the next payload-path rename landing the way `.backlog` did.
 record holds the four remediation options; the first — name the coupling in prose and stop
 restating this block's rules — is the one to take.
 
-**Nothing here names a flow.** This block ships the shape and the check; how a chapter change
-is carried is the engine's, and the two meet only in a repository that installed both.
+**Nothing here ships a flow.** The engine's flows appear in this block only as the routing a
+repository's session-start hook performs; how a chapter change is carried is the engine's, and the two meet only in a repository that installed both.
 
 The checker, the fence writer, and the `tech/` inventory are this block's, and so are `validate`,
 `annotation-sweep`, and `tech-update`. The canvas is not: it is `devbook-derived`'s and loads

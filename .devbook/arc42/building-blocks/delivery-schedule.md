@@ -48,7 +48,7 @@ Run `devbook:validate` over every adopted folder, fix what it reports in the cha
 the committed indexes where `devbook-derived` keeps them, and land one pull request — or a
 schedule-report issue when `devbook-config:doctor`, where installed, finds the installation
 needs a person. The daily `devbook-validate`
-trigger's target: the catalog names a schedule skill, never a foundation skill directly.
+trigger's target: the catalog names a `schedule-*` entry point or, as with `prose-check`, a read-and-report skill that picks its own input, and never a flow.
 
 ### schedule-devbook-verify
 

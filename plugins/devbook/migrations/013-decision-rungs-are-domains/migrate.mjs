@@ -52,7 +52,7 @@ async function* markdownFiles(dir) {
     for (const entry of entries) {
         const full = path.join(dir, entry.name);
         if (entry.isDirectory()) {
-            if (entry.name === "_meta") continue;
+            if (entry.name.startsWith("_")) continue; // _meta, _tools: never chapters
             yield* markdownFiles(full);
         } else if (entry.name.toLowerCase().endsWith(".md")) {
             yield full;

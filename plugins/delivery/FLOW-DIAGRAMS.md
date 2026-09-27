@@ -135,8 +135,8 @@ flowchart TD
     T -->|documentation/config| E
     E --> F{User approves?}
     F -->|Yes| G["Create Pull Request or Skip"]
-    F -->|No| H["Return to the relevant earlier stage"]
-    H --> A
+    F -->|No| H["Return to the stage the notes concern"]
+    H --> T
     G --> DU["Verification or Skip (code-modifying only)"]
     DU --> U["Work Item Update or Skip"]
     U --> I["Summary"]

@@ -929,7 +929,8 @@ flowchart TD
     t0 --> t1
     t1 --> t2
     t2 --> t3
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 
@@ -1049,7 +1050,8 @@ flowchart TD
     g -->|approve| t0
     t0 --> t1
     t1 --> t2
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 
@@ -1114,7 +1116,8 @@ flowchart TD
     t0 --> t1
     t1 --> t2
     t2 --> t3
-    g -->|revise| s0
+    g -->|revise| rv["the stage the notes concern"]
+    rv --> t
     g -->|decline| blocked(["Blocked"])
 ```
 

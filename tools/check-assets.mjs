@@ -34,6 +34,8 @@
 //   skills        every plugins/*/skills/<name>/SKILL.md opens with the line that reports
 //                 its plugin name and version from the manifest beside it (see the
 //                 decision "Every Skill Opens With Its Plugin Version")
+//   migrations    every migrations/<NNN>-<slug>/ is a MIGRATION.md beside a migrate.mjs,
+//                 and devbook's are numbered no higher than CONTRACT_VERSION
 //   catalog       delivery-schedule's schedule catalog passes its own checker,
 //                 plugins/delivery-schedule/tools/schedule-catalog/check.mjs, run from here
 //                 so the pull-request gate covers a trigger that targets a flow
@@ -533,6 +535,35 @@ for (const file of await walk(PLUGINS)) {
     if (lines > BUDGETS[key]) over.push({ file: rel(file), lines, budget: BUDGETS[key] });
 }
 over.sort((a, b) => b.lines / b.budget - a.lines / a.budget);
+
+// ── migrations ──────────────────────────────────────────────────────────────
+//
+// A migration is the pair — MIGRATION.md beside migrate.mjs — numbered by the contract
+// version that shipped it; one without its pair, or numbered past the contract, is a
+// folder a reconcile cannot run.
+
+{
+    const graphPath = path.join(PLUGINS, "devbook", "tools", "devbook-meta", "graph.mjs");
+    const contract = (await exists(graphPath))
+        ? Number((/CONTRACT_VERSION\s*=\s*(\d+)/.exec(await readFile(graphPath, "utf8")) ?? [])[1])
+        : NaN;
+    for (const folder of folders) {
+        const dir = path.join(PLUGINS, folder, "migrations");
+        if (!(await exists(dir))) continue;
+        for (const entry of await readdir(dir, { withFileTypes: true })) {
+            if (!entry.isDirectory()) continue;
+            const label = `plugins/${folder}/migrations/${entry.name}`;
+            const numbered = /^(\d{3})-[a-z0-9-]+$/.exec(entry.name);
+            if (!numbered) { error(`${label}: a migration folder is named <NNN>-<slug>`); continue; }
+            for (const f of ["MIGRATION.md", "migrate.mjs"]) {
+                if (!(await exists(path.join(dir, entry.name, f)))) error(`${label}: missing ${f}; a migration is the pair`);
+            }
+            if (folder === "devbook" && Number.isFinite(contract) && Number(numbered[1]) > contract) {
+                error(`${label}: numbered past CONTRACT_VERSION ${contract}`);
+            }
+        }
+    }
+}
 
 // ── schedule catalog ────────────────────────────────────────────────────────
 //

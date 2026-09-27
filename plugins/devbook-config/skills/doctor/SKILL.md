@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale".'
+description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every provider id bound in the effective configuration that resolves to no skill, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill".'
 ---
 
 # devbook-config doctor
@@ -40,13 +40,31 @@ two writers for one stamp is how a reconcile stops being idempotent.
    | A materialized hash matches nothing ever shipped | customized | Report it and leave it — often deliberate |
    | An `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
 
-4. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
-   hard drift; report staleness and customization without failing — a stale generated file
-   must not block an unrelated pull request.
+4. **Resolve every provider.** Run `node tools/stack-config/check.mjs --print` from delivery's
+   `installPath` and read `config` from its stdout — never merge the layers by hand. delivery
+   not installed: say the providers are unchecked, and why. Take every
+   provider id under `extensions` — a string, an object's `provider`, a chore entry's `run` —
+   and under `bindings`: each `delivery.roles` value, and a `delivery.tracker` provider that
+   is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
+   providers. `null` is an unbound point, not a finding. Resolve each:
+   - `plugin:skill` — `skills/<skill>/SKILL.md` or, for a role, `agents/<skill>.agent.md`
+     under that plugin's `installPath`; a bare `plugin` — the plugin is installed;
+   - `repo:<skill>` — `.agents/skills/<skill>.md`, `.claude/skills/<skill>/SKILL.md`, or
+     `.github/skills/<skill>/SKILL.md` in the repository.
+
+   An id in the **Old** column of devbook's `migrations/015-openspec-verbs/MIGRATION.md` is
+   hard: name its successor from the **New** column, and say `devbook:update` runs the
+   migration that rewrites it. Any other id that resolves to nothing is a warning naming the
+   file and key that bind it — the flow degrades past it, so it never fails the run. A
+   plugin the report does not list is outside this catalog: say it is unchecked.
+5. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
+   hard drift; report staleness, customization, and unresolved providers without failing — a
+   stale generated file must not block an unrelated pull request.
 
 ## Do not
 
-- Do not apply a migration, edit a stamp, or rewrite an `AGENTS.md` section. Each belongs to
+- Do not apply a migration, edit a stamp, rewrite an `AGENTS.md` section, or rebind a
+  provider. Each belongs to
   its component's `update`, which records what it did as it does it.
 - Do not treat a component this machine has not installed as drift: its stamp is shared, and
   the report's `blocked` scope already says so.

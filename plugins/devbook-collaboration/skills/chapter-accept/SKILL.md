@@ -1,6 +1,6 @@
 ---
 name: chapter-accept
-description: 'Run the acceptance decision on a devbook chapter — show the built work against the chapter as evidence rather than a summary of it, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on acceptance write devbook''s own status: accepted rung with accepted-by, accepted-at, and accepted-hash beside the approval record it stands on. Use when: accepting delivered work against its chapter, recording that what was built satisfies what was agreed, signing off a feature at a personal-validation gate, or lifting an acceptance that has gone stale. Triggers on: "accept this chapter", "does the build match the spec", "record the acceptance", "is this accepted", "the acceptance is stale", "sign off the delivered work".'
+description: 'Run the acceptance decision on a devbook chapter, or on a change once every step is merged and verified aligned — show the built work against the chapter as evidence rather than a summary of it, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on acceptance write devbook''s own status: accepted rung with accepted-by, accepted-at, and accepted-hash beside the approval record it stands on. Use when: accepting delivered work against its chapter, recording that what was built satisfies what was agreed, signing off a feature at a personal-validation gate, or lifting an acceptance that has gone stale. Triggers on: "accept this chapter", "does the build match the spec", "record the acceptance", "is this accepted", "the acceptance is stale", "sign off the delivered work".'
 ---
 
 # chapter accept
@@ -13,8 +13,10 @@ Record that a person saw the implemented work against this chapter and
 accepted it. This is the one place `status: accepted` is written, and it is
 never written without a person choosing it in this session.
 
-**`domain/` chapters only**, like the approval under it: both rungs are on that
-folder's ladder and no other, per `devbook-chapter-metadata.md`.
+**A `domain/` chapter, or a change**, like the approval under it: both rungs
+are on that folder's ladder and on a change's `proposal.md`, per
+`devbook-chapter-metadata.md`. A target under `openspec/changes/<name>/` is a
+change: follow **On a change** below.
 
 `approved` says the specification is right; `accepted` says what was built
 satisfies it. The two are a stack: an accepted chapter keeps its approval
@@ -81,6 +83,28 @@ terseness.
 
 5. **Report** the chapter, who accepted it, the day, and what evidence they saw.
    Commit the chapter with its metadata, and stop.
+
+## On a change
+
+A change is accepted as one, on its `proposal.md`, per `devbook-changes.md`:
+
+- **Step 1** shows `proposal.md`, every delta under `devbook-delta/`, and the
+  open notes of each, as `chapter-approve` does on a change, beside the
+  evidence.
+- **Step 2** adds two rows that block, and on either shows what is left and
+  refuses:
+
+  | Condition | Say |
+  |---|---|
+  | A step in `tasks.md` is not `done` — merged — as the bound tracker's `read_item` reports it: `open`, `in progress`, `in review`, or `done` | Each step not merged, with its state. With no tracker bound, read each step's pull request; unknown is not merged |
+  | The last `devbook:verify-change` verdict is not `aligned` for every delta | Each delta and its verdict. A `code-ahead` reported `covered by change <name>, step N` for a merged step is aligned for this purpose; none run is not aligned — run it first |
+
+  The approval rows read `approved-hash` against
+  `chapter-hash.mjs openspec/changes/<name>`.
+- **Step 4** writes the rung and its record on `proposal.md`'s file block,
+  `accepted-hash` from the same command and always written, and nothing on the
+  chapters the deltas target. Merging the change is then
+  `delta.mjs --apply <name>`, which refuses without this record.
 
 ## Lifting a stale acceptance
 

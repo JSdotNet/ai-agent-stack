@@ -37,8 +37,22 @@ Sweeping the answered notes is `devbook:annotation-sweep`, before the branch
 merges. It is devbook's, because the fence is.
 
 Approval is devbook's own field and keeps devbook's meaning. Both decision
-rungs live on `domain/`'s ladder and no other, so `chapter-approve` and
-`chapter-accept` run on model chapters; the review pass itself runs anywhere.
+rungs live on `domain/`'s ladder and on a change's `proposal.md`, so
+`chapter-approve` and `chapter-accept` run on model chapters and on changes;
+the review pass itself runs anywhere.
+
+## On a change
+
+A change under `openspec/changes/<name>/` goes through the same five skills
+as one unit, per devbook's `devbook-changes.md`: its `proposal.md` and every
+delta under `devbook-delta/` are shown together with their open notes, one
+decision is taken, and it is written once, on `proposal.md`, with a hash that
+covers the whole change. The chapters the deltas target get no rung — their
+`change` provenance points at the archived proposal. `chapter-accept` on a
+change also refuses until every step in `tasks.md` is merged and the last
+`verify-change` verdict is `aligned` for every delta, and devbook's
+`delta.mjs --apply` refuses to merge a change that is not accepted. Deciding a
+chapter outside a change is unchanged.
 This plugin never
 writes a rung without a person choosing it in that session, and sweeps the
 answered notes in the same change: an approved chapter carries the decision,

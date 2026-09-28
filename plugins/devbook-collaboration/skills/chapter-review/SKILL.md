@@ -1,6 +1,6 @@
 ---
 name: chapter-review
-description: 'Review one devbook chapter and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about — the open fences are the verdict. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
+description: 'Review one devbook chapter, or one change as a whole, and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about — the open fences are the verdict. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
 ---
 
 # chapter review
@@ -89,6 +89,15 @@ lens is a review that misses the finding.
 
 7. **Report** the findings, the verdict, who owes the next move, and what you
    changed. Commit the chapter and its notes together, and stop.
+
+## On a change
+
+A target under `openspec/changes/<name>/` is reviewed as one: load
+`proposal.md` and every delta under `devbook-delta/` in step 1, with each
+delta's target chapter as it stands and the chapters `solution.md` names —
+the neighbours a change leans on. Run `delta.mjs --check <name>`; each error
+is a finding. Write each fence on the file it is about. Cleared hands the whole
+change to `chapter-approve`.
 
 ## Do not
 

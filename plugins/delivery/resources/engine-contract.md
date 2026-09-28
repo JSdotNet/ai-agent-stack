@@ -158,12 +158,12 @@ zeroed retry budget, an extra checkpoint of your own.
 
 One thing an overlay may say that the committed file may not: **`ext`**, the machine-scope
 counterpart of `components`. `ext.<plugin>.<key>` holds what a plugin needs to remember about
-your machine and nothing else — the environment and model a scheduled routine runs with, say
+your machine and nothing else — a path or a preference that holds on this machine alone, say
 — and is the *Extension Namespace* the devbook already reserves in a chapter's `meta` block,
 applied to the config. The engine checks only that it is an object of objects, merges it like
 any other object, and reads no key in it; the plugin that owns the namespace does, and asks
 only for what is absent there. Refused in the committed file: a reviewer has no use for one
-machine's routine settings, and a personal value in a committed file is everybody's.
+machine's settings, and a personal value in a committed file is everybody's.
 
 `check.mjs` finds both layers on its own — from the environment and the committed `id` — and
 validates each three times over: what it may not say, whether it is well-typed alone, and

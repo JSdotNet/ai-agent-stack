@@ -500,7 +500,11 @@ migration, and `021-no-review-triad` deletes it.
 22 gives `design/` its one `type`, `requirement`: a rule a component keeps or
 breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
 warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
-ships no migration.
+ships no migration. 23 adopts the change folder, `openspec/changes/`: a change's `proposal.md`
+is `type: change` at `status: proposed` with a `category`, each file under its `devbook-delta/`
+is a delta the checker resolves through `delta.mjs`, `archive/` is never indexed, and `change`
+is legal on any chapter as the merge's provenance. A repository without the folder validates
+as before, so it ships no migration.
 
 ## Folder structure
 

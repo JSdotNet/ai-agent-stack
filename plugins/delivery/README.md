@@ -109,7 +109,7 @@ engine names two skills by name and reads them by path, and writes neither:
 
 | Skill | Fills | Where it comes from |
 |---|---|---|
-| `start` | the facts the `app.start` provider reads — the command, the entry points, the readiness signals, the credential pointer | `.agents/skills/start.md`, the repository's own, with a wrapper per host |
+| `run` | the facts the `app.start` provider reads — the setup, the command, the entry points, the readiness signals, the credential pointer | `.claude/skills/run-<name>/SKILL.md`, the repository's own recipe, which Claude Code's `run` follows; Copilot's twin at `.github/skills/run/` points at it |
 | `capture` | evidence capture inside Validation — the layout, the naming, the tooling | `.agents/skills/capture.md`, the same shape |
 
 Whoever seeds them is the repository's business; the engine only expects a skill by that name

@@ -54,7 +54,8 @@ lived in an external QA plugin, so the phase that guarantees evidence could only
 installed. `resources/capture-contract.md` holds with no QA plugin bound, and an unavailable
 capture marks the stage `blocked`. Capture is not an extension point — the guardrail is as
 strong either way and adding a point later is easy. How one product's application comes up is
-prose, seeded as `start` and `capture` skills under `.agents/skills/` that the repository edits.
+prose the repository edits: a `run` recipe at `.claude/skills/run-<name>/SKILL.md` and a `capture`
+skill under `.agents/skills/`.
 
 **Four flows, named for what changes.** Sixteen names drew lines the bodies did not: the three
 `create-*` flows were `flow-feature` with a stage added, the five folder flows shared four

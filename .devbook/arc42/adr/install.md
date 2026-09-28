@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-26
+date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -56,8 +56,17 @@ and is refreshed while it hashes to a release; a procedure body under `.agents/s
 the repository's from its first edit, and the only thing the plugin keeps refreshing is the
 wrapper, which now carries the procedure's goal above the pointer. Same three files, same
 hashes, same customized rule; what differs is which of the three the plugin expects to keep
-rewriting. A present file the component never stamped — a `start` an earlier engine seeded —
+rewriting. A present file the component never stamped — a `capture` an earlier engine seeded —
 is asked about once and kept as the repository's or replaced, never silently overwritten.
+
+**`run` is Claude Code's recipe, not a fourth copy.** Claude Code's `run` and `/run-skill-generator`
+look for `.claude/skills/run-<name>/SKILL.md`, and a `start` procedure beside them was a second
+recipe neither read. So the body of `run` is that recipe — the generator's, or the seed where no
+host can run it — `managed: false` from the moment it lands, and Copilot gets a managed twin at
+`.github/skills/run/SKILL.md` pointing at it. The rename moved a path a customized body sat at,
+which hash-matching cannot do, so `devbook-procedures` ships the first migration outside
+`devbook`: `001-start-is-run`, numbered in its own sequence and idempotent by its `--check`, with
+no ledger — the shape it removes is the record that it ran.
 
 **OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
 the marketplace uses it, so a person who knows one tool reads the other without translating.
@@ -118,6 +127,8 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |
+| 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. |
 | 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. |
 | 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. |
 | 2026-09-25 | The component `init`/`update` pairs, bar `delivery-schedule`'s, are `user-invocable: false`; `devbook-config` is the menu's one entry. |

@@ -1,14 +1,14 @@
 # Hosts
 
 ```meta
-date: 2026-09-25
+date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#host-slots", ".devbook/arc42/08-crosscutting-concepts.md#host", ".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/tech/hosts.md#copilot-plugin-api", ".devbook/arc42/adr/install.md"]
 ```
 
 Every asset is authored once and read by both Claude Code and GitHub Copilot. Where the two
 hosts disagree on a filename, the file is authored once in a host-neutral place and each host
 gets a wrapper of frontmatter and one sentence. Nothing in the marketplace names one host's own
-file, path, or capability, save the four divergences recorded below, and no plugin exists per host. A checker over the hand-authored
+file, path, or capability, save the five divergences recorded below, and no plugin exists per host. A checker over the hand-authored
 files, `tools/check-assets.mjs`, replaces the generator that once derived one host's files from
 the other's.
 
@@ -72,7 +72,7 @@ plain link, so the contract still reads the same on both.
 - **All three pane ids, as before 2026-09-09.** `tabs_context` and `navigate` only reused a
   tab; opening once per session needs one call, so one id is named.
 
-Four divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
+Five divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
 because where a plugin is installed is a fact about a host and nothing else; and
 `delivery-schedule` names the scheduler tools — the local one it creates through and the cloud
 one it only disables — because an install that could not would schedule nothing, or fire a
@@ -85,7 +85,12 @@ substitutes nothing, as Copilot CLI does, leaves a placeholder, which is the `se
 slot's unbound case ([chapter 5](../05-building-block-view.md#host-slots)). And `flow-runner`
 names Claude Code's pane tool, because the runner is the one place the dashboard is opened
 and an allowlist cannot reach a tool by pattern; the surface contract describes the pane
-generically, so the name lives in the allowlist and nowhere else.
+generically, so the name lives in the allowlist and nowhere else. And the `run` procedure's body lives at
+Claude Code's own `.claude/skills/run-<name>/SKILL.md`, recorded by its `/run-skill-generator`,
+because Claude Code's built-in `run` skill follows that recipe and nothing else, and a second
+recipe beside it was one neither host's `run` read. Copilot gets a twin named `run` at
+`.github/skills/run/`, so the engine names one skill on both hosts and branches nowhere; only
+the path of the body is Claude's.
 
 ## History
 
@@ -94,6 +99,7 @@ generically, so the name lives in the allowlist and nowhere else.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | The `run` procedure's body is Claude Code's `run-<name>` recipe, with a Copilot twin: the fifth divergence. |
 | 2026-09-28 | `delivery-schedule` names the desktop app's local scheduler and keeps `RemoteTrigger` only to disable a cloud copy: every schedule is a local routine ([plugin boundaries](plugin-boundaries.md)). |
 | 2026-09-25 | `flow-runner` names `mcp__Claude_Browser__preview_start` and opens the dashboard in the pane: the fourth divergence, reversing 2026-09-09. |
 | 2026-09-23 | The `session-id` slot: `delivery`'s `start_run` callers carry `${CLAUDE_SESSION_ID}`, the lane's third recorded divergence. |

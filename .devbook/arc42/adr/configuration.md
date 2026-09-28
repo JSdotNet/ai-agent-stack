@@ -10,7 +10,7 @@ A repository's wiring is one committed file, `.devbook/config.json`: the engine'
 entry and a committed `id`. Unknown keys are rejected by name. A `config.local.json`
 outside every clone overlays the engine keys at two layers — the user's devbook config
 directory, and `repos/<id>/` under it — and may add a gate but never remove one. How
-the application starts is not configuration: it is the repository's own `start` skill.
+the application starts is not configuration: it is the repository's own `run` recipe.
 
 ## Why
 
@@ -57,9 +57,9 @@ The gitignored checkout layer that started the overlay was retired once both use
 existed: everything personal has a home outside the repository, so the repository has nothing
 to ignore, and devbook's `.gitignore` block went with it.
 
-**Runtime facts live in the `start` skill, not a `runtime` key.** The flow context file had
+**Runtime facts live in the `run` recipe, not a `runtime` key.** The flow context file had
 eight sections; three were answered by config and `.mcp.json`, one spelled `null` in Markdown,
-and the rest were facts the `start` procedure consumed in its next line. Configuration chooses
+and the rest were facts the start procedure — `run` since 1.12.0 — consumed in its next line. Configuration chooses
 among behaviour the engine implements, and how one product's application comes up is prose the
 repository owns. Nothing to start is `extensions.app.start: null`.
 

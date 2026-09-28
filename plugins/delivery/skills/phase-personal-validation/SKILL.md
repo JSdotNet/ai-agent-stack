@@ -32,7 +32,7 @@ A link to a process that is not listening is worse than no link.
 
 - **Reuse the instance Validation left running** when there is one. Start a second only
   after confirming the first is gone.
-- **Otherwise start it** with the `app.start` service — the repository's `start` skill when
+- **Otherwise start it** with the `app.start` service — invoking the `run` skill when
   that is the provider — or the command QA proved this run. **Never hand the person a
   command to run themselves** — starting it is
   this phase's job, and stopping at a command list is a failed handback, not a shortcut.
@@ -100,7 +100,7 @@ of it are the gate's, in `resources/flow-phases.md`.
 - The change set, the run's scope and acceptance criteria, and the change kind.
 - The QA result and evidence from `phase-validation`, when that phase ran.
 - The `app.start` result — base URLs and health verdict — and the path of the repository's
-  `start` skill when the flow-runner found one.
+  `run` recipe when the flow-runner found one.
 
 ## Outputs
 
@@ -123,5 +123,5 @@ of it are the gate's, in `resources/flow-phases.md`.
 ## Reference
 
 Gate contract and the recorded decision: `resources/flow-phases.md`.
-Runtime facts: the repository's `start` skill at `.agents/skills/start.md`.
+Runtime facts: the repository's `run` recipe at `.claude/skills/run-<name>/SKILL.md`.
 Revalidation on a repeat pass: `skills/phase-validation/SKILL.md`.

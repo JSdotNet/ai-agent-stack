@@ -68,7 +68,7 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    whole adoption.
 
    The order is load-bearing at three points: derived's `update` refuses to run until
-   `components.devbook` names an adopted folder; procedures' `update` asks about a `start` or
+   `components.devbook` names an adopted folder; procedures' `update` moves a `start` to `run` and asks about a
    `capture` an older engine seeded before `delivery:update` releases its claim on it; and
    schedule checks its targets against what the repository enables. Each is **required**: a
    failure does not abort the rest, and does make the whole run report as failing.

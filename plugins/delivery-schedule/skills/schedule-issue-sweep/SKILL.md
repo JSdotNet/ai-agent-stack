@@ -303,7 +303,7 @@ requests, and the brief remain the source of truth.
   touches a runtime surface says so under *what could not be proved*, and that is what to
   check by hand before flipping the draft. For work that needs a person present from the
   start, use `start-session-from-issue` in `delivery`.
-- **Every resolution builds in the same environment.** Give the repository's `start` skill its
+- **Every resolution builds in the same environment.** Give the repository's `run` recipe its
   own ports and containers if a build assumes exclusive use of them.
 - The conflict scan is a heuristic: it compares likely paths against open pull request diffs.
   Two issues that turn out to touch the same file cost a rebase, not a lost change.

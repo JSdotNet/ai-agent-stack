@@ -90,7 +90,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 - **No model ever appears in this file.** Model choice is personal — see
   `flow-model-selection.md`.
 - **No secrets.** The file is committed. A credential pointer belongs in the repository's
-  `start` skill, and the value belongs in a secret store.
+  `run` recipe, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks `id` and the
   four engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself, and
@@ -306,7 +306,7 @@ fail offline, in a fresh repository with no remote, and on a base branch not yet
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
 `phase-validation`'s change-kind selection. The first one present wins, and
-`policy.qa.ceiling` caps the result however it was reached. The repository's `start` skill
+`policy.qa.ceiling` caps the result however it was reached. The repository's `run` recipe
 describes the application and never sets a depth. `qa.depth` may be overlaid per machine,
 `qa.ceiling` may not.
 

@@ -1,19 +1,19 @@
 ---
 name: show
 description: "Show the feature being built the way a reviewer would see it: the app running, opened at what the current branch changes, walked through, with evidence taken. Use when: 'show me', 'demo it', 'let me see it working', a flow wants a demo of finished work, or a review needs to look rather than read."
-goal: "Put the feature on the current branch in front of a reviewer: the application running through `start`, opened at the area this branch changes, its scenario walked end to end, every step evidenced through `capture` and cited by path. A demo without evidence paths is not a demo."
+goal: "Put the feature on the current branch in front of a reviewer: the application running through `run`, opened at the area this branch changes, its scenario walked end to end, every step evidenced through `capture` and cited by path. A demo without evidence paths is not a demo."
 ---
 
 # Show the Feature
 
-Compose `start` and `capture` into a walk a reviewer can follow. **Edit this file** — the
+Compose `run` and `capture` into a walk a reviewer can follow. **Edit this file** — the
 branch-to-area map, the walk, and the report are yours; the goal in the wrapper is not.
 
 ## Run it
 
-1. **Start it** by invoking the `start` skill. Reuse the instance it reports; never start a
+1. **Start it** by invoking the `run` skill. Reuse the instance it reports; never start a
    second one from here.
-2. **Sign in** the way `start` says. A credential is never typed by you.
+2. **Sign in** the way `run` says. A credential is never typed by you.
 
 ## Go to
 
@@ -25,7 +25,7 @@ branch-to-area map, the walk, and the report are yours; the goal in the wrapper 
 | _example_ | `/orders` | `src/Orders.Web/Pages/Orders/` |
 
 Match `git diff --name-only <default-branch>...HEAD` against the `Owns` column and open the
-first area that hits, on the entry point `start` reported. Use the host's inline browser when
+first area that hits, on the entry point `run` reported. Use the host's inline browser when
 it has one; otherwise give the plain URL and say so. No hit: open the front end's root and
 say the branch changed nothing the table names.
 

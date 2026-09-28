@@ -23,9 +23,9 @@ whether the document can end in an answer; if it ends in two options and no pick
 
 | Concern | Standing choice | Last decided |
 | --- | --- | --- |
-| [Hosts](hosts.md) | One authored copy per asset, a wrapper per host where filenames differ, nothing names a host's own file or capability save four recorded divergences, a checker over hand-authored files. | 2026-09-25 |
-| [Configuration](configuration.md) | One committed `.devbook/config.json` with the engine's four keys and every component's entry; a three-layer overlay that can only tighten; runtime facts in the `start` skill. | 2026-09-17 |
-| [Install](install.md) | A plugin reaches a repository only through its `init` and is kept current by its `update`, one way, hash-tracked; `validate` checks the corpus and `devbook-config:doctor` the installation; only `devbook` carries a ledger; this repository adopts like any other, its vendored copies checked against the plugins; component pairs are hidden from the menu behind `devbook-config`. | 2026-09-25 |
+| [Hosts](hosts.md) | One authored copy per asset, a wrapper per host where filenames differ, nothing names a host's own file or capability save five recorded divergences, a checker over hand-authored files. | 2026-09-28 |
+| [Configuration](configuration.md) | One committed `.devbook/config.json` with the engine's four keys and every component's entry; a three-layer overlay that can only tighten; runtime facts in the `run` recipe. | 2026-09-17 |
+| [Install](install.md) | A plugin reaches a repository only through its `init` and is kept current by its `update`, one way, hash-tracked; `validate` checks the corpus and `devbook-config:doctor` the installation; only `devbook` carries a ledger; this repository adopts like any other, its vendored copies checked against the plugins; component pairs are hidden from the menu behind `devbook-config`; `devbook-procedures` moves a path by script, not ledger. | 2026-09-28 |
 | [Checks and Indexes](checks-and-indexes.md) | Three checks on every pull request and the validator on the `--check` path, all `devbook`'s; the committed `_meta/` index, its refresh, and the canvas are `devbook-derived`'s, enabled only where the index is wanted. | 2026-09-23 |
 | [Chapter Schema](chapter-schema.md) | One layout under `.devbook/`; `approved` and `accepted` are rungs on `domain/`'s ladder alone, each with a signature and an optional content fingerprint; three folders rest at `active`, and a repository may declare its own transitional rungs in `.devbook/statuses.json`; a context opens with `context.md` — boundary, flags and settings, small actors and dependencies — describes its skills, and a term is a chapter or an alias in `domain.md`. | 2026-09-28 |
 | [Annotations](annotations.md) | The fence and its lifecycle are `devbook`'s schema and reach the five folders only; a review in progress is `status` plus the open fences, never a field; the chapter gate is the review plugin's and reads the chapter; only an open question blocks. | 2026-09-28 |
@@ -33,7 +33,7 @@ whether the document can end in an answer; if it ends in two options and no pick
 | [Hooks](hooks.md) | A session-start hook speaks only where the repository adopted the plugin; a tool matcher names its tools. | 2026-09-07 |
 | [Flow Engine](flow-engine.md) | Four flows named for what changes over a closed set of eleven points; every outside party is a binding; the runner holds every gate and prepends Update Base; `verify` is the spec check. | 2026-09-23 |
 | [Plugin Boundaries](plugin-boundaries.md) | One folder per plugin, three ways to couple, a lower layer never names a higher one; review, the committed index, fan-out, the unattended lane, and the guide are their own plugins; the specialists live elsewhere. | 2026-09-17 |
-| [Releases](releases.md) | Every plugin `1.11.0`, moved together; a contract bump is a minor release and ships a migration when one is owed, which lives for one major; the marketplace name is a frozen per-machine key. | 2026-09-27 |
+| [Releases](releases.md) | Every plugin `1.12.0`, moved together; a contract bump is a minor release and ships a migration when one is owed, which lives for one major; the marketplace name is a frozen per-machine key. | 2026-09-28 |
 
 ## Where a numbered record went
 

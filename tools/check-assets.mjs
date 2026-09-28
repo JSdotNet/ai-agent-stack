@@ -25,7 +25,8 @@
 //                 Host"); a rule named for a plugins/*/rules/<name>.md is a delivered
 //                 copy — verbatim, globs from that plugin's rules.json
 //   procedures    every .agents/skills/<name>.md has a wrapper per host, rendered from
-//                 the devbook-procedures seed and pointing at the copy
+//                 the devbook-procedures seed and pointing at the copy; run is a
+//                 .claude/skills/run-<name>/ recipe with a Copilot twin pointing at it
 //   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
 //                 description, no glob of its own, and an entry with globs in the
 //                 rules.json beside it (see the decision "A Plugin's Rules Reach a Host
@@ -401,6 +402,7 @@ if (await exists(SHARED_SKILLS)) {
             if (!body.includes(pointer)) error(`${label}: body must point at .agents/skills/${name}.md, never restate it`);
         }
     }
+    if (procedures.has("run")) error(".agents/skills/run.md: run's body is a .claude/skills/run-<name>/SKILL.md recipe, never an .agents/skills/ copy");
     // A wrapper that points into .agents/skills/ at nothing is a procedure in one host only.
     for (const parts of SKILL_WRAPPERS) {
         const dir = path.join(ROOT, ...parts);
@@ -413,6 +415,34 @@ if (await exists(SHARED_SKILLS)) {
                 error(`${[...parts, entry.name].join("/")}/SKILL.md: points at .agents/skills/${entry.name}.md, which does not exist`);
             }
         }
+    }
+}
+
+// run is the exception (skill-wrappers.md, "`run`, the exception"): each body is a Claude Code
+// recipe at .claude/skills/run-<name>/SKILL.md, and Copilot's twin at .github/skills/run/ is
+// rendered from the seed and points at every one of them.
+
+const RECIPES = path.join(ROOT, ".claude", "skills");
+const recipes = [];
+if (await exists(RECIPES)) {
+    for (const entry of await readdir(RECIPES, { withFileTypes: true })) {
+        const file = path.join(RECIPES, entry.name, "SKILL.md");
+        if (!entry.isDirectory() || !entry.name.startsWith("run-") || !(await exists(file))) continue;
+        recipes.push(entry.name);
+        const { fm } = frontmatter(await readFile(file, "utf8"));
+        if (scalar(fm, "name") !== entry.name) error(`.claude/skills/${entry.name}/SKILL.md: frontmatter name must equal the folder "${entry.name}"`);
+    }
+}
+const TWIN = path.join(ROOT, ".github", "skills", "run", "SKILL.md");
+if (await exists(TWIN)) {
+    const { fm, body } = frontmatter(await readFile(TWIN, "utf8"));
+    const seedPath = path.join(SEEDS, "run.md");
+    const seed = (await exists(seedPath)) ? frontmatter(await readFile(seedPath, "utf8")).fm : fm;
+    if (scalar(fm, "name") !== "run") error(`.github/skills/run/SKILL.md: name must be "run"`);
+    if (scalar(fm, "description") !== scalar(seed, "description")) error(`.github/skills/run/SKILL.md: description differs from the seed's; the twin is rendered from it`);
+    if (!recipes.length) error(`.github/skills/run/SKILL.md: no .claude/skills/run-<name>/SKILL.md for it to point at`);
+    for (const name of recipes) {
+        if (!body.includes(`Read \`.claude/skills/${name}/SKILL.md\``)) error(`.github/skills/run/SKILL.md: body must point at .claude/skills/${name}/SKILL.md`);
     }
 }
 

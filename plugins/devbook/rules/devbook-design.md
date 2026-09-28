@@ -111,6 +111,9 @@ Allowed `status` values in `design/`:
 | `active` | Agreed and binding for implementation. **Resting value — omit the field.** |
 | `deprecated` | Superseded; kept for history, must not be followed. |
 
+That is the built-in ladder; a repository replaces its transitional rungs per
+file in `.devbook/statuses.json`, per `devbook-chapter-metadata.md`.
+
 There is no `approved` or `accepted` rung here. The two decision rungs are
 `domain/`'s alone — see `devbook-domain.md`.
 

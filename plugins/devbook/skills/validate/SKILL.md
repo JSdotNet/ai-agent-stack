@@ -57,7 +57,8 @@ compressing a lookup table costs a repair, not a sentence.
    | Bad `number` / `date` / `index` value | A non-integer number, a date that is not `YYYY-MM-DD`, or an `index` other than `root`/`exclude` | Correct the value; `date` is a calendar day the content records, not a modification timestamp |
    | `index` or `number` on a chapter block | Both place the document in its directory, so they belong on the file-level block | Move the field to the file-level block, or drop it if the chapter needed neither |
    | No entry point | A directory the convention covers is missing its root document, or has excluded it | Create the expected file, or mark the right one `index: root` |
-   | Unknown status or type | A value outside the allowed ladder or value set | Use one of the values listed in the folder's own instruction file |
+   | Unknown status or type | A value outside the allowed ladder or value set | Use one of the values the message lists — the folder's own instruction file, or the `.devbook/statuses.json` rule it names |
+   | Error on `.devbook/statuses.json` | The repository's ladder lists the resting value, a decision rung, a rung off the `tech/` or `ai/` rating ladder, or has a malformed rule | Fix the file, never the chapters; the offending value is ignored meanwhile. The limits are in `devbook-chapter-metadata.md` under `status` |
    | Approval with no signature | `status: approved` with no `approved-by` or `approved-at` (warning) | Add who approved it and on what day, or drop the rung — an unsigned approval records no decision |
    | Approval record with no rung | `approved-by` or `approved-at` on a chapter whose `status` is not `approved` (warning) | Either restore `status: approved`, or delete both fields in the same change that dropped the rung |
    | Bad `approved-at` value | Not a `YYYY-MM-DD` calendar day | Correct it; it is the day a person approved the chapter |

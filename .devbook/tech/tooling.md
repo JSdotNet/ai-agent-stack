@@ -46,9 +46,10 @@ adopting repository, and the one this repository's `AGENTS.md` section names.
 its refresh of the second.
 
 `.github/workflows/repo-checks.yml` runs the asset checker, the authored generator's `--check`,
-and `claude plugin validate --strict` on every pull request, and `devbook-meta.yml` — the
-workflow `devbook:update` materialized from `plugins/devbook/assets/workflows/` — runs the
-vendored one's `--check`. The Node suites are run by hand before a commit.
+every `*.test.mjs` under `plugins/` and `tools/` through `node --test`, and `claude plugin
+validate --strict` on every pull request, and `devbook-meta.yml` — the workflow
+`devbook:update` materialized from `plugins/devbook/assets/workflows/` — runs the vendored
+one's `--check`.
 
 The surface servers are where the constraint bites hardest and still holds: an HTTP server, a
 server-sent event stream, a Markdown renderer, and a Mermaid page are all reachable from

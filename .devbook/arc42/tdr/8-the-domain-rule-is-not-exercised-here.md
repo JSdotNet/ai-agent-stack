@@ -78,14 +78,11 @@ in this tree to try it on, and a regression in one of them is found by a consume
 checker's own tests carry domain fixtures, which catches a schema regression but not a rule
 that has stopped making sense.
 
-Those tests are also weaker cover than the sentence above reads as.
-[`repo-checks.yml`](../../../.github/workflows/repo-checks.yml) runs `check-assets.mjs`,
-`build.mjs --check`, and `claude plugin validate`, and nothing else; every `*.test.mjs` under
-`plugins/devbook/tools/devbook-meta/` — `behaviour-files.test.mjs` among them — is run by hand,
-as that folder's README says. So what stands between a `domain/` schema regression and a
-consumer is a person remembering to run a file. Putting those tests in the workflow is cheap
-and independent of every option below: it would make the cover this record already credits
-real, without making the rule exercised, which is the thing this record is about.
+Since 2026-09-27 [`repo-checks.yml`](../../../.github/workflows/repo-checks.yml) runs every
+`*.test.mjs` under `plugins/` — `behaviour-files.test.mjs` among them — on every pull request,
+so a `domain/` schema regression fails the gate instead of waiting for a person to run a file.
+That makes the cover this record credits real without making the rule exercised, which is the
+thing this record is about.
 
 ## Remediation options
 

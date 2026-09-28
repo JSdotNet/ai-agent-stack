@@ -30,10 +30,18 @@ The first fails on a manifest, agent, or hook shape a host rejects or a decision
 the schedule catalog included, through its own checker — and reports body budgets. The second fails on a chapter whose `meta` block or reference does not
 resolve.
 
-`.github/workflows/repo-checks.yml` runs both on every pull request, and a third beside them:
-`claude plugin validate --strict` over the marketplace and every plugin manifest, which is what
-catches an unknown manifest field or a bad dependency range. Run it locally before a manifest
-change. The workflow calls `--check` only and never refreshes `_meta/`.
+`.github/workflows/repo-checks.yml` runs both on every pull request, and two more beside them.
+The third is `node --test` over every `*.test.mjs` under `plugins/` and `tools/`, each file
+named because the directory form loads nothing on Windows. Run it locally before changing a
+tool:
+
+```bash
+node --test $(git ls-files -- 'plugins/*.test.mjs' 'tools/*.test.mjs')
+```
+
+The fourth is `claude plugin validate --strict` over the marketplace and every plugin manifest, which is
+what catches an unknown manifest field or a bad dependency range. Run it locally before a
+manifest change. The workflow calls `--check` only and never refreshes `_meta/`.
 
 `--check` is the gate. Refreshing `_meta/` belongs to automation, never to a session: two
 branches that each touch one chapter both rewrite the same JSON, and the conflict is only

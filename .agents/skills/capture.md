@@ -10,18 +10,19 @@ Evidence here is text: command output, a host's transcript, a diff. There is no 
 screen, so the form is always a **text log** — never call it a screenshot, a recording, or a
 trace.
 
-## The three checks
+## The four checks
 
-Every capture of a branch's state is these three, run from the worktree root on the commit
+Every capture of a branch's state is these four, run from the worktree root on the commit
 under review, each into its own file:
 
 | Check | Command |
 | --- | --- |
 | Assets | `node tools/check-assets.mjs` |
 | Devbook metadata | `node plugins/devbook/tools/devbook-meta/build.mjs --check` |
+| Tool tests | `node --test $(git ls-files -- 'plugins/*.test.mjs' 'tools/*.test.mjs')` |
 | Manifests | `claude plugin validate --strict .`, then once per `plugins/*/` with a `.claude-plugin/plugin.json` |
 
-These are the three `.github/workflows/repo-checks.yml` runs; a local capture that disagrees
+These are the four `.github/workflows/repo-checks.yml` runs; a local capture that disagrees
 with CI is a finding about the environment, reported as one.
 
 ## Take it

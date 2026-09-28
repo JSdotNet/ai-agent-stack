@@ -190,6 +190,10 @@ repository path:
 move and does not index it. Derived `_meta/` folders are written beside the
 chapters they index, and the repository-wide rollup under `.devbook/_meta/`.
 
+A proposed change lives outside the parent, in `openspec/changes/<name>/`; its
+`proposal.md` and deltas are chapters too, indexed into the rollup alone. Their
+shape is `devbook-changes.md`'s.
+
 ### Chapter and file references
 
 Chapters are not given a separate stored id. A chapter is addressed by its
@@ -431,6 +435,10 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   "[Linking test cases](#linking-test-cases)" for the format, the level and
   runner vocabularies, and why this field exists where a code-path field
   deliberately does not.
+- **change** (optional) — the change whose merge last touched this chapter or
+  file: its folder name under `openspec/changes/`. Written by
+  `delta.mjs --apply`, never by hand. Available in every folder. See
+  `devbook-changes.md`.
 - **number** (optional, **file-level blocks only**) — this document's number
   within its directory, as a single non-negative integer: arc42 chapter 9,
   TDR 2. A numbered filename (`09-architecture-decisions.md`,

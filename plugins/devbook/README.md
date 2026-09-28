@@ -259,9 +259,10 @@ skills exist.
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the DevOps loop, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
+| `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
-Every glob is scoped to the `.devbook/` folders, so the plugin stays silent in
+Every glob is scoped to the `.devbook/` folders and the change folder, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
 #### How they reach a session

@@ -86,7 +86,7 @@ function replaceEntry(text, entry) {
 
 const seed = split(await readFile(path.join(PLUGIN, "assets", "skills", "run.md"), "utf8")).fm;
 // The release this migration ships in, stamped as `from` on what it writes.
-const version = "1.11.0";
+const version = "1.12.0";
 
 const stampText = (await exists(STAMP)) ? lf(await readFile(abs(STAMP), "utf8")) : null;
 const stamp = stampText ? JSON.parse(stampText) : null;

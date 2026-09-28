@@ -1,4 +1,4 @@
-# 001 — `start` is `run`, from 1.11.0
+# 001 — `start` is `run`, from 1.12.0
 
 ```meta
 appliesTo: [devbook-procedures]
@@ -29,7 +29,7 @@ Claude Code's `run` and `/run-skill-generator` look for `.claude/skills/run-<nam
 
 ## What breaks
 
-A caller naming `start`. Every flow in the marketplace names `run` from 1.11.0. A repository
+A caller naming `start`. Every flow in the marketplace names `run` from 1.12.0. A repository
 that already has a `run-*` recipe *and* `.agents/skills/start.md` is stopped rather than
 merged: fold one into the other by hand, delete `start.md`, and run the script again. A
 `start` wrapper that devbook-procedures did not write is reported and left.

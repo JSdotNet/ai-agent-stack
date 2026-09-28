@@ -59,7 +59,7 @@ to ignore, and devbook's `.gitignore` block went with it.
 
 **Runtime facts live in the `run` recipe, not a `runtime` key.** The flow context file had
 eight sections; three were answered by config and `.mcp.json`, one spelled `null` in Markdown,
-and the rest were facts the start procedure — `run` since 1.11.0 — consumed in its next line. Configuration chooses
+and the rest were facts the start procedure — `run` since 1.12.0 — consumed in its next line. Configuration chooses
 among behaviour the engine implements, and how one product's application comes up is prose the
 repository owns. Nothing to start is `extensions.app.start: null`.
 

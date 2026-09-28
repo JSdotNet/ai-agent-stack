@@ -58,6 +58,15 @@ const STATUS_BY_FOLDER = {
     ai: ["candidate", "trial", "adopted", "hold", "retired"],
 };
 
+/**
+ * The built-in ladder of a folder — what `status` may hold where the
+ * repository's `.devbook/statuses.json` declares nothing (see statuses.mjs).
+ */
+export const builtInStatuses = (folder) => [...(STATUS_BY_FOLDER[folder] ?? [])];
+
+/** The two decision rungs, which no repository configuration adds or removes. */
+export const DECISION_STATUSES = [APPROVED_STATUS, ACCEPTED_STATUS];
+
 // Who approved, and on what day. The gate writes both; they exist so the
 // decision travels with the content and lands in the git history, rather than
 // living in flow configuration or in someone's memory.
@@ -1603,8 +1612,12 @@ export function isStructuralDocument(relPath) {
  * not know which headings are "addressable chapters" per folder — see that
  * folder's own instructions file) — it checks the blocks that *are* present
  * plus the file-level block, which covers the common authoring mistakes.
+ *
+ * `ladder` is the repository's own status ladder, from `loadStatusLadder` in
+ * statuses.mjs. Absent, or where it declares nothing for a block, the folder's
+ * built-in ladder applies.
  */
-export function validateDocument(relPath, markdown) {
+export function validateDocument(relPath, markdown, { ladder = null } = {}) {
     const kind = folderKindForPath(relPath);
     const named = domainFileName(relPath);
     const fileBase = named.base;
@@ -1628,7 +1641,6 @@ export function validateDocument(relPath, markdown) {
         // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
         issues.push({ severity: issue.severity, message: issue.message });
     }
-    const allowedStatus = STATUS_BY_FOLDER[kind];
     const resting = restingStatusFor(kind);
     const optionalFields = new Set([
         ...COMMON_OPTIONAL_FIELDS,
@@ -1710,6 +1722,14 @@ export function validateDocument(relPath, markdown) {
         // omitted status is correct and the resting value written out is the
         // thing worth reporting — otherwise the corpus ends up with two
         // spellings of one state and neither reader knows which to expect.
+        //
+        // Which values are written is the repository's ladder where it declares
+        // one for this block, and the folder's built-in one otherwise. The
+        // resting value is checked first because a configured ladder never
+        // lists it: omission is devbook's mechanism, not a rung to choose.
+        const blockLevel = chapter.level === 1 ? "file" : "chapter";
+        const configured = ladder?.statusesFor(relPath, blockLevel) ?? null;
+        const allowedStatus = configured?.statuses ?? STATUS_BY_FOLDER[kind];
         const declaresStatus = "status" in chapter.meta;
         if (!declaresStatus || chapter.meta.status === null) {
             if (resting === null) {
@@ -1725,22 +1745,24 @@ export function validateDocument(relPath, markdown) {
                     message: `${label} sets \`status\` to a null value — omit the field instead to mean the resting value \`${resting}\`.`,
                 });
             }
-        } else if (!allowedStatus.includes(chapter.meta.status)) {
-            issues.push({
-                severity: "error",
-                message: `${label} has status "${chapter.meta.status}", expected one of: ${allowedStatus.join(", ")}.`,
-            });
         } else if (chapter.meta.status === resting) {
             issues.push({
                 severity: "warning",
                 message: `${label} states \`status: ${resting}\`, which is the resting value in .${kind} — omit the field instead, per the omit-when-empty rule.`,
+            });
+        } else if (!allowedStatus.includes(chapter.meta.status)) {
+            const from = configured ? ` (${configured.source})` : "";
+            issues.push({
+                severity: "error",
+                message: allowedStatus.length
+                    ? `${label} has status "${chapter.meta.status}", expected one of: ${allowedStatus.join(", ")}${from}.`
+                    : `${label} has status "${chapter.meta.status}", and no status is written on this block${from} — omit the field.`,
             });
         }
 
         // `type` records what kind of thing this chapter or file is, in the
         // vocabulary its folder defines. Folders that define no vocabulary
         // (`.arc42`, `.design`) omit the field entirely.
-        const blockLevel = chapter.level === 1 ? "file" : "chapter";
         for (const issue of typeIssues(kind, blockLevel, chapter.meta, fileBase)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }

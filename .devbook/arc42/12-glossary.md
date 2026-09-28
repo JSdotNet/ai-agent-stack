@@ -80,6 +80,23 @@ selects from it and overrides a cadence in its own stamp rather than by editing 
 upgrade can move a shipped default without silently reverting or silently keeping somebody's
 choice.
 
+## Change
+
+```meta
+date: 2026-09-28
+related: [".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/12-glossary.md#proposal", ".devbook/arc42/12-glossary.md#delta"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: change folder.
+
+A proposed change to the devbook, held in `openspec/changes/<name>/` until it lands: a
+proposal, one delta per file it touches, a solution, and tasks. It lands only through
+`delta.mjs --apply`, which merges its deltas and moves the folder to `archive/`; a chapter it
+touched carries its name in `change`. Not a change brief, which is what `apply-change` hands
+the code, and not a pull request, which is one step of a change.
+
 ## Change Brief
 
 ```meta
@@ -112,6 +129,24 @@ Taking an item for this run, recorded as a label on the tracker before any code 
 by the pickup skills and by the issue sweep alike. The tracker is the transport because a claim
 has to be legible to a person who has never heard of the plugin, and because it is what keeps
 a second run, or a second sweep, from picking the same item up.
+
+## Delta
+
+```meta
+date: 2026-09-28
+related: [".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/12-glossary.md#change"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: devbook delta.
+
+One file of a change, under its `devbook-delta/` at the path of the devbook file it changes,
+opening with `change` and `delta` — `added`, `modified`, or `removed`. It names chapters by
+heading, and under each, `ADDED`, `MODIFIED`, and `REMOVED` sections hold entries one level
+deeper that the merge lands one level up. Its unit is the heading: a paragraph is changed by
+replacing its section. OpenSpec's spec delta is the same idea against `specs/`, which a
+devbook change does not have.
 
 ## Derived Index
 
@@ -308,6 +343,22 @@ What every render here produces, and what none of them is allowed to stop being:
 a file that already exists on disk. Rendering the same source that was written, and storing none
 of it, is what keeps a surface from becoming a second answer to what a run produced. A rendered
 view nobody saved is not a record of anything.
+
+## Proposal
+
+```meta
+date: 2026-09-28
+related: [".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/12-glossary.md#change"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: `proposal.md`.
+
+The chapter that says why a change is made: its scope, the chapters it touches, and one
+category — `feature`, `behaviour-change`, or `defect` — as a `type: change` file at
+`status: proposed`. It is the one block in a change with a status. Not a proposal in the
+documentation plugin's sense, which is a standalone document.
 
 ## Provider
 

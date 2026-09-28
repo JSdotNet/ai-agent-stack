@@ -9,8 +9,9 @@ the reference pointing at it still resolves, and that a repository can adopt the
 upgrade it, and be told when the two have drifted apart.
 
 Inside the block: the `meta` block and its field set, the address a chapter is reached by, the
-annotation fence, the reconcile that materializes the convention into a repository, and the
-two directions between a chapter and the code that implements it.
+annotation fence, the reconcile that materializes the convention into a repository, the
+change folder and the merge of its deltas, and the two directions between a chapter and the
+code that implements it.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter
@@ -42,6 +43,7 @@ change belongs to the engine.
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill and one kind per run, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
+| `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
@@ -465,10 +467,35 @@ stored field.
 repository rollup in `.devbook/_meta/`, the tooling in `.devbook/_tools/`, and the stack
 config beside them. The layout is a constant rather than a detected value since
 [the chapter schema record](../adr/chapter-schema.md); what is detected is which of the five
-exist. **Folder Kind** is `arc42`, `domain`, `tech`, `design`, `ai`. The kind decides which
-rule file governs the folder, which `status` ladder applies, and which `type` value set is
-legal — which is why it is a closed set and adding a sixth is a contract change rather than a
-folder.
+exist. **Folder Kind** is `arc42`, `domain`, `tech`, `design`, `ai`, and `changes`. The kind
+decides which rule file governs the folder, which `status` ladder applies, and which `type`
+value set is legal — which is why it is a closed set and adding the sixth, `changes`, was
+contract 23 rather than a folder.
+
+### Change
+
+```meta
+related: [".devbook/arc42/12-glossary.md#change", ".devbook/arc42/12-glossary.md#delta", ".devbook/arc42/12-glossary.md#proposal", ".devbook/arc42/building-blocks/devbook-openspec.md#constraints"]
+```
+
+A proposed change to the devbook, in `openspec/changes/<name>/`: the one folder kind outside
+`.devbook/`, because OpenSpec's CLI resolves `changes/` only under `openspec/`. Its
+`proposal.md` and every delta under `devbook-delta/` are chapters the check indexes into the
+rollup; `solution.md` and `tasks.md` are the change's own and never indexed, and `archive/` is
+history and never read. `delta.mjs --apply` is the only way a change lands, and its
+`gateCheck` seam before the merge stays empty until the decision on where approval lives
+fills it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| `archive/` is never indexed and never a folder kind | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A delta's target is its path under `devbook-delta/`, re-rooted at `.devbook/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A delta opens with `change`, naming its own folder, and `delta`, and carries no other field | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| Every chapter and section a delta names resolves in its target, or the merge writes nothing | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A merge that would leave its target with a new error is refused | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| Every chapter block a merge touched carries `change`, and no other | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A proposal is `type: change` at `proposed`, with one `category` | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
 ### Reference Graph
 

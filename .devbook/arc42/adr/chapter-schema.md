@@ -23,6 +23,13 @@ chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `al
 the chapter it names. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
+A proposed change to those folders is the one devbook content outside the parent: it lives in
+`openspec/changes/<name>/` as a `type: change` proposal at `status: proposed` and one delta
+per file it touches, at that file's path under `devbook-delta/`, until `delta.mjs --apply`
+merges the deltas one heading level up, stamps `change` on every chapter it touched, and moves
+the folder to `archive/`. The path is OpenSpec's, because its CLI resolves `changes/` nowhere
+else, per [the devbook-openspec building block](../building-blocks/devbook-openspec.md#constraints).
+
 ## Why
 
 ```meta
@@ -308,6 +315,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | The change folder, `openspec/changes/`, is a folder kind stamped as `changes`: each change's `proposal.md` is `type: change` at `status: proposed` with a `category`, each file under `devbook-delta/` a delta the checker resolves through `delta.mjs`, and `archive/` is never indexed. `change` is legal on any chapter as the merge's provenance. The folder sits outside `.devbook/` because the OpenSpec spike found its CLI fixes the path; the rungs above `proposed` wait for the decision on where approval lives. Contract 23, additive, no migration. |
 | 2026-09-28 | `design/` gains one chapter type, `requirement`: a rule a component keeps or breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter, warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped. A `#### Scenario:` directly under a requirement no longer warns for having no block. Contract 22, additive, no migration. |
 | 2026-09-28 | Each folder's `status` ladder is a built-in default. A repository declares its own transitional rungs per folder, file glob, and block level in `.devbook/statuses.json`, first matching rule wins; the resting value stays written by omission, `approved` and `accepted` stay `domain/`'s whatever the file says, and `tech/` and `ai/` may only narrow their rating ladder. A configuration error is reported once on the file. Contract 20, additive, no migration. |
 | 2026-09-28 | A `requirements.<name>.md` is titled by the feature it holds, like every other split, instead of `# Requirements`: under `requirements.md` in a menu every split read `Requirements`. `requirements.md` and the invariants subpages keep their kind. No contract; `018-behaviour-titles` now titles a split by its first `##` heading, so it no longer undoes the change. |

@@ -187,11 +187,11 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.9.0",
+      "pluginVersion": "1.10.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
-          "from": "1.9.0",
-          "hash": "sha256:4344c2e9f33ab4e9d953d4dc1db739b223fe6c070152b54f28c9b25b12bb056e",
+          "from": "1.10.0",
+          "hash": "sha256:a15c2e35c144bda1ff8cd651dd46d9daa7a7a2f16d5edaab5d003b7eefef030d",
           "managed": true
         },
         ".claude/rules/devbook-derived-artifacts.md": {

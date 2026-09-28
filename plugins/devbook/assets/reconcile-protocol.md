@@ -67,7 +67,7 @@ whose install rewrites content the repository authored, which is devbook alone:
 |---|---|
 | `pluginVersion` | The devbook release that last reconciled this repository. |
 | `contractVersion` | The schema contract the repository is on, for reporting. A migration runs on its id being absent from the ledger, never on a version comparison — which is why most upgrades reconcile to nothing. |
-| `adopted` | Which devbook folders this repository maintains, without the leading dot. A migration's `appliesTo` is read against this list. |
+| `adopted` | Which devbook folders this repository maintains, without the leading dot — `changes` for the change folder. A migration's `appliesTo` is read against this list. |
 | `materialized` | Every file devbook copied in, and the one section it wrote, with the release it came from and the hash it had when it landed. |
 | `managed: false` | The repository has taken ownership of that copy. Report drift on it; never write to it. |
 

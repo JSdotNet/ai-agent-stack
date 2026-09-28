@@ -7,7 +7,7 @@ matches the stamped hash. The rules — key, hash, customized, orphan — are in
 
 Render it from the stamp's `adopted` list, never from what happens to be on disk:
 
-- Keep one table row per adopted folder and delete the others.
+- Keep one table row per adopted folder, the change folder's included, and delete the others.
 - Replace `<generator>` with the path `generatorPath` reports: the conventional
   `.devbook/_tools/devbook-meta/build.mjs` in a repository this materialized into, and a
   repo-relative path in one that vendors the checker itself. Never write the
@@ -42,6 +42,7 @@ task-scoped context, never baseline context: load the chapters a task names, wal
 | `.devbook/tech/` | The technology graph and its ratings | `devbook-tech.md` |
 | `.devbook/design/` | Design principles, tokens, and component guidelines | `devbook-design.md` |
 | `.devbook/ai/` | How the team works with AI, stage by stage; it records a way of working and never instructs one | `devbook-ai.md` |
+| `openspec/changes/` | Proposed changes to the folders above, each merged by `<generator-dir>/delta.mjs --apply`; never read its `archive/` | `devbook-changes.md` |
 
 Every chapter carries a fenced `meta` block; write it in the same change as the content,
 per `devbook-chapter-metadata.md`. Skip `annotation` fences when loading a

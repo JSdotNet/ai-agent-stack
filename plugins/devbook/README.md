@@ -38,6 +38,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
 | `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
+| `openspec/changes/` | Proposed changes to the folders above, as a proposal and deltas that `delta.mjs` merges; history under `archive/` |
 
 Adoption is partial by design — a repository may take only `domain/` and
 `arc42/`, and the tooling emits scopes for the folders that actually exist.
@@ -47,6 +48,10 @@ Those five live under one `.devbook/` parent with the leading dot dropped —
 tooling under `.devbook/_tools/`, and the repository rollup under
 `.devbook/_meta/`. A root-level `.arc42/` is not a layout: the check reports it
 and does not index it. An address is the chapter's real repository path.
+
+The change folder is the one exception to the parent: `openspec/changes/`, because OpenSpec,
+whose change lane it is, resolves `changes/` only under a folder named `openspec/`. It is
+adopted like the others and stamped as `changes`; its shape is `rules/devbook-changes.md`.
 
 ## Features
 
@@ -340,6 +345,15 @@ node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug>
 any in-process caller import the same functions, so nothing else edits a note
 with a regular expression of its own. Its edits are surgical, and it never
 commits. See `tools/devbook-meta/README.md` for the document shapes.
+
+```bash
+node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
+node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # merge, stamp `change`, move to archive/
+```
+
+`delta.mjs` is the only merge of a change's deltas into the chapters they target. Its
+`gateCheck` seam, before anything is written, is empty until what agreeing a change records
+is decided.
 
 ### Tooling: `devbook-tech`
 

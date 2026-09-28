@@ -85,6 +85,14 @@ used to ask that reads every stamp — moved here because this is the one contex
 them all, and a devbook skill never names another plugin. Hard drift fails; staleness and
 customization are reported and do not.
 
+It also resolves every provider id the effective configuration binds — read through delivery's
+`check.mjs --print`, never merged by hand — against the installed plugins' skills and, for
+`repo:`, the repository's own skill folder. The engine's checker validates a provider's shape
+and never whether it exists, so a binding to a skill that migration 015 retired would otherwise
+do nothing at every run and say so only in that run's summary. A retired id is hard drift,
+named with its successor and `devbook:update` as the fix; any other unresolved id is a warning,
+because the flow degrades past it. An unbound point is not a finding.
+
 ### ask
 
 ```meta
@@ -486,7 +494,7 @@ included. That is the whole shape of it.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `extensions`, `policy`, `gates`; validates with the engine's own checker | `resources/config.schema.json` | The four keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
+| [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `extensions`, `policy`, `gates`; validates with the engine's own checker, and `doctor` reads the effective configuration through its `--print` | `resources/config.schema.json` | The four keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
 | [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, invokes `devbook:init` during init and `devbook:update` during update, and runs its migrations with `--check` from `doctor` | The folder layout, the two skill names, and `migrate.mjs --check` | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
 | [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their `init` or `update` during a fan-out | The stamp shape and each component's two skill names | Every component's stamp stays with the component. This block decides *whether* one runs and never what it does. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Conformist, read-only | Reports whether it is installed and enabled | The marketplace entry and manifests | It has no stamp, no `init`, and no `update`; enabling it is the whole adoption. |

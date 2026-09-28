@@ -27,7 +27,7 @@ Match `git diff --name-only main...HEAD` against the first column and walk every
 | `plugins/<p>/hooks/`, `hooks.json` | The hook's command run with the event payload, per `debug` |
 | `plugins/<p>/mcp/<server>/` | One tool call through the server, per `debug` |
 | `.devbook/` | `build.mjs --check` over it; a chapter has no other runtime |
-| `tools/`, manifests | The three checks alone |
+| `tools/`, manifests | The four checks alone |
 
 A skill that writes into a repository — an `init`, an `update`, a migration — is never walked
 against this worktree: run it in a throwaway `git init` under `.wip/try/<slug>/`, and show its

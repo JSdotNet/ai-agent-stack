@@ -1,7 +1,7 @@
 # Annotations
 
 ```meta
-date: 2026-09-17
+date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#annotation", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -11,9 +11,10 @@ resolved → gone, and the sweep — is `devbook`'s. It reaches the five devbook
 nothing else. The gate that shows a chapter with its open notes and writes `status: approved`
 is `devbook-collaboration:chapter-approve`, in the review plugin and not the engine, and it
 reads the chapter rather than the derived index. Only an open `kind: question` blocks; a
-`flag` is shown first and never blocks. Where a review stands — `review`, `reviewer`,
-`review-at` — is three fields in devbook's own schema, validated by the check, and the review
-plugin ships its five skills and nothing else: no rule, no install, no hook, no stamp.
+`flag` is shown first and never blocks. Where a review stands is the chapter's `status` and its
+open fences, and no field of its own; who owes the next move lives in the pull request or the
+tracker. The review plugin ships its five skills and nothing else: no rule, no install, no
+hook, no stamp.
 
 ## Why
 
@@ -57,17 +58,23 @@ chapter that stands. Making a flag block from the review plugin would change wha
 field means from one layer up. A stricter chapter gate would be a committed switch under
 `components.collaboration` that only ever tightens, and nobody has asked for one.
 
-**Review state is devbook's vocabulary.** The triad mirrored `approved` / `approved-by` /
-`approved-at` from the day it was written, and lived in the opaque `ext` namespace only
-because it was the extension's to write. Every invariant on a review — one reviewer at a time,
-`changes-requested` over at least one open note, no review beside `status: approved` — was
-untested there, because `ext.*` is carried unvalidated by design; in the schema each is one
-clause on the same path the hard gate runs. The one sentence the collaboration rule added for a
-reader — skip these keys when loading a chapter — is the sentence devbook already states for a
-fence, so the rule, its install, its stamp, and its hook go with it. Independence from devbook
-was asked for and declined: every skill reads a `meta` block, writes through the fence writer,
-or writes the rung, and a collaboration plugin over arbitrary Markdown would rebuild devbook's
-schema inside itself.
+**Review state is not a field.** The triad — `review`, `reviewer`, `review-at` — lived in the
+`ext` namespace until 2026-09-17 and in devbook's schema after it, mirroring the approval
+record. Contract 21 removes it, on a request from Budgetbeheer, the one repository that used
+the review pass in earnest. A chapter ready to read but not yet agreed is a rung on the status
+ladder, so a review field beside `status` said the chapter's stage twice: Budgetbeheer wrote
+`status: review` until adoption, the check rejected it, and the only spelling the check then
+took was `status: draft` with `review: requested` — the first one wrong. `changes-requested`
+and `cleared` were a cached copy of what the open fences already say, which the check then had
+to reconcile against them. And who owes the next move is workflow state: in the chapter, every
+reassignment was a content diff on text that did not change, where the pull request, the
+queue, or the tracker holds it for free. The decision records stay, because an approval and an
+acceptance have to travel with the content and lapse with it; a pending review does not.
+Moving the triad out of `ext` was still right — a field nobody validated was worse than either
+— and what the move took with it stays gone: the collaboration rule, its install, its stamp,
+and its hook. Independence from devbook was asked for and declined: every skill reads a `meta`
+block, writes through the fence writer, or writes the rung, and a collaboration plugin over
+arbitrary Markdown would rebuild devbook's schema inside itself.
 
 ## Rejected
 
@@ -80,6 +87,7 @@ schema inside itself.
   answer when someone first wants to annotate a rule.
 - `kind: flag` as a blocker, or a reviewer's choice of kind as a gate.
 - Review state in the `ext` namespace, and a collaboration plugin independent of devbook.
+- Review state as fields in devbook's schema — the triad, from 2026-09-17 to contract 21.
 
 ## History
 
@@ -88,6 +96,7 @@ schema inside itself.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 21, migration `021-no-review-triad`. |
 | 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |
 | 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. |
 | 2026-09-14 | The chapter gate is `devbook-collaboration:chapter-approve` and reads the chapter, not the index. |

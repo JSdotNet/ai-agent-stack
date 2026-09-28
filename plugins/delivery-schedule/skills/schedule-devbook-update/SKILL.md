@@ -11,9 +11,8 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 ## Purpose
 
 `schedule-devbook-validate` finds a repository behind the marketplace and says so; this run
-moves it forward. A cloud session loads the marketplace the repository's committed settings
-name, so its plugins are the published ones, and what `devbook-config:update` would do by hand
-is a pull request a person reviews instead.
+moves it forward. A local routine runs with the plugins this machine has installed, so what
+`devbook-config:update` would do by hand with them is a pull request a person reviews instead.
 
 ## Skill Dependencies
 
@@ -24,10 +23,10 @@ is a pull request a person reviews instead.
 
 1. **Update.** Invoke `devbook-config:update`. Not initialized: say so and stop. Where it
    would ask a person, answer:
-   - which plugins to update, and the host command that installs them: skip — the session
-     already runs what the marketplace published; a plugin still behind is a finding;
+   - which plugins to update, and the host command that installs them: skip — installing a
+     plugin on this machine is a person's step; a plugin still behind is a finding;
    - which `reconcile` rows to run: all of them, **except `delivery-schedule:update`** — it
-     writes to the scheduler and the host settings, and only a person's own turn changes a
+     writes to the scheduler, and only a person's own turn changes a
      schedule; list it as a person's step when its stamp is behind;
    - `frozen`, `adoptable`, or `enabled`: skip; a seeded file or a customized copy: keep the repository's;
      `devbook-config:local`: never offered.

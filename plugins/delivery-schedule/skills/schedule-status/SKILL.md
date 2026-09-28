@@ -14,7 +14,7 @@ Read-only. The scheduler, the identity rule, and the stamp are in
 
 1. **Resolve the repository** with `gh repo view --json nameWithOwner` and read
    `components.schedule` from `.devbook/config.json` for the selection.
-2. **Resolve the scheduler** from the live tool list. None: say the host's own page holds the
+2. **Resolve the local scheduler** from the live tool list. None: say the host's own page holds the
    answer, list the selection from the stamp, and stop.
 3. **List** and keep the entries named `<owner>/<repo> · …`. For each, `list_runs`. For the
    most recent run that failed or parked, and for the run the user asked about, `get_run_log`
@@ -25,7 +25,8 @@ Read-only. The scheduler, the identity rule, and the stamp are in
 5. **Report** one table: schedule, cron, enabled, last run with its outcome, what it published
    as a link, and one line from the log at the point a failed run went wrong. One in the stamp
    the scheduler does not know is `not scheduled — run delivery-schedule:update`; a scheduled one the
-   stamp does not list is `unmanaged`.
+   stamp does not list is `unmanaged`; an enabled entry a cloud scheduler still holds for this
+   repository is `cloud — run delivery-schedule:update to retire it`.
 
 An empty run list is not proof a schedule never fired: a fire refused before a session existed
 leaves no run behind. Report its own `enabled` state and next fire beside the empty list rather

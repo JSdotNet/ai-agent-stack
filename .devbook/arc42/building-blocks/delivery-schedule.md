@@ -70,8 +70,8 @@ related: [".devbook/arc42/building-blocks/devbook-config.md#update", ".devbook/a
 ```
 
 Run `devbook-config:update` with the safe answer at every question it would ask a person, so
-outstanding migrations run and stale copies are refreshed from the plugins the cloud session
-loaded, and land what moved as one draft pull request. It installs no plugin and never runs
+outstanding migrations run and stale copies are refreshed from the plugins installed on the
+machine the routine runs on, and land what moved as one draft pull request. It installs no plugin and never runs
 `delivery-schedule:update`: that one writes to the scheduler, and a schedule changes only on a
 person's own turn, so it is listed as that person's step. `schedule-devbook-validate` finds the
 drift; this moves it. The weekly `devbook-update` trigger's target.
@@ -245,11 +245,16 @@ disable the deselected, and record the selection under this component's stamp �
 [Schedule Selection](#schedule-selection) aggregate, drawn under
 [From Catalog to Scheduler](#from-catalog-to-scheduler).
 
-Refuse what would not run: a cloud session loads this marketplace only if the repository's
-committed host settings enable it and the plugins the target needs. `init` and `update` own those two
-settings keys — it explains, asks, and writes what the selected schedules require, removing
-nothing — and a schedule that would still start without its skill, because the person declined,
-is refused rather than created.
+Local routines only: a routine runs on this machine, in the repository's main checkout, with
+the plugins installed there, and works in a fresh worktree of its own. A cloud scheduler is
+never used to create one — a cloud session starts on a clone without this marketplace's
+plugins and cannot reach its skill — and an enabled cloud copy carrying the repository's name
+is disabled on every sync, so a schedule never fires twice.
+
+Refuse what would not run: a schedule whose `requires` names a plugin the syncing session has
+not loaded is skipped and the plugin named, since a routine from the same checkout loads the
+same set; and a sync from a worktree stops, since the routine would keep a folder removed with
+it.
 
 Match by name: entries are matched by `<owner>/<repo> · <title>`, so a second sync updates
 rather than duplicates — and no scheduler id has to be written into the repository, which is
@@ -390,7 +395,7 @@ and why a trigger can be created, disabled, and re-created without touching what
 
 The values it holds:
 
-- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC; a local
+- **Cadence** — a value object. When the trigger fires, as a cron expression in UTC; the local
   scheduler evaluates it in the machine's own timezone, so the sync converts it and reports
   both. Hourly is
   the ceiling: anything that could fire more often is rejected, because an unattended run that
@@ -405,8 +410,8 @@ The values it holds:
 - **Prompt** — a value object. What the scheduled session is given, assembled from the shared
   [preamble](../12-glossary.md#preamble) and the schedule's own task half. It has to be
   self-contained: the session starts with nothing but the repository, so anything the prompt
-  does not say is not available to be remembered. A local scheduler's prompt gains one
-  paragraph in front, which makes a fresh worktree stand in for the fresh checkout.
+  does not say is not available to be remembered. The preamble's first rule makes the run add
+  a fresh worktree of the base branch, so the checkout it starts in is never the one it edits.
 
 ### Entry Point
 
@@ -443,10 +448,9 @@ Which schedules this repository chose and any cadence it overrode, recorded unde
 `components.schedule` in the stack config and written by this block's `init` and `update` alone.
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts
-and are committed; the environment, the model, and the scheduler's own ids are personal. The
-ids stay in the scheduler — matching by name is what makes writing them down unnecessary —
-and the environment and the model may be remembered under `ext.schedule` in a machine's own
-stack-config overlay, where the engine merges them and this block alone reads them.
+and are committed; the checkout's path, the approved tools, and the scheduler's own ids are
+personal and stay in the scheduler — matching by name is what makes writing them down
+unnecessary.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -464,11 +468,11 @@ The value it holds:
 ### Scheduler Resolution
 
 ```meta
-related: [".devbook/arc42/12-glossary.md#scheduler", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
+related: [".devbook/arc42/12-glossary.md#scheduler", ".devbook/tech/hosts.md#scheduled-routines"]
 ```
 
-Finds whatever the live session exposes that turns a name, a cron expression, a repository, and
-a prompt into a scheduled session — the [scheduler](../12-glossary.md#scheduler) — and creates,
+Finds whatever the live session exposes that turns a name, a cron expression, and a prompt
+into a session run on this machine — the [scheduler](../12-glossary.md#scheduler) — and creates,
 updates, disables, reads, or fires an entry through it.
 
 Invocation semantics: command-invoked, by the four catalog skills. **No scheduler is a normal
@@ -484,6 +488,7 @@ resolution in one place is what makes that true.
 | The scheduler is resolved from what the live session exposes, never from a hardcoded tool name | scheduler resolution | untested |
 | No scheduler is a normal outcome: the operation reports it and stops without failing anything | scheduler resolution | untested |
 | A host capability is touched here and nowhere else in the block | scheduler resolution | untested |
+| A schedule is created only through a local scheduler; a cloud one is used only to disable a copy | scheduler resolution | untested |
 
 ### Catalog Check
 
@@ -528,8 +533,8 @@ Published language rules:
   report as a labelled issue; the run's authority ends at publishing.
 - **Update, do not accumulate.** A weekly report that opens a new issue every week is a backlog
   of its own within two months.
-- **Nothing personal travels.** The scheduler ids stay in the scheduler, the environment and
-  the model there or in a machine's own overlay; nothing published here would be wrong for
+- **Nothing personal travels.** The scheduler ids, the checkout's path, and the approved tools
+  stay in the scheduler; nothing published here would be wrong for
   the next person who opens the file.
 
 ## Runtime
@@ -553,12 +558,13 @@ flowchart TD
     catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
-    enabled -->|yes| settings{"Would a cloud session load the marketplace?"}
-    settings -->|no| refused["Refused: it would start without its skill"]
-    settings -->|yes| assemble["Assemble the prompt: preamble + task half"]
+    enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
+    loaded -->|no| refused["Skipped: it would start without its skill"]
+    loaded -->|yes| assemble["Assemble the prompt: preamble + task half"]
     assemble --> resolve["Resolve the scheduler from the live tool list"]
     resolve -->|absent| noop["Report, change nothing"]
-    resolve -->|present| match{"An entry with this name already?"}
+    resolve -->|present| retire["Disable any cloud copy with this name"]
+    retire --> match{"A local entry with this name already?"}
     match -->|yes| update["Update it"]
     match -->|no| create["Create it"]
     update --> stamp["Record the selection under components.schedule"]
@@ -569,9 +575,10 @@ flowchart TD
 - **Matching by name is what makes a second sync an update.** The name is
   `<owner>/<repo> · <title>`, which is also why no scheduler id has to be written down — and an
   id would be personal, so it could not be committed anyway.
-- **Refusing beats creating something that cannot run.** A cloud session loads this marketplace
-  only if the repository's committed host settings enable it and the plugins the target needs;
-  `init` and `update` offer to write those two keys first and refuses only when declined.
+- **Refusing beats creating something that cannot run.** A routine loads the plugins installed
+  on this machine for the checkout, so one this session has not loaded is a skill the run would
+  not reach. That is also why no schedule is a cloud session: a cloud clone installed none of
+  them.
 - **The first run is the proof, not the creation.** A cadence that has never fired is a guess
   about somebody else's environment.
 
@@ -585,7 +592,8 @@ the gate is what changes when nobody is in the session.
 
 ```mermaid
 flowchart TD
-    fire(["The scheduler fires: a cloud session with nothing but the repository"]) --> preamble["Prompt: preamble, then the task half"]
+    fire(["The scheduler fires: a local routine in the repository's checkout"]) --> worktree["A fresh worktree of the base branch"]
+    worktree --> preamble["Prompt: preamble, then the task half"]
     preamble --> entry["The schedule-* entry point picks its own input"]
     entry --> none{"Anything to do?"}
     none -->|no| quiet(["Report nothing changed, and stop"])
@@ -607,9 +615,8 @@ flowchart TD
   changed something and published nothing.
 - **The next run updates what this one left open.** A weekly report opening a new issue every
   week becomes its own backlog within two months.
-- **Nothing personal crosses into the repository.** The scheduler ids stay in the scheduler,
-  the environment and the model there or under `ext.schedule` in a machine's own overlay; the
-  stamp records only the selection and the overrides.
+- **Nothing personal crosses into the repository.** The scheduler ids, the checkout's path, and
+  the approved tools stay in the scheduler; the stamp records only the selection and the overrides.
 
 ## Dependencies
 
@@ -630,7 +637,7 @@ capability — a divergence taken on purpose.
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
-| The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, a repository, and a prompt into a scheduled session | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
+| The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, issues labelled `schedule-report` | The preamble's publishing rules | Publishing is how an unattended run reaches a person; this lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
 | A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; everything personal about a schedule stays in the scheduler or in a machine's own overlay. |
@@ -659,6 +666,6 @@ scheduler resolution knows a tool answered — see
 an extension rather than a second engine: everything it runs, the engine already had.
 
 **The line between committed and personal is the one to hold.** The selection and the cadence
-overrides go in the repository; the scheduler ids stay in the scheduler, and the environment
-and the model in the scheduler or a machine's own overlay under `ext.schedule`, so nothing in
+overrides go in the repository; the scheduler ids, the checkout's path, and the approved tools
+stay in the scheduler, so nothing in
 the committed file would be wrong for the next person who opens it.

@@ -1,6 +1,6 @@
 ---
 name: devbook-changes
-description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the delta shape the merge in delta.mjs applies.
+description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records and the delta shape the merge in delta.mjs applies.
 ---
 
 # The change folder
@@ -22,8 +22,12 @@ path is OpenSpec's and fixed: its CLI resolves `changes/` only under a folder na
 The file-level block is `type: change`, `status: proposed`, and `category` — one of `feature`,
 `behaviour-change`, `defect`, because the category picks the flow that applies a step. Its
 `##` sections — `Why`, `Scope`, `Chapters touched` by address — are sections and carry no
-block. `proposed` is the only rung here; what agreeing a change records is not settled, so
-never write another.
+block. The change is decided as one, so both gates are recorded once, here: `approved`, then
+`accepted`, with the six fields of `devbook-chapter-metadata.md` and both hashes always written.
+The hash covers the proposal and every delta — `chapter-hash.mjs openspec/changes/<name>` — and
+an open `kind: question` anywhere in the change is an error under either rung. `--apply`
+merges only an `accepted` change over its current hash, writes no rung onto a chapter it lands
+in — `change` points at the archived proposal — and lifts a chapter's own rung it makes stale.
 
 ## A delta
 

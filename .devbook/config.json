@@ -226,67 +226,6 @@
         }
       }
     },
-    "devbook-procedures": {
-      "pluginVersion": "1.9.0",
-      "adopted": ["run", "show", "capture", "debug"],
-      "materialized": {
-        ".agents/skills/capture.md": {
-          "from": "1.8.0",
-          "hash": "sha256:6ad0bdeda2911b86fc98eac3c8bf3f992bf9022f6b081410f57f158ed9889623",
-          "managed": false
-        },
-        ".agents/skills/debug.md": {
-          "from": "1.8.0",
-          "hash": "sha256:1e9475265ad52f1f7801c0cad3ec5e306716eb829d0ba322ad51a3d16c4f5def",
-          "managed": false
-        },
-        ".agents/skills/show.md": {
-          "from": "1.8.0",
-          "hash": "sha256:82f6500a747cfd626dc3b750b53a831fa161c3ac10f5c06946eea0211c3af0ef",
-          "managed": false
-        },
-        ".claude/skills/capture/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:36a9747effbfa406050b77d79fe9cf38843f1a1a3afe8e5b853ee6d73e6d3403",
-          "managed": true
-        },
-        ".claude/skills/debug/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:3b4d67c5f8385574f04d6b8ffba870edfee2ba9ac0c8a015e3267537143514ff",
-          "managed": true
-        },
-        ".claude/skills/run-jsdotnet-devbook/SKILL.md": {
-          "from": "1.11.0",
-          "hash": "sha256:d2e7f4a5a9b39267b997940a30aab07ca4d6a8637f2f161a50a49ffcfaf7101b",
-          "managed": false
-        },
-        ".claude/skills/show/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:35e9994fdc2e01fd7143337536dd87b06dc0aed2b382b080eebf7b22d57085c9",
-          "managed": true
-        },
-        ".github/skills/capture/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:36a9747effbfa406050b77d79fe9cf38843f1a1a3afe8e5b853ee6d73e6d3403",
-          "managed": true
-        },
-        ".github/skills/debug/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:3b4d67c5f8385574f04d6b8ffba870edfee2ba9ac0c8a015e3267537143514ff",
-          "managed": true
-        },
-        ".github/skills/run/SKILL.md": {
-          "from": "1.11.0",
-          "hash": "sha256:07973836c1a60be05014ea0847c59b2f900de0c0279ec519740f39de9b49d2f5",
-          "managed": true
-        },
-        ".github/skills/show/SKILL.md": {
-          "from": "1.8.0",
-          "hash": "sha256:35e9994fdc2e01fd7143337536dd87b06dc0aed2b382b080eebf7b22d57085c9",
-          "managed": true
-        }
-      }
-    },
     "delivery": {
       "pluginVersion": "1.9.0"
     },

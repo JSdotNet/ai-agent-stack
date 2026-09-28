@@ -127,6 +127,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |
 | 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. |
 | 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. |
 | 2026-09-25 | Reversed the 2026-09-09 exemption: this repository adopts like any other. `check-assets` validates delivered rule and procedure trios and fails on a vendored `.devbook/_tools/` copy that differs from `plugins/devbook/tools/`. |

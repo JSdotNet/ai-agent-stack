@@ -27,9 +27,9 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
   `.devbook/config.json` record what they materialized: `devbook` 1.9.0 over `arc42`, `tech`,
   `design`, and `ai`; `delivery` and `schedule` 1.9.0; `devbook-derived` 1.9.0, with its
-  refresh script, its nightly and drift workflows, its rule trio, and its `AGENTS.md` section. `devbook-procedures` is stamped 1.9.0 with `start`,
-  `show`, `capture`, and `debug` but enabled per person, since its wrappers are committed and
-  only an upgrade needs the plugin. A surface is enabled per person too: a run reports into
+  refresh script, its nightly and drift workflows, its rule trio, and its `AGENTS.md` section. `devbook-procedures` is not adopted: the
+  procedures are this marketplace's product, kept as seeds in the plugin, and a repository
+  with no application to run has none of its own. A surface is enabled per person too: a run reports into
   every one bound — `delivery-surface-dashboard` and `delivery-surface-backlog` where they were
   enabled, `delivery-surface-canvas` being a Copilot canvas this marketplace does not offer — and
   resolves its points from `.devbook/config.json`: the GitHub tracker, `devbook:validate` at
@@ -49,7 +49,8 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   here has been carried by a flow end to end, reporting into one of those surfaces.
 - **Limits** — a session loads the released `jsdotnet-devbook` marketplace from its GitHub
   clone, so a flow changed on a branch is not the one that runs here until it is released or
-  the working copy is enabled by path, which `run` does.
+  the working copy is enabled by path — `claude plugin marketplace add . --scope local`, per
+  *Trying a change* in `AGENTS.md`.
 
 ## Fan-Out
 

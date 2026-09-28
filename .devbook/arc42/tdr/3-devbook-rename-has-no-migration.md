@@ -81,6 +81,18 @@ contract 19; the table below says so.
 pairing in [the chapter schema record](../adr/chapter-schema.md), with no migration. The
 proposal is `020-devbook-names` at contract 20; the table below says so.
 
+**2026-09-28. Spent an eleventh time.** Contract 20 went to a repository's own status ladder
+in [the chapter schema record](../adr/chapter-schema.md), with no migration. The proposal is
+`021-devbook-names` at contract 21; the table below says so.
+
+**2026-09-28. Spent a twelfth time.** `021-no-review-triad` took contract 21 in
+[the annotations record](../adr/annotations.md). The proposal is `022-devbook-names` at
+contract 22; the table below says so.
+
+**2026-09-28. Spent a thirteenth time.** Contract 22 went to `design/`'s `requirement` type in
+[the chapter schema record](../adr/chapter-schema.md), with no migration. The proposal is
+`023-devbook-names` at contract 23; the table below says so.
+
 **2026-09-27. The paths above are the 2026-09-05 shape.** The layout has been `.devbook/_tools/`
 since [the chapter schema record](../adr/chapter-schema.md) closed the second one, and the
 skills are `init`, `update`, and `validate`. The table records what the rename moved then;
@@ -115,7 +127,7 @@ was built against moves, and then it fails against a corpus the new generator ac
 
 | Option | Trade-off |
 | --- | --- |
-| Ship `020-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 20 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
+| Ship `023-devbook-names`: move the six paths, rewrite references inside them, rekey the stamp's `materialized` map, bump `CONTRACT_VERSION` to 23 | The complete fix, and the mechanism already exists. Costs a contract bump that records no schema change, weakening `contractVersion` as a statement about the schema |
 | Let reconcile carry a rename table — old key to new key, consulted during Detect — and leave the contract alone | Keeps `contractVersion` meaning only the schema. Adds a second mechanism beside migrations for the thing migrations exist to do |
 | Leave it, and document the manual delete in the plugin README | Cheapest, and honest for a one-maintainer adopter set. Every future asset rename inherits the same manual step |
 

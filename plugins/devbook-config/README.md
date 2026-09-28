@@ -23,7 +23,7 @@ instead of by repository.
 | --- | --- |
 | [`init`](skills/init/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component initializes itself, then runs each adopted component's `init`. Refused where the config exists. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own `update`, and a re-validated config. |
-| [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, installed against newest — each finding with the `update` that fixes it. |
+| [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, a bound provider id that resolves to no skill — a retired one named with its successor — and installed against newest, each finding with the skill that fixes it. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s engine and surface contracts. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
 | [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` — all under your devbook config directory. The one skill here that writes outside the repository, and the one that never writes the committed config. `init` and `update` close by offering it. |
@@ -113,7 +113,7 @@ committed and shared.
 | `.claude-plugin/plugin.json`, `.github/plugin/plugin.json` | The two manifests, agreeing on name, version, and description |
 | `skills/init/SKILL.md` | First setup of the engine keys, before any component initializes |
 | `skills/update/SKILL.md` | Version drift, migrations, re-validation |
-| `skills/doctor/SKILL.md` | The installation diagnosis: stamps, ledger, `AGENTS.md` sections, versions |
+| `skills/doctor/SKILL.md` | The installation diagnosis: stamps, ledger, `AGENTS.md` sections, unresolved providers, versions |
 | `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
 | `skills/local/SKILL.md` | The machine-scope settings: overlays, the model-selection file, `AGENTS.local.md` |

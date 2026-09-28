@@ -1,14 +1,15 @@
 # Checks and Indexes
 
 ```meta
-date: 2026-09-26
+date: 2026-09-27
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
-Three checks gate this repository, and `.github/workflows/repo-checks.yml` runs all of them on
+Four checks gate this repository, and `.github/workflows/repo-checks.yml` runs all of them on
 every pull request: `tools/check-assets.mjs` over the manifests, agents, hooks, rules, and skills; the
 generator's `build.mjs --check` over `.devbook/`, which runs the schema validator on every
-file; and `claude plugin validate --strict`, deliberately unpinned. The checker — the
+file; `node --test` over every `*.test.mjs` under `plugins/` and `tools/`, each file named;
+and `claude plugin validate --strict`, deliberately unpinned. The checker — the
 validator, the graph, the outline, the fence writer, the `validate`, `annotation-sweep`, and
 `tech-update` skills — is `devbook`'s. `build.mjs` checks by default, emits the same documents
 on `--print`, and writes only on `--write`. The committed `_meta/` index and everything that
@@ -84,6 +85,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-27 | `repo-checks.yml` runs the tools' `*.test.mjs` files through `node --test`, listed with `git ls-files` because the directory form loads nothing on Windows and misses a test in a new folder silently. |
 | 2026-09-26 | This repository materializes `devbook-derived`'s refresh script and both workflows, the nightly at 02:17 UTC so it runs ahead of the 03:00 `devbook-validate` schedule. Its `AGENTS.md` section keeps the never-in-session sentence and is stamped `managed: false`: the stricter rule here outranks the template's on-demand refresh, and the script serves `-Check` and the drift warning's hint. |
 | 2026-09-23 | A weekly `devbook-verify` schedule runs `verify-change` over every adopted folder through `delivery-schedule`'s wrapper and opens an issue per uncovered `code-ahead` or `conflict` row; like the validate schedule it targets the wrapper, and unlike it, it writes nothing. |
 | 2026-09-22 | `verify-change` takes a folder or a bounded context as scope, one kind per run and one table; the other two converters stay at one target, because only the report-only one can widen without deciding more. |

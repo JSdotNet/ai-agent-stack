@@ -385,29 +385,29 @@ related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/a
 
 Owned by [devbook-collaboration](building-blocks/devbook-collaboration.md).
 
-Also called: review, review state, review cycle.
+Also called: review, review cycle.
 
-One chapter's trip through `requested`, `changes-requested`, and `cleared`, held as keys in that
-chapter's own block. Each value names who owes the next move — the reviewer, the author, nobody
-— which is the only question the state exists to answer. There is no fourth value for work in
-progress: a review nobody has recorded a verdict on is still `requested`, and a state that
-obliges no one is a state that hides a stall.
+One chapter's trip from a brief to a decision. What it leaves in the chapter is its open
+annotation fences — any open is changes requested, none is cleared — and, at the end, a
+decision rung. Nothing records the pass itself: who owes the next move lives in the pull
+request or the tracker, and the chapter's `status` already says it is not settled.
 
 ## Scheduler
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
+related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution", ".devbook/tech/hosts.md#scheduled-routines"]
 ```
 
 Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 
 Also called: the host's scheduler.
 
-Whatever the live session exposes that turns a name, a cron expression, a repository, and a
-prompt into a scheduled session. It is resolved by capability and never named, and **absent is a
-normal outcome** — the operation reports it and changes nothing. The scheduler is also where
-everything personal lives: the environment, the model, and the entry ids. Matching by name is
+Whatever the live session exposes that turns a name, a cron expression, and a prompt into a
+session run on this machine, in a working folder. It is resolved by capability and never named,
+and **absent is a normal outcome** — the operation reports it and changes nothing. A cloud
+scheduler is never used to create one. The scheduler is also where everything personal lives:
+the checkout's path, the approved tools, and the entry ids. Matching by name is
 what makes writing any of that into the repository unnecessary.
 
 ## Stale Approval

@@ -624,7 +624,7 @@ function render(model) {
     }
     if (!repo.overlays.some((l) => l.present)) {
         const user = repo.overlays.find((l) => l.scope === 'user');
-        out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, role and MCP bindings - and the scheduler asks for its environment and model every time. Run \`devbook-config:local\` to say what is true of this machine.`);
+        out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, role and MCP bindings. Run \`devbook-config:local\` to say what is true of this machine.`);
         out.push('');
     }
     if (repo.modelSelection.present) {

@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-09-26
+date: 2026-09-28
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -12,7 +12,9 @@ folder; on `domain/`'s ladder alone sit two decision rungs — `approved`, with 
 `approved-at`, and an optional `approved-hash` fingerprinting what was approved, and
 `accepted` above it, carrying the same three for the build that satisfies the chapter and
 keeping the approval record it stands on; and the three editorial folders rest at `active` by
-omitting the field. A bounded
+omitting the field. That ladder is a default: a repository declares its own transitional rungs
+per folder, file glob, and block level in `.devbook/statuses.json`, and the resting value, the
+decision rungs, and a stated rating stay devbook's. A bounded
 context opens with `context.md` — its boundary, the `feature-flag` and `setting` chapters its
 capabilities are switched by, and its actors and dependencies until they outgrow the file —
 describes its skills or its features, states what they guarantee in `requirements.md` and
@@ -73,6 +75,26 @@ how settled the writing is, and nearly every chapter sits at `active` permanentl
 it is a line that says nothing and the few moving chapters hide inside it. In `tech/` and `ai/`
 the value is a rating whose purpose is to be stated, and an absent one is indistinguishable
 from `candidate`. An explicit `active` is reported as a warning, never rejected.
+
+**The transitional rungs are the repository's.** A consumer's functional team reviews a domain
+chapter before it is agreed and wanted that visible as `status: review`; its viewer already
+offered `review`, `ready`, `changed`, and `planned` from a `.devbook/statuses.json` it kept for
+its status picker, and the check rejected all four, so a value picked in the viewer failed CI.
+Which rungs a chapter passes through on its way to settled is a team's choice; what devbook has
+to own is the mechanism — the resting value written by omission, the two decision rungs and
+their records, a rating that is always stated. So the ladder is configuration and the
+mechanism is not: a rule lists the rungs a person writes, devbook adds `approved` and
+`accepted` to every `domain/` rule, and listing the resting value, a decision rung, or a rung
+off the `tech/` or `ai/` rating ladder is a configuration error. A rating ladder may only
+narrow, because its five words are the one adoption vocabulary a reader learns across
+repositories and a radar draws. The file is the viewer's, adopted rather than duplicated: one
+file is what keeps the check and the picker from disagreeing, so the check reads its
+`folders.<folder>.rules` — tried in order, first match by glob and `scope` wins — and leaves
+every other key, and every folder that is not devbook's, to whoever else reads it. A
+configuration error is reported once on the file, and the offending value is dropped while
+the rest of the rule stands, so one bad line does not fail every chapter it touches. Contract
+20, additive: no file, or no rule for a block, is the built-in ladder, and no migration is
+owed.
 
 **A context describes its skills.** When the product is procedures, `skills.md` takes the place
 of `features.md` — one or the other, both `type: feature`, because a skill is a feature and a
@@ -156,6 +178,19 @@ type's rules already sit under the aggregate that owns it, and a pairing of thei
 one rule two homes. The placement warning needs no change, because the groupings live on
 `domain.md`, which never splits, so their chapter can only sit in `domain.invariants.md`. Only
 widening what `related` may name, it owes no migration.
+
+**A design component's rules are requirements.** `design/` defined no `type`, so a rule a
+component keeps or breaks — every item movable by keyboard, every colour from a declared token
+— sat in a table or in prose, where nothing warned when no test proved it and a tool that reads
+OpenSpec could not find it. Contract 22 gives `design/` one chapter value, `requirement`: a
+`### Requirement:` under the component's own chapter, with `#### Scenario:` cases, for the same
+reason `domain/` has it. It is proved `e2e` — the rendered component driven, or a visual
+comparison — and the coverage warning holds it there; `integration`, which `domain/` allows for
+a policy no user triggers, is no proof here, because a component rule is always one someone
+sees. Every other `design/` chapter stays untyped, so `type` is optional in this one folder:
+the value marks out rules rather than classifying guidelines, and requiring it everywhere would
+invent kinds heading level already carries. Nothing written under 21 stops validating, so no
+migration is owed.
 
 **A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
 `model.md`, and
@@ -242,6 +277,10 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 - Two supported layouts, and a flat layout at the repository root.
 - A separate `approved` boolean beside `status`; `status` required or optional everywhere.
+- The status ladder under `components.devbook` in `.devbook/config.json`: a stamp is written
+  by the install skill alone, and authored policy inside it would be rewritten by the next
+  reconcile. A ladder that may widen `tech/` or `ai/`, or make `active` a rung to write; a
+  configured ladder that can drop the decision rungs.
 - `naming.md` kept as an optional file kind.
 - *Stakeholder* as the umbrella; a `personas.md`; a second classifier beside `type`.
 - Placing an `ai/` chapter by the file it sits in, with a `side` on each stage file and the
@@ -269,6 +308,8 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | `design/` gains one chapter type, `requirement`: a rule a component keeps or breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter, warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped. A `#### Scenario:` directly under a requirement no longer warns for having no block. Contract 22, additive, no migration. |
+| 2026-09-28 | Each folder's `status` ladder is a built-in default. A repository declares its own transitional rungs per folder, file glob, and block level in `.devbook/statuses.json`, first matching rule wins; the resting value stays written by omission, `approved` and `accepted` stay `domain/`'s whatever the file says, and `tech/` and `ai/` may only narrow their rating ladder. A configuration error is reported once on the file. Contract 20, additive, no migration. |
 | 2026-09-28 | A `requirements.<name>.md` is titled by the feature it holds, like every other split, instead of `# Requirements`: under `requirements.md` in a menu every split read `Requirements`. `requirements.md` and the invariants subpages keep their kind. No contract; `018-behaviour-titles` now titles a split by its first `##` heading, so it no longer undoes the change. |
 | 2026-09-27 | An invariants chapter may pair with the `## Shared Value Objects` or `## Shared Enums` grouping, so a shared type's own rules sit in `domain.invariants.md` beside it instead of under an aggregate that uses it; owned entities and value objects keep their rules under their aggregate. Contract 19, additive, no migration. |
 | 2026-09-26 | A `domain/` file's title names what the page holds: `context.md` the context, every other base file its kind, a split file its chapter, an unnamed page its subject, `context-map.md` the product. The context-name title is no longer the rule. No contract, no migration: the check reads no title and an anchor never derives from one, so an old title validates. |

@@ -173,7 +173,7 @@ where the folder defines no `type`:
 | `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
-| `design-component` | `.devbook/design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
+| `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence
@@ -252,7 +252,7 @@ skills exist.
 
 | File | Pattern | Purpose |
 |------|---------|---------|
-| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, the approval and review triads, and the `tests` test-case link format |
+| `devbook-chapter-metadata.md` | all five folders | Required `meta` block fields, `status` ladders, `type` value sets, the approval and acceptance records, and the `tests` test-case link format |
 | `devbook-domain.md` | `.devbook/domain/**` | Bounded-context structure and ubiquitous language |
 | `devbook-arc42.md` | `.devbook/arc42/**` | arc42 chapter, ADR, and TDR structure |
 | `devbook-tech.md` | `.devbook/tech/**` | Technology graph, versions, maturity ladder |
@@ -294,14 +294,12 @@ the session-start hook, and the skills that name one by path.
 
 ### Review state
 
-`review`, `reviewer`, and `review-at` sit beside `approved-by` and `approved-at`
-and say who owes the next move on a chapter: `requested` the reviewer,
-`changes-requested` the author, `cleared` nobody. The check holds a verdict to
-the notes it stands on — `changes-requested` needs an open annotation,
-`cleared` forbids one — and refuses review state on an approved chapter. The
-vocabulary is devbook's; the skills that write it are
-[`devbook-collaboration`](../devbook-collaboration)'s, and a repository without
-that plugin can still write the three by hand and be held to the same rules.
+A review in progress is never a field of its own. The chapter stays on its
+transitional rung, its open `annotation` fences say what is still asked, and who
+owes the next move lives in the pull request or the tracker. Only the decisions
+are recorded in the chapter: `approved-*` and `accepted-*`, because they have to
+travel with the content and lapse with it. [`devbook-collaboration`](../devbook-collaboration)'s skills run
+the pass; a repository without that plugin reviews the same way by hand.
 
 ### The `ext` namespace
 
@@ -396,7 +394,9 @@ overlay layers — now that every `install` is `init` and `update` and `check` i
 the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 `invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
 reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
-files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Scenario:` cases off an `### Invariant:`.
+files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Scenario:` cases
+off an `### Invariant:`; the eighth is `021-no-review-triad`, which deletes `review`,
+`reviewer`, and `review-at` from every `meta` block and reports the review state it took off.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -432,7 +432,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **18**, covering the metadata schema a repository authors
+One number, currently **21**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -490,7 +490,17 @@ feature, and ships as `018-behaviour-titles`,
 which retitles them; an old title still validates. 19 lets an `invariants` chapter pair with the
 `shared-value-objects` or `shared-enums` grouping as well, so a shared type's own rules sit in
 `domain.invariants.md` beside it; it only widens what `related` may name, and ships no
-migration.
+migration. 20 lets a repository declare its own `status` ladder per folder, file glob, and
+block level in `.devbook/statuses.json`; a folder or block the file does not name takes the
+built-in ladder, so a repository without the file validates as before and no migration is
+owed. 21 removes the review triad — `review`, `reviewer`, `review-at` — from every folder: a
+review in progress is the chapter's rung plus its open annotation fences, and who owes the
+next move is the pull request's or the tracker's. A leftover field is an error naming the
+migration, and `021-no-review-triad` deletes it.
+22 gives `design/` its one `type`, `requirement`: a rule a component keeps or
+breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
+warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
+ships no migration.
 
 ## Folder structure
 

@@ -26,7 +26,8 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 
 Nine skills — six that own the convention in a repository, and three that cross the boundary
 between a chapter and the code implementing it, each over six chapter kinds — plus the rules
-`init` delivers, the tools it materializes, one workflow, and one hook. None of the
+`init` delivers, the tools it materializes, one workflow, one hook, and the one file a
+repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
 change belongs to the engine.
 
@@ -44,6 +45,7 @@ change belongs to the engine.
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
+| `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 ### init
 
@@ -169,7 +171,9 @@ twice. A shared value object's or enum's rules are its grouping's, in `domain.in
 because the type belongs to no one aggregate and pinning them under one decides them for all.
 The split follows who is held to it — a promise made outside the model is a
 requirement, what a type guarantees is an invariant — and that is also what fixes the level
-each is proved at.
+each is proved at. A design component's rules are requirements under its own chapter in
+`design/`, proved `e2e` or by a visual test, because a component keeps or breaks them in what
+the user sees.
 
 ### apply-change
 
@@ -342,6 +346,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | Every file carries a file-level block under its top-level heading | parse | untested |
 | `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| A block's `status` is held to the first `.devbook/statuses.json` rule matching its file and level, else to the built-in ladder; no rule makes `active` a rung, drops a decision rung, or widens a rating ladder | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/statuses.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
@@ -363,12 +368,17 @@ Two enums are the chapter's own. **Chapter Status** is where the content stands:
 defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
 `domain/`'s alone sit two decision rungs: `approved`, the chapter is right, and `accepted`
 above it, the built work satisfies it. The second stands on the first and keeps its record.
-The other four folders have neither: what those rungs decide is asked of the model. Three folders have a resting value written
+The other four folders have neither: what those rungs decide is asked of the model. Each ladder is a default a repository may replace
+with its own transitional rungs, never touching the resting value, the decision rungs, or a
+rating. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
 unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value
-set, at chapter level and at file level separately; `arc42/` and `design/` deliberately define
-none, because their only kind distinction is already carried by heading level.
+set that classifies every chapter, at chapter level and at file level separately; `arc42/`
+deliberately defines none, because its only kind distinction is already carried by heading
+level. `design/` defines one value, `requirement`, and types nothing else: a rule a component
+keeps or breaks is a `### Requirement:` under the component's chapter, so a tool that reads
+OpenSpec reads it, and everything else there is a guideline heading level already describes.
 
 ### Meta Block
 
@@ -382,13 +392,14 @@ is what turns a heading into a node, so deleting it as noise silently drops the 
 the graph and out of every reference pointing at it.
 
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
-`roadmap`, `date`, `tests`, `number`, `index`, and the review triad — `review`, `reviewer`,
-`review-at` — are devbook's, with the six decision fields
+`roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
 — `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
 `accepted-hash` — scoped to `domain/` beside the rungs that write them;
 each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
 it. Empty collections and nulls are omitted rather than written out, so absence has exactly
-one spelling.
+one spelling. No field records a review in progress: that is `status` plus the chapter's open
+annotation fences, and the `review`, `reviewer`, and `review-at` fields contract 21 removed
+are reported by name.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -841,7 +852,7 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | --- | --- | --- | --- | --- |
 | [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
 | [devbook-procedures](devbook-procedures.md#dependencies) | Customer-Supplier, declared | Follows this block's reconcile protocol — the stamp's two shared fields, the hash rules, the plan-before-write phase — and stamps `components.devbook-procedures` beside this block's entry | `assets/reconcile-protocol.md` under **The stamp** | That the protocol and the stamp keep their shape; it reads no chapter and runs no check. |
-| [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Writes `review`, `reviewer`, `review-at` in a chapter's own block; annotation fences written through `annotations.mjs`; writes devbook's `approved` rung | The review triad, the annotation fence, and the `status` ladder | That the three review fields keep their meaning and the check holds them to it, that a fence keeps its schema and its open/resolved/gone lifecycle, and that `approved`, `approved-by`, and `approved-at` keep their meaning. |
+| [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Annotation fences written through `annotations.mjs`; writes devbook's `approved` and `accepted` rungs | The annotation fence and the `status` ladder | That a fence keeps its schema and its open/resolved/gone lifecycle, and that the two rungs and their records keep their meaning. |
 | [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/` and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |

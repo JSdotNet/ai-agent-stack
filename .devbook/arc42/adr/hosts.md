@@ -74,8 +74,9 @@ plain link, so the contract still reads the same on both.
 
 Five divergences stand on purpose: `devbook-config`'s report names a host's plugin directories,
 because where a plugin is installed is a fact about a host and nothing else; and
-`delivery-schedule` names the scheduler tool, because an install that could not would schedule
-nothing, and the workflow tool its issue sweep runs each resolution under, because a sweep that
+`delivery-schedule` names the scheduler tools — the local one it creates through and the cloud
+one it only disables — because an install that could not would schedule nothing, or fire a
+schedule twice, and the workflow tool its issue sweep runs each resolution under, because a sweep that
 could not would resolve nothing ([plugin boundaries](plugin-boundaries.md)). And every
 `delivery` skill that calls `start_run` carries `${CLAUDE_SESSION_ID}`, because Claude Code
 substitutes a session id only into skill content: a skill without the token could not tell a
@@ -99,6 +100,7 @@ the path of the body is Claude's.
 | Date | Change |
 | --- | --- |
 | 2026-09-28 | The `run` procedure's body is Claude Code's `run-<name>` recipe, with a Copilot twin: the fifth divergence. |
+| 2026-09-28 | `delivery-schedule` names the desktop app's local scheduler and keeps `RemoteTrigger` only to disable a cloud copy: every schedule is a local routine ([plugin boundaries](plugin-boundaries.md)). |
 | 2026-09-25 | `flow-runner` names `mcp__Claude_Browser__preview_start` and opens the dashboard in the pane: the fourth divergence, reversing 2026-09-09. |
 | 2026-09-23 | The `session-id` slot: `delivery`'s `start_run` callers carry `${CLAUDE_SESSION_ID}`, the lane's third recorded divergence. |
 | 2026-09-21 | `fleet` deleted: no asset names the Claude CLI. `delivery-schedule`'s issue sweep names the workflow tool, the lane's second recorded divergence. |

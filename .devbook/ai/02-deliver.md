@@ -88,18 +88,19 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42
 date: 2026-09-07
 ```
 
-`delivery-schedule` fires an entry point, a check, or a refresh on a cadence, in a cloud
-session with nobody watching, and lands what it produced as a pull request or a report issue.
+`delivery-schedule` fires an entry point, a check, or a refresh on a cadence, as a local
+routine on the maintainer's machine with nobody watching, and lands what it produced as a pull request or a report issue.
 
 - **Used for** — four of the thirteen schedules are enabled against this repository, per the
   stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, `merge-review`, and
   `package-update`. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a
   glance, not a rebase.
-- **Evidence** — none yet. `candidate` because the whole design rests on one unverified fact:
-  that a cloud session loads the marketplace from the repository's committed settings. The
-  first `schedule-run` answers it; until then a prompt cannot reach its skill and the session
-  either stops or improvises. Promote to `trial` once one has run its target and published,
+- **Evidence** — the fact the design first rested on came back false on 2026-09-28: a cloud
+  session did not load the marketplace from the repository's committed settings, and the
+  Backlog issue sweep stopped at its first rule without its skill. Every schedule has been a
+  local routine since, running with the plugins installed on the machine. Promote to `trial`
+  once a local run has run its target and published here,
   and watch two things: whether the idempotence rule held — one open pull request per
   schedule, updated rather than doubled — and whether a parked run's draft carried enough
   brief to resume by hand.

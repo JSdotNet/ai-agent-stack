@@ -58,6 +58,15 @@ const STATUS_BY_FOLDER = {
     ai: ["candidate", "trial", "adopted", "hold", "retired"],
 };
 
+/**
+ * The built-in ladder of a folder — what `status` may hold where the
+ * repository's `.devbook/statuses.json` declares nothing (see statuses.mjs).
+ */
+export const builtInStatuses = (folder) => [...(STATUS_BY_FOLDER[folder] ?? [])];
+
+/** The two decision rungs, which no repository configuration adds or removes. */
+export const DECISION_STATUSES = [APPROVED_STATUS, ACCEPTED_STATUS];
+
 // Who approved, and on what day. The gate writes both; they exist so the
 // decision travels with the content and lands in the git history, rather than
 // living in flow configuration or in someone's memory.
@@ -101,17 +110,6 @@ const DECISION_FIELDS = [
 // their own approval gate.
 const CONTENT_HASH_PATTERN = /^sha256:[0-9a-f]{8}$/;
 
-// Where a chapter's review stands, who owes the next move, and since when. The
-// triad mirrors the approval triad on purpose — a chapter reads the same way on
-// its way to a decision as it does past one — and, like it, is devbook's
-// vocabulary written by the review workflow layered on top (the annotations decision). Each
-// state names who is waiting: `requested` the reviewer, `changes-requested`
-// the author, `cleared` nobody. The notes in the chapter body are the evidence
-// a state stands on, so the two are checked against each other below.
-const REVIEW_FIELD = "review";
-const REVIEW_STATES = ["requested", "changes-requested", "cleared"];
-const REVIEW_FIELDS = [REVIEW_FIELD, "reviewer", "review-at"];
-
 // The value a folder's content settles on, which is therefore *omitted* rather
 // than written. A folder listed here makes `status` optional: absence means the
 // resting value, and writing it out restates what absence already says.
@@ -138,10 +136,10 @@ const RESTING_STATUS_BY_FOLDER = {
 // the name alone, so anchors are slugs of the bare name.
 //
 // A folder whose lists are empty defines no kind distinction of its own: in
-// `.arc42` and `.design` the only such distinction (chapter vs section) is
-// already carried by heading level, so inventing
-// values there would restate the document structure. `type` is omitted in those
-// folders and reported when used.
+// `.arc42` the only such distinction (chapter vs section) is already carried
+// by heading level, so inventing values there would restate the document
+// structure. `type` is omitted there and reported when used. `.design` is the
+// same apart from its one `requirement` kind.
 const TYPE_BY_FOLDER = {
     domain: {
         chapter: [
@@ -243,8 +241,17 @@ const TYPE_BY_FOLDER = {
         file: ["adoption-map", "stage", "concepts"],
     },
     arc42: { chapter: [], file: [] },
-    design: { chapter: [], file: [] },
+    // `.design` defines one kind and nothing else: a rule a component either
+    // keeps or breaks is a `### Requirement:` under the component's chapter,
+    // typed so a tool that reads OpenSpec reads it. Every other `.design`
+    // chapter is a guideline and stays untyped — see `OPTIONAL_TYPE_FOLDERS`.
+    design: { chapter: ["requirement"], file: [] },
 };
+
+// Folders whose value set marks out a few chapters rather than classifying
+// every one. A block there may omit `type`, and a declared one must still be
+// in the set.
+const OPTIONAL_TYPE_FOLDERS = ["design"];
 
 // `.tech` spelled this concept `kind` before `type` was unified across folders.
 // The old name keeps working so an existing repository is not broken by a
@@ -282,7 +289,6 @@ const COMMON_OPTIONAL_FIELDS = [
     "roadmap",
     "date",
     "tests",
-    ...REVIEW_FIELDS,
 ];
 
 // A feature flag is a switch, so its `default` is one of two words. A setting's
@@ -374,16 +380,29 @@ const DEVBOOK_PATH_PREFIX = /^\.(?:domain|arc42|tech|design|ai)\//;
 // no expectation, and that stays true: these two kinds are checked because the
 // file they live in *is* the claim about their level, so a mismatch means one
 // of the two is wrong.
+//
+// Keyed by folder, then type: `.design`'s `requirement` is a rule a component
+// keeps or breaks on screen, so it is held to a different level than a
+// bounded context's.
 const BEHAVIOUR_TEST_LEVELS = {
-    requirement: {
-        levels: ["e2e", "integration"],
-        reason:
-            "a requirement is proved `e2e` — it promises something to someone outside the model, so what proves it is the product driven the way that someone drives it — or `integration` where it is a policy no user triggers",
+    domain: {
+        requirement: {
+            levels: ["e2e", "integration"],
+            reason:
+                "a requirement is proved `e2e` — it promises something to someone outside the model, so what proves it is the product driven the way that someone drives it — or `integration` where it is a policy no user triggers",
+        },
+        invariant: {
+            levels: ["unit"],
+            reason:
+                "an invariant is proved `unit` — it is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is not asserting the guarantee",
+        },
     },
-    invariant: {
-        levels: ["unit"],
-        reason:
-            "an invariant is proved `unit` — it is what the type guarantees no matter who calls it, and a test that has to start the product to reach it is not asserting the guarantee",
+    design: {
+        requirement: {
+            levels: ["e2e"],
+            reason:
+                "a design requirement is proved `e2e` — a component keeps or breaks it in what the user sees and operates, so what proves it is the rendered component driven by keyboard or pointer, or compared by a visual test",
+        },
     },
 };
 
@@ -425,6 +444,17 @@ const REMOVED_FIELDS = {
         "not what you want, give the documents a `number` or mark the directory's " +
         "entry point with `index: root`. See " +
         "devbook-chapter-metadata.md.",
+    // A review in progress is workflow state: the rung says the chapter is
+    // waiting, the open annotation fences say on what, and who owes the next
+    // move belongs to the pull request or the tracker. Contract 21.
+    ...Object.fromEntries(
+        ["review", "reviewer", "review-at"].map((field) => [
+            field,
+            "a review in progress is the chapter's `status` rung plus its open annotation " +
+                "fences, and who owes the next move lives in the pull request or the tracker. " +
+                "Run the `021-no-review-triad` migration, which deletes it.",
+        ])
+    ),
 };
 
 const FOLDER_EXTRA_FIELDS = {
@@ -819,6 +849,7 @@ export function typeIssues(folder, blockLevel, meta, fileBase = null) {
     const declared = resolveType(folder, meta);
     if (allowed.length) {
         if (declared === null) {
+            if (OPTIONAL_TYPE_FOLDERS.includes(folder)) return issues;
             issues.push({
                 severity: "error",
                 message: `is missing required \`type\`. Expected one of: ${allowed.join(", ")}.`,
@@ -993,8 +1024,25 @@ export function scenarioCount(chapters, index) {
 }
 
 /**
+ * Whether the heading at `index` is a `Scenario:` one level under a
+ * `requirement` chapter — a case of that rule, found by its text, and so a
+ * section rather than a chapter that owes a block.
+ */
+function isScenarioOf(chapters, index, folder) {
+    const heading = chapters[index];
+    if (!SCENARIO_HEADING.test(heading.text)) return false;
+    for (let i = index - 1; i >= 0; i--) {
+        if (chapters[i].level < heading.level) {
+            return chapters[i].level === heading.level - 1 && resolveType(folder, chapters[i].meta) === "requirement";
+        }
+    }
+    return false;
+}
+
+/**
  * Coverage warnings for one behaviour chapter — a `requirement` or an
- * `invariant`. Every other type returns nothing.
+ * `invariant` in `.domain`, a `requirement` in `.design`. Every other type
+ * returns nothing.
  *
  * All of these are warnings, deliberately. Each reports a chapter that is
  * incomplete rather than wrong, and an error would be counter-productive in
@@ -1006,8 +1054,8 @@ export function scenarioCount(chapters, index) {
  * Messages are sentence fragments beginning with a verb, matching `typeIssues`,
  * so each caller can prefix its own subject.
  */
-export function behaviourIssues(type, meta, scenarios = 0) {
-    const expected = BEHAVIOUR_TEST_LEVELS[type];
+export function behaviourIssues(type, meta, scenarios = 0, folder = "domain") {
+    const expected = BEHAVIOUR_TEST_LEVELS[folder]?.[type];
     if (!expected) return [];
     const issues = [];
 
@@ -1461,78 +1509,6 @@ function acceptanceIssues(meta, contentHash = null) {
 }
 
 /**
- * Lint the review record: `review`, `reviewer`, and `review-at`, written
- * together or not at all, against the open notes on the chapter.
- *
- * `openNotes` is how many unresolved annotation fences the chapter carries; the
- * fences are the evidence a verdict stands on, so `changes-requested` over none
- * and `cleared` over one are both a verdict written without its findings.
- * Review state never survives the decision: an approved chapter carries the
- * decision, not the road to it.
- */
-export function reviewIssues(meta, openNotes = 0) {
-    if (!meta) return [];
-    const issues = [];
-    const present = REVIEW_FIELDS.filter((field) => meta[field] != null);
-    if (!present.length) return issues;
-
-    for (const field of present) {
-        const raw = meta[field];
-        if (Array.isArray(raw) || String(raw).trim() === "") {
-            issues.push({
-                severity: "error",
-                message: `has \`${field}\` set to an empty or list value — a review names one state, one reviewer, and one day.`,
-            });
-        }
-    }
-
-    const missing = REVIEW_FIELDS.filter((field) => meta[field] == null);
-    if (missing.length) {
-        issues.push({
-            severity: "error",
-            message: `carries ${present.map((f) => `\`${f}\``).join(", ")} without ${missing.map((f) => `\`${f}\``).join(", ")} — the three are written together or not at all.`,
-        });
-    }
-
-    const state = meta[REVIEW_FIELD];
-    if (state != null && !REVIEW_STATES.includes(String(state))) {
-        issues.push({
-            severity: "error",
-            message: `has \`review\` "${state}" — one of ${REVIEW_STATES.map((s) => `\`${s}\``).join(", ")}.`,
-        });
-    }
-
-    if (meta["review-at"] != null && !DATE_PATTERN.test(String(meta["review-at"]))) {
-        issues.push({
-            severity: "error",
-            message: `has \`review-at\` "${meta["review-at"]}" — a review date is a single calendar day in \`YYYY-MM-DD\` form.`,
-        });
-    }
-
-    if (meta.status === APPROVED_STATUS || meta.status === ACCEPTED_STATUS) {
-        issues.push({
-            severity: "error",
-            message: `states \`status: ${meta.status}\` while carrying review state — the decision clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
-        });
-    }
-
-    if (state === "changes-requested" && openNotes === 0) {
-        issues.push({
-            severity: "error",
-            message: `states \`review: changes-requested\` with no open annotation — a verdict without its findings. Write the objections as fences, or set \`cleared\`.`,
-        });
-    }
-    if (state === "cleared" && openNotes > 0) {
-        issues.push({
-            severity: "error",
-            message: `states \`review: cleared\` over ${openNotes} open annotation${openNotes === 1 ? "" : "s"} — cleared means no open note remains. Resolve them, or set \`changes-requested\`.`,
-        });
-    }
-
-    return issues;
-}
-
-/**
  * Fields this block carries that the schema used to define and no longer does.
  *
  * Exported so the graph build reports them the same way it reports `typeIssues`
@@ -1603,8 +1579,12 @@ export function isStructuralDocument(relPath) {
  * not know which headings are "addressable chapters" per folder — see that
  * folder's own instructions file) — it checks the blocks that *are* present
  * plus the file-level block, which covers the common authoring mistakes.
+ *
+ * `ladder` is the repository's own status ladder, from `loadStatusLadder` in
+ * statuses.mjs. Absent, or where it declares nothing for a block, the folder's
+ * built-in ladder applies.
  */
-export function validateDocument(relPath, markdown) {
+export function validateDocument(relPath, markdown, { ladder = null } = {}) {
     const kind = folderKindForPath(relPath);
     const named = domainFileName(relPath);
     const fileBase = named.base;
@@ -1628,7 +1608,6 @@ export function validateDocument(relPath, markdown) {
         // graph.mjs prefixes every issue with the path; doing it here too printed it twice.
         issues.push({ severity: issue.severity, message: issue.message });
     }
-    const allowedStatus = STATUS_BY_FOLDER[kind];
     const resting = restingStatusFor(kind);
     const optionalFields = new Set([
         ...COMMON_OPTIONAL_FIELDS,
@@ -1677,15 +1656,11 @@ export function validateDocument(relPath, markdown) {
     // question and never its parent's — the same rule the annotation grammar
     // states, applied here rather than re-derived.
     const openQuestions = new Map();
-    // How many open notes each chapter carries, keyed the same way, so the
-    // review state can be held to the findings it claims to stand on.
-    const openNotes = new Map();
     for (const note of parseAnnotations(markdown)) {
         const fields = note.fields ?? {};
         const kindOf = fields.kind ?? "comment";
         const statusOf = fields.status ?? "open";
         if (statusOf !== "open" || !note.chapter) continue;
-        openNotes.set(note.chapter.line, (openNotes.get(note.chapter.line) ?? 0) + 1);
         if (kindOf !== "question" || openQuestions.has(note.chapter.line)) continue;
         openQuestions.set(note.chapter.line, note.line);
     }
@@ -1695,8 +1670,9 @@ export function validateDocument(relPath, markdown) {
         const label = `${"#".repeat(chapter.level)} ${chapter.text} (line ${chapter.line})`;
         if (!chapter.meta) {
             // Level-1 heading already reported above as the file-level block;
-            // a structural document's headings are sections by rule.
-            if (chapter.level > 1 && !structural) {
+            // a structural document's headings are sections by rule, and so
+            // is a `#### Scenario:` directly under a `requirement`.
+            if (chapter.level > 1 && !structural && !isScenarioOf(chapters, index, kind)) {
                 issues.push({
                     severity: "warning",
                     message: `${label} has no \`meta\` block. Add one if this heading is an addressable chapter for this folder.`,
@@ -1710,6 +1686,14 @@ export function validateDocument(relPath, markdown) {
         // omitted status is correct and the resting value written out is the
         // thing worth reporting — otherwise the corpus ends up with two
         // spellings of one state and neither reader knows which to expect.
+        //
+        // Which values are written is the repository's ladder where it declares
+        // one for this block, and the folder's built-in one otherwise. The
+        // resting value is checked first because a configured ladder never
+        // lists it: omission is devbook's mechanism, not a rung to choose.
+        const blockLevel = chapter.level === 1 ? "file" : "chapter";
+        const configured = ladder?.statusesFor(relPath, blockLevel) ?? null;
+        const allowedStatus = configured?.statuses ?? STATUS_BY_FOLDER[kind];
         const declaresStatus = "status" in chapter.meta;
         if (!declaresStatus || chapter.meta.status === null) {
             if (resting === null) {
@@ -1725,22 +1709,25 @@ export function validateDocument(relPath, markdown) {
                     message: `${label} sets \`status\` to a null value — omit the field instead to mean the resting value \`${resting}\`.`,
                 });
             }
-        } else if (!allowedStatus.includes(chapter.meta.status)) {
-            issues.push({
-                severity: "error",
-                message: `${label} has status "${chapter.meta.status}", expected one of: ${allowedStatus.join(", ")}.`,
-            });
         } else if (chapter.meta.status === resting) {
             issues.push({
                 severity: "warning",
                 message: `${label} states \`status: ${resting}\`, which is the resting value in .${kind} — omit the field instead, per the omit-when-empty rule.`,
             });
+        } else if (!allowedStatus.includes(chapter.meta.status)) {
+            const from = configured ? ` (${configured.source})` : "";
+            issues.push({
+                severity: "error",
+                message: allowedStatus.length
+                    ? `${label} has status "${chapter.meta.status}", expected one of: ${allowedStatus.join(", ")}${from}.`
+                    : `${label} has status "${chapter.meta.status}", and no status is written on this block${from} — omit the field.`,
+            });
         }
 
         // `type` records what kind of thing this chapter or file is, in the
         // vocabulary its folder defines. Folders that define no vocabulary
-        // (`.arc42`, `.design`) omit the field entirely.
-        const blockLevel = chapter.level === 1 ? "file" : "chapter";
+        // (`.arc42`) omit the field entirely; `.design` types only its
+        // requirement chapters.
         for (const issue of typeIssues(kind, blockLevel, chapter.meta, fileBase)) {
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
@@ -1889,11 +1876,12 @@ export function validateDocument(relPath, markdown) {
         // coverage warnings — see `behaviourIssues`. Whether the chapter's
         // `related` reaches the prose half it belongs to is the graph build's
         // to say, since only it can resolve across files.
-        if (kind === "domain" && blockLevel === "chapter") {
+        if (blockLevel === "chapter") {
             for (const issue of behaviourIssues(
                 resolveType(kind, chapter.meta),
                 chapter.meta,
-                scenarioCount(chapters, index)
+                scenarioCount(chapters, index),
+                kind
             )) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }
@@ -1914,12 +1902,6 @@ export function validateDocument(relPath, markdown) {
             for (const issue of approvalIssues(chapter.meta, contentHash)) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }
-        }
-
-        // The review workflow writes into the chapter too, and its state is
-        // only consistent against the notes beside it.
-        for (const issue of reviewIssues(chapter.meta, openNotes.get(chapter.line) ?? 0)) {
-            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
         // An open question means the chapter is not agreed, so an approval

@@ -26,6 +26,7 @@ import {
     DEVBOOK_FOLDER_NAMES,
     DEVBOOK_ROOT,
 } from "./metadata.mjs";
+import { loadStatusLadder } from "./statuses.mjs";
 
 /**
  * Every devbook folder this convention recognizes, as the repository path it
@@ -129,7 +130,25 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // beside it in `domain.invariants.md` instead of under an aggregate that
 // happens to use it. It only widens what `related` may name: nothing written
 // under 18 stops validating, and no migration is owed.
-export const CONTRACT_VERSION = 19;
+//
+// Version 20 lets a repository declare its own `status` ladder per folder, file
+// glob, and block level in `.devbook/statuses.json` (statuses.mjs). The resting
+// value, the decision rungs, and a required rating stay devbook's; a folder or a
+// block the file does not name takes the built-in ladder, so a repository with
+// no file validates exactly as under 19 and no migration is owed.
+//
+// Version 21 removes the review triad — `review`, `reviewer`, `review-at`.
+// A review in progress is the chapter's `status` rung plus its open
+// annotation fences, and who owes the next move lives in the pull request
+// or the tracker. A leftover field is reported by name, and
+// `migrations/021-no-review-triad/` deletes it.
+//
+// Version 22 gives `.design` its one chapter type, `requirement`: a rule a
+// component keeps or breaks, as a `### Requirement:` with `#### Scenario:`
+// cases under the component's chapter, held to `e2e` by the coverage warning.
+// Every other `.design` chapter stays untyped, so nothing written under 21
+// stops validating, and no migration is owed.
+export const CONTRACT_VERSION = 22;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -364,6 +383,11 @@ export async function buildGraph(repoRoot, folders = null) {
         });
     }
 
+    // The repository's own status ladder, if it declares one. A configuration
+    // error is reported here, once, instead of on every block it would fail.
+    const { ladder, issues: ladderIssues } = await loadStatusLadder(repoRoot);
+    problems.push(...ladderIssues);
+
     const files = (
         await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))
     ).flat();
@@ -416,7 +440,7 @@ export async function buildGraph(repoRoot, folders = null) {
         // editor extension, which not every author has open. Each issue keeps
         // its own severity: a warning stays a warning, and only an error fails
         // the run.
-        for (const issue of validateDocument(relPath, raw)) {
+        for (const issue of validateDocument(relPath, raw, { ladder })) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,

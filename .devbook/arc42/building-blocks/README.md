@@ -14,7 +14,8 @@ one block owns are in the [glossary](../12-glossary.md).
 
 **One plugin, one block.** A plugin is the unit a host installs, versions, and can refuse to
 load, so it is already the line a model cannot cross without somebody declaring it. Eleven
-files follow the eleven plugin folders under `plugins/`, name for name.
+files follow the eleven plugin folders under `plugins/`, name for name; a twelfth, at
+`status: draft`, describes a plugin designed and not yet built.
 
 ## The set
 
@@ -26,6 +27,7 @@ files follow the eleven plugin folders under `plugins/`, name for name.
 | [devbook](devbook.md) | L0 foundation | Addressed Markdown chapters, the `meta` block under them, the check, and the reconcile that puts the convention into a repository |
 | [devbook-derived](devbook-derived.md) | L1 on devbook | The committed `_meta/` index, its refresh paths, and the canvas that draws the graph |
 | [devbook-procedures](devbook-procedures.md) | L1 on devbook | The five procedures every repository has and no plugin can write — `start`, `show`, `capture`, `debug`, `estimate` — seeded once with a goal the plugin fixes and a body the repository owns |
+| [devbook-openspec](devbook-openspec.md) | L1 on devbook | The change lane: OpenSpec installed and configured so a change is a set of deltas against the chapters — draft, not yet built |
 | [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |

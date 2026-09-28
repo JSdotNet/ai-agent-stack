@@ -5,7 +5,7 @@ date: 2026-09-24
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.10.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.11.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | Every plugin is `1.11.0`; contract 20 ships in it with migration 020, which deletes `review`, `reviewer`, and `review-at` from every `meta` block now that a review in progress is `status` plus the open annotation fences. |
 | 2026-09-27 | Every plugin is `1.10.0`; contract 19 ships in it with no migration, because it only lets an invariants chapter pair with the `## Shared Value Objects` or `## Shared Enums` grouping. |
 | 2026-09-26 | Every plugin is `1.9.0`. `devbook-procedures` seeds a fifth procedure, `estimate`, an added seed a repository adopts through `update`, so no contract moves and no migration is owed. |
 | 2026-09-25 | Every plugin is `1.8.0`; contract 18 ships in it with migration 018, which retitles a context's behaviour files `# Requirements` and `# Invariants`. The same contract takes `#### Scenario:` off an invariant — a claim, its rejection code, and `Enforced at:` — and leaves any an older invariant carries. |

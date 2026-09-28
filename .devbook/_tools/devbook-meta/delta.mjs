@@ -29,7 +29,13 @@ import {
     CHANGES_ARCHIVE,
     DELTA_FOLDER,
     DELTA_SECTIONS,
+    DECISION_STATUSES,
+    changeHash,
     changePathParts,
+    chapterHash,
+    parseAnnotations,
+    parseDocument,
+    resolveAnnotation,
     deltaHeaderIssues,
     parseDeltaHeader,
     slugify,
@@ -302,7 +308,50 @@ export function mergeDelta(parsed, original, change) {
         lines = [...lines.slice(0, hit.index), ...trimBlank(chapter), ...(rest.length ? ["", ...rest] : [])];
     }
 
-    return { merged: `${trimBlank(lines).join(eol)}${eol}`, issues };
+    lines = liftLapsedDecisions(original, trimBlank(lines), change, issues);
+    return { merged: `${lines.join(eol)}${eol}`, issues };
+}
+
+// The six fields a decision rung carries, which come out with it.
+const DECISION_RECORD = ["approved-by", "approved-at", "approved-hash", "accepted-by", "accepted-at", "accepted-hash"];
+
+/**
+ * Take the decision rung off every chapter this merge changed under it. A
+ * chapter's own `approved` or `accepted` is of the content that was read; a
+ * merge that changes that content lapses it, exactly as a hand edit would, and
+ * the change's own decision on `proposal.md` is what agreed the new content —
+ * so the merge writes no rung onto a chapter, and leaves none standing that is
+ * no longer true. Changed means the recorded fingerprint no longer matches or,
+ * where none was recorded, the merge stamped the chapter. A rung the delta set
+ * itself is left for the lint to judge.
+ */
+function liftLapsedDecisions(original, lines, change, issues) {
+    if (original === null) return lines;
+    const rung = (c) => `${c.level}:${c.slug}:${c.meta?.status}`;
+    const before = new Set(
+        parseDocument(original).chapters.filter((c) => DECISION_STATUSES.includes(c.meta?.status)).map(rung)
+    );
+    if (!before.size) return lines;
+    const text = lines.join("\n");
+    const lapsed = parseDocument(text).chapters.filter((c) => {
+        if (!before.has(rung(c))) return false;
+        const recorded = c.meta["accepted-hash"] ?? c.meta["approved-hash"];
+        return recorded != null ? String(recorded).trim() !== chapterHash(text, c.line) : c.meta.change === change;
+    });
+    const out = [...lines];
+    for (const chapter of lapsed.reverse()) {
+        const fence = metaFenceAfter(out, chapter.line - 1, out.length);
+        if (!fence) continue;
+        for (let i = fence.close - 1; i > fence.open; i--) {
+            const key = out[i].slice(0, out[i].indexOf(":")).trim();
+            if (key === "status" || DECISION_RECORD.includes(key)) out.splice(i, 1);
+        }
+        issues.push({
+            severity: "info",
+            message: `lifts \`${chapter.meta.status}\` from "${chapter.text}": the merge changes the content that was decided, and the change's own decision is on its proposal.md.`,
+        });
+    }
+    return out;
 }
 
 /** Strip line numbers so a lint result can be compared before and after a merge. */
@@ -404,14 +453,82 @@ export async function checkChange(repoRoot, name) {
     return report;
 }
 
-// ── The gate seam ───────────────────────────────────────────────────────────
-// Where a check that the change may be merged goes, run after every delta has
-// resolved and before anything is written. It is deliberately empty: what
-// agreeing a change records, and where, is decided with the gates on a change,
-// and whatever that decides fills this function and nothing else. Return
-// problems at error severity to refuse the merge.
-async function gateCheck(/* repoRoot, report */) {
-    return [];
+/** A change's proposal and deltas, read from disk; `null` when it has no proposal. */
+export async function readChange(repoRoot, name) {
+    const base = `${CHANGES_ROOT}/${name}`;
+    let proposal;
+    try {
+        proposal = await readFile(path.join(repoRoot, base, "proposal.md"), "utf8");
+    } catch {
+        return null;
+    }
+    const deltas = [];
+    for (const relPath of (await markdownUnder(repoRoot, `${base}/${DELTA_FOLDER}`)).sort()) {
+        deltas.push({ path: relPath, target: changePathParts(relPath).target, markdown: await readFile(path.join(repoRoot, relPath), "utf8") });
+    }
+    return { name, proposal, deltas };
+}
+
+/** The fingerprint a change's rungs record: its proposal and every delta, as one. */
+export async function changeFingerprint(repoRoot, name) {
+    const change = await readChange(repoRoot, name);
+    return change ? changeHash(change.proposal, change.deltas) : null;
+}
+
+const proposalMeta = (change) => parseDocument(change.proposal).chapters.find((c) => c.level === 1)?.meta ?? {};
+
+/**
+ * What stands against a decision on the change as a whole, beyond what the
+ * proposal's own block lint says. The change is one review, so an open
+ * question anywhere in it — the proposal or any delta — means it is not
+ * agreed. Reported only while the proposal states a rung.
+ */
+export function changeDecisionIssues(change) {
+    const { status } = proposalMeta(change);
+    if (!DECISION_STATUSES.includes(status)) return [];
+    const issues = [];
+    for (const file of [{ path: `${CHANGES_ROOT}/${change.name}/proposal.md`, markdown: change.proposal }, ...change.deltas]) {
+        for (const note of parseAnnotations(file.markdown)) {
+            const fields = resolveAnnotation(note.fields);
+            if (fields.status !== "open" || fields.kind !== "question") continue;
+            issues.push({
+                severity: "error",
+                message: `states \`status: ${status}\` while ${file.path} carries an open \`kind: question\` annotation (line ${note.line}) — the change is decided as one, so an open question anywhere in it means it is not agreed.`,
+            });
+        }
+    }
+    return issues;
+}
+
+// ── The gate ────────────────────────────────────────────────────────────────
+// Run after every delta has resolved and before anything is written. A change
+// merges only once both of its gates have passed, on its proposal: approved,
+// then accepted, each signed and dated, each with the fingerprint of the
+// change as it stands — so nothing was edited after either decision — and no
+// open question anywhere in it. The collaboration plugin's approve and accept
+// skills write the records; this only reads them.
+async function gateCheck(repoRoot, report) {
+    const change = await readChange(repoRoot, report.name);
+    if (!change) return [];
+    const meta = proposalMeta(change);
+    const refuse = (message) => ({ severity: "error", message: `${CHANGES_ROOT}/${report.name}/proposal.md ${message}` });
+    if (meta.status !== "accepted") {
+        return [refuse(`is at \`status: ${meta.status ?? "(none)"}\` — a change merges once it is approved and then accepted. Run both gates on the change first.`)];
+    }
+    const problems = [];
+    for (const field of ["approved-by", "approved-at", "accepted-by", "accepted-at"]) {
+        if (meta[field] == null) problems.push(refuse(`states \`status: accepted\` without \`${field}\` — an unsigned decision is not a gate passed.`));
+    }
+    const current = changeHash(change.proposal, change.deltas);
+    for (const field of ["approved-hash", "accepted-hash"]) {
+        if (meta[field] == null) {
+            problems.push(refuse(`carries no \`${field}\` — a change's gates record the fingerprint of what they decided, so an edit after either is caught.`));
+        } else if (String(meta[field]).trim() !== current) {
+            problems.push(refuse(`records \`${field}\` ${meta[field]}, and the change now fingerprints as ${current} — it changed after the decision. Decide it again.`));
+        }
+    }
+    problems.push(...changeDecisionIssues(change).map((issue) => refuse(issue.message)));
+    return problems;
 }
 
 /** Check, merge, and archive one change. Returns the report and what was written. */

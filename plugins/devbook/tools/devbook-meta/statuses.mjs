@@ -133,7 +133,7 @@ function compileRule(folder, rule, at, report) {
             report(
                 folder === "domain"
                     ? `${at} lists \`${value}\`, which devbook adds to every domain/ rule — the approval gate writes it with its record. Take it out of the list.`
-                    : `${at} lists \`${value}\`, a decision rung, which only domain/ carries. Take it out of the list.`
+                    : `${at} lists \`${value}\`, a decision rung, which only domain/ and a change's proposal carry. Take it out of the list.`
             );
         } else if (resting === null && !builtInStatuses(folder).includes(value)) {
             report(

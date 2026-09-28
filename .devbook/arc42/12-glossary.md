@@ -385,13 +385,12 @@ related: [".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/a
 
 Owned by [devbook-collaboration](building-blocks/devbook-collaboration.md).
 
-Also called: review, review state, review cycle.
+Also called: review, review cycle.
 
-One chapter's trip through `requested`, `changes-requested`, and `cleared`, held as keys in that
-chapter's own block. Each value names who owes the next move — the reviewer, the author, nobody
-— which is the only question the state exists to answer. There is no fourth value for work in
-progress: a review nobody has recorded a verdict on is still `requested`, and a state that
-obliges no one is a state that hides a stall.
+One chapter's trip from a brief to a decision. What it leaves in the chapter is its open
+annotation fences — any open is changes requested, none is cleared — and, at the end, a
+decision rung. Nothing records the pass itself: who owes the next move lives in the pull
+request or the tracker, and the chapter's `status` already says it is not settled.
 
 ## Scheduler
 

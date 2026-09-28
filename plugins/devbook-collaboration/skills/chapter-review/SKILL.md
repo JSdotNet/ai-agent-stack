@@ -1,6 +1,6 @@
 ---
 name: chapter-review
-description: 'Review one devbook chapter and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about and set the review state. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
+description: 'Review one devbook chapter and record the verdict on the chapter itself — check it against its folder''s rules, the neighbours it links to, and the evidence it claims, then write each unresolved finding as an annotation fence beside the passage it is about — the open fences are the verdict. The reviewer''s half of a hand-off. Use when: reviewing a devbook chapter, answering a review request, checking whether a chapter is still true, or resolving findings someone left on one. Triggers on: "review this chapter", "review the domain model", "is this chapter still accurate", "answer the review", "resolve the open findings".'
 ---
 
 # chapter review
@@ -10,12 +10,12 @@ Open the reply with `devbook-collaboration@<version>`, `version` read from `../.
 ## Purpose
 
 Review one chapter and leave the verdict where the next reader will find it: in
-the chapter's own `meta` block. Findings are recorded, not merely reported, so
-an unanswered question survives the session that raised it.
+the chapter, as its open annotation fences. Findings are recorded, not merely
+reported, so an unanswered question survives the session that raised it.
 
-The three review fields and their states are devbook's — `review`, `reviewer`,
-`review-at` in `devbook-chapter-metadata.md`. A finding is an annotation fence,
-not a field — `devbook-annotations.md` has its schema and lifecycle, and
+A finding is an annotation fence, never a `meta` field, and the chapter
+carries no review state — `devbook-chapter-metadata.md` says why.
+`devbook-annotations.md` has the fence's schema and lifecycle, and
 devbook's `.devbook/_tools/devbook-meta/annotations.mjs` is the only thing that
 writes one. Read
 both first.
@@ -77,20 +77,18 @@ lens is a review that misses the finding.
    the gate shows flags first and never blocks on one; `suggestion` or
    `comment` otherwise.
 
-6. **Write the verdict** into the chapter's `meta` block. Set `review-at` to
-   today, and `reviewer` to whoever owes the next move — that is what devbook's
-   rule says the field means, and what the queue reads:
+6. **Read the verdict off the fences.** Write no field for it:
 
-   | Outcome | Write |
-   |---|---|
-   | An open fence remains | `review: changes-requested`, `reviewer` the author |
-   | None does | `review: cleared`, `reviewer` the approver when the request named one, else remove it |
+   | Outcome | Verdict | Next move |
+   |---|---|---|
+   | An open fence remains | Changes requested | The author's, answering the notes |
+   | None does | Cleared | Whoever approves — `chapter-approve` in `domain/` |
 
-   `cleared` says the chapter is ready for a person to approve. It is not the
-   approval — see `chapter-approve`.
+   Cleared says the chapter is ready for a person to decide on. It is not the
+   approval.
 
-7. **Report** the findings, the verdict, and what you changed. Commit the
-   chapter, its notes, and its metadata together, and stop.
+7. **Report** the findings, the verdict, who owes the next move, and what you
+   changed. Commit the chapter and its notes together, and stop.
 
 ## Do not
 

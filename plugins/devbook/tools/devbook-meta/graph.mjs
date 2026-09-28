@@ -127,7 +127,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // beside it in `domain.invariants.md` instead of under an aggregate that
 // happens to use it. It only widens what `related` may name: nothing written
 // under 18 stops validating, and no migration is owed.
-export const CONTRACT_VERSION = 19;
+//
+// Version 20 removes the review triad — `review`, `reviewer`, `review-at`.
+// A review in progress is the chapter's `status` rung plus its open
+// annotation fences, and who owes the next move lives in the pull request
+// or the tracker. A leftover field is reported by name, and
+// `migrations/020-no-review-triad/` deletes it.
+export const CONTRACT_VERSION = 20;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

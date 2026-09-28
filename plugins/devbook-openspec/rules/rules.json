@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "devbook-openspec-change": { "paths": ["openspec/changes/**"] }
+  }
+}

@@ -1,0 +1,33 @@
+---
+name: devbook-openspec-change
+description: What an OpenSpec skill does inside openspec/changes/ when the devbook schema is in use — the artifact ids, the folders it never creates, the fields it never writes, how a step records its branch and pull request, and why a change is archived through devbook-openspec:archive.
+---
+
+# OpenSpec inside the change folder
+
+A change here is a devbook change: its shape is `devbook-changes.md`, and OpenSpec's
+`/opsx:*` skills write it through the `devbook` schema in `openspec/schemas/devbook/`. This
+rule is what they do differently from OpenSpec's defaults.
+
+- **Four artifacts.** `proposal`, `devbook-delta`, `solution`, `tasks`. There is no `specs`
+  and no `design`: behaviour is a delta against its bounded context's `requirements.md` or
+  `invariants.md`, and how to build the change is `solution.md`. Never create `specs/` — in
+  the change or under `openspec/` — and never set `skip_specs` in `.openspec.yaml` to
+  anything but the `true` that `openspec new change` writes.
+- **No decision.** Never write `approved`, `accepted`, or their `-by`, `-at`, and `-hash`
+  fields; the approve and accept gates are the only writers. Any edit to the proposal or a
+  delta after a gate lapses that gate, so decide before you change what was decided.
+- **A delta is checked by devbook.** `openspec validate` accepts zero deltas for this schema
+  and reads nothing in `devbook-delta/`. After every edit to a delta, run
+  `node .devbook/_tools/devbook-meta/delta.mjs --check <name>`.
+- **A step records itself.** Under its `## Step N — title` heading, in this order: `delivers:`,
+  `owner: me` when a person does it, `branch:` once work starts, `PR:` once its pull request
+  opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines
+  and the pull request, and writes them for a run; a person doing a step writes the same
+  lines by hand. Tick a step's tasks in its own pull request.
+- **Apply refuses an unapproved change.** Never take a step while `proposal.md` is below
+  `approved`, or while its `approved-hash` no longer matches
+  `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`.
+- **Archive through the bridge.** `openspec archive` moves the folder and merges no devbook
+  delta. Run `devbook-openspec:archive`, which checks both gates, merges every delta into its
+  chapter, and only then lets `openspec archive` move the folder. Never edit `archive/`.

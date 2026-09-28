@@ -12,7 +12,7 @@ paths:
 A plugin rule is a template a plugin's `init` writes into a repository, and `rules/` holds nothing
 else — shared text a skill or an agent reads by path is a contract and belongs in `resources/`,
 because the folder announces a delivery mechanism and a contract does not use it.
-Two plugins here deliver rules: `devbook` and `devbook-derived`. Adding a `rules/` folder
+Three plugins here deliver rules: `devbook`, `devbook-derived`, and `devbook-openspec`. Adding a `rules/` folder
 to a third means writing the `init` and `update` that materialize it, in the same change.
 
 `rules/<name>.md` is the body plus `name` and `description`, and nothing else: no `paths`, and

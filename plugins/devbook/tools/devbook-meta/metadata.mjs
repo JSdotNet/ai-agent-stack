@@ -78,11 +78,11 @@ const APPROVED_STATUS = "approved";
 // commit; which pull request delivered it is the tracker's business.
 const ACCEPTED_STATUS = "accepted";
 
-// The two decision rungs sit on `domain/`'s ladder and on no other. What they
-// record is that a person agreed the model, and then that what was built
-// satisfies it — a question the domain folder is the only one currently asked.
-// The other four ladders rate content or a technology, and a rung on them was
-// surface nothing used.
+// The two decision rungs sit on `domain/`'s ladder and on a change's
+// `proposal.md`, and on no other. What they record is that a person agreed the
+// model — or a change to the devbook — and then that what was built satisfies
+// it. The other four ladders rate content or a technology, and a rung on them
+// was surface nothing used.
 const STATUS_BY_FOLDER = {
     domain: ["draft", "proposed", "active", "deprecated", APPROVED_STATUS, ACCEPTED_STATUS],
     arc42: ["draft", "proposed", "active", "deprecated"],
@@ -93,9 +93,11 @@ const STATUS_BY_FOLDER = {
     // technology, `.ai` rates a way of working with one.
     ai: ["candidate", "trial", "adopted", "hold", "retired"],
     // A change's `proposal.md` is the one block in the change folder with a
-    // status. Only the first rung is here: what agreeing a change records, and
-    // where, is decided with the gates on a change, which add the rungs above.
-    [CHANGES_FOLDER]: ["proposed"],
+    // status, and it carries the two decision rungs for the whole change: the
+    // change is reviewed and decided as one, so the decision is recorded once.
+    // A chapter a delta merges into gets no rung from it — its `change`
+    // provenance points at the archived proposal, which holds the record.
+    [CHANGES_FOLDER]: ["proposed", APPROVED_STATUS, ACCEPTED_STATUS],
 };
 
 /**
@@ -522,7 +524,7 @@ const FOLDER_EXTRA_FIELDS = {
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
     ai: ["depends-on", "stage"],
-    [CHANGES_FOLDER]: ["category"],
+    [CHANGES_FOLDER]: ["category", ...DECISION_FIELDS],
 };
 
 /**
@@ -1645,7 +1647,7 @@ export function isStructuralDocument(relPath) {
  * statuses.mjs. Absent, or where it declares nothing for a block, the folder's
  * built-in ladder applies.
  */
-export function validateDocument(relPath, markdown, { ladder = null } = {}) {
+export function validateDocument(relPath, markdown, { ladder = null, changeHash: changeFingerprint = null } = {}) {
     const kind = folderKindForPath(relPath);
     const named = domainFileName(relPath);
     const fileBase = named.base;
@@ -1989,14 +1991,18 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
         // the record is checked. The content is only fingerprinted when the
         // chapter claims one — most do not, and hashing every block to learn
         // that would be work for nothing.
-        // Only `domain/` has the rungs, so only there is there a record to
+        // Only `domain/` and a proposal have the rungs, so only there is there a record to
         // lint. Elsewhere the six fields are not in that folder's vocabulary at
         // all, and the unrecognized-field check below reports each one once —
         // running this too would report one mistake twice.
-        if (kind === "domain") {
+        // A proposal's rungs are the whole change's, so its fingerprint covers
+        // every delta too — `changeHash`, which only a caller that can read the
+        // change folder supplies; without it the record is linted unhashed.
+        if (kind === "domain" || kind === CHANGES_FOLDER) {
             const claimsHash =
                 chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
-            const contentHash = claimsHash ? chapterHash(markdown, chapter.line) : null;
+            const contentHash =
+                kind === CHANGES_FOLDER ? changeFingerprint : claimsHash ? chapterHash(markdown, chapter.line) : null;
             for (const issue of approvalIssues(chapter.meta, contentHash)) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }
@@ -2353,11 +2359,19 @@ export function chapterHash(markdown, line = 1) {
         if (next) end = next.line - 1;
     }
 
-    const kept = [];
     const heading = /^#{1,6}\s+(.*)$/.exec(lines[start] ?? "");
-    if (heading) kept.push(heading[1]);
+    const normalised = [heading ? heading[1] : "", hashedText(lines, start + 1, end, ["meta", "annotation"])]
+        .filter((entry) => entry !== "")
+        .join("\n");
+    return digest(normalised);
+}
 
-    for (let i = start + 1; i < end; i++) {
+const digest = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex").slice(0, 8)}`;
+
+/** Lines `from` to `end`, minus the fences labelled in `dropped`, whitespace-normalised. */
+function hashedText(lines, from, end, dropped) {
+    const kept = [];
+    for (let i = from; i < end; i++) {
         const fence = FENCE_PATTERN.exec(lines[i]);
         if (fence) {
             const marker = fence[2];
@@ -2365,7 +2379,7 @@ export function chapterHash(markdown, line = 1) {
             const closer = new RegExp(`^\\s*\\${marker[0]}{${marker.length},}\\s*$`);
             let k = i + 1;
             while (k < lines.length && !closer.test(lines[k])) k++;
-            if (label === "meta" || label === "annotation") {
+            if (dropped.includes(label)) {
                 i = k;
                 continue;
             }
@@ -2377,13 +2391,32 @@ export function chapterHash(markdown, line = 1) {
         }
         kept.push(lines[i]);
     }
-
-    const normalised = kept
+    return kept
         .map((entry) => entry.replace(/\s+/g, " ").trim())
         .filter((entry) => entry !== "")
         .join("\n");
+}
 
-    return `sha256:${createHash("sha256").update(normalised, "utf8").digest("hex").slice(0, 8)}`;
+/**
+ * The content fingerprint of a whole change — what `approved-hash` and
+ * `accepted-hash` record on its `proposal.md`, the way `chapterHash` covers a
+ * chapter. A change is decided as one review, so the fingerprint is one value
+ * over the proposal and every delta: editing any of them lapses both rungs.
+ *
+ * The proposal is hashed as its file block is. A delta keeps its `meta`
+ * fences, because in a delta they are content — the header says what kind of
+ * change it is, and a `MODIFIED` block is the fields it sets — and drops only
+ * its annotation fences. Each delta is keyed by the devbook file it targets,
+ * so moving one to another target is an edit. `deltas` is a list of
+ * `{ target, markdown }`, in any order.
+ */
+export function changeHash(proposalMarkdown, deltas) {
+    const parts = [chapterHash(proposalMarkdown, parseDocument(proposalMarkdown).chapters.find((c) => c.level === 1)?.line ?? 1)];
+    for (const delta of [...deltas].sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0))) {
+        const lines = delta.markdown.split(/\r?\n/);
+        parts.push(`${delta.target}\n${hashedText(lines, 0, lines.length, ["annotation"])}`);
+    }
+    return digest(parts.join("\n"));
 }
 
 /**

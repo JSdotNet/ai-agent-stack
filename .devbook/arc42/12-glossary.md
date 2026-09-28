@@ -93,7 +93,7 @@ Also called: change folder.
 
 A proposed change to the devbook, held in `openspec/changes/<name>/` until it lands: a
 proposal, one delta per file it touches, a solution, and tasks. It lands only through
-`delta.mjs --apply`, which merges its deltas and moves the folder to `archive/`; a chapter it
+`delta.mjs --apply`, once its proposal is accepted, which merges its deltas and moves the folder to `archive/`; a chapter it
 touched carries its name in `change`. Not a change brief, which is what `apply-change` hands
 the code, and not a pull request, which is one step of a change.
 
@@ -357,7 +357,8 @@ Also called: `proposal.md`.
 
 The chapter that says why a change is made: its scope, the chapters it touches, and one
 category — `feature`, `behaviour-change`, or `defect` — as a `type: change` file at
-`status: proposed`. It is the one block in a change with a status. Not a proposal in the
+`status: proposed`. It is the one block in a change with a status, and it carries the change's
+two decision rungs, `approved` and `accepted`, once for the whole change. Not a proposal in the
 documentation plugin's sense, which is a standalone document.
 
 ## Provider

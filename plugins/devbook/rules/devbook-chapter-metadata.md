@@ -277,7 +277,8 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   removed in contract 21 and are reported by name.
 
 
-  On top of **`domain/`**'s ladder — and no other folder's — sit two decision
+  On top of **`domain/`**'s ladder — and of a change's `proposal.md`, which
+  decides the whole change once per `devbook-changes.md`, and no other — sit two decision
   rungs. The first is `approved`: a person has read this chapter and approved it. It is the decision the approval gate
   makes before a chapter becomes work, recorded in the chapter so it travels
   with the content and lands in the git history like any other change — not in
@@ -313,11 +314,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   one change the moment the content changes, and the chapter returns to its
   folder's ordinary rung: a build was accepted against the text that was
   approved, so neither statement outlives it.
-- **approved-by** (`domain/` only, optional) — who approved this chapter: a
+- **approved-by** (`domain/` and a proposal, optional) — who approved this chapter: a
   person, a handle, or a team. One value, not a list.
-- **approved-at** (`domain/` only, optional) — the day they approved it, in
+- **approved-at** (`domain/` and a proposal, optional) — the day they approved it, in
   `YYYY-MM-DD` form.
-- **approved-hash** (`domain/` only, optional) — a fingerprint of the content
+- **approved-hash** (`domain/` and a proposal, optional) — a fingerprint of the content
   that was approved: `sha256:` followed by eight lowercase hex characters. Written by
   the approval gate in the same change as the rung, and never by hand.
 
@@ -342,11 +343,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   claiming the rung — either the approval is current and the status says so, or
   it has lapsed and the record comes out with it. Under `status: accepted` the
   approval record is not orphaned: the acceptance stands on it.
-- **accepted-by** (`domain/` only, optional) — who accepted the built work
+- **accepted-by** (`domain/` and a proposal, optional) — who accepted the built work
   against this chapter. One value, not a list.
-- **accepted-at** (`domain/` only, optional) — the day they accepted it, in
+- **accepted-at** (`domain/` and a proposal, optional) — the day they accepted it, in
   `YYYY-MM-DD` form, on or after `approved-at`.
-- **accepted-hash** (`domain/` only, optional) — the fingerprint of the content accepted,
+- **accepted-hash** (`domain/` and a proposal, optional) — the fingerprint of the content accepted,
   computed exactly as `approved-hash` is. Where both are written they are one
   value, because an acceptance is of the approved content; two that disagree
   say the chapter moved between the two decisions, and are reported.

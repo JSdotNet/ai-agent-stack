@@ -25,12 +25,13 @@ import {
     resolveAnnotation,
     parseDeltaHeader,
     changePathParts,
+    changeHash,
     DEVBOOK_FOLDER_NAMES,
     DEVBOOK_ROOT,
     CHANGES_ROOT,
 } from "./metadata.mjs";
 import { loadStatusLadder } from "./statuses.mjs";
-import { changeFiles, checkDelta } from "./delta.mjs";
+import { changeDecisionIssues, changeFiles, checkDelta, readChange } from "./delta.mjs";
 
 /**
  * Every devbook folder this convention recognizes, as the repository path it
@@ -159,7 +160,16 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // the merge in delta.mjs, `archive/` is never indexed, and `change` is legal on
 // any chapter as the merge's provenance. A repository without the folder
 // validates exactly as under 22, and no migration is owed.
-export const CONTRACT_VERSION = 23;
+//
+// Version 24 gives a change's `proposal.md` the two decision rungs, `approved`
+// and `accepted`, with the six record fields, for the whole change: its
+// fingerprint covers the proposal and every delta, an open question anywhere
+// in the change stands against a rung, and `delta.mjs --apply` merges only an
+// accepted change over its current fingerprint. The merge writes no rung onto
+// the chapters it lands in and lifts one it makes stale. `domain/`'s own rungs
+// are unchanged, so nothing written under 23 stops validating, and no
+// migration is owed.
+export const CONTRACT_VERSION = 24;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -470,9 +480,17 @@ export async function buildGraph(repoRoot, folders = null) {
         // A delta is checked by the merge that would apply it: its header, its
         // shape, every chapter it names resolved in its target, and the merged
         // target through this same lint.
+        // A proposal's rungs decide the whole change, so its fingerprint and its
+        // open questions are read across the proposal and every delta.
+        const proposalOf = changePathParts(relPath)?.part === "proposal" ? await readChange(repoRoot, changePathParts(relPath).name) : null;
         const fileIssues = delta
             ? (await checkDelta(repoRoot, relPath, raw, { ladder })).issues
-            : validateDocument(relPath, raw, { ladder });
+            : proposalOf
+              ? [
+                    ...validateDocument(relPath, raw, { ladder, changeHash: changeHash(proposalOf.proposal, proposalOf.deltas) }),
+                    ...changeDecisionIssues(proposalOf),
+                ]
+              : validateDocument(relPath, raw, { ladder });
         for (const issue of fileIssues) {
             problems.push({
                 severity: issue.severity,

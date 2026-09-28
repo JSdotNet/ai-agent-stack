@@ -1,6 +1,6 @@
 ---
 name: chapter-review-queue
-description: 'Sweep a repository''s devbook folders for everything a review pass has left open — chapters carrying unresolved notes, approved work awaiting acceptance, notes answered but not yet swept, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
+description: 'Sweep a repository''s devbook folders and open changes for everything a review pass has left open — chapters and changes carrying unresolved notes, approved work awaiting acceptance, notes answered but not yet swept, and approvals that have gone stale because the content changed after they were signed. Reports one queue grouped by who owes the next move. Use when: asking what is waiting on review, what needs approval, whose turn it is, or whether any approval has lapsed. Triggers on: "what is awaiting review", "review queue", "what needs approval", "stale approvals", "whose turn is it", "open findings across the devbook folders".'
 ---
 
 # chapter review queue
@@ -35,7 +35,10 @@ chapter that never appears in the queue.
    those fences only. `status` and the approval and acceptance records live in
    the `meta` fence; a note's address, status, and kind
    live in the `annotation` fence, and `node .devbook/_tools/devbook-meta/annotations.mjs list --chapter <address>`
-   reads them for one chapter. Never build the queue from `_meta/`: it is
+   reads them for one chapter. Read each open change beside them — every
+   `openspec/changes/<name>/`, never `archive/` — its `proposal.md` block, and
+   the notes of the proposal and every delta counted as the change's own.
+   Never build the queue from `_meta/`: it is
    generated tool input, carries no review or approval field, and a session is
    denied reading it.
 
@@ -52,6 +55,13 @@ chapter that never appears in the queue.
    | Rung outside `domain/` | Either decision rung, or any of its six fields, on a chapter in another folder | Whoever wrote it — devbook's check reports it |
    | Unsigned approval | `status: approved` with no `approved-by` or `approved-at` | Whoever approved it |
    | Notes to sweep | Resolved notes still in the chapter | Whoever is about to merge the branch |
+
+   An open change is one row, addressed `openspec/changes/<name>`, sorted by
+   the same table from its proposal's rung and the notes of the whole change,
+   plus one row after *Awaiting acceptance*: **Awaiting approval** — a change
+   at `proposed` with no open note, owed by whoever approves. *Rung outside
+   `domain/`* never matches a proposal. Its fingerprint is
+   `chapter-hash.mjs openspec/changes/<name>`.
 
    For the two lapse rows, prefer the chapter's own fingerprint: where it
    carries `approved-hash` or `accepted-hash`, compare it with

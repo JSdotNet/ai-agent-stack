@@ -96,6 +96,7 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. |
 | 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 21, migration `021-no-review-triad`. |
 | 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |
 | 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. |

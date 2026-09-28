@@ -249,10 +249,17 @@ delta under `openspec/changes/<name>/devbook-delta/` — never `archive/` — si
 the chapter's file path and names the chapter's heading or one above it, per
 `devbook-changes.md`. **`capture-specs` never plans over it**, whatever the
 status: it reports the change by name beside what the code has, because the
-chapter's next content is already being decided in that change. What an open
-change means to `verify-change` and `apply-change` waits for the decision on
-what agreeing a change records: until then a change folder has no row for them,
-and both read the chapter as it stands.
+chapter's next content is already being decided in that change.
+
+To the other two, a change is **pending truth** once agreed — its `proposal.md`
+at `approved` or `accepted` over its current hash, per `devbook-changes.md`.
+The target is then the chapter as the delta would leave it, which
+`delta.mjs --check <name>` merges in memory:
+
+| The change | `verify-change` | `apply-change` |
+|---|---|---|
+| Agreed | Verdicts against chapter plus delta. A `code-ahead` the delta explains is reported as `covered by change <name>, step N` — the `tasks.md` step whose `delivers:` names it — and is not drift | Proceeds against chapter plus delta, one step at a time |
+| At `proposed`, or its hash lapsed | Verdicts against the chapter as it stands, and names the change beside each verdict it touches | **Stops and confirms**, as over a `draft` |
 
 **Capture writes no status at all.** Finding an implementation is not agreement
 that the implementation is the intended model, and a capture pass produces a

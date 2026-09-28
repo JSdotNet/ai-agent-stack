@@ -482,9 +482,12 @@ A proposed change to the devbook, in `openspec/changes/<name>/`: the one folder 
 `.devbook/`, because OpenSpec's CLI resolves `changes/` only under `openspec/`. Its
 `proposal.md` and every delta under `devbook-delta/` are chapters the check indexes into the
 rollup; `solution.md` and `tasks.md` are the change's own and never indexed, and `archive/` is
-history and never read. `delta.mjs --apply` is the only way a change lands, and its
-`gateCheck` seam before the merge stays empty until the decision on where approval lives
-fills it.
+history and never read. `delta.mjs --apply` is the only way a change lands, and only once
+both gates have passed on `proposal.md`: the change is decided as one, so `approved` and
+`accepted` are recorded once there, with a hash over the proposal and every delta, and never
+on the chapters it lands in — their `change` points at the archived proposal. Chapter rungs
+stay for work outside the lane; a merge lifts one whose content it changes. An agreed change
+is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.md`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -494,7 +497,10 @@ fills it.
 | Every chapter and section a delta names resolves in its target, or the merge writes nothing | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A merge that would leave its target with a new error is refused | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | Every chapter block a merge touched carries `change`, and no other | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
-| A proposal is `type: change` at `proposed`, with one `category` | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A proposal is `type: change` at `proposed`, `approved`, or `accepted`, with one `category` | parse | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A proposal's hash covers the proposal and every delta, and an open question anywhere in the change stands against its rung | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| `--apply` merges only an `accepted` change, signed, over its current hash | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
 ### Reference Graph

@@ -51,8 +51,13 @@ dot, in prose as on disk, and the rollup moves from the repository root to `.dev
 exists to remove. The rung is one constant appended to each ladder, so reversing it is a
 migration and not a rewrite; every consuming repository's schema assumes this shape.
 
-**The rungs are `domain/`'s.** They record that a person agreed the model, and then that
-what was built satisfies it — a question asked of the model and of nothing else here. An
+**The rungs are `domain/`'s, and a change's.** They record that a person agreed the model,
+and then that what was built satisfies it — a question asked of the model and of nothing else
+here. A change to the devbook under `openspec/changes/` asks the same question of itself, so its
+`proposal.md` carries both rungs for the whole change, with a fingerprint over the proposal and
+every delta; the chapters it merges into get none, and keep their own for work outside a change.
+Recording the decision once per change rather than on every chapter a delta touches is what
+lets `domain/` keep its rungs with no migration. An
 `arc42/` chapter records a standing structure; a `tech/` or `ai/` chapter carries a rating,
 and a decision rung written into that field replaces the rating with something unrelated and
 unrecoverable. `approved` sat on all five ladders from contract 6 because adding it once was
@@ -315,6 +320,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | A change's `proposal.md` carries `approved` and `accepted` with their six fields, for the whole change: the hash covers the proposal and every delta, and `delta.mjs --apply` merges only an accepted change over its current hash, writing no rung onto the chapters it lands in and lifting one it makes stale. Approval lives in both places — chapter rungs for work outside the lane, the proposal's for a change — so `domain/` keeps its rungs and no migration is owed. Contract 24, additive. |
 | 2026-09-28 | The change folder, `openspec/changes/`, is a folder kind stamped as `changes`: each change's `proposal.md` is `type: change` at `status: proposed` with a `category`, each file under `devbook-delta/` a delta the checker resolves through `delta.mjs`, and `archive/` is never indexed. `change` is legal on any chapter as the merge's provenance. The folder sits outside `.devbook/` because the OpenSpec spike found its CLI fixes the path; the rungs above `proposed` wait for the decision on where approval lives. Contract 23, additive, no migration. |
 | 2026-09-28 | `design/` gains one chapter type, `requirement`: a rule a component keeps or breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter, warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped. A `#### Scenario:` directly under a requirement no longer warns for having no block. Contract 22, additive, no migration. |
 | 2026-09-28 | Each folder's `status` ladder is a built-in default. A repository declares its own transitional rungs per folder, file glob, and block level in `.devbook/statuses.json`, first matching rule wins; the resting value stays written by omission, `approved` and `accepted` stay `domain/`'s whatever the file says, and `tech/` and `ai/` may only narrow their rating ladder. A configuration error is reported once on the file. Contract 20, additive, no migration. |

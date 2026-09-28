@@ -11,9 +11,10 @@
 import { mkdtemp, mkdir, writeFile, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { changePathParts, folderKindForPath, validateDocument, CHANGES_ROOT } from "./metadata.mjs";
+import { changeHash, changePathParts, folderKindForPath, validateDocument, CHANGES_ROOT } from "./metadata.mjs";
 import { buildGraph, discoverLayout } from "./graph.mjs";
-import { applyChange, checkChange, mergeDelta, parseDelta } from "./delta.mjs";
+import { applyChange, changeFingerprint, checkChange, mergeDelta, parseDelta } from "./delta.mjs";
+import { main as hashMain } from "./chapter-hash.mjs";
 
 let failed = 0;
 const check = (ok, name, detail) => {
@@ -79,6 +80,20 @@ async function fixture(extra = {}) {
     return root;
 }
 
+// Both gates, passed: the proposal signed at `accepted` over the fingerprint
+// of the change as it stands. `edit` changes the record before it is written.
+const PROPOSAL = `${CHANGES_ROOT}/add-cache/proposal.md`;
+async function decide(root, edit = (block) => block) {
+    const hash = await changeFingerprint(root, "add-cache");
+    const at = path.join(root, PROPOSAL);
+    const text = await readFile(at, "utf8");
+    const block =
+        `status: accepted\napproved-by: @amy\napproved-at: 2026-09-20\napproved-hash: ${hash}\n` +
+        `accepted-by: @sam\naccepted-at: 2026-09-27\naccepted-hash: ${hash}\n`;
+    await writeFile(at, text.replace("status: proposed\n", edit(block)), "utf8");
+    return hash;
+}
+
 // -- The generator indexes it ------------------------------------------------
 
 {
@@ -105,6 +120,7 @@ async function fixture(extra = {}) {
     const all = [...report.problems, ...report.deltas.flatMap((d) => d.issues)];
     check(report.deltas.length === 2 && errorsOf(all).length === 0, "--check resolves every delta of the fixture", JSON.stringify(errorsOf(all)));
 
+    await decide(root);
     const result = await applyChange(root, "add-cache", { date: "2026-09-28" });
     check(result.applied, "--apply merges the fixture", JSON.stringify(errorsOf([...result.report.problems, ...result.report.deltas.flatMap((d) => d.issues)])));
     const merged = await readFile(path.join(root, DECISIONS), "utf8");
@@ -125,6 +141,84 @@ async function fixture(extra = {}) {
     const after = await buildGraph(root);
     check(errorsOf(after.problems).length === 0, "the repository indexes clean after the merge", JSON.stringify(errorsOf(after.problems)));
     await rm(root, { recursive: true, force: true });
+}
+
+// -- The gates -----------------------------------------------------------------
+
+const QUALITY_DELTA = `${CHANGES_ROOT}/add-cache/devbook-delta/arc42/10-quality.md`;
+const editFile = async (root, rel, change) => {
+    const at = path.join(root, rel);
+    await writeFile(at, change(await readFile(at, "utf8")), "utf8");
+};
+const note = (kind) => `\n\`\`\`annotation\nkind: ${kind}\nauthor: amy\ndate: 2026-09-21\nbody: Why 50?\n\`\`\`\n`;
+
+const refusedBy = async (edit, why, pattern, mutate = async () => {}) => {
+    const root = await fixture();
+    if (edit) await decide(root, edit);
+    await mutate(root);
+    const result = await applyChange(root, "add-cache", { date: "2026-09-28" });
+    const messages = errorsOf(result.report.problems).map((i) => i.message);
+    check(
+        !result.applied && messages.some((m) => pattern.test(m)) && (await readFile(path.join(root, DECISIONS), "utf8")) === decisions,
+        `--apply refuses ${why}`,
+        JSON.stringify(messages)
+    );
+    await rm(root, { recursive: true, force: true });
+};
+await refusedBy(null, "a change still at `proposed`", /is at `status: proposed`/);
+await refusedBy((b) => b.replace("status: accepted", "status: approved").replace(/accepted-.*\n/g, ""), "a change approved and not accepted", /is at `status: approved`/);
+await refusedBy((b) => b.replace(/accepted-by.*\n/, ""), "an unsigned acceptance", /without `accepted-by`/);
+await refusedBy((b) => b.replace(/approved-hash.*\n/, ""), "a decision with no fingerprint", /carries no `approved-hash`/);
+await refusedBy((b) => b, "a change edited after its decision", /changed after the decision/, (root) =>
+    editFile(root, QUALITY_DELTA, (t) => t.replace("50 ms", "20 ms"))
+);
+await refusedBy((b) => b, "an open question in any delta", /open `kind: question`/, (root) =>
+    editFile(root, QUALITY_DELTA, (t) => t + note("question"))
+);
+
+{
+    const root = await fixture();
+    const hash = await decide(root);
+    const graph = await buildGraph(root);
+    check(errorsOf(graph.problems).length === 0, "an accepted change over its current fingerprint indexes clean", JSON.stringify(errorsOf(graph.problems)));
+    await editFile(root, QUALITY_DELTA, (t) => t + note("comment"));
+    check((await changeFingerprint(root, "add-cache")) === hash, "a note in a delta does not change the change's fingerprint");
+    await editFile(root, QUALITY_DELTA, (t) => t.replace("50 ms", "20 ms"));
+    const stale = await buildGraph(root);
+    check(
+        errorsOf(stale.problems).some((i) => /content that has changed since `approved-at`/.test(i.message)),
+        "the check reports a decided change edited since",
+        JSON.stringify(errorsOf(stale.problems))
+    );
+
+    const printed = [];
+    const log = console.log;
+    console.log = (line) => printed.push(line);
+    const cwd = process.cwd();
+    process.chdir(root);
+    await hashMain([`${CHANGES_ROOT}/add-cache`]);
+    await hashMain([PROPOSAL]);
+    process.chdir(cwd);
+    console.log = log;
+    const now = await changeFingerprint(root, "add-cache");
+    check(printed[0] === now && printed[1] === now, "chapter-hash.mjs prints the change's fingerprint for the folder and for its proposal", JSON.stringify(printed));
+    await rm(root, { recursive: true, force: true });
+}
+
+// -- A merge lifts a chapter rung it makes stale --------------------------------
+
+{
+    const rung = "type: aggregate\nstatus: approved\napproved-by: @amy\napproved-at: 2026-09-01\n";
+    const model =
+        `# Billing domain\n\n${fence("")}\n` +
+        `## Invoice\n\n${fence(rung)}\nAn invoice.\n\n` +
+        `## Payment\n\n${fence(rung)}\nA payment.\n`;
+    const delta = fence("change: add-cache\ndelta: modified\n") + `\n## Invoice\n\n### ADDED\n\n#### Totals\n\n${fence("")}\nSummed per line.\n`;
+    const merged = mergeDelta(parseDelta(delta), model, "add-cache");
+    const invoice = merged.merged.split("## Invoice")[1].split("## Payment")[0];
+    check(!/approved|accepted/.test(invoice), "a merge lifts the rung off a chapter whose content it changed, and writes none of its own", merged.merged);
+    check(merged.merged.includes(`## Payment\n\n${fence(rung)}`), "a chapter the merge left alone keeps its rung", merged.merged);
+    check(merged.issues.some((i) => i.severity === "info" && /lifts `approved` from "Invoice"/.test(i.message)), "the lift is reported", JSON.stringify(merged.issues));
 }
 
 // -- What --check refuses ----------------------------------------------------
@@ -209,8 +303,16 @@ for (const c of refusals) {
     check(errorsOf(validateDocument(at, noCategory)).some((i) => /missing required `category`/.test(i.message)), "a proposal names its category");
     const badCategory = proposal.replace("category: feature", "category: chore");
     check(errorsOf(validateDocument(at, badCategory)).some((i) => /`category` "chore"/.test(i.message)), "the category is one of three");
-    const approved = proposal.replace("status: proposed", "status: approved");
-    check(errorsOf(validateDocument(at, approved)).length === 1, "`proposed` is the only rung a proposal holds here");
+    const approved = proposal.replace("status: proposed", "status: approved\napproved-by: @amy\napproved-at: 2026-09-20");
+    check(errorsOf(validateDocument(at, approved)).length === 0, "a proposal holds the approval rung and its record");
+    const active = proposal.replace("status: proposed", "status: active");
+    check(errorsOf(validateDocument(at, active)).length === 1, "a proposal's ladder is proposed, approved, accepted");
+    const hashed = approved.replace("approved-at: 2026-09-20", "approved-at: 2026-09-20\napproved-hash: sha256:00000000");
+    check(
+        errorsOf(validateDocument(at, hashed, { changeHash: "sha256:11111111" })).some((i) => /changed since `approved-at`/.test(i.message)),
+        "a proposal's hash is checked against the whole change's"
+    );
+    check(changeHash(proposal, [{ target: "a", markdown: "x" }]) !== changeHash(proposal, [{ target: "a", markdown: "y" }]), "the change's fingerprint covers its deltas");
     const wrongType = proposal.replace("type: change", "type: feature");
     check(errorsOf(validateDocument(at, wrongType)).length === 1, "a proposal is `type: change`");
     check(errorsOf(validateDocument(DECISIONS, decisions.replace("status: proposed", "status: proposed\nchange: Add Cache"))).length === 1, "`change` on a chapter is one change name");

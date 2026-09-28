@@ -1,6 +1,6 @@
 ---
 name: chapter-approve
-description: 'Run the approval decision on a devbook chapter — show the chapter itself with its open annotation fences, flags first and any note raised since approved-at named as such, take approve, revise, or decline from a person, and on approval write devbook''s own status: approved rung with approved-by and approved-at while sweeping the notes it answered. Use when: approving a chapter, signing off a specification before it becomes work, recording who approved what, weighing objections raised after an approval, or lifting an approval that has gone stale. Triggers on: "approve this chapter", "sign off on this", "record the approval", "is this approved", "the approval is stale", "what was raised since the approval".'
+description: 'Run the approval decision on a devbook chapter, or on a change as one review of its proposal and deltas — show the chapter itself with its open annotation fences, flags first and any note raised since approved-at named as such, take approve, revise, or decline from a person, and on approval write devbook''s own status: approved rung with approved-by and approved-at while sweeping the notes it answered. Use when: approving a chapter, signing off a specification before it becomes work, recording who approved what, weighing objections raised after an approval, or lifting an approval that has gone stale. Triggers on: "approve this chapter", "sign off on this", "record the approval", "is this approved", "the approval is stale", "what was raised since the approval".'
 ---
 
 # chapter approve
@@ -13,9 +13,11 @@ Turn a reviewed chapter into devbook's recorded decision, or refuse to. This is
 the one place `status: approved` is written, and it is never written without a
 person choosing it in this session.
 
-**`domain/` chapters only.** The rung is on that folder's ladder and no other,
-per `devbook-chapter-metadata.md`. Asked to approve a chapter
-elsewhere, say so and stop — writing it there fails devbook's check.
+**A `domain/` chapter, or a change.** The rung is on that folder's ladder and
+on a change's `proposal.md`, and no other, per `devbook-chapter-metadata.md`.
+Asked to approve a chapter elsewhere, say so and stop — writing it there fails
+devbook's check. A target under `openspec/changes/<name>/` is a change: follow
+**On a change** below.
 
 `status`, `approved-by`, and `approved-at` are devbook's fields — see
 `devbook-chapter-metadata.md`. So is the annotation fence a finding is written
@@ -100,6 +102,27 @@ which the authoring rules exempt from terseness: a fragment here is what turns
 
 5. **Report** the chapter, who approved it, and the day. Commit the chapter with
    its metadata, and stop.
+
+## On a change
+
+A change is approved as one review, per `devbook-changes.md`, so the steps
+above run over the whole of it and record one decision on its `proposal.md`:
+
+- **Step 1** shows `proposal.md` and every file under `devbook-delta/`, each in
+  full, and the open notes of each — `annotations.mjs list --chapter <file>
+  --status open`, no slug — merged into one list, questions first across the
+  change, each naming its file.
+- **Step 2** adds a row that blocks: `node .devbook/_tools/devbook-meta/delta.mjs
+  --check <name>` reports an error. A delta that does not resolve is not
+  something anyone can agree to. An open question in any file blocks as on a
+  chapter. **Unchanged** compares `approved-hash` with
+  `chapter-hash.mjs openspec/changes/<name>`.
+- **Step 3** is the same three outcomes. A revise fence goes on the file the
+  objection is about.
+- **Step 4** writes the rung and its record on `proposal.md`'s file block, the
+  hash from `chapter-hash.mjs openspec/changes/<name>` and always written, and
+  sweeps resolved notes from the proposal and every delta. Write nothing on the
+  chapters the deltas target: their decision is the proposal's.
 
 ## Lifting a stale approval
 

@@ -5,6 +5,8 @@
 //   node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
 //   node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # check, merge, move to archive/
 //   ... --root ../other-repo    ... --date 2026-09-28   (the archive date; today by default)
+//   ... --no-move   merge and leave the folder where it is, for a caller whose
+//                   own tool moves it — OpenSpec's `openspec archive` does
 //
 // `<change>` is the change's name or its folder, `openspec/changes/<name>`.
 //
@@ -531,8 +533,12 @@ async function gateCheck(repoRoot, report) {
     return problems;
 }
 
-/** Check, merge, and archive one change. Returns the report and what was written. */
-export async function applyChange(repoRoot, name, { date = new Date().toISOString().slice(0, 10) } = {}) {
+/**
+ * Check, merge, and archive one change. Returns the report and what was
+ * written. `move: false` merges and leaves the folder open for the caller to
+ * move; the archive path is still checked, so the caller's move cannot collide.
+ */
+export async function applyChange(repoRoot, name, { date = new Date().toISOString().slice(0, 10), move = true } = {}) {
     const report = await checkChange(repoRoot, name);
     const errors = () => [...report.problems, ...report.deltas.flatMap((d) => d.issues)].filter((i) => i.severity === "error");
     if (errors().length) return { report, applied: false };
@@ -559,6 +565,7 @@ export async function applyChange(repoRoot, name, { date = new Date().toISOStrin
             written.push(`merged  ${delta.target}`);
         }
     }
+    if (!move) return { report, applied: true, written };
     await mkdir(path.join(repoRoot, CHANGES_ARCHIVE), { recursive: true });
     await rename(path.join(repoRoot, CHANGES_ROOT, name), path.join(repoRoot, archived));
     written.push(`moved   ${CHANGES_ROOT}/${name}/ to ${archived}/`);
@@ -587,7 +594,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const mode = args.includes("--apply") ? "--apply" : args.includes("--check") ? "--check" : null;
     const target = mode ? value(mode) : null;
     if (!target) {
-        console.error("usage: delta.mjs --check <change> | --apply <change> [--root <dir>] [--date YYYY-MM-DD]");
+        console.error("usage: delta.mjs --check <change> | --apply <change> [--no-move] [--root <dir>] [--date YYYY-MM-DD]");
         process.exit(2);
     }
     const repoRoot = path.resolve(value("--root") ?? process.cwd());
@@ -597,7 +604,10 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         console.log(errors ? `\n${errors} problem(s) at error severity.` : `\n${name}: every delta resolves.`);
         process.exit(errors ? 1 : 0);
     }
-    const result = await applyChange(repoRoot, name, value("--date") ? { date: value("--date") } : {});
+    const result = await applyChange(repoRoot, name, {
+        ...(value("--date") ? { date: value("--date") } : {}),
+        move: !args.includes("--no-move"),
+    });
     const errors = printReport(result.report);
     if (!result.applied) {
         console.error(`\n${name} not merged: ${errors} problem(s) at error severity.`);

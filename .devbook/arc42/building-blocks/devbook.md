@@ -171,7 +171,9 @@ twice. A shared value object's or enum's rules are its grouping's, in `domain.in
 because the type belongs to no one aggregate and pinning them under one decides them for all.
 The split follows who is held to it — a promise made outside the model is a
 requirement, what a type guarantees is an invariant — and that is also what fixes the level
-each is proved at.
+each is proved at. A design component's rules are requirements under its own chapter in
+`design/`, proved `e2e` or by a visual test, because a component keeps or breaks them in what
+the user sees.
 
 ### apply-change
 
@@ -372,8 +374,11 @@ rating. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
 unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value
-set, at chapter level and at file level separately; `arc42/` and `design/` deliberately define
-none, because their only kind distinction is already carried by heading level.
+set that classifies every chapter, at chapter level and at file level separately; `arc42/`
+deliberately defines none, because its only kind distinction is already carried by heading
+level. `design/` defines one value, `requirement`, and types nothing else: a rule a component
+keeps or breaks is a `### Requirement:` under the component's chapter, so a tool that reads
+OpenSpec reads it, and everything else there is a guideline heading level already describes.
 
 ### Meta Block
 

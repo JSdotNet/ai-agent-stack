@@ -8,7 +8,7 @@ carries the kind.
 
 | | |
 |---|---|
-| Chapters | A component chapter in the component library, recording a recommendation per channel |
+| Chapters | A component chapter in the component library, recording a recommendation per channel, and every `### Requirement:` under it, `type: requirement` |
 | File | `.devbook/design/component-libraries.md` |
 | Folder rule | `devbook-design.md`, with `devbook-chapter-metadata.md` |
 | Context to load | `component-libraries.md`, `color-scheme.md`, `typography-and-layout.md`, `interaction-guidelines.md`, and `accessibility.md`; the authoritative design source when the repository has one |
@@ -33,7 +33,8 @@ rules require exactly that.
 
 `design/` folder rules that apply:
 
-- **No `type` field.** `design/` defines no value set.
+- **`type: requirement` and nothing else.** A `### Requirement:` under the
+  component is typed; the component chapter and every other guideline are not.
 - **`status` is `draft`, `active`, or `deprecated`.** There is no `proposed`,
   and no `approved` or `accepted` rung — the two decision rungs are `domain/`'s.
   The gate's `draft` rule applies unchanged.
@@ -58,18 +59,21 @@ If `design/` does not exist, stop and adopt it through `devbook:update`, or `dev
 | Known gaps | Components hand-rolled that the library also offers, and components the product needs that the library lacks | Each gap handled as the chapter says: an accepted hand-rolled component, or an accepted deviation |
 | Keyboard equivalence | Whether pointer-only interactions built on these components have keyboard equivalents | Every pointer-only interaction operable without a pointer — check `interaction-guidelines.md` against the interaction code |
 | Accessibility posture | The affordances the components are used with, against the thresholds in `accessibility.md` | Those thresholds met — check contrast, focus handling, and labelling |
-| Testable rules, one `### Requirement:` chapter each | The token, keyboard, and accessibility rules the guideline states as thresholds, and the tests that assert them | Each rule kept, with its `#### Scenario:` cases as the acceptance checks |
+| Rules the component keeps or breaks, one `### Requirement:` chapter each, `type: requirement` | The token, keyboard, and accessibility rules the guideline states as thresholds, and the `e2e` and visual tests that assert them | Each rule kept, with its `#### Scenario:` cases as the acceptance checks |
 
-**The testable rules take the same `### Requirement:` shape as a bounded
-context's**, under this component's own chapter in `.devbook/design/` — one
-SHALL sentence, `#### Scenario:` cases beneath it, `tests` naming what asserts
-it. What differs is the block: `design/` defines no `type` value set, so these
-chapters carry the empty `meta` fence every `design/` chapter carries and take
-no `type: requirement`. The fence is still what makes the heading addressable,
-so it is never dropped. The coverage warnings that hold a `domain/` requirement
-to `e2e` do not fire here, because they key on a `type` this folder does not
-have; the level a design rule is proved at follows what asserts it — a contrast
-threshold is a unit assertion, a keyboard path an `e2e` one.
+**A rule the component either keeps or breaks is a requirement**, in the shape
+`devbook-design.md` states: a `### Requirement:` chapter under this component's
+own chapter, `type: requirement`, one SHALL sentence, `#### Scenario:` cases
+beneath it, `tests` naming what proves it. It is proved `e2e` — the rendered
+component driven by keyboard or pointer, or a visual comparison — and a
+requirement whose `tests` reach no `e2e`, or that has no scenario, is a
+coverage warning. The three converters read the same chapters:
+
+| Converter | What it does with a requirement |
+|---|---|
+| `capture-specs` | Drafts one per threshold the component is held to, each with the `e2e` or visual test that asserts it in `tests` and its scenarios from what that test drives. A threshold only a unit test asserts is still drafted, and the missing `e2e` proof is named in the report |
+| `apply-change` | Quotes each as it stands and carries its scenarios as the acceptance checks |
+| `verify-change` | Reads the `e2e` tests its `tests` field names as files, beside the component code, and reaches the verdict per requirement |
 
 Hard-coded values where a token is declared are the most useful finding this
 kind produces, and directly observable: a hex literal, a raw pixel size, a font
@@ -86,10 +90,12 @@ for pointer-only interactions. Mine the tests: one driving an interaction by
 keyboard is the evidence the pointer-only rule is satisfied, and its absence on
 a drag, hover, or gesture affordance is a finding; contrast, focus-order, and
 label assertions establish the accessibility posture; the components rendered
-in tests confirm real adoption as distinct from an installed package.
+in tests confirm real adoption as distinct from an installed package. Each rule
+those tests assert drafts as a requirement chapter under the component.
 
 Compare the code against the authoritative source where there is one, and record
-divergence as `conflict`. Draft with no `type` and no `status`. Write the known
+divergence as `conflict`. Draft with no `status`, and with `type` on the
+requirement chapters only. Write the known
 gaps as the chapter's own section, with a comparison table where more than one
 library is in play, prescriptive and testable — token names and thresholds, not
 prose.
@@ -100,11 +106,11 @@ Component adoption is nearly always `change to existing behaviour`: something
 already renders, and the guideline asks it to render through the library and
 its tokens instead. So the brief lists the replacement sites — "adopt the
 library" without them is not actionable. The token and accessibility rules are
-the **invariants**, and the part most easily dropped: keyboard equivalence for
-every pointer-only interaction, and every value referencing a declared token.
-Where the chapter states them as `### Requirement:` chapters, quote each one as
-it stands and carry its scenarios as the acceptance checks; where it does not,
-write them out with the token names. Where the guideline comes from the
+the part most easily dropped: keyboard equivalence for every pointer-only
+interaction, and every value referencing a declared token. Quote each
+requirement chapter as it stands and carry its scenarios as the acceptance
+checks; where a rule the brief needs is not yet one, write it out with the token
+names and name the requirement the chapter still owes. Where the guideline comes from the
 authoritative source, carry its rules through rather than reinterpreting them.
 
 Ubiquitous language: the component and token names the `design/` chapters
@@ -115,15 +121,24 @@ assert: no hard-coded value where a token is declared, every pointer-only
 interaction reachable by keyboard, the accessibility thresholds met, the
 hand-rolled component no longer imported at the replacement sites.
 
+## Verifying — `verify-change`
+
+Read the component code and the `e2e` tests each requirement's `tests` names,
+as files. A requirement is `aligned` when both the code and a test driving its
+scenarios agree with it; one whose only proof is a unit test is reported with
+that gap beside its verdict. A hard-coded value where a token is declared, and a
+pointer-only interaction, are `conflict` against the code, never
+`code-ahead`: the chapter is not stale because the code breaks it.
+
 ## Do not
 
 - Do not overwrite guidance grounded in the authoritative source with an
   observation from code, or reinterpret a rule that came from it.
 - Do not add, remove, or pin a dependency.
-- Do not set `type`, or use `proposed`.
+- Do not set `type` on anything but a requirement chapter, or use `proposed`.
 - Do not store or produce a wireframe, prototype, screenshot, or user flow.
 - Do not record a pointer-only interaction as acceptable because the code does
-  it, and do not drop the token and keyboard-equivalence invariants from a brief.
+  it, and do not drop the token and keyboard-equivalence requirements from a brief.
 - Do not repeat raw token values — reference the declared names.
 - Do not record a library as in use because its package is present.
 - Do not restate channel or stack facts that belong in `arc42/` or `tech/`.

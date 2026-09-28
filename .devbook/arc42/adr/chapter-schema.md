@@ -179,6 +179,19 @@ one rule two homes. The placement warning needs no change, because the groupings
 `domain.md`, which never splits, so their chapter can only sit in `domain.invariants.md`. Only
 widening what `related` may name, it owes no migration.
 
+**A design component's rules are requirements.** `design/` defined no `type`, so a rule a
+component keeps or breaks — every item movable by keyboard, every colour from a declared token
+— sat in a table or in prose, where nothing warned when no test proved it and a tool that reads
+OpenSpec could not find it. Contract 22 gives `design/` one chapter value, `requirement`: a
+`### Requirement:` under the component's own chapter, with `#### Scenario:` cases, for the same
+reason `domain/` has it. It is proved `e2e` — the rendered component driven, or a visual
+comparison — and the coverage warning holds it there; `integration`, which `domain/` allows for
+a policy no user triggers, is no proof here, because a component rule is always one someone
+sees. Every other `design/` chapter stays untyped, so `type` is optional in this one folder:
+the value marks out rules rather than classifying guidelines, and requiring it everywhere would
+invent kinds heading level already carries. Nothing written under 21 stops validating, so no
+migration is owed.
+
 **A file splits by its chapter.** `domain.md`, `features.md` or `skills.md`, `requirements.md`,
 `model.md`, and
 `flow.md` each grow with the context, and a reader looking for one aggregate should not have
@@ -295,6 +308,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | `design/` gains one chapter type, `requirement`: a rule a component keeps or breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter, warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped. A `#### Scenario:` directly under a requirement no longer warns for having no block. Contract 22, additive, no migration. |
 | 2026-09-28 | Each folder's `status` ladder is a built-in default. A repository declares its own transitional rungs per folder, file glob, and block level in `.devbook/statuses.json`, first matching rule wins; the resting value stays written by omission, `approved` and `accepted` stay `domain/`'s whatever the file says, and `tech/` and `ai/` may only narrow their rating ladder. A configuration error is reported once on the file. Contract 20, additive, no migration. |
 | 2026-09-28 | A `requirements.<name>.md` is titled by the feature it holds, like every other split, instead of `# Requirements`: under `requirements.md` in a menu every split read `Requirements`. `requirements.md` and the invariants subpages keep their kind. No contract; `018-behaviour-titles` now titles a split by its first `##` heading, so it no longer undoes the change. |
 | 2026-09-27 | An invariants chapter may pair with the `## Shared Value Objects` or `## Shared Enums` grouping, so a shared type's own rules sit in `domain.invariants.md` beside it instead of under an aggregate that uses it; owned entities and value objects keep their rules under their aggregate. Contract 19, additive, no migration. |

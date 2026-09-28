@@ -173,7 +173,7 @@ where the folder defines no `type`:
 | `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
-| `design-component` | `.devbook/design/component-libraries.md` | none — `design/` defines no value set | `assets/spec-kinds/design-component.md` |
+| `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence
@@ -497,6 +497,10 @@ owed. 21 removes the review triad — `review`, `reviewer`, `review-at` — from
 review in progress is the chapter's rung plus its open annotation fences, and who owes the
 next move is the pull request's or the tracker's. A leftover field is an error naming the
 migration, and `021-no-review-triad` deletes it.
+22 gives `design/` its one `type`, `requirement`: a rule a component keeps or
+breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
+warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
+ships no migration.
 
 ## Folder structure
 

@@ -142,7 +142,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // annotation fences, and who owes the next move lives in the pull request
 // or the tracker. A leftover field is reported by name, and
 // `migrations/021-no-review-triad/` deletes it.
-export const CONTRACT_VERSION = 21;
+//
+// Version 22 gives `.design` its one chapter type, `requirement`: a rule a
+// component keeps or breaks, as a `### Requirement:` with `#### Scenario:`
+// cases under the component's chapter, held to `e2e` by the coverage warning.
+// Every other `.design` chapter stays untyped, so nothing written under 21
+// stops validating, and no migration is owed.
+export const CONTRACT_VERSION = 22;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

@@ -10,7 +10,7 @@ what it needs. There are three ways to couple — a declared dependency on a low
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
-repository's procedures, and unattended work, four surfaces, and a guide that names
+repository's procedures, the change lane, and unattended work, four surfaces, and a guide that names
 every plugin and depends on none. An extension owns procedure, never schema or state. The specialists
 are published from another marketplace and are bound per repository, never depended on.
 
@@ -114,6 +114,15 @@ repository's from the first edit. `delivery:init` and `delivery:update` survive 
 releases its old claim on the two seeds — the protocol's adoption-changed case, which is why
 the handover ships no migration.
 
+**The change lane is an extension over the convention, and OpenSpec is installed, never
+copied.** A change is a set of deltas against devbook chapters, merged by devbook's own
+`delta.mjs` and decided by `devbook-collaboration`'s gates, so everything the lane adds is
+procedure around a shape devbook owns: `devbook-openspec`, an L1 over `devbook`. It configures
+OpenSpec through its documented surfaces — a project schema and `config.yaml` — rather than
+forking a dozen skills against a project that releases every few weeks, and it names the engine
+only as the `spec` and `tracker` providers a repository binds, so a repository without an engine
+builds each step through OpenSpec's own `/opsx:apply`.
+
 ## Rejected
 
 ```meta
@@ -143,6 +152,7 @@ the handover ships no migration.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. |
 | 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. |
 | 2026-09-26 | The weekly `devbook-update` schedule runs `devbook-config:update` unattended and lands a draft pull request; it installs no plugin and never runs `delivery-schedule:update`. |
 | 2026-09-26 | `devbook-procedures` seeds a fifth procedure, `estimate`: story points sized against the repository's own finished work, so a pace measured in points means the same across plans. Nothing depends on it; a caller that finds it absent sizes by its own rule and says so. |

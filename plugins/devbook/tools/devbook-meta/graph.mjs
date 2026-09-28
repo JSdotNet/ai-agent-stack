@@ -23,10 +23,14 @@ import {
     isExtensionField,
     parseAnnotations,
     resolveAnnotation,
+    parseDeltaHeader,
+    changePathParts,
     DEVBOOK_FOLDER_NAMES,
     DEVBOOK_ROOT,
+    CHANGES_ROOT,
 } from "./metadata.mjs";
 import { loadStatusLadder } from "./statuses.mjs";
+import { changeFiles, checkDelta } from "./delta.mjs";
 
 /**
  * Every devbook folder this convention recognizes, as the repository path it
@@ -35,7 +39,7 @@ import { loadStatusLadder } from "./statuses.mjs";
  */
 export const DEVBOOK_FOLDERS = DEVBOOK_FOLDER_NAMES.map((name) => `${DEVBOOK_ROOT}/${name}`);
 
-export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
+export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // The repo-visible contract: one number covering the metadata schema a
 // repository authors and the derived artifacts a consumer reads. It moves only
 // when something repo-visible changes shape, which is why a plugin release
@@ -148,7 +152,14 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // cases under the component's chapter, held to `e2e` by the coverage warning.
 // Every other `.design` chapter stays untyped, so nothing written under 21
 // stops validating, and no migration is owed.
-export const CONTRACT_VERSION = 22;
+//
+// Version 23 adopts the change folder, `openspec/changes/`, as a folder kind:
+// each change's `proposal.md` is a `type: change` file at `status: proposed`
+// with a `category`, each file under its `devbook-delta/` is a delta checked by
+// the merge in delta.mjs, `archive/` is never indexed, and `change` is legal on
+// any chapter as the merge's provenance. A repository without the folder
+// validates exactly as under 22, and no migration is owed.
+export const CONTRACT_VERSION = 23;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -258,6 +269,10 @@ const ATTRIBUTE_FIELDS = [
     "accepted-by",
     "accepted-at",
     "accepted-hash",
+    // The change folder's own: a proposal's category, and on any chapter the
+    // change whose merge last touched it.
+    "category",
+    "change",
 ];
 
 // Non-reference fields whose authored form may be a scalar or a bracket list,
@@ -388,9 +403,13 @@ export async function buildGraph(repoRoot, folders = null) {
     const { ladder, issues: ladderIssues } = await loadStatusLadder(repoRoot);
     problems.push(...ladderIssues);
 
-    const files = (
-        await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))
-    ).flat();
+    // The change folder is indexed beside the folders whenever it exists: its
+    // proposals and deltas are chapters, and a delta's references resolve like
+    // any other. Its `archive/` is history and is never read.
+    const files = [
+        ...(await Promise.all(scanned.map((folder) => collectMarkdown(repoRoot, folder)))).flat(),
+        ...(await changeFiles(repoRoot)),
+    ];
 
     for (const relPath of files) {
         const folder = folderKindForPath(relPath);
@@ -409,6 +428,7 @@ export async function buildGraph(repoRoot, folders = null) {
         }
 
         const fileMeta = chapters.find((c) => c.level === 1)?.meta ?? null;
+        const delta = changePathParts(relPath)?.part === "delta" ? parseDeltaHeader(raw)?.meta ?? {} : null;
         const fileNode = {
             id: relPath,
             label: composeFileLabel(
@@ -429,6 +449,13 @@ export async function buildGraph(repoRoot, folders = null) {
         if (number !== null) fileNode.number = number;
         // Omitted rather than emitted as 0, so adding this did not churn every
         // node of every existing index.
+        // A delta's own header says which change it belongs to and what it
+        // does; where it lands is its path, re-rooted at the devbook.
+        if (delta) {
+            if (delta.change) fileNode.change = delta.change;
+            if (delta.delta) fileNode.delta = delta.delta;
+            fileNode.target = changePathParts(relPath).target;
+        }
         const fileOpenNotes = [...openNotes.values()].reduce((a, b) => a + b, 0);
         if (fileOpenNotes) fileNode.openNotes = fileOpenNotes;
         nodes.set(fileNode.id, fileNode);
@@ -440,7 +467,13 @@ export async function buildGraph(repoRoot, folders = null) {
         // editor extension, which not every author has open. Each issue keeps
         // its own severity: a warning stays a warning, and only an error fails
         // the run.
-        for (const issue of validateDocument(relPath, raw, { ladder })) {
+        // A delta is checked by the merge that would apply it: its header, its
+        // shape, every chapter it names resolved in its target, and the merged
+        // target through this same lint.
+        const fileIssues = delta
+            ? (await checkDelta(repoRoot, relPath, raw, { ladder })).issues
+            : validateDocument(relPath, raw, { ladder });
+        for (const issue of fileIssues) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,
@@ -740,7 +773,7 @@ export async function buildGraphDocument(
         schemaVersion: SCHEMA_VERSION,
         generatedBy: generatorPath(repoRoot),
         scope,
-        sources: scope === REPO_SCOPE ? folders : [scope],
+        sources: scope === REPO_SCOPE ? [...folders, ...(await hasChanges(repoRoot))] : [scope],
         // Deliberately no timestamp: the index is a deterministic function of
         // the Markdown, so re-running it produces a byte-identical file and CI
         // can diff it to detect a stale commit.
@@ -799,7 +832,14 @@ export async function discoverLayout(repoRoot) {
         }
         if (await isDirectory(path.join(repoRoot, `.${name}`))) stray.push(`.${name}`);
     }
-    return { folders, stray };
+    // The change folder is adopted the same way, by existing.
+    const changes = (await isDirectory(path.join(repoRoot, CHANGES_ROOT))) ? CHANGES_ROOT : null;
+    return { folders, stray, changes };
+}
+
+/** The change folder as a rollup source, when the repository has one. */
+async function hasChanges(repoRoot) {
+    return (await isDirectory(path.join(repoRoot, CHANGES_ROOT))) ? [CHANGES_ROOT] : [];
 }
 
 async function isDirectory(absolutePath) {

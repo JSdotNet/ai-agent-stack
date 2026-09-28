@@ -32,6 +32,42 @@ export const DEVBOOK_FOLDER_NAMES = ["arc42", "domain", "tech", "design", "ai"];
 export const DEVBOOK_ROOT = ".devbook";
 export const DEVBOOK_PREFIX = `${DEVBOOK_ROOT}/`;
 
+/**
+ * The change folder: where a proposed change to the devbook lives until it is
+ * merged. It sits outside `.devbook/` because OpenSpec, whose change lane it
+ * is, resolves `changes/` only under a folder literally named `openspec/` —
+ * the spike recorded in the repository's devbook-openspec building block. The
+ * names are OpenSpec's and fixed. A repository adopts it like any folder, by
+ * having it; `archive/` inside it is history and never indexed.
+ *
+ * Of each change, `proposal.md` and every file under `devbook-delta/` are
+ * devbook chapters. `solution.md` and `tasks.md` are the change's own working
+ * files, and nothing in them lands in the devbook.
+ */
+export const CHANGES_FOLDER = "changes";
+export const CHANGES_ROOT = "openspec/changes";
+export const CHANGES_ARCHIVE = `${CHANGES_ROOT}/archive`;
+export const DELTA_FOLDER = "devbook-delta";
+
+/**
+ * Where a path sits in the change folder, or null outside it and inside
+ * `archive/`. `part` is `proposal`, `delta`, or `other`; a delta's `target` is
+ * the devbook file it changes — its path under `devbook-delta/`, re-rooted at
+ * `.devbook/`.
+ */
+export function changePathParts(relPath) {
+    const normalized = String(relPath).replace(/\\/g, "/");
+    if (!normalized.startsWith(`${CHANGES_ROOT}/`)) return null;
+    const [name, ...rest] = normalized.slice(CHANGES_ROOT.length + 1).split("/");
+    if (!name || name === "archive") return null;
+    const inner = rest.join("/");
+    if (inner === "proposal.md") return { name, part: "proposal", target: null };
+    if (rest[0] === DELTA_FOLDER && rest.length > 1) {
+        return { name, part: "delta", target: `${DEVBOOK_PREFIX}${rest.slice(1).join("/")}` };
+    }
+    return { name, part: "other", target: null };
+}
+
 const APPROVED_STATUS = "approved";
 
 // One rung above `approved`, and the two are a stack rather than a choice:
@@ -56,6 +92,10 @@ const STATUS_BY_FOLDER = {
     // adoption vocabulary. What is on the ladder differs — `.tech` rates a
     // technology, `.ai` rates a way of working with one.
     ai: ["candidate", "trial", "adopted", "hold", "retired"],
+    // A change's `proposal.md` is the one block in the change folder with a
+    // status. Only the first rung is here: what agreeing a change records, and
+    // where, is decided with the gates on a change, which add the rungs above.
+    [CHANGES_FOLDER]: ["proposed"],
 };
 
 /**
@@ -246,6 +286,9 @@ const TYPE_BY_FOLDER = {
     // typed so a tool that reads OpenSpec reads it. Every other `.design`
     // chapter is a guideline and stays untyped — see `OPTIONAL_TYPE_FOLDERS`.
     design: { chapter: ["requirement"], file: [] },
+    // A change's `proposal.md` is a `change`. Its sections are sections, and a
+    // delta's chapters are typed by the folder they land in, never by this one.
+    [CHANGES_FOLDER]: { chapter: [], file: ["change"] },
 };
 
 // Folders whose value set marks out a few chapters rather than classifying
@@ -289,6 +332,9 @@ const COMMON_OPTIONAL_FIELDS = [
     "roadmap",
     "date",
     "tests",
+    // Provenance: the change whose merge last touched this chapter. Written by
+    // the delta merge, never by hand, and valid in every folder.
+    "change",
 ];
 
 // A feature flag is a switch, so its `default` is one of two words. A setting's
@@ -298,6 +344,15 @@ const FLAG_DEFAULTS = ["on", "off"];
 // Who may change a setting at runtime: the person it belongs to, an
 // administrator for the whole tenant, or an operator for the whole system.
 const SETTING_SCOPES = ["user", "tenant", "system"];
+
+// What kind of change a proposal is, named once because it decides which flow
+// applies a step: new functionality, a change to behaviour that exists, or a
+// defect. OpenSpec's `devbook` schema asks for it in the same three words.
+export const CHANGE_CATEGORIES = ["feature", "behaviour-change", "defect"];
+
+// A change's name as its folder spells it, and so as `change` spells it on a
+// delta and, after the merge, on every chapter the delta touched.
+const CHANGE_NAME_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 // How a bounded context ships: as its own deployable `service`, or as a
 // `module` inside a modular monolith that hosts other contexts beside it.
@@ -467,6 +522,7 @@ const FOLDER_EXTRA_FIELDS = {
     tech: ["kind", "version", "depends-on", "alternatives"],
     design: [],
     ai: ["depends-on", "stage"],
+    [CHANGES_FOLDER]: ["category"],
 };
 
 /**
@@ -546,6 +602,7 @@ const FIELD_TYPE_SCOPE = {
     tech: {},
     design: {},
     ai: {},
+    [CHANGES_FOLDER]: {},
 };
 
 // The exceptions to `CHAPTER_ONLY_EXTRA_FIELDS`: a chapter-only field a file
@@ -561,6 +618,7 @@ const FILE_FIELD_TYPE_SCOPE = {
 
 /** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
+    if (changePathParts(relPath)) return CHANGES_FOLDER;
     const normalized = String(relPath).replace(/\\/g, "/");
     // An address is just a repository path, and every devbook path starts with
     // the one parent. Nothing else in the schema knows about the layout.
@@ -1564,6 +1622,9 @@ const STRUCTURAL_DOMAIN_BASES = ["model", "flow", "dependencies"];
 export function isStructuralDocument(relPath) {
     const kind = folderKindForPath(relPath);
     if (!kind) return false;
+    // A proposal's `## Why`, `## Scope`, and the rest are sections of one
+    // document; its file-level block is the change's only block.
+    if (kind === CHANGES_FOLDER) return changePathParts(relPath).part === "proposal";
     const subject = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + kind.length + 1);
     if (subject === STRUCTURAL_ROOT_FILES[kind]) return true;
     if (kind !== "domain" || subject.split("/").length !== 2) return false;
@@ -1593,6 +1654,18 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
         issues.push({
             severity: "info",
             message: `${relPath} is not under .devbook/arc42/, domain/, tech/, design/, or ai/ — no metadata rules apply.`,
+        });
+        return issues;
+    }
+
+    // A delta is checked against the chapter it targets, which only the delta
+    // merge can resolve; here, only its own header is in reach.
+    const changePart = changePathParts(relPath);
+    if (changePart?.part === "delta") return deltaHeaderIssues(relPath, markdown);
+    if (changePart && changePart.part !== "proposal") {
+        issues.push({
+            severity: "info",
+            message: `${relPath} is a change's own working file — only \`proposal.md\` and \`${DELTA_FOLDER}/\` hold devbook chapters, so no metadata rules apply.`,
         });
         return issues;
     }
@@ -1796,6 +1869,31 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
             }
         }
 
+        // A proposal names its change's category once, from a closed set,
+        // because the category is what picks the flow that applies a step.
+        if (kind === CHANGES_FOLDER && blockLevel === "file") {
+            const category = chapter.meta.category;
+            if (category == null) {
+                issues.push({
+                    severity: "error",
+                    message: `${label} is missing required \`category\`. Expected one of: ${CHANGE_CATEGORIES.join(", ")}.`,
+                });
+            } else if (!CHANGE_CATEGORIES.includes(category)) {
+                issues.push({
+                    severity: "error",
+                    message: `${label} has \`category\` "${Array.isArray(category) ? category.join(", ") : category}", expected one of: ${CHANGE_CATEGORIES.join(", ")}.`,
+                });
+            }
+        }
+
+        // `change` is the merge's provenance stamp, so it is one change name.
+        if (chapter.meta.change != null && !CHANGE_NAME_PATTERN.test(chapter.meta.change)) {
+            issues.push({
+                severity: "error",
+                message: `${label} has \`change\` "${chapter.meta.change}" — it names one change, as its folder under ${CHANGES_ROOT}/ spells it: lowercase kebab-case.`,
+            });
+        }
+
         // `effort` is a story-point estimate, so it is a single non-negative
         // integer. A list, a fraction, a negative number, or a word such as
         // "large" is not an estimate this schema can total or compare.
@@ -1953,6 +2051,76 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
         }
     }
 
+    return issues;
+}
+
+// ---------------------------------------------------------------------------
+// Deltas — a change's chapters, at the path of the file each one changes
+// ---------------------------------------------------------------------------
+
+/** The three things a delta does to the chapters it names. */
+export const DELTA_KINDS = ["added", "modified", "removed"];
+
+/** The three section headings under a targeted chapter, and what each does. */
+export const DELTA_SECTIONS = ["ADDED", "MODIFIED", "REMOVED"];
+
+/**
+ * A delta's own `meta` block — the one that opens the file, above any heading
+ * — and the line after its closing fence. `null` when the file does not open
+ * with one.
+ */
+export function parseDeltaHeader(markdown) {
+    const lines = markdown.split(/\r?\n/);
+    let i = 0;
+    while (i < lines.length && lines[i].trim() === "") i++;
+    if (i >= lines.length || !/^```meta\s*$/.test(lines[i].trim())) return null;
+    const body = [];
+    let k = i + 1;
+    while (k < lines.length && lines[k].trim() !== "```") body.push(lines[k++]);
+    if (k >= lines.length) return null;
+    return { meta: parseMetaBody(body.join("\n")), end: k + 1 };
+}
+
+/**
+ * The rules a delta's header answers on its own: it names its change, which is
+ * the folder it sits in, and one delta kind, and it carries nothing else — a
+ * delta has no status of its own and inherits everything through `change`.
+ */
+export function deltaHeaderIssues(relPath, markdown) {
+    const issues = [];
+    const where = changePathParts(relPath);
+    const header = parseDeltaHeader(markdown);
+    if (!header) {
+        issues.push({
+            severity: "error",
+            message: `opens with no \`meta\` block — a delta starts with one carrying \`change: ${where?.name ?? "<name>"}\` and \`delta\` (${DELTA_KINDS.join(", ")}).`,
+        });
+        return issues;
+    }
+    const { change, delta } = header.meta;
+    if (change == null) {
+        issues.push({ severity: "error", message: `is missing required \`change\` in its opening \`meta\` block.` });
+    } else if (where && change !== where.name) {
+        issues.push({
+            severity: "error",
+            message: `has \`change\` "${change}" but sits in the change folder \`${where.name}\` — a delta names the change it belongs to.`,
+        });
+    }
+    if (delta == null) {
+        issues.push({
+            severity: "error",
+            message: `is missing required \`delta\` in its opening \`meta\` block. Expected one of: ${DELTA_KINDS.join(", ")}.`,
+        });
+    } else if (!DELTA_KINDS.includes(delta)) {
+        issues.push({ severity: "error", message: `has \`delta\` "${delta}", expected one of: ${DELTA_KINDS.join(", ")}.` });
+    }
+    for (const key of Object.keys(header.meta)) {
+        if (key === "change" || key === "delta") continue;
+        issues.push({
+            severity: "error",
+            message: `carries \`${key}\` in its opening \`meta\` block, which holds only \`change\` and \`delta\` — a delta has no status of its own and inherits through its change.`,
+        });
+    }
     return issues;
 }
 

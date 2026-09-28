@@ -22,6 +22,12 @@
       ],
       "install": "arc42"
     },
+    "devbook-changes": {
+      "paths": [
+        "openspec/changes/**"
+      ],
+      "install": "changes"
+    },
     "devbook-chapter-metadata": {
       "paths": [
         ".devbook/arc42/**",

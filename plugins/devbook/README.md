@@ -38,6 +38,7 @@ deleting it, and a reader loading a chapter for context skips every fence.
 | `tech/` | Technology graph: platforms, runtimes, frameworks, versions, maturity |
 | `design/` | UX and visual design guidelines, tokens, design rules |
 | `ai/` | How the team develops with AI: usage per stage of the DevOps loop, concepts, adoption status |
+| `openspec/changes/` | Proposed changes to the folders above, as a proposal and deltas that `delta.mjs` merges; history under `archive/` |
 
 Adoption is partial by design — a repository may take only `domain/` and
 `arc42/`, and the tooling emits scopes for the folders that actually exist.
@@ -47,6 +48,10 @@ Those five live under one `.devbook/` parent with the leading dot dropped —
 tooling under `.devbook/_tools/`, and the repository rollup under
 `.devbook/_meta/`. A root-level `.arc42/` is not a layout: the check reports it
 and does not index it. An address is the chapter's real repository path.
+
+The change folder is the one exception to the parent: `openspec/changes/`, because OpenSpec,
+whose change lane it is, resolves `changes/` only under a folder named `openspec/`. It is
+adopted like the others and stamped as `changes`; its shape is `rules/devbook-changes.md`.
 
 ## Features
 
@@ -259,9 +264,10 @@ skills exist.
 | `devbook-design.md` | `.devbook/design/**` | Design guideline scope and token rules |
 | `devbook-ai.md` | `.devbook/ai/**` | AI usage per stage of the DevOps loop, the adoption ladder, and the `tech/` boundary |
 | `devbook-annotations.md` | all five folders | The `annotation` fence: core field set, position anchoring, the resolve-means-delete lifecycle, and the rule that keeps an open note out of task context |
+| `devbook-changes.md` | `openspec/changes/**` | The change folder: `proposal.md`, the delta shape `delta.mjs` merges, `solution.md`, and `tasks.md` |
 | `devbook-naming.md` | devbook folders and `_meta` | Underscore and dot prefixes, kebab-case, no redundant suffixes |
 
-Every glob is scoped to the `.devbook/` folders, so the plugin stays silent in
+Every glob is scoped to the `.devbook/` folders and the change folder, so the plugin stays silent in
 repositories and files that have not adopted the convention.
 
 #### How they reach a session
@@ -339,6 +345,15 @@ node .devbook/_tools/devbook-meta/annotations.mjs sweep   --chapter <path#slug>
 any in-process caller import the same functions, so nothing else edits a note
 with a regular expression of its own. Its edits are surgical, and it never
 commits. See `tools/devbook-meta/README.md` for the document shapes.
+
+```bash
+node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
+node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # merge, stamp `change`, move to archive/
+```
+
+`delta.mjs` is the only merge of a change's deltas into the chapters they target. Its
+`gateCheck` seam, before anything is written, is empty until what agreeing a change records
+is decided.
 
 ### Tooling: `devbook-tech`
 
@@ -500,7 +515,11 @@ migration, and `021-no-review-triad` deletes it.
 22 gives `design/` its one `type`, `requirement`: a rule a component keeps or
 breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
 warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
-ships no migration.
+ships no migration. 23 adopts the change folder, `openspec/changes/`: a change's `proposal.md`
+is `type: change` at `status: proposed` with a `category`, each file under its `devbook-delta/`
+is a delta the checker resolves through `delta.mjs`, `archive/` is never indexed, and `change`
+is legal on any chapter as the merge's provenance. A repository without the folder validates
+as before, so it ships no migration.
 
 ## Folder structure
 

@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring devbook into a repository for the first time — adopt the arc42, domain, tech, design, and ai folders under .devbook/, scaffold one starting chapter per adopted folder, install the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption".'
+description: 'Bring devbook into a repository for the first time — adopt the arc42, domain, tech, design, and ai folders under .devbook/ and the change folder under openspec/changes/, scaffold one starting chapter per adopted folder, install the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption", "adopt the change folder".'
 user-invocable: false
 ---
 
@@ -18,7 +18,7 @@ init would ask again what the stamp already answers.
 
 1. **Detect.** Installed version and disk state. A devbook folder already on disk with no
    stamp is adopted as found, never recreated.
-2. **Resolve.** Ask adoption as one question naming all five folders; `ai/`'s stage set is a
+2. **Resolve.** Ask adoption as one question naming all five folders and the change folder; `ai/`'s stage set is a
    follow-up, asked only when `ai/` was adopted. Adopt only folders the repository will
    actually maintain — an empty devbook folder is worse than an absent one, and partial
    adoption is the normal case.
@@ -38,6 +38,10 @@ root-level `.domain/` — and one starting chapter with a valid `meta` block, wr
 shape its rule states: `devbook-arc42.md`, `devbook-domain.md`, `devbook-tech.md`,
 `devbook-design.md`, `devbook-ai.md`. Required block fields are in
 `devbook-chapter-metadata.md`. `devbook:update` creates a folder adopted later the same way.
+
+The change folder, stamped as `changes`, is `openspec/changes/` at the repository root — the
+one place OpenSpec resolves it — and starts empty: write `openspec/changes/archive/.gitkeep`
+and no chapter, because a change is only ever proposed, per `devbook-changes.md`.
 
 `ai/` needs its stage set chosen before anything is written: ask which positions this
 repository's development flow actually has, create one numbered file per stage, and register

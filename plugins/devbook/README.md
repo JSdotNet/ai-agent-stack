@@ -352,8 +352,8 @@ node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # merge, stamp `c
 ```
 
 `delta.mjs` is the only merge of a change's deltas into the chapters they target. Its
-`gateCheck` seam, before anything is written, is empty until what agreeing a change records
-is decided.
+`gateCheck`, before anything is written, refuses a change whose proposal is not `accepted`
+over its current hash. `chapter-hash.mjs openspec/changes/<name>` prints that hash.
 
 ### Tooling: `devbook-tech`
 

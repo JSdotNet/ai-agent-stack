@@ -1,7 +1,7 @@
 # devbook-collaboration
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/12-glossary.md#review-pass", ".devbook/arc42/12-glossary.md#stale-approval"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/12-glossary.md#review-pass", ".devbook/arc42/12-glossary.md#stale-approval"]
 ```
 
 How a chapter is reviewed and decided. Responsible for two things: that every objection to a
@@ -9,7 +9,10 @@ chapter is written into it, beside the passage it is about, and that an approval
 chosen by a person in the session that wrote it.
 
 Inside the block: the brief that asks for a review, the reading of a verdict off the open
-notes, the two decisions, and the sweep that reports what is still open.
+notes, the two decisions, and the sweep that reports what is still open. The same five skills
+take a [change](devbook.md#change) as one unit: its proposal and every delta reviewed
+together, one decision per gate, written once on `proposal.md` and never on the chapters the
+deltas target. Deciding a chapter outside a change is unchanged.
 
 Outside it: what a chapter says, what its folder's rules are, the schema, and the
 [annotation](devbook.md#annotation) a finding is written as — all [devbook](devbook.md)'s —
@@ -104,8 +107,8 @@ a green suite, a merged pull request, or a schedule.
 related: [".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue"]
 ```
 
-Sweep the adopted folders and report the chapters with open notes, the work awaiting a
-decision, and which approvals have gone stale. It writes nothing, which makes it the one skill
+Sweep the adopted folders and every open change and report the chapters and changes with
+open notes, the work awaiting a decision, and which approvals have gone stale. It writes nothing, which makes it the one skill
 here that is safe to schedule.
 
 ## Structure
@@ -176,9 +179,9 @@ classDiagram
   annotation fences, both devbook's, and who owes the next move lives in the pull request or
   the tracker. This block contributes the procedure and none of the vocabulary
   ([the annotations record](../adr/annotations.md)).
-- **The decision rungs are `domain/`'s, the fence is every folder's.** So the pass runs
-  wherever a chapter lives, and the two gates run on model chapters only — a repository that
-  adopts no `domain/` gets the review and neither decision.
+- **The decision rungs are `domain/`'s and a change's, the fence is every folder's.** So
+  the pass runs wherever a chapter lives, and the two gates run on model chapters and on a
+  change's `proposal.md` — a repository with neither gets the review and no decision.
 - **The line is who writes, not who defines.** Every field is devbook's; this block writes
   `status`, `approved-by`, and `approved-at` only through [Approval](#approval), and the
   acceptance three only through `Acceptance`, which stands on the record Approval left.
@@ -213,6 +216,9 @@ chapter's stage twice ([the annotations record](../adr/annotations.md)).
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | This block writes no `meta` field except devbook's two decision rungs and their six record fields | all mutations | untested |
+| On a change, the decision is written once on `proposal.md`, with the change's hash, and on no chapter a delta targets | `chapter-approve()`, `chapter-accept()` | untested |
+| A change is accepted only with every `tasks.md` step merged and every delta verified `aligned` | `chapter-accept()` | untested |
+| A change merges only once accepted over its current hash | devbook's `delta.mjs --apply` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A leftover `review`, `reviewer`, or `review-at` is reported by name, in every folder | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | A finding is written through devbook's `annotations.mjs` and never as a field | `chapter-review()`, `chapter-approve()` | untested |
 | Approval sweeps the chapter's resolved notes in the same change that writes the rung | `chapter-approve()` | untested |
@@ -328,7 +334,7 @@ application, a test run — that lives outside this one entirely.
 | `accepted-at` falls on or after `approved-at` | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | An unsigned, undated, or orphaned acceptance record is reported | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | Both records come off together when the content moves under them | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
-| The rung is on `domain/`'s ladder and no other folder's | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
+| The rung is on `domain/`'s ladder and a change's proposal, and no other folder's | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | It reads evidence that lives outside this block — a running application, a test run | `chapter-accept()` | untested |
 
 ### Chapter Approved
@@ -344,7 +350,7 @@ in flow configuration or in somebody's memory.
 
 Payload:
 
-- `status` — the `approved` rung, on top of `domain/`'s ladder and no other folder's
+- `status` — the `approved` rung, on top of `domain/`'s ladder or a change's `proposal.md`, and no other folder's
 - `approved-by` — one person, handle, or team; never a list
 - `approved-at` — the day they approved it, `YYYY-MM-DD`
 - `approved-hash` — optional; the fingerprint of the content approved, which is what makes a
@@ -383,7 +389,7 @@ the product satisfies it.
 
 Payload:
 
-- `status` — the `accepted` rung, on `domain/`'s ladder and no other folder's
+- `status` — the `accepted` rung, on `domain/`'s ladder or a change's `proposal.md`, and no other folder's
 - `accepted-by` — one person, handle, or team; never a list
 - `accepted-at` — the day they accepted it, `YYYY-MM-DD`, on or after `approved-at`
 - `accepted-hash` — optional; the fingerprint of the content accepted
@@ -507,7 +513,7 @@ into.
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.0.0 <2.0.0` | Reads a chapter's `status` and its open annotation fences; writes no review field | `devbook-chapter-metadata.md`: a review in progress is the chapter's rung plus its open fences, never a field | It has no store and no vocabulary of its own, and remembers nothing about a review in the chapter — [the annotations record](../adr/annotations.md). |
 | [devbook](devbook.md#annotation) | Conformist, for the whole device | Writes findings through `.devbook/_tools/devbook-meta/annotations.mjs` | The [annotation](devbook.md#annotation) fence: its schema, its placement rule, and its open/resolved/gone lifecycle | A finding is devbook's device, not this block's. It reads the fences as the evidence a verdict stands on, and sweeping them is devbook's too — see [the annotations record](../adr/annotations.md). |
-| [devbook](devbook.md#chapter) | Conformist, for one field | Writes `status: approved` or `accepted` and the six record fields directly, on `domain/` chapters only | The two decision rungs, on `domain/`'s ladder alone, and their six record fields | Both rungs are devbook's fields and keep devbook's meaning. This block runs the decisions; it does not own the vocabulary, and a repository with no `domain/` folder gets the review pass and neither decision. |
+| [devbook](devbook.md#chapter) | Conformist, for one field | Writes `status: approved` or `accepted` and the six record fields directly, on `domain/` chapters and a change's `proposal.md` only | The two decision rungs, on `domain/`'s ladder and a change's proposal, and their six record fields | Both rungs are devbook's fields and keep devbook's meaning. This block runs the decisions; it does not own the vocabulary, and a repository with no `domain/` folder and no change gets the review pass and neither decision. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder and two manifests | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged like every other plugin here, and — alone among them — materializes nothing and stamps nothing. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests and skills | Each host's own schemas | Enabling the plugin is the whole adoption; the rules its skills follow are devbook's, and reach a host through devbook's install. |
 

@@ -7,7 +7,7 @@
 // cron that is not five fields or could fire more than once an hour, a target whose skill
 // folder does not exist in this marketplace or is a flow-* skill, a plugin in `requires` the
 // marketplace does not list or that omits the target's plugin, a tool list without `Skill`,
-// an empty body, or a placeholder outside the four the contract names — in a body or in the
+// an empty body, or a placeholder outside the five the contract names — in a body or in the
 // preamble.
 //
 // Dependency-free ESM against node: built-ins, like everything else executable here.
@@ -25,7 +25,7 @@ const PREAMBLE = path.join(PLUGIN, "resources", "schedule-preamble.md");
 const REQUIRED = ["name", "title", "cadence", "cron", "target", "requires", "tools"];
 const CADENCES = new Set(["daily", "weekdays", "weekly"]);
 const PLACEHOLDER = /\{\{\s*([a-z]+)\s*\}\}/g;
-const ALLOWED_PLACEHOLDERS = new Set(["repo", "base", "name", "title"]);
+const ALLOWED_PLACEHOLDERS = new Set(["repo", "base", "name", "title", "checkout"]);
 
 const errors = [];
 const error = (file, msg) => errors.push(`${path.relative(ROOT, file)}: ${msg}`);

@@ -397,17 +397,18 @@ obliges no one is a state that hides a stall.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution", ".devbook/tech/hosts.md#scheduled-cloud-sessions"]
+related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#scheduler-resolution", ".devbook/tech/hosts.md#scheduled-routines"]
 ```
 
 Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 
 Also called: the host's scheduler.
 
-Whatever the live session exposes that turns a name, a cron expression, a repository, and a
-prompt into a scheduled session. It is resolved by capability and never named, and **absent is a
-normal outcome** — the operation reports it and changes nothing. The scheduler is also where
-everything personal lives: the environment, the model, and the entry ids. Matching by name is
+Whatever the live session exposes that turns a name, a cron expression, and a prompt into a
+session run on this machine, in a working folder. It is resolved by capability and never named,
+and **absent is a normal outcome** — the operation reports it and changes nothing. A cloud
+scheduler is never used to create one. The scheduler is also where everything personal lives:
+the checkout's path, the approved tools, and the entry ids. Matching by name is
 what makes writing any of that into the repository unnecessary.
 
 ## Stale Approval

@@ -69,28 +69,34 @@ not the import — it is whether these pages render the same way through `create
 did over the MCP viewer they were written against. `delivery-surface-canvas` kept both transports until
 it became canvas-only, so there is no longer a second one to answer that on its behalf.
 
-## Scheduled Cloud Sessions
+## Scheduled Routines
 
 ```meta
 status: trial
 type: platform
-date: 2026-09-07
+date: 2026-09-28
 depends-on: [".devbook/tech/hosts.md#claude-code-plugin-api"]
 related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/05-building-block-view.md#schedule-plugin"]
 ```
 
-Cron-scheduled cloud sessions: a name, a five-field UTC expression at one hour minimum, a
-repository, a tool allowlist, a model, an environment, and one prompt, with no local files, no
-locally configured MCP servers, and no memory between runs. The second platform here an asset
+Cron-scheduled local routines: a name, a five-field expression in the machine's own timezone,
+a working folder, and one prompt, run on this machine with the plugins, MCP servers, and
+settings installed there, with the tools approved on the routine itself, and with no memory
+between runs. They fire only while the host app runs; one due while it was closed runs on the
+next launch. The second platform here an asset
 *drives* rather than is read by: `delivery-schedule` creates and updates them through the
 scheduler tool the session exposes, and reads their runs and logs back. Claude Code calls the
 page Routines and the GitHub Copilot app calls it Automations; the tool is resolved from the
 live tool list, so the plugin names neither.
 
-`trial`: the scheduler this machine exposes is a local one — it runs on the machine, in a
-working folder, on local time — and the routines for this repository were created against it
-with a hand-adapted prompt before the catalog contract described that shape. The unverified
-part is not the API — it is
-whether a cloud session loads this marketplace from the repository's committed settings, and a
-session that starts without its skill has scheduled nothing. Its absence costs the cadence,
-never the procedure: every target runs by hand exactly as before.
+The cloud flavour — a repository, a tool allowlist, a model, and an environment in place of
+the working folder, on a fresh clone — is not used. On 2026-09-28 a cloud run of the Backlog
+issue sweep started with none of this marketplace's plugins installed, though the repository's
+committed settings enabled them, and stopped without its skill; a session that starts without
+its skill has scheduled nothing. `delivery-schedule` creates local routines only and disables
+any cloud copy it finds.
+
+`trial`: local routines have run these targets against several repositories since
+2026-09-26. The unverified part is the machine: a routine needs it on and the host app open.
+Its absence costs the cadence, never the procedure: every target runs by hand exactly as
+before.

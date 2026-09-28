@@ -4,11 +4,12 @@
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/install.md"]
 ```
 
-Responsible for one thing: that a repository has, by name, the five procedures every
+Responsible for one thing: that a repository has, by name, the six procedures every
 repository has and no plugin can write — `run`, how its application is built and comes up; `show`, how
 the feature being built is put in front of a reviewer; `capture`, how evidence is taken;
 `debug`, how a cause is found inside the running application; `estimate`, how work is sized
-against the repository's own finished work — and that each one's goal reads
+against the repository's own finished work; `prototype`, how a feature is sketched as standalone
+HTML in the repository's design conventions — and that each one's goal reads
 the same in every repository while how it is done never does.
 
 Inside the block: the five seeds and their goals, the wrapper per host that carries a goal, the
@@ -33,7 +34,7 @@ them.
 | --- | --- | --- |
 | `init` | skill | A person, or `devbook-config:init` during setup and a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `run`, `show`, `capture`, `debug`, `estimate` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
+| `run`, `show`, `capture`, `debug`, `estimate`, `prototype` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `SessionStart` | hook pair | Either host, at session start |
 
 ### init and update
@@ -67,8 +68,8 @@ related: [".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook
 
 Also called: procedure skill, repository skill, seeded skill.
 
-One of five named things a repository knows how to do and a plugin cannot: `run`, `show`,
-`capture`, `debug`, `estimate`. In a repository it is three files — the body at
+One of six named things a repository knows how to do and a plugin cannot: `run`, `show`,
+`capture`, `debug`, `estimate`, `prototype`. In a repository it is three files — the body at
 `.agents/skills/<name>.md`, and a wrapper per host at `.claude/skills/<name>/SKILL.md` and
 `.github/skills/<name>/SKILL.md` — and one stamp entry per file under
 `components.devbook-procedures.materialized`. The body is seeded once and is the repository's
@@ -110,7 +111,9 @@ path; `capture` returns one file per checkpoint and per failure, under the workt
 form named honestly; `debug` names a cause and proves it, doing the debugging itself and
 leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
 sized against the repository's own finished work and naming the reference compared with, so
-that a pace measured in points means the same across plans. It is the `goal` field of the
+that a pace measured in points means the same across plans; `prototype` returns one standalone HTML
+file, everything inline and nothing fetched, in the repository's design conventions with the
+guideline and story each came from, changing no source file. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
 
@@ -149,7 +152,7 @@ it follows.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Separate Ways | Names `run` at its `app.start` point and `capture` inside Validation, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this plugin | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.devbook-procedures`, invokes `init` during setup and `update` during a fan-out, and answers its adoption question from the engine keys it just wrote | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
-| Any session, either host | Conformist | Invokes `run`, `show`, `capture`, `debug`, or `estimate` by name | The goal in the wrapper | That the goal holds whatever the body says. |
+| Any session, either host | Conformist | Invokes `run`, `show`, `capture`, `debug`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 
 **The goal is the seam.** Every procedure's body differs per repository; the one sentence that
 does not is what a caller may rely on, and it lives in the file the plugin keeps rewriting

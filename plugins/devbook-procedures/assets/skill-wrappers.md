@@ -1,9 +1,10 @@
 # A procedure, in the repository
 
-`assets/skills/` holds five procedures every repository has and no plugin can write: **run**,
+`assets/skills/` holds six procedures every repository has and no plugin can write: **run**,
 how its application is built and comes up; **show**, how the feature being built is put in front of a
 reviewer; **capture**, how evidence is taken; **debug**, how a cause is found inside the running
-application; **estimate**, how work is sized against the repository's own finished work. Each
+application; **estimate**, how work is sized against the repository's own finished work; **prototype**, how a
+feature is sketched as standalone HTML in the repository's own design conventions. Each
 is repository-specific by nature — one product runs `aspire start`, the next `docker compose
 up`; one has tracing, the next has screenshots; a 3 in one codebase is not a 3 in the next —
 and each has one goal that never varies. So the plugin fixes the goal and seeds the procedure, in the shape
@@ -84,6 +85,6 @@ so the body lives there and Claude Code's `run` is the Claude wrapper:
 
 `components.devbook-procedures.adopted` in `.devbook/config.json` names them, without
 ceremony: a repository with nothing to start drops `run`, `show`, and `debug`; one that takes
-no evidence drops `capture` and `show`; `estimate` needs neither. `init` asks on a first run
+no evidence drops `capture` and `show`; `estimate` needs neither; one with no user interface drops `prototype`. `init` asks on a first run
 and `update` never re-asks what the stamp answers. None is a dependency of anything: a caller that names one of these skills
 and finds it absent does without and says so.

@@ -1,6 +1,6 @@
 # devbook-procedures
 
-The five procedures every repository has and no plugin can write. One product runs
+The six procedures every repository has and no plugin can write. One product runs
 `aspire start`, the next `docker compose up`; one has tracing, the next has screenshots; one is
 debugged from an Aspire dashboard, the next from a browser console. What never varies is what
 each procedure is *for*. So this plugin fixes the goal and seeds the procedure:
@@ -12,6 +12,7 @@ each procedure is *for*. So this plugin fixes the goal and seeds the procedure:
 | `capture` | Return evidence a reviewer can open: one file per checkpoint and per failure, paths under the worktree root, the form named honestly | the layout, the naming, the tooling |
 | `debug` | Name the cause of an observed issue and prove it — a log line, a trace span, a breakpoint's state — without handing the person a debugger, and leave nothing behind in the change | where the logs live, which debugger reaches the app, how a reproduction is set up |
 | `estimate` | Return story points off 1/2/3/5/8/13/21 per unit of work, sized against the repository's reference examples, naming the reference each was compared with | the reference table of finished work per value, and its calibration |
+| `prototype` | Return one standalone HTML file — everything inline, nothing fetched — prototyping the requested features in the repository's design conventions, naming the guideline and story each came from, and changing no source file | where the design guidelines and Storybook live, what a prototype shows, where it lands |
 
 Each lands as one editable copy under `.agents/skills/<name>.md` with a managed wrapper per
 host that carries the goal — except `run`, whose body is Claude Code's own project recipe at
@@ -37,13 +38,13 @@ Then enable `devbook-procedures` with `/plugin` and run `devbook-procedures:init
 repository. It asks which of the five to adopt on the first run and records the answer as
 `components.devbook-procedures.adopted` in `.devbook/config.json`; a repository with nothing
 to start adopts neither `run`, `show`, nor `debug`, and one that takes no evidence adopts
-neither `capture` nor `show`; `estimate` needs neither.
+neither `capture` nor `show`; `estimate` needs neither; one with no user interface adopts no `prototype`.
 
 ## What it ships
 
 | Part | What it is |
 |---|---|
-| `assets/skills/<name>.md` | The five seeds: `name`, `description`, and `goal` in the frontmatter, an example-filled procedure below. `run.md` lands only where `/run-skill-generator` cannot run |
+| `assets/skills/<name>.md` | The six seeds: `name`, `description`, and `goal` in the frontmatter, an example-filled procedure below. `run.md` lands only where `/run-skill-generator` cannot run |
 | `migrations/001-start-is-run/` | Moves a `start` procedure to the `run` recipe and its Copilot twin, and renames it in the stamp; `update` runs it first |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a managed wrapper per host, and where the goal sits |
 | `hooks/` | A session-start pointer: invoke the repository's procedure skill rather than guessing a command, a URL, or a layout |

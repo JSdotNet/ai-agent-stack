@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s procedure skills — run, show, capture, debug, estimate — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a run, show, capture, debug, or estimate skill is missing, a start skill is still there, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the debug skill", "adopt the estimate skill", "drop the show skill".'
+description: 'Move a repository''s procedure skills — run, show, capture, debug, estimate, prototype — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a run, show, capture, debug, estimate, or prototype skill is missing, a start skill is still there, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the debug skill", "adopt the estimate skill", "adopt the prototype skill", "drop the show skill".'
 user-invocable: false
 ---
 

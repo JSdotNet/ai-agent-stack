@@ -61,8 +61,8 @@ those contracts; it does not re-decide them per skill.
    the stack config carries no model key. Resolve each family to the current latest
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether the
-   repository has a `start` skill at `.agents/skills/start.md`. When it does, persist the
-   path and name it to whichever provider fills `app.start` and to Validation as the
+   repository has a `run` recipe at `.claude/skills/run-<name>/SKILL.md` — one per unit in a
+   monorepo. When it does, persist the path, start the app by invoking `run`, and name it to whichever provider fills `app.start` and to Validation as the
    repository's declared runtime facts — command, entry points, readiness signals,
    credential pointer. Do not read it yourself; the `app.start` result carries what later
    stages need. Both files are optional; a missing or malformed one never blocks the run.
@@ -194,7 +194,7 @@ those contracts; it does not re-decide them per skill.
 - **No pull request** unless the user explicitly approved it and that approval is persisted.
 - **Model choice is personal; repo context and policy are not model choice.** A personal
   override changes the category default for that user only. The repository has no say in
-  model selection at all. The repository's `start` skill and `policy` decide startup and QA
+  model selection at all. The repository's `run` recipe and `policy` decide startup and QA
   depth; neither ever sets a model.
 - **Shared-worktree sub-agents first.** An agent launched with its own checkout cannot see
   this session's uncommitted change set, so reserve that for work that would otherwise

@@ -1,29 +1,37 @@
 ---
-name: start
-description: "Start this repository's application the way this repository says to, and leave it running. Use when: starting or running the app locally, 'start the app', 'run it', resuming work on a branch, or a flow needs a runtime at app.start."
+name: run
+description: "Build and launch this repository's application the way this repository says to, and leave it running. Use when: running or starting the app locally, 'run it', 'start the app', resuming work on a branch, or a flow needs a runtime at app.start."
 goal: "Leave this repository's application running and healthy, and report the command that started it, the health verdict, and its entry points. Never hand the person a command to run themselves."
 ---
 
-# Start the Application
+# Run the Application
 
-Start the app from what this file declares, not from a command guessed per session. **Edit
-this file** — it is yours: the facts are examples to replace, the procedure a starting point.
-Whoever invokes `start` expects only what the wrapper's goal says: a running application and
-the three facts reported.
+Build and launch the app from what this file declares, not from a command guessed per
+session. **Edit this file** — it is yours: the facts are examples to replace, the procedure a
+starting point. Whoever invokes `run` expects only what the goal says: a running application
+and the three facts reported.
 
-A repository with nothing to start drops `start` from `components.devbook-procedures.adopted`
-in `.devbook/config.json` instead of keeping this file.
+This is the seed a host without Claude Code's `/run-skill-generator` lands at
+`.claude/skills/run-<id>/SKILL.md`. Where the generator ran, its recipe is this file instead;
+keep `## Healthy` and `## Entry points` in it either way — a flow's validation reads them.
 
-## Run
+## Setup
 
-<!-- The command, where it runs from, and what it needs. Replace the example. -->
+<!-- What a clean checkout needs before the first launch. Replace the example. -->
+
+- The .NET SDK named in `global.json` and a running container runtime.
+- `dotnet restore` from the repository root.
+- Environment: none beyond the AppHost's own user secrets.
+
+## Launch
+
+<!-- The command, where it runs from. Replace the example. -->
 
 ```bash
 aspire start
 ```
 
-- From the repository root; needs the .NET SDK and a running container runtime.
-- AppHost: `src/Orders.AppHost/Orders.AppHost.csproj`
+- From the repository root. AppHost: `src/Orders.AppHost/Orders.AppHost.csproj`
 
 1. **Check whether it is already running** before starting a second copy — worktrees share
    ports. Reuse a running instance and say so.
@@ -31,7 +39,7 @@ aspire start
    the declared one fails; report the failure.
 3. **Wait for the signals under Healthy.** Stop waiting on a fatal error, or after two
    minutes of silence. Do not report a partially-started app as healthy.
-4. **Re-read the entry points** every start — a port changes.
+4. **Re-read the entry points** every launch — a port changes.
 
 Report in a couple of lines: the command, the health verdict, the entry points. Leave the app
 running — `show`, `debug`, and a flow's later stages work against it.
@@ -66,6 +74,6 @@ running — `show`, `debug`, and a flow's later stages work against it.
 ## Never
 
 - Restart a running instance without saying so.
-- Run destructive setup — a database drop, a volume prune, `git clean` — as part of starting.
+- Run destructive setup — a database drop, a volume prune, `git clean` — as part of running.
   Propose it instead.
 - Put a secret in this file. It is committed.

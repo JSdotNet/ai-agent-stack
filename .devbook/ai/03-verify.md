@@ -45,22 +45,24 @@ related: [".devbook/arc42/building-blocks/devbook-procedures.md"]
 date: 2026-09-26
 ```
 
-`start`, `show`, `capture`, and `debug` under `.agents/skills/` say how a change here is tried,
+`run` at `.claude/skills/run-jsdotnet-devbook/`, and `show`, `capture`, and `debug` under
+`.agents/skills/`, say how a change here is tried,
 shown, evidenced, and debugged, for a repository with no application to run.
 
-- **Used for** — trying a branch from this working copy: `start` adds it as the
+- **Used for** — trying a branch from this working copy: `run` adds it as the
   `jsdotnet-devbook` marketplace by path at local scope and enables what the branch touches;
   `show` walks the diff, the changed asset invoked from the working copy, and the checks;
   `capture` takes the three checks `repo-checks.yml` runs as text logs under `.wip/evidence/`;
   `debug` reproduces a checker, hook, or MCP server failure outside the host first.
 - **Adopted by** — nobody yet; the four landed here on 2026-09-26 and no session has
   invoked one. Each body was rewritten from its seed on
-  its first edit, so the stamp marks all four `managed: false` and `devbook-procedures:update`
+  its first edit, so the stamp marks all four `managed: false`; on 2026-09-28 `start` moved to
+  the `run` recipe through `devbook-procedures`'s `001-start-is-run` and `devbook-procedures:update`
   reports them as customized. `estimate` is not adopted.
 - **Evidence** — none yet. `trial` because the procedures are written and nothing has invoked
   them. Promote once a pull request here cites a `.wip/evidence/` capture and a walk `show`
   took from an enabled working copy.
 - **Limits** — every walk runs on Claude Code; the Copilot side of a dual-host asset is named as
   not walked. Whether a local-scope path declaration wins over the committed GitHub source of
-  the same marketplace name is what `start`'s health check is there to catch, and has not been
+  the same marketplace name is what `run`'s health check is there to catch, and has not been
   observed yet.

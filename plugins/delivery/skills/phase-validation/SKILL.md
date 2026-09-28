@@ -49,12 +49,13 @@ Location** below, which is why the QA sub-agent shares the worktree rather than 
 
 ## Repo Context
 
-The repository's runtime facts live in its `start` skill — `.agents/skills/start.md`, the
-repository's own — and reach this phase two ways: the
-`app.start` service returns base URLs and a health verdict, and the flow-runner names the
-file when it exists. Use them as follows:
+The repository's runtime facts live in its `run` recipe — `.claude/skills/run-<name>/SKILL.md`,
+the repository's own, which Claude Code's `run` skill follows and Copilot reaches through
+`.github/skills/run/` — and reach this phase two ways: the `app.start` service returns base
+URLs and a health verdict, and the flow-runner names the file when it exists. Start the app by
+invoking `run`, never by a command read out of the file. Use them as follows:
 
-- **How to run** — while the file declares the startup command and AppHost, never discover or
+- **How to run** — while the file declares the setup, the launch command, and AppHost, never discover or
   guess them, and never ask the user for them.
 - **Base URLs** — validate against the entry points the `app.start` result returned.
 - **Healthy startup** — judge startup against the file's readiness signals, and do not report
@@ -170,7 +171,7 @@ or a restart, and do not ask the user to restart the app manually as the normal 
   flow.
 - The affected scenarios or critical paths to exercise.
 - The `app.start` result — base URLs, health verdict — and the path of the repository's
-  `start` skill when the flow-runner found one.
+  `run` recipe when the flow-runner found one.
 
 ## Outputs
 
@@ -223,4 +224,4 @@ comes back, and what an unavailable capture does to this stage. It holds whether
 scenario that had visual evidence to give.
 
 Phase definition: `resources/flow-phases.md`.
-Runtime facts: the repository's `start` skill at `.agents/skills/start.md`.
+Runtime facts: the repository's `run` recipe at `.claude/skills/run-<name>/SKILL.md`.

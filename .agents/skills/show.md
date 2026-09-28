@@ -1,7 +1,7 @@
 ---
 name: show
 description: "Show the feature being built the way a reviewer would see it: the app running, opened at what the current branch changes, walked through, with evidence taken. Use when: 'show me', 'demo it', 'let me see it working', a flow wants a demo of finished work, or a review needs to look rather than read."
-goal: "Put the feature on the current branch in front of a reviewer: the application running through `start`, opened at the area this branch changes, its scenario walked end to end, every step evidenced through `capture` and cited by path. A demo without evidence paths is not a demo."
+goal: "Put the feature on the current branch in front of a reviewer: the application running through `run`, opened at the area this branch changes, its scenario walked end to end, every step evidenced through `capture` and cited by path. A demo without evidence paths is not a demo."
 ---
 
 # Show the Change
@@ -12,7 +12,7 @@ and the check output. There is no UI and no screenshot to take.
 
 ## Run it
 
-Invoke the `start` skill and reuse what it reports. For a headless walk that writes no setting,
+Invoke the `run` skill and reuse what it reports. For a headless walk that writes no setting,
 load the touched plugin for one run: `claude -p --plugin-dir plugins/<plugin> "<prompt>"`.
 
 ## Go to

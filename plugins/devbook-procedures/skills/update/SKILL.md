@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s procedure skills — start, show, capture, debug, estimate — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a start, show, capture, debug, or estimate skill is missing, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the debug skill", "adopt the estimate skill", "drop the show skill".'
+description: 'Move a repository''s procedure skills — run, show, capture, debug, estimate — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a run, show, capture, debug, or estimate skill is missing, a start skill is still there, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the debug skill", "adopt the estimate skill", "drop the show skill".'
 user-invocable: false
 ---
 
@@ -19,12 +19,15 @@ and touches no other entry.
 
 ## The run
 
-1. **Resolve.** `adopted` from the stamp is the list. Never re-ask what it answers; a
+1. **Migrate.** Run `../../migrations/001-start-is-run/migrate.mjs --check` with node, the
+   repository root as the working directory; while it exits `1`, show its plan, run it without `--check`, and report
+   what moved. It turns a `start` procedure into the `run` recipe and its Copilot twin.
+2. **Resolve.** `adopted` from the stamp is the list. Never re-ask what it answers; a
    procedure is added or dropped only when the user asks for it.
-2. **Detect**, **Plan**, **Materialize** exactly as `init` steps 2–4, with one more plan
+3. **Detect**, **Plan**, **Materialize** exactly as `init` steps 2–4, with one more plan
    row: a name dropped from `adopted` orphans its three files — reported, never deleted.
-3. **Stamp.** Rewrite `components.devbook-procedures` — `pluginVersion`, `adopted`, and
+4. **Stamp.** Rewrite `components.devbook-procedures` — `pluginVersion`, `adopted`, and
    `materialized`.
-4. **Report** what moved, name every customized file left alone, name each shipped
+5. **Report** what moved, name every customized file left alone, name each shipped
    procedure missing from `adopted` as available without asking about it, and leave the
    commit to the user.

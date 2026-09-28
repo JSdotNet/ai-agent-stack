@@ -1014,8 +1014,8 @@ runner and named by no skill.
   Creating the repository stays manual; every later stage opens by checking what is there, so
   a governed repository with no project runs the scaffold and a bare one runs everything.
 - **It writes no stack config of its own.** Stack Setup runs `devbook-config:init`, which
-  owns the engine keys, the MCP files, and each component's `init`; the flow fills the
-  `start` skill's facts afterwards, because those are the project's, not the config's.
+  owns the engine keys, the MCP files, and each component's `init`; the flow records the
+  `run` recipe and fills its facts afterwards, because those are the project's, not the config's.
 - It is code-tier because what it scaffolds has to build. A scaffold that was never compiled
   is a guess about somebody else's toolchain.
 - Governance and CI land before the scaffold, so the first build runs under the protection
@@ -1158,7 +1158,7 @@ it never depends on — one row below says that is not the whole truth.
 | A bound MCP server | Binding, per point | Named in `bindings["delivery.mcp"]`, resolved from the live tool list | The tool-name pattern, never one spelling | A server that does not answer costs a stage its grounding, never the run. |
 | A surface | Resolved at run time, never declared | A `delivery-surface-*` server in the live tool list, in `bindings["delivery.surface"]` order | `resources/surface-contract.md`, three capability groups | No surface bound is a normal outcome. It costs a view, never a capability. |
 | Claude Code and Copilot Plugin APIs | Conformist | Manifests, skills, the `flow-runner` agent, `hooks/hooks.json` and `hooks.json` | Each host's own schemas | The host decides what loads. Host divergence is absorbed through a slot rather than a branch. |
-| A consuming repository | Customer-Supplier, this block supplying | `.devbook/config.json`, four engine-owned keys; the `start` and `capture` skills it names by name and reads at `.agents/skills/<name>.md`, whoever seeded them | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
+| A consuming repository | Customer-Supplier, this block supplying | `.devbook/config.json`, four engine-owned keys; the `run` and `capture` skills it names by name and reads at `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md`, whoever wrote them | `resources/config.schema.json`, validated by `check.mjs` | Configuration is how a repository shapes a run without being able to weaken it. |
 
 ### Inbound
 

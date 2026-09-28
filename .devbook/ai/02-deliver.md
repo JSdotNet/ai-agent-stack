@@ -49,7 +49,7 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   here has been carried by a flow end to end, reporting into one of those surfaces.
 - **Limits** — a session loads the released `jsdotnet-devbook` marketplace from its GitHub
   clone, so a flow changed on a branch is not the one that runs here until it is released or
-  the working copy is enabled by path, which `start` does.
+  the working copy is enabled by path, which `run` does.
 
 ## Fan-Out
 

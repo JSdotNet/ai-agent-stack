@@ -10,7 +10,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 The engine materializes nothing. Everything it reads from a repository is either
 `.devbook/config.json` — the four engine-owned keys, which `devbook-config:init` writes — or
-a skill the repository owns and the engine names by name: `start` at `app.start`, `capture`
+a skill the repository owns and the engine names by name: `run` at `app.start`, `capture`
 inside Validation. Neither is a dependency; a flow that finds one absent does without and
 says so. So `delivery:init` records the engine, and this skill keeps the record current and
 releases what an earlier engine wrote.

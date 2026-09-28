@@ -48,7 +48,7 @@ const COMPONENTS = {
 // The order the reconcile list is run in, and it is not cosmetic: devbook-derived's update
 // refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
 // checks its targets against the plugins this repository enables, so it wants the settled
-// state. `devbook-procedures` sits before `delivery` so that a `start` or `capture` an older
+// state. `devbook-procedures` sits before `delivery` so that a `start` it moves to `run`, or a `capture` an older
 // engine seeded is adopted or replaced before the engine's update releases its claim on it,
 // and both sit before schedule because schedule's targets call those procedures. Anything not
 // named here follows, alphabetically.
@@ -367,7 +367,7 @@ function buildRepository(repoRoot) {
     const config = load('stack config', path);
     const legacyPath = join(repoRoot, '.github', 'ai-agent-stack.json');
     const legacy = existsSync(legacyPath) ? legacyPath : null;
-    // The flow context file is retired: its facts belong in the repository's `start` skill and
+    // The flow context file is retired: its facts belong in the repository's `run` recipe and
     // its QA depth in `policy.qa.depth`. Nothing reads either path; the report names a leftover
     // so the retirement is a named instruction rather than a file that silently stopped applying.
     const legacyFlowContext = ['.devbook', '.claude']
@@ -609,7 +609,7 @@ function render(model) {
         out.push('');
     }
     if (repo.legacyFlowContextPath) {
-        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`start\` skill at \`.agents/skills/start.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`extensions.app.start\` set to \`null\`. Move what it says and delete it.`);
+        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`run\` recipe at \`.claude/skills/run-<name>/SKILL.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`extensions.app.start\` set to \`null\`. Move what it says and delete it.`);
         out.push('');
     }
     for (const layer of repo.overlays.filter((l) => l.present)) {

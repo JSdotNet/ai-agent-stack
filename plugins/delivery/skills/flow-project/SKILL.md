@@ -52,10 +52,10 @@ gh repo create <org>/<name> --description "<description>" --private --clone
 - Run `devbook-config:init`. It decides which plugins the repository will use, writes the
   engine keys of `.devbook/config.json`, declares the default MCP servers in the
   repository's own MCP files, and hands each adopted component its own `init` — the one
-  for the devbook folders, and the one that seeds the repository's procedure skills for
-  `start`. A repository that already has the config runs `devbook-config:update` instead.
-- Fill the `start` skill's facts — the command, the entry points, the readiness signals, the
-  credential pointer — so later flows know how to start and validate this project. A
+  for the devbook folders, and the one that seeds the repository's procedure skills, `run` among them. A repository that already has the config runs `devbook-config:update` instead.
+- Record the `run` recipe — `/run-skill-generator` in Claude Code, the `run` seed elsewhere —
+  and fill its facts: the setup, the command, the entry points, the readiness signals, the
+  credential pointer, so later flows know how to start and validate this project. A
   repository with nothing to run binds `extensions.app.start` to `null` instead.
 
 **Agents:** the `implement` service
@@ -141,7 +141,7 @@ Update → Summary. That file defines them; change them there, for every flow.
 
 A new runnable scaffold, so Validation runs with capture: start the AppHost, confirm the
 dashboard and the service health endpoints are green — default `localhost:18888`, or the
-entry points Stage 2 declared in the `start` skill — confirm database connectivity,
+entry points Stage 2 declared in the `run` recipe — confirm database connectivity,
 and run Playwright smoke checks on the example service under the runtime monitor.
 
 Two expectations are specific to this scaffold: Build & Test compiles the AppHost, service,

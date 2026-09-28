@@ -86,8 +86,9 @@ it is not a bridge. Undeclared is the only position left, and an undeclared coup
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
 
 The dashed `delivery → devbook-procedures` edge is a different kind: the engine names two
-skills, `start` and `capture`, and the path `.agents/skills/<name>.md` they live at, and
-never the plugin that seeds them. A repository may write both by hand and the engine is none
+skills, `run` and `capture`, and the paths they live at — `.claude/skills/run-<name>/SKILL.md`
+for the recipe Claude Code's `run` follows, `.agents/skills/capture.md` — and never the plugin
+that seeds them. A repository may write both by hand and the engine is none
 the wiser; absent, a flow does without and says so. The seam is the skill name, which is why
 `devbook-procedures` can sit over `devbook` and the engine can stay capability-free — see
 [the plugin boundaries record](adr/plugin-boundaries.md).
@@ -224,7 +225,7 @@ flowchart TB
     subgraph repo["A consuming repository"]
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
-        sk[".agents/skills/ - the procedure bodies: start, show, capture, debug, estimate"]
+        sk[".agents/skills/ - the procedure bodies: show, capture, debug, estimate; run is a .claude/skills/run-* recipe"]
         sw[".claude/skills/ and .github/skills/ - one wrapper each, carrying the goal"]
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
@@ -257,7 +258,7 @@ The two trios are the same shape with the ownership reversed. A rule body is the
 host-neutral copy the install refreshes while it still hashes to a release — and its wrappers
 are ceremony. A procedure body is the repository's from the first edit onward, and its
 wrappers are where the plugin keeps the one thing it does own: the goal, refreshed on every
-upgrade, so `start` means the same across every repository while how it is done never does.
+upgrade, so `run` means the same across every repository while how it is done never does.
 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
 the four engine-owned keys and stops; each `components.<name>` stamp stays with the component
@@ -459,7 +460,7 @@ ignoring it, so a typo is an error rather than a silently absent setting.
 
 Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
 from `devbook`'s, `components.derived` from `devbook-derived`'s for the refresh script, its
-workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `start`,
+workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `run`,
 `show`, `capture`, and `debug` copies it seeds and the `adopted` list that selects them,
 `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
 materializes nothing — and `components.schedule` from `delivery-schedule`'s.
@@ -474,7 +475,7 @@ It sits beside the devbook chapter folders and is read by every host, which is t
 it left `.github/` — see [the decision](adr/configuration.md).
 Reading it is not adopting devbook: the engine reads that path with no devbook folder present.
 It is the only engine file in the folder: the runtime facts a run needs live in the
-repository's own `start` skill, not in a second file here — see
+repository's own `run` recipe, not in a second file here — see
 [the configuration record](adr/configuration.md).
 
 ## Schedule Plugin

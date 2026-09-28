@@ -12,7 +12,7 @@ the goal in the wrapper is not.
 
 ## Run it
 
-Invoke the `start` skill and reuse the instance it reports. Reproduce the symptom once, the
+Invoke the `run` skill and reuse the instance it reports. Reproduce the symptom once, the
 narrowest way that shows it — one request, one click, one command — and note the exact time.
 
 ## Observe
@@ -21,9 +21,9 @@ narrowest way that shows it — one request, one click, one command — and note
 
 | Signal | Where |
 | --- | --- |
-| Structured logs and traces | The Aspire dashboard `start` reports, or the Aspire MCP tools when the tool list has them |
+| Structured logs and traces | The Aspire dashboard `run` reports, or the Aspire MCP tools when the tool list has them |
 | Browser console and network | The browser tool's console and request tools |
-| Process output | The terminal `start` left running |
+| Process output | The terminal `run` left running |
 
 Read the window around the reproduction, not the whole log. Follow one request's trace end to
 end before reading a second. Quote the line or span that points at the cause.

@@ -133,7 +133,7 @@ stopping at the first match:
 There is deliberately **no repository-level model override**. Model choice is a personal cost
 and speed preference, not a property of the repository being worked on, and a committed
 override would silently change what every collaborator's runs cost. A repository that needs
-to influence a run does so through `.devbook/config.json` and its own `start` skill, which
+to influence a run does so through `.devbook/config.json` and its own `run` recipe, which
 set QA depth and runtime facts and never a model.
 
 None of the agents invoked by a flow pin their own `model`, so there is no

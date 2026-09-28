@@ -1,7 +1,7 @@
 # A procedure, in the repository
 
-`assets/skills/` holds five procedures every repository has and no plugin can write: **start**,
-how its application comes up; **show**, how the feature being built is put in front of a
+`assets/skills/` holds five procedures every repository has and no plugin can write: **run**,
+how its application is built and comes up; **show**, how the feature being built is put in front of a
 reviewer; **capture**, how evidence is taken; **debug**, how a cause is found inside the running
 application; **estimate**, how work is sized against the repository's own finished work. Each
 is repository-specific by nature — one product runs `aspire start`, the next `docker compose
@@ -58,10 +58,32 @@ The wrappers stay **managed**: the goal and the matching text are refreshed on e
 and everything that decides *what actually happens* stays the repository's. A repository that
 edits a wrapper anyway keeps it — reported, left alone, like any customized file.
 
+## `run`, the exception
+
+`run` has no `.agents/skills/run.md`. Claude Code ships its own `run` skill, which follows a
+project recipe at `.claude/skills/run-<name>/SKILL.md` that its `/run-skill-generator` records,
+so the body lives there and Claude Code's `run` is the Claude wrapper:
+
+```
+.claude/skills/run-<name>/SKILL.md     the procedure: the generator's recipe, or this seed
+  └── .github/skills/run/SKILL.md      goal → pointer, Copilot's twin
+```
+
+- **Where the generator is reachable** — Claude Code, the person typing `/run-skill-generator`
+  when the host does not let a skill invoke it — the recipe it writes is the body. Otherwise
+  `assets/skills/run.md` lands there, its `name` rendered `run-<id>`, `<id>` being `id` in
+  `.devbook/config.json`. Either way the body is the repository's from the moment it lands:
+  stamped `managed: false`, never written to again. Several `run-*` recipes — one per unit of a
+  monorepo — are each a body.
+- **The Copilot twin** is the wrapper above with `name: run`, the seed's `description` and
+  `goal`, and one pointer per body: ``Read `.claude/skills/run-<name>/SKILL.md` and follow it``,
+  saying which unit each launches when there are several. It stays managed.
+- **A caller names `run`** and gets Claude Code's skill or the twin, one name on both hosts.
+
 ## Which procedures, and when
 
 `components.devbook-procedures.adopted` in `.devbook/config.json` names them, without
-ceremony: a repository with nothing to start drops `start`, `show`, and `debug`; one that takes
+ceremony: a repository with nothing to start drops `run`, `show`, and `debug`; one that takes
 no evidence drops `capture` and `show`; `estimate` needs neither. `init` asks on a first run
 and `update` never re-asks what the stamp answers. None is a dependency of anything: a caller that names one of these skills
 and finds it absent does without and says so.

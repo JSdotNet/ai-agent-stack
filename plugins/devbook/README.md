@@ -396,7 +396,7 @@ overlay layers — now that every `install` is `init` and `update` and `check` i
 the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 `invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
 reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
-files by kind and takes the `#### Scenario:` cases off an `### Invariant:`.
+files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Scenario:` cases off an `### Invariant:`.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -485,11 +485,14 @@ rewrites every reference into them. The old names validate with a warning for on
 18 takes the `#### Scenario:` cases off an `### Invariant:` — it is a claim, its rejection
 code, and `Enforced at:`, proved by its `unit` test — so only a requirement is warned for
 having none, and a scenario an older invariant carries is tolerated. It titles the behaviour
-files by kind, `# Requirements` and `# Invariants`, and ships as `018-behaviour-titles`,
+files by kind, `# Requirements` and `# Invariants`, a `requirements.<name>.md` split by its
+feature, and ships as `018-behaviour-titles`,
 which retitles them; an old title still validates. 19 lets an `invariants` chapter pair with the
 `shared-value-objects` or `shared-enums` grouping as well, so a shared type's own rules sit in
 `domain.invariants.md` beside it; it only widens what `related` may name, and ships no
-migration. 20 gives `design/` its one `type`, `requirement`: a rule a component keeps or
+migration. 20 lets a repository declare its own `status` ladder in `.devbook/statuses.json`;
+a repository with no file validates as before, and it ships no migration. 21 gives `design/`
+its one `type`, `requirement`: a rule a component keeps or
 breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter,
 warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped, so it
 ships no migration.

@@ -44,13 +44,24 @@ nothing may present itself as ready for review before a person has looked.
 
 **An unattended run moves the stack forward, and never the scheduler.** Detection alone —
 `doctor` inside the daily validate, the plugin check inside the package update — left every
-upgrade as an issue someone had to turn into a session. A cloud session already loads the
-marketplace the repository's settings name, so the plugins it runs are the published ones,
-and `devbook-config:update` with the safe answer at each question is a draft pull request a
-person reviews rather than a session a person drives. Two steps stay a person's: installing a
-plugin on a machine, which no cloud session reaches, and `delivery-schedule:update`, which
-writes to the scheduler — a schedule is created or changed only from a person's own turn, so an
-unattended run that re-synced the catalog would be a schedule changing itself.
+upgrade as an issue someone had to turn into a session. A routine runs with the plugins
+installed on the machine, so `devbook-config:update` with the safe answer at each question is a draft pull request a
+person reviews rather than a session a person drives. Two steps stay a person's: installing or
+upgrading a plugin on the machine, and `delivery-schedule:update`, which writes to the
+scheduler — a schedule is created or changed only from a person's own turn, so an unattended
+run that re-synced the catalog would be a schedule changing itself.
+
+**A schedule is a local routine, never a cloud session.** A routine runs on the maintainer's
+machine, in the repository's main checkout, with the plugins installed there, and does its
+work in a fresh worktree of the base branch. The catalog was first written for cloud sessions,
+on the unverified assumption that one loads this marketplace from the repository's committed
+settings. On 2026-09-28 a cloud run of the Backlog issue sweep started with no plugin
+installed and stopped without its skill, while the local routines for another repository had
+been running their targets since 2026-09-26. So `delivery-schedule` creates through a local
+scheduler only, disables any cloud copy carrying the repository's name, and no longer writes
+the marketplace keys into a repository's committed settings. The cost is the machine: a
+routine fires only while it is on and the host app runs, and one due while it was closed runs
+on the next launch.
 
 **A role plugin holds no flow control.** The ported specialists each arrived with a mandatory
 approve-handoff sequence, session-spawning tools, and a plan-and-checkpoint loop of their own.
@@ -111,6 +122,11 @@ the handover ships no migration.
 - Fan-out or scheduling as skills inside the engine; the triggers outside and the procedures in.
 - The unattended stack update running `delivery-schedule:update` with the rest: a schedule
   would re-sync the scheduler that fires it, from no person's turn.
+- Cloud sessions as the schedule's runtime, beside or instead of local routines. A cloud clone
+  installs none of the marketplace's plugins, so the run cannot reach its skill; keeping both
+  would fire every schedule twice. A setup script that installs the plugins in the cloud
+  environment would make the environment, not the repository, the thing a schedule depends on,
+  and it is personal.
 - Keeping the specialists with their references, on the argument that an unresolvable reference
   degrades one stage.
 - The guide as a skill inside `devbook`, or as an L1 extension over it.
@@ -127,6 +143,7 @@ the handover ships no migration.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. |
 | 2026-09-26 | The weekly `devbook-update` schedule runs `devbook-config:update` unattended and lands a draft pull request; it installs no plugin and never runs `delivery-schedule:update`. |
 | 2026-09-26 | `devbook-procedures` seeds a fifth procedure, `estimate`: story points sized against the repository's own finished work, so a pace measured in points means the same across plans. Nothing depends on it; a caller that finds it absent sizes by its own rule and says so. |
 | 2026-09-21 | `fleet` is deleted: the issue sweep is a `delivery-schedule` entry point, sequential in one session, and nothing in the marketplace spawns a session. An unattended run closes an issue on high-confidence evidence of it being resolved, the one exception to *never close*; every pull request the sweep opens is a draft. |

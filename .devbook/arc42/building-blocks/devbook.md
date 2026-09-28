@@ -26,7 +26,8 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 
 Nine skills — six that own the convention in a repository, and three that cross the boundary
 between a chapter and the code implementing it, each over six chapter kinds — plus the rules
-`init` delivers, the tools it materializes, one workflow, and one hook. None of the
+`init` delivers, the tools it materializes, one workflow, one hook, and the one file a
+repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
 change belongs to the engine.
 
@@ -44,6 +45,7 @@ change belongs to the engine.
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
+| `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 ### init
 
@@ -344,6 +346,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | Every file carries a file-level block under its top-level heading | parse | untested |
 | `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A resting `status` is written by omitting the field, never as `active` | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| A block's `status` is held to the first `.devbook/statuses.json` rule matching its file and level, else to the built-in ladder; no rule makes `active` a rung, drops a decision rung, or widens a rating ladder | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/statuses.test.mjs` |
 | `status: approved` carries both `approved-by` and `approved-at`, and neither outlives it | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | An `approved-hash` or `accepted-hash` that does not match the chapter's content is a lapsed decision | parse | `unit:node:plugins/devbook/tools/devbook-meta/content-hash.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
@@ -365,7 +368,9 @@ Two enums are the chapter's own. **Chapter Status** is where the content stands:
 defines its own ladder — `domain/` uses `draft`, `proposed`, `active`, `deprecated` — and on
 `domain/`'s alone sit two decision rungs: `approved`, the chapter is right, and `accepted`
 above it, the built work satisfies it. The second stands on the first and keeps its record.
-The other four folders have neither: what those rungs decide is asked of the model. Three folders have a resting value written
+The other four folders have neither: what those rungs decide is asked of the model. Each ladder is a default a repository may replace
+with its own transitional rungs, never touching the resting value, the decision rungs, or a
+rating. Three folders have a resting value written
 by omitting the field; two make the field mandatory because there the value is a rating, and
 unrated is not the same as the lowest rung. **Chapter Type** is what kind of thing the chapter
 is: the classification that is never written into the heading. Three folders define a value

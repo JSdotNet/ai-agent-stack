@@ -90,8 +90,7 @@ record work this skill did not do.
 
 8. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
    model-selection file exist for the person running this. When neither does, say that the
-   first flow here runs at the team's defaults and asks for the scheduler's environment and
-   model every time, and offer to run `local` now. Their machine, their answer.
+   first flow here runs at the team's defaults, and offer to run `local` now. Their machine, their answer.
 
 This skill is the empty case only. Everything about moving an already-configured repository
 forward — version drift, migrations, the fan-out across components — belongs to

@@ -142,7 +142,8 @@ viewer that labels and sorts pages by title — the consumer's spec-manager does
 read. The consumer had already stopped following it, titling by kind and by subject. The folder
 names the context, so the title is spent on the page: `context.md` by the context, because the
 context is what it holds; every other base file by its kind; a split file by the chapter it
-holds; a page the convention does not name by its subject; `context-map.md` by the product as
+holds, a `requirements.<name>.md` included — titled by kind, every entry listed under
+`requirements.md` read `Requirements`; a page the convention does not name by its subject; `context-map.md` by the product as
 before. It ships no contract and no migration. A title is not an address — an anchor is a
 slug of a `##` heading and never of the `#` — and the check reads no title, so a file titled
 the old way validates and resolves exactly as before; retitling is editorial, done when the
@@ -295,6 +296,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 | Date | Change |
 | --- | --- |
 | 2026-09-28 | Each folder's `status` ladder is a built-in default. A repository declares its own transitional rungs per folder, file glob, and block level in `.devbook/statuses.json`, first matching rule wins; the resting value stays written by omission, `approved` and `accepted` stay `domain/`'s whatever the file says, and `tech/` and `ai/` may only narrow their rating ladder. A configuration error is reported once on the file. Contract 20, additive, no migration. |
+| 2026-09-28 | A `requirements.<name>.md` is titled by the feature it holds, like every other split, instead of `# Requirements`: under `requirements.md` in a menu every split read `Requirements`. `requirements.md` and the invariants subpages keep their kind. No contract; `018-behaviour-titles` now titles a split by its first `##` heading, so it no longer undoes the change. |
 | 2026-09-27 | An invariants chapter may pair with the `## Shared Value Objects` or `## Shared Enums` grouping, so a shared type's own rules sit in `domain.invariants.md` beside it instead of under an aggregate that uses it; owned entities and value objects keep their rules under their aggregate. Contract 19, additive, no migration. |
 | 2026-09-26 | A `domain/` file's title names what the page holds: `context.md` the context, every other base file its kind, a split file its chapter, an unnamed page its subject, `context-map.md` the product. The context-name title is no longer the rule. No contract, no migration: the check reads no title and an anchor never derives from one, so an old title validates. |
 | 2026-09-25 | An `### Invariant:` carries no `#### Scenario:` — a claim, its rejection code, and `Enforced at:`, proved by its `unit` test; a missing scenario warns on a requirement only, and one an older invariant carries is tolerated. `requirements.md` is titled `# Requirements` and an invariants subpage `# Invariants`. Contract 18, migration 018, which retitles. |

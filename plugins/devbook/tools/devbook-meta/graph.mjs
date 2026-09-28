@@ -119,7 +119,9 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // requirement is warned for having no `#### Scenario:`, and a scenario an older
 // invariant still carries is tolerated. `requirements.md` is titled
 // `# Requirements` and an invariants subpage `# Invariants`, so a menu listing
-// pages by title can tell them from the context's other pages. A file still
+// pages by title can tell them from the context's other pages; a
+// `requirements.<name>.md` split takes its feature's name, so the entries
+// under `requirements.md` differ. A file still
 // titled by its context validates; `migrations/018-behaviour-titles/`
 // retitles it, because reconcile never touches an authored file.
 //

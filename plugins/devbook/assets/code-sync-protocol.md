@@ -242,8 +242,17 @@ mistake the flag exists to prevent.
 
 `approved` and `accepted`, `domain/`'s two decision rungs, read as `active` in
 every column — they are `active` with a signature. The rows are about the
-chapter the run is aimed at; a change folder open against a chapter is not a
-status and has no row here.
+chapter the run is aimed at.
+
+A change open against that chapter sits on top of every row. It is open when a
+delta under `openspec/changes/<name>/devbook-delta/` — never `archive/` — sits at
+the chapter's file path and names the chapter's heading or one above it, per
+`devbook-changes.md`. **`capture-specs` never plans over it**, whatever the
+status: it reports the change by name beside what the code has, because the
+chapter's next content is already being decided in that change. What an open
+change means to `verify-change` and `apply-change` waits for the decision on
+what agreeing a change records: until then a change folder has no row for them,
+and both read the chapter as it stands.
 
 **Capture writes no status at all.** Finding an implementation is not agreement
 that the implementation is the intended model, and a capture pass produces a

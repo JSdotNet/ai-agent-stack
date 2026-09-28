@@ -248,6 +248,25 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   belongs to whatever else reads the file — a viewer's status picker — and is
   left alone.
 
+  The allowed values are folder-specific; see the `status` section
+  in `devbook-domain.md`,
+  `devbook-arc42.md`,
+  `devbook-tech.md`,
+  `devbook-design.md`, or
+  `devbook-ai.md` for the value set
+  that applies to the folder you're editing, unless `.devbook/statuses.json`
+  declares one for the block, as above. A file-level `status` reflects
+  the document as a whole and is set independently of its chapters' own
+  `status` values (e.g. a file can be `active` overall while one chapter
+  inside it is still `draft`).
+
+  A review in progress is never a field beside `status`: the chapter stays on
+  its transitional rung — a repository that wants the review visible declares a
+  rung for it in `.devbook/statuses.json` — and its open `annotation` fences say
+  what is still asked. Who owes the next move belongs to the pull request or
+  the tracker, not the chapter. `review`, `reviewer`, and `review-at` were
+  removed in contract 21 and are reported by name.
+
 
   On top of **`domain/`**'s ladder — and no other folder's — sit two decision
   rungs. The first is `approved`: a person has read this chapter and approved it. It is the decision the approval gate
@@ -326,38 +345,6 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   The three behave field for field like the approval three: written together,
   deleted together, reported when one is left behind, and off the moment the
   content changes.
-- **review** (optional) — where this chapter's review pass stands, on the way to
-  that decision: `requested` (waiting on the reviewer), `changes-requested`
-  (waiting on the author; at least one open annotation says why), or `cleared`
-  (waiting on nobody; no open annotation remains, and the chapter is ready for
-  the approval decision). Omitted means no review is running. The three states
-  are checked against the notes in the chapter body: `changes-requested` over no
-  open fence, or `cleared` over one, is a verdict written without its findings.
-- **reviewer** (optional) — who owes the next move: one handle, name, or role.
-  Never a list.
-- **review-at** (optional) — the day the current review state was written, in
-  `YYYY-MM-DD` form.
-
-  The three are written together or not at all, mirroring the approval triad so
-  a chapter reads the same way on its way to a decision as it does past one.
-  None of it is chapter content: a reader loading a chapter for context skips
-  the review fields the same way it skips an annotation fence, and only review
-  work — a review skill, a queue, the approval gate — reads them. Approval
-  deletes all three in the same change that writes the rung: an approved
-  chapter carries the decision, not the road to it. A finding is never a field
-  here; it is one `annotation` fence beside the passage it is about.
-
-  The allowed values are folder-specific; see the `status` section
-  in `devbook-domain.md`,
-  `devbook-arc42.md`,
-  `devbook-tech.md`,
-  `devbook-design.md`, or
-  `devbook-ai.md` for the value set
-  that applies to the folder you're editing, unless `.devbook/statuses.json`
-  declares one for the block, as above. A file-level `status` reflects
-  the document as a whole and is set independently of its chapters' own
-  `status` values (e.g. a file can be `active` overall while one chapter
-  inside it is still `draft`).
 - **type** (required where the folder defines a value set) — what kind of thing
   this chapter or file *is*: the classification that used to be written as a
   heading prefix. Like `status`, the allowed values are folder-specific and are

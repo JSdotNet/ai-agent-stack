@@ -136,7 +136,13 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT };
 // value, the decision rungs, and a required rating stay devbook's; a folder or a
 // block the file does not name takes the built-in ladder, so a repository with
 // no file validates exactly as under 19 and no migration is owed.
-export const CONTRACT_VERSION = 20;
+//
+// Version 21 removes the review triad — `review`, `reviewer`, `review-at`.
+// A review in progress is the chapter's `status` rung plus its open
+// annotation fences, and who owes the next move lives in the pull request
+// or the tracker. A leftover field is reported by name, and
+// `migrations/021-no-review-triad/` deletes it.
+export const CONTRACT_VERSION = 21;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

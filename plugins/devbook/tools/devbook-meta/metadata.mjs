@@ -110,17 +110,6 @@ const DECISION_FIELDS = [
 // their own approval gate.
 const CONTENT_HASH_PATTERN = /^sha256:[0-9a-f]{8}$/;
 
-// Where a chapter's review stands, who owes the next move, and since when. The
-// triad mirrors the approval triad on purpose — a chapter reads the same way on
-// its way to a decision as it does past one — and, like it, is devbook's
-// vocabulary written by the review workflow layered on top (the annotations decision). Each
-// state names who is waiting: `requested` the reviewer, `changes-requested`
-// the author, `cleared` nobody. The notes in the chapter body are the evidence
-// a state stands on, so the two are checked against each other below.
-const REVIEW_FIELD = "review";
-const REVIEW_STATES = ["requested", "changes-requested", "cleared"];
-const REVIEW_FIELDS = [REVIEW_FIELD, "reviewer", "review-at"];
-
 // The value a folder's content settles on, which is therefore *omitted* rather
 // than written. A folder listed here makes `status` optional: absence means the
 // resting value, and writing it out restates what absence already says.
@@ -291,7 +280,6 @@ const COMMON_OPTIONAL_FIELDS = [
     "roadmap",
     "date",
     "tests",
-    ...REVIEW_FIELDS,
 ];
 
 // A feature flag is a switch, so its `default` is one of two words. A setting's
@@ -434,6 +422,17 @@ const REMOVED_FIELDS = {
         "not what you want, give the documents a `number` or mark the directory's " +
         "entry point with `index: root`. See " +
         "devbook-chapter-metadata.md.",
+    // A review in progress is workflow state: the rung says the chapter is
+    // waiting, the open annotation fences say on what, and who owes the next
+    // move belongs to the pull request or the tracker. Contract 21.
+    ...Object.fromEntries(
+        ["review", "reviewer", "review-at"].map((field) => [
+            field,
+            "a review in progress is the chapter's `status` rung plus its open annotation " +
+                "fences, and who owes the next move lives in the pull request or the tracker. " +
+                "Run the `021-no-review-triad` migration, which deletes it.",
+        ])
+    ),
 };
 
 const FOLDER_EXTRA_FIELDS = {
@@ -1470,78 +1469,6 @@ function acceptanceIssues(meta, contentHash = null) {
 }
 
 /**
- * Lint the review record: `review`, `reviewer`, and `review-at`, written
- * together or not at all, against the open notes on the chapter.
- *
- * `openNotes` is how many unresolved annotation fences the chapter carries; the
- * fences are the evidence a verdict stands on, so `changes-requested` over none
- * and `cleared` over one are both a verdict written without its findings.
- * Review state never survives the decision: an approved chapter carries the
- * decision, not the road to it.
- */
-export function reviewIssues(meta, openNotes = 0) {
-    if (!meta) return [];
-    const issues = [];
-    const present = REVIEW_FIELDS.filter((field) => meta[field] != null);
-    if (!present.length) return issues;
-
-    for (const field of present) {
-        const raw = meta[field];
-        if (Array.isArray(raw) || String(raw).trim() === "") {
-            issues.push({
-                severity: "error",
-                message: `has \`${field}\` set to an empty or list value — a review names one state, one reviewer, and one day.`,
-            });
-        }
-    }
-
-    const missing = REVIEW_FIELDS.filter((field) => meta[field] == null);
-    if (missing.length) {
-        issues.push({
-            severity: "error",
-            message: `carries ${present.map((f) => `\`${f}\``).join(", ")} without ${missing.map((f) => `\`${f}\``).join(", ")} — the three are written together or not at all.`,
-        });
-    }
-
-    const state = meta[REVIEW_FIELD];
-    if (state != null && !REVIEW_STATES.includes(String(state))) {
-        issues.push({
-            severity: "error",
-            message: `has \`review\` "${state}" — one of ${REVIEW_STATES.map((s) => `\`${s}\``).join(", ")}.`,
-        });
-    }
-
-    if (meta["review-at"] != null && !DATE_PATTERN.test(String(meta["review-at"]))) {
-        issues.push({
-            severity: "error",
-            message: `has \`review-at\` "${meta["review-at"]}" — a review date is a single calendar day in \`YYYY-MM-DD\` form.`,
-        });
-    }
-
-    if (meta.status === APPROVED_STATUS || meta.status === ACCEPTED_STATUS) {
-        issues.push({
-            severity: "error",
-            message: `states \`status: ${meta.status}\` while carrying review state — the decision clears \`review\`, \`reviewer\`, and \`review-at\` in the same change, because the decision is the record.`,
-        });
-    }
-
-    if (state === "changes-requested" && openNotes === 0) {
-        issues.push({
-            severity: "error",
-            message: `states \`review: changes-requested\` with no open annotation — a verdict without its findings. Write the objections as fences, or set \`cleared\`.`,
-        });
-    }
-    if (state === "cleared" && openNotes > 0) {
-        issues.push({
-            severity: "error",
-            message: `states \`review: cleared\` over ${openNotes} open annotation${openNotes === 1 ? "" : "s"} — cleared means no open note remains. Resolve them, or set \`changes-requested\`.`,
-        });
-    }
-
-    return issues;
-}
-
-/**
  * Fields this block carries that the schema used to define and no longer does.
  *
  * Exported so the graph build reports them the same way it reports `typeIssues`
@@ -1689,15 +1616,11 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
     // question and never its parent's — the same rule the annotation grammar
     // states, applied here rather than re-derived.
     const openQuestions = new Map();
-    // How many open notes each chapter carries, keyed the same way, so the
-    // review state can be held to the findings it claims to stand on.
-    const openNotes = new Map();
     for (const note of parseAnnotations(markdown)) {
         const fields = note.fields ?? {};
         const kindOf = fields.kind ?? "comment";
         const statusOf = fields.status ?? "open";
         if (statusOf !== "open" || !note.chapter) continue;
-        openNotes.set(note.chapter.line, (openNotes.get(note.chapter.line) ?? 0) + 1);
         if (kindOf !== "question" || openQuestions.has(note.chapter.line)) continue;
         openQuestions.set(note.chapter.line, note.line);
     }
@@ -1936,12 +1859,6 @@ export function validateDocument(relPath, markdown, { ladder = null } = {}) {
             for (const issue of approvalIssues(chapter.meta, contentHash)) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }
-        }
-
-        // The review workflow writes into the chapter too, and its state is
-        // only consistent against the notes beside it.
-        for (const issue of reviewIssues(chapter.meta, openNotes.get(chapter.line) ?? 0)) {
-            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
         // An open question means the chapter is not agreed, so an approval

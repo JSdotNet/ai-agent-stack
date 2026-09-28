@@ -205,7 +205,7 @@ open says nothing is outstanding. Who owes the next move is not part of it — t
 request's or the tracker's, where a reassignment is not a content diff on a chapter whose text
 did not change.
 
-Until contract 20 the position was stored as devbook's `review`, `reviewer`, and `review-at`,
+Until contract 21 the position was stored as devbook's `review`, `reviewer`, and `review-at`,
 and the check held them against the fences. A stored copy of what the fences already say is a
 second record that can disagree with the first, and a review field beside `status` stated the
 chapter's stage twice ([the annotations record](../adr/annotations.md)).

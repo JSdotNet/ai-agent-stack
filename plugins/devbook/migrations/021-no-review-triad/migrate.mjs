@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 020-no-review-triad — see MIGRATION.md.
+// 021-no-review-triad — see MIGRATION.md.
 //
 //   node migrate.mjs --check   verify only; exit 1 while work remains
 //   node migrate.mjs           apply; a second run changes nothing
@@ -131,10 +131,10 @@ for (const folder of FOLDERS) {
     }
 }
 
-if (remaining === 0) report("020-no-review-triad: nothing to do");
+if (remaining === 0) report("021-no-review-triad: nothing to do");
 else if (!checkOnly) {
     report(
-        `020-no-review-triad: ${remaining} file(s) changed. \`status\` was left as it was — ` +
+        `021-no-review-triad: ${remaining} file(s) changed. \`status\` was left as it was — ` +
         "carry any review still pending into the pull request or the tracker.",
     );
 }

@@ -222,22 +222,50 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   Spell the absence by leaving the field out, never as `status: null` — same
   discipline as `issue: null`, and the reason is the same.
 
+  **Each folder's ladder is a built-in default.** A repository whose team
+  reviews differently declares its own in `.devbook/statuses.json`, and the
+  check validates against it:
+
+  ```json
+  { "folders": { "domain": { "rules": [
+    { "files": ["**/actors.md"], "scope": "file", "statuses": ["draft", "review", "ready"] },
+    { "files": ["**/domain.md", "**/domain.*.md"], "statuses": ["draft", "review", "ready", "deprecated"] }
+  ] } } }
+  ```
+
+  Rules are tried in order and the first whose `files` glob — relative to the
+  folder — and `scope` (`file` for the `#` block, `chapter`, or `any`, the
+  default) match a block decides it. A block no rule matches, and a folder the
+  file does not name, takes the built-in ladder. A rule lists the rungs a person
+  writes, and nothing else: never the resting value, which stays written by
+  omission; never `approved` or `accepted`, which devbook adds to every
+  `domain/` rule and keeps out of every other folder; and in `tech/` and `ai/`
+  only rungs of the rating ladder, never an empty list, because a rating is
+  always stated. An empty list elsewhere means the block carries no status.
+  Listing any of those is a configuration error, reported once on the file.
+  The check reads only `folders.<folder>.rules[].files`, `scope`, and
+  `statuses`; every other key, and every folder that is not a devbook folder,
+  belongs to whatever else reads the file — a viewer's status picker — and is
+  left alone.
+
   The allowed values are folder-specific; see the `status` section
   in `devbook-domain.md`,
   `devbook-arc42.md`,
   `devbook-tech.md`,
   `devbook-design.md`, or
   `devbook-ai.md` for the value set
-  that applies to the folder you're editing. A file-level `status` reflects
+  that applies to the folder you're editing, unless `.devbook/statuses.json`
+  declares one for the block, as above. A file-level `status` reflects
   the document as a whole and is set independently of its chapters' own
   `status` values (e.g. a file can be `active` overall while one chapter
   inside it is still `draft`).
 
   A review in progress is never a field beside `status`: the chapter stays on
-  its transitional rung, and its open `annotation` fences say what is still
-  asked. Who owes the next move belongs to the pull request or the tracker, not
-  the chapter. `review`, `reviewer`, and `review-at` were removed in contract 20
-  and are reported by name.
+  its transitional rung — a repository that wants the review visible declares a
+  rung for it in `.devbook/statuses.json` — and its open `annotation` fences say
+  what is still asked. Who owes the next move belongs to the pull request or
+  the tracker, not the chapter. `review`, `reviewer`, and `review-at` were
+  removed in contract 21 and are reported by name.
 
 
   On top of **`domain/`**'s ladder — and no other folder's — sit two decision

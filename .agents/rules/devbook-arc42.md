@@ -82,7 +82,9 @@ instructions.
   — do not add a second, duplicate block for the file.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. Architecture documentation describes a
-  standing decision/structure, not a task, so there is no `done`.
+  standing decision/structure, not a task, so there is no `done`. That is
+  the built-in ladder; a repository replaces its transitional rungs per file
+  in `.devbook/statuses.json`, per `devbook-chapter-metadata.md`.
 - **There is no `approved` or `accepted` rung here.** The two decision rungs
   are `domain/`'s alone — see `devbook-domain.md`. An architecture chapter
   records a standing structure, and the question those rungs answer is asked of

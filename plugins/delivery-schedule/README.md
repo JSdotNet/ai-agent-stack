@@ -9,6 +9,12 @@ One capability, two host names. Claude Code calls it **Routines**; the GitHub Co
 calls it **Automations**. This plugin says *schedule* and records both as aliases, so one
 catalog serves either host — the scheduler is resolved from the live tool list, never named.
 
+Every schedule is a **local routine**: the session runs on your machine, in the repository's
+main checkout, with the plugins you have installed there, and works in a fresh worktree of its
+own. Never a cloud session — a cloud session starts on a clone without this marketplace's
+plugins and cannot reach the skill it was scheduled to run. `delivery-schedule:update` disables
+any cloud copy it finds for the repository.
+
 ## Installation
 
 ```bash
@@ -107,9 +113,8 @@ the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 - **Close, with one exception.** An issue that high-confidence evidence — a commit, a file, a
   pull request, a sibling issue — shows already resolved, closed by the issue sweep with that
   evidence in the comment. Every other closure is a proposal in a brief, with the command.
-- **Carry anything personal into the repository.** The scheduler ids live in the scheduler;
-  the environment and the model are asked once and, if you say so, remembered under
-  `ext.schedule` in your own stack-config overlay, outside every clone. The stamp records
+- **Carry anything personal into the repository.** The scheduler ids, the checkout's path,
+  and the tools you approved live in the scheduler. The stamp records
   the selection and the cadence overrides, and nothing that would be wrong for the next
   person who opens the file.
 
@@ -121,18 +126,20 @@ Together they are one thing — work that runs with nobody watching — so they 
 stacked on the engine they call into. It is an L1 extension: it owns no flow, holds no gate,
 and adds no extension point.
 
-It is the one plugin here whose subject is a host capability — scheduled cloud sessions — and
+It is the one plugin here whose subject is a host capability — scheduled local routines — and
 that is a divergence from the rule that nothing in this marketplace names one, taken on purpose
 and recorded in `.devbook/arc42/adr/plugin-boundaries.md`. The catalog is host-neutral
 data; only the scheduler resolution knows which tool answers.
 
 ## Before the first schedule
 
-A cloud session loads this marketplace only if the repository's committed host settings enable
-it and the plugins a schedule requires. `delivery-schedule:init` and `delivery-schedule:update` own those two keys: it offers
-to write what is missing, and refuses to schedule what would start without its skill when
-you decline. The first run is still the proof: fire one with
-`schedule-run` and read it with `schedule-status` before trusting the cadence.
+A routine loads the plugins installed on this machine for the checkout, so install every
+plugin a schedule `requires` first: `delivery-schedule:update` skips a schedule whose plugin
+this session has not loaded, and names it. Run it from the repository's main checkout, never a
+worktree — the routine keeps the folder it was created from. The first run is the proof, and
+it is where the routine's tools are approved: fire one with `schedule-run` and read it with
+`schedule-status` before trusting the cadence. A local scheduler runs only while its host
+is running; a routine due while it was closed runs on the next launch.
 
 ## Checking the catalog
 

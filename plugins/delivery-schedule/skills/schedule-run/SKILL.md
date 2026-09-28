@@ -13,7 +13,7 @@ The scheduler and the identity rule are in `resources/schedule-catalog-contract.
 
 1. **Take the schedule name.** Without one, list the selection from `components.schedule` and
    ask.
-2. **Resolve the scheduler** from the live tool list. None: say it is fired from the host's
+2. **Resolve the local scheduler** from the live tool list, never a cloud one. None: say it is fired from the host's
    own page, and stop.
 3. **Find it**: `list`, matched on `<owner>/<repo> · <title>`. Not found: say so and point at
    `delivery-schedule:init`, or `delivery-schedule:update` where `components.schedule` exists.
@@ -24,4 +24,5 @@ The scheduler and the identity rule are in `resources/schedule-catalog-contract.
    scheduler has one, and report as `schedule-status` does in its step 5.
 
 A run fired this way is the same unattended session a schedule starts. It cannot ask this
-session anything, and it parks where a gate would be.
+session anything, and it parks where a gate would be; a tool it has not been approved for
+waits on the routine's own page.

@@ -1,5 +1,5 @@
 // Asserts that the review triad — `review`, `reviewer`, `review-at` — is gone
-// from the schema since contract 20. A review in progress is the chapter's
+// from the schema since contract 21. A review in progress is the chapter's
 // `status` rung plus its open annotation fences; who owes the next move is the
 // pull request's or the tracker's. A leftover field is reported by name, with
 // the migration that deletes it, in every folder.
@@ -31,7 +31,7 @@ const domain = (meta) =>
         );
     }
     check(
-        issues.some((i) => i.message.includes("020-no-review-triad")),
+        issues.some((i) => i.message.includes("021-no-review-triad")),
         "the report names the migration that deletes it",
         dump(issues)
     );

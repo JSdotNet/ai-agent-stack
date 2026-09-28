@@ -60,7 +60,7 @@ field means from one layer up. A stricter chapter gate would be a committed swit
 
 **Review state is not a field.** The triad — `review`, `reviewer`, `review-at` — lived in the
 `ext` namespace until 2026-09-17 and in devbook's schema after it, mirroring the approval
-record. Contract 20 removes it, on a request from Budgetbeheer, the one repository that used
+record. Contract 21 removes it, on a request from Budgetbeheer, the one repository that used
 the review pass in earnest. A chapter ready to read but not yet agreed is a rung on the status
 ladder, so a review field beside `status` said the chapter's stage twice: Budgetbeheer wrote
 `status: review` until adoption, the check rejected it, and the only spelling the check then
@@ -87,7 +87,7 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
   answer when someone first wants to annotate a rule.
 - `kind: flag` as a blocker, or a reviewer's choice of kind as a gate.
 - Review state in the `ext` namespace, and a collaboration plugin independent of devbook.
-- Review state as fields in devbook's schema — the triad, from 2026-09-17 to contract 20.
+- Review state as fields in devbook's schema — the triad, from 2026-09-17 to contract 21.
 
 ## History
 
@@ -96,7 +96,7 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
 
 | Date | Change |
 | --- | --- |
-| 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 20, migration `020-no-review-triad`. |
+| 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 21, migration `021-no-review-triad`. |
 | 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |
 | 2026-09-14 | `flag` is read by the gate: shown first, named as raised since the approval, never blocking. |
 | 2026-09-14 | The chapter gate is `devbook-collaboration:chapter-approve` and reads the chapter, not the index. |

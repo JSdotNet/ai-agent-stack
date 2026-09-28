@@ -1,7 +1,7 @@
-# 020 — no review triad
+# 021 — no review triad
 
 ```meta
-contractVersion: 20
+contractVersion: 21
 appliesTo: [domain, arc42, tech, design, ai]
 breaking: yes
 ```

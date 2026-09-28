@@ -199,8 +199,9 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc
 
 Also called: routine, automation.
 
-A trigger that fires a procedure the stack already ships, in a cloud session that starts with
-nothing but the repository: a cadence, a target skill, the plugins that skill needs, and a
+A trigger that fires a procedure the stack already ships, as a local routine: a session the
+host's scheduler starts on the maintainer's machine, in the repository's checkout, with no
+memory of a previous run. A cadence, a target skill, the plugins that skill needs, and a
 prompt self-contained enough to run it with nobody watching. A schedule is a trigger and never
 a procedure — the `schedule-*` entry point is what runs; the schedule is what asks.
 

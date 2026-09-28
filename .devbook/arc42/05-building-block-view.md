@@ -522,10 +522,9 @@ schedule can require.
 
 State splits by who it belongs to. The selection and any cadence override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
-`delivery-schedule:init` and `delivery-schedule:update` only. The environment, the model, and the scheduler ids are personal: the
-ids live in the scheduler, and matching by name is what makes writing them down unnecessary;
-the environment and the model may be remembered under `ext.schedule` in a machine's own
-[overlay](adr/configuration.md), never in the committed file.
+`delivery-schedule:init` and `delivery-schedule:update` only. The scheduler ids, the checkout's path, and the tools a routine
+was approved for are personal and live in the scheduler — every schedule is a local routine on
+one machine — and matching by name is what makes writing them down unnecessary.
 
 ## Asset Kinds
 

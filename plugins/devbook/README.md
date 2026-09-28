@@ -395,7 +395,7 @@ the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 `invariants.<name>.md` into the invariants subpage of their domain page and rewrites every
 reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
 files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Scenario:` cases
-off an `### Invariant:`; the eighth is `020-no-review-triad`, which deletes `review`,
+off an `### Invariant:`; the eighth is `021-no-review-triad`, which deletes `review`,
 `reviewer`, and `review-at` from every `meta` block and reports the review state it took off.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
@@ -432,7 +432,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **20**, covering the metadata schema a repository authors
+One number, currently **21**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -490,10 +490,13 @@ feature, and ships as `018-behaviour-titles`,
 which retitles them; an old title still validates. 19 lets an `invariants` chapter pair with the
 `shared-value-objects` or `shared-enums` grouping as well, so a shared type's own rules sit in
 `domain.invariants.md` beside it; it only widens what `related` may name, and ships no
-migration. 20 removes the review triad — `review`, `reviewer`, `review-at` — from every
-folder: a review in progress is the chapter's rung plus its open annotation fences, and who owes the
+migration. 20 lets a repository declare its own `status` ladder per folder, file glob, and
+block level in `.devbook/statuses.json`; a folder or block the file does not name takes the
+built-in ladder, so a repository without the file validates as before and no migration is
+owed. 21 removes the review triad — `review`, `reviewer`, `review-at` — from every folder: a
+review in progress is the chapter's rung plus its open annotation fences, and who owes the
 next move is the pull request's or the tracker's. A leftover field is an error naming the
-migration, and `020-no-review-triad` deletes it.
+migration, and `021-no-review-triad` deletes it.
 
 ## Folder structure
 

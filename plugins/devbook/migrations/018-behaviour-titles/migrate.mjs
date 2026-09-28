@@ -6,8 +6,10 @@
 //   node migrate.mjs --root ../other-repo
 //
 // Idempotent by construction: the shape that must not be present is a
-// behaviour file whose `#` title is not its kind. Once every one reads
-// `# Requirements` or `# Invariants` the migration has nothing to see.
+// behaviour file whose `#` title is not the one it takes. Once
+// `requirements.md` reads `# Requirements`, every invariants subpage
+// `# Invariants`, and every `requirements.<name>.md` the name of the feature
+// it holds, the migration has nothing to see.
 
 import { readFile, writeFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";
@@ -19,10 +21,30 @@ const ROOT = path.resolve(rootIndex !== -1 ? args[rootIndex + 1] : process.cwd()
 
 const DOMAIN = ".devbook/domain";
 
-/** The title a behaviour file takes, or null for every other file. */
-function titleFor(name) {
-    if (/^requirements(?:\.[^.]+)?\.md$/.test(name)) return "Requirements";
-    if (/^domain(?:\.[^.]+)?\.invariants\.md$/.test(name)) return "Invariants";
+/** Whether a file is one of the behaviour files this migration titles. */
+function isBehaviourFile(name) {
+    return /^requirements(?:\.[^.]+)?\.md$/.test(name) || /^domain(?:\.[^.]+)?\.invariants\.md$/.test(name);
+}
+
+/**
+ * The title a behaviour file takes. A `requirements.<name>.md` is a split and
+ * takes its feature's name — its first `##` heading — so the entries listed
+ * under `requirements.md` differ; one with no `##` heading gets null and is
+ * left alone.
+ */
+function titleFor(name, text) {
+    if (name === "requirements.md") return "Requirements";
+    if (name.startsWith("requirements.")) return firstHeading(text, "## ");
+    return "Invariants";
+}
+
+/** The text of the first heading outside a fence that starts with `marker`, or null. */
+function firstHeading(text, marker) {
+    let inFence = false;
+    for (const line of text.split("\n")) {
+        if (line.startsWith("```")) inFence = !inFence;
+        else if (!inFence && line.startsWith(marker)) return line.slice(marker.length).trim();
+    }
     return null;
 }
 
@@ -57,14 +79,15 @@ if (await exists(DOMAIN)) {
         if (!entry.isDirectory() || entry.name.startsWith("_")) continue;
         const context = path.posix.join(DOMAIN, entry.name);
         for (const name of (await readdir(path.join(ROOT, context))).sort()) {
-            const title = titleFor(name);
-            if (!title) continue;
+            if (!isBehaviourFile(name)) continue;
             const file = path.posix.join(context, name);
             // Files are read as LF and written back with the line ending they
             // had, so a CRLF checkout is migrated without a whole-file diff.
             const raw = await readFile(path.join(ROOT, file), "utf8");
             const eol = raw.includes("\r\n") ? "\r\n" : "\n";
             const text = raw.replace(/\r\n/g, "\n");
+            const title = titleFor(name, text);
+            if (!title) continue;
             const next = retitle(text, title);
             if (next === null || next === text) continue;
             remaining++;

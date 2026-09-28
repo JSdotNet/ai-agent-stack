@@ -12,7 +12,8 @@ A bounded context's behaviour files are titled by what they hold, not by the con
 
 | File | Title |
 | --- | --- |
-| `requirements.md`, `requirements.<name>.md` | `# Requirements` |
+| `requirements.md` | `# Requirements` |
+| `requirements.<name>.md` | the feature it holds: its first `##` heading |
 | `domain.invariants.md`, `domain.<name>.invariants.md` | `# Invariants` |
 
 The script rewrites the `#` title of each one that says anything else. Every other `domain/`
@@ -27,7 +28,8 @@ scenarios: one an older invariant carries stays, and the checker no longer asks 
 
 A menu that lists pages by title showed the context name three times — the context, its
 requirements, its invariants — with nothing to tell them apart. The folder already names the
-context. Given/When/Then under an invariant restated the claim in event terms, and the unit
+context. A `requirements.<name>.md` lists under `requirements.md`, so it takes its feature's
+name: titled by kind, every entry there read `Requirements`. Given/When/Then under an invariant restated the claim in event terms, and the unit
 test already names the case. The record is `.devbook/arc42/adr/chapter-schema.md` in the
 marketplace.
 
@@ -43,7 +45,8 @@ never rewrites an authored chapter, so without it the old titles would stay.
 node migrate.mjs --check
 ```
 
-`--check` exits `1` while a behaviour file carries another title and `0` when none does. It
+`--check` exits `1` while a behaviour file carries another title — a split an earlier run of
+this script titled `# Requirements` included — and `0` when none does. It
 writes nothing. Drop the flag to apply. Running it twice changes nothing. Both forms take
 `--root <path>`, defaulting to the working directory.
 
@@ -51,5 +54,5 @@ writes nothing. Drop the flag to apply. Running it twice changes nothing. Both f
 
 It reads each context folder under `.devbook/domain/`, finds the four file shapes above, and
 replaces the first `#` heading outside a fence. It writes each file back with the line endings
-it had. It skips a file with no `#` title, the legacy `invariants.md` that
+it had. It skips a file with no `#` title, a `requirements.<name>.md` with no `##` heading, the legacy `invariants.md` that
 `017-invariants-under-domain` moves, and `_meta/`. It never removes a scenario.

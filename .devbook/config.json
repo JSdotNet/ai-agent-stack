@@ -46,18 +46,18 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.9.0",
-      "contractVersion": 18,
+      "pluginVersion": "1.10.0",
+      "contractVersion": 19,
       "adopted": ["arc42", "tech", "design", "ai"],
       "materialized": {
         ".agents/rules/devbook-ai.md": {
-          "from": "1.8.0",
-          "hash": "sha256:0c149deefa37aaee2ebe5ffbbc4a9cca051f840fbf3ebc6efc798a801065875f",
+          "from": "1.10.0",
+          "hash": "sha256:0e0cc41d517438b94629527bf23919db9a6ebbacbb32191a7f5eca1e85adcd1d",
           "managed": true
         },
         ".agents/rules/devbook-annotations.md": {
-          "from": "1.8.0",
-          "hash": "sha256:00895fbb2be30d3af877b568d3ec6d7bd98a80bddf91d3883a330e576b781136",
+          "from": "1.10.0",
+          "hash": "sha256:d1979bf1d643fc3a18013db130fb1ca0f275ffe0fe9754caa72ebfa4092e18c5",
           "managed": true
         },
         ".agents/rules/devbook-arc42.md": {
@@ -66,23 +66,23 @@
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.9.0",
-          "hash": "sha256:40b2f26ef9dbb98b929934996090653cd639321b6fed3dbc25a0cffd165bce7c",
+          "from": "1.10.0",
+          "hash": "sha256:7e787ac1dd6d1e1f39a12884615c75492e86f4e09da3f907e064652e674325c4",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
-          "from": "1.8.0",
-          "hash": "sha256:bf7bfee2700a8b1f57f649dfe4a5c3fb56556ef81101b14bbae709f8660ad4ef",
+          "from": "1.10.0",
+          "hash": "sha256:335f531e791065c6b53aa3c48fbd7431e8518d32e7c5a479d731d97638253830",
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
-          "from": "1.8.0",
-          "hash": "sha256:4477a7268cd6e7039db1ae1b505e5067b58e3b49ade443be77ece7918457f2b0",
+          "from": "1.10.0",
+          "hash": "sha256:b7bd0529ae7182a70e3af9f9b89f7eff908bf245bb17ca1ca5423cd8b80a6600",
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
-          "from": "1.8.0",
-          "hash": "sha256:43ae3cf30c12cf35a599f6c37b37b6b3a3156ba90b1d7a2b3df4f927714e48ee",
+          "from": "1.10.0",
+          "hash": "sha256:3cab462825249c06fa4dc01d8089bcdbcbc956fce19d30aad511b83d14b026eb",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
@@ -121,13 +121,13 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.9.0",
-          "hash": "sha256:2b9245f60580b7e9bd374ad9c2a05593606dacaeab75c5b48b90e688cc50dc50",
+          "from": "1.10.0",
+          "hash": "sha256:955f222cce49b875b26183318483df2fde26ff5325558addf896abf7ba8fdc8d",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
-          "from": "1.8.0",
-          "hash": "sha256:4f2c6639b00be75e38556639321a68133c12d76e828fa425a6fc0c0056bb0ad8",
+          "from": "1.10.0",
+          "hash": "sha256:516d3085d0036802d5592773dfb4d81778a0c30b486972c1cfa30b37c3416c49",
           "managed": true
         },
         ".github/instructions/devbook-ai.instructions.md": {
@@ -187,11 +187,11 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.9.0",
+      "pluginVersion": "1.10.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
-          "from": "1.9.0",
-          "hash": "sha256:4344c2e9f33ab4e9d953d4dc1db739b223fe6c070152b54f28c9b25b12bb056e",
+          "from": "1.10.0",
+          "hash": "sha256:a15c2e35c144bda1ff8cd651dd46d9daa7a7a2f16d5edaab5d003b7eefef030d",
           "managed": true
         },
         ".claude/rules/devbook-derived-artifacts.md": {
@@ -227,7 +227,7 @@
       }
     },
     "devbook-procedures": {
-      "pluginVersion": "1.9.0",
+      "pluginVersion": "1.10.0",
       "adopted": ["start", "show", "capture", "debug"],
       "materialized": {
         ".agents/skills/capture.md": {
@@ -293,7 +293,7 @@
       }
     },
     "delivery": {
-      "pluginVersion": "1.9.0"
+      "pluginVersion": "1.10.0"
     },
     "schedule": {
       "pluginVersion": "1.9.0",

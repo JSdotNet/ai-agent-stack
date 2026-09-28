@@ -80,8 +80,9 @@ The sortable list SHALL let every item be moved without a pointer.
 
 #### Scenario: Move an item down
 
-- **WHEN** an item has focus and the person presses Alt+ArrowDown
-- **THEN** the item moves one place down and keeps focus
+- **Given** an item that is not the last one has focus
+- **When** the person presses Alt+ArrowDown
+- **Then** the item moves one place down and keeps focus
 `;
 
 const clean = validateDocument(".devbook/design/component-libraries.md", component("e2e:playwright:tests/sortable.spec.ts"));

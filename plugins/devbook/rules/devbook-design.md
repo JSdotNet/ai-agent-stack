@@ -119,7 +119,8 @@ The sortable list SHALL let every item be moved without a pointer.
 
 #### Scenario: Move an item down
 
-- **When** an item has focus and the person presses Alt+ArrowDown
+- **Given** an item that is not the last one has focus
+- **When** the person presses Alt+ArrowDown
 - **Then** the item moves one place down and keeps focus
 ```
 

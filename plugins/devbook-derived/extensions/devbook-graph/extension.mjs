@@ -46,7 +46,9 @@ async function loadChecker() {
         }
         const mod = (name) => import(pathToFileURL(path.join(dir, name)).href);
         const [graph, outline, metadata] = await Promise.all([mod("graph.mjs"), mod("outline.mjs"), mod("metadata.mjs")]);
-        return { dir, graph, outline, metadata };
+        // A checker older than contract 20 has no statuses.mjs; its lint uses the built-in ladders.
+        const statuses = await mod("statuses.mjs").catch(() => null);
+        return { dir, graph, outline, metadata, statuses };
     }
     throw new Error(
         "devbook-graph: devbook's checker is not installed — none of " +
@@ -59,6 +61,13 @@ const checker = await loadChecker();
 const { buildGraph, buildGraphDocument, SCOPES, REPO_SCOPE, resolveScope: resolveKnownScope } = checker.graph;
 const { buildOutlineDocument } = checker.outline;
 const { parseDocument, validateDocument, folderKindForPath, restingStatusFor, testCommand, DEVBOOK_FOLDER_NAMES } = checker.metadata;
+
+// The lint reads the repository's own status ladder, as the check does, re-read on
+// every call so an edit to .devbook/statuses.json shows without a restart.
+async function lint(relPath, raw) {
+    const ladder = checker.statuses ? (await checker.statuses.loadStatusLadder(REPO_ROOT)).ladder : null;
+    return validateDocument(relPath, raw, { ladder });
+}
 
 // One local HTTP server + current document path per open canvas instance.
 const instances = new Map();
@@ -105,7 +114,7 @@ async function buildDocumentPayload(state) {
     if (!state.relPath) return null;
     const raw = await readFile(state.absolutePath, "utf8");
     const { fileTitle, fileMeta, chapters } = parseDocument(raw);
-    const issues = validateDocument(state.relPath, raw);
+    const issues = await lint(state.relPath, raw);
     // The folder's resting status travels with the payload so the page can
     // badge a block that omits `status` with the state it actually has. The
     // page cannot derive it: it sees a path, not the schema.
@@ -334,7 +343,7 @@ const session = await joinSession({
                             throw new Error("No document is open on this canvas instance.");
                         }
                         const raw = await readFile(entry.state.absolutePath, "utf8");
-                        const issues = validateDocument(entry.state.relPath, raw);
+                        const issues = await lint(entry.state.relPath, raw);
                         return { path: entry.state.relPath, issues };
                     },
                 },

@@ -461,7 +461,9 @@ instructions.
 - The metadata block's `status` field uses `draft`, `proposed`, `active`, or
   `deprecated` in this folder. This folder describes the current (or
   agreed-future) model, not a task queue, so there is no `done`: `active`
-  means "this is the current model", `deprecated` means superseded.
+  means "this is the current model", `deprecated` means superseded. That is
+  the built-in ladder; a repository replaces its transitional rungs per file
+  in `.devbook/statuses.json`, per `devbook-chapter-metadata.md`.
 - On top of that ladder sit the two decision rungs, defined once in
   `devbook-chapter-metadata.md` and belonging to **this folder only**:
   `approved`, a person agreed this chapter, recorded with `approved-by` and

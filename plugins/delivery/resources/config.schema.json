@@ -73,6 +73,10 @@
             "pr-lane": { "$ref": "#/$defs/nullableString" }
           }
         },
+        "openspec.grill": {
+          "description": "The skill that interrogates an idea before a change is proposed, as plugin:skill. The engine never reads it: the change lane's own skills do. null means deliberately none, and explore runs alone. May be set per machine in an overlay.",
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/providerId" }]
+        },
         "delivery.mcp": {
           "description": "Which MCP servers each flow extension point uses, by the server id the repository's own MCP configuration declares. A stage resolves the servers of the point it serves from the live tool list; a server that does not answer costs that stage its grounding, never the run. An absent point takes the engine default; null means deliberately none. A server is never a plugin dependency.",
           "type": "object",

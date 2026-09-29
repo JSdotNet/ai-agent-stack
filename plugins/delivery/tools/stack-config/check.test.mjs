@@ -188,6 +188,13 @@ test('a tracker may be a plugin:skill provider in provider-id shape', () => {
     assert.equal(check({ bindings: { 'delivery.tracker': { provider: 'Your:Skill' } } }).length, 1);
 });
 
+test('the grill binding takes one provider id or null, never a list', () => {
+    assert.deepEqual(check({ bindings: { 'openspec.grill': 'your-agents:grill-me' } }), []);
+    assert.deepEqual(check({ bindings: { 'openspec.grill': null } }), []);
+    assert.equal(check({ bindings: { 'openspec.grill': ['your-agents:grill-me'] } }).length, 1);
+    assert.equal(check({ bindings: { 'openspec.gril': 'your-agents:grill-me' } }).length, 1);
+});
+
 test('a surface preference is an ordered list of delivery-surface-* server names', () => {
     assert.deepEqual(check({ bindings: { 'delivery.surface': ['delivery-surface-backlog', 'delivery-surface-dashboard'] } }), []);
     assert.deepEqual(check({ bindings: { 'delivery.surface': [] } }), []);

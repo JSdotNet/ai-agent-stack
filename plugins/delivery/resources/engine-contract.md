@@ -358,6 +358,10 @@ dependencies: one missing specialist must not demote every skill that names it.
   names no server of its own beyond those defaults, and no server is ever a dependency;
   `resources/mcp-template.json` and `resources/mcp-vscode-template.json` declare the
   defaults in each host's shape for a repository to copy.
+- **Grill.** `bindings["openspec.grill"]` names the skill that interrogates an idea before a
+  change is proposed, as `plugin:skill`, or `null` for none. The engine never reads it; it is
+  carried here so the change lane's skills find it in the same effective configuration, and
+  so a machine may bind its own in an overlay.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   validation, so it binds as the `implement` and `validate` services above rather than as an
   advisor a stage delegates a question to.

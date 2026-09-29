@@ -7,8 +7,9 @@ description: 'Keep a change''s tasks.md as its work items — read a step, set i
 
 Open the reply with `devbook-openspec@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-A work item is one step: `<change>#step-<N>`, the `## Step N — title` block in
-`openspec/changes/<change>/tasks.md`. The lines under a step heading are
+A work item is a part of a change: `<change>` is its proposal, `<change>#step-<N>` the
+`## Step N — title` block in `openspec/changes/<change>/tasks.md`, and `<change>#close` its
+acceptance and archive. The lines under a step heading are
 `../../rules/devbook-openspec-change.md`'s — `delivers:`, `owner: me`, `branch:`, `PR:`, then
 the tasks. Three operations; anything else — find, create, link — is not this tracker's, and
 the caller takes its unbound path.
@@ -27,8 +28,12 @@ not `done`. Read the pull request's state through whatever the host exposes for 
 GitHub CLI, a connector — and say so when none answers: the state is then unknown, never
 `done`.
 
-- **`read_item`** — the step's title, its `delivers:` and `owner`, its tasks with their ticks,
-  its state, and the change's proposal status. A step that does not exist is an error, named.
+- **`read_item`** — for every item, `change`, `part` (`proposal`, `step` with its number, or
+  `close`), and `workflow`: the proposal's `Workflow:` line, else
+  `components.openspec.workflow`, else `single-branch`. For a step, also its title,
+  `delivers:` and `owner`, its tasks with their ticks, its state, and the proposal's status.
+  Under `proposal-first` the proposal's state is read the same way off `change/<change>`'s
+  pull request. An item that does not exist is an error, named.
 - **`update_item`** — given a state and the tasks the run completed: write `branch:` when the
   run starts the step and `PR:` when its pull request opens, and tick the completed tasks.
   Edit those lines only, on the step's own branch, so the ticks reach `main` with the merge.

@@ -24,8 +24,10 @@ gives. Absent or outside it, print `npm install -g @fission-ai/openspec@latest` 
 install it. Every CLI call runs from the repository root.
 
 **Ask**, before writing anything: which hosts OpenSpec installs its skills for — its `--tools`
-list, `claude,github-copilot` by default — and whether this repository allows a Step 0
-prototype. Both are the repository's and go in the stamp. Whether to send OpenSpec's anonymous
+list, `claude,github-copilot` by default — whether this repository allows a Step 0
+prototype, and which git workflow a change runs in by default: `single-branch`, one branch and
+one pull request, or `proposal-first`, the proposal and every step each its own pull request.
+All three are the repository's and go in the stamp. Whether to send OpenSpec's anonymous
 usage statistics is this machine's alone: read `ext["devbook-openspec"].telemetry` from the
 stack-config overlay's user layer, ask only when it is absent, and write the answer there, never
 to the repository. Run every CLI call with `OPENSPEC_TELEMETRY=0` when the answer is no.
@@ -47,11 +49,12 @@ not where this repository's behaviour lives, and `archive` recreates it empty, w
 1. **Plan.** One table of the paths above, `create` or `skip-customized`, and write nothing.
 2. **Materialize** in the table's order, then delete `openspec/specs/`.
 3. **Stamp** `components.openspec`: `pluginVersion`, `cli` (the range checked), `tools`,
-   `prototype`, and `materialized`, each entry with `from`, `hash`, and `managed`.
+   `prototype`, `workflow`, and `materialized`, each entry with `from`, `hash`, and `managed`.
 4. **Verify.** `openspec schema validate devbook`, `openspec schema which devbook` answering
    `Source: project`, and `node .devbook/_tools/devbook-meta/build.mjs --check`. A failing check
    is reported as failing, never as initialized.
 5. **Report** what landed and what the engine binds — `"spec": "devbook-openspec:spec"` and
-   `bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }` — which are the
-   engine's keys to write, not this skill's. Offer `devbook-openspec:onboard`, and leave the
+   `bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`, and the
+   replan chore `"flow.start": [{ "run": "devbook-openspec:status --replan", "on-failure":
+   "required" }]` — which are the engine's keys to write, not this skill's. Offer `devbook-openspec:onboard`, and leave the
    commit to the person.

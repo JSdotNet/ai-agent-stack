@@ -8,7 +8,8 @@ and configures OpenSpec so its skills write devbook changes, and never copies on
 
 An L1 extension: it depends on `devbook` and nothing else. The engine appears only as provider
 strings a repository binds in `.devbook/config.json` — `"spec": "devbook-openspec:spec"` and
-`bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`; without them,
+`bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`, and
+`"flow.start": [{ "run": "devbook-openspec:status --replan", "on-failure": "required" }]`; without them,
 OpenSpec's `/opsx:apply` builds each step itself.
 
 ## Installation
@@ -37,7 +38,7 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 | `update` | Checks the CLI against the stamped range, runs `openspec update`, replaces every managed file that still hashes to what landed, and re-stamps. Refused where no stamp exists |
 | `spec` | The provider for an engine's `spec` point: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change below `approved` or whose approval has lapsed |
 | `tracker` | The provider for an engine's tracker: `tasks.md` as the work items, with `read_item`, `update_item`, and `comment`, and a step's state — `open`, `in progress`, `in review`, `done` — read off its `branch:` and `PR:` lines and the pull request |
-| `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. Writes nothing |
+| `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. With `--replan`, the engine's `flow.start` chore: re-checks the deltas, the open steps, and the related chapters against `main` and fails on any flag. Writes nothing |
 | `archive` | Checks both gates, merges every delta with `delta.mjs --apply --no-move`, then lets `openspec archive` move the folder |
 | `onboard` | Walks a person through a first real change, one move at a time |
 
@@ -62,7 +63,8 @@ openspec/
 
 `components.openspec` in `.devbook/config.json`: `pluginVersion`, `cli` (the range the CLI is
 checked against), `tools` (the hosts `openspec init` set up), `prototype` (whether a Step 0
-prototype is allowed), and `materialized`, per devbook's `assets/reconcile-protocol.md`.
+prototype is allowed), `workflow` (`single-branch` or `proposal-first`, the git workflow a
+change runs in unless its proposal's `Workflow:` line says otherwise), and `materialized`, per devbook's `assets/reconcile-protocol.md`.
 Payload-only: no contract version and no migration ledger. Whether OpenSpec may send usage
 statistics is one machine's answer and lives in the stack-config overlay as
 `ext["devbook-openspec"].telemetry`, never in the stamp.

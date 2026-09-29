@@ -1,7 +1,6 @@
 ---
 name: schedule-issue-sweep
 description: 'The unattended issue sweep: classify every open issue nobody has classified yet in the repository''s own labels, close the ones high-confidence evidence shows already resolved, resolve up to N of the rest one at a time — each on its own branch, each landing as a draft pull request — and publish one brief of what was labelled, closed, opened, and left for a person. Also runnable by hand; the weekday issue-sweep schedule''s target. At maxResolve 0 it is the triage alone.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Issue Sweep

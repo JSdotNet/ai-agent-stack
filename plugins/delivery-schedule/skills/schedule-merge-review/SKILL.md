@@ -1,7 +1,6 @@
 ---
 name: schedule-merge-review
 description: 'Review every open pull request that is waiting on a reviewer: run the code review checklist over its diff, read its checks and its distance from the base branch, and post one review comment per pull request with the findings and a merge verdict. Never approves, never merges, never pushes. Idempotent per head commit, so a daily run re-reviews only what changed.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Merge Review

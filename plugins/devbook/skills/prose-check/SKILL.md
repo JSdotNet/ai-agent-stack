@@ -1,6 +1,6 @@
 ---
 name: prose-check
-description: 'Read every adopted devbook folder and report the prose that does not earn its lines — a hedge in a sentence stating a fact, a paragraph restating its heading, a closing summary repeating the body, a term defined a second time outside the ubiquitous language, a name in prose that no longer exists in the tree — beside what devbook:validate reports about structure. Writes nothing: the report is the output, and an edit is a person''s, through the folder''s flow. Use when: tightening chapters before a review, finding what a fold or rename left behind in prose, or on a cadence. Triggers on: "check the chapters'' prose", "what is stale in the devbook", "tighten the chapters", "prose check", "devbook prose".'
+description: 'Read every adopted devbook folder and report the prose that does not earn its lines or does not read — a hedge in a sentence stating a fact, a paragraph restating its heading, a closing summary repeating the body, a term defined a second time outside the ubiquitous language, a name in prose that no longer exists in the tree, fragments chained with dashes, an overlong sentence, a coined name nobody defined, a sequence or state machine told in prose with no diagram — beside what devbook:validate reports about structure. Writes nothing: the report is the output, and an edit is a person''s, through the folder''s flow. Use when: tightening chapters before a review, finding what a fold or rename left behind in prose, a chapter is hard to read, or on a cadence. Triggers on: "check the chapters'' prose", "what is stale in the devbook", "tighten the chapters", "prose check", "devbook prose", "is the devbook readable", "where is a diagram missing".'
 ---
 
 # prose check
@@ -10,7 +10,8 @@ Open the reply with `devbook@<version>`, `version` read from `../../.claude-plug
 ## Purpose
 
 `devbook:validate` asks whether the Markdown satisfies the schema. This asks whether the prose
-earns its lines, and answers with a report and nothing else. A chapter is content, not
+earns its lines and reads as `devbook-writing.md` asks, and answers with a report and
+nothing else. A chapter is content, not
 instruction, so the standard here is narrower than an instruction tightening: a definition,
 an invariant table, a record of a decision as it was taken all stay — only prose that says
 nothing a reader needs, or names something the tree no longer has, is a finding.
@@ -47,7 +48,7 @@ standard, and a class stated by half reports the wrong sentence.
    set aside for step 4, and the names a chapter can point at: every skill folder, plugin,
    rule, and path the repository ships, so step 4 can test a name against the tree.
 
-3. **Read each chapter with its folder's rule beside it.** Load the chapter and nothing
+3. **Read each chapter with its folder's rule and `devbook-writing.md` beside it.** Load the chapter and nothing
    else; a `related` edge is followed only to test a `second-definition`.
 
 4. **Record a finding per hit**: chapter address (`<path>#<slug>`), line, class, the
@@ -60,6 +61,10 @@ standard, and a class stated by half reports the wrong sentence.
    | `hedge` | "it is worth noting", "arguably", "generally", "in most cases", "somewhat" in a sentence that states a fact, a rule, or an invariant | The sentence without the hedge |
    | `restated-heading` | A section's first sentence paraphrases its heading | Cut it; start at the second sentence |
    | `repeated-body` | A closing paragraph repeats what the section already said | Cut it |
+   | `telegraphic` | Clauses or list items chained with dashes, more than one dash in a paragraph, or a run of fragments such as "no X, no Y, no Z" | The same content as full sentences or a bulleted list |
+   | `long-sentence` | A sentence past about 35 words, or carrying more than one idea | The sentence split |
+   | `coinage` | A hyphenated or invented name, such as a "fill-run", that neither the glossary nor the ubiquitous language defines | The defined term, or "define it in the glossary" |
+   | `missing-diagram` | A section narrates three or more steps, states, or connected parts in prose, with no diagram or table | The diagram kind `devbook-writing.md` names for it |
    | `structure` | Whatever step 1 reported | `devbook:validate`'s own fix column |
 
    A hit inside protected text — a fence, a table, a section the rule requires, `adr/`,
@@ -68,7 +73,7 @@ standard, and a class stated by half reports the wrong sentence.
 5. **Report.** One table per folder, findings ordered `stale-name`, `second-definition`,
    `structure`, then the prose classes, cut at Limit with the remainder counted per class.
    Close with the totals: chapters read, findings per class, and the standard applied — the
-   folder rules by name. No findings is a one-line report, and the ordinary case for a
+   folder rules and `devbook-writing.md` by name. No findings is a one-line report, and the ordinary case for a
    chapter that settled.
 
 ## Notes

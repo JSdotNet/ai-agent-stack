@@ -1,7 +1,9 @@
 {
   "id": "jsdotnet-devbook",
   "bindings": {
-    "delivery.tracker": { "provider": "github" },
+    "delivery.tracker": {
+      "provider": "github"
+    },
     "delivery.roles": {
       "architecture": null,
       "qa": null,
@@ -46,144 +48,174 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.10.0",
-      "contractVersion": 19,
-      "adopted": ["arc42", "tech", "design", "ai"],
+      "pluginVersion": "1.13.0",
+      "contractVersion": 24,
+      "adopted": [
+        "arc42",
+        "tech",
+        "design",
+        "ai"
+      ],
       "materialized": {
         ".agents/rules/devbook-ai.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:0e0cc41d517438b94629527bf23919db9a6ebbacbb32191a7f5eca1e85adcd1d",
           "managed": true
         },
         ".agents/rules/devbook-annotations.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:d1979bf1d643fc3a18013db130fb1ca0f275ffe0fe9754caa72ebfa4092e18c5",
           "managed": true
         },
         ".agents/rules/devbook-arc42.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:ffb9f56427a52f873e9af13011e1721db879193a24f2d11c292955862e601147",
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:7e787ac1dd6d1e1f39a12884615c75492e86f4e09da3f907e064652e674325c4",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:335f531e791065c6b53aa3c48fbd7431e8518d32e7c5a479d731d97638253830",
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:b7bd0529ae7182a70e3af9f9b89f7eff908bf245bb17ca1ca5423cd8b80a6600",
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:3cab462825249c06fa4dc01d8089bcdbcbc956fce19d30aad511b83d14b026eb",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:71565ce2531437853a08501a5631f5ee2ae0d17b012e499bf0d0a8f42a829b58",
           "managed": true
         },
         ".claude/rules/devbook-annotations.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:f5373d9b68b55ee44dc7879eb34a3c054fd4d45989e0c97616275bd89c86c008",
           "managed": true
         },
         ".claude/rules/devbook-arc42.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:a8a60911deea32f3e0e33bb7d81aef93d3c2db7cb6e06d637b9e2014b16e9af9",
           "managed": true
         },
         ".claude/rules/devbook-chapter-metadata.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:5f317ca4e0c59cdae8dd2dfe99566115cabf6955e998e2e9fa3148dbd6d63a54",
           "managed": true
         },
         ".claude/rules/devbook-design.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:83b34973226befcf2a37e5d1b35f57548188159cf4d4e3be1d0bb9ae2de53408",
           "managed": true
         },
         ".claude/rules/devbook-naming.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:21e942583e0cdcac06f8840f12faab65c1e7a2568707f227fc4607fb4c45059f",
           "managed": true
         },
         ".claude/rules/devbook-tech.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:6e8ad7dcafeb8fe02cb344761641e2123794195ec7e6cf9405760928e6d39e55",
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:955f222cce49b875b26183318483df2fde26ff5325558addf896abf7ba8fdc8d",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
-          "from": "1.10.0",
+          "from": "1.13.0",
           "hash": "sha256:516d3085d0036802d5592773dfb4d81778a0c30b486972c1cfa30b37c3416c49",
           "managed": true
         },
         ".github/instructions/devbook-ai.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:f9ba3ab598b46ea959fed6fe2ae2a7438fa63ce18cd0210cd61fb5c6131d6265",
           "managed": true
         },
         ".github/instructions/devbook-annotations.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:2f2d0faae5ae5c4e73fb0d321cde73d86f6864e3fd43b3e1cbd07c01b9fb5685",
           "managed": true
         },
         ".github/instructions/devbook-arc42.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:52047a3e078a538a6be9becb04605244c6bcc5fba45e1a71f8e5fcc1ae35d188",
           "managed": true
         },
         ".github/instructions/devbook-chapter-metadata.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:53c59c4667424b4d201fe9a76c5b61ffac0a9369423b84d329d7e47b31e257d1",
           "managed": true
         },
         ".github/instructions/devbook-design.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:06e93d3fbf4d512948e6a75c030cc174210db186ac5dcd7820da9451340adb51",
           "managed": true
         },
         ".github/instructions/devbook-naming.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:552462f07195ec7fbcb07d0c15431b0c4c4ddb32fd78e0520093cd7ba2dcfc20",
           "managed": true
         },
         ".github/instructions/devbook-tech.instructions.md": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:b5e876e4851849a2f9dc75fabb595cde1fb1a9e7eeb5d509a5bfa7fc0586ec97",
           "managed": true
         },
         ".github/workflows/devbook-meta.yml": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:403e42647389b27026b3a211323067d8e94f058eae5a734ce03c4d1efb7b1cfc",
           "managed": true
         },
         "AGENTS.md#devbook": {
-          "from": "1.8.0",
+          "from": "1.13.0",
           "hash": "sha256:8b16acffe2e3b583fdea3d2f960527eb3d5fce8713114384f64672bc290ec101",
           "managed": true
         }
       },
       "migrations": [
-        { "id": "010-terms-live-in-domain-md", "applied": "2026-09-17" },
-        { "id": "011-context-md", "applied": "2026-09-18" },
-        { "id": "012-no-checkout-overlay", "applied": "2026-09-21" },
-        { "id": "013-decision-rungs-are-domains", "applied": "2026-09-23" },
-        { "id": "015-openspec-verbs", "applied": "2026-09-23" },
-        { "id": "017-invariants-under-domain", "result": "not-applicable" },
-        { "id": "018-behaviour-titles", "result": "not-applicable" }
+        {
+          "id": "010-terms-live-in-domain-md",
+          "applied": "2026-09-17"
+        },
+        {
+          "id": "011-context-md",
+          "applied": "2026-09-18"
+        },
+        {
+          "id": "012-no-checkout-overlay",
+          "applied": "2026-09-21"
+        },
+        {
+          "id": "013-decision-rungs-are-domains",
+          "applied": "2026-09-23"
+        },
+        {
+          "id": "015-openspec-verbs",
+          "applied": "2026-09-23"
+        },
+        {
+          "id": "017-invariants-under-domain",
+          "result": "not-applicable"
+        },
+        {
+          "id": "018-behaviour-titles",
+          "result": "not-applicable"
+        },
+        {
+          "id": "021-no-review-triad",
+          "applied": "2026-09-29"
+        }
       ]
     },
     "derived": {
@@ -231,11 +263,19 @@
     },
     "schedule": {
       "pluginVersion": "1.9.0",
-      "enabled": ["devbook-validate", "tech-update", "merge-review", "package-update"]
+      "enabled": [
+        "devbook-validate",
+        "tech-update",
+        "merge-review",
+        "package-update"
+      ]
     },
     "delivery-surface-dashboard": {
       "sessionNaming": {
-        "labels": { "devbook": "devbook", "code": null }
+        "labels": {
+          "devbook": "devbook",
+          "code": null
+        }
       }
     }
   }

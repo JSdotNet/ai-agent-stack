@@ -1,7 +1,6 @@
 ---
 name: schedule-security-review
 description: 'Run a layered security review of the repository: vulnerable dependencies from the package managers'' own audits, secrets committed to the tree, CI workflow hardening, and the security items of the code review checklist. Produces a severity-ranked report and opens one GitHub issue per new high-severity finding, deduplicated against the issues already open.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Security Review

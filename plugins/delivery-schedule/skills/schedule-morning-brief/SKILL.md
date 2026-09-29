@@ -1,7 +1,6 @@
 ---
 name: schedule-morning-brief
 description: 'Report what changed in this repository since yesterday and what needs a person today, in one screen: failed runs on the base branch, pull requests waiting on someone, what merged, what opened, and what the schedules landed overnight. Picks its own window, so it runs unattended each weekday morning; run it by hand to catch up after time away.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Morning Brief

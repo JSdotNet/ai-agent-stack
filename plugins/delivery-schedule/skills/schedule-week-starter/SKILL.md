@@ -1,7 +1,6 @@
 ---
 name: schedule-week-starter
 description: 'Scan configured topics for updates published in the last 7 days and produce a concise "What''s new this week" digest. Default topics: .NET Aspire, Claude Code, and the Anthropic engineering blog.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Week Starter

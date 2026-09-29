@@ -5,7 +5,8 @@
 //
 // Fails on: a missing or malformed frontmatter field, a name that is not the file stem, a
 // cron that is not five fields or could fire more than once an hour, a target whose skill
-// folder does not exist in this marketplace or is a flow-* skill, a plugin in `requires` the
+// folder does not exist in this marketplace, is a flow-* skill, or sets
+// disable-model-invocation, a plugin in `requires` the
 // marketplace does not list or that omits the target's plugin, a tool list without `Skill`,
 // an empty body, or a placeholder outside the five the contract names — in a body or in the
 // preamble.
@@ -93,7 +94,9 @@ for (const name of files) {
         else {
             targetPlugin = m[1];
             if (m[2].startsWith("flow-")) error(file, `target ${fields.target} is a flow — a flow ends at a gate no unattended run can pass`);
-            if (!(await exists(path.join(ROOT, "plugins", m[1], "skills", m[2], "SKILL.md")))) error(file, `target ${fields.target} has no skill folder in this marketplace`);
+            const skill = path.join(ROOT, "plugins", m[1], "skills", m[2], "SKILL.md");
+            if (!(await exists(skill))) error(file, `target ${fields.target} has no skill folder in this marketplace`);
+            else if (frontmatter(await readFile(skill, "utf8"))?.fields["disable-model-invocation"] === "true") error(file, `target ${fields.target} sets disable-model-invocation — the scheduled session reaches it through the model, so every run would stop at step 1`);
         }
     }
 

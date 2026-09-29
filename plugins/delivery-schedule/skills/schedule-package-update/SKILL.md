@@ -1,7 +1,6 @@
 ---
 name: schedule-package-update
 description: 'Update all outdated NuGet packages in a .NET solution, check installed plugins for newer versions, and open a PR with the changes. Handles Central Package Management, Aspire integration upgrades, and post-update build and test verification.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Package Update

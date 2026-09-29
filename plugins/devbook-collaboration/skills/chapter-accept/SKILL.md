@@ -91,13 +91,14 @@ A change is accepted as one, on its `proposal.md`, per `devbook-changes.md`:
 - **Step 1** shows `proposal.md`, every delta under `devbook-delta/`, and the
   open notes of each, as `chapter-approve` does on a change, beside the
   evidence.
-- **Step 2** adds two rows that block, and on either shows what is left and
+- **Step 2** adds three rows that block, and on any shows what is left and
   refuses:
 
   | Condition | Say |
   |---|---|
   | A step in `tasks.md` is not `done` — merged — as the bound tracker's `read_item` reports it: `open`, `in progress`, `in review`, or `done` | Each step not merged, with its state. With no tracker bound, read each step's pull request; unknown is not merged |
   | The last `devbook:verify-change` verdict is not `aligned` for every delta | Each delta and its verdict. A `code-ahead` reported `covered by change <name>, step N` for a merged step is aligned for this purpose; none run is not aligned — run it first |
+  | `policy["openspec.scenarios"]` is `linked` in the effective stack configuration and a scenario in a delta names no test | Each unverified scenario. Under `advisory` — the default, and what an absent key or config means — list them as what the person weighs, and do not block |
 
   The approval rows read `approved-hash` against
   `chapter-hash.mjs openspec/changes/<name>`.

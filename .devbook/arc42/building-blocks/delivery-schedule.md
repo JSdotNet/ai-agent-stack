@@ -144,6 +144,13 @@ parks — what did not reach a draft pull request is a comment on the issue and 
 Review every pull request waiting on a reviewer and leave one comment per pull request. It
 reviews and never approves — approving is a decision, and no unattended run takes one.
 
+It also reads the window's conflicts — merges re-run from their parents, open pull requests
+against the base and each other, overlapping squash merges — and names each file that keeps
+conflicting with the change that would end it: split a mixed file, give a registration list one
+file per entry, regenerate a generated one. A hotspot is the code's problem, not one pull
+request's, so it is reported, never fixed: the fix is a person's change through the code flow.
+Conflicts are found with `git merge-tree`, which never touches the working tree.
+
 ### schedule-morning-brief
 
 ```meta

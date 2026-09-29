@@ -139,7 +139,7 @@ same way:
 | `gates` | **Appended.** An overlay can add a checkpoint and has no way of spelling the removal of one — at any layer, of any layer beneath it. |
 | `null` | A value — deliberately unbound — never a delete. |
 
-Five things an overlay may not say, and the checker refuses each by name:
+Six things an overlay may not say, and the checker refuses each by name:
 
 | Refused | Because |
 | --- | --- |
@@ -148,6 +148,7 @@ Five things an overlay may not say, and the checker refuses each by name:
 | `policy.pr.required` | What the repository produces, not how one machine runs it. |
 | `policy.qa.ceiling` | The ceiling is the repository's limit. `qa.depth` is your choice inside it. |
 | `policy.gate.personalValidation` | The mandatory gate. Already `const` in the schema, and named here so the refusal states the invariant rather than a type error. |
+| `policy.openspec.scenarios` | What acceptance of a change requires is the repository's; `advisory` in an overlay would unlock a gate the committed file keeps shut. |
 
 That list is the whole safety story, and it is worth stating plainly: **a file no reviewer
 sees must never be able to weaken what a reviewer sees.** Everything a reader of the committed
@@ -312,6 +313,7 @@ key means the engine's own choice rather than undefined.
 | `phases.updateBase` | boolean | `true` |
 | `phases.verification` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
+| `openspec.scenarios` | `advisory`, `linked` | `advisory` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that
 defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
@@ -324,6 +326,15 @@ a well-formed git ref name, so free prose is rejected by pattern — and nothing
 that ref exists is resolved against the remote at flow time — Update Base fetches it, the
 pull-request lane opens against it — because a config check that reached for the network would
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
+
+`openspec.scenarios` governs a change whose behaviour is written as scenarios, at its
+acceptance. A scenario is proven by the test its chapter's `tests` link names; one that names
+none is **unverified**. `advisory` shows every unverified scenario at acceptance and never
+blocks on it, the way an open review note is shown at a gate; `linked` refuses acceptance
+while any scenario is unverified. The engine's part is the evidence: Validation reports each
+scenario with its link (**Reporting Contract**, `surface-contract.md`) and Verification lists
+the unverified ones. The refusal belongs to whatever runs the acceptance decision, which reads
+the key from the effective configuration. It is the repository's, so no overlay may set it.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
 `phase-validation`'s change-kind selection. The first one present wins, and

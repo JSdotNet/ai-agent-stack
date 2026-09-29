@@ -40,7 +40,8 @@
     "pr.base": "main",
     "phases.updateBase": true,
     "phases.verification": true,
-    "phases.workItemUpdate": true
+    "phases.workItemUpdate": true,
+    "openspec.scenarios": "advisory"
   },
   "gates": [
     {

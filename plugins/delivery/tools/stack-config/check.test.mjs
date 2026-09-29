@@ -134,6 +134,12 @@ test('an out-of-enum policy value is rejected', () => {
     assert.match(errors[0], /not one of full, targeted, startup-only, skipped/);
 });
 
+test('openspec.scenarios takes advisory or linked and nothing else', () => {
+    assert.deepEqual(check({ policy: { 'openspec.scenarios': 'advisory' } }), []);
+    assert.deepEqual(check({ policy: { 'openspec.scenarios': 'linked' } }), []);
+    assert.equal(check({ policy: { 'openspec.scenarios': 'required' } }).length, 1);
+});
+
 test('personalValidation may only say required', () => {
     assert.deepEqual(check({ policy: { 'gate.personalValidation': 'required' } }), []);
     assert.equal(check({ policy: { 'gate.personalValidation': 'optional' } }).length, 1);
@@ -317,7 +323,7 @@ test('the overlay never carries an id — the id is what found it', () => {
 });
 
 test('the overlay may not touch what the repository produces', () => {
-    for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation']) {
+    for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation', 'openspec.scenarios']) {
         const errors = checkLocalOverlay({ policy: { [key]: key === 'pr.required' ? false : 'full' } });
         assert.equal(errors.length, 1, key);
         assert.match(errors[0], /locked/);

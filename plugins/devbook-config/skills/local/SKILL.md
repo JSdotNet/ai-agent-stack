@@ -41,7 +41,8 @@ the model-selection file is *Personal Global Override File* in `resources/flow-m
 ## Do not
 
 - Never touch `.devbook/config.json`. Nothing here is true of the repository.
-- Never write `id`, `components`, `policy.pr.required`, `policy.qa.ceiling`, or
-  `policy.gate.personalValidation` in an overlay; the checker refuses each by name.
+- Never write `id`, `components`, `policy.pr.required`, `policy.qa.ceiling`,
+  `policy.gate.personalValidation`, or `policy.openspec.scenarios` in an overlay; the
+  checker refuses each by name.
 - Never write a secret. Gitignored is not private, and neither is a home directory.
 - Never write an overlay for someone else: on a shared account, say so and stop.

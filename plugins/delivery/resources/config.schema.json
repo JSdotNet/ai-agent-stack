@@ -135,7 +135,11 @@
         },
         "phases.updateBase": { "type": "boolean" },
         "phases.verification": { "type": "boolean" },
-        "phases.workItemUpdate": { "type": "boolean" }
+        "phases.workItemUpdate": { "type": "boolean" },
+        "openspec.scenarios": {
+          "description": "Whether a change's scenarios must each name the test that proves them before the change is accepted. `advisory`, the default, shows a scenario with no linked test as unverified and never blocks; `linked` refuses acceptance until every scenario names one. Set in the committed config only: an overlay may not weaken what a reviewer sees.",
+          "enum": ["advisory", "linked"]
+        }
       }
     },
     "gates": {

@@ -116,7 +116,12 @@ that surface's own `runId`:
   request that reaches no surface is invisible there, however it was opened.
 - **For Validation**, also pass `scenarios` (one entry per tested scenario with
   `status: "pass"|"fail"|"flaky"`, `notes`, and optional evidence paths) and `monitoring` (the
-  log and trace summary with any error findings), so evidence renders inline.
+  log and trace summary with any error findings), so evidence renders inline. A scenario the
+  run's specification carries also takes `test` — the `tests` link that proves it,
+  `<level>:<runner>:<selector>` — or `test: null` when it names none, which a surface renders
+  as **unverified**; under `policy["openspec.scenarios"]: "linked"` it also marks the row as
+  what refuses acceptance (`engine-contract.md`, **Policy**). A surface that ignores the key
+  stays conformant.
 - **Keep the gate and `deliver` as separate stages.** Gate `deliver` on the approval recorded
   at Personal Validation, mark it `skipped` when there is no change set, and record all
   delivery-time changes under its stage output.

@@ -304,6 +304,10 @@ further verification joins this phase rather than becoming a phase of its own.
 - **Unbound**, the flow-runner reaches the same verdicts itself, with only code that executes
   and tests that pass counting as evidence. The reading goes to a read-only sub-agent in the
   same worktree; the verdict table is what comes back.
+- **List the unverified scenarios.** Every scenario in the specification whose chapter names
+  no test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
+  reports it, `linked` reports it as what will refuse acceptance. Linking the test is the
+  step's work, never this phase's.
 - **Report; never repair.** The phase edits no source, test, or chapter and creates no commit,
   so the pull-request branch is exactly as the reviewer found it. It is `done` whatever the
   verdicts say: a `spec-ahead` or `code-ahead` row is not a failed stage, it is the finding.

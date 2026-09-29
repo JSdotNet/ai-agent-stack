@@ -1,7 +1,6 @@
 ---
 name: schedule-devbook-verify
 description: 'The unattended drift check: run devbook:verify-change over every adopted folder, one run per kind, and open one issue per code-ahead or conflict row nothing already covers. Reports and never writes a chapter, a brief, or a capture plan. The weekly devbook-verify schedule''s target.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Devbook Verify

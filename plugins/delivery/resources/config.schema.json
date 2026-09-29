@@ -139,7 +139,11 @@
         },
         "phases.updateBase": { "type": "boolean" },
         "phases.verification": { "type": "boolean" },
-        "phases.workItemUpdate": { "type": "boolean" }
+        "phases.workItemUpdate": { "type": "boolean" },
+        "openspec.scenarios": {
+          "description": "Whether a change's scenarios must each name the test that proves them before the change is accepted. `advisory`, the default, shows a scenario with no linked test as unverified and never blocks; `linked` refuses acceptance until every scenario names one. Set in the committed config only: an overlay may not weaken what a reviewer sees.",
+          "enum": ["advisory", "linked"]
+        }
       }
     },
     "gates": {
@@ -201,18 +205,24 @@
         { "type": "null" }
       ]
     },
+    "choreId": {
+      "title": "a provider id, optionally followed by --flag arguments",
+      "description": "A provider id as providerId spells it, optionally followed by space-separated --flags the chore's skill receives as its arguments — plugin:skill --replan.",
+      "type": "string",
+      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)( --[a-z0-9]+(-[a-z0-9]+)*)*$"
+    },
     "chorePoint": {
       "description": "Zero or more chores, run in declared order. `on-failure` defaults to advisory.",
       "type": "array",
       "items": {
         "oneOf": [
-          { "$ref": "#/$defs/providerId" },
+          { "$ref": "#/$defs/choreId" },
           {
             "type": "object",
             "required": ["run"],
             "additionalProperties": false,
             "properties": {
-              "run": { "$ref": "#/$defs/providerId" },
+              "run": { "$ref": "#/$defs/choreId" },
               "on-failure": { "enum": ["required", "advisory"], "default": "advisory" }
             }
           }

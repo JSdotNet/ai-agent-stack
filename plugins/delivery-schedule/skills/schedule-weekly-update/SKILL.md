@@ -1,7 +1,6 @@
 ---
 name: schedule-weekly-update
 description: 'Report a repository''s week as one update a stakeholder can read: what shipped, what is in flight, the issues opened and closed, releases, failed runs on the base branch, what the schedules landed, and what carries into next week — with the numbers beside the narrative. Picks its own window, so it runs unattended at the end of each week; run it by hand for any date range.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Weekly Update

@@ -17,6 +17,16 @@ taken: the first still depends on a repository outside this one, the second stil
 exercise with a folder that exists to be checked, and the third is still false. What did
 change is the weight of the second, for the reason the impact section now records.
 
+**2026-09-29.** Re-accepted at medium a second time, when the change lane was built. The
+choice was between the fixture corpus and this, and it went this way: the lane is new surface
+only this repository ships, and it can be exercised here on the folders already kept, so this
+repository adopts `devbook-openspec` and runs its first change against `arc42/`. That
+exercises the change folder, the delta merge, both gates on a proposal, and the bridge's
+`spec`, `tracker`, `status`, and `archive` where they ship. It exercises nothing of the domain
+rule — a delta against `arc42/` writes no `requirements.md` or `invariants.md` — so the
+behaviour files stay exercised in a consuming repository, and a fixture `domain/` would still
+be a folder that exists to be checked.
+
 ## The debt
 
 ```meta
@@ -97,7 +107,8 @@ thing this record is about.
 
 **Trigger:** the first change to `devbook-domain.md` or a domain kind file after this fold.
 **Fired 2026-09-22**, when contract 14 added the two behaviour files and edited all four domain
-kind files; re-accepted at medium rather than remediated, per the note at the top. Next
-trigger: the first `domain/` defect a consumer reports, or the next contract that adds a
-chapter kind this repository cannot write — either settles the second option above without
-further argument.
+kind files; re-accepted at medium rather than remediated, per the note at the top. **Fired
+again 2026-09-29**, when the change lane added `type: change`; re-accepted with the lane
+adopted here, so that kind is one this repository writes. Next trigger: the first `domain/`
+defect a consumer reports, or the next contract that adds a chapter kind this repository
+cannot write — either settles the second option above without further argument.

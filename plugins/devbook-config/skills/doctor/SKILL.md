@@ -44,9 +44,10 @@ two writers for one stamp is how a reconcile stops being idempotent.
    `installPath` being delivery's, with the repository as the working directory — it resolves
    `.devbook/config.json` from there — and read `config` from its stdout; never merge the
    layers by hand. delivery not installed: say the providers are unchecked, and why. Take every
-   provider id under `extensions` — a string, an object's `provider`, a chore entry's `run` —
-   and under `bindings`: each `delivery.roles` value, `openspec.grill`, and a `delivery.tracker`
-   provider that is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
+   provider id under `extensions` — a string, an object's `provider`, a chore entry's `run`, less any
+   `--flag` arguments after it — and under `bindings`: each `delivery.roles` value,
+   `openspec.grill`, and a `delivery.tracker` provider that
+   is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
    providers. `null` is an unbound point, not a finding. Resolve each:
    - `plugin:skill` — `skills/<skill>/SKILL.md` or, for a role, `agents/<skill>.agent.md`
      under that plugin's `installPath`; a bare `plugin` — the plugin is installed;

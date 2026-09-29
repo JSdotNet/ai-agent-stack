@@ -1,6 +1,6 @@
 ---
 name: status
-description: 'Report where a change under openspec/changes/ stands in one table — OpenSpec''s artifact progress, every step''s state, the verify-change verdict for every delta, and both gates, approval and acceptance, each with whether its fingerprint still holds — and name the one next move. Writes nothing. Use when: "where is this change", "what is left before I can accept it", "can this change be archived", "is the approval still current", or before devbook-openspec:archive. Triggers on: "devbook-openspec status", "change status", "status of the change".'
+description: 'Report where a change under openspec/changes/ stands in one table — OpenSpec''s artifact progress, every step''s state, the verify-change verdict for every delta, and both gates, approval and acceptance, each with whether its fingerprint still holds — and name the one next move. With --replan, the engine''s flow.start chore: re-check one change''s deltas, open steps, and related chapters against main and fail on any flag. Writes nothing. Use when: "where is this change", "what is left before I can accept it", "can this change be archived", "is the approval still current", or before devbook-openspec:archive. Triggers on: "devbook-openspec status", "change status", "status of the change", "does the plan still hold", "replan".'
 ---
 
 # devbook-openspec status
@@ -28,3 +28,15 @@ nothing: every edit this report points at is a person's or another skill's.
    build the first open step (`/opsx:apply`), fix a verdict, accept
    (`devbook-collaboration:chapter-accept` — every step `done` and every delta aligned), or
    archive (`devbook-openspec:archive` — accepted, both hashes current).
+
+## `--replan`
+
+Bound as an engine's `flow.start` chore with `on-failure: required`, so it runs after the base
+is fetched and before a step's scope is acted on. One change — the one the run's item belongs
+to — and three checks instead of the report, in order: every delta against its target chapter
+as it now stands on `main` (a target changed since `approved-at` is a conflict); every open
+step against the code through `devbook:verify-change` (a step whose requirements and
+invariants already hold, or whose assumption a merged step broke); and every `depends-on` and
+`related` chapter of the proposal (one deprecated or rewritten since). Print one row per flag
+and exit non-zero on any, zero on none. Rewrite nothing: revising is `/opsx:update`, and a
+revised delta lapses the approval and goes back through `chapter-approve`.

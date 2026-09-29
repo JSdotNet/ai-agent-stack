@@ -154,7 +154,7 @@ skill changes who runs capture, never whether it runs.
 | `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
 | `resources/flow-phases.md` | Which phases each tier runs, and the opening and closing phases in full |
-| `resources/engine-contract.md` | Extension points, gates, policy, the stack config and its overlays, bindings, and host slots |
+| `resources/engine-contract.md` | Extension points, gates, policy, the stack config and its overlays, bindings, the two git workflows, and host slots |
 | `resources/surface-contract.md` | The surface capability, how a surface is bound, and the reporting contract every flow follows |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/flow-model-selection.md` | Category → model resolution and the personal override |

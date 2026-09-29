@@ -1,7 +1,6 @@
 ---
 name: schedule-devbook-update
 description: 'The unattended stack update: run devbook-config:update with the safe answer at every question it would ask a person, so outstanding migrations run and stale copies are re-materialized from the plugins the session loaded, and land the result as one draft pull request — or a schedule-report issue when only a person''s step is left. The weekly devbook-update schedule''s target.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Devbook Update

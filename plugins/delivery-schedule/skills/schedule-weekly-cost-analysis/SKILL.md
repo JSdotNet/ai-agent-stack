@@ -1,7 +1,6 @@
 ---
 name: schedule-weekly-cost-analysis
 description: 'Analyse the token usage the bound delivery surface recorded for the week''s flow runs, surface the top actionable cost-reduction tips, and produce a concise report.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Weekly Cost Analysis

@@ -1,7 +1,6 @@
 ---
 name: schedule-whats-new
 description: 'Check one or more GitHub repositories for what changed since the last run: open pull requests and pull requests merged since the last checkpoint. Correlates each PR with related Jira tickets or GitHub issues where discoverable, and persists a per-repo checkpoint so the next run only reports genuinely new activity.'
-disable-model-invocation: true
 ---
 
 # Scheduled: What's New

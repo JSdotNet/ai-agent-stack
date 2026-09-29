@@ -1,7 +1,6 @@
 ---
 name: schedule-instruction-review
 description: 'Tighten the instruction assets a repository loads into a model — AGENTS.md and its host twins, rules, skills, agents, prompts, contracts: cut sentences that change nothing, replace a duplicate with a pointer, turn a prohibition positive, strip hedging, fix pointers that no longer resolve. Lands as one draft pull request, one commit per file, with a ledger of every cut; skips what the previous run''s rejected pull request touched.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Instruction Review

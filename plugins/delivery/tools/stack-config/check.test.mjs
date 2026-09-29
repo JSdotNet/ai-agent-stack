@@ -134,6 +134,12 @@ test('an out-of-enum policy value is rejected', () => {
     assert.match(errors[0], /not one of full, targeted, startup-only, skipped/);
 });
 
+test('openspec.scenarios takes advisory or linked and nothing else', () => {
+    assert.deepEqual(check({ policy: { 'openspec.scenarios': 'advisory' } }), []);
+    assert.deepEqual(check({ policy: { 'openspec.scenarios': 'linked' } }), []);
+    assert.equal(check({ policy: { 'openspec.scenarios': 'required' } }).length, 1);
+});
+
 test('personalValidation may only say required', () => {
     assert.deepEqual(check({ policy: { 'gate.personalValidation': 'required' } }), []);
     assert.equal(check({ policy: { 'gate.personalValidation': 'optional' } }).length, 1);
@@ -170,6 +176,30 @@ test('a chore point takes a list, not a bare provider', () => {
 test('a chore on-failure value is a closed enum', () => {
     const errors = check({ extensions: { 'flow.end': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
     assert.equal(errors.length, 1);
+});
+
+test('a chore may carry --flag arguments after its id, in either form', () => {
+    assert.deepEqual(
+        check({
+            extensions: {
+                'flow.start': [
+                    'repo:replan --dry-run',
+                    { run: 'your-plugin:status --replan', 'on-failure': 'required' },
+                ],
+            },
+        }),
+        [],
+    );
+});
+
+test('a chore argument is a --flag, never free text or a bare word', () => {
+    for (const run of ['your-plugin:status replan', 'your-plugin:status --Replan', 'your-plugin:status --replan; rm -rf /']) {
+        assert.equal(check({ extensions: { 'flow.start': [{ run }] } }).length, 1, run);
+    }
+});
+
+test('a service provider takes no arguments', () => {
+    assert.equal(check({ extensions: { spec: 'your-plugin:spec --replan' } }).length, 1);
 });
 
 test('null binds a role deliberately, which is not the same as absent', () => {
@@ -300,7 +330,7 @@ test('the overlay never carries an id — the id is what found it', () => {
 });
 
 test('the overlay may not touch what the repository produces', () => {
-    for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation']) {
+    for (const key of ['pr.required', 'qa.ceiling', 'gate.personalValidation', 'openspec.scenarios']) {
         const errors = checkLocalOverlay({ policy: { [key]: key === 'pr.required' ? false : 'full' } });
         assert.equal(errors.length, 1, key);
         assert.match(errors[0], /locked/);

@@ -90,6 +90,9 @@ and break it. They are not removed, because no plugin depends on `devbook-config
 repository with `devbook` alone still reaches `devbook:init` by asking for it in words.
 `delivery-schedule`'s pair stays visible: a person runs it directly to change a cadence, not
 only through the fan-out. A host that does not know the key ignores it and keeps listing them.
+Its `schedule-*` entry points carry neither key: a scheduled session reaches its target
+through the model, so `disable-model-invocation` stops every run at its first step, and the
+schedule catalog's checker fails a target that sets it.
 
 **This repository adopts like any other.** It was once exempt: a second copy of
 `plugins/devbook/tools/` under `.devbook/_tools/` would drift on the first edit, and a delivered
@@ -127,6 +130,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`, which had stopped every scheduled run at the Skill call; the catalog checker now fails a target that sets it. |
 | 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |
 | 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. |
 | 2026-09-26 | This repository reaches its own release through `devbook-config:update`: `devbook` materialized at 1.8.0 and every stamp moved to 1.9.0 with no migration outstanding; `devbook-procedures` adopted `start`, `show`, `capture`, and `debug`, each body rewritten from its seed. `devbook-derived` stayed at 1.2.0 while the machine that ran it lacked the plugin — a stamp is never dropped for that — and reached 1.9.0 once it was installed; its refresh script, both workflows, and its rule trio landed then too, never having been stamped before. |

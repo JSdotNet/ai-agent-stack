@@ -1,7 +1,6 @@
 ---
 name: schedule-devbook-validate
 description: 'The unattended devbook validation: run devbook:validate over every adopted folder, fix what it reports in the source Markdown, refresh the committed _meta/ indexes where devbook-derived keeps them, and land the result as one pull request — or a schedule-report issue when devbook-config:doctor, where installed, finds the installation needs a person. The daily devbook-validate schedule''s target.'
-disable-model-invocation: true
 ---
 
 # Scheduled: Devbook Validate

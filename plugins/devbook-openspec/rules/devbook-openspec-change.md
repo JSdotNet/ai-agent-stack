@@ -25,6 +25,10 @@ rule is what they do differently from OpenSpec's defaults.
   opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines
   and the pull request, and writes them for a run; a person doing a step writes the same
   lines by hand. Tick a step's tasks in its own pull request.
+- **A proposal may name its workflow.** One `Workflow: single-branch` or
+  `Workflow: proposal-first` line under the proposal's title overrides
+  `components.openspec.workflow` for that change alone; write it only to differ from the
+  repository's default. The branches each workflow uses are the engine's.
 - **Apply refuses an unapproved change.** Never take a step while `proposal.md` is below
   `approved`, or while its `approved-hash` no longer matches
   `node .devbook/_tools/devbook-meta/chapter-hash.mjs openspec/changes/<name>`.

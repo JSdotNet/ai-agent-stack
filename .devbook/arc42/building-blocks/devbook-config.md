@@ -57,6 +57,15 @@ Stop at the engine keys: four keys and no more. Every `components.<name>` stamp 
 component that knows what it materialized, which is why each component's `init` is invoked and not
 absorbed — the boundary [Engine Configuration](#engine-configuration) holds.
 
+The change lane is one more component with three questions: is the OpenSpec CLI here, adopt the
+lane and allow a Step 0 prototype, and grill an idea before proposing it. Init checks the CLI
+and prints the install command rather than running it — the same way the issue sweep checks
+`gh` — writes the `spec` and tracker bindings to [devbook-openspec](devbook-openspec.md) and the
+optional gates, adds the change folder to what `devbook:init` adopts, and leaves `openspec init`,
+the schema, and the `components.openspec` stamp to `devbook-openspec:init`. The grill skill comes
+from another marketplace, so it is a binding, `bindings["openspec.grill"]`, and the one key init
+writes whether or not the engine is adopted: the lane reads it, not the engine.
+
 ### update
 
 ```meta
@@ -93,6 +102,12 @@ do nothing at every run and say so only in that run's summary. A retired id is h
 named with its successor and `devbook:update` as the fix; any other unresolved id is a warning,
 because the flow degrades past it. An unbound point is not a finding.
 
+Where the change lane is stamped, it checks the OpenSpec CLI against `components.openspec.cli`
+and lists every open change whose proposal is still `proposed` and whose folder nobody has
+committed to in seven days. Both are warnings: the CLI is a fact about this machine, like a
+plugin it lacks, and a stale proposal waits on a person, which `chapter-approve` on the folder
+settles either way.
+
 ### ask
 
 ```meta
@@ -127,7 +142,9 @@ Ask what is true of this machine and write it where the stack reads it: a
 [machine overlay](#engine-configuration) at the user layer by default, the repository layer when
 an answer is about one repository; the model-selection file the engine's `model-override` slot
 resolves to; and `AGENTS.local.md` — all under the user's devbook config directory, none in
-the clone. Every question is optional and the default is nothing.
+the clone. Every question is optional and the default is nothing. A grill skill of the
+person's own is one of them: `bindings["openspec.grill"]` in an overlay wins over the
+repository's, and `null` there skips grilling on this machine.
 
 It exists because `init` may not write an overlay — an overlay is true of the person running
 it, not of the repository they set up — and without it the first run on every machine took the
@@ -409,7 +426,10 @@ materializes anything is invoked, never reimplemented.
 flowchart TD
     start(["devbook-config:init"]) --> report["The read-only report: which plugins are installed and enabled here"]
     report --> adopt["Ask which adoptable components the repository takes. Not installed: reported, never offered"]
-    adopt --> delivery{"delivery among them?"}
+    adopt --> lane{"devbook-openspec among them?"}
+    lane -->|yes| laneAsk["Ask: OpenSpec CLI here? adopt the lane, with a prototype? a grill skill?"]
+    laneAsk --> delivery{"delivery among them?"}
+    lane -->|no| delivery
     delivery -->|no| idOnly["Write id alone. Nothing here reads an engine key"]
     delivery -->|yes| intent["Ask about intent: roles, tracker, providers, policy, gates"]
     intent --> keys["Write id, bindings, extensions, policy, gates"]
@@ -419,11 +439,13 @@ flowchart TD
     idOnly --> fanout
     fanout --> devbookInstall["devbook:init"]
     fanout --> derivedInstall["devbook-derived:init"]
+    fanout --> openspecInstall["devbook-openspec:init"]
     fanout --> proceduresInstall["devbook-procedures:init"]
     fanout --> deliveryInstall["delivery:init"]
     fanout --> scheduleInstall["delivery-schedule:init"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
     derivedInstall --> stamps
+    openspecInstall --> stamps
     proceduresInstall --> stamps
     deliveryInstall --> stamps
     scheduleInstall --> stamps
@@ -437,6 +459,7 @@ flowchart TD
   act; a stamp written for one the machine lacks is `blocked` on the very next update.
 - **The engine keys exist only for the engine.** They are `delivery.*` settings, so a repository
   adopting devbook without `delivery` is asked nothing about roles, points, policy, or gates.
+  `bindings["openspec.grill"]` is the one exception: the change lane reads it, not the engine.
 - **The fan-out is a delegation, always.** A component's own `init` and `update` are the only things that
   know what that component materialized, which is why nothing here writes a stamp.
 - **An unknown key is rejected rather than ignored.** That single property is most of what the
@@ -497,6 +520,7 @@ included. That is the whole shape of it.
 | [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `extensions`, `policy`, `gates`; validates with the engine's own checker, and `doctor` reads the effective configuration through its `--print` | `resources/config.schema.json` | The four keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
 | [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, invokes `devbook:init` during init and `devbook:update` during update, and runs its migrations with `--check` from `doctor` | The folder layout, the two skill names, and `migrate.mjs --check` | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
 | [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their `init` or `update` during a fan-out | The stamp shape and each component's two skill names | Every component's stamp stays with the component. This block decides *whether* one runs and never what it does. |
+| [devbook-openspec](devbook-openspec.md#dependencies) | Conformist, read-only | Reads its stamp, invokes its `init` or `update` during a fan-out, and writes the provider ids it exposes into the engine keys | Its stamp, its two skill names, and the ids `devbook-openspec:spec` and `devbook-openspec:tracker` | The lane's questions are asked here because the bindings they answer are engine keys; everything OpenSpec materializes is the bridge's. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Conformist, read-only | Reports whether it is installed and enabled | The marketplace entry and manifests | It has no stamp, no `init`, and no `update`; enabling it is the whole adoption. |
 | The four surfaces | Conformist, read-only | Reports whether each is installed, enabled, and at what version | The marketplace entries and manifests | Naming a plugin is not depending on one. Every row degrades to `not installed`. |
 | The host's own plugin state | Conformist, **and a known divergence** | Reads the host's config directory, its installed-plugin file, its marketplace clones, and three settings layers merged nearest-last | The host's own file layout | Where a plugin is installed and whether it is enabled is a fact about a host and nothing else, so an asset answering it either names those files or answers nothing. |

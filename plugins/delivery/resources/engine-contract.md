@@ -186,7 +186,7 @@ producing side effects and a report.
 | Point | Kind | When | Contract |
 | --- | --- | --- | --- |
 | `session.start` | chore | Once, before the first flow | Load context, check environment and tooling, warn early. Distinct from the host's own session-start hook, which is settings-level and knows nothing about flows. |
-| `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it. |
+| `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it; a replan chore, below, may stop the run instead. |
 | `spec` | service | Specification and architecture intake | Scope and acceptance criteria → the specification the rest of the flow builds on. Unbound: the flow-runner writes it inline. The highest-value gate attaches here. |
 | `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
 | `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
@@ -206,6 +206,8 @@ invisible second implementation of the flow, which is the thing the engine exist
 `provider` key names it and whose other keys are options that provider understands. A chore
 takes an array, each entry a string or `{ "run": …, "on-failure": "required"|"advisory" }`;
 `advisory` is the default and puts a failure in the summary instead of stopping the run.
+A chore's id may carry `--flag` arguments after it — `your-plugin:your-skill --replan` — which
+the skill receives as its arguments; they are no part of the id it resolves by.
 
 A provider id is `plugin:skill`, a bare `plugin` (resolved through its role), or
 `repo:<skill>` for a repo-native skill the host loads with no marketplace involved. A
@@ -219,6 +221,25 @@ uses what it returns as the run's specification: it derives nothing inline and n
 rewrites nor supplements it. A `spec` approval gate with `show: artifact` renders that
 returned specification — what the provider returned, not a summary of it — and `revise`
 re-runs the provider with the notes, as at any point.
+
+**A `flow.start` chore may replan.** A run that builds one step of a larger agreed change
+starts from a plan agreed before the base moved under it. Update Base fixes the branch and says
+nothing about whether the plan still holds, so a replan chore — bound as
+`{ "run": "your-change-plugin:your-status-skill --replan", "on-failure": "required" }` — checks
+three things, in order, against the base Update Base just fetched:
+
+1. **Every proposed chapter change against its target as it now stands on the base.** A target
+   that changed since the change was approved is a conflict, never something to merge quietly.
+2. **Every open step against the code as it now stands.** A step whose outcome already holds,
+   or whose assumption a merged step invalidated, is flagged.
+3. **Every chapter the change depends on or relates to.** One deprecated or rewritten since
+   the change was agreed is a flag on the change itself.
+
+Any flag fails the chore, and `required` stops the run before the scope is acted on. The
+output is the list of what to decide; revising the plan is the change's owner's, through
+the change's own revision, and a revised chapter change goes back through its approval. A
+replan rewrites no chapter change and no step, and never runs on a schedule: a plan is
+re-checked when someone is about to act on it.
 
 ## Gates
 

@@ -172,6 +172,30 @@ test('a chore on-failure value is a closed enum', () => {
     assert.equal(errors.length, 1);
 });
 
+test('a chore may carry --flag arguments after its id, in either form', () => {
+    assert.deepEqual(
+        check({
+            extensions: {
+                'flow.start': [
+                    'repo:replan --dry-run',
+                    { run: 'your-plugin:status --replan', 'on-failure': 'required' },
+                ],
+            },
+        }),
+        [],
+    );
+});
+
+test('a chore argument is a --flag, never free text or a bare word', () => {
+    for (const run of ['your-plugin:status replan', 'your-plugin:status --Replan', 'your-plugin:status --replan; rm -rf /']) {
+        assert.equal(check({ extensions: { 'flow.start': [{ run }] } }).length, 1, run);
+    }
+});
+
+test('a service provider takes no arguments', () => {
+    assert.equal(check({ extensions: { spec: 'your-plugin:spec --replan' } }).length, 1);
+});
+
 test('null binds a role deliberately, which is not the same as absent', () => {
     assert.deepEqual(check({ bindings: { 'delivery.roles': { security: null } } }), []);
     assert.equal(check({ bindings: { 'delivery.roles': { security: 42 } } }).length, 1);

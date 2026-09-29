@@ -197,18 +197,24 @@
         { "type": "null" }
       ]
     },
+    "choreId": {
+      "title": "a provider id, optionally followed by --flag arguments",
+      "description": "A provider id as providerId spells it, optionally followed by space-separated --flags the chore's skill receives as its arguments — plugin:skill --replan.",
+      "type": "string",
+      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)( --[a-z0-9]+(-[a-z0-9]+)*)*$"
+    },
     "chorePoint": {
       "description": "Zero or more chores, run in declared order. `on-failure` defaults to advisory.",
       "type": "array",
       "items": {
         "oneOf": [
-          { "$ref": "#/$defs/providerId" },
+          { "$ref": "#/$defs/choreId" },
           {
             "type": "object",
             "required": ["run"],
             "additionalProperties": false,
             "properties": {
-              "run": { "$ref": "#/$defs/providerId" },
+              "run": { "$ref": "#/$defs/choreId" },
               "on-failure": { "enum": ["required", "advisory"], "default": "advisory" }
             }
           }

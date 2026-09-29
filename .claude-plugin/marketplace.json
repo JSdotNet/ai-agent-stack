@@ -65,6 +65,12 @@
       "source": "./plugins/devbook-collaboration",
       "description": "Review, comment, and hand-off workflows over devbook chapters. Hands a chapter to a reviewer with a brief, reviews one against its folder's rules and its evidence, records each finding as a devbook annotation fence beside the passage it is about, runs the approval decision that writes devbook's own approved rung, runs the acceptance decision that writes the accepted rung above it, and sweeps the adopted folders for open notes, work awaiting a decision, and approvals gone stale. Five skills and nothing else, over devbook: a review in progress is the chapter's status and its open annotation fences, who owes the next move stays in the pull request or the tracker, and the only fields it writes are devbook's approval and acceptance rungs, all validated by the check, so it owns no schema, materializes nothing into a repository, and stamps nothing.",
       "version": "1.12.0"
+    },
+    {
+      "name": "devbook-openspec",
+      "source": "./plugins/devbook-openspec",
+      "description": "The change lane: installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as deltas against its devbook chapters — never a copy of OpenSpec's skills. init checks the CLI against the stamped range, runs openspec init at the repository root, writes the managed devbook schema (proposal → devbook-delta → solution → tasks) and a seeded config.yaml, removes the specs/ folder the CLI scaffolds, installs the change-folder rule with a wrapper per host, and stamps components.openspec; update runs openspec update and refreshes what it manages. Four providers an engine can bind by name: spec returns an approved change's specification unchanged, tracker keeps tasks.md as the work items with read_item, update_item, and comment, status reports steps, verdicts, and both gates, and archive checks the gates, merges every delta through devbook's delta.mjs, and lets openspec archive move the folder. onboard walks a first change through. An L1 extension over devbook.",
+      "version": "1.12.0"
     }
   ]
 }

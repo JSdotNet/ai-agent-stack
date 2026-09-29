@@ -1,0 +1,85 @@
+name: devbook
+version: 1
+description: A change to the devbook, proposed as deltas against its chapters — proposal → devbook-delta → solution → tasks
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: Why the change, its scope, the chapters it touches, and one category
+    template: proposal.md
+    instruction: |
+      Write the proposal per devbook-changes.md. Its file-level meta block is
+      `type: change`, `status: proposed`, and `category` — one of `feature`,
+      `behaviour-change`, `defect` — because the category picks the flow that
+      applies a step. Then three sections, each without a meta block: `## Why`,
+      `## Scope`, and `## Chapters touched`, every chapter by address.
+
+      Read the chapters it touches and walk their `related` links first; never
+      load a devbook folder whole. Skip every `annotation` fence: a review note
+      is not content. Never write `approved` or `accepted`: only the approve and
+      accept gates write those.
+    requires: []
+
+  - id: devbook-delta
+    generates: "devbook-delta/**/*.md"
+    description: One delta per devbook file the change touches, at that file's path
+    template: devbook-delta.md
+    instruction: |
+      One delta per devbook file the change touches, at that file's own path
+      below `.devbook/`: `devbook-delta/arc42/09-decisions.md` changes
+      `.devbook/arc42/09-decisions.md`. Each opens with a meta block holding
+      exactly `change` — this change's folder name — and `delta: added`,
+      `modified`, or `removed`, then names chapters by heading at their own
+      level, with `ADDED`, `MODIFIED`, and `REMOVED` sections of entries one
+      level deeper. The full shape is devbook-changes.md; every chapter a delta
+      writes follows its target folder's rule and devbook-chapter-metadata.md.
+
+      A requirement is one SHALL sentence and its `#### Scenario:` cases, in its
+      bounded context's requirements.md; an invariant is one sentence and its
+      `Enforced at:` line, in its invariants.md — per devbook-domain.md. A
+      decision the change makes is a delta too, under `devbook-delta/arc42/adr/`
+      when it is architectural.
+
+      A change with no prose delta still writes one: a placeholder holding only
+      the opening meta block, because an empty `devbook-delta/` is unfinished.
+      After every edit run
+      `node .devbook/_tools/devbook-meta/delta.mjs --check <change>`.
+    requires:
+      - proposal
+
+  - id: solution
+    generates: solution.md
+    description: How to make the change, and the chapters a builder loads beyond the delta
+    template: solution.md
+    instruction: |
+      Instructions for making the change, and nothing that lands in the devbook
+      on archive. First name, by address, the chapters a builder must load
+      beyond the delta — an existing decision, a related feature or aggregate, a
+      tech rating — and why each matters here. Then the approach: order,
+      structure, the trade-offs taken. A decision the change makes is never
+      written here; it is a delta. Never repeat what a delta already says.
+    requires:
+      - devbook-delta
+
+  - id: tasks
+    generates: tasks.md
+    description: The steps, one pull request each
+    template: tasks.md
+    instruction: |
+      `## Step N — title` blocks, one pull request each, in dependency order.
+      Under each heading, a `delivers:` line naming the deltas it delivers by
+      address, then — when a person will do the step — a line reading exactly
+      `owner: me`, then the step's tasks as `- [ ]` checkboxes, each saying how
+      it is verified. A prototype, only where this repository's rules allow
+      one, is `## Step 0 — Prototype: <question>` and is never merged.
+    requires:
+      - solution
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+  instruction: |
+    Take the first open step without `owner: me`. Never take a step of a change
+    whose proposal is not `approved`. Hand the step to a repo-native flow-* skill
+    first, then the delivery engine's flow for the proposal's category, and
+    implement inline only when no engine is installed. One step is one pull
+    request, and its tasks are ticked in that pull request.

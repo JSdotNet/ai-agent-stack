@@ -7,8 +7,8 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/05-buildin
 
 The language every plugin is written in — the shared kernel. **One plugin, one block:** a plugin
 is the unit a host installs, versions, and can refuse to load, so it is already the line a
-model cannot cross without somebody declaring it, and the eleven files under
-[building-blocks/](building-blocks/README.md) follow the eleven plugin folders name for name. This
+model cannot cross without somebody declaring it, and the twelve files under
+[building-blocks/](building-blocks/README.md) follow the twelve plugin folders name for name. This
 chapter is the one part of the picture that is not a plugin. It holds only what is true of
 every plugin, so a new plugin costs a block file as well as a marketplace entry, and the two
 land together.
@@ -430,7 +430,7 @@ plugins it may name. A lower layer never names a higher one.
 | Layer | Depends on | Example |
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration`, `devbook-openspec` |
 | L2b bridge | Two stacks at once, deliberately | none |
 | L3 surface | Neither direction, and never declared: resolved from the live tool list | the four `delivery-surface-*` plugins — a surface is not a layer, as the sentence below says; `devbook-graph` is not one either, ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
@@ -606,6 +606,8 @@ supporting.
 | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-procedures](building-blocks/devbook-procedures.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
+| [devbook](building-blocks/devbook.md) | [devbook-openspec](building-blocks/devbook-openspec.md) | Customer/Supplier | Yes, `devbook >=1.12.0 <2.0.0` |
+| [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `/opsx:apply` builds the step |
 | [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |

@@ -22,7 +22,7 @@ date: 2026-09-21
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Eleven plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Twelve plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -37,6 +37,7 @@ flowchart TB
         DBD["devbook-derived 1.12.0"]
         DPR["devbook-procedures 1.12.0"]
         DBC["devbook-collaboration 1.12.0"]
+        DOS["devbook-openspec 1.12.0"]
         SCH["delivery-schedule 1.12.0"]
     end
 
@@ -50,6 +51,7 @@ flowchart TB
     DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
     DPR ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
+    DOS ==>|"devbook >=1.12.0 &lt;2.0.0"| DEV
     SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
 
     SD -->|"delivery.surface.*@1"| DEL
@@ -63,6 +65,7 @@ flowchart TB
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
     DEL -.->|"flow-project runs devbook-config:init"| CFG
+    DOS -.->|"spec and tracker providers, bound by name"| DEL
 ```
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is
@@ -92,6 +95,10 @@ that seeds them. A repository may write both by hand and the engine is none
 the wiser; absent, a flow does without and says so. The seam is the skill name, which is why
 `devbook-procedures` can sit over `devbook` and the engine can stay capability-free — see
 [the plugin boundaries record](adr/plugin-boundaries.md).
+
+The dashed `devbook-openspec → delivery` edge runs the same way as the procedures one: the
+bridge ships a `spec` and a `tracker` provider an engine binds by name in `.devbook/config.json`,
+and names the engine nowhere else. Unbound, OpenSpec's own `/opsx:apply` builds each step.
 
 `devbook-config` sits in no layer for the opposite reason: it names every plugin here and
 declares none deliberately, so a plugin it cannot find is a row reading `not installed` rather

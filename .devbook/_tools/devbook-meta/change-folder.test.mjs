@@ -112,6 +112,18 @@ async function decide(root, edit = (block) => block) {
     await rm(root, { recursive: true, force: true });
 }
 
+// -- --apply --no-move merges and leaves the folder for the caller to move ---
+
+{
+    const root = await fixture();
+    await decide(root);
+    const result = await applyChange(root, "add-cache", { date: "2026-09-28", move: false });
+    check(result.applied && (await readFile(path.join(root, DECISIONS), "utf8")).includes("writes invalidate"), "--no-move still merges every delta");
+    check(await exists(path.join(root, CHANGES_ROOT, "add-cache/proposal.md")), "--no-move leaves the change folder where it is");
+    check(!(await exists(path.join(root, CHANGES_ROOT, "archive/2026-09-28-add-cache"))), "--no-move writes nothing under archive/");
+    await rm(root, { recursive: true, force: true });
+}
+
 // -- --check and --apply -----------------------------------------------------
 
 {

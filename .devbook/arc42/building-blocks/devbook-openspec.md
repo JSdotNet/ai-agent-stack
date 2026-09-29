@@ -1,74 +1,114 @@
 # devbook-openspec
 
 ```meta
-status: draft
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
 The change lane: the plugin that installs and configures the OpenSpec CLI so a change to a
-repository is proposed, agreed, applied, and archived as a set of deltas against its devbook
-chapters. No plugin folder exists yet; this block records what the lane is designed to be and
-what the OpenSpec spike of 2026-09-27 established about the CLI it configures.
+repository is proposed, agreed, built step by step, and archived as a set of deltas against its
+devbook chapters.
 
-Inside the block: the `devbook` schema and its templates, the seeded `config.yaml`, the
-providers the engine can bind (`spec`, `tracker`, `status`, `archive`), and the merge of a
-change's deltas into the chapters they target on archive.
+Inside the block: the `devbook` schema and its templates, the seeded `config.yaml`, the rule
+for what an OpenSpec skill does inside a change, the providers an engine binds (`spec`,
+`tracker`), the report that joins steps, verdicts, and gates (`status`), and the sequence that
+lands a change (`archive`).
 
-Outside it: the chapters themselves and the shape of a delta, which are
-[devbook](devbook.md)'s to define; the flows that carry each step, which are delivery's; and
-OpenSpec's own twelve skills and its CLI, which are installed and configured here, never
-copied.
+Outside it: the shape of a change and its delta, the merge, and both gate records, which are
+[devbook](devbook.md#change)'s — `devbook-changes.md` and `delta.mjs`; the approve and accept
+decisions, which are [devbook-collaboration](devbook-collaboration.md)'s; the flows that carry
+each step, which are the engine's; and OpenSpec's own skills and CLI, which are installed and
+configured here, never copied.
 
 ## Interfaces
 
 ```meta
-status: draft
 ```
-
-Planned, per the design checkpoint's *devbook-openspec* section; none is built.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `onboard` | skill | A person making a first change |
-| `spec` | skill, provider | The engine's `spec` point |
-| `tracker` | skill, provider | `delivery.tracker`, as `plugin:skill` |
-| `status` | skill, provider | A person, and the archive gate |
-| `archive` | skill, provider | A person, after the change is accepted |
+| `spec` | skill, provider | The engine's `spec` point, as `"spec": "devbook-openspec:spec"` |
+| `tracker` | skill, provider | `bindings["delivery.tracker"]`, as `{ "provider": "devbook-openspec:tracker" }` |
+| `status` | skill | A person, and `archive` as its gate check |
+| `archive` | skill | A person, once the change is accepted |
+| `devbook-openspec-change` | rule | Both hosts, when a file under `openspec/changes/` is opened |
 
 ## Structure
 
 ```meta
-status: draft
 ```
 
 ### Schema
 
 ```meta
-status: draft
 ```
 
-A project schema named `devbook` whose artifacts run `proposal` → `devbook-delta` → `solution`
-→ `tasks`, with `apply` tracking `tasks.md`. Managed: the bridge writes it and replaces it
-while it still hashes to a release. The spike validated it with `openspec schema validate
-devbook` once two corrections to the checkpoint's draft were made — every artifact needs a
-`description`, and an `instruction` containing `` `owner: me` `` must be a block scalar, since
-a plain YAML scalar cannot hold `: `.
+A project schema named `devbook` at `openspec/schemas/devbook/`, whose artifacts run
+`proposal` → `devbook-delta` → `solution` → `tasks`, with `apply` tracking `tasks.md`.
+`solution` is OpenSpec's `design` renamed, because `design` is a devbook folder here. Managed:
+`init` writes it and `update` replaces it while it still hashes to what landed. Every artifact
+carries a `description`, and every `instruction` is a block scalar, because a plain YAML scalar
+cannot hold the `: ` in `` `owner: me` ``; `openspec schema validate devbook` passes on 1.13.2.
 
 ### Config
 
 ```meta
-status: draft
 ```
 
-`config.yaml` with `schema: devbook`, the context, and per-artifact rules. Seeded once by
-`init` and the repository's after that, because OpenSpec reads only one such file.
+`openspec/config.yaml` with `schema: devbook`, the context every OpenSpec skill is handed, the
+per-artifact rules, and `operations.apply` and `operations.archive` guidance that routes a step
+through a flow and a change through `archive`. Seeded once by `init`, with the Step 0 line only
+where the repository allows a prototype, and the repository's after that — OpenSpec reads only
+one such file.
+
+### The change rule
+
+```meta
+```
+
+`devbook-openspec-change.md`, installed as a trio on `openspec/changes/**`: four artifacts and
+no `specs/` or `design`, no gate field written by an OpenSpec skill, `delta.mjs --check` after
+every delta edit, and the lines a step records itself with — `delivers:`, `owner: me`,
+`branch:`, `PR:`. It is what OpenSpec's defaults would otherwise get wrong; the shape itself
+stays `devbook-changes.md`.
+
+### Step state
+
+```meta
+```
+
+`tracker` reads a step's state and never decides it: `done` when its `PR:` pull request is
+merged, `in review` while it is open, `in progress` while its `branch:` exists, `open`
+otherwise. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
+with the merge, and never writes `done`.
+
+### Landing a change
+
+```meta
+```
+
+`archive` runs `status` as the gate check, then `delta.mjs --apply <name> --no-move`, then
+`openspec archive <name> --yes --skip-specs`. devbook's merge refuses on the same gates again;
+`--no-move` leaves the folder where OpenSpec's archive expects it, and OpenSpec's move lands it
+at the same `archive/<date>-<name>/` devbook's own move would have. Run end to end on a trial
+change against 1.13.2: the gate refused `proposed`, the merge stamped `change`, and the archive
+exited 0 with only its `## What Changes` warning.
+
+### The stamp
+
+```meta
+```
+
+`components.openspec`: `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
+default), `tools` (the hosts `openspec init` set up), `prototype`, and `materialized`. Whether
+OpenSpec may send usage statistics is one machine's answer and lives in the stack-config
+overlay as `ext["devbook-openspec"].telemetry`.
 
 ## Constraints
 
 ```meta
-status: draft
 related: [".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md"]
 ```
 
@@ -82,7 +122,6 @@ answer: `core/root-selection.js` builds each root as `<root>/openspec/changes`,
 ### The root is a folder named openspec
 
 ```meta
-status: draft
 ```
 
 **Question:** can the root be `.devbook/`, with `openspec init` run there? **No.** A root is
@@ -101,15 +140,13 @@ itself, and a dotted `.openspec/` is not recognised.
   `.devbook/` alone — the action context OpenSpec hands an apply agent scopes implementation
   edits to the devbook folder, not to the code.
 
-**Fallback:** `.devbook/.openspec/` is not available. `openspec/` at the repository root
-applies: it is the one placement every command resolves from anywhere in the tree and whose
-edit root is the repository. `.devbook/openspec/` works for planning, but only from under
-`.devbook/` and with apply scoped away from the code.
+**Taken:** `openspec/` at the repository root, where `init` runs `openspec init .`: the one
+placement every command resolves from anywhere in the tree and whose edit root is the
+repository.
 
 ### Folder names are fixed
 
 ```meta
-status: draft
 ```
 
 **Question:** can the change and schema folders be `.changes/` and `.schemas/`, and can
@@ -124,16 +161,16 @@ fixed names under `openspec/`.
   project`.
 - With `specs/` deleted, `openspec list --specs` said `No specs found.`, `openspec validate
   --all` said `No items found to validate.`, and `openspec doctor` said `OpenSpec root: ok` —
-  but `init` scaffolds `specs/` and the next `openspec archive` recreated it, empty. Git does
-  not track an empty folder, so it never reaches a commit.
+  but `init` scaffolds `specs/` with a `.gitkeep` in it, which git does track, and the next
+  `openspec archive` recreated the folder, empty.
 
-**Fallback:** OpenSpec's plain names inside its own folder. `specs/` stays absent from the
-tree without any removal step.
+**Taken:** OpenSpec's plain names inside its own folder. `init` deletes the scaffolded
+`specs/` and its `.gitkeep`, and `update` and `archive` delete it again when it comes back
+empty.
 
 ### An empty glob artifact is incomplete
 
 ```meta
-status: draft
 ```
 
 **Question:** is `devbook-delta/**/*.md`, matching no file, complete in `openspec status`?
@@ -146,12 +183,12 @@ status: draft
 because the schema has no `specs` artifact; that is what lets `openspec validate` pass a
 devbook change at all (`skip_specs is set in .openspec.yaml ... zero deltas accepted`).
 
-**Fallback:** a one-line placeholder delta for a change with no prose delta.
+**Taken:** a placeholder delta for a change with no prose delta — the opening block alone, per
+`devbook-changes.md` — and the schema's `devbook-delta` instruction says so.
 
 ### Archive moves, and merges nothing
 
 ```meta
-status: draft
 ```
 
 **Question:** does `openspec archive` move a change whose deltas it does not recognise, or
@@ -164,28 +201,26 @@ schema — and one task was open, `Continuing due to --yes flag.`
 With `skip_specs: false` on a second change, `openspec validate` refused (`Change must have at
 least one delta. No deltas found.`, exit 1), and `openspec archive --yes` moved it anyway.
 
-**Fallback:** none is needed for the move — the CLI does it. The merge is the bridge's
-`archive`, as the design already had it: it writes each delta into its chapter first, then
-calls `openspec archive` to move the folder.
+**Taken:** the CLI does the move and the bridge does the merge first — *Landing a change*
+above.
 
 ## Dependencies
 
 ```meta
-status: draft
 related: [".devbook/arc42/building-blocks/devbook.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#layer"]
 ```
 
-An L1 extension over devbook, planned to declare that one dependency and to name delivery
-only as a provider string.
+An L1 extension over devbook, declaring that one dependency and naming the engine only as the
+provider strings a repository binds.
 
 ### Outbound
 
 ```meta
-status: draft
 ```
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Customer-Supplier | The delta and proposal shapes, and the chapters a delta merges into | devbook's chapter schema | A delta is a devbook chapter by another path. |
-| OpenSpec CLI | Conformist | `openspec init`, `new change`, `status`, `validate`, `archive` | The CLI, its `schema.yaml` format, and its fixed `openspec/` layout | The workflow is OpenSpec's; the bridge only configures it. |
-| delivery | Separate Ways | A provider string in `.devbook/config.json`, skipped when absent | The engine's `spec` and `tracker` bindings | A step runs through a flow when one is installed and inline when not. |
+| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.12.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
+| [devbook-collaboration](devbook-collaboration.md) | Separate Ways | `chapter-approve` and `chapter-accept` named as the next move | The skill names alone | The two gates are decisions, and deciding is that plugin's; `status` names them and never writes a rung. |
+| OpenSpec CLI | Conformist | `openspec init`, `update`, `new change`, `status`, `validate`, `schema validate`, `archive` | The CLI, its `schema.yaml` and `config.yaml` formats, and its fixed `openspec/` layout | The workflow is OpenSpec's; the bridge only configures it. |
+| delivery | Separate Ways | Provider strings in `.devbook/config.json`, skipped when absent | The engine's `spec` point and its `plugin:skill` tracker contract | A step runs through a flow when an engine is installed and through `/opsx:apply` when not. |

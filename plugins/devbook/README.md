@@ -349,6 +349,7 @@ commits. See `tools/devbook-meta/README.md` for the document shapes.
 ```bash
 node .devbook/_tools/devbook-meta/delta.mjs --check <change>   # resolve every delta, write nothing
 node .devbook/_tools/devbook-meta/delta.mjs --apply <change>   # merge, stamp `change`, move to archive/
+node .devbook/_tools/devbook-meta/delta.mjs --apply <change> --no-move   # merge; the caller moves the folder
 ```
 
 `delta.mjs` is the only merge of a change's deltas into the chapters they target. Its

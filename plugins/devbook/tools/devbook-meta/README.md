@@ -34,6 +34,9 @@ node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 # Resolve one change's deltas; merge them and archive the change
 node .devbook/_tools/devbook-meta/delta.mjs --check add-cache
 node .devbook/_tools/devbook-meta/delta.mjs --apply add-cache
+
+# Merge and leave the folder for another tool to move — `openspec archive` does
+node .devbook/_tools/devbook-meta/delta.mjs --apply add-cache --no-move
 ```
 
 The change folder, `openspec/changes/`, is indexed into the repository rollup

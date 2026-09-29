@@ -1,0 +1,29 @@
+schema: devbook
+
+context: |
+  The source of truth is the devbook, under .devbook/. Read the chapters a
+  change names and walk their related links; never load a devbook folder whole.
+  Annotation fences are review notes, not content: skip them.
+  A change lives in openspec/changes/<name>/ and is a set of deltas against
+  devbook chapters. Its shape is .agents/rules/devbook-changes.md, and what an
+  OpenSpec skill does inside it is .agents/rules/devbook-openspec-change.md.
+  There is no specs/ folder here and no design artifact: solution is its id.
+
+rules:
+  proposal:
+    - Name the change category once. It decides which flow applies a step.
+  devbook-delta:
+    - A delta opens with the meta block devbook-changes.md defines, and nothing else in it carries a status.
+    - Never write approved or accepted; only the approve and accept gates do.
+    - Behaviour lives in its bounded context's requirements.md and invariants.md, never in a folder of its own.
+  tasks:
+    - Every step ends in a validation the engine can run.
+
+operations:
+  apply:
+    guidance:
+      - Route a step through a repo-native flow-* skill first, then the delivery engine's flow for the proposal's category, and implement inline only when no engine is installed.
+      - Tick the step's tasks in the step's own pull request.
+  archive:
+    guidance:
+      - Archive through devbook-openspec:archive, never openspec archive alone; the CLI moves the folder and merges no devbook delta.

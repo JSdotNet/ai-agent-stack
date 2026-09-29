@@ -5,7 +5,7 @@ date: 2026-09-27
 related: [".devbook/arc42/11-risks-and-technical-debt.md", ".devbook/arc42/building-blocks/devbook-openspec.md#constraints", ".devbook/arc42/building-blocks/devbook.md#dependencies"]
 ```
 
-**Remediation state:** identified · **Severity:** medium · **Owner:** the maintainer
+**Remediation state:** resolved · **Severity:** medium · **Owner:** the maintainer
 
 ## The debt
 
@@ -56,10 +56,10 @@ fallbacks are now the design.
 ```meta
 ```
 
-The planned `devbook-openspec` plugin — its `init`, which places the root at the repository
-level, and its `archive`, which owns the merge — and devbook's generator, whose folder
-resolution has to reach `openspec/changes/` outside `.devbook/`. Nothing shipped is wrong
-today; nothing has been built on the other layout.
+The `devbook-openspec` plugin — its `init`, which places the root at the repository level and
+deletes the scaffolded `specs/`, and its `archive`, which owns the merge — and devbook's
+generator and `delta.mjs`, whose folder resolution reaches `openspec/changes/` outside
+`.devbook/`. Nothing was built on the other layout.
 
 ## Impact
 
@@ -86,3 +86,23 @@ bridge release.
 **Trigger:** the bridge's first release, which is when the compensating code becomes something
 to maintain; or an OpenSpec release that makes the root folder name or the archive merge
 configurable, which settles the second option.
+
+## Resolution
+
+```meta
+```
+
+Resolved 2026-09-28, on the first trigger — the bridge's first build — by the first option:
+the fixed layout is accepted and the bridge compensates, as the
+[building block](../building-blocks/devbook-openspec.md#constraints) records under each
+*Taken*. The root is `openspec/` at the repository level; `init`, `update`, and `archive`
+delete the `specs/` folder the CLI scaffolds or recreates; a delta is checked by
+`delta.mjs --check`, which the change rule tells every OpenSpec skill to run; a change with no
+prose delta carries a placeholder; and `archive` merges through `delta.mjs --apply --no-move`
+before `openspec archive` moves the folder. The `## What Changes` warning stays, expected and
+non-blocking. Telemetry is the overlay's `ext["devbook-openspec"].telemetry`.
+
+What remains is the cost the record named, now paid knowingly: an OpenSpec release that
+changes its root, archive, or status behaviour is a bridge release, checked against the range
+`components.openspec.cli` pins. The upstream option stays open and would reopen this record if
+OpenSpec makes the root folder name or the archive merge configurable.

@@ -67,8 +67,8 @@ instructions.
 
 - Keep the glossary aligned with the ubiquitous language defined per bounded
   context in `domain/`.
-- Prefer diagrams (Mermaid) over long prose for building-block and runtime
-  views.
+- Draw the building-block and runtime views as diagrams, per
+  `devbook-writing.md`.
 - Each file's top-level chapter, and any independently trackable ## section
   inside it, must carry the metadata block described in
   `devbook-chapter-metadata.md` (status — optional here, see

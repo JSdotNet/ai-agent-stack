@@ -66,6 +66,16 @@
         ".devbook/tech/**"
       ],
       "install": "tech"
+    },
+    "devbook-writing": {
+      "paths": [
+        ".devbook/arc42/**",
+        ".devbook/domain/**",
+        ".devbook/tech/**",
+        ".devbook/design/**",
+        ".devbook/ai/**"
+      ],
+      "install": "always"
     }
   }
 }

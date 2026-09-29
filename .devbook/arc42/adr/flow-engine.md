@@ -1,7 +1,7 @@
 # Flow Engine
 
 ```meta
-date: 2026-09-23
+date: 2026-09-29
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -92,6 +92,7 @@ own audit already used.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-29 | The change lane in the engine: an item the tracker reports as part of a change runs `single-branch` or `proposal-first`, which names its branches and pull requests, and a proposal's status follows its pull request. A `flow.start` chore may replan and stop the run on a stale plan; a chore id may carry `--flag` arguments. No new point: the workflow is read off the tracker, and the replan is a chore. |
 | 2026-09-23 | The tracker may be a `plugin:skill` provider implementing `read_item`, `update_item`, and `comment`; a step's pull request is its state; a `spec` provider may return an already-approved specification. No new point: both fill a binding and a service that already exist. |
 | 2026-09-15 | Sixteen flows become four, named for what changes; no fallback flow. |
 | 2026-09-15 | `verify` is the spec check after the pull request; Build & Test serves `validate`; Documentation Update and `docs.update` removed. |

@@ -162,6 +162,10 @@ behaviour.
 - Exempt safety-critical text from any terseness rule: confirmations before irreversible
   actions, and anything a fragment could make ambiguous, stay in full prose.
 
+These rules are for assets. A devbook chapter is written for people and follows
+`plugins/devbook/rules/devbook-writing.md` instead: full sentences, and a diagram wherever
+one tells the story.
+
 ## Trying a change
 
 ```bash

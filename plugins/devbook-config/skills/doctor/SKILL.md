@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every provider id bound in the effective configuration that resolves to no skill, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill".'
+description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every provider id bound in the effective configuration that resolves to no skill, a missing or out-of-range OpenSpec CLI and an unapproved change nobody has touched in a week, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill", "is the OpenSpec CLI current", "stale proposals".'
 ---
 
 # devbook-config doctor
@@ -45,8 +45,8 @@ two writers for one stamp is how a reconcile stops being idempotent.
    `.devbook/config.json` from there — and read `config` from its stdout; never merge the
    layers by hand. delivery not installed: say the providers are unchecked, and why. Take every
    provider id under `extensions` — a string, an object's `provider`, a chore entry's `run` —
-   and under `bindings`: each `delivery.roles` value, and a `delivery.tracker` provider that
-   is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
+   and under `bindings`: each `delivery.roles` value, `openspec.grill`, and a `delivery.tracker`
+   provider that is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
    providers. `null` is an unbound point, not a finding. Resolve each:
    - `plugin:skill` — `skills/<skill>/SKILL.md` or, for a role, `agents/<skill>.agent.md`
      under that plugin's `installPath`; a bare `plugin` — the plugin is installed;
@@ -58,7 +58,15 @@ two writers for one stamp is how a reconcile stops being idempotent.
    migration that rewrites it. Any other id that resolves to nothing is a warning naming the
    file and key that bind it — the flow degrades past it, so it never fails the run. A
    plugin the report does not list is outside this catalog: say it is unchecked.
-5. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
+5. **Check the change lane** when `components.openspec` exists. Run `openspec --version`
+   from the repository root: absent, or outside `components.openspec.cli`, is a warning —
+   a fact about this machine, like a plugin it lacks — and the fix is
+   `npm install -g @fission-ai/openspec@latest`, run by the person, never here. Then, for
+   each `openspec/changes/<name>/` outside `archive/`, read `status` from `proposal.md`'s
+   block: a change still at `proposed` whose folder `git log -1 --format=%cs` dates more than
+   seven days back — or, never committed, whose newest file is — is a warning naming the
+   change and its age, fixed by `devbook-collaboration:chapter-approve` on the folder.
+6. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
    hard drift; report staleness, customization, and unresolved providers without failing — a
    stale generated file must not block an unrelated pull request.
 

@@ -30,7 +30,7 @@ const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 //
 // `contract: false` is not "has not got round to it". Only a component whose update rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
-// it owns whole has hash-matching as its whole migration mechanism. So four of these five will
+// it owns whole has hash-matching as its whole migration mechanism. So five of these six will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
 // `.devbook/arc42/adr/install.md`.
@@ -40,6 +40,7 @@ const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 const COMPONENTS = {
     devbook: { plugin: 'devbook', init: 'devbook:init', update: 'devbook:update', contract: true },
     derived: { plugin: 'devbook-derived', init: 'devbook-derived:init', update: 'devbook-derived:update', contract: false },
+    openspec: { plugin: 'devbook-openspec', init: 'devbook-openspec:init', update: 'devbook-openspec:update', contract: false },
     'devbook-procedures': { plugin: 'devbook-procedures', init: 'devbook-procedures:init', update: 'devbook-procedures:update', contract: false },
     delivery: { plugin: 'delivery', init: 'delivery:init', update: 'delivery:update', contract: false },
     schedule: { plugin: 'delivery-schedule', init: 'delivery-schedule:init', update: 'delivery-schedule:update', contract: false },
@@ -48,11 +49,12 @@ const COMPONENTS = {
 // The order the reconcile list is run in, and it is not cosmetic: devbook-derived's update
 // refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
 // checks its targets against the plugins this repository enables, so it wants the settled
-// state. `devbook-procedures` sits before `delivery` so that a `start` it moves to `run`, or a `capture` an older
+// state. `devbook-openspec` follows devbook because its init refuses until `components.devbook`
+// adopts the change folder at contract 24. `devbook-procedures` sits before `delivery` so that a `start` it moves to `run`, or a `capture` an older
 // engine seeded is adopted or replaced before the engine's update releases its claim on it,
 // and both sit before schedule because schedule's targets call those procedures. Anything not
 // named here follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-procedures', 'delivery', 'delivery-schedule'];
+const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-openspec', 'devbook-procedures', 'delivery', 'delivery-schedule'];
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and

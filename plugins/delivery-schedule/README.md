@@ -36,7 +36,7 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-devbook-verify` | Runs `devbook:verify-change` over every adopted folder, one run per kind, and opens an issue per `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such row, and a `schedule-report` issue with the whole table |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
-| `schedule-merge-review` | Reviews every pull request waiting on a reviewer | One comment per pull request |
+| `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
 | `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
 | `schedule-performance-review` | Scores ten findings, implements the best one | A pull request |

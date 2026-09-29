@@ -93,6 +93,9 @@ branch is behind — and nothing later in the run notices.
 - **Resolve the base** from `policy.pr.base`, falling back to the repository's default
   branch, and fetch it. No remote, or a fetch that fails, marks the phase `skipped` with the
   reason — never `blocked`. Working offline is not an error.
+- **Take the workflow's branch** when the tracker reports the item as part of a change: check
+  out the branch **Git Workflows** (`engine-contract.md`) names, or cut it from the fetched
+  base, before anything below. No change reported, stay on the current branch.
 - **Refuse to touch a dirty tree.** With uncommitted changes present, mark the phase
   `skipped` and name the files. **Never stash.** The stash stack is shared by every worktree
   of the repository, so an entry left here can be popped by another session.
@@ -270,6 +273,9 @@ description as file artifacts, say so once, and continue.
   with the host's own pull-request action when the session offers one, otherwise `gh pr create`
   or the bound GitHub tooling. Build & Test, Validation, and the recorded approval **are**
   the validation: never rebuild, re-run tests or QA, or ask for a second confirmation here.
+- **Follow the change's workflow** when the item is part of one, per **Git Workflows** in
+  `engine-contract.md`: a `proposal-first` proposal opens as a draft; a `single-branch` run
+  that does not close the change pushes its branch and opens nothing, and says so.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Report the pull request URL in `links`** on this stage, per **Reporting Contract** in
   `surface-contract.md`, however the pull request was opened.

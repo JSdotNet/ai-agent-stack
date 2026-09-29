@@ -1,6 +1,6 @@
 ---
 name: engine-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, and the host slots.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the two git workflows a change runs in, and the host slots.
 ---
 
 # Engine Contract
@@ -376,7 +376,10 @@ dependencies: one missing specialist must not demote every skill that names it.
   and pull request rather than decided by the engine — `open`, `in progress` (a branch
   exists), `in review` (a pull request is open), `done` (merged). An operation outside the
   three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
-  A skill that does not resolve is the unbound path for all of them.
+  A skill that does not resolve is the unbound path for all of them. Its `read_item` may also
+  report the larger change an item belongs to: the `change` name, the item's `part` —
+  `proposal`, `step` with its number, or `close` — and the `workflow`, which **Git
+  Workflows** below turns into the run's branch.
 - **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
   group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
@@ -393,6 +396,35 @@ dependencies: one missing specialist must not demote every skill that names it.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   validation, so it binds as the `implement` and `validate` services above rather than as an
   advisor a stage delegates a question to.
+
+## Git Workflows
+
+A work item the tracker reports as part of a change runs in one of two workflows, and the
+workflow names the branch the run works on and the pull requests the change makes. The tracker
+reports it with the item — the default its own component stamps for the repository, which a
+`Workflow:` line in the change's proposal overrides. Reported as neither, it is
+`single-branch`. The engine reads the workflow and never chooses it.
+
+| Workflow | Branches | Pull requests | Where the two decisions happen |
+| --- | --- | --- | --- |
+| `single-branch` | `change/<name>`, for the whole change | One: the proposal, every step, and the close together | Approval in the session, before the first step; acceptance is that pull request's review |
+| `proposal-first` | `change/<name>` for the proposal, `step/<name>/<N>` per step, `archive/<name>` for the close | One per branch, each against `policy.pr.base` | Approval in the proposal's pull request; acceptance and the close share the last |
+
+- **The branch is the workflow's.** At Update Base the run checks the named branch out when
+  it exists and cuts it from the fetched base when it does not. A `proposal-first` step is
+  always cut from the base, which by then holds the merged proposal every step reads.
+- **A `single-branch` step is a commit, not a pull request.** Each run on the change commits
+  on `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the
+  one pull request only on the run that closes the change; an earlier run pushes and stops
+  there.
+- **A proposal's status follows its pull request.** Under `proposal-first` the proposal's
+  pull request opens as a draft: a draft is proposed, an approving review is approved — the
+  approval gate records that decision in the review, never the engine — and merged is on the
+  base. The engine reads each state through the tracker and writes none of them.
+- **Why these names.** Git refuses a ref that is both a leaf and a directory, so
+  `change/<name>` beside `change/<name>/1` fails; a step is `step/<name>/<N>` for that reason.
+- **No change reported, no workflow.** Every other item runs on the branch it was started on,
+  as before.
 
 ## Host Slots
 

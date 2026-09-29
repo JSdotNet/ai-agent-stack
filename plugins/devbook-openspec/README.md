@@ -42,6 +42,30 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 | `archive` | Checks both gates, merges every delta with `delta.mjs --apply --no-move`, then lets `openspec archive` move the folder |
 | `onboard` | Walks a person through a first real change, one move at a time |
 
+## What the engine binds
+
+`devbook-config:init` writes these into `.devbook/config.json`; this plugin never does. The two
+gates are optional and show a change's own gates inside a run: approval as the run starts one
+step, and the verdicts as it ends.
+
+```json
+"extensions": { "spec": "devbook-openspec:spec" },
+"bindings": {
+  "delivery.tracker": { "provider": "devbook-openspec:tracker" },
+  "openspec.grill": "<plugin>:<grill-skill>"
+},
+"gates": [
+  { "at": "spec", "when": "after", "purpose": "approval", "show": "artifact",
+    "prompt": "This run builds one step of an approved change. Proceed?" },
+  { "at": "verify", "when": "after", "purpose": "risk", "show": "summary",
+    "prompt": "Verdicts above. Any row not aligned stays open on the change." }
+]
+```
+
+`openspec.grill` names a skill from another marketplace that interrogates an idea before
+`/opsx:propose`; `onboard` offers it at the explore move. `null` or absent, explore runs alone.
+A machine may bind its own in the stack-config overlay through `devbook-config:local`.
+
 ## Where things live
 
 OpenSpec resolves its root only as a folder named `openspec/`, with `changes/`, `schemas/`, and

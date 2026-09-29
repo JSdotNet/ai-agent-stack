@@ -16,8 +16,9 @@ its hash rules, and devbook's `assets/rule-wrappers.md` for the rule trio. This 
 **Refuse**, saying which and naming the fix, when: `components.openspec` exists (run
 `devbook-openspec:update`); `components.devbook` is absent (run `devbook:init`);
 `components.devbook.adopted` lacks `changes` or `contractVersion` is below 24 (run
-`devbook:update` — the change folder and its gates are devbook's); or `openspec/` already
-exists (a setup this skill did not write — moving it to the `devbook` schema is a person's call).
+`devbook:update` — the change folder and its gates are devbook's); or `openspec/config.yaml`
+already exists (a setup this skill did not write — moving it to the `devbook` schema is a
+person's call). `openspec/changes/` alone is devbook's change folder, and `openspec init` keeps it.
 
 **The CLI.** Run `openspec --version` against `>=1.13.2 <2.0.0`, or a narrower range the person
 gives. Absent or outside it, print `npm install -g @fission-ai/openspec@latest` and stop: never

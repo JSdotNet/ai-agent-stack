@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, extensions, policy, gates), validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo".'
+description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, extensions, policy, gates) — the change lane''s spec, tracker, and grill bindings among them when devbook-openspec is adopted — validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo", "set up the change lane".'
 ---
 
 # devbook-config init
@@ -41,7 +41,8 @@ record work this skill did not do.
    The four engine keys are `delivery.*` settings and are written **only when `delivery` is
    among the components adopted in step 2**. Nothing else reads them, so a role or a point
    bound where no flow ever runs is a setting nobody maintains. Without delivery, the whole
-   file is `{ "id": "<name>" }`; skip steps 4 and 5.
+   file is `{ "id": "<name>" }` plus step 4's grill binding; validate in step 5 only where
+   delivery is installed, and skip step 6.
 
    With delivery: ask which roles, tracker, extension points, policy switches, and gates
    this repository really has a provider or a reason for. Bind a role only to a plugin the
@@ -53,15 +54,30 @@ record work this skill did not do.
    `resources/engine-contract.md` in that same plugin for what each point and gate means.
    Never put a model or a secret in this file.
 
-4. **Validate.** Run that plugin's `tools/stack-config/check.mjs` against the file. An
+4. **The change lane**, when `devbook-openspec` is among the components adopted in step 2.
+   Ask its three questions, in this order:
+   - **Is the OpenSpec CLI here?** Run `openspec --version`. Absent, print
+     `npm install -g @fission-ai/openspec@latest` and wait until it answers; never run it
+     yourself. Declined, the lane is not adopted and nothing below is written.
+   - **Adopt the change lane, and allow a Step 0 prototype?** A yes adds `changes` to what
+     `devbook:init` adopts in step 7, and the prototype answer is `devbook-openspec:init`'s
+     to stamp. With delivery adopted, write `"spec": "devbook-openspec:spec"` under
+     `extensions` and `{ "provider": "devbook-openspec:tracker" }` as
+     `bindings["delivery.tracker"]`, and offer the two optional gates in the bridge's
+     README under *What the engine binds*.
+   - **Grill an idea before proposing it?** Name the `plugin:skill` the person uses — it
+     comes from another marketplace, so never propose one — and write it as
+     `bindings["openspec.grill"]`, delivery or not. No answer is `null`.
+
+5. **Validate.** Run that plugin's `tools/stack-config/check.mjs` against the file. An
    unknown key is an error, not a warning: a typo must never become a silently absent
    setting. Fix and re-run until it exits `0`.
 
    Write no overlay here: an overlay lives under the user's devbook config directory, is
-   true of the person running this and of nobody they set a repository up for, and step 8
+   true of the person running this and of nobody they set a repository up for, and step 9
    offers `devbook-config:local`, which writes it.
 
-5. **Declare the default MCP servers.** Every point left absent in step 3 takes the engine
+6. **Declare the default MCP servers.** Every point left absent in step 3 takes the engine
    default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
    host can start the server. The report's **MCP servers** lines say which of those ids
    `.mcp.json`, `.vscode/mcp.json`, and `.github/mcp.json` already declare. When the
@@ -72,10 +88,11 @@ record work this skill did not do.
    missing ids in its own shape and change nothing else in it. These files are the
    repository's, unstamped, and never touched again by this plugin.
 
-6. **Let each adopted component initialize itself.** For every component chosen in step 2,
+7. **Let each adopted component initialize itself.** For every component chosen in step 2,
    invoke that component's own `init` and let it materialize its payload and write its
    own stamp, in the order the report's reconcile list gives — `devbook:init` for the
-   devbook folders, `devbook-derived:init` for the committed index, `devbook-procedures:init`
+   devbook folders, `devbook-derived:init` for the committed index, `devbook-openspec:init`
+   for the change lane, with step 4's prototype answer, `devbook-procedures:init`
    for the repository's `run`, `show`, `capture`, `debug`, `estimate`, and `prototype` skills,
    `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
    that one's adoption question from the engine keys just written: `extensions.app.start` of
@@ -83,12 +100,12 @@ record work this skill did not do.
    and `show`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
    by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 
-7. **Verify and report.** Re-run the report, run `devbook-config:doctor`, and say plainly
+8. **Verify and report.** Re-run the report, run `devbook-config:doctor`, and say plainly
    what was set up, what was deliberately left unbound, what was not installed and therefore
    not offered, and anything that ended failing. An init that ends
    on a failing check is reported as failing, never as done.
 
-8. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
+9. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
    model-selection file exist for the person running this. When neither does, say that the
    first flow here runs at the team's defaults, and offer to run `local` now. Their machine, their answer.
 
@@ -101,7 +118,9 @@ forward — version drift, migrations, the fan-out across components — belongs
 - Do not write, edit, or remove a `components.<name>` key. It is not yours.
 - Do not set up, or ask about, a plugin the report shows as not installed. Report it; do not
   install it on the user's behalf.
-- Do not write an engine key into a repository that is not adopting `delivery`.
+- Do not write an engine key into a repository that is not adopting `delivery`. The grill
+  binding is the change lane's, not the engine's, and is the one exception.
+- Do not run `npm install`, or install the OpenSpec CLI any other way. Print the command.
 - Do not write an overlay, at either of its layers. `devbook-config:local` does, for the
   person running it.
 - Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,

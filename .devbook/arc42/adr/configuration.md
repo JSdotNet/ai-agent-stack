@@ -89,6 +89,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-29 | `bindings["openspec.grill"]` names the change lane's grill skill, or `null`. The engine carries it and never reads it; `devbook-config:init` writes it with the lane's `spec` and tracker bindings, and `devbook-config:local` may bind one per machine in an overlay. |
 | 2026-09-29 | `policy["openspec.scenarios"]`: `advisory` by default, `linked` refusing a change's acceptance while a scenario names no test. Locked against overlays, beside `pr.required` and `qa.ceiling`: what acceptance requires is the repository's. A chore's `run` may carry `--flag` arguments; a service's provider may not. |
 | 2026-09-27 | `devbook-config:doctor` resolves every provider id in the effective configuration against the installed skills and the repository's own skill folder: an id migration 015 retired is hard drift naming its successor, any other unresolved id a warning, and an unbound point nothing. The checker still validates shape only. |
 | 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. |

@@ -62,13 +62,16 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
 
 4. **Fan out, in the report's order.** For each `reconcile` row, invoke that component's own
    `update` — `devbook:update`, then `devbook-derived:update`, then
-   `devbook-procedures:update`, then `delivery:update`, then `delivery-schedule:update` — and
+   `devbook-openspec:update`, then `devbook-procedures:update`, then `delivery:update`, then
+   `delivery-schedule:update` — and
    let it run its migrations oldest first, overwrite what is stale, leave what is customized,
    and rewrite its own stamp. `devbook-collaboration` has no `init` or `update`: enabling it is the
    whole adoption.
 
-   The order is load-bearing at three points: derived's `update` refuses to run until
-   `components.devbook` names an adopted folder; procedures' `update` moves a `start` to `run` and asks about a
+   The order is load-bearing at four points: derived's `update` refuses to run until
+   `components.devbook` names an adopted folder; the change lane's `update` needs devbook's
+   change folder current, and stops on an OpenSpec CLI outside its stamped range — print
+   the install command and never run it; procedures' `update` moves a `start` to `run` and asks about a
    `capture` an older engine seeded before `delivery:update` releases its claim on it; and
    schedule checks its targets against what the repository enables. Each is **required**: a
    failure does not abort the rest, and does make the whole run report as failing.

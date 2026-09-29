@@ -39,6 +39,14 @@ different questions — *what should this repository use?* against *is what it u
 and only the first is a conversation about intent. Merging them would put an interview in
 front of an operation people run to change nothing.
 
+The change lane is one more component, `openspec`, written by `devbook-openspec`. `init` asks
+its three questions — is the OpenSpec CLI here, adopt the lane and allow a Step 0 prototype,
+grill an idea before proposing — writes the `spec` and tracker bindings, the optional gates, and
+`bindings["openspec.grill"]`, and leaves the rest to `devbook-openspec:init`. It never installs
+the CLI. `update` fans out to `devbook-openspec:update`, `doctor` reports a missing or
+out-of-range CLI and an unapproved change nobody has touched in a week, and `local` binds a
+grill skill of your own.
+
 The six carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
 scope against its neighbours in the same plugin; here the plugin name is the scope, and
 `devbook-config:init` says everything a prefix would have. The verbs are OpenSpec's —

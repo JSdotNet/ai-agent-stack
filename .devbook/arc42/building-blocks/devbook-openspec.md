@@ -31,7 +31,7 @@ configured here, never copied.
 | `onboard` | skill | A person making a first change |
 | `spec` | skill, provider | The engine's `spec` point, as `"spec": "devbook-openspec:spec"` |
 | `tracker` | skill, provider | `bindings["delivery.tracker"]`, as `{ "provider": "devbook-openspec:tracker" }` |
-| `status` | skill | A person, and `archive` as its gate check |
+| `status` | skill | A person, `archive` as its gate check, and the engine's `flow.start` point as `devbook-openspec:status --replan` |
 | `archive` | skill | A person, once the change is accepted |
 | `devbook-openspec-change` | rule | Both hosts, when a file under `openspec/changes/` is opened |
 
@@ -82,7 +82,9 @@ stays `devbook-changes.md`.
 `tracker` reads a step's state and never decides it: `done` when its `PR:` pull request is
 merged, `in review` while it is open, `in progress` while its `branch:` exists, `open`
 otherwise. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
-with the merge, and never writes `done`.
+with the merge, and never writes `done`. Its items are the proposal, each step, and the close,
+and `read_item` reports each one's `change`, `part`, and `workflow` — the proposal's
+`Workflow:` line, else the stamp's — which the engine turns into branch names.
 
 ### Landing a change
 
@@ -102,7 +104,8 @@ exited 0 with only its `## What Changes` warning.
 ```
 
 `components.openspec`: `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
-default), `tools` (the hosts `openspec init` set up), `prototype`, and `materialized`. Whether
+default), `tools` (the hosts `openspec init` set up), `prototype`, `workflow` (`single-branch` or
+`proposal-first`; absent reads as `single-branch`), and `materialized`. Whether
 OpenSpec may send usage statistics is one machine's answer and lives in the stack-config
 overlay as `ext["devbook-openspec"].telemetry`.
 

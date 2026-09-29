@@ -1,6 +1,6 @@
 ---
 name: engine-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, and the host slots.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the two git workflows a change runs in, and the host slots.
 ---
 
 # Engine Contract
@@ -139,7 +139,7 @@ same way:
 | `gates` | **Appended.** An overlay can add a checkpoint and has no way of spelling the removal of one — at any layer, of any layer beneath it. |
 | `null` | A value — deliberately unbound — never a delete. |
 
-Five things an overlay may not say, and the checker refuses each by name:
+Six things an overlay may not say, and the checker refuses each by name:
 
 | Refused | Because |
 | --- | --- |
@@ -148,6 +148,7 @@ Five things an overlay may not say, and the checker refuses each by name:
 | `policy.pr.required` | What the repository produces, not how one machine runs it. |
 | `policy.qa.ceiling` | The ceiling is the repository's limit. `qa.depth` is your choice inside it. |
 | `policy.gate.personalValidation` | The mandatory gate. Already `const` in the schema, and named here so the refusal states the invariant rather than a type error. |
+| `policy.openspec.scenarios` | What acceptance of a change requires is the repository's; `advisory` in an overlay would unlock a gate the committed file keeps shut. |
 
 That list is the whole safety story, and it is worth stating plainly: **a file no reviewer
 sees must never be able to weaken what a reviewer sees.** Everything a reader of the committed
@@ -186,7 +187,7 @@ producing side effects and a report.
 | Point | Kind | When | Contract |
 | --- | --- | --- | --- |
 | `session.start` | chore | Once, before the first flow | Load context, check environment and tooling, warn early. Distinct from the host's own session-start hook, which is settings-level and knows nothing about flows. |
-| `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it. |
+| `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it; a replan chore, below, may stop the run instead. |
 | `spec` | service | Specification and architecture intake | Scope and acceptance criteria → the specification the rest of the flow builds on. Unbound: the flow-runner writes it inline. The highest-value gate attaches here. |
 | `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
 | `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
@@ -206,6 +207,8 @@ invisible second implementation of the flow, which is the thing the engine exist
 `provider` key names it and whose other keys are options that provider understands. A chore
 takes an array, each entry a string or `{ "run": …, "on-failure": "required"|"advisory" }`;
 `advisory` is the default and puts a failure in the summary instead of stopping the run.
+A chore's id may carry `--flag` arguments after it — `your-plugin:your-skill --replan` — which
+the skill receives as its arguments; they are no part of the id it resolves by.
 
 A provider id is `plugin:skill`, a bare `plugin` (resolved through its role), or
 `repo:<skill>` for a repo-native skill the host loads with no marketplace involved. A
@@ -219,6 +222,25 @@ uses what it returns as the run's specification: it derives nothing inline and n
 rewrites nor supplements it. A `spec` approval gate with `show: artifact` renders that
 returned specification — what the provider returned, not a summary of it — and `revise`
 re-runs the provider with the notes, as at any point.
+
+**A `flow.start` chore may replan.** A run that builds one step of a larger agreed change
+starts from a plan agreed before the base moved under it. Update Base fixes the branch and says
+nothing about whether the plan still holds, so a replan chore — bound as
+`{ "run": "your-change-plugin:your-status-skill --replan", "on-failure": "required" }` — checks
+three things, in order, against the base Update Base just fetched:
+
+1. **Every proposed chapter change against its target as it now stands on the base.** A target
+   that changed since the change was approved is a conflict, never something to merge quietly.
+2. **Every open step against the code as it now stands.** A step whose outcome already holds,
+   or whose assumption a merged step invalidated, is flagged.
+3. **Every chapter the change depends on or relates to.** One deprecated or rewritten since
+   the change was agreed is a flag on the change itself.
+
+Any flag fails the chore, and `required` stops the run before the scope is acted on. The
+output is the list of what to decide; revising the plan is the change's owner's, through
+the change's own revision, and a revised chapter change goes back through its approval. A
+replan rewrites no chapter change and no step, and never runs on a schedule: a plan is
+re-checked when someone is about to act on it.
 
 ## Gates
 
@@ -291,6 +313,7 @@ key means the engine's own choice rather than undefined.
 | `phases.updateBase` | boolean | `true` |
 | `phases.verification` | boolean | `true` |
 | `phases.workItemUpdate` | boolean | `true` |
+| `openspec.scenarios` | `advisory`, `linked` | `advisory` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that
 defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
@@ -303,6 +326,15 @@ a well-formed git ref name, so free prose is rejected by pattern — and nothing
 that ref exists is resolved against the remote at flow time — Update Base fetches it, the
 pull-request lane opens against it — because a config check that reached for the network would
 fail offline, in a fresh repository with no remote, and on a base branch not yet pushed.
+
+`openspec.scenarios` governs a change whose behaviour is written as scenarios, at its
+acceptance. A scenario is proven by the test its chapter's `tests` link names; one that names
+none is **unverified**. `advisory` shows every unverified scenario at acceptance and never
+blocks on it, the way an open review note is shown at a gate; `linked` refuses acceptance
+while any scenario is unverified. The engine's part is the evidence: Validation reports each
+scenario with its link (**Reporting Contract**, `surface-contract.md`) and Verification lists
+the unverified ones. The refusal belongs to whatever runs the acceptance decision, which reads
+the key from the effective configuration. It is the repository's, so no overlay may set it.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
 `phase-validation`'s change-kind selection. The first one present wins, and
@@ -344,7 +376,10 @@ dependencies: one missing specialist must not demote every skill that names it.
   and pull request rather than decided by the engine — `open`, `in progress` (a branch
   exists), `in review` (a pull request is open), `done` (merged). An operation outside the
   three — `find_item`, `create_item`, `link_change` — takes the unbound path, reported once.
-  A skill that does not resolve is the unbound path for all of them.
+  A skill that does not resolve is the unbound path for all of them. Its `read_item` may also
+  report the larger change an item belongs to: the `change` name, the item's `part` —
+  `proposal`, `step` with its number, or `close` — and the `workflow`, which **Git
+  Workflows** below turns into the run's branch.
 - **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
   group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
@@ -361,6 +396,35 @@ dependencies: one missing specialist must not demote every skill that names it.
 - **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
   validation, so it binds as the `implement` and `validate` services above rather than as an
   advisor a stage delegates a question to.
+
+## Git Workflows
+
+A work item the tracker reports as part of a change runs in one of two workflows, and the
+workflow names the branch the run works on and the pull requests the change makes. The tracker
+reports it with the item — the default its own component stamps for the repository, which a
+`Workflow:` line in the change's proposal overrides. Reported as neither, it is
+`single-branch`. The engine reads the workflow and never chooses it.
+
+| Workflow | Branches | Pull requests | Where the two decisions happen |
+| --- | --- | --- | --- |
+| `single-branch` | `change/<name>`, for the whole change | One: the proposal, every step, and the close together | Approval in the session, before the first step; acceptance is that pull request's review |
+| `proposal-first` | `change/<name>` for the proposal, `step/<name>/<N>` per step, `archive/<name>` for the close | One per branch, each against `policy.pr.base` | Approval in the proposal's pull request; acceptance and the close share the last |
+
+- **The branch is the workflow's.** At Update Base the run checks the named branch out when
+  it exists and cuts it from the fetched base when it does not. A `proposal-first` step is
+  always cut from the base, which by then holds the merged proposal every step reads.
+- **A `single-branch` step is a commit, not a pull request.** Each run on the change commits
+  on `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the
+  one pull request only on the run that closes the change; an earlier run pushes and stops
+  there.
+- **A proposal's status follows its pull request.** Under `proposal-first` the proposal's
+  pull request opens as a draft: a draft is proposed, an approving review is approved — the
+  approval gate records that decision in the review, never the engine — and merged is on the
+  base. The engine reads each state through the tracker and writes none of them.
+- **Why these names.** Git refuses a ref that is both a leaf and a directory, so
+  `change/<name>` beside `change/<name>/1` fails; a step is `step/<name>/<N>` for that reason.
+- **No change reported, no workflow.** Every other item runs on the branch it was started on,
+  as before.
 
 ## Host Slots
 

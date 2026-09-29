@@ -38,13 +38,14 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const SCHEMA_PATH = join(HERE, '..', '..', 'resources', 'config.schema.json');
 
 // What an overlay may not say. The committed file describes what this repository
-// produces; an overlay describes how one machine runs it, and these four are the first
-// kind wearing the second's clothes. Personal Validation is already `const` in the schema
+// produces; an overlay describes how one machine runs it, and these are the first kind
+// wearing the second's clothes. Personal Validation is already `const` in the schema
 // and is listed anyway, so the refusal names the invariant rather than a type error.
 const LOCKED = [
     'policy.gate.personalValidation',
     'policy.pr.required',
     'policy.qa.ceiling',
+    'policy.openspec.scenarios',
 ];
 
 /** Resolve a local `#/...` pointer against the schema root. */

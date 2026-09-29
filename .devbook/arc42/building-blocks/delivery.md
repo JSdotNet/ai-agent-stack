@@ -460,12 +460,19 @@ a report and may never change an outcome.
 | A chore may declare itself required and stop the run; it may never rewrite a result or stand in for a gate | chore invocation | untested |
 | A point with no provider costs capability, never the run | provider resolution | untested |
 | A bound MCP server that does not answer costs a stage its grounding, never the run | provider resolution | untested |
+| A chore's id may carry `--flag` arguments for its skill; a service's provider takes none | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 
 **Point Kind** (enum) — `service` or `chore`. `spec`, `implement`, `validate`, `app.start`,
 `qa.run`, `verify`, and `deliver` are services; `session.start`, `flow.start`,
 `data.prepare`, and `flow.end` are chores. Nothing is both, and no point changes kind — a
 chore promoted to a service would be a provider gaining the authority to change an outcome
 without anybody re-reading the flow.
+
+A **replan** is the `flow.start` chore that re-checks an agreed change before a run acts on
+it: every proposed chapter change against its target on the base, every open step against the
+code, and the chapters the change relates to. Bound `required`, a flag stops the run; the
+chore rewrites nothing, since revising the plan is the change owner's decision, not a
+provider's.
 
 ### Gate
 
@@ -521,12 +528,15 @@ devbook folder present, which is the reason the file could move there at all.
 | An overlay never carries the `id` that located it | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | A flow reads its effective configuration from `check.mjs --print`, never by merging layers itself; a refused layer prints nothing | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Model choice takes no repository-level binding | `check.mjs` | untested |
+| An overlay may not weaken what the committed file requires: the pull request, the QA ceiling, Personal Validation, and the scenarios policy are locked | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 
 The config owns two value objects: Policy Switch, and the Binding that follows.
 
 **Policy Switch** — one member of a closed set: QA depth and its ceiling, the validate retry
 budget, the gate revise budget, whether the flow commits at each handback, whether a pull
-request is required. Closed because an open one would be a stage definition wearing a shorter
+request is required, and whether a change's scenarios must each name a test before the change
+is accepted — `advisory` shows the unverified ones, `linked` refuses acceptance over them, and
+the refusal is the acceptance gate's, which reads the switch. Closed because an open one would be a stage definition wearing a shorter
 name.
 
 ### Binding
@@ -595,6 +605,14 @@ writes file artifacts only and opens nothing.
 | Raising the pull request is the host's own action, never a skill here | the lane skills | untested |
 | The lane runs separately from a run, on a change no flow produced | the lane skills | untested |
 | Unbound, `deliver` writes file artifacts only and opens nothing | `deliver` | untested |
+| An item the tracker reports as part of a change runs on the branch its workflow names; the engine reads the workflow and never chooses it | Update Base | untested |
+| A proposal's status follows its pull request, and the engine writes none of it | `deliver` | untested |
+
+**Git Workflow** (enum) — `single-branch` or `proposal-first`, reported by the tracker with the
+item. `single-branch` works the whole change on `change/<name>` and opens one pull request;
+`proposal-first` gives the proposal `change/<name>`, each step `step/<name>/<N>`, and the close
+`archive/<name>`, one pull request each, the proposal's opened as a draft. The step prefix is
+not `change/` because git refuses a ref that is both a leaf and a directory.
 
 ### Run Started
 

@@ -27,5 +27,6 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
 5. **Materialize.** Overwrite only what step 2 found replaceable. Delete `openspec/specs/`
    again when it holds nothing but `.gitkeep`.
 6. **Stamp.** Rewrite `components.openspec` — `pluginVersion` and `materialized`; keep `cli`,
-   `tools`, and `prototype` as they were.
+   `tools`, `prototype`, and `workflow` as they were. A stamp without `workflow` reads as
+   `single-branch`; leave it absent rather than writing a choice nobody made.
 7. **Verify and report** exactly as `init` does, and leave the commit to the person.

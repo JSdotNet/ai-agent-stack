@@ -1,7 +1,7 @@
 # Configuration
 
 ```meta
-date: 2026-09-17
+date: 2026-09-29
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
 ```
 
@@ -31,8 +31,8 @@ not a single folder was adopted. There is no fallback path, deliberately; the gu
 names the old file while it exists.
 
 **The overlay may only tighten.** A file no reviewer sees may not weaken what a reviewer sees:
-`gates` append, `policy.pr.required`, `policy.qa.ceiling`, `policy.gate.personalValidation`
-and `components` are refused, and the check validates the overlay alone and the merged result.
+`gates` append, `policy.pr.required`, `policy.qa.ceiling`, `policy.gate.personalValidation`,
+`policy.openspec.scenarios` and `components` are refused, and the check validates the overlay alone and the merged result.
 Trusting the overlay because its author could edit the committed file fails on visibility, not
 capability — the committed edit shows in review and the overlay never does.
 
@@ -89,6 +89,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-29 | `policy["openspec.scenarios"]`: `advisory` by default, `linked` refusing a change's acceptance while a scenario names no test. Locked against overlays, beside `pr.required` and `qa.ceiling`: what acceptance requires is the repository's. A chore's `run` may carry `--flag` arguments; a service's provider may not. |
 | 2026-09-27 | `devbook-config:doctor` resolves every provider id in the effective configuration against the installed skills and the repository's own skill folder: an id migration 015 retired is hard drift naming its successor, any other unresolved id a warning, and an unbound point nothing. The checker still validates shape only. |
 | 2026-09-21 | `check.mjs --print` emits the merged configuration; a flow reads that document and never a layer by hand. A session learns of the overlays from delivery's session-start hook on both hosts; the rendered `AGENTS.md` section keeps the contributor rule and the directory, and names no plugin's file. |
 | 2026-09-21 | The checkout layer retired: an overlay lives in the user's devbook config directory and never in a clone. `ext.<plugin>.<key>` accepted in an overlay and refused in the committed file; `devbook-config:local` owns writing the overlays. |

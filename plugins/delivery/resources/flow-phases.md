@@ -93,6 +93,9 @@ branch is behind — and nothing later in the run notices.
 - **Resolve the base** from `policy.pr.base`, falling back to the repository's default
   branch, and fetch it. No remote, or a fetch that fails, marks the phase `skipped` with the
   reason — never `blocked`. Working offline is not an error.
+- **Take the workflow's branch** when the tracker reports the item as part of a change: check
+  out the branch **Git Workflows** (`engine-contract.md`) names, or cut it from the fetched
+  base, before anything below. No change reported, stay on the current branch.
 - **Refuse to touch a dirty tree.** With uncommitted changes present, mark the phase
   `skipped` and name the files. **Never stash.** The stash stack is shared by every worktree
   of the repository, so an entry left here can be popped by another session.
@@ -270,6 +273,9 @@ description as file artifacts, say so once, and continue.
   with the host's own pull-request action when the session offers one, otherwise `gh pr create`
   or the bound GitHub tooling. Build & Test, Validation, and the recorded approval **are**
   the validation: never rebuild, re-run tests or QA, or ask for a second confirmation here.
+- **Follow the change's workflow** when the item is part of one, per **Git Workflows** in
+  `engine-contract.md`: a `proposal-first` proposal opens as a draft; a `single-branch` run
+  that does not close the change pushes its branch and opens nothing, and says so.
 - **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
 - **Report the pull request URL in `links`** on this stage, per **Reporting Contract** in
   `surface-contract.md`, however the pull request was opened.
@@ -304,6 +310,10 @@ further verification joins this phase rather than becoming a phase of its own.
 - **Unbound**, the flow-runner reaches the same verdicts itself, with only code that executes
   and tests that pass counting as evidence. The reading goes to a read-only sub-agent in the
   same worktree; the verdict table is what comes back.
+- **List the unverified scenarios.** Every scenario in the specification whose chapter names
+  no test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
+  reports it, `linked` reports it as what will refuse acceptance. Linking the test is the
+  step's work, never this phase's.
 - **Report; never repair.** The phase edits no source, test, or chapter and creates no commit,
   so the pull-request branch is exactly as the reviewer found it. It is `done` whatever the
   verdicts say: a `spec-ahead` or `code-ahead` row is not a failed stage, it is the finding.

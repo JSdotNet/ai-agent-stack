@@ -223,7 +223,7 @@ provider strings a repository binds.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.12.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
+| [devbook](devbook.md#dependencies) | Customer-Supplier, declared `devbook >=1.13.0 <2.0.0` | The change folder and its rule, `delta.mjs --check` and `--apply --no-move`, `chapter-hash.mjs`, `verify-change`, and the reconcile protocol's stamp | devbook's chapter schema at contract 24 and its reconcile protocol | A delta is a devbook chapter by another path, and only devbook merges one. `init` refuses below contract 24. |
 | [devbook-collaboration](devbook-collaboration.md) | Separate Ways | `chapter-approve` and `chapter-accept` named as the next move | The skill names alone | The two gates are decisions, and deciding is that plugin's; `status` names them and never writes a rung. |
 | OpenSpec CLI | Conformist | `openspec init`, `update`, `new change`, `status`, `validate`, `schema validate`, `archive` | The CLI, its `schema.yaml` and `config.yaml` formats, and its fixed `openspec/` layout | The workflow is OpenSpec's; the bridge only configures it. |
 | delivery | Separate Ways | Provider strings in `.devbook/config.json`, skipped when absent | The engine's `spec` point and its `plugin:skill` tracker contract | A step runs through a flow when an engine is installed and through `/opsx:apply` when not. |

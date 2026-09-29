@@ -43,8 +43,8 @@ person picks a different model per folder through the personal override for that
 - Confirm the repository keeps the target folder, at the root or under `.devbook/`. If it
   does not, stop and say so: adopting a folder is the devbook convention's own `init` or `update`, never
   a flow's.
-- Load the instruction files that govern the target path — `.agents/rules/devbook-<folder>.md`
-  and `devbook-chapter-metadata.md` beside it, read directly, because a rule fires only when
+- Load the instruction files that govern the target path — `.agents/rules/devbook-<folder>.md`,
+  and `devbook-chapter-metadata.md` and `devbook-writing.md` beside it, read directly, because a rule fires only when
   a host opens a matching file and a new chapter has none yet — task-scoped. Load only the
   chapters in scope plus the ones the change links to — never the whole folder.
 - Settle the kind. A `arc42/` proposal, comparison, or target-architecture draft is a

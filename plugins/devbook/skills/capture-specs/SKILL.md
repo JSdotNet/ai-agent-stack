@@ -40,7 +40,8 @@ has one, and the repository root. The kind's file lists what else it needs.
 4. Reach a verdict per chapter. `code-ahead` is the case this skill exists for.
    `aligned`: report and stop. `spec-ahead`: stop and hand the scope to
    `apply-change`. `conflict` or `unresolved`: stop and ask.
-5. Draft the content to the folder rule's template, as the kind's file says:
+5. Draft the content to the folder rule's template, as the kind's file says, in the
+   prose and diagrams `devbook-writing.md` asks for:
    the invariants as claims with the `Enforced at:` line, the requirements as SHALL
    sentences with their `#### Scenario:` cases, each with the evidence behind it.
    Put the tests that assert each one in `tests`. Where a counterpart resolved

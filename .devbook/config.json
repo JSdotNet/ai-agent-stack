@@ -59,37 +59,42 @@
       "materialized": {
         ".agents/rules/devbook-ai.md": {
           "from": "1.13.0",
-          "hash": "sha256:0e0cc41d517438b94629527bf23919db9a6ebbacbb32191a7f5eca1e85adcd1d",
+          "hash": "sha256:64a72409b2570648e9aa4654511d33e86014edcc950033a171a143dc7b81595d",
           "managed": true
         },
         ".agents/rules/devbook-annotations.md": {
           "from": "1.13.0",
-          "hash": "sha256:d1979bf1d643fc3a18013db130fb1ca0f275ffe0fe9754caa72ebfa4092e18c5",
+          "hash": "sha256:fce8bf2f71a09e072ae2cf6e7b678a0fa653422646b10fec3ce4aacb37ac865c",
           "managed": true
         },
         ".agents/rules/devbook-arc42.md": {
           "from": "1.13.0",
-          "hash": "sha256:ffb9f56427a52f873e9af13011e1721db879193a24f2d11c292955862e601147",
+          "hash": "sha256:028e6835f14e1cd14aa803699c2e4132eeb9c8e5b430d80465d8ebf196d64287",
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
           "from": "1.13.0",
-          "hash": "sha256:7e787ac1dd6d1e1f39a12884615c75492e86f4e09da3f907e064652e674325c4",
+          "hash": "sha256:895626d76145df89b809be2385c1daae48785c6c8998305225398bace52a5c29",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
           "from": "1.13.0",
-          "hash": "sha256:335f531e791065c6b53aa3c48fbd7431e8518d32e7c5a479d731d97638253830",
+          "hash": "sha256:63e7236d9e489c3f92e15cfc837954a88d1d43f13a69562724809bd317328748",
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
           "from": "1.13.0",
-          "hash": "sha256:b7bd0529ae7182a70e3af9f9b89f7eff908bf245bb17ca1ca5423cd8b80a6600",
+          "hash": "sha256:c1e38d72cb1b2bc2c7da20507c3839bdc278a9f3cec344f538defd793580abc0",
           "managed": true
         },
         ".agents/rules/devbook-tech.md": {
           "from": "1.13.0",
-          "hash": "sha256:3cab462825249c06fa4dc01d8089bcdbcbc956fce19d30aad511b83d14b026eb",
+          "hash": "sha256:8dcf5b411350ef9ebf0f3a280cd8ad483ad3c8611bd7a952a26ed650aec048df",
+          "managed": true
+        },
+        ".agents/rules/devbook-writing.md": {
+          "from": "1.13.0",
+          "hash": "sha256:25ba4223bc70d1692da1bb24e304285136464961dfe4edc9891ca73d9ac2b80f",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
@@ -127,9 +132,14 @@
           "hash": "sha256:6e8ad7dcafeb8fe02cb344761641e2123794195ec7e6cf9405760928e6d39e55",
           "managed": true
         },
+        ".claude/rules/devbook-writing.md": {
+          "from": "1.13.0",
+          "hash": "sha256:1308b407b5129fa3d13921b1569e84afc85bd05b1579a847a000a06f71f4f33c",
+          "managed": true
+        },
         ".devbook/_tools/devbook-meta": {
           "from": "1.13.0",
-          "hash": "sha256:955f222cce49b875b26183318483df2fde26ff5325558addf896abf7ba8fdc8d",
+          "hash": "sha256:d2d89ed550eadb63415c95c4fd3382c98303a9e0b0759821c642669ba5d39849",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
@@ -172,9 +182,14 @@
           "hash": "sha256:b5e876e4851849a2f9dc75fabb595cde1fb1a9e7eeb5d509a5bfa7fc0586ec97",
           "managed": true
         },
+        ".github/instructions/devbook-writing.instructions.md": {
+          "from": "1.13.0",
+          "hash": "sha256:3c74067c8d5371f83eeb6741989d2af9e4dc6bec35d8681d1fa211ff67abe086",
+          "managed": true
+        },
         ".github/workflows/devbook-meta.yml": {
           "from": "1.13.0",
-          "hash": "sha256:403e42647389b27026b3a211323067d8e94f058eae5a734ce03c4d1efb7b1cfc",
+          "hash": "sha256:eac3750ca8da62caf3865758d09db6f08ed2733fe3aef03c25d5212bd0d36d52",
           "managed": true
         },
         "AGENTS.md#devbook": {
@@ -219,7 +234,7 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.10.0",
+      "pluginVersion": "1.13.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
           "from": "1.10.0",
@@ -237,13 +252,13 @@
           "managed": true
         },
         ".github/workflows/devbook-meta-drift.yml": {
-          "from": "1.9.0",
-          "hash": "sha256:568f5dcab675b9be6b58656a20da8e9fc04763d30bd6e916289745f2096533c9",
+          "from": "1.13.0",
+          "hash": "sha256:0bb66f2cd7370185b1265c229357520330b6687be04244f7ae3504940cccb7fe",
           "managed": true
         },
         ".github/workflows/devbook-meta-nightly.yml": {
-          "from": "1.9.0",
-          "hash": "sha256:61b8a363f6b24f9537b9ee72eb88660623e64de7c34a01a7d1ec38c1e32c0621",
+          "from": "1.13.0",
+          "hash": "sha256:960d83abf75bdc636f0ecf003cacf8f140d42f8e2f9303878bfdb7a73f7926c3",
           "managed": true
         },
         "AGENTS.md#devbook-derived": {
@@ -259,7 +274,7 @@
       }
     },
     "delivery": {
-      "pluginVersion": "1.10.0"
+      "pluginVersion": "1.13.0"
     },
     "schedule": {
       "pluginVersion": "1.9.0",

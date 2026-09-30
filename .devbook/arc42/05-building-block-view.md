@@ -232,7 +232,7 @@ flowchart TB
     subgraph repo["A consuming repository"]
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
-        sk[".agents/skills/ - the procedure bodies: show, capture, diagnose, estimate, prototype - run is a .claude/skills/run-* recipe"]
+        sk[".agents/skills/ - the procedure bodies: capture, diagnose, estimate, prototype - run is a .claude/skills/run-* recipe"]
         sw[".claude/skills/ and .github/skills/ - one wrapper each, carrying the goal"]
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
@@ -468,7 +468,7 @@ ignoring it, so a typo is an error rather than a silently absent setting.
 Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
 from `devbook`'s, `components.derived` from `devbook-derived`'s for the refresh script, its
 workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `run`,
-`show`, `capture`, and `diagnose` copies it seeds and the `adopted` list that selects them,
+`capture`, and `diagnose` copies it seeds and the `adopted` list that selects them,
 `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
 materializes nothing — and `components.schedule` from `delivery-schedule`'s.
 `devbook-collaboration` materializes nothing and stamps nothing

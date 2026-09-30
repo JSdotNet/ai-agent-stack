@@ -92,8 +92,8 @@ Record that a person saw the implemented work against this chapter and accepted 
 rung above `approved`, with a signature, a date, and the content fingerprint the acceptance
 was of. The approval record stays: the two statements are different, and both are wanted.
 
-What it shows is the built work, never a summary of it — the repository's own `show` procedure
-where `devbook-procedures` is installed, otherwise the chapter's linked `tests` run. It refuses
+What it shows is the built work, never a summary of it — the application started through the
+repository's `run` skill where it has one, and the chapter's linked `tests` run. It refuses
 on an open `kind: question`, on a chapter that was never approved, and on an approval whose
 fingerprint no longer matches the chapter: an acceptance stands on a current approval, and
 there is nothing to accept against without one.

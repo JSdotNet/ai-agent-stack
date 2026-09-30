@@ -32,9 +32,9 @@ terseness.
 ## Steps
 
 1. **Show the chapter and the evidence**, neither summarised. The chapter as it
-   stands, and the built work running against it: through the repository's own
-   `show` procedure where `devbook-procedures` is installed, otherwise the
-   chapter's linked `tests` run through the repository's test command. A
+   stands, and the built work running against it: started through the
+   repository's `run` skill where it has one, and the chapter's linked `tests`
+   run through the repository's test command. A
    summary of a test run is not evidence, and a screenshot of a passing suite
    is not the suite. Where neither is available, say so plainly — the person is
    then accepting on their own reading, and should know it.

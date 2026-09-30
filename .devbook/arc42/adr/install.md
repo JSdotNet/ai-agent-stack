@@ -72,9 +72,14 @@ no ledger — the shape it removes is the record that it ran.
 command or skill the host bundles replaces it, so a procedure named `debug` took Claude Code's
 `/debug` away from every repository that adopted it. The procedure is `diagnose`, and
 `002-debug-is-diagnose` moves an edited body and renames it in the stamp; the wrappers are
-`update`'s to write, as for any adopted procedure. The same rule keeps `show` from becoming
-`verify`: Claude Code's `/verify` confirms a change for the person who typed it and cannot be
-invoked by the model, while `show` is what a flow calls for a reviewer's walk with evidence.
+`update`'s to write, as for any adopted procedure.
+
+**A procedure no caller invokes is not seeded.** `show` walked the branch's feature for a
+reviewer through `run` and `capture`, but no flow called it: Validation starts the application
+through `run` and takes evidence through `capture` directly, and on Claude Code a person who
+wants to see a change working types `/verify`, which follows the same `run` recipe. So `show`
+is removed; `003-show-removed` deletes its wrappers and an unedited body, and leaves an edited
+one as the repository's own.
 
 **OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
 the marketplace uses it, so a person who knows one tool reads the other without translating.
@@ -138,6 +143,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-30 | `show` is removed: no flow invoked it, and `/verify` answers a person on Claude Code; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. |
 | 2026-09-30 | `debug` becomes `diagnose`, since a project skill named `debug` replaces Claude Code's bundled `/debug`; `devbook-procedures` ships `002-debug-is-diagnose`. |
 | 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`, which had stopped every scheduled run at the Skill call; the catalog checker now fails a target that sets it. |
 | 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |

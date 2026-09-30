@@ -118,7 +118,8 @@ re-reads.
 
 ### Phase 7 — Summary
 
-10. Output per layer: findings, high, issues created, issues already open.
+10. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+    per-layer counts, then the ranked table from Phase 5 as *Findings*.
 
 ## Surface Reporting
 

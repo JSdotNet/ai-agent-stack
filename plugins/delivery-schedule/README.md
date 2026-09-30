@@ -31,11 +31,11 @@ hand it one. Every one of them is also runnable by hand.
 
 | Skill | Does | Lands as |
 |---|---|---|
-| `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, or a schedule-report issue when `devbook-config:doctor` finds the installation needs a person |
-| `schedule-devbook-update` | Runs `devbook-config:update` with the safe answer at every question, so outstanding migrations run and stale copies are refreshed; never touches the scheduler | A draft pull request, or a schedule-report issue when only a person's step is left |
-| `schedule-devbook-verify` | Runs `devbook:verify-change` over every adopted folder, one run per kind, and opens an issue per `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such row, and a `schedule-report` issue with the whole table |
+| `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, and a report naming what `devbook-config:doctor` finds needs a person |
+| `schedule-devbook-update` | Runs `devbook-config:update` with the safe answer at every question, so outstanding migrations run and stale copies are refreshed; never touches the scheduler | A draft pull request, or a report naming the person's step that is left |
+| `schedule-devbook-verify` | Runs `devbook:verify-change` over every adopted folder, one run per kind, and opens an issue per `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such row, and a report with the whole table |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
-| `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a `schedule-report` brief of what to validate and decide |
+| `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
 | `schedule-morning-brief` | What changed in this repository since yesterday, needs-you first | A one-screen brief |
 | `schedule-package-update` | Updates outdated packages and verifies the build | A pull request |
@@ -63,18 +63,18 @@ requests across several repositories, with a checkpoint and ticket correlation.
 |---|---|---|---|---|
 | `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
-| `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a `schedule-report` brief, replaced while unread |
-| `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
-| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
+| `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a brief |
+| `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A report |
+| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
-| `devbook-verify` | Monday 04:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a `schedule-report` issue |
+| `devbook-verify` | Monday 04:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
 | `devbook-update` | Saturday 05:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
 | `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
-| `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
-| `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended |
-| `prose-check` | Wednesday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
+| `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
+| `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended, and a report |
+| `prose-check` | Wednesday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -93,6 +93,13 @@ and replaces the body: nothing between two runs is lost, and closing the issue i
 acknowledged. The closed issues are the record. `issue-sweep`'s brief keeps the same one
 open issue without a window: the rows a person has not decided fold into the next run's.
 
+A run waits for you. Archiving a run's session in the host is how you say you have handled
+it; while an earlier run of the same schedule is still unarchived — a merge review whose
+comments you are still working through, a pull request you have not looked at — the next run
+does no work, replies `Skipped: …`, and archives itself. Where the host keeps no archived state,
+every run proceeds. The rule is in `resources/schedule-catalog-contract.md` under
+*The Pickup Gate*.
+
 ## The four catalog skills
 
 | Skill | Does |
@@ -110,8 +117,8 @@ the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 
 - **Pass a gate.** It parks with a handoff brief where Personal Validation would be.
 - **Merge, approve, or delete.** Every change lands as a pull request from a branch under
-  `schedule/<name>/<date>`, every report as an issue labelled `schedule-report`, and a run
-  updates what its previous run left open rather than opening a second.
+  `schedule/<name>/<date>`, and a run updates the pull request its previous run left open
+  rather than opening a second.
 - **Close, with one exception.** An issue that high-confidence evidence — a commit, a file, a
   pull request, a sibling issue — shows already resolved, closed by the issue sweep with that
   evidence in the comment. Every other closure is a proposal in a brief, with the command.

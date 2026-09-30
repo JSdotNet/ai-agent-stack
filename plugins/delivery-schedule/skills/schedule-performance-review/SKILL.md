@@ -121,8 +121,8 @@ high-allocation paths first; read them before scanning.
 
 ### Phase 6 — Summary
 
-15. Once the pull request is created (or the run concludes without one), output a
-    completion summary:
+15. Once the pull request is created (or the run concludes without one), output the report
+    in `report.md` beside this file, per `../../resources/report-contract.md`. It carries:
     - Number of findings identified.
     - Implemented finding: file, issue, expected improvement.
     - Link to the opened PR.

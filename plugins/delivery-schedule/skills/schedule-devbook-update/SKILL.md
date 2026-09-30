@@ -1,6 +1,6 @@
 ---
 name: schedule-devbook-update
-description: 'The unattended stack update: run devbook-config:update with the safe answer at every question it would ask a person, so outstanding migrations run and stale copies are re-materialized from the plugins the session loaded, and land the result as one draft pull request — or a schedule-report issue when only a person''s step is left. The weekly devbook-update schedule''s target.'
+description: 'The unattended stack update: run devbook-config:update with the safe answer at every question it would ask a person, so outstanding migrations run and stale copies are re-materialized from the plugins the session loaded, and land the result as one draft pull request — or a report naming the step when only a person''s step is left. The weekly devbook-update schedule''s target.'
 ---
 
 # Scheduled: Devbook Update
@@ -31,8 +31,9 @@ moves it forward. A local routine runs with the plugins this machine has install
      `devbook-config:local`: never offered.
 2. **Land.** If the tree changed, open a **draft** pull request titled
    `chore(devbook): stack update <YYYY-MM-DD>`: the stamps before and after, each migration
-   run, each copy left customized, each row skipped and why, and the person's steps. Only a
-   person's step is left: a schedule-report issue naming it. Neither: say so and stop.
+   run, each copy left customized, each row skipped and why, and the person's steps.
+3. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`:
+   the pull request, or the person's step that is left, or `Nothing moved.`
 
 ## Do not
 

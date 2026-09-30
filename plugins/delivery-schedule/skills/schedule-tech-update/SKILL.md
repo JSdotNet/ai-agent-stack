@@ -28,7 +28,8 @@ manifest and a chapter is a fact the run can state and a person can accept.
    stop.
 2. **Land.** If any chapter moved, open a **draft** pull request titled
    `chore(tech): technology graph refresh <YYYY-MM-DD>` with the inventory deltas and every
-   chapter change in its body. Nothing moved: say so in the run log and stop.
+   chapter change in its body.
+3. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`.
 
 ## Do not
 

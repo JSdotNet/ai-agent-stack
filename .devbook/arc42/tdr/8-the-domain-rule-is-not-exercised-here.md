@@ -27,6 +27,16 @@ rule — a delta against `arc42/` writes no `requirements.md` or `invariants.md`
 behaviour files stay exercised in a consuming repository, and a fixture `domain/` would still
 be a folder that exists to be checked.
 
+**2026-09-30.** The adoption above did not happen, and is no longer planned: this repository
+does not adopt `devbook-openspec`, and the lane's first change runs in a consuming repository
+instead. So the lane joins the domain rule on the list of what ships here unexercised —
+`type: change`, the change folder, the delta merge's apply path, both gates on a proposal, and
+the bridge's skills are checked here only by their unit tests and by reading. Reading the lane
+skill by skill before that first change found two paths that could never close a change — a
+`single-branch` step that waited for a pull request of its own, and an acceptance that owed a
+`verify-change` verdict for a delta nothing can verify — both fixed the same day. The severity
+stays medium: the consuming repository is where the rest will show.
+
 ## The debt
 
 ```meta
@@ -108,7 +118,7 @@ thing this record is about.
 **Trigger:** the first change to `devbook-domain.md` or a domain kind file after this fold.
 **Fired 2026-09-22**, when contract 14 added the two behaviour files and edited all four domain
 kind files; re-accepted at medium rather than remediated, per the note at the top. **Fired
-again 2026-09-29**, when the change lane added `type: change`; re-accepted with the lane
-adopted here, so that kind is one this repository writes. Next trigger: the first `domain/`
+again 2026-09-29**, when the change lane added `type: change`; re-accepted, and on 2026-09-30
+the lane was left unadopted here, so that kind is written only in a consuming repository. Next trigger: the first `domain/`
 defect a consumer reports, or the next contract that adds a chapter kind this repository
 cannot write — either settles the second option above without further argument.

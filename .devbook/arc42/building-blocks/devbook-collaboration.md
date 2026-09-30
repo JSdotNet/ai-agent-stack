@@ -217,7 +217,7 @@ chapter's stage twice ([the annotations record](../adr/annotations.md)).
 | --- | --- | --- |
 | This block writes no `meta` field except devbook's two decision rungs and their six record fields | all mutations | untested |
 | On a change, the decision is written once on `proposal.md`, with the change's hash, and on no chapter a delta targets | `chapter-approve()`, `chapter-accept()` | untested |
-| A change is accepted only with every `tasks.md` step merged and every delta verified `aligned` | `chapter-accept()` | untested |
+| A change is accepted only with every `tasks.md` step done and every delta `verify-change` covers verified `aligned`; a delta against a chapter outside its kinds owes no verdict | `chapter-accept()` | untested |
 | A change merges only once accepted over its current hash | devbook's `delta.mjs --apply` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A leftover `review`, `reviewer`, or `review-at` is reported by name, in every folder | devbook's check | `unit:node:plugins/devbook/tools/devbook-meta/review-state.test.mjs` |
 | A finding is written through devbook's `annotations.mjs` and never as a field | `chapter-review()`, `chapter-approve()` | untested |

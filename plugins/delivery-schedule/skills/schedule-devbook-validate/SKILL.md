@@ -1,6 +1,6 @@
 ---
 name: schedule-devbook-validate
-description: 'The unattended devbook validation: run devbook:validate over every adopted folder, fix what it reports in the source Markdown, refresh the committed _meta/ indexes where devbook-derived keeps them, and land the result as one pull request — or a schedule-report issue when devbook-config:doctor, where installed, finds the installation needs a person. The daily devbook-validate schedule''s target.'
+description: 'The unattended devbook validation: run devbook:validate over every adopted folder, fix what it reports in the source Markdown, refresh the committed _meta/ indexes where devbook-derived keeps them, and land the result as one pull request — and report what devbook-config:doctor, where installed, finds that needs a person. The daily devbook-validate schedule''s target.'
 ---
 
 # Scheduled: Devbook Validate
@@ -36,12 +36,13 @@ a scheduled run, never a session beside a chapter edit.
 2. **Repair.** Fix what it reports in the source Markdown, never under `_meta/`, and re-run
    until it exits `0`.
 3. **Diagnose** with `devbook-config:doctor` where it is installed. Hard drift is not
-   repaired here — each component's `update` owns it and needs a person: publish a
-   schedule-report issue naming it, unless one is open.
+   repaired here — each component's `update` owns it and needs a person: a *Needs you* row
+   in the report.
 4. **Refresh** the committed indexes where `devbook-derived` materialized the refresh path.
 5. **Land.** If anything changed, open the pull request titled
    `chore(devbook): daily validate <YYYY-MM-DD>` with the findings, the fixes, and the moved
-   index files in its body. Nothing changed: say so in the run log and stop.
+   index files in its body.
+6. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`.
 
 ## Do not
 

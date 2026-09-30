@@ -63,6 +63,18 @@ the marketplace keys into a repository's committed settings. The cost is the mac
 routine fires only while it is on and the host app runs, and one due while it was closed runs
 on the next launch.
 
+**A run's report stays in the run's own session.** The catalog published every report as a
+GitHub issue labelled `schedule-report` because a cloud session leaves nothing its owner can
+open later. A local routine does: its session stays on the host's Routines page. So a report
+is the run's last message, in a `report.md` template the entry point carries beside its
+`SKILL.md` on the frame of `resources/report-contract.md` — a verdict line, *Needs you* first,
+one table row per item, *Run* last. An issue is opened only where a skill's procedure files a
+finding someone must work — a `devbook-drift` row, a security finding. The first issues read
+as a wall of links on 2026-09-30, several pull requests packed into each bullet; that is what
+the template's one-row-per-item rule exists to prevent. The cost is reach: the report lives on
+one machine's scheduler page, and a morning brief no longer extends its window back to the
+last one nobody closed.
+
 **A role plugin holds no flow control.** The ported specialists each arrived with a mandatory
 approve-handoff sequence, session-spawning tools, and a plan-and-checkpoint loop of their own.
 A gate a plugin owns cannot be governed — configuration may add a gate and never remove one,
@@ -136,6 +148,9 @@ builds each step through OpenSpec's own `/opsx:apply`.
   would fire every schedule twice. A setup script that installs the plugins in the cloud
   environment would make the environment, not the repository, the thing a schedule depends on,
   and it is personal.
+- Reports as `schedule-report` issues once schedules ran locally: a report is read once, and
+  as an issue it needs closing, sits in the backlog the issue sweep triages, and is written
+  for GitHub's renderer rather than the session it came from.
 - Keeping the specialists with their references, on the argument that an unresolvable reference
   degrades one stage.
 - The guide as a skill inside `devbook`, or as an L1 extension over it.
@@ -152,6 +167,7 @@ builds each step through OpenSpec's own `/opsx:apply`.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. |
 | 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. |
 | 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. |
 | 2026-09-26 | The weekly `devbook-update` schedule runs `devbook-config:update` unattended and lands a draft pull request; it installs no plugin and never runs `delivery-schedule:update`. |

@@ -16,7 +16,6 @@ This session keeps nothing between runs, so point the state file at a path outsi
 repository and let every run be a first run: the 7-day window is the checkpoint. Do not commit
 the state file.
 
-Publish the report as the schedule-report issue. Skip the follow-up phase — there is nobody to
-ask — and instead list its candidates as the report's last section: a merged pull request
-whose linked issue is still open, an open pull request whose ticket is already done, and a
-pull request with no ticket at all.
+Skip the follow-up phase — there is nobody to ask. Its candidates are the report's *Needs you*
+rows: a merged pull request whose linked issue is still open, an open pull request whose
+ticket is already done, and a pull request with no ticket at all.

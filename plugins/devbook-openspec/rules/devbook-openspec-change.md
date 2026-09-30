@@ -24,7 +24,8 @@ rule is what they do differently from OpenSpec's defaults.
   `owner: me` when a person does it, `branch:` once work starts, `PR:` once its pull request
   opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines
   and the pull request, and writes them for a run; a person doing a step writes the same
-  lines by hand. Tick a step's tasks in its own pull request.
+  lines by hand. Tick a step's tasks in its own pull request — or, under `single-branch`, where
+  a step is a commit on `change/<name>` with no pull request of its own, in that commit.
 - **A proposal may name its workflow.** One `Workflow: single-branch` or
   `Workflow: proposal-first` line under the proposal's title overrides
   `components.openspec.workflow` for that change alone; write it only to differ from the

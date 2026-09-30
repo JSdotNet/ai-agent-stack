@@ -11,8 +11,9 @@ tools: [Bash, Read, Glob, Grep, Skill]
 Run `prose-check` from the repository root over every adopted devbook folder, with the
 default limit.
 
-The report is the publication: publish it as the schedule-report issue. No findings means the
-summary in this log is enough — no issue. If the skill stops because the repository has not
+The report is the publication, in the frame the preamble's rule 6 gives: *Needs you* holds
+nothing, and one section per folder lists its findings — chapter, finding, the sentence at
+fault quoted. No findings: `Nothing found.` If the skill stops because the repository has not
 adopted devbook, say so and stop.
 
 The tool list carries no editor on purpose. This run reads and reports; the daily

@@ -1,7 +1,7 @@
 # Annotations
 
 ```meta
-date: 2026-09-28
+date: 2026-09-30
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#annotation", ".devbook/arc42/building-blocks/devbook-collaboration.md", ".devbook/arc42/building-blocks/devbook-collaboration.md#dependencies", ".devbook/arc42/08-crosscutting-concepts.md#extension-namespace", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -96,6 +96,7 @@ arbitrary Markdown would rebuild devbook's schema inside itself.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-30 | Accepting a change owes an `aligned` verdict only for a delta whose target `verify-change` covers. A delta against a decision or debt record or a prose chapter has no code to be measured against, and requiring one made such a change impossible to accept. A step is `done` per its workflow, not only by a merge. |
 | 2026-09-28 | On a change the review is the whole change: proposal and every delta with their open notes, one decision per gate on `proposal.md`, and an open question anywhere in the change blocks either rung. Chapter rungs stay for work outside the lane. |
 | 2026-09-28 | `review`, `reviewer`, `review-at` leave devbook's schema: a review in progress is `status` plus the open fences, and who owes the next move lives in the pull request or the tracker. Contract 21, migration `021-no-review-triad`. |
 | 2026-09-17 | `review`, `reviewer`, `review-at` move from `ext` into devbook's schema; the review plugin ships skills only. |

@@ -89,7 +89,7 @@ date: 2026-09-07
 ```
 
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, as a local
-routine on the maintainer's machine with nobody watching, and lands what it produced as a pull request or a report issue.
+routine on the maintainer's machine with nobody watching, and lands a change as a pull request and its report as the run's last message.
 
 - **Used for** — four of the thirteen schedules are enabled against this repository, per the
   stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, `merge-review`, and

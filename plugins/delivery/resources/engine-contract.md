@@ -411,7 +411,7 @@ reports it with the item — the default its own component stamps for the reposi
 
 | Workflow | Branches | Pull requests | Where the two decisions happen |
 | --- | --- | --- | --- |
-| `single-branch` | `change/<name>`, for the whole change | One: the proposal, every step, and the close together | Approval in the session, before the first step; acceptance is that pull request's review |
+| `single-branch` | `change/<name>`, for the whole change | One: the proposal, every step, and the close together | Approval in the session, before the first step; acceptance in the session on the closing run, before the archive — that pull request's review is the last look, not the decision |
 | `proposal-first` | `change/<name>` for the proposal, `step/<name>/<N>` per step, `archive/<name>` for the close | One per branch, each against `policy.pr.base` | Approval in the proposal's pull request; acceptance and the close share the last |
 
 - **The branch is the workflow's.** At Update Base the run checks the named branch out when
@@ -420,7 +420,9 @@ reports it with the item — the default its own component stamps for the reposi
 - **A `single-branch` step is a commit, not a pull request.** Each run on the change commits
   on `change/<name>`, the tracker ticks the step's tasks, and Create Pull Request opens the
   one pull request only on the run that closes the change; an earlier run pushes and stops
-  there.
+  there. The tracker reports such a step `done` once its tasks are ticked in a commit on the
+  branch, so the closing run can take the acceptance and the archive before it opens the one
+  pull request, which then carries them.
 - **A proposal's status follows its pull request.** Under `proposal-first` the proposal's
   pull request opens as a draft: a draft is proposed, an approving review is approved — the
   approval gate records that decision in the review, never the engine — and merged is on the

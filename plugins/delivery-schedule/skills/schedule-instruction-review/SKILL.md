@@ -70,7 +70,7 @@ None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` nam
 
 ### Phase 4 — Pull Request
 
-9. Nothing edited: no pull request, no issue; the summary says so.
+9. Nothing edited: no pull request, no issue; the report says so.
 10. Otherwise open a draft pull request titled `chore(instructions): tighten <YYYY-MM-DD>`.
     Draft because no check proves a rewritten instruction; the reviewer's re-read is the test.
     The body carries the ledger:
@@ -83,7 +83,8 @@ None. `gh` for pull requests, and the repository's own checks as `AGENTS.md` nam
 
 ### Phase 5 — Summary
 
-11. Output: files read, edited, skipped, lines removed, the standard applied, and the link.
+11. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+    files read, edited, skipped, lines removed, the standard applied, and the link.
 
 ## Surface Reporting
 

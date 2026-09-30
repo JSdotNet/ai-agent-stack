@@ -396,6 +396,7 @@ and why a trigger can be created, disabled, and re-created without touching what
 | A cron expression that could fire more than hourly is rejected | `check.mjs` | untested |
 | The `requires` list names the target's own plugin | `check.mjs` | untested |
 | Every prompt begins with the preamble, stated once and not restated per schedule | prompt assembly | untested |
+| A run does no work while an earlier run of the same schedule is unarchived and did not skip | preamble | untested |
 | A trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled | `init`, `update` | untested |
 | Schedules are matched by name, so a second sync updates rather than duplicates | `init`, `update` | untested |
 | No placeholder the contract does not name appears in a prompt | `check.mjs` | untested |
@@ -602,7 +603,9 @@ the gate is what changes when nobody is in the session.
 
 ```mermaid
 flowchart TD
-    fire(["The scheduler fires: a local routine in the repository's checkout"]) --> worktree["A fresh worktree of the base branch"]
+    fire(["The scheduler fires: a local routine in the repository's checkout"]) --> pickup{"Is an earlier run still unarchived?"}
+    pickup -->|yes| skip(["Reply Skipped, archive this session, and stop"])
+    pickup -->|no| worktree["A fresh worktree of the base branch"]
     worktree --> preamble["Prompt: preamble, then the task half"]
     preamble --> entry["The schedule-* entry point picks its own input"]
     entry --> none{"Anything to do?"}
@@ -618,6 +621,10 @@ flowchart TD
     report --> done(["Done. Nothing merged, approved, closed, or deleted"])
 ```
 
+- **A run waits for the owner, not the other way round.** Archiving a run's session is how a
+  person says they handled it. While an earlier run is unarchived, the next one skips and
+  archives itself, so a result nobody has read is never buried under a newer one. A host with
+  no archived state leaves the check open.
 - **The gate is never passed and never waited at.** It is parked at, with a brief — which is the
   whole reason a schedule may not target a flow, and why the catalog checker enforces it.
 - **Every run ends with a report, even an empty one.** Most weeks the security review finds

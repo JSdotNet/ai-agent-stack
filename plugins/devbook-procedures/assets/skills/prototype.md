@@ -7,8 +7,8 @@ goal: "Return one standalone HTML file per request — every style, script, and 
 # Prototype a Feature
 
 Turn a feature request into a clickable HTML sketch that looks like this product. **Edit this
-file** — where the conventions live, what a prototype shows, and where it lands are yours; the
-goal in the wrapper is not.
+file** — where the conventions live and what a prototype shows are yours; the goal in the
+wrapper is not.
 
 ## Read the conventions
 
@@ -40,9 +40,6 @@ goal in the wrapper is not.
 
 ## Deliver
 
-<!-- Where prototypes land. Replace the example. -->
-
-- `.wip/prototypes/<feature>.html`, one file per request, under the worktree root.
 - Open it in the host's inline browser when it has one; otherwise give the path.
 - Report in a few lines: the path, the features shown, and per convention the guideline or
   story it came from, plus every convention guessed.

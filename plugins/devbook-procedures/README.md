@@ -11,7 +11,7 @@ each procedure is *for*. So this plugin fixes the goal and seeds the procedure:
 | `capture` | Return evidence a reviewer can open: one file per checkpoint and per failure, paths under the worktree root, the form named honestly | the layout, the naming, the tooling |
 | `diagnose` | Name the cause of an observed issue and prove it — a log line, a trace span, a breakpoint's state — without handing the person a debugger, and leave nothing behind in the change | where the logs live, which debugger reaches the app, how a reproduction is set up |
 | `estimate` | Return story points off 1/2/3/5/8/13/21 per unit of work, sized against the repository's reference examples, naming the reference each was compared with | the reference table of finished work per value, and its calibration |
-| `prototype` | Return one standalone HTML file — everything inline, nothing fetched — prototyping the requested features in the repository's design conventions, naming the guideline and story each came from, and changing no source file | where the design guidelines and Storybook live, what a prototype shows, where it lands |
+| `prototype` | Return one standalone HTML file — everything inline, nothing fetched — prototyping the requested features in the repository's design conventions, naming the guideline and story each came from, and changing no source file | where the design guidelines and Storybook live, what a prototype shows |
 
 Each lands as one editable copy under `.agents/skills/<name>.md` with a managed wrapper per
 host that carries the goal — except `run`, whose body is Claude Code's own project recipe at

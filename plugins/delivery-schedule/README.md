@@ -1,8 +1,8 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: sixteen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: seventeen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, thirteen trigger files that fire one on a cadence, and four skills that put those
+report, fourteen trigger files that fire one on a cadence, and four skills that put those
 triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app
@@ -45,6 +45,7 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-week-starter` | Digests what the tracked topics published this week | A digest |
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
+| `schedule-weekly-retro` | Reviews how the week's work went, on a stronger model, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
 | `schedule-whats-new` | What changed in the tracked repositories since last run | A change report |
 
@@ -72,6 +73,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
 | `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
+| `weekly-retro` | Saturday and Sunday 09:00 | `schedule-weekly-retro`, at most once a week, only below 75% of every plan window | `delivery-schedule`, `delivery` | A draft pull request when something was recommended |
 | `prose-check` | Wednesday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
 
 Each is one file under `resources/schedules/`, and every prompt starts with

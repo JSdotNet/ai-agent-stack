@@ -21,14 +21,14 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Twenty skills in two halves: sixteen entry points that pick their own input, and four that
+Twenty-one skills in two halves: seventeen entry points that pick their own input, and four that
 put a trigger in the scheduler and read it back. Every one of them is also runnable by hand,
 which is how a cadence gets proved before it is trusted. Beside them: the shipped catalog, four
 contracts, the catalog checker, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, sixteen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, seventeen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
@@ -222,6 +222,23 @@ related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetr
 Read the week's token telemetry from the run surface and report the cost. It reads measured
 numbers or it reports none — a surface that does not capture telemetry leaves this empty rather
 than estimated.
+
+### schedule-weekly-retro
+
+```meta
+related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-instruction-review"]
+```
+
+Read how the person worked in the repository over the week — their pull requests, reverts,
+review rounds, the runs the surface recorded, and their sessions where the host lists them —
+and land what it recommends as one draft pull request, one commit per recommendation. Two
+things set it apart from every other entry point. It gates on the plan's credit: it reads the
+plan limits first and stops at or above a threshold, so it spends only what the weekly reset
+would otherwise discard, and its trigger fires on both weekend days because the second firing
+is the retry. And it delegates the review to a model stronger than the week ran on, resolved
+from the personal `model-override` file and never from the repository, because model choice is
+personal. It edits instruction assets and checks only; a devbook chapter, product code, or a
+habit is listed for a person.
 
 ### schedule-weekly-update
 
@@ -431,7 +448,7 @@ A `schedule-*` skill that picks its own input, so it needs no person to hand it 
 unclassified issues and the top of the backlog, every pull request waiting on a reviewer, the
 outdated packages, the week's changes in the tracked repositories, the repository's own day or
 week, the instruction assets a model loads.
-Sixteen ship here.
+Seventeen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
@@ -562,7 +579,7 @@ scheduler is a normal outcome at every step below.
 
 ```mermaid
 flowchart TD
-    catalog["The shipped catalog: thirteen trigger files"] --> select["A repository selects and overrides cadences"]
+    catalog["The shipped catalog: fourteen trigger files"] --> select["A repository selects and overrides cadences"]
     select --> enabled{"Target's plugin enabled here?"}
     enabled -->|no| skipped["Reported and skipped. Never scheduled"]
     enabled -->|yes| loaded{"Has this session loaded every plugin it requires?"}
@@ -659,7 +676,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
+**Naming a target is deliberately weaker than depending on one.** One of the fourteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

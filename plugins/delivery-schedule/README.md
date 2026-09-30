@@ -91,6 +91,13 @@ and replaces the body: nothing between two runs is lost, and closing the issue i
 acknowledged. The closed issues are the record. `issue-sweep`'s brief keeps the same one
 open issue without a window: the rows a person has not decided fold into the next run's.
 
+A run waits for you. Archiving a run's session in the host is how you say you have handled
+it; while an earlier run of the same schedule is still unarchived — a merge review whose
+comments you are still working through, a pull request you have not looked at — the next run
+does no work, replies `Skipped: …`, and archives itself. Where the host keeps no archived state,
+every run proceeds. The rule is in `resources/schedule-catalog-contract.md` under
+*The Pickup Gate*.
+
 ## The four catalog skills
 
 | Skill | Does |

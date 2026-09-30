@@ -115,8 +115,10 @@ form named honestly; `diagnose` names a cause and proves it, doing the debugging
 leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
 sized against the repository's own finished work and naming the reference compared with, so
 that a pace measured in points means the same across plans; `prototype` returns one standalone HTML
-file, everything inline and nothing fetched, in the repository's design conventions with the
-guideline and story each came from, changing no source file. It is the `goal` field of the
+file, everything inline and nothing fetched, on the repository's demo template and in its design
+system with the guideline, token, or story each came from; given an existing demo it returns the
+revision with every surviving screen id kept, and it writes into no `.devbook/` folder and
+changes no source file. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
 

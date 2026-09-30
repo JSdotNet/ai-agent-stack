@@ -609,7 +609,9 @@ writes file artifacts only and opens nothing.
 | A proposal's status follows its pull request, and the engine writes none of it | `deliver` | untested |
 
 **Git Workflow** (enum) — `single-branch` or `proposal-first`, reported by the tracker with the
-item. `single-branch` works the whole change on `change/<name>` and opens one pull request;
+item. `single-branch` works the whole change on `change/<name>` and opens one pull request,
+on the closing run, after the acceptance and archive it carries — a step there is a commit,
+`done` once its tasks are ticked;
 `proposal-first` gives the proposal `change/<name>`, each step `step/<name>/<N>`, and the close
 `archive/<name>`, one pull request each, the proposal's opened as a draft. The step prefix is
 not `change/` because git refuses a ref that is both a leaf and a directory.

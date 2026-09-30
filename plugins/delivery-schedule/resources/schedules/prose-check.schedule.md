@@ -2,7 +2,7 @@
 name: prose-check
 title: Prose check
 cadence: weekly
-cron: "0 4 * * 3"
+cron: "0 6 * * 0"
 target: devbook:prose-check
 requires: [devbook]
 tools: [Bash, Read, Glob, Grep, Skill]

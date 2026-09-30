@@ -63,16 +63,16 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a `schedule-report` brief, replaced while unread |
-| `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
-| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
+| `morning-brief` | Weekdays 06:30 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
+| `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
-| `devbook-verify` | Monday 04:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a `schedule-report` issue |
-| `devbook-update` | Saturday 05:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
-| `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
-| `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
+| `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a `schedule-report` issue |
+| `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
+| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
+| `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
-| `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
-| `prose-check` | Wednesday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
+| `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A `schedule-report` issue, replaced while unread |
+| `prose-check` | Sunday 06:00 | `prose-check`, every adopted folder, report only | `devbook` | A `schedule-report` issue when something was found |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a

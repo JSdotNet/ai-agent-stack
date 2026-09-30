@@ -2,7 +2,7 @@
 name: weekly-update
 title: Weekly update
 cadence: weekly
-cron: "0 16 * * 5"
+cron: "0 17 * * 0"
 target: delivery-schedule:schedule-weekly-update
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Glob, Grep, Skill]

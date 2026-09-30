@@ -2,7 +2,7 @@
 name: devbook-verify
 title: Devbook verify
 cadence: weekly
-cron: "0 4 * * 1"
+cron: "0 5 * * 0"
 target: delivery-schedule:schedule-devbook-verify
 requires: [delivery-schedule, devbook]
 tools: [Bash, Read, Glob, Grep, Skill]

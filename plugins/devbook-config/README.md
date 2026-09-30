@@ -34,6 +34,10 @@ plugins, flows, and bindings a chapter's prose no longer matches, and leaves `st
 **Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:init`,
 `devbook-config:update`, and `devbook-config:doctor` keep against a `components.<name>` stamp.
 
+Both close on the same [setup report](resources/setup-report.md): what the repository adopted,
+its procedures and routines, every plugin's version, and what that one run changed. One shape
+for both is what lets a person compare an update against the init before it.
+
 `init` and `update` stay two skills rather than one that branches on detect. They answer
 different questions — *what should this repository use?* against *is what it uses current?* —
 and only the first is a conversation about intent. Merging them would put an interview in
@@ -126,6 +130,7 @@ committed and shared.
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
 | `skills/local/SKILL.md` | The machine-scope settings: overlays, the model-selection file, `AGENTS.local.md` |
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
+| `resources/setup-report.md` | The setup report `init` and `update` close on: what is adopted, the procedures, the routines, the versions, and what this run changed |
 
 ## Known gap
 

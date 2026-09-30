@@ -83,15 +83,20 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    An upgrade can retire a key, and an unknown key is an error rather than a
    silently absent setting. Fix against `resources/engine-contract.md` in that same plugin.
 
-6. **Verify and report honestly.** Re-run the report and `devbook-config:doctor`.
-   Name what was upgraded, what migrations ran, what was left customized, what was skipped and
-   under which scope, and anything still outstanding. Pass on the report's *Bindings nobody has
-   enabled* section as the warning it is — enablement is personal to this checkout — and change
-   neither file for it. An update that ends on a failing check is reported as failing.
+6. **Verify.** Re-run the report and `devbook-config:doctor`. Pass on the report's *Bindings
+   nobody has enabled* section as the warning it is — enablement is personal to this checkout
+   — and change neither file for it. An update that ends on a failing check is reported as
+   failing.
 
 7. **Offer `devbook-config:local`** when the report says no user overlay or model-selection
    file exists for the person running this: the stack runs at the team's defaults on this
    machine until they say otherwise, and that is theirs to decide, once.
+
+8. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
+   as the last thing in the reply, a run that changed nothing included: under *This run*,
+   each component's stamp before and after step 4, the migrations it ran, what it left
+   customized, and every skipped row with its scope; the unenabled bindings and whatever
+   is still outstanding under *Still open*.
 
 ## Do not
 

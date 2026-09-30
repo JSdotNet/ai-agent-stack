@@ -35,6 +35,7 @@ the one script all six read through. None of them writes a key another component
 | `adoption` | skill | A person checking the `ai/` adoption record against what is installed |
 | `local` | skill | A person saying what is true of their machine — after `init` or `update` offers it, or when the report says no user overlay exists |
 | `scripts/report.mjs` | script, the read-only report | The six skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
+| `resources/setup-report.md` | template, the setup report | `init` and `update` at their close; one shape for both, so a run compares against the last one |
 | The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
 | The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` |
 
@@ -52,6 +53,9 @@ invoke every component's own `init` rather than reimplementing any of them. It r
 
 It is a conversation about intent, which is why it is not the same skill as the one that moves
 the stack forward.
+
+It closes on the setup report `update` closes on too: what is adopted, the procedures and
+routines, every plugin's version, and what the run changed.
 
 Stop at the engine keys: four keys and no more. Every `components.<name>` stamp stays with the
 component that knows what it materialized, which is why each component's `init` is invoked and not
@@ -73,8 +77,10 @@ writes whether or not the engine is adopted: the lane reads it, not the engine.
 
 Move the whole configured stack forward in one run: version drift, outstanding migrations, a
 fan-out to every adopted component's `update`, and a re-validated config. It changes
-nothing about intent, which is what makes it safe to run when nothing has changed. The service
-is [Update Service](#update-service); the verdicts are under [Update, By Scope](#update-by-scope).
+nothing about intent, which is what makes it safe to run when nothing has changed. It closes
+on the setup report, a run that changed nothing included, with each component's stamp before
+and after. The service is [Update Service](#update-service); the verdicts are under
+[Update, By Scope](#update-by-scope).
 
 Never drop a stamp: a component this machine has not installed is reported, skipped, and **left
 stamped**. A stamp is committed and shared while installed-ness is personal, so dropping the

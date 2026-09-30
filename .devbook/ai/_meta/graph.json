@@ -1,41 +1,40 @@
 {
-  "schemaVersion": 7,
-  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "schemaVersion": 24,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/ai",
   "sources": [
     ".devbook/ai"
   ],
   "stats": {
     "nodes": 15,
-    "edges": 12,
+    "edges": 13,
     "nodesByFolder": {
       "ai": 9,
-      "tech": 1,
-      "domain": 3,
-      "arc42": 2
+      "tech": 2,
+      "arc42": 4
     },
     "nodesByType": {
-      "file": 4,
-      "chapter": 11
+      "file": 5,
+      "chapter": 10
     },
     "nodesByKind": {
       "stage": 3,
       "practice": 2,
       "skill": 3,
       "adoption-map": 1,
-      "platform": 1,
-      "term": 3,
-      "none": 2
+      "platform": 2,
+      "none": 4
     },
     "nodesByStatus": {
       "adopted": 4,
-      "trial": 2,
+      "trial": 3,
       "candidate": 4,
-      "active": 5
+      "active": 4
     },
     "edgesByType": {
       "contains": 5,
-      "related": 7
+      "depends-on": 3,
+      "related": 5
     }
   },
   "problems": [],
@@ -65,7 +64,11 @@
           "line": 11,
           "status": "adopted",
           "kind": "practice",
-          "related": [
+          "date": "2026-09-02",
+          "stage": [
+            "code"
+          ],
+          "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
           ]
         }
@@ -94,8 +97,14 @@
           "line": 11,
           "status": "trial",
           "kind": "skill",
+          "date": "2026-09-02",
+          "stage": [
+            "plan",
+            "code",
+            "test"
+          ],
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#flow-skill"
+            ".devbook/arc42/08-crosscutting-concepts.md#flow-skill"
           ]
         }
       },
@@ -108,12 +117,20 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "fan-out",
           "level": 2,
-          "line": 44,
+          "line": 55,
           "status": "candidate",
           "kind": "skill",
+          "date": "2026-09-21",
+          "stage": [
+            "plan",
+            "code"
+          ],
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-cli"
+          ],
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
-            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+            ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep",
+            ".devbook/arc42/adr/plugin-boundaries.md"
           ]
         }
       },
@@ -126,12 +143,17 @@
           "path": ".devbook/ai/02-deliver.md",
           "slug": "scheduling",
           "level": 2,
-          "line": 66,
+          "line": 81,
           "status": "candidate",
           "kind": "skill",
+          "date": "2026-09-07",
+          "stage": [
+            "operate",
+            "monitor"
+          ],
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#routine",
-            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
+            ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+            ".devbook/arc42/adr/plugin-boundaries.md"
           ]
         }
       },
@@ -159,7 +181,11 @@
           "line": 11,
           "status": "candidate",
           "kind": "practice",
-          "related": [
+          "date": "2026-09-02",
+          "stage": [
+            "test"
+          ],
+          "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
           ]
         }
@@ -195,107 +221,110 @@
       },
       {
         "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "id": ".devbook/arc42/08-crosscutting-concepts.md#flow-skill",
           "label": "Flow Skill",
           "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "folder": "arc42",
+          "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "flow-skill",
           "level": 2,
-          "line": 83,
+          "line": 146,
           "status": "active",
           "statusDeclared": false,
-          "kind": "term",
           "date": "2026-09-02",
           "related": [
-            ".devbook/ai/02-deliver.md#flow-skills"
+            ".devbook/ai/02-deliver.md#flow-skills",
+            ".devbook/arc42/06-runtime-view.md#a-flow-run"
           ],
           "outOfScope": true
         }
       },
       {
         "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
-          "label": "Fleet Skill",
+          "id": ".devbook/tech/hosts.md#claude-code-cli",
+          "label": "Claude Code CLI",
           "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
-          "slug": "fleet-skill",
+          "folder": "tech",
+          "path": ".devbook/tech/hosts.md",
+          "slug": "claude-code-cli",
           "level": 2,
-          "line": 122,
-          "status": "active",
-          "statusDeclared": false,
-          "kind": "term",
-          "date": "2026-09-03",
+          "line": 23,
+          "status": "trial",
+          "kind": "platform",
+          "depends-on": [
+            ".devbook/tech/hosts.md#claude-code-plugin-api"
+          ],
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
-            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin"
+            ".devbook/arc42/tdr/2-fleet-names-the-cli-directly.md"
           ],
           "outOfScope": true
         }
       },
       {
         "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
-          "label": "Fan-Out Is Its Own Plugin",
-          "type": "chapter",
-          "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "fan-out-is-its-own-plugin",
-          "level": 2,
-          "line": 582,
-          "status": "active",
-          "statusDeclared": false,
-          "date": "2026-09-03",
-          "related": [
-            ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
-            ".devbook/domain/plugin-authoring/naming.md#layer",
-            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
-          ],
-          "outOfScope": true
-        }
-      },
-      {
-        "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#routine",
-          "label": "Routine",
-          "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
-          "slug": "routine",
-          "level": 2,
-          "line": 144,
-          "status": "active",
-          "statusDeclared": false,
-          "kind": "term",
-          "date": "2026-09-07",
-          "related": [
-            ".devbook/domain/plugin-authoring/naming.md#flow-skill",
-            ".devbook/arc42/05-building-block-view.md#routine-plugin",
-            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin"
-          ],
-          "outOfScope": true
-        }
-      },
-      {
-        "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
-          "label": "Routines Are Their Own Plugin",
+          "id": ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep",
+          "label": "schedule-issue-sweep",
           "type": "chapter",
           "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "routines-are-their-own-plugin",
+          "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
+          "slug": "schedule-issue-sweep",
+          "level": 3,
+          "line": 93,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/building-blocks/delivery-schedule.md#entry-point",
+            ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-morning-brief",
+            ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue",
+            ".devbook/arc42/adr/plugin-boundaries.md"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/plugin-boundaries.md",
+          "label": "Plugin Boundaries",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/plugin-boundaries.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-09-21",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/05-building-block-view.md#config-plugin",
+            ".devbook/arc42/05-building-block-view.md#schedule-plugin",
+            ".devbook/arc42/building-blocks/README.md",
+            ".devbook/arc42/08-crosscutting-concepts.md#plugin",
+            ".devbook/arc42/08-crosscutting-concepts.md#layer",
+            ".devbook/arc42/08-crosscutting-concepts.md#role",
+            ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+            ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
+            ".devbook/arc42/adr/flow-engine.md",
+            ".devbook/arc42/adr/surfaces.md"
+          ],
+          "outOfScope": true
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+          "label": "Schedule",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/08-crosscutting-concepts.md",
+          "slug": "schedule",
           "level": 2,
-          "line": 743,
+          "line": 193,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#routine",
-            ".devbook/arc42/05-building-block-view.md#routine-plugin",
-            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
-            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
-            ".devbook/tech/hosts.md#claude-code-routines"
+            ".devbook/arc42/08-crosscutting-concepts.md#flow-skill",
+            ".devbook/arc42/05-building-block-view.md#schedule-plugin",
+            ".devbook/arc42/adr/plugin-boundaries.md"
           ],
           "outOfScope": true
         }
@@ -344,58 +373,66 @@
       },
       {
         "data": {
-          "id": "related:.devbook/ai/01-author.md#claude-code-as-authoring-host->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "id": "depends-on:.devbook/ai/01-author.md#claude-code-as-authoring-host->.devbook/tech/hosts.md#claude-code-plugin-api",
           "source": ".devbook/ai/01-author.md#claude-code-as-authoring-host",
           "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
-          "type": "related"
+          "type": "depends-on"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/02-deliver.md#flow-skills->.devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "id": "related:.devbook/ai/02-deliver.md#flow-skills->.devbook/arc42/08-crosscutting-concepts.md#flow-skill",
           "source": ".devbook/ai/02-deliver.md#flow-skills",
-          "target": ".devbook/domain/plugin-authoring/naming.md#flow-skill",
+          "target": ".devbook/arc42/08-crosscutting-concepts.md#flow-skill",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/domain/plugin-authoring/naming.md#fleet-skill",
+          "id": "depends-on:.devbook/ai/02-deliver.md#fan-out->.devbook/tech/hosts.md#claude-code-cli",
           "source": ".devbook/ai/02-deliver.md#fan-out",
-          "target": ".devbook/domain/plugin-authoring/naming.md#fleet-skill",
-          "type": "related"
+          "target": ".devbook/tech/hosts.md#claude-code-cli",
+          "type": "depends-on"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep",
           "source": ".devbook/ai/02-deliver.md#fan-out",
-          "target": ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+          "target": ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/domain/plugin-authoring/naming.md#routine",
+          "id": "related:.devbook/ai/02-deliver.md#fan-out->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/ai/02-deliver.md#fan-out",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/08-crosscutting-concepts.md#schedule",
           "source": ".devbook/ai/02-deliver.md#scheduling",
-          "target": ".devbook/domain/plugin-authoring/naming.md#routine",
+          "target": ".devbook/arc42/08-crosscutting-concepts.md#schedule",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "id": "related:.devbook/ai/02-deliver.md#scheduling->.devbook/arc42/adr/plugin-boundaries.md",
           "source": ".devbook/ai/02-deliver.md#scheduling",
-          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/ai/03-verify.md#plugin-evaluation->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "id": "depends-on:.devbook/ai/03-verify.md#plugin-evaluation->.devbook/tech/hosts.md#claude-code-plugin-api",
           "source": ".devbook/ai/03-verify.md#plugin-evaluation",
           "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
-          "type": "related"
+          "type": "depends-on"
         }
       }
     ]

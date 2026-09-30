@@ -1,10 +1,9 @@
 {
-  "schemaVersion": 7,
-  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "schemaVersion": 24,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".",
   "sources": [
     ".devbook/arc42",
-    ".devbook/domain",
     ".devbook/tech",
     ".devbook/design",
     ".devbook/ai"
@@ -26,7 +25,18 @@
           "status": "active",
           "statusDeclared": false,
           "number": 1,
-          "summary": "ai-agent-stack packages the devbook and delivery flow — the agents, skills, instruction files, and hooks that do the work — as plugins served from one marketplace, jsdotnet."
+          "summary": "This repository, devbook, packages the devbook convention and the delivery flow — the agents, skills, instruction files, and hooks that do the work — as plugins served from one marketplace, jsdotnet-devbook. The repository is named for the convention that every plugin here reads from or writes…"
+        },
+        {
+          "type": "file",
+          "name": "03-context-and-scope.md",
+          "path": ".devbook/arc42/03-context-and-scope.md",
+          "title": "Context and Scope",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 3,
+          "summary": "This repository ships authoring assets rather than a running product, so a user here is a host that loads an asset and a repository that installs one. Both sit outside every building block, and every block conforms to them rather than the other way round. What is inside the boundary is the…",
+          "diagrams": 1
         },
         {
           "type": "file",
@@ -35,7 +45,30 @@
           "title": "Building Block View",
           "status": "active",
           "statusDeclared": false,
-          "number": 5
+          "number": 5,
+          "diagrams": 3
+        },
+        {
+          "type": "file",
+          "name": "06-runtime-view.md",
+          "path": ".devbook/arc42/06-runtime-view.md",
+          "title": "Runtime View",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 6,
+          "summary": "The scenarios that cross several blocks: a file becoming something a host loads, payload becoming state in somebody else's repository, and the run a flow skill describes. A flow that stays inside one block lives in that block's file under ## Runtime — see building-blocks/. Structure lives in…",
+          "diagrams": 3
+        },
+        {
+          "type": "file",
+          "name": "08-crosscutting-concepts.md",
+          "path": ".devbook/arc42/08-crosscutting-concepts.md",
+          "title": "Crosscutting Concepts",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 8,
+          "summary": "The language every plugin is written in — the shared kernel. One plugin, one block: a plugin is the unit a host installs, versions, and can refuse to load, so it is already the line a model cannot cross without somebody declaring it, and the twelve files under building-blocks/ follow the twelve…",
+          "diagrams": 1
         },
         {
           "type": "file",
@@ -45,7 +78,7 @@
           "status": "active",
           "statusDeclared": false,
           "number": 9,
-          "summary": "Decisions taken and defensible. A record that ends in options rather than a choice is debt, not a decision, and lives in chapter 11 instead."
+          "summary": "Technical choices taken and defensible. Records live in adr/, one per concern, and are linked from here rather than restated, the same way chapter 11 relates to tdr/. The index lists every concern with its standing choice and says where the numbered records that preceded them went."
         },
         {
           "type": "file",
@@ -55,7 +88,280 @@
           "status": "active",
           "statusDeclared": false,
           "number": 11,
-          "summary": "What this repository owes, and what it is exposed to. Records live in tdr/ and are linked from here rather than restated, the same way chapter 9 is meant to relate to adr/."
+          "summary": "What this repository owes, and what it is exposed to. Records live in tdr/ and are linked from here rather than restated, the same way chapter 9 relates to adr/."
+        },
+        {
+          "type": "file",
+          "name": "12-glossary.md",
+          "path": ".devbook/arc42/12-glossary.md",
+          "title": "Glossary",
+          "status": "active",
+          "statusDeclared": false,
+          "number": 12,
+          "summary": "The terms this repository uses with one meaning each, drawn from the ubiquitous language of its bounded contexts. Every term is owned by exactly one building block, named on the term, and its references point at the parts of that block the term qualifies. The vocabulary every plugin shares …"
+        },
+        {
+          "type": "directory",
+          "name": "adr",
+          "path": ".devbook/arc42/adr",
+          "title": "Decision Records",
+          "children": [
+            {
+              "type": "file",
+              "name": "README.md",
+              "path": ".devbook/arc42/adr/README.md",
+              "title": "Decision Records",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "A choice this repository made and can defend — one whose reversal would cost a migration of code, data, or an installed machine. One record per concern, named for the concern, always describing the standing choice, with a ## History table carrying every decision that shaped it. A naming, layout, or…",
+              "root": true
+            },
+            {
+              "type": "file",
+              "name": "annotations.md",
+              "path": ".devbook/arc42/adr/annotations.md",
+              "title": "Annotations",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-28",
+              "summary": "A review note is a fenced annotation block in the chapter, beside the passage it comments on, and the fence — its schema, its only writer annotations.mjs, its lifecycle open → resolved → gone, and the sweep — is devbook's. It reaches the five devbook folders and nothing else. The gate that shows a…"
+            },
+            {
+              "type": "file",
+              "name": "chapter-schema.md",
+              "path": ".devbook/arc42/adr/chapter-schema.md",
+              "title": "Chapter Schema",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-28",
+              "summary": "A devbook is five folders of Markdown chapters under one parent — .devbook/arc42, .devbook/domain, .devbook/tech, .devbook/design, .devbook/ai — and nowhere else, each addressable heading carrying a fenced meta block. status is one field with one ladder per folder; on domain/'s ladder alone sit two…"
+            },
+            {
+              "type": "file",
+              "name": "checks-and-indexes.md",
+              "path": ".devbook/arc42/adr/checks-and-indexes.md",
+              "title": "Checks and Indexes",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-28",
+              "summary": "Four checks gate this repository, and .github/workflows/repo-checks.yml runs all of them on every pull request: tools/check-assets.mjs over the manifests, agents, hooks, rules, and skills; the generator's build.mjs --check over .devbook/, which runs the schema validator on every file; node --test…"
+            },
+            {
+              "type": "file",
+              "name": "configuration.md",
+              "path": ".devbook/arc42/adr/configuration.md",
+              "title": "Configuration",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-29",
+              "summary": "A repository's wiring is one committed file, .devbook/config.json: the engine's four keys — bindings, extensions, policy, gates — beside every component's components.<name> entry and a committed id. Unknown keys are rejected by name. A config.local.json outside every clone overlays the engine keys…"
+            },
+            {
+              "type": "file",
+              "name": "flow-engine.md",
+              "path": ".devbook/arc42/adr/flow-engine.md",
+              "title": "Flow Engine",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-29",
+              "summary": "delivery is a flow engine: four flows named for what changes — flow-code, flow-spec, flow-update-packages, flow-project — over a closed set of eleven extension points, seven services and four chores, that a repository fills and never extends. Everything a flow talks to outside the engine is a…"
+            },
+            {
+              "type": "file",
+              "name": "hooks.md",
+              "path": ".devbook/arc42/adr/hooks.md",
+              "title": "Hooks",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-07",
+              "summary": "A hook is the one component that speaks unasked, so every hook this marketplace ships checks before it speaks. A SessionStart hook stays silent unless the repository adopted the plugin — named in its own enabledPlugins, or carrying the assets the guidance is about — and a tool hook's matcher names…"
+            },
+            {
+              "type": "file",
+              "name": "hosts.md",
+              "path": ".devbook/arc42/adr/hosts.md",
+              "title": "Hosts",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-28",
+              "summary": "Every asset is authored once and read by both Claude Code and GitHub Copilot. Where the two hosts disagree on a filename, the file is authored once in a host-neutral place and each host gets a wrapper of frontmatter and one sentence. Nothing in the marketplace names one host's own file, path, or…"
+            },
+            {
+              "type": "file",
+              "name": "install.md",
+              "path": ".devbook/arc42/adr/install.md",
+              "title": "Install",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-28",
+              "summary": "A plugin reaches a repository through its init skill, is kept current by its update, and reaches it in no other way. init refuses where the component's stamp exists and update where it does not. Either writes the payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under…"
+            },
+            {
+              "type": "file",
+              "name": "plugin-boundaries.md",
+              "path": ".devbook/arc42/adr/plugin-boundaries.md",
+              "title": "Plugin Boundaries",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-21",
+              "summary": "Every plugin is self-contained under plugins/<name>/ and either works alone or declares what it needs. There are three ways to couple — a declared dependency on a lower layer, a bridge plugin depending on both sides, a surface capability resolved from the live tool list — and a lower layer never…"
+            },
+            {
+              "type": "file",
+              "name": "releases.md",
+              "path": ".devbook/arc42/adr/releases.md",
+              "title": "Releases",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-29",
+              "summary": "Every plugin carries the same version — 1.13.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+            },
+            {
+              "type": "file",
+              "name": "surfaces.md",
+              "path": ".devbook/arc42/adr/surfaces.md",
+              "title": "Surfaces",
+              "status": "active",
+              "statusDeclared": false,
+              "date": "2026-09-25",
+              "summary": "A surface is a viewer for a run: an MCP server named delivery-surface-*, resolved from the live tool list in either host spelling, or a host canvas whose actions carry the contract's operation names. The same names on a server with any other name are not a surface. The lifecycle group fans out…"
+            }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": "building-blocks",
+          "path": ".devbook/arc42/building-blocks",
+          "title": "Building Blocks",
+          "children": [
+            {
+              "type": "file",
+              "name": "README.md",
+              "path": ".devbook/arc42/building-blocks/README.md",
+              "title": "Building Blocks",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "One file per plugin: its responsibility, the interfaces it exposes, the parts inside it, the flows that cross it, and its dependencies in their actual direction. Chapter 5 holds what every plugin shares — the landscape, the folder shape, what an install leaves in a repository — and links here for…",
+              "root": true
+            },
+            {
+              "type": "file",
+              "name": "delivery-schedule.md",
+              "path": ".devbook/arc42/building-blocks/delivery-schedule.md",
+              "title": "delivery-schedule",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "Work that runs with nobody watching, and the catalog of triggers that fires it. Responsible for one thing: that a procedure can run in a session nobody is watching without ever passing a gate, without merging anything, and without carrying anything personal into the repository.",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "delivery-surface-backlog.md",
+              "path": ".devbook/arc42/building-blocks/delivery-surface-backlog.md",
+              "title": "delivery-surface-backlog",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "A run shown in the application where its work item already lives. Responsible for one thing: that the Backlog desktop app answers as a surface when, and only when, this plugin is installed — and says plainly when it cannot.",
+              "diagrams": 1
+            },
+            {
+              "type": "file",
+              "name": "delivery-surface-canvas.md",
+              "path": ".devbook/arc42/building-blocks/delivery-surface-canvas.md",
+              "title": "delivery-surface-canvas",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "Mermaid and Markdown rendered live beside the files they came from. Responsible for one thing: that a diagram or a document written to a file can be looked at, live, beside the file — and that looking at it creates nothing anyone could mistake for a record.",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "delivery-surface-collector.md",
+              "path": ".devbook/arc42/building-blocks/delivery-surface-collector.md",
+              "title": "delivery-surface-collector",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "A run recorded to disk rather than watched, for unattended sessions. Responsible for one thing: that a run nobody watched is still legible afterwards — which stages ran, how many times, what a person decided at each gate, what the evidence was, and whether the run was handed off or abandoned.",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "delivery-surface-dashboard.md",
+              "path": ".devbook/arc42/building-blocks/delivery-surface-dashboard.md",
+              "title": "delivery-surface-dashboard",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The live view of a run, measured by hooks rather than told. Responsible for three things: that a run is visible while it happens, that what it shows was measured rather than claimed, and that uninstalling it costs a view and never a capability.",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "delivery.md",
+              "path": ".devbook/arc42/building-blocks/delivery.md",
+              "title": "delivery",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The delivery engine. Responsible for three things: that one unit of work reaches a review-ready change inside one session, that a person decided it was ready, and that a repository can shape the run without being able to weaken it.",
+              "diagrams": 8
+            },
+            {
+              "type": "file",
+              "name": "devbook-collaboration.md",
+              "path": ".devbook/arc42/building-blocks/devbook-collaboration.md",
+              "title": "devbook-collaboration",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "How a chapter is reviewed and decided. Responsible for two things: that every objection to a chapter is written into it, beside the passage it is about, and that an approval on it was chosen by a person in the session that wrote it.",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "devbook-config.md",
+              "path": ".devbook/arc42/building-blocks/devbook-config.md",
+              "title": "devbook-config",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "What this stack is, what this machine has, and how this repository is wired. Responsible for four things: that a repository's stack configuration exists before anything initializes itself, that it can be moved forward in one run, that its installation can be diagnosed without a write, and that…",
+              "diagrams": 3
+            },
+            {
+              "type": "file",
+              "name": "devbook-derived.md",
+              "path": ".devbook/arc42/building-blocks/devbook-derived.md",
+              "title": "devbook-derived",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The committed index and the canvas that draws it. Responsible for one thing: that a repository which keeps the derived _meta/ indexes in its tree has them current on the default branch and never regenerated in a session."
+            },
+            {
+              "type": "file",
+              "name": "devbook-openspec.md",
+              "path": ".devbook/arc42/building-blocks/devbook-openspec.md",
+              "title": "devbook-openspec",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The change lane: the plugin that installs and configures the OpenSpec CLI so a change to a repository is proposed, agreed, built step by step, and archived as a set of deltas against its devbook chapters."
+            },
+            {
+              "type": "file",
+              "name": "devbook-procedures.md",
+              "path": ".devbook/arc42/building-blocks/devbook-procedures.md",
+              "title": "devbook-procedures",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "Responsible for one thing: that a repository has, by name, the six procedures every repository has and no plugin can write — run, how its application is built and comes up; show, how the feature being built is put in front of a reviewer; capture, how evidence is taken; debug, how a cause is found…"
+            },
+            {
+              "type": "file",
+              "name": "devbook.md",
+              "path": ".devbook/arc42/building-blocks/devbook.md",
+              "title": "devbook",
+              "status": "active",
+              "statusDeclared": false,
+              "summary": "The convention itself. Responsible for three things: that a chapter can be addressed, that the reference pointing at it still resolves, and that a repository can adopt the convention, upgrade it, and be told when the two have drifted apart.",
+              "diagrams": 4
+            }
+          ]
         },
         {
           "type": "directory",
@@ -93,7 +399,7 @@
               "statusDeclared": false,
               "number": 2,
               "date": "2026-09-03",
-              "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
             },
             {
               "type": "file",
@@ -105,97 +411,72 @@
               "number": 3,
               "date": "2026-09-05",
               "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "area",
-      "name": ".devbook/domain",
-      "path": ".devbook/domain",
-      "kind": "domain",
-      "title": "Context Map",
-      "children": [
-        {
-          "type": "file",
-          "name": "context-map.md",
-          "path": ".devbook/domain/context-map.md",
-          "title": "Context Map",
-          "kind": "context-map",
-          "status": "active",
-          "statusDeclared": false,
-          "summary": "This repository has one bounded context. It builds authoring assets, not a running product, so there is no second context to integrate with — the hosts that load the assets are outside the boundary.",
-          "root": true
-        },
-        {
-          "type": "directory",
-          "name": "plugin-authoring",
-          "path": ".devbook/domain/plugin-authoring",
-          "title": "Plugin Authoring",
-          "children": [
-            {
-              "type": "file",
-              "name": "domain.md",
-              "path": ".devbook/domain/plugin-authoring/domain.md",
-              "title": "Plugin Authoring",
-              "kind": "domain",
-              "status": "active",
-              "statusDeclared": false,
-              "summary": "What this context is responsible for: that an asset written once loads correctly in every host that reads it, and that a plugin can be installed on its own.",
-              "root": true
             },
             {
               "type": "file",
-              "name": "dependencies.md",
-              "path": ".devbook/domain/plugin-authoring/dependencies.md",
-              "title": "Plugin Authoring",
-              "kind": "dependencies",
+              "name": "4-delivery-depends-on-devbook.md",
+              "path": ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
+              "title": "4. delivery Depends on devbook",
               "status": "active",
               "statusDeclared": false,
-              "summary": "What this context depends on and who depends on it. The hosts sit outside the boundary and are conformed to; the repositories that adopt a plugin sit outside it and are supplied."
+              "number": 4,
+              "date": "2026-09-07",
+              "summary": "Remediation state: in-progress · Severity: medium · Owner: the maintainer"
             },
             {
               "type": "file",
-              "name": "features.md",
-              "path": ".devbook/domain/plugin-authoring/features.md",
-              "title": "Plugin Authoring",
-              "kind": "features",
+              "name": "5-derived-index-is-not-optional.md",
+              "path": ".devbook/arc42/tdr/5-derived-index-is-not-optional.md",
+              "title": "5. The Derived Index Is Not Optional",
               "status": "active",
               "statusDeclared": false,
-              "summary": "What this context lets a maintainer do, in the language of naming.md rather than in file paths. Four features, and each is a thing a host or a consuming repository can observe."
+              "number": 5,
+              "date": "2026-09-08",
+              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
             },
             {
               "type": "file",
-              "name": "flow.md",
-              "path": ".devbook/domain/plugin-authoring/flow.md",
-              "title": "Plugin Authoring",
-              "kind": "flow",
+              "name": "6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md",
+              "path": ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md",
+              "title": "6. sync-specs Borrows a Name OpenSpec Uses for Something Else",
               "status": "active",
               "statusDeclared": false,
-              "summary": "How the terms in model.md move over time: a file becoming something a host loads, payload becoming state in somebody else's repository, and the run a flow skill describes. Structure lives in model.md; responsibilities and boundary live in domain.md.",
-              "diagrams": 3
+              "number": 6,
+              "date": "2026-09-15",
+              "summary": "Remediation state: resolved · Severity: low · Owner: the maintainer"
             },
             {
               "type": "file",
-              "name": "model.md",
-              "path": ".devbook/domain/plugin-authoring/model.md",
-              "title": "Plugin Authoring",
-              "kind": "model",
+              "name": "7-the-decision-set-predates-the-concern-rule.md",
+              "path": ".devbook/arc42/tdr/7-the-decision-set-predates-the-concern-rule.md",
+              "title": "7. The Decision Set Predates the Concern Rule",
               "status": "active",
               "statusDeclared": false,
-              "summary": "Structural view of the context: what a marketplace holds, what a plugin is made of, and what a plugin leaves behind in a repository that adopts it. domain.md says what the context is responsible for; this file says how its terms relate.",
-              "diagrams": 1
+              "number": 7,
+              "date": "2026-09-17",
+              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
             },
             {
               "type": "file",
-              "name": "naming.md",
-              "path": ".devbook/domain/plugin-authoring/naming.md",
-              "title": "Naming",
-              "kind": "naming",
+              "name": "8-the-domain-rule-is-not-exercised-here.md",
+              "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
+              "title": "8. The Domain Rule Is Not Exercised Here",
               "status": "active",
               "statusDeclared": false,
-              "summary": "The terms this repository trades in. Where a host uses a different word for the same thing, the host's word is recorded as an alias rather than adopted."
+              "number": 8,
+              "date": "2026-09-21",
+              "summary": "Remediation state: identified · Severity: medium · Owner: the maintainer"
+            },
+            {
+              "type": "file",
+              "name": "9-openspecs-model-does-not-cover-a-devbook-change.md",
+              "path": ".devbook/arc42/tdr/9-openspecs-model-does-not-cover-a-devbook-change.md",
+              "title": "9. OpenSpec's Model Does Not Cover a devbook Change",
+              "status": "active",
+              "statusDeclared": false,
+              "number": 9,
+              "date": "2026-09-27",
+              "summary": "Remediation state: resolved · Severity: medium · Owner: the maintainer"
             }
           ]
         }
@@ -220,19 +501,19 @@
         },
         {
           "type": "file",
-          "name": "hosts.md",
-          "path": ".devbook/tech/hosts.md",
-          "title": "Hosts",
-          "status": "adopted",
-          "summary": "The platforms that read an asset, the one that runs it, and the one library a host supplies at load time. Nothing in this layer is a dependency in a manifest; each is what the checked-in files are authored for."
-        },
-        {
-          "type": "file",
           "name": "shared.md",
           "path": ".devbook/tech/shared.md",
           "title": "Shared",
           "status": "adopted",
           "summary": "Formats and protocols that cut across every layer: what an asset is written in, and how a plugin ships tools rather than prose."
+        },
+        {
+          "type": "file",
+          "name": "hosts.md",
+          "path": ".devbook/tech/hosts.md",
+          "title": "Hosts",
+          "status": "adopted",
+          "summary": "The platforms that read an asset, the one that runs it, and the one library a host supplies at load time. Nothing in this layer is a dependency in a manifest; each is what the checked-in files are authored for."
         },
         {
           "type": "file",
@@ -276,7 +557,7 @@
           "title": "AI Adoption Map",
           "kind": "adoption-map",
           "status": "adopted",
-          "summary": "How this repository is itself built with AI. The assets it ships are the product and are described in .devbook/arc42 and .devbook/domain; what follows is only how the work gets done here. The practices live one chapter each in the stage files; this file is the map.",
+          "summary": "How this repository is itself built with AI. The assets it ships are the product and are described in .devbook/arc42; what follows is only how the work gets done here. The practices live one chapter each in the usage files; this file is the map.",
           "diagrams": 1,
           "root": true
         },

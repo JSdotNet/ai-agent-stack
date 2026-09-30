@@ -1,21 +1,20 @@
 {
-  "schemaVersion": 7,
-  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "schemaVersion": 24,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
     ".devbook/tech"
   ],
   "stats": {
-    "nodes": 23,
+    "nodes": 22,
     "edges": 26,
     "nodesByFolder": {
       "tech": 14,
-      "arc42": 8,
-      "domain": 1
+      "arc42": 8
     },
     "nodesByType": {
-      "file": 5,
-      "chapter": 18
+      "file": 7,
+      "chapter": 15
     },
     "nodesByKind": {
       "none": 12,
@@ -23,13 +22,12 @@
       "library": 1,
       "format": 1,
       "protocol": 2,
-      "runtime": 2,
-      "term": 1
+      "runtime": 2
     },
     "nodesByStatus": {
       "adopted": 10,
       "trial": 4,
-      "active": 9
+      "active": 8
     },
     "edgesByType": {
       "contains": 10,
@@ -96,11 +94,11 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "copilot-plugin-api",
           "level": 2,
-          "line": 42,
+          "line": 39,
           "status": "adopted",
           "kind": "platform",
           "related": [
-            ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset"
+            ".devbook/arc42/adr/hosts.md"
           ]
         }
       },
@@ -113,7 +111,7 @@
           "path": ".devbook/tech/hosts.md",
           "slug": "copilot-extension-sdk",
           "level": 2,
-          "line": 53,
+          "line": 51,
           "status": "trial",
           "kind": "library",
           "date": "2026-09-04",
@@ -127,23 +125,23 @@
       },
       {
         "data": {
-          "id": ".devbook/tech/hosts.md#claude-code-routines",
-          "label": "Claude Code Routines",
+          "id": ".devbook/tech/hosts.md#scheduled-routines",
+          "label": "Scheduled Routines",
           "type": "chapter",
           "folder": "tech",
           "path": ".devbook/tech/hosts.md",
-          "slug": "claude-code-routines",
+          "slug": "scheduled-routines",
           "level": 2,
-          "line": 74,
+          "line": 72,
           "status": "trial",
           "kind": "platform",
-          "date": "2026-09-07",
+          "date": "2026-09-28",
           "depends-on": [
             ".devbook/tech/hosts.md#claude-code-plugin-api"
           ],
           "related": [
-            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
-            ".devbook/arc42/05-building-block-view.md#routine-plugin"
+            ".devbook/arc42/adr/plugin-boundaries.md",
+            ".devbook/arc42/05-building-block-view.md#schedule-plugin"
           ]
         }
       },
@@ -184,7 +182,7 @@
           "status": "adopted",
           "kind": "protocol",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#mcp-server"
+            ".devbook/arc42/08-crosscutting-concepts.md#mcp-server"
           ]
         }
       },
@@ -197,7 +195,7 @@
           "path": ".devbook/tech/shared.md",
           "slug": "mcp-apps",
           "level": 2,
-          "line": 34,
+          "line": 36,
           "status": "trial",
           "kind": "protocol",
           "date": "2026-09-03",
@@ -256,7 +254,7 @@
           "path": ".devbook/tech/tooling.md",
           "slug": "powershell",
           "level": 2,
-          "line": 50,
+          "line": 58,
           "status": "adopted",
           "kind": "runtime",
           "date": "2026-09-04",
@@ -264,7 +262,7 @@
             ".devbook/tech/tooling.md#node"
           ],
           "related": [
-            ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+            ".devbook/arc42/adr/hosts.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder"
           ]
         }
@@ -282,7 +280,7 @@
           "status": "active",
           "statusDeclared": false,
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#marketplace"
+            ".devbook/arc42/08-crosscutting-concepts.md#marketplace"
           ],
           "outOfScope": true
         }
@@ -299,9 +297,9 @@
           "date": "2026-09-03",
           "related": [
             ".devbook/arc42/11-risks-and-technical-debt.md",
-            ".devbook/domain/plugin-authoring/naming.md#host-slot",
-            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
-            ".devbook/arc42/09-architecture-decisions.md#fan-out-is-its-own-plugin",
+            ".devbook/arc42/08-crosscutting-concepts.md#host-slot",
+            ".devbook/arc42/adr/hosts.md",
+            ".devbook/arc42/adr/plugin-boundaries.md",
             ".devbook/tech/hosts.md#claude-code-cli"
           ],
           "number": 2,
@@ -310,19 +308,21 @@
       },
       {
         "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
-          "label": "One Authored Copy Per Asset",
-          "type": "chapter",
+          "id": ".devbook/arc42/adr/hosts.md",
+          "label": "Hosts",
+          "type": "file",
           "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "one-authored-copy-per-asset",
-          "level": 2,
-          "line": 48,
+          "path": ".devbook/arc42/adr/hosts.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-02",
+          "date": "2026-09-28",
           "related": [
-            ".devbook/tech/hosts.md#copilot-plugin-api"
+            ".devbook/arc42/09-architecture-decisions.md",
+            ".devbook/arc42/05-building-block-view.md#host-slots",
+            ".devbook/arc42/08-crosscutting-concepts.md#host",
+            ".devbook/arc42/08-crosscutting-concepts.md#host-slot",
+            ".devbook/tech/hosts.md#copilot-plugin-api",
+            ".devbook/arc42/adr/install.md"
           ],
           "outOfScope": true
         }
@@ -336,55 +336,61 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 18,
+          "line": 107,
           "status": "active",
           "statusDeclared": false,
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#plugin",
-            ".devbook/arc42/09-architecture-decisions.md#one-folder-per-plugin"
+            ".devbook/arc42/08-crosscutting-concepts.md#plugin",
+            ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule",
+            ".devbook/arc42/adr/plugin-boundaries.md",
+            ".devbook/arc42/adr/install.md"
           ],
           "outOfScope": true
         }
       },
       {
         "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
-          "label": "Routines Are Their Own Plugin",
-          "type": "chapter",
+          "id": ".devbook/arc42/adr/plugin-boundaries.md",
+          "label": "Plugin Boundaries",
+          "type": "file",
           "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "routines-are-their-own-plugin",
-          "level": 2,
-          "line": 743,
+          "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-07",
+          "date": "2026-09-21",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#routine",
-            ".devbook/arc42/05-building-block-view.md#routine-plugin",
-            ".devbook/arc42/09-architecture-decisions.md#the-guide-names-every-plugin-and-depends-on-none",
-            ".devbook/arc42/09-architecture-decisions.md#no-host-profile-plugins",
-            ".devbook/tech/hosts.md#claude-code-routines"
+            ".devbook/arc42/09-architecture-decisions.md",
+            ".devbook/arc42/05-building-block-view.md#plugin-folder",
+            ".devbook/arc42/05-building-block-view.md#config-plugin",
+            ".devbook/arc42/05-building-block-view.md#schedule-plugin",
+            ".devbook/arc42/building-blocks/README.md",
+            ".devbook/arc42/08-crosscutting-concepts.md#plugin",
+            ".devbook/arc42/08-crosscutting-concepts.md#layer",
+            ".devbook/arc42/08-crosscutting-concepts.md#role",
+            ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+            ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md",
+            ".devbook/arc42/adr/flow-engine.md",
+            ".devbook/arc42/adr/surfaces.md"
           ],
           "outOfScope": true
         }
       },
       {
         "data": {
-          "id": ".devbook/arc42/05-building-block-view.md#routine-plugin",
-          "label": "Routine Plugin",
+          "id": ".devbook/arc42/05-building-block-view.md#schedule-plugin",
+          "label": "Schedule Plugin",
           "type": "chapter",
           "folder": "arc42",
           "path": ".devbook/arc42/05-building-block-view.md",
-          "slug": "routine-plugin",
+          "slug": "schedule-plugin",
           "level": 2,
-          "line": 271,
+          "line": 488,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#routine",
-            ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+            ".devbook/arc42/08-crosscutting-concepts.md#schedule",
+            ".devbook/arc42/adr/plugin-boundaries.md",
             ".devbook/arc42/05-building-block-view.md#stack-config"
           ],
           "outOfScope": true
@@ -392,19 +398,19 @@
       },
       {
         "data": {
-          "id": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "id": ".devbook/arc42/08-crosscutting-concepts.md#mcp-server",
           "label": "MCP Server",
           "type": "chapter",
-          "folder": "domain",
-          "path": ".devbook/domain/plugin-authoring/naming.md",
+          "folder": "arc42",
+          "path": ".devbook/arc42/08-crosscutting-concepts.md",
           "slug": "mcp-server",
           "level": 2,
-          "line": 335,
+          "line": 405,
           "status": "active",
           "statusDeclared": false,
-          "kind": "term",
           "related": [
-            ".devbook/tech/shared.md#model-context-protocol"
+            ".devbook/tech/shared.md#model-context-protocol",
+            ".devbook/arc42/adr/flow-engine.md"
           ],
           "outOfScope": true
         }
@@ -418,32 +424,13 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 127,
+          "line": 329,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
           "related": [
-            ".devbook/domain/plugin-authoring/naming.md#surface",
-            ".devbook/arc42/09-architecture-decisions.md#three-surfaces-one-contract"
-          ],
-          "outOfScope": true
-        }
-      },
-      {
-        "data": {
-          "id": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
-          "label": "No Generated Sync Layer",
-          "type": "chapter",
-          "folder": "arc42",
-          "path": ".devbook/arc42/09-architecture-decisions.md",
-          "slug": "no-generated-sync-layer",
-          "level": 2,
-          "line": 60,
-          "status": "active",
-          "statusDeclared": false,
-          "date": "2026-09-02",
-          "related": [
-            ".devbook/tech/tooling.md#powershell"
+            ".devbook/arc42/08-crosscutting-concepts.md#surface",
+            ".devbook/arc42/adr/surfaces.md"
           ],
           "outOfScope": true
         }
@@ -484,9 +471,9 @@
       },
       {
         "data": {
-          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#claude-code-routines",
+          "id": "contains:.devbook/tech/hosts.md->.devbook/tech/hosts.md#scheduled-routines",
           "source": ".devbook/tech/hosts.md",
-          "target": ".devbook/tech/hosts.md#claude-code-routines",
+          "target": ".devbook/tech/hosts.md#scheduled-routines",
           "type": "contains"
         }
       },
@@ -556,9 +543,9 @@
       },
       {
         "data": {
-          "id": "related:.devbook/tech/hosts.md#copilot-plugin-api->.devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "id": "related:.devbook/tech/hosts.md#copilot-plugin-api->.devbook/arc42/adr/hosts.md",
           "source": ".devbook/tech/hosts.md#copilot-plugin-api",
-          "target": ".devbook/arc42/09-architecture-decisions.md#one-authored-copy-per-asset",
+          "target": ".devbook/arc42/adr/hosts.md",
           "type": "related"
         }
       },
@@ -580,33 +567,33 @@
       },
       {
         "data": {
-          "id": "depends-on:.devbook/tech/hosts.md#claude-code-routines->.devbook/tech/hosts.md#claude-code-plugin-api",
-          "source": ".devbook/tech/hosts.md#claude-code-routines",
+          "id": "depends-on:.devbook/tech/hosts.md#scheduled-routines->.devbook/tech/hosts.md#claude-code-plugin-api",
+          "source": ".devbook/tech/hosts.md#scheduled-routines",
           "target": ".devbook/tech/hosts.md#claude-code-plugin-api",
           "type": "depends-on"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
-          "source": ".devbook/tech/hosts.md#claude-code-routines",
-          "target": ".devbook/arc42/09-architecture-decisions.md#routines-are-their-own-plugin",
+          "id": "related:.devbook/tech/hosts.md#scheduled-routines->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/tech/hosts.md#scheduled-routines",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/tech/hosts.md#claude-code-routines->.devbook/arc42/05-building-block-view.md#routine-plugin",
-          "source": ".devbook/tech/hosts.md#claude-code-routines",
-          "target": ".devbook/arc42/05-building-block-view.md#routine-plugin",
+          "id": "related:.devbook/tech/hosts.md#scheduled-routines->.devbook/arc42/05-building-block-view.md#schedule-plugin",
+          "source": ".devbook/tech/hosts.md#scheduled-routines",
+          "target": ".devbook/arc42/05-building-block-view.md#schedule-plugin",
           "type": "related"
         }
       },
       {
         "data": {
-          "id": "related:.devbook/tech/shared.md#model-context-protocol->.devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "id": "related:.devbook/tech/shared.md#model-context-protocol->.devbook/arc42/08-crosscutting-concepts.md#mcp-server",
           "source": ".devbook/tech/shared.md#model-context-protocol",
-          "target": ".devbook/domain/plugin-authoring/naming.md#mcp-server",
+          "target": ".devbook/arc42/08-crosscutting-concepts.md#mcp-server",
           "type": "related"
         }
       },
@@ -644,9 +631,9 @@
       },
       {
         "data": {
-          "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "id": "related:.devbook/tech/tooling.md#powershell->.devbook/arc42/adr/hosts.md",
           "source": ".devbook/tech/tooling.md#powershell",
-          "target": ".devbook/arc42/09-architecture-decisions.md#no-generated-sync-layer",
+          "target": ".devbook/arc42/adr/hosts.md",
           "type": "related"
         }
       },

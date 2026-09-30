@@ -7,7 +7,7 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-b
 Responsible for one thing: that a repository has, by name, the six procedures every
 repository has and no plugin can write — `run`, how its application is built and comes up; `show`, how
 the feature being built is put in front of a reviewer; `capture`, how evidence is taken;
-`debug`, how a cause is found inside the running application; `estimate`, how work is sized
+`diagnose`, how a cause is found inside the running application; `estimate`, how work is sized
 against the repository's own finished work; `prototype`, how a feature is sketched as standalone
 HTML in the repository's design conventions — and that each one's goal reads
 the same in every repository while how it is done never does.
@@ -34,7 +34,7 @@ them.
 | --- | --- | --- |
 | `init` | skill | A person, or `devbook-config:init` during setup and a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
-| `run`, `show`, `capture`, `debug`, `estimate`, `prototype` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
+| `run`, `show`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `SessionStart` | hook pair | Either host, at session start |
 
 ### init and update
@@ -69,7 +69,7 @@ related: [".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook
 Also called: procedure skill, repository skill, seeded skill.
 
 One of six named things a repository knows how to do and a plugin cannot: `run`, `show`,
-`capture`, `debug`, `estimate`, `prototype`. In a repository it is three files — the body at
+`capture`, `diagnose`, `estimate`, `prototype`. In a repository it is three files — the body at
 `.agents/skills/<name>.md`, and a wrapper per host at `.claude/skills/<name>/SKILL.md` and
 `.github/skills/<name>/SKILL.md` — and one stamp entry per file under
 `components.devbook-procedures.materialized`. The body is seeded once and is the repository's
@@ -86,6 +86,10 @@ Copilot's twin at `.github/skills/run/SKILL.md` carries the goal and points at e
 One name reaches it on both hosts. `migrations/001-start-is-run/` moves a `start` procedure
 into that shape.
 
+No procedure shares a name with a command or skill a host bundles: a project skill replaces
+the host's own of the same name. `diagnose` was `debug` until it was found to hide Claude
+Code's `/debug`; `migrations/002-debug-is-diagnose/` renames it.
+
 `show` is the one procedure that names two others: it invokes `run` and `capture` by name
 and stops when either is absent. None is a dependency of anything.
 
@@ -97,6 +101,7 @@ and stops when either is absent. None is a dependency of anything.
 | A name dropped from `adopted` orphans its three files, reported and never deleted | `init`, `update` | untested |
 | `run`'s body is a `.claude/skills/run-<name>/SKILL.md` recipe, never written after it lands, and Copilot's twin points at every one | `init`, `update`, `tools/check-assets.mjs` | `check-assets` over this repository |
 | `show` invokes `run` and `capture` by name and stops when either is absent | the `show` seed | untested |
+| No procedure other than `run` takes the name of a command or skill a host bundles | the seeds under `assets/skills/` | untested |
 
 ### Goal
 
@@ -108,7 +113,7 @@ The one sentence a procedure must satisfy whatever its body says: what a caller 
 `run` leaves the application running and reports the command, the health verdict, and the
 entry points; `show` puts the branch's feature in front of a reviewer with evidence cited by
 path; `capture` returns one file per checkpoint and per failure, under the worktree root, the
-form named honestly; `debug` names a cause and proves it, doing the debugging itself and
+form named honestly; `diagnose` names a cause and proves it, doing the debugging itself and
 leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
 sized against the repository's own finished work and naming the reference compared with, so
 that a pace measured in points means the same across plans; `prototype` returns one standalone HTML
@@ -152,7 +157,7 @@ it follows.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Separate Ways | Names `run` at its `app.start` point and `capture` inside Validation, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this plugin | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads `components.devbook-procedures`, invokes `init` during setup and `update` during a fan-out, and answers its adoption question from the engine keys it just wrote | The stamp shape and the install skill's name | That the stamp exists and keeps its shape; it writes none of it. |
-| Any session, either host | Conformist | Invokes `run`, `show`, `capture`, `debug`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
+| Any session, either host | Conformist | Invokes `run`, `show`, `capture`, `diagnose`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 
 **The goal is the seam.** Every procedure's body differs per repository; the one sentence that
 does not is what a caller may rely on, and it lives in the file the plugin keeps rewriting

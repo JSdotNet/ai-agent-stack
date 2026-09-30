@@ -1,10 +1,10 @@
 ---
-name: debug
-description: "Find the cause of an issue observed in this repository's running application — read its logs, traces, and console, reproduce it, and set a breakpoint where a log cannot say. Use when: 'why does this fail', 'debug it', a reproduction is needed, an exception or a wrong value has no obvious origin, or a flow's defect stage needs a root cause."
+name: diagnose
+description: "Find the cause of an issue observed in this repository's running application — read its logs, traces, and console, reproduce it, and set a breakpoint where a log cannot say. Use when: 'why does this fail', 'debug it', 'diagnose it', a reproduction is needed, an exception or a wrong value has no obvious origin, or a flow's defect stage needs a root cause."
 goal: "Name the cause of an observed issue and prove it with evidence — the log line, the trace span, or the breakpoint state that shows it — doing the debugging yourself rather than handing the person a debugger, and leaving no breakpoint, diagnostic line, or temporary setting behind in the change."
 ---
 
-# Debug the Application
+# Diagnose the Application
 
 Go from a symptom to a cause with the evidence attached. **Edit this file** — where this
 repository's logs live, which debugger reaches it, and how a reproduction is set up are yours;

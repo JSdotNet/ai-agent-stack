@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-28
+date: 2026-09-30
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -68,6 +68,14 @@ which hash-matching cannot do, so `devbook-procedures` ships the first migration
 `devbook`: `001-start-is-run`, numbered in its own sequence and idempotent by its `--check`, with
 no ledger — the shape it removes is the record that it ran.
 
+**A procedure never takes a host's own name.** A project skill that shares its name with a
+command or skill the host bundles replaces it, so a procedure named `debug` took Claude Code's
+`/debug` away from every repository that adopted it. The procedure is `diagnose`, and
+`002-debug-is-diagnose` moves an edited body and renames it in the stamp; the wrappers are
+`update`'s to write, as for any adopted procedure. The same rule keeps `show` from becoming
+`verify`: Claude Code's `/verify` confirms a change for the person who typed it and cannot be
+invoked by the model, while `show` is what a flow calls for a reviewer's walk with evidence.
+
 **OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
 the marketplace uses it, so a person who knows one tool reads the other without translating.
 One `install` covering first setup and upgrade asked a stamped repository what its stamp already
@@ -130,6 +138,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-09-30 | `debug` becomes `diagnose`, since a project skill named `debug` replaces Claude Code's bundled `/debug`; `devbook-procedures` ships `002-debug-is-diagnose`. |
 | 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`, which had stopped every scheduled run at the Skill call; the catalog checker now fails a target that sets it. |
 | 2026-09-28 | This repository drops `devbook-procedures`: its `run`, `show`, `capture`, and `debug` copies and the stamp entry are removed, since the procedures are the product here and the plugin's seeds are their only copy. |
 | 2026-09-28 | `start` becomes `run`: its body is Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe from `/run-skill-generator`, with a Copilot twin; `devbook-procedures` ships `001-start-is-run`, the first migration of a payload-only component, and this repository applies it. |

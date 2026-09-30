@@ -67,15 +67,9 @@ else:
 
 ### Phase 4 — Consolidated Report
 
-5. Merge findings from all three layers into a single ranked report:
-
-   | Priority | Layer | File | Finding | Action |
-   |----------|-------|------|---------|--------|
-   | 🔴 Blocking | Code Review | `Api/Handlers/Query.cs:42` | Sync-over-async `.Result` on DB call | Fix before merge |
-   | 🔴 High TODO | TODO Review | `Services/Data.cs:87` | `// TODO: add retry logic` since 3 months | Create issue |
-   | ⚠️ Important | Code Review | `Models/Order.cs:14` | Missing null guard on `customerId` | Fix soon |
-   | ⚠️ Quick Win | Suggestions | `Services/Email.cs` | Extract magic strings to constants | Easy win |
-   | 💡 Low | TODO Review | `Utils/Helpers.cs:5` | `// TODO: consider extracting helper` | Backlog |
+5. Merge findings from all three layers into one ranked list — the *Findings* table of
+   `report.md` beside this file — priority first: `blocking`, `high`, `important`,
+   `quick win`, `low`.
 
 6. De-duplicate: if the same location appears in multiple layers, merge into one finding
    with the highest severity and all contributing reasons noted.
@@ -94,14 +88,9 @@ else:
 
 ### Phase 6 — Summary
 
-10. Output a completion summary:
-
-    | Layer | Findings | Blocking / High | Created as Issues |
-    |-------|----------|-----------------|-------------------|
-    | TODO Review | 8 | 2 | 2 |
-    | Suggestions | 5 | 0 | 0 |
-    | Code Review | 6 | 3 | 3 |
-    | **Total** | **19** | **5** | **5** |
+10. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+    the per-layer counts, then the ranked list from Phase 4 as *Findings*, each linked to the
+    issue Phase 5 opened for it.
 
 ## Surface Reporting
 

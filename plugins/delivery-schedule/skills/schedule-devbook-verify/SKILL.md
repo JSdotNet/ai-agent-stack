@@ -36,8 +36,8 @@ this run only collects them and tracks the two that need someone as issues.
    changed, otherwise leave it. None: open it with labels `devbook-drift` and `automated`, the
    verdict, its evidence, and the action the report named — `devbook:capture-specs` over that
    chapter for `code-ahead`, the question put to a person for `conflict`.
-4. **Report.** Publish the merged table as the schedule-report issue, `aligned` rows included,
-   with the issues from step 3 linked. Every row `aligned`: say so in the run log and stop.
+4. **Report** in `report.md` beside this file, per `../../resources/report-contract.md`,
+   with the issues from step 3 linked. Every row `aligned`: the counts and nothing else.
 
 ## Surface Reporting
 

@@ -248,16 +248,9 @@ at `high` confidence, and nothing lowers that.
 
 ### Phase 6 — Brief
 
-14. Publish the brief as the schedule-report issue, titled `Issue sweep — <YYYY-MM-DD>`,
-    replacing the previous run's while it is still open and folding its unresolved rows in.
-    Lead with the line that decides whether the reader keeps reading:
-
-    ```text
-    Issue sweep 2026-09-21: 12 triaged, 2 closed, 3 draft pull requests, 1 did not complete.
-    4 proposals need an answer.
-    ```
-
-    Then, in this order — needs-you first, done last:
+14. End the run with the brief, in `report.md` beside this file, per
+    `../../resources/report-contract.md` — never as an issue. Its sections, needs-you first,
+    done last:
 
     | § | Holds |
     | --- | --- |
@@ -268,7 +261,7 @@ at `high` confidence, and nothing lowers that.
     | ⑤ Closed | Each closed issue with the evidence in its closing comment |
     | ⑥ Triaged and deferred | Counts of classifications written per type and severity; issues judged but not resolved — conflicts (with what), surplus past `maxResolve`, untriaged past `maxTriage` |
 
-    Nothing in ① to ④ and nothing closed: say so in the run log and open no issue.
+    Nothing in ① to ④ and nothing closed: the verdict line and *Run* alone.
 
 ## Surface Reporting
 

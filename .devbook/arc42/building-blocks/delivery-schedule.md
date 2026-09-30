@@ -21,10 +21,11 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Twenty skills in two halves: sixteen entry points that pick their own input, and four that
-put a trigger in the scheduler and read it back. Every one of them is also runnable by hand,
-which is how a cadence gets proved before it is trusted. Beside them: the shipped catalog, four
-contracts, the catalog checker, one hook, and one stamp.
+Twenty skills in two halves: sixteen entry points that pick their own input, each with the
+`report.md` template its report follows, and four that put a trigger in the scheduler and read
+it back. Every one of them is also runnable by hand, which is how a cadence gets proved before
+it is trusted. Beside them: the shipped catalog, five contracts, the catalog checker, one hook,
+and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -33,7 +34,7 @@ contracts, the catalog checker, one hook, and one stamp.
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| `schedule-catalog-contract.md`, `schedule-preamble.md`, `change-window-contract.md`, `instruction-tightening.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies |
+| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
 | `components.schedule` | stamp in the stack config | Written by `init` and `update` alone, read by [devbook-config](devbook-config.md) |
@@ -45,9 +46,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#validate", ".devbook/arc42/
 ```
 
 Run `devbook:validate` over every adopted folder, fix what it reports in the chapters, refresh
-the committed indexes where `devbook-derived` keeps them, and land one pull request — or a
-schedule-report issue when `devbook-config:doctor`, where installed, finds the installation
-needs a person. The daily `devbook-validate`
+the committed indexes where `devbook-derived` keeps them, and land one pull request; what
+`devbook-config:doctor`, where installed, finds that needs a person is a row of its report. The daily `devbook-validate`
 trigger's target: the catalog names a `schedule-*` entry point or, as with `prose-check`, a read-and-report skill that picks its own input, and never a flow.
 
 ### schedule-devbook-verify
@@ -59,7 +59,7 @@ related: [".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/a
 Run `devbook:verify-change` over every adopted folder, one run per kind, and open one
 `devbook-drift` issue per `code-ahead` or `conflict` row that no open pull request, approved
 change, or earlier issue already covers. A `code-ahead` row names a capture plan waiting to be
-asked for; a `spec-ahead` row, a change nobody proposed, stays in the schedule-report table.
+asked for; a `spec-ahead` row, a change nobody proposed, stays in the report's table.
 It reports and never writes a chapter or plans a capture on its own. The weekly
 `devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
 
@@ -517,29 +517,32 @@ nobody re-reads.
 related: [".devbook/arc42/08-crosscutting-concepts.md#tracker"]
 ```
 
-Published when an unattended run of an [entry point](#entry-point) has something to say: a
-report as an issue labelled `schedule-report`, or a change as a pull request from a dated
-branch. It is the only way a run nobody watched reaches a person, so a run that publishes
-nothing has, from outside, not happened.
+Published at the end of every unattended run of an [entry point](#entry-point): the report,
+as the run's last message in its own session, and a change as a pull request from a dated
+branch. The session stays on the host's Routines or Automations page, which is where a run
+nobody watched reaches a person.
 
 Payload:
 
-- `kind` — a report issue, or a pull request from `schedule/<name>/<date>`
-- `schedule` — which trigger fired it, so the next run can find what this one left open
-- `findings` or `changes` — what was found or what was changed, in the run's own words
+- `report` — the entry point's `report.md` filled in: a verdict line, *Needs you* first, one
+  table row per item, *Run* last, per `resources/report-contract.md`
+- `schedule` — which trigger fired it, so the next run can find the pull request this one left open
+- `changes` — a pull request from `schedule/<name>/<date>`, when the tree changed
 
 Consumers:
 
-- **The maintainer**, who reads it on the tracker rather than in a session they were not in.
-- **The next run of the same schedule**, which updates what this one left open instead of
-  opening a second.
+- **The maintainer**, who reads the report on the scheduler's page and the change on GitHub.
+- **The next run of the same schedule**, which updates the pull request this one left open
+  instead of opening a second.
 
 Published language rules:
 
 - **Never merge, approve, close, or delete.** Every change lands as a pull request and every
-  report as a labelled issue; the run's authority ends at publishing.
-- **Update, do not accumulate.** A weekly report that opens a new issue every week is a backlog
-  of its own within two months.
+  report as the session's last message; the run's authority ends at publishing.
+- **A report is never an issue.** An issue is work someone must do; a skill opens one only for
+  a finding, and a report read once would otherwise sit in the backlog the sweep triages.
+- **Readable at a glance.** One row per item in the reader's words, never several pull
+  requests packed into one bullet.
 - **Nothing personal travels.** The scheduler ids, the checkout's path, and the approved tools
   stay in the scheduler; nothing published here would be wrong for
   the next person who opens the file.
@@ -609,19 +612,19 @@ flowchart TD
     gate --> park["Park: write the handoff brief"]
     park --> land{"What is there to publish?"}
     land -->|a change| pr["Pull request from schedule/&lt;name&gt;/&lt;date&gt;"]
-    land -->|findings| issue["Issue labelled schedule-report, updating the one this schedule left open"]
-    land -->|nothing| silent(["Say so, and stop"])
-    pr --> done(["Done. Nothing merged, approved, closed, or deleted"])
-    issue --> done
+    land -->|findings| report
+    land -->|nothing| report
+    pr --> report["The report, in the entry point's template, as the session's last message"]
+    report --> done(["Done. Nothing merged, approved, closed, or deleted"])
 ```
 
 - **The gate is never passed and never waited at.** It is parked at, with a brief — which is the
   whole reason a schedule may not target a flow, and why the catalog checker enforces it.
-- **A run that publishes nothing has, from outside, not happened.** That is acceptable and
-  common: most weeks the security review finds nothing new. What is not acceptable is a run that
-  changed something and published nothing.
-- **The next run updates what this one left open.** A weekly report opening a new issue every
-  week becomes its own backlog within two months.
+- **Every run ends with a report, even an empty one.** Most weeks the security review finds
+  nothing new, and `Nothing found.` under the heading says so. What is not acceptable is a run
+  that changed something and reported nothing.
+- **The next run updates the pull request this one left open.** A report needs no such rule:
+  each run's session holds its own.
 - **Nothing personal crosses into the repository.** The scheduler ids, the checkout's path, and
   the approved tools stay in the scheduler; the stamp records only the selection and the overrides.
 
@@ -645,7 +648,7 @@ capability — a divergence taken on purpose.
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
-| GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, issues labelled `schedule-report` | The preamble's publishing rules | Publishing is how an unattended run reaches a person; this lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |
+| GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, and the issues a skill opens for a finding | The preamble's publishing rules | A change reaches a person as a pull request; the report stays in the run's session. This lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | Plugin folder, two manifests, marketplace entry, `resources/` contracts, the `components.schedule` stamp | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged, installed, and stamped like everything else here. |
 | A consuming repository | Customer-Supplier, this block supplying | `components.schedule` in the stack config: the selection and any cadence overrides | The stamp shape, and the schedule names | The selection is a repository fact; everything personal about a schedule stays in the scheduler or in a machine's own overlay. |
 
@@ -657,7 +660,7 @@ capability — a divergence taken on purpose.
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
-| A maintainer, later | Customer-Supplier, this block supplying | A pull request from `schedule/<name>/<date>`, or an issue labelled `schedule-report` | The branch and label conventions | That every run publishes what it did, and that the next run updates rather than duplicates. |
+| A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports what it did in the same shape, and that the next run updates its pull request rather than duplicating it. |
 
 **Naming a target is deliberately weaker than depending on one.** One of the thirteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not

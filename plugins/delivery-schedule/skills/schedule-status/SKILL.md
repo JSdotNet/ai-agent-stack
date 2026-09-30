@@ -20,8 +20,8 @@ Read-only. The scheduler, the identity rule, and the stamp are in
    most recent run that failed or parked, and for the run the user asked about, `get_run_log`
    where the scheduler has one; a scheduler with only `list_runs` is reported from that, and
    the report says so.
-4. **Cross-check what a run published** with `gh`: an open pull request on `schedule/<name>/`,
-   an open issue labelled `schedule-report`.
+4. **Cross-check what a run published**: its report, the last message of the run's session,
+   and with `gh` an open pull request on `schedule/<name>/`.
 5. **Report** one table: schedule, cron, enabled, last run with its outcome, what it published
    as a link, and one line from the log at the point a failed run went wrong. One in the stamp
    the scheduler does not know is `not scheduled — run delivery-schedule:update`; a scheduled one the

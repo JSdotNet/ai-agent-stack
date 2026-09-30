@@ -56,35 +56,11 @@ session starts with the two delivery plugins.
 
 ### Phase 3 — Produce Report
 
-5. Output the Weekly Cost Analysis report:
-
-   ```
-   ## Weekly Cost Analysis — <date range>
-
-   ### Summary
-
-   | Metric | Value |
-   |--------|-------|
-   | Total tokens | <n> |
-   | Most expensive model | <model> (<pct>% of tokens) |
-   | Most expensive agent type | <agent> (<pct>% of tokens) |
-
-   ### Top Cost-Reduction Tips
-
-   1. **<Tip title>** — <description and expected saving>.
-   2. **<Tip title>** — <description and expected saving>.
-   …
-
-   ### Repository-Specific Actions
-
-   - [ ] <actionable recommendation derived from cross-reference in Phase 2>
-   - [ ] <actionable recommendation>
-   ```
-
-6. If `output-format` is `full`, append:
-   - Per-model token and cost breakdown table.
-   - Every tip, not just the top-N.
-   - Session-level or agent-level breakdown table if available.
+5. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+   the summary metrics, the top-N tips with their expected saving, and each
+   repository-specific action from Phase 2 as a *Needs you* row.
+6. If `output-format` is `full`, add the *Breakdown* — per model, and per session or agent
+   where available — and every tip, not just the top N.
 
 ### Phase 4 — Follow-Up (Optional)
 

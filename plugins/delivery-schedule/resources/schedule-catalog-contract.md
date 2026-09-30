@@ -31,7 +31,8 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
-what it produces. Five placeholders, substituted at sync time: `{{repo}}` (`owner/repo`),
+what it produces. It never restates the report's shape — the target's `report.md` owns that — and names
+only what is particular to this schedule. Five placeholders, substituted at sync time: `{{repo}}` (`owner/repo`),
 `{{base}}` (the default branch), `{{name}}`, `{{title}}`, and `{{checkout}}` — the absolute
 path of the repository's main checkout on this machine, with forward slashes. A date is
 computed in the session.
@@ -50,13 +51,13 @@ that leaves a question open has left it to chance.
 | A run produces | It lands as |
 | --- | --- |
 | A change to the tree | A pull request from a branch under `schedule/<name>/<YYYY-MM-DD>`: ready for review when build and tests passed, draft otherwise, and draft always where the skill says so. Never a push to the base branch. |
-| A report and no change | One GitHub issue labelled `schedule-report`, titled `<title> — <YYYY-MM-DD>`. |
+| A report | The run's last message, in the template `report.md` beside the target's `SKILL.md`, per `report-contract.md`. Read on the host's Routines or Automations page, where the run's session stays; never a GitHub issue. |
 | A parked run | A draft pull request carrying the handoff brief: what is done, what is not, the exact invocation to resume. |
 | Findings the target skill opens itself | Whatever that skill writes — a comment, an issue. The schedule adds nothing beside it. |
 | An issue high-confidence evidence shows already resolved | Closed by the issue sweep with the evidence in the comment — the one closure the preamble allows. |
 
-A run looks for what its own previous run left open — by branch prefix, or by title and
-label — and updates that rather than opening a second. Nothing a scheduled run opens is ever
+A run looks for the pull request its own previous run left open, by branch prefix, and
+updates that rather than opening a second. Nothing a scheduled run opens is ever
 merged, approved, closed, or deleted by a scheduled run.
 
 ## The Scheduler

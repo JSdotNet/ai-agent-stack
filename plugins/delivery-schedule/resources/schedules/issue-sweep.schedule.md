@@ -16,8 +16,5 @@ the preamble allows; up to three of the rest are resolved one at a time, each on
 branch under `schedule/{{name}}/<YYYY-MM-DD>/`, each opened as a **draft** pull request whose
 body says what could not be proved. Nothing else is closed, nothing is ready for review.
 
-Publish the brief as the schedule-report issue `{{title}} — <YYYY-MM-DD>`: the draft pull
-requests with what to validate, the proposals awaiting an answer, the flagged issues, what did
-not complete, what was closed. When the previous brief is still open, fold its unresolved rows
-into this one and replace its body. Nothing to report: say so in the run log and open no
-issue.
+The brief is the report: the draft pull requests with what to validate, the proposals
+awaiting an answer, the flagged issues, what did not complete, what was closed.

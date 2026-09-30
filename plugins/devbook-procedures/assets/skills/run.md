@@ -42,7 +42,7 @@ aspire start
 4. **Re-read the entry points** every launch — a port changes.
 
 Report in a couple of lines: the command, the health verdict, the entry points. Leave the app
-running — `show`, `debug`, and a flow's later stages work against it.
+running — `diagnose` and a flow's later stages work against it.
 
 ## Healthy
 
@@ -54,7 +54,7 @@ running — `show`, `debug`, and a flow's later stages work against it.
 
 ## Entry points
 
-<!-- What `show` opens and a stage validates against. -->
+<!-- What a person opens and a stage validates against. -->
 
 | Entry point | URL |
 | --- | --- |

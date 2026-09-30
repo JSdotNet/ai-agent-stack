@@ -28,17 +28,17 @@ not a manifest field but what each `dependencies` array says, read as a sentence
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.13.0"]
-        DEL["delivery 1.13.0"]
-        CFG["devbook-config 1.13.0"]
+        DEV["devbook 1.14.0"]
+        DEL["delivery 1.14.0"]
+        CFG["devbook-config 1.14.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.13.0"]
-        DPR["devbook-procedures 1.13.0"]
-        DBC["devbook-collaboration 1.13.0"]
-        DOS["devbook-openspec 1.13.0"]
-        SCH["delivery-schedule 1.13.0"]
+        DBD["devbook-derived 1.14.0"]
+        DPR["devbook-procedures 1.14.0"]
+        DBC["devbook-collaboration 1.14.0"]
+        DOS["devbook-openspec 1.14.0"]
+        SCH["delivery-schedule 1.14.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
@@ -232,7 +232,7 @@ flowchart TB
     subgraph repo["A consuming repository"]
         ar[".agents/rules/ - the rule bodies"]
         cw[".claude/rules/ and .github/instructions/ - one wrapper each"]
-        sk[".agents/skills/ - the procedure bodies: show, capture, debug, estimate, prototype - run is a .claude/skills/run-* recipe"]
+        sk[".agents/skills/ - the procedure bodies: capture, diagnose, estimate, prototype - run is a .claude/skills/run-* recipe"]
         sw[".claude/skills/ and .github/skills/ - one wrapper each, carrying the goal"]
         folders[".devbook/arc42 domain tech design ai"]
         meta["_meta/ - generated, refreshed by a schedule"]
@@ -468,7 +468,7 @@ ignoring it, so a typo is an error rather than a silently absent setting.
 Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
 from `devbook`'s, `components.derived` from `devbook-derived`'s for the refresh script, its
 workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `run`,
-`show`, `capture`, and `debug` copies it seeds and the `adopted` list that selects them,
+`capture`, and `diagnose` copies it seeds and the `adopted` list that selects them,
 `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
 materializes nothing — and `components.schedule` from `delivery-schedule`'s.
 `devbook-collaboration` materializes nothing and stamps nothing

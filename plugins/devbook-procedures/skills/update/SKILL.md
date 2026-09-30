@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s procedure skills — run, show, capture, debug, estimate, prototype — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a run, show, capture, debug, estimate, or prototype skill is missing, a start skill is still there, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the debug skill", "adopt the estimate skill", "adopt the prototype skill", "drop the show skill".'
+description: 'Move a repository''s procedure skills — run, capture, diagnose, estimate, prototype — forward after upgrading devbook-procedures or changing which are adopted: refresh every wrapper and every body that still hashes to a shipped seed, seed a newly adopted procedure, orphan a dropped one, and re-stamp components.devbook-procedures. Refused where no stamp exists: run devbook-procedures:init. Use when: upgrading devbook-procedures, a run, capture, diagnose, estimate, or prototype skill is missing, a start or debug skill is still there, or the adopted list changed. Triggers on: "devbook-procedures update", "update devbook-procedures", "upgrade devbook-procedures", "adopt the diagnose skill", "adopt the estimate skill", "adopt the prototype skill", "drop the capture skill".'
 user-invocable: false
 ---
 
@@ -19,9 +19,11 @@ and touches no other entry.
 
 ## The run
 
-1. **Migrate.** Run `../../migrations/001-start-is-run/migrate.mjs --check` with node, the
-   repository root as the working directory; while it exits `1`, show its plan, run it without `--check`, and report
-   what moved. It turns a `start` procedure into the `run` recipe and its Copilot twin.
+1. **Migrate.** Run each script under `../../migrations/` in number order with node, the
+   repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
+   its plan, run it without `--check`, and report what moved. `001` turns a `start` procedure
+   into the `run` recipe and its Copilot twin; `002` renames `debug` to `diagnose`; `003` removes
+   `show`.
 2. **Resolve.** `adopted` from the stamp is the list. Never re-ask what it answers; a
    procedure is added or dropped only when the user asks for it.
 3. **Detect**, **Plan**, **Materialize** exactly as `init` steps 2–4, with one more plan

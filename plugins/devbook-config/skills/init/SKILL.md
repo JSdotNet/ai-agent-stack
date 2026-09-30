@@ -93,11 +93,10 @@ record work this skill did not do.
    own stamp, in the order the report's reconcile list gives — `devbook:init` for the
    devbook folders, `devbook-derived:init` for the committed index, `devbook-openspec:init`
    for the change lane, with step 4's prototype answer, `devbook-procedures:init`
-   for the repository's `run`, `show`, `capture`, `debug`, `estimate`, and `prototype` skills,
+   for the repository's `run`, `capture`, `diagnose`, `estimate`, and `prototype` skills,
    `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
    that one's adoption question from the engine keys just written: `extensions.app.start` of
-   `null` drops `run`, `show`, and `debug`; `policy.qa.depth` of `skipped` drops `capture`
-   and `show`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
+   `null` drops `run` and `diagnose`; `policy.qa.depth` of `skipped` drops `capture`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
    by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 
 8. **Verify.** Re-run the report and run `devbook-config:doctor`. An init that ends on a

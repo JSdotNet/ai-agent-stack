@@ -1,11 +1,11 @@
 # Releases
 
 ```meta
-date: 2026-09-29
+date: 2026-09-30
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.13.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.14.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-09-30 | Every plugin is `1.14.0`. It carries `devbook-procedures`' `002-debug-is-diagnose` and `003-show-removed`, payload-only migrations with no contract bump. |
 | 2026-09-29 | Every plugin is `1.13.0`, the one release of the change lane; contracts 22, 23, and 24 ship in it with no migration, each additive. It carries the `requirement` type on `.design`, the change folder under `openspec/changes/` with its rule and the delta merge `delta.mjs`, the two rungs on a change's `proposal.md` and the gates and review queue that write them, the `devbook-openspec` bridge — joining at this version, its `devbook` range raised to `>=1.13.0` — the engine's replan chore, `policy["openspec.scenarios"]`, and `bindings["openspec.grill"]`, and `devbook-config` setting up, updating, and diagnosing the lane, unresolved provider ids included. |
 | 2026-09-28 | Every plugin is `1.12.0`. `devbook-procedures` renames `start` to `run`, whose body becomes Claude Code's `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin, and ships `001-start-is-run` to move it; it adds a sixth procedure, `prototype`, which owes nothing. No contract change. |
 | 2026-09-28 | Every plugin is `1.11.0`. Contract 20 ships in it with no migration, because a repository with no `.devbook/statuses.json` validates as before; contract 21 ships with migration 021, which deletes `review`, `reviewer`, and `review-at` from every `meta` block now that a review in progress is `status` plus the open annotation fences. |

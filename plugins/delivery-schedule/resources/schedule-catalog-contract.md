@@ -166,9 +166,12 @@ first run is the proof either way — fire it with `schedule-run` and read it wi
 ## Cadence
 
 Every `cron` is UTC; `delivery-schedule:update` converts it to the machine's timezone and shows both. Weekly
-schedules sit on different days so their pull requests do not all land on Monday, and the two
-that open a pull request queue of their own — `package-update`, `tech-update` — sit on the
-weekend so the queue waits for the week rather than competing with it. Match a cadence to how
+schedules run on the weekend, so what they produce is waiting on Monday morning rather than
+interrupting a working day. They run one per hour so no two share the checkout, in dependency
+order: `package-update`, then `devbook-update`, then `security-review` over the new dependency
+set on Saturday; `tech-update`, then the checks that read it, then the two weekly reports
+covering the whole week on Sunday. The weekday schedules end with `morning-brief`, so it can
+report what the sweep and the merge review did. Match a cadence to how
 fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
 daily package update produces a queue.
 

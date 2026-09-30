@@ -63,16 +63,16 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `package-update` | Saturday 04:00 | `schedule-package-update`, minor and patch only | `delivery-schedule`, `delivery` | A pull request |
 | `merge-review` | Weekdays 06:00 | `schedule-merge-review`, up to 10 pull requests | `delivery-schedule`, `delivery` | One comment per pull request |
 | `issue-sweep` | Weekdays 04:30 | `schedule-issue-sweep`, every open issue, `maxResolve 3`, high confidence only | `delivery-schedule`, `delivery` | Draft pull requests, closed issues, and a brief |
-| `morning-brief` | Weekdays 05:00 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A report |
-| `change-report` | Friday 15:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
+| `morning-brief` | Weekdays 06:30 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A report |
+| `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
-| `devbook-verify` | Monday 04:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
-| `devbook-update` | Saturday 05:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
-| `security-review` | Tuesday 04:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
-| `instruction-review` | Thursday 04:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
+| `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
+| `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
+| `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
+| `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
 | `tech-update` | Sunday 04:00 | `schedule-tech-update`, every `tech/` layer | `delivery-schedule`, `devbook` | A draft pull request |
-| `weekly-update` | Friday 16:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
-| `prose-check` | Wednesday 04:00 | `prose-check`, every adopted folder, report only | `devbook` | A report |
+| `weekly-update` | Sunday 17:00 | `schedule-weekly-update`, 7-day window | `delivery-schedule`, `delivery` | A report |
+| `prose-check` | Sunday 06:00 | `prose-check`, every adopted folder, report only | `devbook` | A report |
 
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
@@ -110,6 +110,17 @@ every run proceeds. The rule is in `resources/schedule-catalog-contract.md` unde
 All four resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
 the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
+
+## Migrations
+
+A routine keeps the cron it was created with, so a moved catalog default reaches a repository
+only through `delivery-schedule:update`. A migration under `migrations/<nnn>-<slug>/` names
+the routines that still carry an old default: `migrate.mjs --check` exits `1` while the stamp
+predates the move, and `update` runs every one in step 1 and re-times what it names in step 6.
+
+| Migration | Does |
+|---|---|
+| `migrations/001-weekend-cadence/` | Names the routines the weekend cadence moves, for a stamp below `1.15.0`; an override is kept |
 
 ## What a scheduled run never does
 

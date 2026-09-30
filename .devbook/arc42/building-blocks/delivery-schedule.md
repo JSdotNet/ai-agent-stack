@@ -24,8 +24,8 @@ anything a target delegates to, which is a binding the consuming repository make
 Twenty skills in two halves: sixteen entry points that pick their own input, each with the
 `report.md` template its report follows, and four that put a trigger in the scheduler and read
 it back. Every one of them is also runnable by hand, which is how a cadence gets proved before
-it is trusted. Beside them: the shipped catalog, five contracts, the catalog checker, one hook,
-and one stamp.
+it is trusted. Beside them: the shipped catalog, five contracts, the catalog checker, one
+migration, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -36,6 +36,7 @@ and one stamp.
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
 | `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
+| `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
 | `components.schedule` | stamp in the stack config | Written by `init` and `update` alone, read by [devbook-config](devbook-config.md) |
 

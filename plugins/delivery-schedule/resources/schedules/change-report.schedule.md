@@ -2,7 +2,7 @@
 name: change-report
 title: Change report
 cadence: weekly
-cron: "0 15 * * 5"
+cron: "0 16 * * 0"
 target: delivery-schedule:schedule-whats-new
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Write, Glob, Grep, Skill]

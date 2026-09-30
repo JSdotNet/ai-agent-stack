@@ -2,7 +2,7 @@
 name: security-review
 title: Security review
 cadence: weekly
-cron: "0 4 * * 2"
+cron: "0 8 * * 6"
 target: delivery-schedule:schedule-security-review
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Glob, Grep, Skill]

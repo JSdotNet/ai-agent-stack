@@ -124,15 +124,9 @@ skipped and named, never forced.
 
 ### Phase 6 — Summary
 
-14. Once the pull request is created (or the run concludes without one), output a
-    final summary table:
-
-    | Package | Current | New | Result |
-    |---------|---------|-----|--------|
-    | `Newtonsoft.Json` | `13.0.1` | `13.0.3` | ✅ Updated |
-    | `xunit` | `2.6.0` | `2.7.0` | ⚠️ Skipped (test failure) |
-    | `Aspire.Hosting.Redis` | `9.0.0` | `9.1.0` | ✅ Updated |
-    | `delivery` | `1.8.0` | `1.9.0` | ℹ️ Behind (reported, not updated) |
+14. Once the pull request is created (or the run concludes without one), output the report
+    in `report.md` beside this file, per `../../resources/report-contract.md`: one *Packages*
+    row per package — updated, skipped with the reason, or a plugin behind.
 
 ## Surface Reporting
 

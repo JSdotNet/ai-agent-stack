@@ -18,10 +18,11 @@ The scheduler and the identity rule are in `resources/schedule-catalog-contract.
 3. **Find it**: `list`, matched on `<owner>/<repo> · <title>`. Not found: say so and point at
    `delivery-schedule:init`, or `delivery-schedule:update` where `components.schedule` exists.
 4. **Confirm before firing.** Show the name, the target skill, and what the run may open — a
-   pull request on `schedule/<name>/`, an issue labelled `schedule-report` — and wait for a yes.
+   pull request on `schedule/<name>/`, an issue its skill opens for a finding — and wait for a yes.
    Then `run`.
 5. **Report.** Wait for the run to appear in `list_runs`, `get_run_log` it where the
-   scheduler has one, and report as `schedule-status` does in its step 5.
+   scheduler has one, and report as `schedule-status` does in its step 5, with the run's
+   own report quoted when it finished.
 
 A run fired this way is the same unattended session a schedule starts. It cannot ask this
 session anything, and it parks where a gate would be; a tool it has not been approved for

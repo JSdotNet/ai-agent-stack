@@ -175,11 +175,10 @@ whether or not Phase 1 left any pull request to review.
 
 ### Phase 5 — Summary
 
-13. Output one table: pull request, author, verdict, blocking count, comment link, and the
-    pull requests skipped as already reviewed or cut by the per-run maximum.
-14. Output a second table of the hotspots: file, conflicts, contentions, pattern, suggestion,
-    and the open pull requests touching it now. None over the threshold is one line saying so,
-    with the window and how many merges were re-run.
+13. Output the report in `report.md` beside this file, per
+    `../../resources/report-contract.md`: every reviewed pull request with its verdict and
+    comment link, and the hotspots with the change that would end each. None over the
+    threshold: a *Run* row naming the window and how many merges were re-run.
 
 ## Surface Reporting
 

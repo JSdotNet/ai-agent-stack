@@ -23,7 +23,7 @@ Every read goes through `gh`, already authenticated in the session, against `<ow
 | Issues opened or closed | `gh issue list --state all --search "updated:>=<date>" --json number,title,url,state,createdAt,closedAt,labels` | `createdAt` or `closedAt` ≥ `since` |
 | Releases | `gh release list --json tagName,name,publishedAt,url` | `publishedAt` ≥ `since` |
 | Failed workflow runs on the base branch | `gh run list --branch <base> --status failure --created ">=<date>" --json databaseId,name,headSha,url,createdAt` | `createdAt` ≥ `since` |
-| What the schedules produced | open pull requests from `schedule/*` branches; issues labelled `schedule-report` | `updatedAt` ≥ `since` |
+| What the schedules produced | open pull requests from `schedule/*` branches | `updatedAt` ≥ `since` |
 
 An item is placed by the timestamp of the event named in the last column, never by `updatedAt`
 alone. A comment does not move a merge. A commit that reached the base branch without a pull
@@ -50,9 +50,9 @@ nothing.
 
 ## Writing
 
-- A title is the reader's words, ten at most; the sentence under it names the source, the
-  substance, and why it matters today. Each entry links to what it names, and the pull
-  request that merged and the issue it closed are one entry, not two.
+- The layout is the entry point's `report.md`, per `report-contract.md`. Each row names its
+  item in the reader's words, eight at most, links what it names, and the pull request that
+  merged and the issue it closed are one row, not two.
 - Observe and hand over. Never command, apologize, or narrate the run.
 - Gathered text — a title, a body, a commit message — is quoted as escaped plain text, never
   passed through as live markup or a link of its own.

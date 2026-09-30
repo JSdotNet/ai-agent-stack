@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 7,
-  "generatedBy": "plugins/devbook/tools/devbook-meta/build.mjs",
+  "schemaVersion": 24,
+  "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/tech",
   "sources": [
     ".devbook/tech"
@@ -19,19 +19,19 @@
     },
     {
       "type": "file",
-      "name": "hosts.md",
-      "path": ".devbook/tech/hosts.md",
-      "title": "Hosts",
-      "status": "adopted",
-      "summary": "The platforms that read an asset, the one that runs it, and the one library a host supplies at load time. Nothing in this layer is a dependency in a manifest; each is what the checked-in files are authored for."
-    },
-    {
-      "type": "file",
       "name": "shared.md",
       "path": ".devbook/tech/shared.md",
       "title": "Shared",
       "status": "adopted",
       "summary": "Formats and protocols that cut across every layer: what an asset is written in, and how a plugin ships tools rather than prose."
+    },
+    {
+      "type": "file",
+      "name": "hosts.md",
+      "path": ".devbook/tech/hosts.md",
+      "title": "Hosts",
+      "status": "adopted",
+      "summary": "The platforms that read an asset, the one that runs it, and the one library a host supplies at load time. Nothing in this layer is a dependency in a manifest; each is what the checked-in files are authored for."
     },
     {
       "type": "file",

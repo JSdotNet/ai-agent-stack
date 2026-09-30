@@ -234,7 +234,7 @@
       ]
     },
     "derived": {
-      "pluginVersion": "1.10.0",
+      "pluginVersion": "1.13.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
           "from": "1.10.0",
@@ -252,13 +252,13 @@
           "managed": true
         },
         ".github/workflows/devbook-meta-drift.yml": {
-          "from": "1.9.0",
-          "hash": "sha256:568f5dcab675b9be6b58656a20da8e9fc04763d30bd6e916289745f2096533c9",
+          "from": "1.13.0",
+          "hash": "sha256:0bb66f2cd7370185b1265c229357520330b6687be04244f7ae3504940cccb7fe",
           "managed": true
         },
         ".github/workflows/devbook-meta-nightly.yml": {
-          "from": "1.9.0",
-          "hash": "sha256:61b8a363f6b24f9537b9ee72eb88660623e64de7c34a01a7d1ec38c1e32c0621",
+          "from": "1.13.0",
+          "hash": "sha256:960d83abf75bdc636f0ecf003cacf8f140d42f8e2f9303878bfdb7a73f7926c3",
           "managed": true
         },
         "AGENTS.md#devbook-derived": {

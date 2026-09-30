@@ -46,7 +46,7 @@ weekly reset, and turns it into edits a person can accept or drop one by one.
    unavailable or not applicable, or when any of these windows is at or above the threshold:
    the weekly all-models window, the weekly window of the model Phase 2 resolves when the tool
    lists one, and the short rolling window. Name each window, its percent, and its reset in
-   the summary either way.
+   the report either way.
 
 ### Phase 2 — Resolve the Reviewer
 
@@ -77,7 +77,7 @@ weekly reset, and turns it into edits a person can accept or drop one by one.
 
 ### Phase 5 — Pull Request
 
-10. Nothing to recommend: no pull request, no issue; the summary says so.
+10. Nothing to recommend: no pull request, no issue; the report says so.
 11. When last week's retro pull request is still open, add the commits to its branch and
     rewrite its body to cover both weeks. Otherwise open a draft titled
     `chore(retro): week of <YYYY-MM-DD>` — draft always, because no check proves an
@@ -90,10 +90,11 @@ weekly reset, and turns it into edits a person can accept or drop one by one.
     then *Listed, not edited*, grouped as devbook chapter, product code, and *for you* —
     habits and personal settings no repository file can hold.
 
-### Phase 6 — Summary
+### Phase 6 — Report
 
-12. Output: the gate's verdict and windows, the reviewer model, the window, each source's
-    count, the recommendations with their commits, and the link.
+12. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+    the gate's verdict and windows, the reviewer model, the window, each source's count, the
+    recommendations with their commits, and the link. A run the gate stops still reports.
 
 ## Surface Reporting
 
@@ -102,7 +103,7 @@ With no surface bound, skip the calls, say so once, and continue — the pull re
 the source of truth.
 
 - `start_run` with `skillId: "schedule-weekly-retro"` and these stages: Gate, Resolve the
-  Reviewer, Gather, Review and Edit, Pull Request, Summary. A run the gate stops calls
+  Reviewer, Gather, Review and Edit, Pull Request, Report. A run the gate stops calls
   `finish_run` after Gate.
 
 ## Notes

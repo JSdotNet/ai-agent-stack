@@ -11,5 +11,5 @@ tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Agent]
 Run `schedule-weekly-retro` for `{{repo}}` on `{{base}}` with threshold `75`.
 
 It fires on Saturday and again on Sunday, and runs at most once a week: a run the credit gate
-or an earlier retro stops is a normal outcome, and the summary in this log is enough — no
-issue. The draft pull request it opens is the publication.
+or an earlier retro stops is a normal outcome, and its report says which window stopped it.
+The draft pull request it opens carries the recommendations; the report links it.

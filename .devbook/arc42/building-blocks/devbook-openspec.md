@@ -81,7 +81,9 @@ stays `devbook-changes.md`.
 
 `tracker` reads a step's state and never decides it: `done` when its `PR:` pull request is
 merged, `in review` while it is open, `in progress` while its `branch:` exists, `open`
-otherwise. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
+otherwise. Under `single-branch` a step is a commit with no pull request of its own, so it is
+`done` once its tasks are ticked in a commit on `change/<name>` and never `in review`; the one
+pull request is the close's, opened after the acceptance and the archive it carries. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
 with the merge, and never writes `done`. Its items are the proposal, each step, and the close,
 and `read_item` reports each one's `change`, `part`, and `workflow` — the proposal's
 `Workflow:` line, else the stamp's — which the engine turns into branch names.

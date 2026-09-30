@@ -1,6 +1,6 @@
 ---
 name: chapter-accept
-description: 'Run the acceptance decision on a devbook chapter, or on a change once every step is merged and verified aligned — show the built work against the chapter as evidence rather than a summary of it, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on acceptance write devbook''s own status: accepted rung with accepted-by, accepted-at, and accepted-hash beside the approval record it stands on. Use when: accepting delivered work against its chapter, recording that what was built satisfies what was agreed, signing off a feature at a personal-validation gate, or lifting an acceptance that has gone stale. Triggers on: "accept this chapter", "does the build match the spec", "record the acceptance", "is this accepted", "the acceptance is stale", "sign off the delivered work".'
+description: 'Run the acceptance decision on a devbook chapter, or on a change once every step is done and verified aligned — show the built work against the chapter as evidence rather than a summary of it, refuse over an open question or a lapsed approval, take accept, send back, or decline from a person, and on acceptance write devbook''s own status: accepted rung with accepted-by, accepted-at, and accepted-hash beside the approval record it stands on. Use when: accepting delivered work against its chapter, recording that what was built satisfies what was agreed, signing off a feature at a personal-validation gate, or lifting an acceptance that has gone stale. Triggers on: "accept this chapter", "does the build match the spec", "record the acceptance", "is this accepted", "the acceptance is stale", "sign off the delivered work".'
 ---
 
 # chapter accept
@@ -96,7 +96,7 @@ A change is accepted as one, on its `proposal.md`, per `devbook-changes.md`:
 
   | Condition | Say |
   |---|---|
-  | A step in `tasks.md` is not `done` — merged — as the bound tracker's `read_item` reports it: `open`, `in progress`, `in review`, or `done` | Each step not merged, with its state. With no tracker bound, read each step's pull request; unknown is not merged |
+  | A step in `tasks.md` is not `done` as the bound tracker's `read_item` reports it — merged under `proposal-first`; every task ticked in a commit on `change/<name>` under `single-branch`, where a step has no pull request of its own | Each step not done, with its state. With no tracker bound, read the same off the step's pull request, or its ticks on `change/<name>` under `single-branch`; unknown is not done |
   | The last `devbook:verify-change` verdict is not `aligned` for every delta | Each delta and its verdict. A `code-ahead` reported `covered by change <name>, step N` for a merged step is aligned for this purpose; none run is not aligned — run it first |
   | `policy["openspec.scenarios"]` is `linked` in the effective stack configuration and a scenario in a delta names no test | Each unverified scenario. Under `advisory` — the default, and what an absent key or config means — list them as what the person weighs, and do not block |
 

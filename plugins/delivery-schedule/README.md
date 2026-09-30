@@ -104,6 +104,17 @@ All four resolve the scheduler from the live tool list, match by the name
 `<owner>/<repo> · <title>`, and treat no scheduler as a normal outcome. The file, the prompt,
 the stamp, and the operations are in `resources/schedule-catalog-contract.md`.
 
+## Migrations
+
+A routine keeps the cron it was created with, so a moved catalog default reaches a repository
+only through `delivery-schedule:update`. A migration under `migrations/<nnn>-<slug>/` names
+the routines that still carry an old default: `migrate.mjs --check` exits `1` while the stamp
+predates the move, and `update` runs every one in step 1 and re-times what it names in step 6.
+
+| Migration | Does |
+|---|---|
+| `migrations/001-weekend-cadence/` | Names the routines the weekend cadence moves, for a stamp below `1.15.0`; an override is kept |
+
 ## What a scheduled run never does
 
 - **Pass a gate.** It parks with a handoff brief where Personal Validation would be.

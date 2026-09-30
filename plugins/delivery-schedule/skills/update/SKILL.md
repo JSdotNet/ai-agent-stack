@@ -18,7 +18,9 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
 1. **Read the catalog and the selection.** Every `resources/schedules/*.schedule.md` in this
    plugin, and `components.schedule` from `.devbook/config.json`. The stamp's `enabled` is the
    selection; change it only where the user asks. A selected name the catalog no longer ships
-   is reported and dropped from the selection.
+   is reported and dropped from the selection. Run each `../../migrations/*/migrate.mjs
+   --check` in number order, the repository root as the working directory, and carry its
+   plan into the report: the routines it names are the ones step 6 re-times.
 2. **Resolve the repository and the checkout.** `gh repo view --json nameWithOwner,defaultBranchRef`
    gives `{{repo}}` and `{{base}}`; the parent of `git rev-parse --path-format=absolute
    --git-common-dir`, with forward slashes, gives `{{checkout}}`. When `git rev-parse

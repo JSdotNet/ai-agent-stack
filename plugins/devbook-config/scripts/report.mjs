@@ -13,7 +13,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
@@ -245,14 +245,57 @@ function unenabledBindings(repository, enabled) {
     return found;
 }
 
-/** Which versions of which plugins the host has on disk, per `name@marketplace`. */
-function resolveInstalled(configDir) {
+/**
+ * The paths a project- or local-scope install may name for this repository: the root itself,
+ * then, when the root is a git worktree, its main checkout. The host does not document which
+ * of the two a worktree session matches, so both count, the root first.
+ */
+function projectPaths(repoRoot) {
+    const paths = [repoRoot];
+    try {
+        const common = execFileSync(
+            'git',
+            ['-C', repoRoot, 'rev-parse', '--path-format=absolute', '--git-common-dir'],
+            { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+        ).trim();
+        if (common && basename(common) === '.git') paths.push(dirname(resolve(common)));
+    } catch {
+        // Not a git checkout: the root is the only path an install can name.
+    }
+    return [...new Set(paths.map(samePath))];
+}
+
+/** A path in the form two spellings of it compare equal in: resolved, and case-folded on Windows. */
+function samePath(path) {
+    const full = resolve(path).replace(/[\\/]+$/, '');
+    return process.platform === 'win32' ? full.toLowerCase() : full;
+}
+
+/**
+ * The one install entry that applies to a repository, mirroring the host: local scope over
+ * project scope over user scope, per the host's plugin-install docs. A local or project entry
+ * counts only when its `projectPath` is one of `paths`; an install made for another project,
+ * or another worktree of this one, never masks the entry that applies, whatever its version.
+ */
+function selectInstall(entries, paths) {
+    const wanted = paths.map(samePath);
+    const forProject = (scope, path) => entries.find(
+        (entry) => entry?.scope === scope && entry.projectPath && samePath(entry.projectPath) === path,
+    );
+    for (const path of wanted) {
+        const found = forProject('local', path) ?? forProject('project', path);
+        if (found) return found;
+    }
+    return entries.find((entry) => entry?.scope === 'user') ?? null;
+}
+
+/** Which version of which plugin applies to the repository at `paths`, per `name@marketplace`. */
+function resolveInstalled(configDir, paths) {
     const state = load('installed plugins', join(configDir, 'plugins', 'installed_plugins.json'));
     const byKey = new Map();
     for (const [key, entries] of Object.entries(state?.plugins ?? {})) {
-        const list = Array.isArray(entries) ? entries : [entries];
-        const best = list.slice().sort((a, b) => compareVersions(a.version, b.version)).pop();
-        if (best) byKey.set(key, best);
+        const found = selectInstall(Array.isArray(entries) ? entries : [entries], paths);
+        if (found) byKey.set(key, found);
     }
     return byKey;
 }
@@ -820,7 +863,7 @@ function main(argv) {
     });
 
     const catalogs = resolveCatalogs(options.root, configDir, options.marketplace);
-    const installed = resolveInstalled(configDir);
+    const installed = resolveInstalled(configDir, projectPaths(options.root));
     const enabled = resolveEnabled(options.root, configDir);
     const repository = buildRepository(options.root);
     const plugins = buildPluginRows(
@@ -858,4 +901,4 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     process.exit(main(process.argv.slice(2)));
 }
 
-export { compareVersions, buildPluginRows, buildRepository, bindingPlugin, describeStamp, unenabledBindings, parseArgs };
+export { compareVersions, projectPaths, resolveInstalled, selectInstall, buildPluginRows, buildRepository, bindingPlugin, describeStamp, unenabledBindings, parseArgs };

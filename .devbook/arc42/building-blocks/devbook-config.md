@@ -260,6 +260,7 @@ the report prints both, and the commit behind each.
 | Every fact names the file it came from, and every file that was absent is named too | report | untested |
 | It reads and takes no network | report | untested |
 | A plugin it names but cannot find is reported as not installed, never as an error | report | untested |
+| The installed version is the one install that applies to this repository, as the host picks it — local, then project scope naming the root or a worktree's main checkout, then user; an install made for another project never counts, whatever its version | report | `unit:node:plugins/devbook-config/scripts/report.test.mjs` |
 | An empty table is legible as "this file was absent", never as "there is nothing" | report | untested |
 | The three scope inputs stay orthogonal — installed is per machine, enabled is per checkout, stamped is per repository | scope resolution | untested |
 

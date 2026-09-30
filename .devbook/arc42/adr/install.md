@@ -143,6 +143,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches, so `update` re-times it and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. |
 | 2026-09-30 | `show` is removed: no flow invoked it, and `/verify` answers a person on Claude Code; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. |
 | 2026-09-30 | `debug` becomes `diagnose`, since a project skill named `debug` replaces Claude Code's bundled `/debug`; `devbook-procedures` ships `002-debug-is-diagnose`. |
 | 2026-09-29 | `delivery-schedule`'s `schedule-*` entry points drop `disable-model-invocation`, which had stopped every scheduled run at the Skill call; the catalog checker now fails a target that sets it. |

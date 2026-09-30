@@ -2,7 +2,7 @@
 name: devbook-update
 title: Devbook stack update
 cadence: weekly
-cron: "0 5 * * 6"
+cron: "0 6 * * 6"
 target: delivery-schedule:schedule-devbook-update
 requires: [delivery-schedule, devbook-config, devbook]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]

@@ -2,7 +2,7 @@
 name: morning-brief
 title: Morning brief
 cadence: weekdays
-cron: "0 5 * * 1-5"
+cron: "30 6 * * 1-5"
 target: delivery-schedule:schedule-morning-brief
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Glob, Grep, Skill]

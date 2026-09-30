@@ -2,7 +2,7 @@
 name: instruction-review
 title: Instruction review
 cadence: weekly
-cron: "0 4 * * 4"
+cron: "0 7 * * 0"
 target: delivery-schedule:schedule-instruction-review
 requires: [delivery-schedule, delivery]
 tools: [Bash, Read, Write, Edit, Glob, Grep, Skill]

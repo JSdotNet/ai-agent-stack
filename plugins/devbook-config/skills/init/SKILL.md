@@ -100,14 +100,17 @@ record work this skill did not do.
    and `show`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
    by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 
-8. **Verify and report.** Re-run the report, run `devbook-config:doctor`, and say plainly
-   what was set up, what was deliberately left unbound, what was not installed and therefore
-   not offered, and anything that ended failing. An init that ends
-   on a failing check is reported as failing, never as done.
+8. **Verify.** Re-run the report and run `devbook-config:doctor`. An init that ends on a
+   failing check is reported as failing, never as done.
 
 9. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
    model-selection file exist for the person running this. When neither does, say that the
    first flow here runs at the team's defaults, and offer to run `local` now. Their machine, their answer.
+
+10. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
+    as the last thing in the reply: every component this run initialized under *This run*,
+    with *Before* as `not adopted`, and what was deliberately left unbound, not installed and
+    therefore not offered, or failing under *Still open*.
 
 This skill is the empty case only. Everything about moving an already-configured repository
 forward — version drift, migrations, the fan-out across components — belongs to

@@ -45,7 +45,7 @@ hand it one. Every one of them is also runnable by hand.
 | `schedule-tech-update` | Runs `devbook:tech-update` over every `tech/` layer and lands what moved | A draft pull request |
 | `schedule-week-starter` | Digests what the tracked topics published this week | A digest |
 | `schedule-weekly-cost-analysis` | Reads the surface's token telemetry for the week | A cost report |
-| `schedule-weekly-retro` | Reviews how the week's work went, on a stronger model, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
+| `schedule-weekly-retro` | Reviews the week's sessions for AI usage — bottlenecks, context load, model and effort fit — on a stronger model, only while the plan has credit to spare | A draft pull request, one commit per recommendation |
 | `schedule-weekly-update` | The repository's week: shipped, in flight, issues, releases, carry-over | A weekly update |
 | `schedule-whats-new` | What changed in the tracked repositories since last run | A change report |
 

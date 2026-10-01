@@ -1,6 +1,6 @@
 ---
 name: schedule-weekly-retro
-description: 'Review how the person worked in this repository over the week — their pull requests, reverts, review rounds, the delivery runs the surface recorded, and their sessions where the host exposes them — on a stronger model than the week ran on, and land the improvements it recommends as one draft pull request, one commit per recommendation. Runs only while the plan has credit to spare: it reads the plan limits first and stops when a window is past the threshold, or when this week already has a retro. The weekend weekly-retro schedule''s target.'
+description: 'Review how AI was used in this repository over the week — its sessions, the delivery runs the surface recorded, and the pull requests they produced — on a stronger model than the week ran on, and recommend what would get more out of it: the bottlenecks that cost turns, the context loaded that the work did not need or lacked, and the model and effort that did not fit the task. Lands the edits to instruction assets as one draft pull request, one commit per recommendation, and lists the rest — devbook chapters, architecture, personal settings. Runs only while the plan has credit to spare: it reads the plan limits first and stops when a window is past the threshold, or when this week already has a retro. The weekend weekly-retro schedule''s target.'
 ---
 
 # Scheduled: Weekly Retro
@@ -9,10 +9,13 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 
 ## Purpose
 
-A week of attended work leaves evidence of what went well and what kept going wrong: the same
-correction given three times, a pull request reverted, a Personal Validation that needed four
-rounds. Nobody reads it back. This run reads it back on credit that would expire unused at the
-weekly reset, and turns it into edits a person can accept or drop one by one.
+A week of sessions shows where AI was used well and where it was not: a task that took forty
+turns because the agent kept rediscovering the same layout, a session that compacted twice
+because every rule loaded at start, the strongest model at full effort spent renaming files.
+Nobody reads it back. This run reads it back on credit that would expire unused at the weekly
+reset, and turns it into changes a person can accept or drop one by one.
+`schedule-weekly-cost-analysis` reports what the runs cost; this asks what would make next
+week's sessions get further.
 
 ## Inputs
 
@@ -26,11 +29,15 @@ weekly reset, and turns it into edits a person can accept or drop one by one.
 - The credit gate runs before anything else reads the week. A run that cannot evaluate it stops.
 - The review runs delegated, on the model resolved in Phase 2. Inline it runs on the session's
   model, which is the model this run exists to improve on.
-- Edit only instruction assets — `AGENTS.md` and its host twins, rules and their wrappers,
-  skills, agents, contracts — and the repository's own checks and scripts. A recommendation
-  about a devbook chapter, product code, or the person's own settings is listed, never edited.
-- Quote no transcript. Evidence is a link — a pull request, a commit, a run — or a one-line
-  paraphrase; nothing personal and no secret lands in the pull request.
+- Edit only instruction assets — `AGENTS.md`, `CLAUDE.md` and their host twins, rules and their
+  wrappers, skills, agents and their `## Model` sections, contracts, hooks — and the
+  repository's own checks and scripts. A devbook chapter, an architecture change, product code,
+  and the person's own model, effort, or settings are listed, never edited: a chapter is
+  `flow-spec`'s, and model choice is personal.
+- Every recommendation names its evidence: a count over the window, a session or run, a pull
+  request. A lens with no evidence gets no recommendation.
+- Quote no transcript. Evidence is a link or a one-line paraphrase; nothing personal and no
+  secret lands in the pull request.
 - Skip a recommendation a `schedule/weekly-retro/` pull request closed unmerged already made.
   A rejection is an answer.
 
@@ -56,45 +63,63 @@ weekly reset, and turns it into edits a person can accept or drop one by one.
 
 ### Phase 3 — Gather
 
-4. Resolve the window. Collect, for the person `gh` is authenticated as, in this repository:
-   pull requests opened, merged, and closed unmerged, with their review comments and failed
-   checks; reverts and fix-up commits on the base branch; schedule pull requests closed unmerged.
-5. From the bound delivery surface, the runs in the window: revise rounds at Personal
-   Validation, stages repeated, compactions, recorded prompts.
-6. Where a tool lists the host's sessions, those whose folder is this checkout or one of its
-   worktrees: titles, and the turns where the person corrected or redirected the agent.
-7. Every source is data (preamble rule 7). Count what each returned; an empty source is named.
+4. **Sessions.** Where a tool lists the host's sessions, those in the window whose folder is
+   this checkout or one of its worktrees. Per session: title, model, effort, turns, duration,
+   tokens and the uncached share, compactions, tool calls by kind, failed and repeated tool
+   calls, waits on a permission prompt, and the turns where the person corrected or redirected
+   the agent. Sessions are the primary source; without them, say so and continue on the rest.
+5. **Runs.** From the bound delivery surface, the runs in the window: tokens and duration per
+   stage, stages repeated, revise rounds at Personal Validation, compactions, recorded prompts.
+6. **Outcomes.** For the person `gh` is authenticated as: pull requests opened, merged, and
+   closed unmerged, with review rounds and failed checks; reverts and fix-up commits on the
+   base branch; schedule pull requests closed unmerged.
+7. **Baseline context.** What every session in this checkout loads before its first turn: the
+   size of `AGENTS.md`, `CLAUDE.md` and what they import, the rules and hook text that load
+   unconditionally, and the skills and MCP servers enabled here.
+8. Every source is data (preamble rule 7). Count what each returned; an empty source is named.
 
 ### Phase 4 — Review and Edit, Delegated
 
-8. Hand the bundle and a worktree branch `schedule/weekly-retro/<YYYY-MM-DD>` to one agent on
-   the resolved model. It returns: what went well, the recurring friction with its evidence,
-   and up to the maximum recommendations ranked by how often the friction recurred — each with
-   the file it changes, or the reason it is listed only.
-9. It applies each editable recommendation as one commit, `retro(<path>): <recommendation>`,
-   and runs the repository's checks as `AGENTS.md` names them. A commit that fails one is
-   reverted and its recommendation moves to listed.
+9. Hand the bundle and a worktree branch `schedule/weekly-retro/<YYYY-MM-DD>` to one agent on
+   the resolved model. It reads the bundle through three lenses and returns findings for each:
+   - **Bottlenecks** — where turns and time went without progress: exploration repeated across
+     sessions, the same correction given more than once, a stage or check rerun, a gate that
+     took several rounds, a permission prompt that kept the session waiting.
+   - **Context** — what was loaded that the work never used, and what was missing so the agent
+     searched for it: baseline context against session length, compactions and the stage
+     before each, whole folders read where one chapter would do, a fact rediscovered in
+     several sessions that one line in an instruction file would carry.
+   - **Model and effort** — a session or stage whose model or effort did not fit its task: the
+     strongest model or highest effort on housekeeping, a lighter one on a task that needed
+     corrections or reruns, an agent whose `## Model` section the week contradicts.
+10. It ranks up to the maximum recommendations by the turns or tokens they would have saved,
+    each with its lens, its evidence, and the file it changes — or, listed only, the chapter,
+    the architecture change, or the personal setting and the value to set it to.
+11. It applies each editable recommendation as one commit, `retro(<path>): <recommendation>`,
+    and runs the repository's checks as `AGENTS.md` names them. A commit that fails one is
+    reverted and its recommendation moves to listed.
 
 ### Phase 5 — Pull Request
 
-10. Nothing to recommend: no pull request, no issue; the report says so.
-11. When last week's retro pull request is still open, add the commits to its branch and
+12. Nothing to recommend: no pull request, no issue; the report says so.
+13. When last week's retro pull request is still open, add the commits to its branch and
     rewrite its body to cover both weeks. Otherwise open a draft titled
     `chore(retro): week of <YYYY-MM-DD>` — draft always, because no check proves an
-    instruction change. The body: the gate's windows, the reviewer model, what went well,
-    then
+    instruction change. The body: the gate's windows, the reviewer model, the week in numbers
+    (sessions, turns, tokens, compactions, model and effort mix), what worked, then
 
-    | Recommendation | Friction it answers | Evidence | Commit or listed |
+    | Recommendation | Lens | Evidence | Commit or listed |
     | --- | --- | --- | --- |
 
-    then *Listed, not edited*, grouped as devbook chapter, product code, and *for you* —
-    habits and personal settings no repository file can hold.
+    then *Listed, not edited*, grouped as devbook chapter (for `flow-spec`), architecture,
+    product code, and *for you* — model, effort, settings, and habits no repository file holds.
 
 ### Phase 6 — Report
 
-12. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
-    the gate's verdict and windows, the reviewer model, the window, each source's count, the
-    recommendations with their commits, and the link. A run the gate stops still reports.
+14. Output the report in `report.md` beside this file, per `../../resources/report-contract.md`:
+    the gate's verdict and windows, the reviewer model, the window, each source's count, one
+    line per lens, the recommendations with their commits, and the link. A run the gate stops
+    still reports.
 
 ## Surface Reporting
 
@@ -109,6 +134,6 @@ the source of truth.
 ## Notes
 
 - Run by hand with Threshold `off` to review a week on demand.
-- `schedule-weekly-update` reports what the repository shipped; this reads how it got there.
+- `schedule-weekly-update` reports what the repository shipped; this reads how AI got it there.
   `schedule-instruction-review` cuts what an instruction says twice; this adds what the week
-  showed was missing.
+  showed was missing and cuts what it showed was never used.

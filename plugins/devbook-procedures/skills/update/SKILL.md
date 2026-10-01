@@ -23,7 +23,7 @@ and touches no other entry.
    repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
    its plan, run it without `--check`, and report what moved. `001` turns a `start` procedure
    into the `run` recipe and its Copilot twin; `002` renames `debug` to `diagnose`; `003` removes
-   `show`.
+   `show`; `004` drops an `app.start` binding to `repo:start`.
 2. **Resolve.** `adopted` from the stamp is the list. Never re-ask what it answers; a
    procedure is added or dropped only when the user asks for it.
 3. **Detect**, **Plan**, **Materialize** exactly as `init` steps 2–4, with one more plan

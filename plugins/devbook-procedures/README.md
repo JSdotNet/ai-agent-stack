@@ -47,6 +47,7 @@ to start adopts neither `run` nor `diagnose`, and one that takes no evidence ado
 | `migrations/001-start-is-run/` | Moves a `start` procedure to the `run` recipe and its Copilot twin, and renames it in the stamp; `update` runs it first |
 | `migrations/002-debug-is-diagnose/` | Renames a `debug` procedure to `diagnose`, so it no longer replaces Claude Code's own `/debug`; `update` runs it after `001` |
 | `migrations/003-show-removed/` | Removes a `show` procedure's wrappers and stamp entries, and its body unless the repository edited it |
+| `migrations/004-start-binding-is-run/` | Removes an `extensions["app.start"]` binding to `repo:start`, which `001` left naming no skill, or hands its options to the default provider |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a managed wrapper per host, and where the goal sits |
 | `hooks/` | A session-start pointer: invoke the repository's procedure skill rather than guessing a command, a URL, or a layout |
 

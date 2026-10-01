@@ -63,6 +63,8 @@ A link to a process that is not listening is worse than no link.
 
 ## Step 3 — Say What To Check
 
+When the `show-me` skill is available, write this step and Step 4 per that skill.
+
 The part no automated stage produces. A short numbered list, each item naming **where to
 look, what to do, and what should happen.**
 

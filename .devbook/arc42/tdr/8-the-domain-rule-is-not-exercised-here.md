@@ -55,7 +55,8 @@ language — is now kept by no folder in the repository that ships it. The same 
 of the six converter kinds: `aggregate`, `domain-service`, `feature`, and `setting` dispatch on
 a `type` field `arc42/` forbids, so only `building-block` and `design-component` can run here.
 The `aliases` rung of counterpart resolution has no chapter to read either; a block file
-carries its aliases as an "Also called" line the converters do not parse.
+carries its aliases as an "Also called" line the converters do not parse. The term register
+`build.mjs` writes reads the same fields and is empty here for the same reason.
 
 ## Origin
 

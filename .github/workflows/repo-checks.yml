@@ -19,6 +19,10 @@ on:
     branches:
       - main
   pull_request:
+    # ready_for_review beside the defaults, so marking a draft ready runs the
+    # checks again: auto-merge.yml starts on that event and judges the head
+    # commit's latest check runs, which would otherwise be the draft's.
+    types: [opened, synchronize, reopened, ready_for_review]
     branches:
       - main
   workflow_dispatch:

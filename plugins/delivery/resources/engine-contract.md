@@ -28,6 +28,8 @@ Three rules hold across all of it, and they are the reason the engine stays reus
 
 `.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys
 and never edits another component's. `components` belongs to each component's own `init` and `update` skills.
+The one write a component makes to an engine key is a migration renaming an id it retired, per
+devbook's `assets/reconcile-protocol.md` under *The stamp*.
 `id` sits beside the four and is not a setting: it names the repository, once, so a machine can
 keep an overlay for it — see below.
 

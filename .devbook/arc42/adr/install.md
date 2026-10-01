@@ -66,7 +66,12 @@ host can run it — `managed: false` from the moment it lands, and Copilot gets 
 `.github/skills/run/SKILL.md` pointing at it. The rename moved a path a customized body sat at,
 which hash-matching cannot do, so `devbook-procedures` ships the first migration outside
 `devbook`: `001-start-is-run`, numbered in its own sequence and idempotent by its `--check`, with
-no ledger — the shape it removes is the record that it ran.
+no ledger — the shape it removes is the record that it ran. `001` rewrote only the stamp, so an
+`extensions["app.start"]` bound to `repo:start` kept naming a skill that was gone;
+`004-start-binding-is-run` removes it, since the default provider invokes `run`, or hands its
+options to that provider. `extensions` is the engine's, and this is the one write another
+component makes there: the rename exception devbook's reconcile protocol grants for an id another
+entry spells, extended to the procedure a `devbook-procedures` migration renamed.
 
 **A procedure never takes a host's own name.** A project skill that shares its name with a
 command or skill the host bundles replaces it, so a procedure named `debug` took Claude Code's
@@ -143,6 +148,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. |
 | 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches, so `update` re-times it and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. |
 | 2026-09-30 | `show` is removed: no flow invoked it, and `/verify` answers a person on Claude Code; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. |
 | 2026-09-30 | `debug` becomes `diagnose`, since a project skill named `debug` replaces Claude Code's bundled `/debug`; `devbook-procedures` ships `002-debug-is-diagnose`. |

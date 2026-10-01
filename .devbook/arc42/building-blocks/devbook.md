@@ -396,8 +396,9 @@ the graph and out of every reference pointing at it.
 The field set is closed except for one seam. `status`, `type`, `related`, `issue`, `effort`,
 `roadmap`, `date`, `tests`, `number`, and `index` are devbook's, with the six decision fields
 — `approved-by`, `approved-at`, `approved-hash`, `accepted-by`, `accepted-at`,
-`accepted-hash` — scoped to `domain/` beside the rungs that write them;
-each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
+`accepted-hash` — scoped to `domain/` beside the rungs that write them, and `sync`, the
+sync direction, on `domain/`, `arc42/`, and `design/` blocks at the four levels the chapter
+schema decision names; each with a documented meaning per folder; `ext.<plugin>.<key>` belongs to whoever namespaced
 it. Empty collections and nulls are omitted rather than written out, so absence has exactly
 one spelling. No field records a review in progress: that is `status` plus the chapter's open
 annotation fences, and the `review`, `reviewer`, and `review-at` fields contract 21 removed
@@ -410,6 +411,7 @@ are reported by name.
 | The field set is closed except for `ext.<plugin>.<key>` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | The six decision fields are scoped to `domain/` | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | Empty collections and nulls are omitted, so absence has exactly one spelling | schema validator | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| `sync` is one of five directions, set only on a sync level and never on a chapter a unit owns; a value no unit inherits is warned | schema validator, `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
 
 ### Annotation
 

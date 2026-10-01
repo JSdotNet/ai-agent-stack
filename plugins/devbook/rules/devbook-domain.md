@@ -291,7 +291,9 @@ Adding a context or a file needs no declaration anywhere; just regenerate
   - Domain Service chapters describe the service's responsibility and the
     aggregates/policies it coordinates.
   - Domain Event chapters are first-class addressable chapters and carry
-    metadata blocks like other `domain.md` chapters.
+    metadata blocks like other `domain.md` chapters. Each names the aggregate
+    or domain service that raises it in `related`, which places it in that
+    unit, per `devbook-chapter-metadata.md`.
   - Value Objects and Enums **shared across multiple aggregates** within the
     context get their own separate chapter — do not duplicate them under each
     aggregate that uses them.
@@ -928,6 +930,7 @@ What it reacts to is a requirement of the unit that reacts, in
 \`\`\`meta
 status: draft
 type: domain-event
+related: [.devbook/domain/<context>/domain.md#<aggregate-heading-slug>]
 \`\`\`
 
 Published when <business trigger>.

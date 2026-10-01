@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-09-28
+date: 2026-10-01
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -20,7 +20,9 @@ capabilities are switched by, and its actors and dependencies until they outgrow
 describes its skills or its features, states what they guarantee in `requirements.md` and
 what its aggregates enforce in the invariants subpage of their domain page, says who acts with `user`, `organisation`, `technical`
 chapters, and keeps its vocabulary in `domain.md`: a term is a chapter or an `aliases` entry on
-the chapter it names. The rule files under
+the chapter it names. Which way a sync unit and its code flow is `sync` in the `meta` block of
+a folder overview, a `context.md`, a context page, or the unit's root chapter, nearest wins and
+`report` when none says. The rule files under
 `plugins/devbook/rules/` are the specification; this record is why it has the shape it has.
 
 A proposed change to those folders is the one devbook content outside the parent: it lives in
@@ -282,6 +284,27 @@ highest rung among the chapters at it — and authored nowhere. The tools a stag
 AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a `stage` on a
 `tech/` chapter would cross the one-way boundary between the two folders from the wrong side.
 
+**The sync direction is chapter metadata, at four levels, nearest wins.** The sweeps that keep
+chapters and code aligned need to know, per unit, which side is the truth: the agreed chapter
+(`push`), the code (`pull`), whichever the verdict says (`sync`), neither but report (`report`),
+or neither and stay out (`off`). The first draft kept that as a map in `.devbook/config.json`,
+which put a property of the model in a file the model's reviewers never read and the chapter
+viewers never show. As a field it is reviewed with the chapter, shown by every tool that already
+reads `meta` blocks, and checked by the one checker. It is a devbook field, not an
+`ext.delivery-schedule.*` key: `ext` is carried unvalidated, so a misspelt value would silently
+mean `report`, and the converters that honour it — `capture-specs`, `apply-change`,
+`verify-change` — are devbook's. Four levels — folder overview, `context.md`, context page, the
+unit's root chapter — let a whole context follow the code while one aggregate's agreed model
+leads it, without writing the value on every chapter. A chapter a unit owns (an entity, value
+object, enum, domain event, invariant, requirement, sub-feature, or term) refuses it, as do
+`requirements*.md` and `*.invariants.md`, which hold only such chapters: they are captured and
+briefed with their unit, and half a unit cannot go the other way. A value no unit inherits is a
+warning, which covers `actors.md` until an actor kind exists. For the same grouping a
+`domain-event` names the aggregate or domain service that raises it in `related`, because the
+Trigger names it only in prose; it is a warning so a corpus written before keeps passing. The
+fingerprints already exclude `meta` blocks, so a flip lapses no approval. Contract 25, additive:
+absent means `report`, today's behaviour, and no migration is owed.
+
 ## Rejected
 
 ```meta
@@ -309,6 +332,9 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
   18 did for two; a context-qualified title (`# Order Management — Domain`), which repeats what
   the folder says; a migration retitling every file, which would rewrite authored text to fix
   what no check reads.
+- The sync direction as a map under `components.schedule` in `.devbook/config.json`, or as an
+  `ext.delivery-schedule.sync` key; a direction on owned chapters; a single folder-wide switch
+  with no closer override.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -320,6 +346,7 @@ AI usage rests on are deliberately not in the picture: they are `tech/`'s, and a
 
 | Date | Change |
 | --- | --- |
+| 2026-10-01 | `sync` — `push`, `pull`, `sync`, `report`, `off` — on `domain/`, `arc42/`, and `design/` blocks says which way a sync unit and its code flow, set on a folder overview, a `context.md`, a context page, or a unit's root chapter, nearest wins, `report` by default. Refused on owned chapters and owned-only pages; a value no unit inherits is warned; a `domain-event` is warned when its `related` names no raiser. Contract 25, additive, no migration. |
 | 2026-09-28 | A change's `proposal.md` carries `approved` and `accepted` with their six fields, for the whole change: the hash covers the proposal and every delta, and `delta.mjs --apply` merges only an accepted change over its current hash, writing no rung onto the chapters it lands in and lifting one it makes stale. Approval lives in both places — chapter rungs for work outside the lane, the proposal's for a change — so `domain/` keeps its rungs and no migration is owed. Contract 24, additive. |
 | 2026-09-28 | The change folder, `openspec/changes/`, is a folder kind stamped as `changes`: each change's `proposal.md` is `type: change` at `status: proposed` with a `category`, each file under `devbook-delta/` a delta the checker resolves through `delta.mjs`, and `archive/` is never indexed. `change` is legal on any chapter as the merge's provenance. The folder sits outside `.devbook/` because the OpenSpec spike found its CLI fixes the path; the rungs above `proposed` wait for the decision on where approval lives. Contract 23, additive, no migration. |
 | 2026-09-28 | `design/` gains one chapter type, `requirement`: a rule a component keeps or breaks is a `### Requirement:` with `#### Scenario:` cases under the component's chapter, warned when its `tests` reach no `e2e`. Every other `design/` chapter stays untyped. A `#### Scenario:` directly under a requirement no longer warns for having no block. Contract 22, additive, no migration. |

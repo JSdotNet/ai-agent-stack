@@ -1,6 +1,6 @@
 ---
 name: schedule-weekly-retro
-description: 'Review how AI was used in this repository over the week — its sessions, the delivery runs the surface recorded, and the pull requests they produced — on a stronger model than the week ran on, and recommend what would get more out of it: the bottlenecks that cost turns, the context loaded that the work did not need or lacked, and the model and effort that did not fit the task. Lands the edits to instruction assets as one draft pull request, one commit per recommendation, and lists the rest — devbook chapters, architecture, personal settings. Runs only while the plan has credit to spare: it reads the plan limits first and stops when a window is past the threshold, or when this week already has a retro. The weekend weekly-retro schedule''s target.'
+description: 'Review how AI was used in this repository over the week — its sessions, the delivery runs the surface recorded, and the pull requests they produced — on a stronger model than the week ran on, and recommend what would get more out of it: the bottlenecks that cost turns, the context loaded that the work did not need or lacked, and the model and effort that did not fit the task. Lands the edits to instruction assets and devbook chapters as one draft pull request, one commit per recommendation, and lists the rest — product code and personal settings. Runs only while the plan has credit to spare: it reads the plan limits first and stops when a window is past the threshold, or when this week already has a retro. The weekend weekly-retro schedule''s target.'
 ---
 
 # Scheduled: Weekly Retro
@@ -30,10 +30,14 @@ week's sessions get further.
 - The review runs delegated, on the model resolved in Phase 2. Inline it runs on the session's
   model, which is the model this run exists to improve on.
 - Edit only instruction assets — `AGENTS.md`, `CLAUDE.md` and their host twins, rules and their
-  wrappers, skills, agents and their `## Model` sections, contracts, hooks — and the
-  repository's own checks and scripts. A devbook chapter, an architecture change, product code,
-  and the person's own model, effort, or settings are listed, never edited: a chapter is
-  `flow-spec`'s, and model choice is personal.
+  wrappers, skills, agents and their `## Model` sections, contracts, hooks — the repository's
+  own checks and scripts, and chapters in its adopted devbook folders, the `ai/` record and
+  `arc42/` among them. Product code and the person's own model, effort, or settings are listed,
+  never edited: model choice is personal.
+- A chapter edit follows that folder's instruction file and `devbook-chapter-metadata.md`, as
+  `flow-spec` would: its `meta` block in the same commit, never an `annotation` fence, never a
+  file under `_meta/`. The draft pull request stands in for `flow-spec`'s approval gate, so a
+  chapter edit lands nowhere else.
 - Every recommendation names its evidence: a count over the window, a session or run, a pull
   request. A lens with no evidence gets no recommendation.
 - Quote no transcript. Evidence is a link or a one-line paraphrase; nothing personal and no
@@ -93,11 +97,12 @@ week's sessions get further.
      strongest model or highest effort on housekeeping, a lighter one on a task that needed
      corrections or reruns, an agent whose `## Model` section the week contradicts.
 10. It ranks up to the maximum recommendations by the turns or tokens they would have saved,
-    each with its lens, its evidence, and the file it changes — or, listed only, the chapter,
-    the architecture change, or the personal setting and the value to set it to.
+    each with its lens, its evidence, and the file or chapter it changes — or, listed only,
+    the product code change, or the personal setting and the value to set it to.
 11. It applies each editable recommendation as one commit, `retro(<path>): <recommendation>`,
-    and runs the repository's checks as `AGENTS.md` names them. A commit that fails one is
-    reverted and its recommendation moves to listed.
+    and runs the repository's checks as `AGENTS.md` names them — the devbook check among them
+    whenever a chapter changed. A commit that fails one is reverted and its recommendation
+    moves to listed.
 
 ### Phase 5 — Pull Request
 
@@ -111,8 +116,8 @@ week's sessions get further.
     | Recommendation | Lens | Evidence | Commit or listed |
     | --- | --- | --- | --- |
 
-    then *Listed, not edited*, grouped as devbook chapter (for `flow-spec`), architecture,
-    product code, and *for you* — model, effort, settings, and habits no repository file holds.
+    then *Listed, not edited*, grouped as product code (for `flow-code`) and *for you* —
+    model, effort, settings, and habits no repository file holds.
 
 ### Phase 6 — Report
 

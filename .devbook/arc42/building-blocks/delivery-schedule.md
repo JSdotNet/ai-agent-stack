@@ -240,8 +240,9 @@ plan limits first and stops at or above a threshold, so it spends only what the 
 would otherwise discard, and its trigger fires on both weekend days because the second firing
 is the retry. And it delegates the review to a model stronger than the week ran on, resolved
 from the personal `model-override` file and never from the repository, because model choice is
-personal. It edits instruction assets and checks only; a devbook chapter, an architecture
-change, product code, or a personal model, effort, or habit is listed for a person.
+personal. It edits instruction assets, checks, and devbook chapters, each chapter under its
+folder's own rules; the draft pull request is the approval a chapter would otherwise get from
+`flow-spec`. Product code, or a personal model, effort, or habit, is listed for a person.
 
 ### schedule-weekly-update
 

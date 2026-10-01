@@ -508,6 +508,35 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 | A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
+### Demo
+
+```meta
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+```
+
+The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.html` that shows
+what a person sees in a bounded context. It belongs to the Devbook Folder aggregate and is no
+chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
+`context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
+the chapters whose `demo` field names it. Links run from Markdown to the demo only. The file
+records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
+change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
+demo is built on the repository's template at `.devbook/design/demo-template.html`. The
+[demos record](../adr/demos.md) holds the reasons.
+
+The decision is recorded and not yet enforced. The `devbook-click-demo` plan adds the address
+contract, the `demo` field to the folder rules, the checker rules, a page fingerprint that
+covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
+nothing in this block reads a demo, and the invariants below are what those steps owe.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A page-named demo exists only beside its page and moves with it on a split | not yet built | untested |
+| Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | not yet built | untested |
+| A demo under `domain/` carries exactly one variant | not yet built | untested |
+| A page's fingerprint covers its demos, so editing one lifts a stale approval | not yet built | untested |
+| A demo over 500 KB is a warning, never an error | not yet built | untested |
+
 ### Reference Graph
 
 ```meta

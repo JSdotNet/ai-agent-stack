@@ -93,6 +93,17 @@ entry for it yet, propose adding the discovered code name as one. That
 turns a one-off inference into a durable pairing for the next pass. Propose it in
 the plan — nothing here writes the alias onto the chapter.
 
+The opposite drift is a dead alias: an `aliases` entry that matches no
+identifier anywhere in the source tree. A rename in code leaves one behind, and
+a pairing the repository depends on — code in one language, chapters in
+another — breaks without a sign. `verify-change` reports every dead alias in
+scope as its own finding, whatever verdict the chapter reaches through its other
+aliases or rungs: the chapter address, the alias, and a proposal to remove it or
+correct it to the name the code now carries, under the report table (see
+[Report table](#report-table)). It never edits `aliases`. The check lives in this
+search and nowhere else: a language-agnostic identifier search in the
+`devbook-meta` checker would be noisy and slow, so `build.mjs` takes no alias pass.
+
 ## Evidence rules
 
 Only two things count as evidence about what the application does:
@@ -480,3 +491,10 @@ Column rules:
 Report every chapter in scope, including the `aligned` ones. A pass that lists
 only its findings does not tell the reader what was checked and found fine, so
 the same ground gets re-covered next time.
+
+`verify-change` follows the table with one row per dead alias, or the line
+"No dead aliases." when the run found none:
+
+| Chapter | Alias | Proposal |
+|---|---|---|
+| `.devbook/arc42/building-blocks/ordering.md#order` | `Bestelling` | No identifier matches; the class is now `Order`. Remove the alias, or correct it if a Dutch name is still meant to pair |

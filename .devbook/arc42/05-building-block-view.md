@@ -18,27 +18,28 @@ concerned.
 ## Level 1: The Plugin Landscape
 
 ```meta
-date: 2026-09-21
+date: 2026-10-01
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Twelve plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
 flowchart TB
     subgraph L0["L0 foundation - works with only itself installed"]
-        DEV["devbook 1.14.0"]
-        DEL["delivery 1.14.0"]
-        CFG["devbook-config 1.14.0"]
+        DEV["devbook 1.15.0"]
+        DEL["delivery 1.15.0"]
+        CFG["devbook-config 1.15.0"]
+        SKL["devbook-skills 1.15.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
-        DBD["devbook-derived 1.14.0"]
-        DPR["devbook-procedures 1.14.0"]
-        DBC["devbook-collaboration 1.14.0"]
-        DOS["devbook-openspec 1.14.0"]
-        SCH["delivery-schedule 1.14.0"]
+        DBD["devbook-derived 1.15.0"]
+        DPR["devbook-procedures 1.15.0"]
+        DBC["devbook-collaboration 1.15.0"]
+        DOS["devbook-openspec 1.15.0"]
+        SCH["delivery-schedule 1.15.0"]
     end
 
     subgraph SURF["Surface - declared by nothing, resolved at run time"]
@@ -66,6 +67,8 @@ flowchart TB
     CFG -.->|"reads every plugin, declares none"| DEL
     DEL -.->|"flow-project runs devbook-config:init"| CFG
     DOS -.->|"spec and tracker providers, bound by name"| DEL
+    DEV -.->|"names the skill show-me, never the plugin"| SKL
+    DEL -.->|"names the skill show-me, never the plugin"| SKL
 ```
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is

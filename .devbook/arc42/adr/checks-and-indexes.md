@@ -1,7 +1,7 @@
 # Checks and Indexes
 
 ```meta
-date: 2026-09-28
+date: 2026-10-01
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#index-generator", ".devbook/arc42/tdr/5-derived-index-is-not-optional.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
@@ -62,6 +62,22 @@ direction. Phasing the committed index out is disabling one plugin, and a reposi
 enables it never sees a derived file, a refresh script, or a nightly pull request, and still has
 the full check.
 
+**The term register is devbook's, and reads fields only.** `build.mjs` writes a fourth
+document per scope, `_meta/naming.json`: `domain/`'s ubiquitous language as a list, each term
+with its lede as its definition, its `aliases`, and its `related` chapters. A reader that
+wants to show what a term means had only the graph, whose term nodes carry a label and nothing
+else, and the alternative was parsing Markdown in another language. It is built from the graph
+the check already holds — the walk keeps each chapter's lede beside the nodes, off them, so
+`graph.json` does not change shape — and devbook owns it like the other three; devbook-derived
+commits it like the other three. A term is a `term` chapter or any other `domain/` chapter
+with `aliases`. The chapters of `arc42/12-glossary.md` are not terms: their "Also called" line
+is prose, not a field ([debt record 8](../tdr/8-the-domain-rule-is-not-exercised-here.md)), and
+a generator that read it would make a writing habit part of the schema. So this repository's
+own register is empty until a `domain/` is adopted. The register carries its own
+`schemaVersion`, starting at 1, because its first reader, spec-manager, lives outside this
+repository and pins it; a contract bump that leaves the register alone must not break that
+reader. Adding a derived file changes no chapter schema, so no migration ships with it.
+
 ## Rejected
 
 ```meta
@@ -74,6 +90,8 @@ the full check.
 - Computing the documents and never committing them — the reader that cannot run Node still
   needs a file, and `--print` survives from the attempt.
 - The checker and the generator in `devbook-derived` together, with `devbook` naming its path.
+- Reading the arc42 glossary into the term register by parsing its "Also called" line.
+- The register on the contract version: a consumer pinning it would break on every bump.
 
 The nine Node suites under `plugins/*/tools/` are still run by nobody; adding them is a
 separate call.
@@ -85,6 +103,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-01 | `build.mjs` writes `_meta/naming.json`, the term register, per scope beside the other three, from `domain/`'s `term` and aliased chapters; `arc42/`'s glossary is not read, and the register carries its own `schemaVersion: 1`. |
 | 2026-09-28 | The checker indexes the change folder's proposals and deltas into the repository rollup only, with no scope or `_meta/` of its own, since OpenSpec would read one as a change; each delta is checked by `delta.mjs`'s `checkDelta`, the same function a merge runs, so an indexed delta fails the check exactly when it would fail to merge. |
 | 2026-09-27 | `repo-checks.yml` runs the tools' `*.test.mjs` files through `node --test`, listed with `git ls-files` because the directory form loads nothing on Windows and misses a test in a new folder silently. |
 | 2026-09-26 | This repository materializes `devbook-derived`'s refresh script and both workflows, the nightly at 02:17 UTC so it runs ahead of the 03:00 `devbook-validate` schedule. Its `AGENTS.md` section keeps the never-in-session sentence and is stamped `managed: false`: the stricter rule here outranks the template's on-demand refresh, and the script serves `-Check` and the drift warning's hint. |

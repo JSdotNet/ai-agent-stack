@@ -159,7 +159,8 @@ Owned by [devbook-derived](building-blocks/devbook-derived.md).
 
 Also called: `_meta`, generated index, build output.
 
-Anything under a `_meta/` folder: the graph, the reading order, and the annotation index,
+Anything under a `_meta/` folder: the graph, the reading order, the annotation index, and the
+term register,
 emitted deterministically so a clean `git diff` proves they are current. A session never reads
 one as a source of fact and never regenerates one: two branches that each touch one chapter
 both rewrite the same JSON, and the conflict is only resolvable by re-running the generator —

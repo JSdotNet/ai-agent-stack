@@ -32,7 +32,10 @@ materialize, stamp — every time.
 
 `.devbook/config.json`, repo-scope and committed. devbook owns exactly
 one entry inside it and never edits another component's — except where a
-devbook migration renames an id another component's entry spells.
+devbook migration renames an id another component's entry spells. A
+`devbook-procedures` migration has the same exception for a procedure it
+renamed: it rewrites the id where an engine key binds it, and nothing else
+there.
 
 Five fields, and only devbook writes all five. Every component writes `pluginVersion`
 and what it put in the repository — a `materialized` map for one that copies files,

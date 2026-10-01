@@ -576,7 +576,11 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 ```
 
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
-and the annotation index for the repository and for each adopted folder. It checks by default
+the annotation index, and the term register for the repository and for each adopted folder.
+The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
+other `domain/` chapter carrying `aliases`, each with its lede as its definition. It is built
+from the graph and the ledes the same walk kept, never a second read. It carries its own
+`schemaVersion`, because its first reader is outside this repository. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
 [devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
@@ -595,6 +599,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | An unresolved reference fails; a heading with no block is reported and tolerated | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A structural document's heading with no block is not reported | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| The term register lists `domain/`'s `term` and aliased chapters only, never `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
 
 ### Fence Writer
 
@@ -659,8 +664,11 @@ differently; a domain service is the deliberate exception and is its own kind.
 
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
-`domain.md` aliases, then the building-block view, then the observed naming convention, and
-reports `unresolved` rather than guessing.
+the chapter's `aliases`, then the building-block view, then the observed naming convention, and
+reports `unresolved` rather than guessing. The same search catches the reverse rot: an alias
+that names no identifier in the source tree is reported by `verify-change` as its own finding,
+with a proposal to remove or correct it, and never rewritten. No checker pass duplicates it —
+an identifier search that knows no language would be noisy and slow.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -669,7 +677,8 @@ reports `unresolved` rather than guessing.
 | `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
-| Resolution walks `domain.md` aliases, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
+| Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
+| `verify-change` reports every alias that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
 
 ### Shared Value Objects
 
@@ -878,6 +887,7 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | --- | --- | --- | --- | --- |
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
+| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `devbook-writing.md` names the skill `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Pictures read faster than prose. Without the skill, the rule's own table of diagram kinds applies, so nothing is declared. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper `init` writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
 | A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
 

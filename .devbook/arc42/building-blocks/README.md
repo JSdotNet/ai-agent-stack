@@ -2,7 +2,7 @@
 
 ```meta
 index: root
-related: [".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md"]
+related: [".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/arc42/building-blocks/devbook-skills.md"]
 ```
 
 One file per plugin: its responsibility, the interfaces it exposes, the parts inside it, the
@@ -13,8 +13,8 @@ vocabulary every block is written in is [chapter 8](../08-crosscutting-concepts.
 one block owns are in the [glossary](../12-glossary.md).
 
 **One plugin, one block.** A plugin is the unit a host installs, versions, and can refuse to
-load, so it is already the line a model cannot cross without somebody declaring it. Twelve
-files follow the twelve plugin folders under `plugins/`, name for name.
+load, so it is already the line a model cannot cross without somebody declaring it. Thirteen
+files follow the thirteen plugin folders under `plugins/`, name for name.
 
 ## The set
 
@@ -28,6 +28,7 @@ files follow the twelve plugin folders under `plugins/`, name for name.
 | [devbook-procedures](devbook-procedures.md) | L1 on devbook | The five procedures every repository has and no plugin can write — `run`, `capture`, `diagnose`, `estimate`, `prototype` — seeded once with a goal the plugin fixes and a body the repository owns |
 | [devbook-openspec](devbook-openspec.md) | L1 on devbook | The change lane: OpenSpec installed and configured so a change is a set of deltas against the chapters, proposed, agreed, built step by step, and archived |
 | [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
+| [devbook-skills](devbook-skills.md) | L0 foundation | Reusable guidance any plugin names and none depends on: `show-me`, a picture before the prose |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
 | [delivery-schedule](delivery-schedule.md) | L1 on delivery | Work that runs with nobody watching, and the catalog of triggers that fires it |

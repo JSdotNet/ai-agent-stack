@@ -178,13 +178,14 @@ repository actually adopts, plus a repository-wide rollup:
 | `.devbook/_meta/graph.json` | repository-wide | reference graph | devbook's `.devbook/_tools/devbook-meta/build.mjs --write` |
 | `.devbook/_meta/index.json` | repository-wide | ordered reading outline | same |
 | `.devbook/_meta/annotations.json` | repository-wide | open notes, from the `annotation` fences | same |
-| `.devbook/arc42/_meta/*.json` | `arc42/` | all three of the above, scoped | same |
-| `.devbook/domain/_meta/*.json` | `domain/` | all three of the above, scoped | same |
-| `.devbook/tech/_meta/*.json` | `tech/` | all three of the above, scoped | same |
-| `.devbook/design/_meta/*.json` | `design/` | all three of the above, scoped | same |
-| `.devbook/ai/_meta/*.json` | `ai/` | all three of the above, scoped | same |
+| `.devbook/_meta/naming.json` | repository-wide | term register, from `domain/`'s terms and aliases | same |
+| `.devbook/arc42/_meta/*.json` | `arc42/` | all four of the above, scoped | same |
+| `.devbook/domain/_meta/*.json` | `domain/` | all four of the above, scoped | same |
+| `.devbook/tech/_meta/*.json` | `tech/` | all four of the above, scoped | same |
+| `.devbook/design/_meta/*.json` | `design/` | all four of the above, scoped | same |
+| `.devbook/ai/_meta/*.json` | `ai/` | all four of the above, scoped | same |
 
-`annotations.json` is derived like the other two: the notes themselves are
+`annotations.json` is derived like the others: the notes themselves are
 authored Markdown in the chapters, so deleting this file loses nothing. Write a
 note with `annotations.mjs`, never into this index.
 

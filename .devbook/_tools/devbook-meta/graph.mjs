@@ -386,6 +386,41 @@ function applyMeta(node, meta, folder) {
 }
 
 /**
+ * A chapter's lede: its first paragraph or blockquote, joined to one line with
+ * its inline Markdown kept as written. Fences — the `meta` block, an
+ * `annotation`, a diagram — are stepped over, and the next heading ends the
+ * search, so a chapter that opens straight into a sub-chapter has none.
+ *
+ * Read from the lines `buildGraph` already holds, so the term register gets
+ * its descriptions without a second pass over the corpus.
+ */
+function chapterLede(lines, headingLine) {
+    let fence = null;
+    const paragraph = [];
+    for (let i = headingLine; i < lines.length; i++) {
+        const line = lines[i];
+        const marker = /^\s*(`{3,}|~{3,})/.exec(line);
+        if (fence) {
+            if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length) fence = null;
+            continue;
+        }
+        if (marker) {
+            if (paragraph.length) break;
+            fence = marker[1];
+            continue;
+        }
+        if (/^#{1,6}\s/.test(line)) break;
+        if (line.trim() === "") {
+            if (paragraph.length) break;
+            continue;
+        }
+        paragraph.push(line.replace(/^\s*>\s?/, "").trim());
+    }
+    const lede = paragraph.join(" ").replace(/\s+/g, " ").trim();
+    return lede || null;
+}
+
+/**
  * Compose a file node's display label.
  *
  * A `domain/` file is titled by what it holds, so a split file's title is its
@@ -418,6 +453,9 @@ export async function buildGraph(repoRoot, folders = null) {
     // keyed by node id. Kept off the nodes: the level follows from the path
     // and the type, and a consumer resolves it the same way.
     const syncLevels = new Map();
+    // Each chapter's lede, by node id. Kept off the nodes so graph.json does
+    // not change shape; the term register is its one reader.
+    const ledes = new Map();
 
     const layout = folders ? null : await discoverLayout(repoRoot);
     const scanned = folders ?? layout.folders;
@@ -448,6 +486,7 @@ export async function buildGraph(repoRoot, folders = null) {
         const folder = folderKindForPath(relPath);
         const raw = await readFile(path.join(repoRoot, relPath), "utf8");
         const { fileTitle, chapters } = parseDocument(raw);
+        const lines = raw.split(/\r?\n/);
 
         // Open notes per chapter, counted from the same read. Carrying the
         // count on the node is what lets the canvas badge the chapters nobody
@@ -589,6 +628,8 @@ export async function buildGraph(repoRoot, folders = null) {
             if (chapterSync.level) syncLevels.set(id, chapterSync.level);
             if (openNotes.get(chapter.slug)) node.openNotes = openNotes.get(chapter.slug);
             nodes.set(id, node);
+            const lede = chapterLede(lines, chapter.line);
+            if (lede) ledes.set(id, lede);
             ancestors.push({ level: chapter.level, id });
 
             edges.push({
@@ -760,7 +801,7 @@ export async function buildGraph(repoRoot, folders = null) {
         });
     }
 
-    return { nodes: [...nodes.values()], edges, problems };
+    return { nodes: [...nodes.values()], edges, problems, ledes };
 }
 
 function summarize(nodes, edges) {

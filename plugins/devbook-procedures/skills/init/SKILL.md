@@ -33,7 +33,7 @@ entry.
 
 1. **Resolve.** Ask which of the five to adopt, offering all five, and say that nothing to
    start means no `run` or `diagnose`, and no evidence means no `capture`;
-   `estimate` needs neither; no user interface means no `prototype`.
+   `estimate` and `prototype` need neither.
 2. **Detect.** For each adopted name, hash what is on disk. A file present at a path this
    component has never stamped is somebody's — ask once, per procedure, whether to keep it as
    the repository's own (`managed: false`) or replace it with the seed; a wrapper is replaced

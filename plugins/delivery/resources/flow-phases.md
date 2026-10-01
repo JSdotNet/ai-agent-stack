@@ -268,7 +268,8 @@ description as file artifacts, say so once, and continue.
   unrelated user browser sessions.
 - **Write the PR description** from the change set, the code review outcome, and the
   validation evidence. Follow the repository's own PR template when it has one, and link the
-  originating work item — `Closes` when merging resolves it, `Refs` when it does not.
+  originating work item — `Closes` when merging resolves it, `Refs` when it does not. When
+  the `show-me` skill is available, write each section per that skill.
 - **Open it through the lane, and validate nothing twice.** Push the branch, then raise the PR
   with the host's own pull-request action when the session offers one, otherwise `gh pr create`
   or the bound GitHub tooling. Build & Test, Validation, and the recorded approval **are**
@@ -374,7 +375,8 @@ captures what this run learned. A chore may fail without failing the run unless 
 itself required.
 
 - **Summarize the delivered outcome**, the created pull request if any, and the work item
-  update outcome when applicable.
+  update outcome when applicable. When the `show-me` skill is available, write it per that
+  skill.
 - **Emit the run summary** once the pull request and any applicable work item update are
   complete, or the run concludes without one.
 - **Never author measured numbers.** Token, context, and timing figures come from the

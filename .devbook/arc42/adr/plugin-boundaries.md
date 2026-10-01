@@ -1,8 +1,8 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-09-21
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
+date: 2026-10-01
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
 Every plugin is self-contained under `plugins/<name>/` and either works alone or declares
@@ -135,6 +135,19 @@ forking a dozen skills against a project that releases every few weeks, and it n
 only as the `spec` and `tracker` providers a repository binds, so a repository without an engine
 builds each step through OpenSpec's own `/opsx:apply`.
 
+**Showing before telling is a plugin of its own, named by skill and never by plugin.** A
+person takes in a diagram, a file tree, or a type signature faster than the paragraph that
+describes it. Three places want that: a devbook chapter, a pull request description, and the
+report a flow gives the person at each stage and gate. The guidance is one skill, `show-me`, in
+`devbook-skills`, an L0 plugin that depends on nothing. `devbook` and `delivery` name the skill
+alone, the way `delivery` names `run` and `capture`, and declare no dependency on it. Where the
+skill is absent, each caller keeps its own short rule: `devbook-writing.md` keeps its table of
+diagram kinds, and the engine reports in prose as before. A declared dependency would install a
+second plugin with each foundation for guidance that only improves how output reads, and a
+missing skill must cost readability, never a load. `domain.md` and its splits are the exception
+in the devbook: they keep the diagrams `devbook-domain.md` prescribes, because that rule already
+fixes the model chapter's shape.
+
 ## Rejected
 
 ```meta
@@ -157,6 +170,10 @@ builds each step through OpenSpec's own `/opsx:apply`.
 - A `devbook-flows` bridge holding the folder flows.
 - Keeping the seeds in `delivery` and adding `show` and `debug` there: two skills no phase
   calls, in a plugin a repository without an engine never enables.
+- `show-me` inside `devbook`: a pull request and a flow's report are not devbook's concerns,
+  and a repository running the engine without devbook would lose it.
+- `devbook` and `delivery` declaring `devbook-skills` in `dependencies`: guidance that only
+  improves readability would decide whether a foundation loads.
 - A migration for the seed handover: `delivery` is payload-only and the protocol gives such a
   component hash-matching and orphaning as its whole mechanism.
 
@@ -167,6 +184,7 @@ builds each step through OpenSpec's own `/opsx:apply`.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |
 | 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. |
 | 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. |
 | 2026-09-28 | Every schedule is a local routine: `delivery-schedule` creates through a local scheduler only, disables cloud copies, and stops writing the marketplace keys into committed settings; the `{{checkout}}` placeholder and a worktree rule enter the preamble, and `ext.schedule` is no longer read. |

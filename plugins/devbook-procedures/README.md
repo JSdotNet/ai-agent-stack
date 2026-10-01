@@ -11,7 +11,7 @@ each procedure is *for*. So this plugin fixes the goal and seeds the procedure:
 | `capture` | Return evidence a reviewer can open: one file per checkpoint and per failure, paths under the worktree root, the form named honestly | the layout, the naming, the tooling |
 | `diagnose` | Name the cause of an observed issue and prove it — a log line, a trace span, a breakpoint's state — without handing the person a debugger, and leave nothing behind in the change | where the logs live, which debugger reaches the app, how a reproduction is set up |
 | `estimate` | Return story points off 1/2/3/5/8/13/21 per unit of work, sized against the repository's reference examples, naming the reference each was compared with | the reference table of finished work per value, and its calibration |
-| `prototype` | Return one standalone HTML file — everything inline, nothing fetched — on the repository's demo template and in its design system, naming the guideline, token, or story each came from; revise an existing demo with its screen ids kept; write into no `.devbook/` folder and change no source file | where the template, design system, and Storybook live, what a prototype shows |
+| `prototype` | Answer one named design question and return the answer — the question, what it showed, where it lands next — beside one standalone HTML file, everything inline, nothing fetched: a logic question as a model with a state panel, free play, and walkthroughs in the domain's terms; a visual one as two or more structurally different variants on the repository's demo template and in its design system, naming the guideline, token, or story each came from; revise an existing demo with its screen ids kept; never merged — write into no `.devbook/` folder and change no source file | where the domain model, template, design system, and Storybook live, what a prototype shows |
 
 Each lands as one editable copy under `.agents/skills/<name>.md` with a managed wrapper per
 host that carries the goal — except `run`, whose body is Claude Code's own project recipe at
@@ -37,7 +37,8 @@ Then enable `devbook-procedures` with `/plugin` and run `devbook-procedures:init
 repository. It asks which of the five to adopt on the first run and records the answer as
 `components.devbook-procedures.adopted` in `.devbook/config.json`; a repository with nothing
 to start adopts neither `run` nor `diagnose`, and one that takes no evidence adopts no
-`capture`; `estimate` needs neither; one with no user interface adopts no `prototype`.
+`capture`; `estimate` and `prototype` need neither — without a user interface, `prototype`
+still settles logic questions.
 
 ## What it ships
 

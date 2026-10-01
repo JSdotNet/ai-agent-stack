@@ -26,6 +26,9 @@ import {
     parseDeltaHeader,
     changePathParts,
     changeHash,
+    syncLevel,
+    syncSources,
+    SYNC_DIRECTIONS,
     DEVBOOK_FOLDER_NAMES,
     DEVBOOK_ROOT,
     CHANGES_ROOT,
@@ -169,7 +172,17 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // the chapters it lands in and lifts one it makes stale. `domain/`'s own rungs
 // are unchanged, so nothing written under 23 stops validating, and no
 // migration is owed.
-export const CONTRACT_VERSION = 24;
+//
+// Version 25 gives `.domain`, `.arc42`, and `.design` an optional `sync` —
+// `push`, `pull`, `sync`, `report`, or `off` — for which way a chapter and its
+// code sync, set on a folder overview, a `context.md`, a context page, or a
+// unit's root chapter, nearest wins, `report` when none does. It is refused on
+// a chapter a unit owns and on `requirements*.md` and `*.invariants.md`, and a
+// value no unit inherits is warned. A `domain-event` is warned when its
+// `related` names no aggregate or domain service raising it. Absent means
+// `report`, today's behaviour, so nothing written under 24 stops validating
+// and no migration is owed.
+export const CONTRACT_VERSION = 25;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -255,6 +268,9 @@ const RELATED_TARGET_KINDS = {
     invariants: ["aggregate", "domain-service", "shared-value-objects", "shared-enums"],
 };
 
+// The chapter kinds a `domain-event`'s `related` names as the one that raises it.
+const RAISER_KINDS = ["aggregate", "domain-service"];
+
 // The authored `type` field is emitted under the node key `kind`, because
 // `type` on a node is already the structural discriminator
 // (`file`/`chapter`/`heading`/`external`). `.tech` nodes have always carried
@@ -268,6 +284,9 @@ const ATTRIBUTE_FIELDS = [
     "default",
     "scope",
     "deployment",
+    // Which way the chapter and its code sync. Carried as written; the
+    // effective direction of a unit is resolved from `syncSources`.
+    "sync",
     "date",
     "approved-by",
     "approved-at",
@@ -430,6 +449,10 @@ export async function buildGraph(repoRoot, folders = null) {
     // term pointing at a Value Object sub-chapter covered by its parent
     // aggregate's block — so they are materialized on demand.
     const headingIndex = new Map();
+    // The sync level of every block that states `sync`, and every unit root,
+    // keyed by node id. Kept off the nodes: the level follows from the path
+    // and the type, and a consumer resolves it the same way.
+    const syncLevels = new Map();
     // Each chapter's lede, by node id. Kept off the nodes so graph.json does
     // not change shape; the term register is its one reader.
     const ledes = new Map();
@@ -492,6 +515,8 @@ export async function buildGraph(repoRoot, folders = null) {
         // An .arc42 file is exactly one top-level chapter, so its level-1 block
         // serves as the file-level block; other folders follow the same shape.
         applyMeta(fileNode, fileMeta, folder);
+        const fileSync = syncLevel(relPath, "file", fileMeta, 1);
+        if (fileSync.level) syncLevels.set(fileNode.id, fileSync.level);
         // Set outside applyMeta because it also comes from the filename, which
         // no metadata field can supply.
         const number = documentNumber(relPath, fileMeta);
@@ -599,6 +624,8 @@ export async function buildGraph(repoRoot, folders = null) {
                 line: chapter.line,
             };
             applyMeta(node, chapter.meta, folder);
+            const chapterSync = syncLevel(relPath, "chapter", chapter.meta, chapter.level);
+            if (chapterSync.level) syncLevels.set(id, chapterSync.level);
             if (openNotes.get(chapter.slug)) node.openNotes = openNotes.get(chapter.slug);
             nodes.set(id, node);
             const lede = chapterLede(lines, chapter.line);
@@ -736,6 +763,42 @@ export async function buildGraph(repoRoot, folders = null) {
                 message: `${node.id} states ${state(node.deployment)} but ${context.id} states ${state(context.deployment)} — how a context ships is written the same on its \`bounded-context\` chapter and its \`context.md\`, or on neither.`,
             });
         }
+    }
+
+    // A domain event belongs to the aggregate root or domain service that
+    // raises it, and `related` is the only place that says which: the Trigger
+    // names the raiser in prose, which no tool groups by. Without it the event
+    // is in no sync unit. A warning, so a corpus written before the field was
+    // asked for keeps passing the check.
+    for (const node of nodes.values()) {
+        if (node.type !== "chapter" || node.folder !== "domain" || node.kind !== "domain-event") continue;
+        const raised = asList(node.related).some((ref) => RAISER_KINDS.includes(nodes.get(ref)?.kind));
+        if (raised) continue;
+        problems.push({
+            severity: "warning",
+            path: node.path,
+            message: `${node.id} is a \`domain-event\` chapter whose \`related\` names no ${RAISER_KINDS.map((kind) => `\`${kind}\``).join(" or ")} chapter — name the one that raises it, which is what places the event in that unit.`,
+        });
+    }
+
+    // A stated direction no unit inherits does nothing: every unit below it
+    // states its own, or the level holds no unit at all (`actors.md`, until an
+    // actor kind exists). Each unit resolves nearest-wins through
+    // `syncSources`; whatever no unit resolved to is reported.
+    const inherited = new Set();
+    for (const [id, level] of syncLevels) {
+        if (level !== "unit") continue;
+        const source = syncSources(id).find((ref) => syncLevels.has(ref) && nodes.get(ref)?.sync != null);
+        if (source) inherited.add(source);
+    }
+    for (const [id, level] of syncLevels) {
+        const node = nodes.get(id);
+        if (level === "unit" || inherited.has(id) || !SYNC_DIRECTIONS.includes(node?.sync)) continue;
+        problems.push({
+            severity: "warning",
+            path: node.path,
+            message: `${id} has \`sync: ${node.sync}\`, which no unit inherits — every unit under it states its own direction, or none sits under it. Remove it, or set it where a unit reads it.`,
+        });
     }
 
     return { nodes: [...nodes.values()], edges, problems, ledes };

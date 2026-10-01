@@ -518,11 +518,12 @@ const FOLDER_EXTRA_FIELDS = {
     domain: [
         "depends-on", "aliases", "feature-flag", "setting", "role", "key", "default", "scope",
         "deployment",
+        "sync",
         ...DECISION_FIELDS,
     ],
-    arc42: [],
+    arc42: ["sync"],
     tech: ["kind", "version", "depends-on", "alternatives"],
-    design: [],
+    design: ["sync"],
     ai: ["depends-on", "stage"],
     [CHANGES_FOLDER]: ["category", ...DECISION_FIELDS],
 };
@@ -617,6 +618,159 @@ const FILE_FIELD_TYPE_SCOPE = {
         deployment: ["context"],
     },
 };
+
+// ---------------------------------------------------------------------------
+// Sync direction — which way changes flow between a chapter and its code
+// ---------------------------------------------------------------------------
+
+/**
+ * The values `sync` may take. `push` makes the agreed chapter the truth the
+ * code follows, `pull` the code the evidence the chapter follows, `sync` lets
+ * each verdict decide, `report` only reports drift, and `off` keeps the unit
+ * out of every sweep. Exported for the tools that list units by direction.
+ */
+export const SYNC_DIRECTIONS = ["push", "pull", "sync", "report", "off"];
+
+/** The direction of a unit nothing above it sets: report drift, write nothing. */
+export const DEFAULT_SYNC_DIRECTION = "report";
+
+// The root chapters of a sync unit in `.domain`, one per converter kind: an
+// aggregate, a domain service, a feature, and the two switch chapters.
+const SYNC_UNIT_TYPES = ["aggregate", "domain-service", "feature", "feature-flag", "setting"];
+
+// Chapters a unit owns. They are captured and briefed with that unit, so a
+// direction of their own would let half a unit go one way and half the other.
+const SYNC_OWNED_TYPES = [
+    "entity",
+    "value-object",
+    "enum",
+    "domain-event",
+    "invariant",
+    "requirement",
+    "sub-feature",
+    "term",
+];
+
+// The folder overview whose file-level block sets a folder's default.
+const SYNC_FOLDER_FILES = {
+    domain: "context-map.md",
+    arc42: "05-building-block-view.md",
+    design: "component-libraries.md",
+};
+
+// Context pages whose file-level block sets a default for the units on them.
+// `actors.md` is one although no unit lives there yet: an actor kind is a
+// later change, and until it exists a value there is reported as inherited by
+// nothing rather than refused.
+const SYNC_PAGE_BASES = ["domain", "features", "skills", "actors"];
+
+// Pages that hold only chapters some unit on another page owns.
+const SYNC_OWNED_PAGE_BASES = ["requirements", "invariants"];
+
+/**
+ * Where a `sync` value on this block sits: `{ level }` with `folder`,
+ * `context`, `page`, or `unit`, or `{ refused }` with `owned`, `owned-page`,
+ * or `none` — a block that is no level at all. `blockLevel` is "file" for the
+ * level-1 block and "chapter" for every other heading; `headingLevel` is the
+ * chapter's heading depth, which `.design` needs because only a `##` chapter
+ * of `component-libraries.md` is a component.
+ */
+export function syncLevel(relPath, blockLevel, meta, headingLevel = blockLevel === "file" ? 1 : 2) {
+    const folder = folderKindForPath(relPath);
+    if (!SYNC_FOLDER_FILES[folder]) return { refused: "none" };
+    const subject = String(relPath).replace(/\\/g, "/").slice(DEVBOOK_PREFIX.length + folder.length + 1);
+    const type = resolveType(folder, meta);
+
+    if (folder === "domain") {
+        if (subject === SYNC_FOLDER_FILES.domain) return blockLevel === "file" ? { level: "folder" } : { refused: "none" };
+        if (subject.split("/").length !== 2) return { refused: "none" };
+        const { base } = domainFileName(relPath);
+        if (SYNC_OWNED_PAGE_BASES.includes(base)) return { refused: "owned-page" };
+        if (blockLevel === "file") {
+            if (base === "context") return { level: "context" };
+            return SYNC_PAGE_BASES.includes(base) ? { level: "page" } : { refused: "none" };
+        }
+        if (SYNC_UNIT_TYPES.includes(type)) return { level: "unit" };
+        return SYNC_OWNED_TYPES.includes(type) ? { refused: "owned" } : { refused: "none" };
+    }
+
+    if (folder === "arc42") {
+        if (blockLevel !== "file") return { refused: "none" };
+        if (subject === SYNC_FOLDER_FILES.arc42) return { level: "folder" };
+        const isBlock = /^building-blocks\/[^/]+\.md$/.test(subject) && indexRole(meta) !== "root";
+        return isBlock ? { level: "unit" } : { refused: "none" };
+    }
+
+    // `.design`: the component-libraries document, and its `##` components.
+    if (subject !== SYNC_FOLDER_FILES.design) return { refused: "none" };
+    if (blockLevel === "file") return { level: "folder" };
+    if (type === "requirement") return { refused: "owned" };
+    return headingLevel === 2 && type === null ? { level: "unit" } : { refused: "none" };
+}
+
+/**
+ * The blocks a unit's direction is read from, nearest first: the unit, its
+ * page, its context, its folder. The first that states `sync` wins, and none
+ * means `report`. `unitId` is a graph node id — a chapter's `<path>#<slug>`,
+ * or a building block's bare path. A page that is also the context (a switch
+ * chapter in `context.md`) appears once.
+ */
+export function syncSources(unitId) {
+    const relPath = String(unitId).split("#")[0];
+    const folder = folderKindForPath(relPath);
+    const overview = SYNC_FOLDER_FILES[folder];
+    if (!overview) return [unitId];
+    const sources = [unitId];
+    if (folder === "domain") {
+        const context = `${relPath.slice(0, relPath.lastIndexOf("/"))}/context.md`;
+        sources.push(relPath, context);
+    }
+    sources.push(`${DEVBOOK_PREFIX}${folder}/${overview}`);
+    return [...new Set(sources)];
+}
+
+/**
+ * Lint `sync`: one of `SYNC_DIRECTIONS`, on a block that is a sync level, and
+ * never on a chapter a unit owns or a page that holds only such chapters.
+ * Whether any unit actually inherits a value is the graph build's to say,
+ * since only it sees every page of a context at once.
+ */
+export function syncIssues(relPath, blockLevel, meta, headingLevel) {
+    if (!meta || !("sync" in meta)) return [];
+    if (meta.sync === null || (Array.isArray(meta.sync) && meta.sync.length === 0)) {
+        return [{
+            severity: "warning",
+            message: `sets \`sync\` to an empty/null value — omit the field instead to inherit the direction from above, or \`${DEFAULT_SYNC_DIRECTION}\` when nothing above sets one.`,
+        }];
+    }
+    const issues = [];
+    const value = meta.sync;
+    if (Array.isArray(value) || !SYNC_DIRECTIONS.includes(value)) {
+        issues.push({
+            severity: "error",
+            message: `has \`sync\` "${Array.isArray(value) ? value.join(", ") : value}", expected one of: ${SYNC_DIRECTIONS.join(", ")}.`,
+        });
+    }
+    const { refused } = syncLevel(relPath, blockLevel, meta, headingLevel);
+    const folder = folderKindForPath(relPath);
+    if (refused === "owned") {
+        issues.push({
+            severity: "error",
+            message: `has \`sync\` on a \`${resolveType(folder, meta)}\` chapter, which a unit owns and is captured and briefed with it — set the direction on the unit's root chapter or above it. See devbook-chapter-metadata.md.`,
+        });
+    } else if (refused === "owned-page") {
+        issues.push({
+            severity: "error",
+            message: `has \`sync\` on a page that holds only chapters a unit on another page owns — each follows its unit's direction. See devbook-chapter-metadata.md.`,
+        });
+    } else if (refused === "none") {
+        issues.push({
+            severity: "error",
+            message: `has \`sync\` on a block that is no sync level — it is set on a folder overview (\`domain/context-map.md\`, \`arc42/05-building-block-view.md\`, \`design/component-libraries.md\`), a \`context.md\`, a context page, or a unit's root chapter. See devbook-chapter-metadata.md.`,
+        });
+    }
+    return issues;
+}
 
 /** Determine which devbook folder a repo-relative path belongs to. */
 export function folderKindForPath(relPath) {
@@ -1812,6 +1966,12 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
             issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
         }
 
+        // Which way the chapter and its code sync, and whether this block is
+        // one a direction may be set on.
+        for (const issue of syncIssues(relPath, blockLevel, chapter.meta, chapter.level)) {
+            issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
+        }
+
         // `feature-flag` and `setting` on a feature point at the chapter that
         // describes the switch, in the context's `context.md`. Until contract
         // 10 `feature-flag` held the bare application key; a bare key is now
@@ -2039,6 +2199,7 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         for (const [key, value] of Object.entries(chapter.meta)) {
             if (isExtensionField(key)) continue; // opaque by contract — never validated
             if (key === "status") continue; // recognized, and fully reported above
+            if (key === "sync") continue; // reported by syncIssues in every folder
             if (key in REMOVED_FIELDS) continue; // already reported above
             if (!optionalFields.has(key)) {
                 issues.push({

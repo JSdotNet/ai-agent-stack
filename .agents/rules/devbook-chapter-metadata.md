@@ -451,6 +451,11 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   it sorts first; `index: exclude` keeps it out of `_meta/index.json` altogether
   while leaving it in the reference graph. Omit the field for an ordinary listed
   document, which is nearly every file.
+- **sync** (optional, `domain/`, `arc42/`, `design/`) — which way changes flow
+  between this unit and its code: `push`, `pull`, `sync`, `report`, or `off`.
+  Set only at the four levels in
+  "[Sync direction](#sync-direction)", which also says how a unit resolves it.
+  Omit it to inherit.
 
 - **ext** (optional) — the extension namespace: state owned by a plugin layered
   on top of devbook, not by devbook itself. Keys are dotted and namespaced by
@@ -500,6 +505,57 @@ roadmap: [sync-service, mobile-mvp]
 related: [.devbook/domain/sync/features.md#offline-sync]
 \`\`\`
 ```
+
+## Sync direction
+
+`sync` says which way changes flow between a chapter and the code that
+implements it, for the sweeps that keep the two aligned:
+
+| Value | Truth | What a sweep does |
+|---|---|---|
+| `push` | the agreed chapter | turns a `spec-ahead` verdict into code, through `apply-change` |
+| `pull` | the code | turns a `code-ahead` verdict into chapters, through `capture-specs` |
+| `sync` | the verdict | does either, each only on its own verdict; a `conflict` goes to a person |
+| `report` | neither | reports drift and writes nothing — the default |
+| `off` | neither | leaves the unit out of every sweep |
+
+A direction governs a **sync unit**: an aggregate with the entities, value
+objects, and enums it owns, the domain events it raises, its invariants, and the
+requirements and terms that name it; a domain service the same way; a feature
+with its sub-features and requirements; one `feature-flag` or `setting`
+chapter; one `arc42/building-blocks/<name>.md` file; one `##` component chapter
+of `design/component-libraries.md`.
+
+Set it at one of four levels, widest first. Each sets the default for everything
+under it that states nothing:
+
+| Level | The block that carries it |
+|---|---|
+| Folder | the file-level block of `domain/context-map.md`, `arc42/05-building-block-view.md`, or `design/component-libraries.md` |
+| Context | the file-level block of `domain/<context>/context.md` |
+| Page | the file-level block of a context page: `domain.md` and its splits, `features.md`, `skills.md`, and theirs, `actors.md` |
+| Unit | the unit's root chapter: an `aggregate`, `domain-service`, `feature`, `feature-flag`, or `setting` chapter, a building block file, a component chapter |
+
+A unit resolves **nearest wins**: its own chapter, then its page, its context,
+its folder, and `report` when none of them states one. A switch chapter's page
+is its `context.md`, so its page and context are one block.
+
+The check refuses `sync` on a chapter a unit owns — `entity`, `value-object`,
+`enum`, `domain-event`, `invariant`, `requirement`, `sub-feature`, `term` — and
+on a page that holds only such chapters, `requirements.md` and its splits and
+every `*.invariants.md`: each follows its unit and cannot go another way. It
+refuses it on every other block, and in `tech/` and `ai/`, as no level. A value
+no unit inherits — every unit under it states its own, or none sits under it —
+is reported as a warning. `actors.md` is the standing case: a value there is
+allowed and inherited by nothing until an actor kind exists.
+
+A `domain-event` chapter names the `aggregate` or `domain-service` that raises
+it in `related`. That entry is what places the event in its unit; an event
+without it is reported and belongs to none.
+
+Changing a direction lapses no approval: `approved-hash` and `accepted-hash`
+exclude the `meta` blocks, so the flip leaves both standing. It is still a
+chapter edit, reviewed like any other.
 
 ## Linking test cases
 

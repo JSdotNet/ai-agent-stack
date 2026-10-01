@@ -479,6 +479,52 @@ An approval still written on a chapter whose content has moved under it. It is a
 concept rather than a state: nothing transitions a chapter into it, and the queue sweep is what
 surfaces it, because a chapter cannot notice its own approval has expired.
 
+## Sync Direction
+
+```meta
+date: 2026-10-01
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#meta-block", ".devbook/arc42/adr/chapter-schema.md"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: `sync`.
+
+Which way changes flow between a sync unit and its code: `push` from the agreed chapter to the
+code, `pull` from the code to the chapter, `sync` whichever way the drift verdict points,
+`report` nowhere, and `off` out of every sweep. It is written in a `meta` block at one of four
+levels — folder overview, `context.md`, context page, the unit's root chapter — and the nearest
+one wins; with none it is `report`.
+
+## Sync Group
+
+```meta
+date: 2026-10-01
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/adr/chapter-schema.md"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+The sync units one sweep run verifies, changes on one branch, and lands as one pull request.
+Usually it is one unit; units join only when a chapter ties them — a requirement naming two
+aggregates and no feature — and never through a link such as `depends-on`. A group whose units
+resolve to different directions is set aside for a person, not acted on.
+
+## Sync Unit
+
+```meta
+date: 2026-10-01
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+What one verify pass covers and one sync direction governs: an aggregate with the entities,
+value objects, and enums it owns, the events it raises, its invariants, and the requirements
+and terms that name it; a domain service the same way; a feature with its sub-features and
+requirements; one feature flag or setting; one building block file; one component chapter. A
+chapter the unit owns carries no direction of its own.
+
 ## Tier
 
 ```meta

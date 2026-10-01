@@ -657,8 +657,11 @@ differently; a domain service is the deliberate exception and is its own kind.
 
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
-`domain.md` aliases, then the building-block view, then the observed naming convention, and
-reports `unresolved` rather than guessing.
+the chapter's `aliases`, then the building-block view, then the observed naming convention, and
+reports `unresolved` rather than guessing. The same search catches the reverse rot: an alias
+that names no identifier in the source tree is reported by `verify-change` as its own finding,
+with a proposal to remove or correct it, and never rewritten. No checker pass duplicates it —
+an identifier search that knows no language would be noisy and slow.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -667,7 +670,8 @@ reports `unresolved` rather than guessing.
 | `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
-| Resolution walks `domain.md` aliases, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
+| Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
+| `verify-change` reports every alias that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
 
 ### Shared Value Objects
 

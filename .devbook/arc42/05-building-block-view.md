@@ -18,11 +18,11 @@ concerned.
 ## Level 1: The Plugin Landscape
 
 ```meta
-date: 2026-09-21
+date: 2026-10-01
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Twelve plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -31,6 +31,7 @@ flowchart TB
         DEV["devbook 1.14.0"]
         DEL["delivery 1.14.0"]
         CFG["devbook-config 1.14.0"]
+        SKL["devbook-skills 1.14.0"]
     end
 
     subgraph L1["L1 extension - one declared foundation"]
@@ -66,6 +67,8 @@ flowchart TB
     CFG -.->|"reads every plugin, declares none"| DEL
     DEL -.->|"flow-project runs devbook-config:init"| CFG
     DOS -.->|"spec and tracker providers, bound by name"| DEL
+    DEV -.->|"names the skill show-me, never the plugin"| SKL
+    DEL -.->|"names the skill show-me, never the plugin"| SKL
 ```
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is

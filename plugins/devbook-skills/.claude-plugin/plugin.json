@@ -1,0 +1,17 @@
+{
+  "name": "devbook-skills",
+  "version": "1.14.0",
+  "description": "Reusable guidance any plugin can name and none has to depend on. Ships show-me: put a picture before the prose whenever the content has a shape — a Mermaid sequence, state, or flow diagram, a file tree labelled with what each entry is for, a type signature, a diff, a call stack, pseudocode, or a table — and keep the prose after it to the reasons, the exceptions, and the limits. Named by skill, never declared: devbook's devbook-writing rule names it for every chapter but domain.md, and the delivery engine names it for pull request descriptions and its report back to the person, each keeping its own rule when it is absent. Materializes nothing into a repository and stamps nothing.",
+  "author": {
+    "name": "Job Schepers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "show-me",
+    "visual",
+    "diagram",
+    "mermaid",
+    "readability",
+    "explain"
+  ]
+}

@@ -11,8 +11,14 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | --- | --- | --- |
 | <weekly all models, the reviewer's weekly window, the short rolling window> | <n>% | <ISO datetime UTC> |
 
-| Reviewer model | From | Window | Pull requests | Surface runs | Sessions |
+| Reviewer model | From | Window | Sessions | Surface runs | Pull requests |
 | --- | --- | --- | --- | --- | --- |
+
+| Lens | Finding |
+| --- | --- |
+| Bottlenecks | <where turns went without progress, or none found> |
+| Context | <what loaded unused or was missing, or none found> |
+| Model and effort | <the mismatch, or none found> |
 
 ### Needs you
 | What | Where | Do |
@@ -20,8 +26,8 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Keep or drop each recommendation | [#<n>](<url>) | [commits](<url>/commits) |
 
 ### For you
-| Habit or setting | Evidence |
-| --- | --- |
+| Model, effort, setting, or habit | Set to | Evidence |
+| --- | --- | --- |
 
 ### Run
 | Outcome | What | Why |

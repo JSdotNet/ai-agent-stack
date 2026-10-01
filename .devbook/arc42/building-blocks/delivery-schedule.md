@@ -230,16 +230,19 @@ than estimated.
 related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-instruction-review"]
 ```
 
-Read how the person worked in the repository over the week — their pull requests, reverts,
-review rounds, the runs the surface recorded, and their sessions where the host lists them —
-and land what it recommends as one draft pull request, one commit per recommendation. Two
+Read how AI was used in the repository over the week — its sessions where the host lists
+them, the runs the surface recorded, and the pull requests they produced — through three
+lenses: the bottlenecks that cost turns, the context loaded that the work did not use or
+lacked, and the model and effort that did not fit the task. It lands what it recommends as one
+draft pull request, one commit per recommendation. Two
 things set it apart from every other entry point. It gates on the plan's credit: it reads the
 plan limits first and stops at or above a threshold, so it spends only what the weekly reset
 would otherwise discard, and its trigger fires on both weekend days because the second firing
 is the retry. And it delegates the review to a model stronger than the week ran on, resolved
 from the personal `model-override` file and never from the repository, because model choice is
-personal. It edits instruction assets and checks only; a devbook chapter, product code, or a
-habit is listed for a person.
+personal. It edits instruction assets, checks, and devbook chapters, each chapter under its
+folder's own rules; the draft pull request is the approval a chapter would otherwise get from
+`flow-spec`. Product code, or a personal model, effort, or habit, is listed for a person.
 
 ### schedule-weekly-update
 

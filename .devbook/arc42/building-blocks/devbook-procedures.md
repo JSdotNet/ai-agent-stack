@@ -8,8 +8,8 @@ Responsible for one thing: that a repository has, by name, the five procedures e
 repository has and no plugin can write — `run`, how its application is built and comes up;
 `capture`, how evidence is taken;
 `diagnose`, how a cause is found inside the running application; `estimate`, how work is sized
-against the repository's own finished work; `prototype`, how a feature is sketched as standalone
-HTML in the repository's design conventions — and that each one's goal reads
+against the repository's own finished work; `prototype`, how a design question is settled with a
+throwaway standalone HTML prototype and its answer kept — and that each one's goal reads
 the same in every repository while how it is done never does.
 
 Inside the block: the five seeds and their goals, the wrapper per host that carries a goal, the
@@ -114,11 +114,15 @@ entry points; `capture` returns one file per checkpoint and per failure, under t
 form named honestly; `diagnose` names a cause and proves it, doing the debugging itself and
 leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
 sized against the repository's own finished work and naming the reference compared with, so
-that a pace measured in points means the same across plans; `prototype` returns one standalone HTML
-file, everything inline and nothing fetched, on the repository's demo template and in its design
-system with the guideline, token, or story each came from; given an existing demo it returns the
-revision with every surviving screen id kept, and it writes into no `.devbook/` folder and
-changes no source file. It is the `goal` field of the
+that a pace measured in points means the same across plans; `prototype` answers one design question named up
+front and returns the answer — what the prototype showed and where it lands next — beside one
+standalone HTML file, everything inline and nothing fetched: a logic question as a model anyone
+can drive through a state panel, free play, and walkthroughs in the domain's terms; a visual one
+as two or more structurally different variants on the repository's demo template and in its
+design system, with the guideline, token, or story each came from. Given an existing demo it
+returns the revision with every surviving screen id kept. The prototype is never merged: it
+writes into no `.devbook/` folder and changes no source file, and the answer reaches the devbook
+only through a change. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
 

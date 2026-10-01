@@ -586,8 +586,10 @@ and writes only on `--write`, which nothing in this block passes — the committ
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
 block is reported and tolerated — except in a structural document the folder rules name, such
 as `technology-graph.md` or `adoption-map.md`, whose sections are not chapters and draw
-nothing. Every per-block rule reaches the gate through the schema
-validator the graph build calls per file
+nothing. A Markdown link in chapter prose is read too: a relative target with no file behind
+it, or an anchor no heading in an indexed file renders, is a warning, so a link to a deleted
+chapter is reported without failing a chapter that links ahead. Every per-block rule reaches the gate through the schema validator the graph
+build calls per file
 (`unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs`).
 
 Invocation semantics: command-invoked, and scheduled — `--check` runs in CI on every pull
@@ -598,6 +600,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | It checks by default and writes only on `--write`, which nothing in this block passes | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/layout.test.mjs` |
 | An unresolved reference fails; a heading with no block is reported and tolerated | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A structural document's heading with no block is not reported | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
+| A prose link whose file does not exist, or whose anchor no indexed heading renders, is a warning; absolute URLs, code, and fences are not read | `graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/prose-links.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The term register lists `domain/`'s `term` and aliased chapters only, never `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
 

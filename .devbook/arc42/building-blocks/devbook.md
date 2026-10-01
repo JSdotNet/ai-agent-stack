@@ -574,7 +574,11 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 ```
 
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
-and the annotation index for the repository and for each adopted folder. It checks by default
+the annotation index, and the term register for the repository and for each adopted folder.
+The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
+other `domain/` chapter carrying `aliases`, each with its lede as its definition. It is built
+from the graph and the ledes the same walk kept, never a second read. It carries its own
+`schemaVersion`, because its first reader is outside this repository. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
 [devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
@@ -593,6 +597,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | An unresolved reference fails; a heading with no block is reported and tolerated | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | A structural document's heading with no block is not reported | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| The term register lists `domain/`'s `term` and aliased chapters only, never `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
 
 ### Fence Writer
 

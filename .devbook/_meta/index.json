@@ -123,7 +123,7 @@
               "title": "Annotations",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-09-28",
+              "date": "2026-09-30",
               "summary": "A review note is a fenced annotation block in the chapter, beside the passage it comments on, and the fence — its schema, its only writer annotations.mjs, its lifecycle open → resolved → gone, and the sweep — is devbook's. It reaches the five devbook folders and nothing else. The gate that shows a…"
             },
             {
@@ -163,7 +163,7 @@
               "title": "Flow Engine",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-09-29",
+              "date": "2026-09-30",
               "summary": "delivery is a flow engine: four flows named for what changes — flow-code, flow-spec, flow-update-packages, flow-project — over a closed set of eleven extension points, seven services and four chores, that a repository fills and never extends. Everything a flow talks to outside the engine is a…"
             },
             {
@@ -193,7 +193,7 @@
               "title": "Install",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-09-28",
+              "date": "2026-09-30",
               "summary": "A plugin reaches a repository through its init skill, is kept current by its update, and reaches it in no other way. init refuses where the component's stamp exists and update where it does not. Either writes the payload one way — rules as a host-neutral copy plus a wrapper per host, tooling under…"
             },
             {
@@ -213,8 +213,8 @@
               "title": "Releases",
               "status": "active",
               "statusDeclared": false,
-              "date": "2026-09-29",
-              "summary": "Every plugin carries the same version — 1.13.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+              "date": "2026-09-30",
+              "summary": "Every plugin carries the same version — 1.14.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
             },
             {
               "type": "file",
@@ -349,7 +349,7 @@
               "title": "devbook-procedures",
               "status": "active",
               "statusDeclared": false,
-              "summary": "Responsible for one thing: that a repository has, by name, the six procedures every repository has and no plugin can write — run, how its application is built and comes up; show, how the feature being built is put in front of a reviewer; capture, how evidence is taken; debug, how a cause is found…"
+              "summary": "Responsible for one thing: that a repository has, by name, the five procedures every repository has and no plugin can write — run, how its application is built and comes up; capture, how evidence is taken; diagnose, how a cause is found inside the running application; estimate, how work is sized…"
             },
             {
               "type": "file",

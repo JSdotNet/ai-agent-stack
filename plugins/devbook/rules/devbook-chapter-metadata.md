@@ -448,7 +448,9 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   Available on any chapter in any folder, and on the file-level blocks of a
   change's `proposal.md` and `solution.md`, per `devbook-changes.md`. A
   requirement names one walkthrough per scenario, beside its `tests`: the
-  walkthrough shows the scenario, the test proves it. Links run from Markdown to
+  walkthrough shows the scenario, the test proves it, and its id is that
+  scenario's slug. Quote an address whose `flags` lists more than one key, since
+  a comma otherwise ends the entry. Links run from Markdown to
   the demo only. A demo names no chapter, and its own metadata script,
   `<script type="application/json" id="demo-meta">`, holds `question` — the one
   question it was prototyped to answer — and nothing else: no stage, status,

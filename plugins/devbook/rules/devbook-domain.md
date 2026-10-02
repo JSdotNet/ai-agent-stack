@@ -264,7 +264,7 @@ people will use.
 The file is one HTML document built on the repository's demo template,
 `.devbook/design/demo-template.html`: every style, script, and image inline and
 nothing fetched, the template's managed region kept byte for byte, and no
-`<script>` outside it except `demo-model`. It aims at 500 KB and may exceed it.
+`<script>` outside it except `demo-model` and `demo-meta`. It aims at 500 KB and may exceed it.
 Only `/prototype` writes one, and it reaches `domain/` only as a delta of a
 change, per `devbook-changes.md`; it is never edited in place.
 

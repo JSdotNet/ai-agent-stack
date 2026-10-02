@@ -118,8 +118,10 @@ devbook-procedures 1.14.0 moved the `prototype` seed onto the demo template and 
 system in `ab478e36`. The same release removed `show`, which no flow invoked, and renamed
 `debug` to `diagnose` so it no longer hides Claude Code's `/debug`. The rest of this decision
 is built by the `devbook-click-demo` plan. Its folder rules have landed, and so has its
-address contract, as `devbook.demo.address@1`. The checker and fingerprint, the whole-file
-delta, the template and its tool, and the rest of the seed are still to come.
+address contract, as `devbook.demo.address@1`. The checker holds every demo to the HTML
+contract and resolves every `demo` address, and a demo is part of the fingerprint of the page
+it belongs to, both in contract 26. The whole-file delta, the template and its tool, and the
+rest of the seed are still to come.
 
 ## Rejected
 
@@ -150,6 +152,7 @@ delta, the template and its tool, and the rest of the seed are still to come.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
 | 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. |
 | 2026-10-02 | A durable demo per bounded context in `domain/`, written only by `/prototype` and promoted only by an OpenSpec proposal; the file knows its question and not its lifecycle; no product-level demo, a 500 KB target, and the template in `design/`, independent of Storybook. |
 | 2026-09-30 | devbook-procedures 1.14.0 builds the `prototype` seed on the demo template and design system, removes `show`, and renames `debug` to `diagnose`. |

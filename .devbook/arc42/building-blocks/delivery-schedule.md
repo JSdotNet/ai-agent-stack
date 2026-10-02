@@ -21,20 +21,20 @@ anything a target delegates to, which is a binding the consuming repository make
 ```meta
 ```
 
-Twenty-one skills in two halves: seventeen entry points that pick their own input, each with
+Twenty-two skills in two halves: eighteen entry points that pick their own input, each with
 the `report.md` template its report follows, and four that put a trigger in the scheduler and
 read it back. Every one of them is also runnable by hand, which is how a cadence gets proved
-before it is trusted. Beside them: the shipped catalog, six contracts, one shared work script, the
+before it is trusted. Beside them: the shipped catalog, seven contracts, one shared work script, the
 catalog checker, one migration, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `schedule-devbook-validate` through `schedule-whats-new`, seventeen entry points | skills | The scheduler, on a cadence, or a person by hand |
+| `schedule-devbook-validate` through `schedule-whats-new`, eighteen entry points | skills | The scheduler, on a cadence, or a person by hand |
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its failure marker a parameter |
+| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its failure marker a parameter; what the two devbook sync sweeps share, down to the `devbook-sync-report` block |
 | `scripts/resolve-issue.workflow.js` | work script | A sweep, through the host's workflow tool, per `draft-pr-contract.md`: scope, a failing test first, build and unit tests with bounded repair, two review lenses |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
@@ -58,12 +58,35 @@ trigger's target: the catalog names a `schedule-*` entry point or, as with `pros
 related: [".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
-Run `devbook:verify-change` over every adopted folder, one run per kind, and open one
-`devbook-drift` issue per `code-ahead` or `conflict` row that no open pull request, approved
-change, or earlier issue already covers. A `code-ahead` row names a capture plan waiting to be
+Run `devbook:verify-change` over every sync unit at `report` — the direction a chapter has when
+nothing sets one — one run per unit, and open one `devbook-drift` issue per unit with a
+`code-ahead` or `conflict` row that no open pull request, approved change, or earlier issue
+already covers. A unit at `off` is left out, and one at `pull`, `push`, or `sync` belongs to
+[schedule-devbook-sweep](#schedule-devbook-sweep), so no unit is verified by two routines. A `code-ahead` row names a capture plan waiting to be
 asked for; a `spec-ahead` row, a change nobody proposed, stays in the report's table.
 It reports and never writes a chapter or plans a capture on its own. The weekly
 `devbook-verify` trigger's target, on the same wrapper rule as `schedule-devbook-validate`.
+
+### schedule-devbook-sweep
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#unit-lister", ".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep", ".devbook/arc42/building-blocks/delivery.md#dependencies"]
+```
+
+Bring chapters and code level in the direction each chapter states in its own `sync` field,
+with nobody watching. One entry point serves both directions, taking `direction: pull` or
+`push`, because selection, verification, filing, and the brief are the same work and only the
+resolving step differs. It is the issue sweep with a sync group where that has an issue: list
+the groups `units.mjs` assigns to the direction, verify up to twelve in parallel with one
+read-only agent each, file one `devbook-drift` issue per group a person must answer, and land up
+to N of the rest one at a time through the shared draft pull request step, with `sync-failed` as
+the failure marker. Pull writes chapters only and adds them at `draft`; push writes source and
+tests only, from agreed chapters only; neither removes anything or resolves a `conflict`. A
+`sync` group drifting both ways is pulled first and pushed once the capture has merged. The
+brief closes with a `devbook-sync-report` block, which also reaches a bound surface as the run's
+`verdicts`. What the directions share is `resources/devbook-sweep-contract.md`; the work script
+for each direction, and its schedule, ship separately, and until one does that direction
+verifies and files without landing anything.
 
 ### schedule-devbook-update
 
@@ -458,7 +481,7 @@ A `schedule-*` skill that picks its own input, so it needs no person to hand it 
 unclassified issues and the top of the backlog, every pull request waiting on a reviewer, the
 outdated packages, the week's changes in the tracked repositories, the repository's own day or
 week, the instruction assets a model loads.
-Seventeen ship here.
+Eighteen ship here.
 
 Picking its own input is the entire distinguishing property. A procedure that needs an argument
 needs a person, and a person is exactly what an unattended run does not have.
@@ -678,7 +701,7 @@ capability — a divergence taken on purpose.
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
-| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, and three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets, and the sync sweep lists its groups with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, and the issues a skill opens for a finding | The preamble's publishing rules | A change reaches a person as a pull request; the report stays in the run's session. This lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |

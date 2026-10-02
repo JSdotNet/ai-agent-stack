@@ -575,6 +575,10 @@ A term is one of two things, both in `domain/`:
   listed under its own title, because a modelled concept is its own glossary
   entry.
 
+A `requirement` or `invariant` chapter is never a term: its `aliases` are the
+codes the rule is cited by, which rules split from one source row share, not
+names of a concept.
+
 `arc42/12-glossary.md` is not read: its "Also called" line is prose, not an
 `aliases` field, and the register reads fields only. A folder with no terms
 writes `{ "terms": [], "problems": [] }`, so every `_meta/` holds the same four

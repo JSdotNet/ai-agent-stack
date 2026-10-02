@@ -1,7 +1,8 @@
 // The term register, `_meta/naming.json`, is built from the graph `buildGraph`
 // already holds: every `term` chapter in `domain/`, and every other `domain/`
 // chapter that carries `aliases`, under its own title, its lede as the
-// description. `arc42/`'s glossary is not read — its "Also called" line is
+// description. A `requirement` or `invariant` chapter is not a term: its
+// `aliases` are the codes it is cited by. `arc42/`'s glossary is not read — its "Also called" line is
 // prose, not a field. The register carries its own `schemaVersion` of 1, sorts
 // by name, and reports a term with no definition and a spelling two terms
 // claim, both as warnings.
@@ -36,11 +37,29 @@ const domain = [
     `### Basket\n\n${fence("type: term\naliases: [order_id]\n")}\n#### Detail\n\nBelow a heading, so not Basket's lede.\n`,
 ].join("\n");
 
+// Two rules split from one source row share its code, and an invariant cites
+// it too; one rule also lists a spelling a term owns. None of it is language.
+const REQUIREMENTS = ".devbook/domain/ordering/requirements.md";
+const INVARIANTS = ".devbook/domain/ordering/domain.invariants.md";
+const rule = (kind, name, aliases) =>
+    `### ${kind[0].toUpperCase()}${kind.slice(1)}: ${name}\n\n${fence(`type: ${kind}\naliases: [${aliases}]\n`)}\nThe system SHALL ${name.toLowerCase()}.\n`;
+const requirements = [
+    `# Requirements\n\n${fence("type: requirements\n")}`,
+    `## Checkout\n\n${fence(`type: requirements\nrelated: [${DOMAIN}#order]\n`)}`,
+    rule("requirement", "Acknowledge a confirmed order", "BACK-53"),
+    rule("requirement", "Mail a confirmed order", "BACK-53, order_id"),
+].join("\n");
+const invariants = [
+    `# Invariants\n\n${fence("type: invariants\n")}`,
+    `## Order\n\n${fence(`type: invariants\nrelated: [${DOMAIN}#order]\n`)}`,
+    rule("invariant", "Confirm an order once", "BACK-53"),
+].join("\n");
+
 const glossary = `# Glossary\n\n${fence("number: 12\n")}\nTerms.\n\n## Adoption\n\n${fence("date: 2026-09-08\n")}\nAlso called: scope.\n\nWhich folders a repository has taken on.\n`;
 
 const root = await mkdtemp(path.join(tmpdir(), "devbook-naming-"));
 try {
-    for (const [rel, body] of Object.entries({ [DOMAIN]: domain, [GLOSSARY]: glossary })) {
+    for (const [rel, body] of Object.entries({ [DOMAIN]: domain, [REQUIREMENTS]: requirements, [INVARIANTS]: invariants, [GLOSSARY]: glossary })) {
         await mkdir(path.join(root, path.dirname(rel)), { recursive: true });
         await writeFile(path.join(root, rel), body, "utf8");
     }
@@ -56,6 +75,16 @@ try {
     );
     check(!byName["Order Line"], "a model chapter with no `aliases` is not a term");
     check(!byName.Adoption, "an arc42 glossary chapter is not read");
+    check(
+        !register.terms.some((term) => term.path === REQUIREMENTS || term.path === INVARIANTS),
+        "a requirement or invariant is not a term, aliases or not",
+        JSON.stringify(register.terms.map((t) => t.id))
+    );
+    check(
+        !register.problems.some((p) => /back-53/.test(p.message) || p.path === REQUIREMENTS || p.path === INVARIANTS),
+        "a code shared by rules, or a rule citing a term's spelling, is no collision",
+        JSON.stringify(register.problems, null, 2)
+    );
 
     const order = byName.Order;
     check(

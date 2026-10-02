@@ -24,8 +24,8 @@ anything a target delegates to, which is a binding the consuming repository make
 Twenty-one skills in two halves: seventeen entry points that pick their own input, each with
 the `report.md` template its report follows, and four that put a trigger in the scheduler and
 read it back. Every one of them is also runnable by hand, which is how a cadence gets proved
-before it is trusted. Beside them: the shipped catalog, five contracts, the catalog checker, one
-migration, one hook, and one stamp.
+before it is trusted. Beside them: the shipped catalog, six contracts, one shared work script, the
+catalog checker, one migration, one hook, and one stamp.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -34,7 +34,8 @@ migration, one hook, and one stamp.
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
-| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies |
+| `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its failure marker a parameter |
+| `scripts/resolve-issue.workflow.js` | work script | A sweep, through the host's workflow tool, per `draft-pr-contract.md`: scope, a failing test first, build and unit tests with bounded repair, two review lenses |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
@@ -136,6 +137,10 @@ Resolution is sequential in the session the schedule gave it: a worktree cut and
 issue, the resolution run through the host's workflow tool as sub-agents, never a second session.
 A scheduled run has hours and nobody to hand a parked worktree to, so it neither fans out nor
 parks — what did not reach a draft pull request is a comment on the issue and a row in the brief.
+The claim, the branch, the draft pull request and its body, the failure marker, and the worktree
+removal are `resources/draft-pr-contract.md`, and the resolution is
+`scripts/resolve-issue.workflow.js`, both outside the skill so that any sweep landing an item as a
+draft pull request calls the same step; the issue sweep passes `sweep-failed` as its marker.
 
 ### schedule-merge-review
 

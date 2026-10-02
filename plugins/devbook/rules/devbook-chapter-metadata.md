@@ -693,7 +693,8 @@ The absence rule holds for the two typed levels too: a `requirement` with no
 `tests` is reported for the level by nothing, because it has claimed no
 coverage. What it *is* reported for is having no `#### Scenario:` — a promise
 with no case that exercises it is one nobody can tell has been broken — and that
-is a coverage warning on the same footing. An `invariant` carries no scenario
+is a coverage warning on the same footing, except at `status: deprecated`,
+where the promise is withdrawn. An `invariant` carries no scenario
 and is never reported for lacking one.
 
 A delivered feature, and a domain aggregate whose invariants are pinned,

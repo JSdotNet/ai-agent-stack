@@ -11,14 +11,14 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`, then the folder rule that file names. Nothing in them is
 repeated here.
 
-**Kind.** One kind and one chapter per run, decided as `capture-specs` decides it:
-the chapter's `type`, or the file where the folder has none. An aggregate is
-briefed whole, with everything it owns and the events it raises. A chapter that
-does not exist is a modelling task for the folder's flow, or a `capture-specs`
-pass if the thing is already in code.
+**Kind.** One chapter, sync unit, or sync group per run, its kind decided as
+`capture-specs` decides it: the chapter's `type`, or the file where the folder
+has none. An aggregate is briefed whole, with everything it owns and the events
+it raises. A chapter that does not exist is a modelling task for the folder's
+flow, or a `capture-specs` pass if the thing is already in code.
 
-**Inputs.** The chapter as `<path>#<heading-slug>` or by heading, the bounded
-context where the kind has one, and the repository root.
+**Inputs.** The chapter as `<path>#<heading-slug>` or by heading, or a sync unit
+or group per **The sync unit** in the protocol; the bounded context; the root.
 
 ## Steps
 

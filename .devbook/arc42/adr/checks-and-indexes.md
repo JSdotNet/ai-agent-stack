@@ -120,6 +120,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | All three converters also take a sync unit or group as scope, its chapters exactly as `units.mjs` lists them; `capture-specs` and `apply-change` widen this far and no further, because a unit is what one pull request changes and the tool, not the pass, decides what it holds. Any `conflict` stops the group, and an unattended run lands a draft pull request with added chapters at `draft`. `verify-change`'s table gains each chapter's effective `sync` and the sweep that will act. |
 | 2026-10-02 | The term register leaves `requirement` and `invariant` chapters out: their `aliases` are the codes a rule is cited by, shared by rules split from one row, and `verify-change` no longer reports one as a dead alias. Over spec-manager's devbook, 1668 terms and 859 collisions became 242 and 18. No migration: the field stays legal and no chapter changes. |
 | 2026-10-01 | `build.mjs` writes `_meta/naming.json`, the term register, per scope beside the other three, from `domain/`'s `term` and aliased chapters; `arc42/`'s glossary is not read, and the register carries its own `schemaVersion: 1`. |
 | 2026-09-28 | The checker indexes the change folder's proposals and deltas into the repository rollup only, with no scope or `_meta/` of its own, since OpenSpec would read one as a change; each delta is checked by `delta.mjs`'s `checkDelta`, the same function a merge runs, so an indexed delta fails the check exactly when it would fail to merge. |

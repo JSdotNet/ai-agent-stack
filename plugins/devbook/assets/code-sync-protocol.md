@@ -48,6 +48,61 @@ question and the answer. `verify-change` is the
 pass that says which one a chapter needs, and it is what both of the others do
 before they write.
 
+## The sync unit
+
+Each of the three skills also takes a **sync unit** or a **sync group** as its
+scope, named by the unit's root chapter address. A unit is what one pass covers
+and one pull request changes: an aggregate with everything it owns, the events it
+raises, its invariants, and the requirements and terms that name it; a domain
+service the same way; a feature with its sub-features and requirements; one
+feature flag or setting; one building block file; one component chapter; and one
+shared-types unit per context. A group is the units a requirement naming two
+aggregates and no feature ties together, and is usually one unit. The rules are
+"Sync direction" in `devbook-chapter-metadata.md`.
+
+Never work membership out by reading. List it:
+
+```bash
+node .devbook/_tools/devbook-meta/units.mjs --groups --json
+```
+
+Take the unit's or group's `chapters` as the scope, exactly. A chapter the tool
+lists as an orphan is in no unit and is reported, never adopted into one. A group
+the tool sets aside — mixed directions, or past its chapter cap — is reported with
+its reason and not acted on, and never split. A group is one run whatever kinds
+its units carry: each chapter is read through its own kind's file, and the run
+still ends in one table.
+
+Feature flags and settings run as the `setting` kind, and a shared-types unit as
+`aggregate`.
+
+**The roll-up.** A unit's verdict comes from its chapters', and a group's from
+its units':
+
+- Any `conflict` stops the whole group. Nothing in it is written until a person
+  answers, however many of its other chapters are actionable.
+- Otherwise the group is actionable in a direction when at least one chapter has
+  that verdict, and the pass covers every chapter with that verdict at once.
+  `aligned` and `unresolved` chapters are reported beside it and left alone.
+- A group with both `code-ahead` and `spec-ahead` chapters is captured first and
+  applied in a later pass, once the capture has landed — the two directions never
+  share a pass, per the paragraph above.
+
+**The direction.** `units.mjs` prints each unit's effective `sync`, the block it
+came from, and a group's rolled-up direction. The value decides which sweep acts
+on the verdict:
+
+| `sync` | Sweep that acts |
+|---|---|
+| `pull` | `devbook-pull-sweep`, on `code-ahead` |
+| `push` | `devbook-push-sweep`, on `spec-ahead` |
+| `sync` | the pull sweep on `code-ahead`, the push sweep on `spec-ahead` |
+| `report` | `devbook-verify`, which reports and writes nothing |
+| `off` | none |
+
+A verdict no sweep acts on — `conflict`, `unresolved`, one pointing against the
+direction, any verdict in a set-aside group — goes to a person.
+
 ## Counterpart resolution
 
 Neither direction can start until the chapter and its code counterpart are
@@ -276,7 +331,8 @@ The target is then the chapter as the delta would leave it, which
 
 **Capture writes no status at all.** Finding an implementation is not agreement
 that the implementation is the intended model, and a capture pass produces a
-plan rather than a chapter, so:
+plan rather than a chapter, so — with the one exception in
+[Carrying a plan in unattended](#carrying-a-plan-in-unattended):
 
 - A plan for a chapter that does not exist yet proposes content and no `status`
   line. What the chapter is worth is decided when someone carries the plan in,
@@ -351,6 +407,31 @@ A plan never carries a `status` line, an `annotation` fence, or an edit to anyth
 outside the headings it lists. Where the target is a chapter still being decided — a
 `draft` — the plan proposes no replacement for it: it reports what the code has
 beside what the draft says and leaves the two for the person to reconcile.
+
+## Carrying a plan in unattended
+
+An unattended run — a sweep, with nobody watching — carries the plan in itself, on
+its own branch, and lands it as a **draft pull request**. The draft is the person:
+nothing it carries counts as agreed until someone reviews and merges it. The
+sweep's own contract owns the branch, the body, and the labels; this section owns
+what the carried chapters may say.
+
+- **`ADDED` chapters arrive at `status: draft`.** A plan carries no status, so the
+  carrier writes the one value that says nobody has agreed yet. Promoting it is the
+  reviewer's edit.
+- **Nothing above `draft`, and never a decision rung.** No `active`, no `approved`
+  or `accepted`, and no deleted `status` line — in a folder whose resting value is
+  `active`, deleting the line promotes the chapter.
+- **A `MODIFIED` chapter keeps its `status` line as it stands.** Where its new text
+  lapses an `approved-hash` or `accepted-hash`, the pull request says so.
+- **`REMOVED` is never carried.** It stays a finding for a person.
+- **Only the chapters the plan lists.** Nothing outside its headings, and no
+  `annotation` fence.
+
+The apply direction has the same shape: the brief goes to the resolver as its
+specification, and the change lands as a draft pull request. The status gate's
+"stop and confirm" has nobody to ask, so a chapter at `draft` or `proposed` is
+skipped and named in the run's report, never built.
 
 ## Code-side writes: the change brief
 
@@ -489,6 +570,16 @@ Column rules:
   Never "reviewed the code".
 - **Action** — what was done or is being asked for. For `conflict` and
   `unresolved`, the action is the question being put to the user.
+
+`verify-change` adds two columns after **Verdict**, read from `units.mjs` and
+never inferred:
+
+- **Sync** — the chapter's effective `sync` and the level it came from, as
+  `pull (context)`; `report (default)` when nothing states one; `—` for a chapter
+  in no unit.
+- **Sweep** — the sweep that will act on this verdict, per the table in
+  [The sync unit](#the-sync-unit), or `a person` when none will. A chapter in a
+  set-aside group says `a person` and why.
 
 Report every chapter in scope, including the `aligned` ones. A pass that lists
 only its findings does not tell the reader what was checked and found fine, so

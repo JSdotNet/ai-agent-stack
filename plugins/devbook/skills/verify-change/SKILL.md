@@ -11,12 +11,11 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`. Nothing in them is repeated here.
 
 **Kind.** Decided as `capture-specs` decides it: the chapter's `type`, or the
-file where the folder has none. One kind per run, however wide the scope: a run
-that would cross kinds is two runs.
+file where the folder has none. One kind per run, however wide the scope — a
+sync unit or group excepted, per **The sync unit** in the protocol.
 
-**Scope.** Wider than the other two, because reading is cheap and a verdict is
-worth having in bulk. Any of: one chapter as `<path>#<heading-slug>` or by
-heading, one file, a bounded context, or a whole devbook folder. A scope wider
+**Scope.** Any of: one chapter as `<path>#<heading-slug>` or by heading, a sync
+unit or group, one file, a bounded context, or a whole devbook folder. A scope wider
 than one chapter means every chapter of the run's kind inside it — a folder
 given with no kind named takes the kind that folder's chapters carry, and says
 which it took. Everything in scope lands in **one** table, `aligned` rows
@@ -43,7 +42,8 @@ repository root.
    says so, per the protocol's status table: a verdict against a draft is a
    verdict about a sketch.
 5. Close with the protocol's report table — one table for the run, whatever
-   its scope, `aligned` rows included — and stop.
+   its scope, `aligned` rows included, with its **Sync** and **Sweep** columns
+   from `units.mjs` — and stop.
    The `Action` column names what the verdict calls for and nothing is done:
    `code-ahead` calls for `capture-specs`, `spec-ahead` for `apply-change`,
    `conflict` and `unresolved` for the question put to the user.

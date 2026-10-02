@@ -370,6 +370,26 @@ export function demoFileIssues(relPath, html) {
     for (const fetch of demo.fetches) {
         error(`fetches from the network: ${fetch} — a demo is one file that opens with the network off, every style, script, and image inline.`);
     }
+    // The file knows its question and nothing about its lifecycle: `demo-meta`
+    // holds `question` alone, per devbook-chapter-metadata.md.
+    const metaScript = demo.scripts.find((s) => s.id === DEMO_META_ID);
+    if (metaScript) {
+        let meta;
+        try {
+            meta = JSON.parse(metaScript.body);
+        } catch (e) {
+            error(`has a \`${DEMO_META_ID}\` that is not valid JSON: ${e.message}`);
+        }
+        if (meta !== undefined) {
+            const extra = meta && typeof meta === "object" && !Array.isArray(meta) ? Object.keys(meta).filter((key) => key !== "question") : [];
+            if (typeof meta?.question !== "string" || !meta.question.trim()) {
+                error(`has a \`${DEMO_META_ID}\` with no \`question\` — the one question the demo was prototyped to answer.`);
+            }
+            if (extra.length) {
+                error(`has \`${extra.join("`, `")}\` in its \`${DEMO_META_ID}\`, which holds \`question\` and nothing else — the file names no stage, status, verdict, or page; where it sits says which it is.`);
+            }
+        }
+    }
     if (demo.bytes > DEMO_SIZE_TARGET) {
         issues.push({
             severity: "warning",

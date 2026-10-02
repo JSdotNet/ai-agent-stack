@@ -50,6 +50,8 @@ still settles logic questions.
 | `migrations/003-show-removed/` | Removes a `show` procedure's wrappers and stamp entries, and its body unless the repository edited it |
 | `migrations/004-start-binding-is-run/` | Removes an `extensions["app.start"]` binding to `repo:start`, which `001` left naming no skill, or hands its options to the default provider |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a managed wrapper per host, and where the goal sits |
+| `assets/demo-template.html` | The starting demo template, for `.devbook/design/demo-template.html`: the managed region between `template:begin hash=…` and `template:end` — design tokens, app shell, control panel, and the script for devbook's demo address contract — and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
+| `assets/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against. `tests/demo-template.test.mjs` keeps its region equal to the template's |
 | `hooks/` | A session-start pointer: invoke the repository's procedure skill rather than guessing a command, a URL, or a layout |
 
 ## Skills

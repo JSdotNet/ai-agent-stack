@@ -528,7 +528,9 @@ chapter, so it carries no `meta` block. `demo.html` belongs to the context and c
 the chapters whose `demo` field names it. Links run from Markdown to the demo only. The file
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
-demo is built on the repository's template at `.devbook/design/demo-template.html`. The
+demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
+starting copy and a sample demo built on it are
+[devbook-procedures](devbook-procedures.md#demo-template)'s. The
 [demos record](../adr/demos.md) holds the reasons.
 
 A `demo` field and a note point into a demo by an address, and a frame that hosts a demo

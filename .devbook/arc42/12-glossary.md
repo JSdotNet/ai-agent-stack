@@ -148,6 +148,24 @@ deeper that the merge lands one level up. Its unit is the heading: a paragraph i
 replacing its section. OpenSpec's spec delta is the same idea against `specs/`, which a
 devbook change does not have.
 
+## Demo
+
+```meta
+date: 2026-10-02
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/12-glossary.md#prototype"]
+```
+
+Owned by [devbook](building-blocks/devbook.md).
+
+Also called: click demo, `demo.html`, `<page>.demo.html`.
+
+The agreed, clickable picture of what a person sees in a bounded context: one self-contained
+HTML file in `domain/<context>/`, built on the repository's demo template. It is the source of
+truth for which screens exist, how a person moves between them, their copy, and their states.
+A rule, a term, or a design token still wins where the demo disagrees. A demo is a prototype
+that an OpenSpec proposal carried into `domain/`, and the file itself never says so: only its
+location does. It is never the running application.
+
 ## Derived Index
 
 ```meta
@@ -363,6 +381,37 @@ category — `feature`, `behaviour-change`, or `defect` — as a `type: change` 
 two decision rungs, `approved` and `accepted`, once for the whole change. Not a proposal in the
 documentation plugin's sense, which is a standalone document.
 
+## Prototype
+
+```meta
+date: 2026-10-02
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo"]
+```
+
+Owned by [devbook-procedures](building-blocks/devbook-procedures.md).
+
+One standalone HTML file that answers one question, in UI mode or logic mode. It needs no
+change, no task, and no approval, and it is never a source of truth. It carries its question
+and no stage, status, or verdict. A UI prototype becomes a [demo](#demo) when a proposal
+carries it with exactly one variant. A logic prototype never does, because it is code. One
+nobody takes further stays where it is, as evidence of what was tried.
+
+## Prototyping
+
+```meta
+date: 2026-10-02
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+```
+
+Owned by [devbook-procedures](building-blocks/devbook-procedures.md).
+
+Also called: `/prototype`.
+
+The activity of writing or revising a prototype, which only the `prototype` procedure does. It
+starts from a question stated in one sentence and ends with a one-line answer for whoever
+asked. That answer becomes the verdict of a proposal that carries the prototype. Given a demo,
+prototyping returns a revised prototype that keeps every surviving screen id and anchor.
+
 ## Provider
 
 ```meta
@@ -508,7 +557,8 @@ Owned by [devbook](building-blocks/devbook.md).
 The sync units one sweep run verifies, changes on one branch, and lands as one pull request.
 Usually it is one unit; units join only when a chapter ties them — a requirement naming two
 aggregates and no feature — and never through a link such as `depends-on`. A group whose units
-resolve to different directions is set aside for a person, not acted on.
+resolve to different directions, or that holds more than 40 chapters, is set aside for a
+person, not acted on and never split. `units.mjs --groups` lists them.
 
 ## Sync Unit
 
@@ -522,8 +572,9 @@ Owned by [devbook](building-blocks/devbook.md).
 What one verify pass covers and one sync direction governs: an aggregate with the entities,
 value objects, and enums it owns, the events it raises, its invariants, and the requirements
 and terms that name it; a domain service the same way; a feature with its sub-features and
-requirements; one feature flag or setting; one building block file; one component chapter. A
-chapter the unit owns carries no direction of its own.
+requirements; one feature flag or setting; one building block file; one component chapter; and
+one shared-types unit per context for its shared value objects and enums. A chapter the unit
+owns carries no direction of its own. `units.mjs` lists them with their effective direction.
 
 ## Tier
 

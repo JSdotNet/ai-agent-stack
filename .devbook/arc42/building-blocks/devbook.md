@@ -44,6 +44,7 @@ change belongs to the engine.
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
+| `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
@@ -222,7 +223,7 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbo
 ```
 
 Three aggregates — the chapter, the folder, and the graph derived from a corpus of them —
-five domain services, and the two value objects the aggregates share. The chapter is the
+six domain services, and the two value objects the aggregates share. The chapter is the
 consistency boundary everything else is expressed in terms of.
 
 ### Model
@@ -508,6 +509,35 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 | A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
+### Demo
+
+```meta
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+```
+
+The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.html` that shows
+what a person sees in a bounded context. It belongs to the Devbook Folder aggregate and is no
+chapter, so it carries no `meta` block. `demo.html` belongs to the context and counts with
+`context.md`, `<page>.demo.html` belongs to `<page>.md`, and any other `*.demo.html` belongs to
+the chapters whose `demo` field names it. Links run from Markdown to the demo only. The file
+records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
+change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
+demo is built on the repository's template at `.devbook/design/demo-template.html`. The
+[demos record](../adr/demos.md) holds the reasons.
+
+The decision is recorded and not yet enforced. The `devbook-click-demo` plan adds the address
+contract, the `demo` field to the folder rules, the checker rules, a page fingerprint that
+covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
+nothing in this block reads a demo, and the invariants below are what those steps owe.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A page-named demo exists only beside its page and moves with it on a split | not yet built | untested |
+| Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | not yet built | untested |
+| A demo under `domain/` carries exactly one variant | not yet built | untested |
+| A page's fingerprint covers its demos, so editing one lifts a stale approval | not yet built | untested |
+| A demo over 500 KB is a warning, never an error | not yet built | untested |
+
 ### Reference Graph
 
 ```meta
@@ -641,6 +671,40 @@ is visibly not. Materialized by `init` or `update` only where `tech/` is adopted
 | --- | --- | --- |
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
 | Materialized only where `tech/` is adopted | `init`, `update` | untested |
+
+### Unit Lister
+
+```meta
+related: [".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+```
+
+Also called: `units.mjs`.
+
+`units.mjs` reads the reference graph and lists every sync unit with its chapters, its
+effective `sync` direction, and the block that direction came from. Each chapter belongs to one
+unit, decided from headings, `type`, file names, and `related` alone: an owned type by the
+aggregate it sits under, an event by the raiser its `related` names, an invariant by the
+grouping it sits under, a requirement by the feature it names and only otherwise by the
+aggregate, and a term by the one unit its name or alias resolves into. Shared value objects and
+enums form one shared-types unit per context.
+
+With `--groups` it joins units into the groups a sweep claims. A requirement that names two
+aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
+reference, or a shared type never does, so a feature touching five aggregates does not pull
+all five into one pull request. A group's direction rolls up from its units, a `sync` unit
+going with the one other direction it meets. A group whose units go two other ways, or that
+holds more than 40 chapters, is set aside for a person rather than split. Orphans — an event
+naming no raiser, a term with two homes, a requirement naming nothing — and a stated direction
+no unit inherits are listed beside. `--direction` keeps what one sweep picks up, and `--json`
+prints the result for the sweep to read.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every chapter belongs to at most one unit, decided from structure and never from prose | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A requirement naming a feature belongs to the feature, whatever else it names | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 
 ### Spec Converter
 

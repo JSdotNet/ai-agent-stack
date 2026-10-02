@@ -2,6 +2,7 @@
 
 ```meta
 number: 5
+sync: pull
 ```
 
 ## Marketplace Root

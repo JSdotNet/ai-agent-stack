@@ -9,7 +9,7 @@ repository has and no plugin can write — `run`, how its application is built a
 `capture`, how evidence is taken;
 `diagnose`, how a cause is found inside the running application; `estimate`, how work is sized
 against the repository's own finished work; `prototype`, how a design question is settled with a
-throwaway standalone HTML prototype and its answer kept — and that each one's goal reads
+standalone HTML prototype and its answer kept — and that each one's goal reads
 the same in every repository while how it is done never does.
 
 Inside the block: the five seeds and their goals, the wrapper per host that carries a goal, the
@@ -105,7 +105,7 @@ invoked it; `migrations/003-show-removed/` takes it out of a repository.
 ### Goal
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook-procedures.md#procedure", ".devbook/arc42/08-crosscutting-concepts.md#published-languages"]
+related: [".devbook/arc42/building-blocks/devbook-procedures.md#procedure", ".devbook/arc42/08-crosscutting-concepts.md#published-languages", ".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#prototype"]
 ```
 
 The one sentence a procedure must satisfy whatever its body says: what a caller gets back.
@@ -125,6 +125,15 @@ writes into no `.devbook/` folder and changes no source file, and the answer rea
 only through a change. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
+
+`prototype` is the only writer of a demo, per the [demos record](../adr/demos.md). Its file
+stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
+prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
+exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
+delta to `domain.md`, `flow.md`, or an invariants subpage. The seed does not say all of this
+yet. The `devbook-click-demo` plan adds the one-sentence question written into the file, the
+one-line answer kept out of it, the two modes, the 500 KB target, and the starting template
+that `init` seeds at `.devbook/design/demo-template.html`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |

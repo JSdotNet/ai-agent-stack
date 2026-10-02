@@ -710,6 +710,12 @@ instructions.
   and every synonym resolves to that one chapter. A `term` chapter exists only
   for a word that has no chapter to carry the field, and its `related` field
   points at the chapters it is about.
+- On a `requirement` or `invariant` chapter, `aliases` holds the codes the rule
+  is cited by elsewhere — a requirement code from the document it was captured
+  from, a ticket key — not surface names: a rule is not a word of the language.
+  Rules split from one source row each keep its code, so the same code on
+  several rules is expected. The term register leaves these chapters out, and
+  `verify-change` looks for no identifier named after a code.
 
 ## Templates
 

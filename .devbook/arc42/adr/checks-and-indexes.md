@@ -78,6 +78,18 @@ own register is empty until a `domain/` is adopted. The register carries its own
 repository and pins it; a contract bump that leaves the register alone must not break that
 reader. Adding a derived file changes no chapter schema, so no migration ships with it.
 
+**A rule is not a term, so the register leaves requirements and invariants out.** A
+`requirement` or `invariant` chapter's `aliases` hold the codes the rule is cited by — a
+requirement code from the document it was captured from — not surface names of a concept, and
+`devbook-domain.md` says so. Rules split from one source row each keep its code, so a code is
+expected on several rules, and a register that read them was mostly rules and warned mostly
+about that: over spec-manager's devbook at `e2186d2f` it held 1668 terms, 1426 of them rules,
+and 839 of its 859 collisions came from shared codes. Without them it holds 242 terms and 18
+collisions, each a real clash between two model or feature chapters. The field stays legal on
+a behaviour chapter and nothing in a chapter moves, so the change is to the derived file and a
+rule's prose only, and no migration is owed. `verify-change`'s dead-alias search skips the same
+two kinds, since a code names no identifier by design.
+
 ## Rejected
 
 ```meta
@@ -92,6 +104,11 @@ reader. Adding a derived file changes no chapter schema, so no migration ships w
 - The checker and the generator in `devbook-derived` together, with `devbook` naming its path.
 - Reading the arc42 glossary into the term register by parsing its "Also called" line.
 - The register on the contract version: a consumer pinning it would break on every bump.
+- A separate field for a requirement code, or the code in the requirement's name: either moves
+  every code in every adopted repository, which is a migration bought for a field name, and the
+  name would put one code in several anchors.
+- Keeping rules in the register and counting no collision between rules of one behaviour file:
+  the register would still be mostly rules, and a rule is not a word of the language.
 
 The nine Node suites under `plugins/*/tools/` are still run by nobody; adding them is a
 separate call.
@@ -104,6 +121,7 @@ separate call.
 | Date | Change |
 | --- | --- |
 | 2026-10-02 | All three converters also take a sync unit or group as scope, its chapters exactly as `units.mjs` lists them; `capture-specs` and `apply-change` widen this far and no further, because a unit is what one pull request changes and the tool, not the pass, decides what it holds. Any `conflict` stops the group, and an unattended run lands a draft pull request with added chapters at `draft`. `verify-change`'s table gains each chapter's effective `sync` and the sweep that will act. |
+| 2026-10-02 | The term register leaves `requirement` and `invariant` chapters out: their `aliases` are the codes a rule is cited by, shared by rules split from one row, and `verify-change` no longer reports one as a dead alias. Over spec-manager's devbook, 1668 terms and 859 collisions became 242 and 18. No migration: the field stays legal and no chapter changes. |
 | 2026-10-01 | `build.mjs` writes `_meta/naming.json`, the term register, per scope beside the other three, from `domain/`'s `term` and aliased chapters; `arc42/`'s glossary is not read, and the register carries its own `schemaVersion: 1`. |
 | 2026-09-28 | The checker indexes the change folder's proposals and deltas into the repository rollup only, with no scope or `_meta/` of its own, since OpenSpec would read one as a change; each delta is checked by `delta.mjs`'s `checkDelta`, the same function a merge runs, so an indexed delta fails the check exactly when it would fail to merge. |
 | 2026-09-27 | `repo-checks.yml` runs the tools' `*.test.mjs` files through `node --test`, listed with `git ls-files` because the directory form loads nothing on Windows and misses a test in a new folder silently. |

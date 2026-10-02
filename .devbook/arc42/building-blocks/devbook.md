@@ -27,8 +27,8 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 
 Nine skills — six that own the convention in a repository, and three that cross the boundary
 between a chapter and the code implementing it, each over six chapter kinds — plus the rules
-`init` delivers, the tools it materializes, one workflow, one hook, and the one file a
-repository may author to change what the check accepts. None of the
+`init` delivers, the tools it materializes, one workflow, one hook, one contract that other
+plugins follow, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
 change belongs to the engine.
 
@@ -48,6 +48,7 @@ change belongs to the engine.
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
+| `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
 | `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 ### init
@@ -529,6 +530,12 @@ records its question and nothing about its lifecycle: under `domain/` it is the 
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`. The
 [demos record](../adr/demos.md) holds the reasons.
+
+A `demo` field and a note point into a demo by an address, and a frame that hosts a demo
+talks to it through four `postMessage` messages. Both are `resources/demo-address.md`,
+versioned as `devbook.demo.address@1`, which this block owns and the demo template,
+spec-manager, and Backlog follow. A demo opened with no parent frame ignores the messages, and
+a host frames it sandboxed without same-origin.
 
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's

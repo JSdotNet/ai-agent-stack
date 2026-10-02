@@ -40,6 +40,9 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 Links run one way, from Markdown to HTML. A chapter points at a screen, a state, or a
 walkthrough through an optional `demo` field in its `meta` block, and the demo names no page.
 That keeps every link where the checker and the indexes read, because they read Markdown.
+The address a `demo` field holds, and the four messages a frame that hosts a demo exchanges
+with it, are devbook's contract `plugins/devbook/resources/demo-address.md`, which the
+template, spec-manager, and Backlog follow.
 
 There is no product-level demo. A journey that crosses contexts belongs to the context it
 ends in.
@@ -114,9 +117,9 @@ reports the size as a warning and never as an error.
 devbook-procedures 1.14.0 moved the `prototype` seed onto the demo template and the design
 system in `ab478e36`. The same release removed `show`, which no flow invoked, and renamed
 `debug` to `diagnose` so it no longer hides Claude Code's `/debug`. The rest of this decision
-is built by the `devbook-click-demo` plan: the address contract, the folder rules, the
-checker and fingerprint, the whole-file delta, the template and its tool, and the rest of the
-seed.
+is built by the `devbook-click-demo` plan. Its folder rules have landed, and so has its
+address contract, as `devbook.demo.address@1`. The checker and fingerprint, the whole-file
+delta, the template and its tool, and the rest of the seed are still to come.
 
 ## Rejected
 
@@ -147,5 +150,6 @@ seed.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. |
 | 2026-10-02 | A durable demo per bounded context in `domain/`, written only by `/prototype` and promoted only by an OpenSpec proposal; the file knows its question and not its lifecycle; no product-level demo, a 500 KB target, and the template in `design/`, independent of Storybook. |
 | 2026-09-30 | devbook-procedures 1.14.0 builds the `prototype` seed on the demo template and design system, removes `show`, and renames `debug` to `diagnose`. |

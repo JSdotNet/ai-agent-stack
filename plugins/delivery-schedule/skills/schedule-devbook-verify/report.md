@@ -14,18 +14,19 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | What | Where | Do |
 | --- | --- | --- |
 | Conflict: <the question, own words> | `<chapter>#<heading>` | [#<n>](<url>) |
-| Code ahead: capture it | `<chapter>#<heading>` | `devbook:capture-specs <chapter>` |
+| Code ahead: capture it | `<unit id>` | `devbook:capture-specs <unit id>` |
+| Orphan: <its reason> | `<chapter>` | add the `related` it lacks |
 | Drift issue now aligned | [#<n>](<url>) | `gh issue close <n>` |
 
 ### Drift
-| Verdict | Chapter | Evidence | Issue |
+| Verdict | Unit | Chapter | Evidence | Issue |
 | --- | --- | --- | --- |
 
 ### Run
 | Outcome | What | Why |
 | --- | --- | --- |
 
-*`schedule-devbook-verify@<version>` · folders <list> · <ISO datetime UTC>*
+*`schedule-devbook-verify@<version>` · <n> report units · <ISO datetime UTC>*
 ```
 
 *Drift* holds every row that is not `aligned`; the `aligned` rows are the count alone.

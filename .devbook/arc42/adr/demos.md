@@ -105,6 +105,11 @@ in every demo. The template is part of the design system, at
 changes through `flow-spec` like any `design/` chapter. It is independent of Storybook, so a
 demo opens anywhere with no toolchain.
 
+The managed region is the template's and not the demo's, so it is the one part of a demo that
+`/prototype` does not write. `demo-template.mjs --refresh` rewrites it in every demo when the
+template changes, and touches nothing else. A region edited by hand is an error, because the
+next refresh would discard the edit.
+
 A demo has a size target of 500 KB. `/prototype` works to stay under it with inline SVG,
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
 reports the size as a warning and never as an error.
@@ -123,7 +128,9 @@ devbook-procedures asset, with a sample demo built on it for spec-manager and Ba
 against; `init` does not seed it yet. The checker holds every demo to the HTML contract and
 resolves every `demo` address, and a demo is part of the fingerprint of the page it belongs
 to, both in contract 26. `delta.mjs` checks a demo delta with those rules and lands it by
-replacing its target whole. The template's tool and the rest of the seed are still to come.
+replacing its target whole. `demo-template.mjs` checks every demo's managed region against the
+template, a stale one as a warning and a hand-edited one as an error, and `--refresh` rewrites
+the regions after the template changes. The rest of the seed is still to come.
 
 ## Rejected
 
@@ -154,6 +161,7 @@ replacing its target whole. The template's tool and the rest of the seed are sti
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
 | 2026-10-02 | The starting demo template and a sample demo built on it, shipped by devbook-procedures. |
 | 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. |

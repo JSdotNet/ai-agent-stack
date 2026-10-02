@@ -127,7 +127,8 @@ only through a change. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
 
-`prototype` is the only writer of a demo, per the [demos record](../adr/demos.md). Its file
+`prototype` is the only writer of a demo outside the template's managed region, per the
+[demos record](../adr/demos.md). Its file
 stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
 prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
 exactly one variant. A logic prototype never is, because it is code, and its answer lands as a

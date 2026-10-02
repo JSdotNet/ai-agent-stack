@@ -546,8 +546,16 @@ density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field a
 `demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address, and
 `chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to.
 `delta.mjs --check` runs the same rules over every demo a change carries, and `--apply`
-replaces the target whole. Still to come from the `devbook-click-demo` plan is
-`demo-template.mjs`.
+replaces the target whole.
+
+`demo-template.mjs` holds every demo's managed region to the template. The begin marker's hash
+certifies the region: text that hashes to its own marker is a release of the template exactly
+as it shipped, so no list of past versions is kept. `--check`, which `build.mjs --check` runs,
+reports a region on an earlier version than the template's as stale, a warning, and one whose
+text matches no version as hand-edited, an error. `--refresh` re-stamps the template's marker,
+then rewrites every demo's region from it and nothing else in the file. It is the one write
+into a demo that is not `/prototype`'s, and like any edit to a demo it lifts the approval of
+the page the demo belongs to.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -560,6 +568,8 @@ replaces the target whole. Still to come from the `devbook-click-demo` plan is
 | A demo under `domain/` carries exactly one variant | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A page's fingerprint covers its demos, so editing one lifts a stale approval | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo over 500 KB is a warning, never an error | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A demo's managed region matches a template version, and one on an earlier version than the template's is a warning | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
+| `--refresh` rewrites only the managed region, and leaves a demo's own parts byte for byte | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
 | A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | `devbook-delta/` holds Markdown deltas and demos directly in a `domain/<context>/` folder, and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |

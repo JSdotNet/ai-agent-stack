@@ -173,7 +173,9 @@ set on Saturday; `tech-update`, then the checks that read it, then the two weekl
 covering the whole week on Sunday. The weekday schedules end with `morning-brief`, so it can
 report what the sweep and the merge review did. `weekly-retro` takes 09:00 on both weekend days
 and runs at most once a week: its target gates on the plan's remaining credit, so the second
-firing is the retry before the weekly reset. Match a cadence to how
+firing is the retry before the weekly reset. `devbook-pull-sweep` is the one weekly schedule on a
+working day: Monday 04:00, after Sunday's `devbook-verify` and before the weekday issue sweep, so
+its draft pull requests are the first thing on the week's first morning. Match a cadence to how
 fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
 daily package update produces a queue.
 

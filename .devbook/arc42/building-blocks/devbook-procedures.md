@@ -34,6 +34,7 @@ them.
 | `init` | skill | A person, or `devbook-config:init` during setup and a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/skills/`, each with a `goal` | Materialized into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
+| `assets/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, by spec-manager and Backlog as a test fixture |
 | `SessionStart` | hook pair | Either host, at session start |
 
 ### init and update
@@ -132,13 +133,48 @@ prototype nobody takes further stays where it is as evidence. A UI prototype is 
 exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
 delta to `domain.md`, `flow.md`, or an invariants subpage. The seed does not say all of this
 yet. The `devbook-click-demo` plan adds the one-sentence question written into the file, the
-one-line answer kept out of it, the two modes, the 500 KB target, and the starting template
-that `init` seeds at `.devbook/design/demo-template.html`.
+one-line answer kept out of it, the two modes, the 500 KB target, and `init` seeding the
+[demo template](#demo-template) at `.devbook/design/demo-template.html`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Every seed carries a `goal`, rendered into both wrappers above the pointer | `init`, `update` | untested |
 | A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `init`, `update` | untested |
+
+### Demo template
+
+```meta
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+```
+
+The starting template every demo is built on, shipped as `assets/demo-template.html` and meant
+to land at `.devbook/design/demo-template.html`, where the repository makes it its own through
+`flow-spec`. It is one HTML file. Between `<!-- template:begin hash=… -->` and
+`<!-- template:end -->` sits the managed region: the design-token styles, the app shell, the
+control panel, and the one script a demo carries. The rest of the file is the demo's own: its
+screens in `main[data-demo-app]`, its `demo-model`, and its `demo-meta`. The comment that opens
+the region is the authoring reference for both.
+
+The hash is `sha256:` over the region's text between the two markers, every CRLF read as LF,
+spelled as the reconcile protocol spells a file's. The panel reads it back from the marker and
+sends it as the template version in `demo:ready`, so a host and a later check tell one release
+of the region from another without a version number of their own.
+
+The panel jumps to any screen or state, plays walkthroughs with their scenario lines beside the
+screen, switches role, flags, settings, viewport, and, while there are two or more, variants,
+and shows the pins a host sends. Its script implements the four messages of devbook's
+`resources/demo-address.md`. It is dark, monospaced, and hazard-striped, so nobody takes it for
+the product.
+
+`assets/demo-sample/features.demo.html` is a demo built on it: an ordering context's screens at
+real density with one walkthrough, `a-declined-card-keeps-the-basket`. spec-manager and
+Backlog test against it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The region's begin marker carries the hash of the region | the asset | `tests/demo-template.test.mjs` |
+| The sample holds the template's region byte for byte, and its `demo-model` and screens list each other exactly | the asset | `tests/demo-template.test.mjs` |
+| No script sits outside the region except `demo-model` and `demo-meta`, and nothing is fetched | the asset | `tests/demo-template.test.mjs` |
 
 ## Dependencies
 

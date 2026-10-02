@@ -22,6 +22,11 @@
 // result, so a delta that would leave its target invalid is reported before
 // anything is written. The graph build imports `checkDelta` and runs the same
 // check on every delta it indexes.
+//
+// A `*.demo.html` under `domain/<context>/` is the one other file a delta
+// folder holds: no header, no sections, checked with demo.mjs's rules and
+// landed by replacing its target whole. The graph does not index it, but the
+// change's fingerprint covers it like any delta. Any other file is an error.
 
 import { readFile, writeFile, readdir, mkdir, rename, rm, stat } from "node:fs/promises";
 import path from "node:path";
@@ -44,6 +49,7 @@ import {
     validateDocument,
 } from "./metadata.mjs";
 import { loadStatusLadder } from "./statuses.mjs";
+import { demoFileIssues } from "./demo.mjs";
 
 const FENCE = /^\s*(`{3,}|~{3,})/;
 const HEADING = /^(#{1,6})\s+(.*?)\s*#*\s*$/;
@@ -391,6 +397,15 @@ export async function checkDelta(repoRoot, relPath, markdown, { ladder = null } 
     return { issues, target: where.target, merged: result.merged, placeholder: !!result.placeholder, removesFile: result.merged === null && !result.issues.length };
 }
 
+/**
+ * Check one demo delta: the demo rules over the file as it would land. Its
+ * merge is the file itself, which replaces the target whole.
+ */
+export function checkDemoDelta(relPath, html) {
+    const where = changePathParts(relPath);
+    return { issues: demoFileIssues(where.target, html), target: where.target, merged: html, demo: true, placeholder: false, removesFile: false };
+}
+
 /** Every file a change folder indexes: its proposal and each delta. */
 export async function changeFiles(repoRoot) {
     const found = [];
@@ -409,7 +424,7 @@ export async function changeFiles(repoRoot) {
     return found.sort();
 }
 
-async function markdownUnder(repoRoot, rel) {
+async function filesUnder(repoRoot, rel) {
     const out = [];
     let entries;
     try {
@@ -419,10 +434,26 @@ async function markdownUnder(repoRoot, rel) {
     }
     for (const entry of entries) {
         const child = `${rel}/${entry.name}`;
-        if (entry.isDirectory()) out.push(...(await markdownUnder(repoRoot, child)));
-        else if (entry.isFile() && entry.name.endsWith(".md")) out.push(child);
+        if (entry.isDirectory()) out.push(...(await filesUnder(repoRoot, child)));
+        else if (entry.isFile()) out.push(child);
     }
     return out;
+}
+
+const isDemoFile = (rel) => rel.endsWith(".demo.html");
+
+async function markdownUnder(repoRoot, rel) {
+    return (await filesUnder(repoRoot, rel)).filter((child) => child.endsWith(".md"));
+}
+
+/** Every delta file of one change: the Markdown deltas, the demos, and anything else. */
+async function deltaFilesUnder(repoRoot, rel) {
+    const all = (await filesUnder(repoRoot, rel)).sort();
+    return {
+        markdown: all.filter((child) => child.endsWith(".md")),
+        demos: all.filter(isDemoFile),
+        other: all.filter((child) => !child.endsWith(".md") && !isDemoFile(child)),
+    };
 }
 
 async function exists(absolute) {
@@ -446,16 +477,23 @@ export async function checkChange(repoRoot, name) {
     if (!(await exists(path.join(repoRoot, base, "proposal.md")))) {
         report.problems.push({ severity: "error", message: `${base}/ has no proposal.md.` });
     }
-    const deltas = await markdownUnder(repoRoot, `${base}/${DELTA_FOLDER}`);
-    if (!deltas.length) report.problems.push({ severity: "error", message: `${base}/ has no delta under ${DELTA_FOLDER}/ — a change with nothing to merge carries a placeholder.` });
-    for (const relPath of deltas.sort()) {
+    const files = await deltaFilesUnder(repoRoot, `${base}/${DELTA_FOLDER}`);
+    if (!files.markdown.length) report.problems.push({ severity: "error", message: `${base}/ has no delta under ${DELTA_FOLDER}/ — a change with nothing to merge carries a placeholder.` });
+    for (const relPath of files.other) {
+        report.problems.push({ severity: "error", message: `${relPath} is neither a Markdown delta nor a \`*.demo.html\` — a demo is the one other file ${DELTA_FOLDER}/ holds.` });
+    }
+    for (const relPath of files.markdown) {
         const markdown = await readFile(path.join(repoRoot, relPath), "utf8");
         report.deltas.push({ path: relPath, markdown, ...(await checkDelta(repoRoot, relPath, markdown, { ladder })) });
+    }
+    for (const relPath of files.demos) {
+        const markdown = await readFile(path.join(repoRoot, relPath), "utf8");
+        report.deltas.push({ path: relPath, markdown, ...checkDemoDelta(relPath, markdown) });
     }
     return report;
 }
 
-/** A change's proposal and deltas, read from disk; `null` when it has no proposal. */
+/** A change's proposal and deltas, demos included, read from disk; `null` when it has no proposal. */
 export async function readChange(repoRoot, name) {
     const base = `${CHANGES_ROOT}/${name}`;
     let proposal;
@@ -465,7 +503,8 @@ export async function readChange(repoRoot, name) {
         return null;
     }
     const deltas = [];
-    for (const relPath of (await markdownUnder(repoRoot, `${base}/${DELTA_FOLDER}`)).sort()) {
+    const files = await deltaFilesUnder(repoRoot, `${base}/${DELTA_FOLDER}`);
+    for (const relPath of [...files.markdown, ...files.demos]) {
         deltas.push({ path: relPath, target: changePathParts(relPath).target, markdown: await readFile(path.join(repoRoot, relPath), "utf8") });
     }
     return { name, proposal, deltas };
@@ -562,7 +601,7 @@ export async function applyChange(repoRoot, name, { date = new Date().toISOStrin
         } else {
             await mkdir(path.dirname(target), { recursive: true });
             await writeFile(target, delta.merged, "utf8");
-            written.push(`merged  ${delta.target}`);
+            written.push(`${delta.demo ? "replaced" : "merged  "} ${delta.target}`);
         }
     }
     if (!move) return { report, applied: true, written };

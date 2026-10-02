@@ -44,6 +44,7 @@ change belongs to the engine.
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
+| `demo.mjs` | demo file rules, in-process | `delta.mjs`, for every demo a change carries |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
@@ -539,10 +540,14 @@ a host frames it sandboxed without same-origin.
 
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
-`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta. Nothing
-enforces it yet. The `devbook-click-demo` plan adds the checker rules, a page fingerprint that
-covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
-the checker reports a `demo` field as unknown, and the invariants below are what those steps owe.
+`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta.
+`demo.mjs` holds the rules a demo's own file must meet — where it lands, the managed region,
+no script outside it but `demo-model` and `demo-meta`, nothing fetched, `demo-meta` holding
+`question` alone, and the size target. `delta.mjs --check` runs them over every demo a change
+carries, and `--apply` replaces the target whole. The `devbook-click-demo` plan still adds the
+checker rules over `domain/`, a page fingerprint that covers its demos, and
+`demo-template.mjs`. Until then the checker reports a `demo` field as unknown, and the
+invariants still marked unbuilt below are what those steps owe.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -550,7 +555,10 @@ the checker reports a `demo` field as unknown, and the invariants below are what
 | Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | not yet built | untested |
 | A demo under `domain/` carries exactly one variant | not yet built | untested |
 | A page's fingerprint covers its demos, so editing one lifts a stale approval | not yet built | untested |
-| A demo over 500 KB is a warning, never an error | not yet built | untested |
+| A demo over 500 KB is a warning, never an error | `demo.mjs`, for a demo delta; not yet built over `domain/` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+| A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+| A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+| `devbook-delta/` holds Markdown deltas and demos and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 
 ### Reference Graph
 

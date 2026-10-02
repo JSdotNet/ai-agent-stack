@@ -5,7 +5,7 @@
 // build. `delta.mjs --check` runs these on every demo a change carries.
 //
 // A demo is one HTML document built on the template: a managed region between
-// `template:begin hash=…` and `template:end`, the template's own; a
+// `<!-- template:begin hash=… -->` and `<!-- template:end -->`, the template's own; a
 // `demo-model` JSON script the panel reads; a `demo-meta` JSON script holding
 // `question` and nothing else; every style, script, and image inline.
 
@@ -53,12 +53,15 @@ export function demoFileIssues(relPath, html) {
     }
     if (!/<html[\s>]/i.test(html)) error(`is not an HTML document — a demo is one file with its \`<html>\` element.`);
 
-    const begin = html.indexOf("template:begin");
-    const end = html.indexOf("template:end");
+    // The markers are HTML comments; the template's own script may name them in text.
+    const begins = [...html.matchAll(/<!--\s*template:begin\s+hash=\S+\s*-->/g)];
+    const ends = [...html.matchAll(/<!--\s*template:end\s*-->/g)];
+    const begin = begins[0]?.index ?? -1;
+    const end = ends[0]?.index ?? -1;
     const managed = begin !== -1 && end > begin;
     if (!managed) {
-        error(`has no template managed region — a demo is built on the repository's demo template, its region between \`template:begin hash=…\` and \`template:end\` kept as the template wrote it.`);
-    } else if (html.indexOf("template:begin", begin + 1) !== -1 || html.indexOf("template:end", end + 1) !== -1) {
+        error(`has no template managed region — a demo is built on the repository's demo template, its region between \`<!-- template:begin hash=… -->\` and \`<!-- template:end -->\` kept as the template wrote it.`);
+    } else if (begins.length > 1 || ends.length > 1) {
         error(`has more than one template managed region — the template is in a demo once.`);
     }
     const outside = managed ? html.slice(0, begin) + html.slice(end) : html;

@@ -76,6 +76,16 @@ check(
     has(demoFileIssues(AT, demo({ meta: { question: "Q?", status: "approved", verdict: "yes" } })), /`status`, `verdict` in its `demo-meta`/),
     "a demo-meta naming a status or verdict is an error"
 );
+check(
+    has(demoFileIssues(AT, demo({ head: `<!-- template:begin hash=x --><!-- template:end -->` })), /more than one template managed region/),
+    "a demo with two managed regions is an error"
+);
+{
+    // The shipped sample demo, built on the real template, whose script names the marker in a regex.
+    const sample = new URL("../../../devbook-procedures/assets/demo-sample/features.demo.html", import.meta.url);
+    const html = await readFile(sample, "utf8").catch(() => null);
+    if (html !== null) check(!errorsOf(demoFileIssues(AT, html)).length, "the sample demo on the shipped template passes the demo rules", JSON.stringify(demoFileIssues(AT, html)));
+}
 {
     const big = demo({ app: `<p>${"x".repeat(DEMO_SIZE_TARGET)}</p>` });
     const issues = demoFileIssues(AT, big);

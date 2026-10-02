@@ -1,24 +1,24 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/arc42",
   "sources": [
     ".devbook/arc42"
   ],
   "stats": {
-    "nodes": 467,
-    "edges": 1096,
+    "nodes": 491,
+    "edges": 1161,
     "nodesByFolder": {
-      "arc42": 457,
+      "arc42": 481,
       "tech": 7,
       "ai": 3
     },
     "nodesByType": {
-      "file": 44,
-      "chapter": 423
+      "file": 46,
+      "chapter": 445
     },
     "nodesByKind": {
-      "none": 458,
+      "none": 482,
       "practice": 2,
       "platform": 4,
       "skill": 1,
@@ -26,14 +26,14 @@
       "library": 1
     },
     "nodesByStatus": {
-      "active": 457,
+      "active": 481,
       "adopted": 5,
       "candidate": 1,
       "trial": 4
     },
     "edgesByType": {
-      "contains": 414,
-      "related": 682
+      "contains": 436,
+      "related": 725
     }
   },
   "problems": [],
@@ -176,7 +176,7 @@
           "line": 18,
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-21",
+          "date": "2026-10-01",
           "related": [
             ".devbook/arc42/building-blocks/README.md",
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
@@ -193,7 +193,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "plugin-folder",
           "level": 2,
-          "line": 107,
+          "line": 110,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -213,7 +213,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "level-2-what-lands-in-a-repository",
           "level": 2,
-          "line": 210,
+          "line": 213,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-21",
@@ -234,7 +234,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "roles-and-services",
           "level": 2,
-          "line": 286,
+          "line": 289,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -254,7 +254,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "surface-plugins",
           "level": 2,
-          "line": 329,
+          "line": 332,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-03",
@@ -273,7 +273,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "host-slots",
           "level": 2,
-          "line": 361,
+          "line": 364,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-23",
@@ -292,7 +292,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "config-plugin",
           "level": 2,
-          "line": 395,
+          "line": 398,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -313,7 +313,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "stack-config",
           "level": 2,
-          "line": 449,
+          "line": 452,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-21",
@@ -332,7 +332,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "schedule-plugin",
           "level": 2,
-          "line": 488,
+          "line": 491,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-07",
@@ -352,7 +352,7 @@
           "path": ".devbook/arc42/05-building-block-view.md",
           "slug": "asset-kinds",
           "level": 2,
-          "line": 538,
+          "line": 541,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -1265,6 +1265,26 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/12-glossary.md#demo",
+          "label": "Demo",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "demo",
+          "level": 2,
+          "line": 151,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-02",
+          "related": [
+            ".devbook/arc42/adr/demos.md",
+            ".devbook/arc42/building-blocks/devbook.md#demo",
+            ".devbook/arc42/12-glossary.md#prototype"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/12-glossary.md#derived-index",
           "label": "Derived Index",
           "type": "chapter",
@@ -1272,7 +1292,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "derived-index",
           "level": 2,
-          "line": 151,
+          "line": 169,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1293,7 +1313,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "drift-verdict",
           "level": 2,
-          "line": 168,
+          "line": 187,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1312,7 +1332,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "engine-key",
           "level": 2,
-          "line": 186,
+          "line": 205,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1333,7 +1353,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "headless",
           "level": 2,
-          "line": 203,
+          "line": 222,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1352,7 +1372,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "idleness",
           "level": 2,
-          "line": 219,
+          "line": 238,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1371,7 +1391,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "invariant",
           "level": 2,
-          "line": 236,
+          "line": 255,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-24",
@@ -1390,7 +1410,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "park",
           "level": 2,
-          "line": 255,
+          "line": 274,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1410,7 +1430,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "personal-validation",
           "level": 2,
-          "line": 273,
+          "line": 292,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1431,7 +1451,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "pr-lane",
           "level": 2,
-          "line": 297,
+          "line": 316,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1451,7 +1471,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "preamble",
           "level": 2,
-          "line": 314,
+          "line": 333,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1470,7 +1490,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "preview",
           "level": 2,
-          "line": 332,
+          "line": 351,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1489,13 +1509,52 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "proposal",
           "level": 2,
-          "line": 348,
+          "line": 367,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-28",
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#change",
             ".devbook/arc42/12-glossary.md#change"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/12-glossary.md#prototype",
+          "label": "Prototype",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "prototype",
+          "level": 2,
+          "line": 384,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-02",
+          "related": [
+            ".devbook/arc42/adr/demos.md#how-prototyping-works",
+            ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+            ".devbook/arc42/12-glossary.md#demo"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/12-glossary.md#prototyping",
+          "label": "Prototyping",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "prototyping",
+          "level": 2,
+          "line": 399,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-02",
+          "related": [
+            ".devbook/arc42/adr/demos.md#how-prototyping-works",
+            ".devbook/arc42/building-blocks/devbook-procedures.md#goal"
           ]
         }
       },
@@ -1508,7 +1567,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "provider",
           "level": 2,
-          "line": 365,
+          "line": 415,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1528,7 +1587,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "reconcile",
           "level": 2,
-          "line": 382,
+          "line": 432,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1548,7 +1607,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "report",
           "level": 2,
-          "line": 398,
+          "line": 448,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1568,7 +1627,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "requirement",
           "level": 2,
-          "line": 414,
+          "line": 464,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-24",
@@ -1587,7 +1646,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "review-pass",
           "level": 2,
-          "line": 432,
+          "line": 482,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1606,7 +1665,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "scheduler",
           "level": 2,
-          "line": 448,
+          "line": 498,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1626,13 +1685,72 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "stale-approval",
           "level": 2,
-          "line": 466,
+          "line": 516,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
           "related": [
             ".devbook/arc42/building-blocks/devbook-collaboration.md",
             ".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/12-glossary.md#sync-direction",
+          "label": "Sync Direction",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "sync-direction",
+          "level": 2,
+          "line": 531,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-01",
+          "related": [
+            ".devbook/arc42/building-blocks/devbook.md",
+            ".devbook/arc42/building-blocks/devbook.md#meta-block",
+            ".devbook/arc42/adr/chapter-schema.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/12-glossary.md#sync-group",
+          "label": "Sync Group",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "sync-group",
+          "level": 2,
+          "line": 548,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-01",
+          "related": [
+            ".devbook/arc42/building-blocks/devbook.md",
+            ".devbook/arc42/adr/chapter-schema.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/12-glossary.md#sync-unit",
+          "label": "Sync Unit",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/12-glossary.md",
+          "slug": "sync-unit",
+          "level": 2,
+          "line": 563,
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-01",
+          "related": [
+            ".devbook/arc42/building-blocks/devbook.md",
+            ".devbook/arc42/building-blocks/devbook.md#spec-converter",
+            ".devbook/arc42/adr/chapter-schema.md"
           ]
         }
       },
@@ -1645,7 +1763,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "tier",
           "level": 2,
-          "line": 481,
+          "line": 579,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1664,7 +1782,7 @@
           "path": ".devbook/arc42/12-glossary.md",
           "slug": "unanswered-group",
           "level": 2,
-          "line": 496,
+          "line": 594,
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-08",
@@ -1711,7 +1829,7 @@
           "path": ".devbook/arc42/adr/README.md",
           "slug": "where-a-numbered-record-went",
           "level": 2,
-          "line": 38,
+          "line": 39,
           "status": "active",
           "statusDeclared": false
         }
@@ -1788,7 +1906,7 @@
           "path": ".devbook/arc42/adr/chapter-schema.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-28",
+          "date": "2026-10-01",
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/building-blocks/devbook.md",
@@ -1808,7 +1926,7 @@
           "path": ".devbook/arc42/adr/chapter-schema.md",
           "slug": "why",
           "level": 2,
-          "line": 33,
+          "line": 35,
           "status": "active",
           "statusDeclared": false
         }
@@ -1822,7 +1940,7 @@
           "path": ".devbook/arc42/adr/chapter-schema.md",
           "slug": "rejected",
           "level": 2,
-          "line": 285,
+          "line": 308,
           "status": "active",
           "statusDeclared": false
         }
@@ -1836,7 +1954,7 @@
           "path": ".devbook/arc42/adr/chapter-schema.md",
           "slug": "history",
           "level": 2,
-          "line": 316,
+          "line": 342,
           "status": "active",
           "statusDeclared": false
         }
@@ -1850,7 +1968,7 @@
           "path": ".devbook/arc42/adr/checks-and-indexes.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-28",
+          "date": "2026-10-01",
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/building-blocks/devbook.md#index-generator",
@@ -1884,7 +2002,7 @@
           "path": ".devbook/arc42/adr/checks-and-indexes.md",
           "slug": "rejected",
           "level": 2,
-          "line": 65,
+          "line": 81,
           "status": "active",
           "statusDeclared": false
         }
@@ -1898,7 +2016,7 @@
           "path": ".devbook/arc42/adr/checks-and-indexes.md",
           "slug": "history",
           "level": 2,
-          "line": 81,
+          "line": 99,
           "status": "active",
           "statusDeclared": false
         }
@@ -1961,6 +2079,140 @@
           "slug": "history",
           "level": 2,
           "line": 85,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md",
+          "label": "Demos",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-02",
+          "related": [
+            ".devbook/arc42/09-architecture-decisions.md",
+            ".devbook/arc42/building-blocks/devbook.md#demo",
+            ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+            ".devbook/arc42/12-glossary.md#demo",
+            ".devbook/arc42/12-glossary.md#prototype",
+            ".devbook/arc42/12-glossary.md#prototyping",
+            ".devbook/arc42/adr/chapter-schema.md",
+            ".devbook/arc42/adr/annotations.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#why",
+          "label": "Why",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "why",
+          "level": 2,
+          "line": 13,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#where-it-lives",
+          "label": "Where it lives",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "where-it-lives",
+          "level": 3,
+          "line": 24,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#the-file-never-knows-its-lifecycle",
+          "label": "The file never knows its lifecycle",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "the-file-never-knows-its-lifecycle",
+          "level": 3,
+          "line": 47,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#how-prototyping-works",
+          "label": "How prototyping works",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "how-prototyping-works",
+          "level": 3,
+          "line": 72,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#the-template",
+          "label": "The template",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "the-template",
+          "level": 3,
+          "line": 93,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#what-already-landed",
+          "label": "What already landed",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "what-already-landed",
+          "level": 3,
+          "line": 109,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#rejected",
+          "label": "Rejected",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "rejected",
+          "level": 2,
+          "line": 121,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/adr/demos.md#history",
+          "label": "History",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/adr/demos.md",
+          "slug": "history",
+          "level": 2,
+          "line": 143,
           "status": "active",
           "statusDeclared": false
         }
@@ -2198,7 +2450,7 @@
           "path": ".devbook/arc42/adr/install.md",
           "slug": "rejected",
           "level": 2,
-          "line": 121,
+          "line": 126,
           "status": "active",
           "statusDeclared": false
         }
@@ -2212,7 +2464,7 @@
           "path": ".devbook/arc42/adr/install.md",
           "slug": "history",
           "level": 2,
-          "line": 139,
+          "line": 144,
           "status": "active",
           "statusDeclared": false
         }
@@ -2226,13 +2478,14 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-21",
+          "date": "2026-10-01",
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
             ".devbook/arc42/05-building-block-view.md#config-plugin",
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/building-blocks/README.md",
+            ".devbook/arc42/building-blocks/devbook-skills.md",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin",
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
             ".devbook/arc42/08-crosscutting-concepts.md#role",
@@ -2266,7 +2519,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "rejected",
           "level": 2,
-          "line": 138,
+          "line": 151,
           "status": "active",
           "statusDeclared": false
         }
@@ -2280,7 +2533,7 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "slug": "history",
           "level": 2,
-          "line": 163,
+          "line": 180,
           "status": "active",
           "statusDeclared": false
         }
@@ -2419,7 +2672,8 @@
           "statusDeclared": false,
           "related": [
             ".devbook/arc42/05-building-block-view.md",
-            ".devbook/arc42/08-crosscutting-concepts.md"
+            ".devbook/arc42/08-crosscutting-concepts.md",
+            ".devbook/arc42/building-blocks/devbook-skills.md"
           ]
         }
       },
@@ -4854,7 +5108,7 @@
           "path": ".devbook/arc42/building-blocks/delivery.md",
           "slug": "inbound",
           "level": 3,
-          "line": 1183,
+          "line": 1184,
           "status": "active",
           "statusDeclared": false
         }
@@ -6103,7 +6357,9 @@
           "statusDeclared": false,
           "related": [
             ".devbook/arc42/building-blocks/devbook-procedures.md#procedure",
-            ".devbook/arc42/08-crosscutting-concepts.md#published-languages"
+            ".devbook/arc42/08-crosscutting-concepts.md#published-languages",
+            ".devbook/arc42/adr/demos.md",
+            ".devbook/arc42/12-glossary.md#prototype"
           ]
         }
       },
@@ -6116,7 +6372,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-procedures.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 130,
+          "line": 143,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6134,7 +6390,7 @@
           "path": ".devbook/arc42/building-blocks/devbook-procedures.md",
           "slug": "outbound",
           "level": 3,
-          "line": 139,
+          "line": 152,
           "status": "active",
           "statusDeclared": false
         }
@@ -6148,7 +6404,115 @@
           "path": ".devbook/arc42/building-blocks/devbook-procedures.md",
           "slug": "inbound",
           "level": 3,
-          "line": 151,
+          "line": 164,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "label": "devbook-skills",
+          "type": "file",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/building-blocks/README.md",
+            ".devbook/arc42/adr/plugin-boundaries.md",
+            ".devbook/arc42/building-blocks/devbook.md#dependencies",
+            ".devbook/arc42/building-blocks/delivery.md#dependencies"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#interfaces",
+          "label": "Interfaces",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "interfaces",
+          "level": 2,
+          "line": 17,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#show-me",
+          "label": "show-me",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "show-me",
+          "level": 3,
+          "line": 26,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/adr/plugin-boundaries.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#structure",
+          "label": "Structure",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "structure",
+          "level": 2,
+          "line": 37,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "label": "Dependencies",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "dependencies",
+          "level": 2,
+          "line": 62,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/08-crosscutting-concepts.md#layer",
+            ".devbook/arc42/adr/plugin-boundaries.md"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#outbound",
+          "label": "Outbound",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "outbound",
+          "level": 3,
+          "line": 77,
+          "status": "active",
+          "statusDeclared": false
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook-skills.md#inbound",
+          "label": "Inbound",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "slug": "inbound",
+          "level": 3,
+          "line": 87,
           "status": "active",
           "statusDeclared": false
         }
@@ -6200,7 +6564,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "init",
           "level": 3,
-          "line": 52,
+          "line": 53,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6218,7 +6582,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "update",
           "level": 3,
-          "line": 63,
+          "line": 64,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6236,7 +6600,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "validate",
           "level": 3,
-          "line": 81,
+          "line": 82,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6254,7 +6618,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "tech-update",
           "level": 3,
-          "line": 97,
+          "line": 98,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6272,7 +6636,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "prose-check",
           "level": 3,
-          "line": 109,
+          "line": 110,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6290,7 +6654,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "annotation-sweep",
           "level": 3,
-          "line": 121,
+          "line": 122,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6309,7 +6673,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "capture-specs",
           "level": 3,
-          "line": 131,
+          "line": 132,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6327,7 +6691,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "apply-change",
           "level": 3,
-          "line": 180,
+          "line": 181,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6345,7 +6709,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "verify-change",
           "level": 3,
-          "line": 196,
+          "line": 197,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6362,7 +6726,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "structure",
           "level": 2,
-          "line": 218,
+          "line": 219,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6381,7 +6745,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "model",
           "level": 3,
-          "line": 228,
+          "line": 229,
           "status": "active",
           "statusDeclared": false
         }
@@ -6395,7 +6759,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "chapter",
           "level": 3,
-          "line": 328,
+          "line": 329,
           "status": "active",
           "statusDeclared": false
         }
@@ -6409,7 +6773,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "meta-block",
           "level": 3,
-          "line": 385,
+          "line": 386,
           "status": "active",
           "statusDeclared": false
         }
@@ -6423,7 +6787,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "annotation",
           "level": 3,
-          "line": 414,
+          "line": 417,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6440,7 +6804,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "devbook-folder",
           "level": 3,
-          "line": 445,
+          "line": 448,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6459,7 +6823,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "change",
           "level": 3,
-          "line": 475,
+          "line": 478,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6472,6 +6836,26 @@
       },
       {
         "data": {
+          "id": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "label": "Demo",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook.md",
+          "slug": "demo",
+          "level": 3,
+          "line": 512,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/adr/demos.md",
+            ".devbook/arc42/12-glossary.md#demo",
+            ".devbook/arc42/building-blocks/devbook.md#change",
+            ".devbook/arc42/building-blocks/devbook-procedures.md#goal"
+          ]
+        }
+      },
+      {
+        "data": {
           "id": ".devbook/arc42/building-blocks/devbook.md#reference-graph",
           "label": "Reference Graph",
           "type": "chapter",
@@ -6479,7 +6863,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reference-graph",
           "level": 3,
-          "line": 509,
+          "line": 541,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6497,7 +6881,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reconciler",
           "level": 3,
-          "line": 543,
+          "line": 575,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6515,7 +6899,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "index-generator",
           "level": 3,
-          "line": 570,
+          "line": 602,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6534,7 +6918,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "fence-writer",
           "level": 3,
-          "line": 597,
+          "line": 637,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6552,12 +6936,32 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "tech-inventory",
           "level": 3,
-          "line": 617,
+          "line": 657,
           "status": "active",
           "statusDeclared": false,
           "related": [
             ".devbook/arc42/building-blocks/devbook.md#tech-update",
             ".devbook/arc42/building-blocks/devbook.md#devbook-folder"
+          ]
+        }
+      },
+      {
+        "data": {
+          "id": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "label": "Unit Lister",
+          "type": "chapter",
+          "folder": "arc42",
+          "path": ".devbook/arc42/building-blocks/devbook.md",
+          "slug": "unit-lister",
+          "level": 3,
+          "line": 675,
+          "status": "active",
+          "statusDeclared": false,
+          "related": [
+            ".devbook/arc42/12-glossary.md#sync-unit",
+            ".devbook/arc42/12-glossary.md#sync-group",
+            ".devbook/arc42/adr/chapter-schema.md",
+            ".devbook/arc42/building-blocks/devbook.md#spec-converter"
           ]
         }
       },
@@ -6570,7 +6974,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "spec-converter",
           "level": 3,
-          "line": 635,
+          "line": 709,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6589,7 +6993,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "shared-value-objects",
           "level": 3,
-          "line": 672,
+          "line": 750,
           "status": "active",
           "statusDeclared": false
         }
@@ -6603,7 +7007,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "runtime",
           "level": 2,
-          "line": 709,
+          "line": 787,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6622,7 +7026,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "reconciling-a-repository",
           "level": 3,
-          "line": 718,
+          "line": 796,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6639,7 +7043,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "a-chapters-standing",
           "level": 3,
-          "line": 759,
+          "line": 837,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6657,7 +7061,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "catching-up-with-the-code",
           "level": 3,
-          "line": 796,
+          "line": 874,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6675,7 +7079,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "dependencies",
           "level": 2,
-          "line": 861,
+          "line": 939,
           "status": "active",
           "statusDeclared": false,
           "related": [
@@ -6694,7 +7098,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "outbound",
           "level": 3,
-          "line": 870,
+          "line": 948,
           "status": "active",
           "statusDeclared": false
         }
@@ -6708,7 +7112,7 @@
           "path": ".devbook/arc42/building-blocks/devbook.md",
           "slug": "inbound",
           "level": 3,
-          "line": 882,
+          "line": 961,
           "status": "active",
           "statusDeclared": false
         }
@@ -7422,7 +7826,7 @@
           "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
           "slug": "origin",
           "level": 2,
-          "line": 60,
+          "line": 61,
           "status": "active",
           "statusDeclared": false
         }
@@ -7436,7 +7840,7 @@
           "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
           "slug": "affected-components",
           "level": 2,
-          "line": 69,
+          "line": 70,
           "status": "active",
           "statusDeclared": false
         }
@@ -7450,7 +7854,7 @@
           "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
           "slug": "impact",
           "level": 2,
-          "line": 91,
+          "line": 92,
           "status": "active",
           "statusDeclared": false
         }
@@ -7464,7 +7868,7 @@
           "path": ".devbook/arc42/tdr/8-the-domain-rule-is-not-exercised-here.md",
           "slug": "remediation-options",
           "level": 2,
-          "line": 107,
+          "line": 108,
           "status": "active",
           "statusDeclared": false
         }
@@ -8288,6 +8692,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#demo",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#demo",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#derived-index",
           "source": ".devbook/arc42/12-glossary.md",
           "target": ".devbook/arc42/12-glossary.md#derived-index",
@@ -8384,6 +8796,22 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#prototype",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#prototype",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#prototyping",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#prototyping",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#provider",
           "source": ".devbook/arc42/12-glossary.md",
           "target": ".devbook/arc42/12-glossary.md#provider",
@@ -8435,6 +8863,30 @@
           "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#stale-approval",
           "source": ".devbook/arc42/12-glossary.md",
           "target": ".devbook/arc42/12-glossary.md#stale-approval",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#sync-direction",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#sync-direction",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#sync-group",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#sync-group",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/12-glossary.md->.devbook/arc42/12-glossary.md#sync-unit",
+          "source": ".devbook/arc42/12-glossary.md",
+          "target": ".devbook/arc42/12-glossary.md#sync-unit",
           "type": "contains"
         }
       },
@@ -8563,6 +9015,70 @@
           "id": "contains:.devbook/arc42/adr/configuration.md->.devbook/arc42/adr/configuration.md#history",
           "source": ".devbook/arc42/adr/configuration.md",
           "target": ".devbook/arc42/adr/configuration.md#history",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md->.devbook/arc42/adr/demos.md#why",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/adr/demos.md#why",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md#why->.devbook/arc42/adr/demos.md#where-it-lives",
+          "source": ".devbook/arc42/adr/demos.md#why",
+          "target": ".devbook/arc42/adr/demos.md#where-it-lives",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md#why->.devbook/arc42/adr/demos.md#the-file-never-knows-its-lifecycle",
+          "source": ".devbook/arc42/adr/demos.md#why",
+          "target": ".devbook/arc42/adr/demos.md#the-file-never-knows-its-lifecycle",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md#why->.devbook/arc42/adr/demos.md#how-prototyping-works",
+          "source": ".devbook/arc42/adr/demos.md#why",
+          "target": ".devbook/arc42/adr/demos.md#how-prototyping-works",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md#why->.devbook/arc42/adr/demos.md#the-template",
+          "source": ".devbook/arc42/adr/demos.md#why",
+          "target": ".devbook/arc42/adr/demos.md#the-template",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md#why->.devbook/arc42/adr/demos.md#what-already-landed",
+          "source": ".devbook/arc42/adr/demos.md#why",
+          "target": ".devbook/arc42/adr/demos.md#what-already-landed",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md->.devbook/arc42/adr/demos.md#rejected",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/adr/demos.md#rejected",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/adr/demos.md->.devbook/arc42/adr/demos.md#history",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/adr/demos.md#history",
           "type": "contains"
         }
       },
@@ -10472,6 +10988,54 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/devbook-skills.md#interfaces",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#interfaces",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md#interfaces->.devbook/arc42/building-blocks/devbook-skills.md#show-me",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#interfaces",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#show-me",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/devbook-skills.md#structure",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#structure",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md#dependencies->.devbook/arc42/building-blocks/devbook-skills.md#outbound",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#outbound",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook-skills.md#dependencies->.devbook/arc42/building-blocks/devbook-skills.md#inbound",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md#inbound",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/building-blocks/devbook.md->.devbook/arc42/building-blocks/devbook.md#interfaces",
           "source": ".devbook/arc42/building-blocks/devbook.md",
           "target": ".devbook/arc42/building-blocks/devbook.md#interfaces",
@@ -10608,6 +11172,14 @@
       },
       {
         "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook.md#structure->.devbook/arc42/building-blocks/devbook.md#demo",
+          "source": ".devbook/arc42/building-blocks/devbook.md#structure",
+          "target": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
           "id": "contains:.devbook/arc42/building-blocks/devbook.md#structure->.devbook/arc42/building-blocks/devbook.md#reference-graph",
           "source": ".devbook/arc42/building-blocks/devbook.md#structure",
           "target": ".devbook/arc42/building-blocks/devbook.md#reference-graph",
@@ -10643,6 +11215,14 @@
           "id": "contains:.devbook/arc42/building-blocks/devbook.md#structure->.devbook/arc42/building-blocks/devbook.md#tech-inventory",
           "source": ".devbook/arc42/building-blocks/devbook.md#structure",
           "target": ".devbook/arc42/building-blocks/devbook.md#tech-inventory",
+          "type": "contains"
+        }
+      },
+      {
+        "data": {
+          "id": "contains:.devbook/arc42/building-blocks/devbook.md#structure->.devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "source": ".devbook/arc42/building-blocks/devbook.md#structure",
+          "target": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
           "type": "contains"
         }
       },
@@ -12416,6 +12996,30 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#demo->.devbook/arc42/adr/demos.md",
+          "source": ".devbook/arc42/12-glossary.md#demo",
+          "target": ".devbook/arc42/adr/demos.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#demo->.devbook/arc42/building-blocks/devbook.md#demo",
+          "source": ".devbook/arc42/12-glossary.md#demo",
+          "target": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#demo->.devbook/arc42/12-glossary.md#prototype",
+          "source": ".devbook/arc42/12-glossary.md#demo",
+          "target": ".devbook/arc42/12-glossary.md#prototype",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/12-glossary.md#derived-index->.devbook/arc42/building-blocks/devbook-derived.md",
           "source": ".devbook/arc42/12-glossary.md#derived-index",
           "target": ".devbook/arc42/building-blocks/devbook-derived.md",
@@ -12672,6 +13276,46 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#prototype->.devbook/arc42/adr/demos.md#how-prototyping-works",
+          "source": ".devbook/arc42/12-glossary.md#prototype",
+          "target": ".devbook/arc42/adr/demos.md#how-prototyping-works",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#prototype->.devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "source": ".devbook/arc42/12-glossary.md#prototype",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#prototype->.devbook/arc42/12-glossary.md#demo",
+          "source": ".devbook/arc42/12-glossary.md#prototype",
+          "target": ".devbook/arc42/12-glossary.md#demo",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#prototyping->.devbook/arc42/adr/demos.md#how-prototyping-works",
+          "source": ".devbook/arc42/12-glossary.md#prototyping",
+          "target": ".devbook/arc42/adr/demos.md#how-prototyping-works",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#prototyping->.devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "source": ".devbook/arc42/12-glossary.md#prototyping",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/12-glossary.md#provider->.devbook/arc42/building-blocks/delivery.md",
           "source": ".devbook/arc42/12-glossary.md#provider",
           "target": ".devbook/arc42/building-blocks/delivery.md",
@@ -12811,6 +13455,70 @@
           "id": "related:.devbook/arc42/12-glossary.md#stale-approval->.devbook/arc42/building-blocks/devbook-collaboration.md#review-queue",
           "source": ".devbook/arc42/12-glossary.md#stale-approval",
           "target": ".devbook/arc42/building-blocks/devbook-collaboration.md#review-queue",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-direction->.devbook/arc42/building-blocks/devbook.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-direction",
+          "target": ".devbook/arc42/building-blocks/devbook.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-direction->.devbook/arc42/building-blocks/devbook.md#meta-block",
+          "source": ".devbook/arc42/12-glossary.md#sync-direction",
+          "target": ".devbook/arc42/building-blocks/devbook.md#meta-block",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-direction->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-direction",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-group->.devbook/arc42/building-blocks/devbook.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-group",
+          "target": ".devbook/arc42/building-blocks/devbook.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-group->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-group",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-unit->.devbook/arc42/building-blocks/devbook.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-unit",
+          "target": ".devbook/arc42/building-blocks/devbook.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-unit->.devbook/arc42/building-blocks/devbook.md#spec-converter",
+          "source": ".devbook/arc42/12-glossary.md#sync-unit",
+          "target": ".devbook/arc42/building-blocks/devbook.md#spec-converter",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/12-glossary.md#sync-unit->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/12-glossary.md#sync-unit",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
           "type": "related"
         }
       },
@@ -13051,6 +13759,70 @@
           "id": "related:.devbook/arc42/adr/configuration.md->.devbook/arc42/adr/install.md",
           "source": ".devbook/arc42/adr/configuration.md",
           "target": ".devbook/arc42/adr/install.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/09-architecture-decisions.md",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/09-architecture-decisions.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/building-blocks/devbook.md#demo",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/12-glossary.md#demo",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/12-glossary.md#demo",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/12-glossary.md#prototype",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/12-glossary.md#prototype",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/12-glossary.md#prototyping",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/12-glossary.md#prototyping",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/adr/demos.md->.devbook/arc42/adr/annotations.md",
+          "source": ".devbook/arc42/adr/demos.md",
+          "target": ".devbook/arc42/adr/annotations.md",
           "type": "related"
         }
       },
@@ -13320,6 +14092,14 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/adr/plugin-boundaries.md->.devbook/arc42/building-blocks/devbook-skills.md",
+          "source": ".devbook/arc42/adr/plugin-boundaries.md",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/adr/plugin-boundaries.md->.devbook/arc42/08-crosscutting-concepts.md#plugin",
           "source": ".devbook/arc42/adr/plugin-boundaries.md",
           "target": ".devbook/arc42/08-crosscutting-concepts.md#plugin",
@@ -13475,6 +14255,14 @@
           "id": "related:.devbook/arc42/building-blocks/README.md->.devbook/arc42/08-crosscutting-concepts.md",
           "source": ".devbook/arc42/building-blocks/README.md",
           "target": ".devbook/arc42/08-crosscutting-concepts.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/README.md->.devbook/arc42/building-blocks/devbook-skills.md",
+          "source": ".devbook/arc42/building-blocks/README.md",
+          "target": ".devbook/arc42/building-blocks/devbook-skills.md",
           "type": "related"
         }
       },
@@ -15768,6 +16556,22 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-procedures.md#goal->.devbook/arc42/adr/demos.md",
+          "source": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "target": ".devbook/arc42/adr/demos.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-procedures.md#goal->.devbook/arc42/12-glossary.md#prototype",
+          "source": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "target": ".devbook/arc42/12-glossary.md#prototype",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/building-blocks/devbook-procedures.md#dependencies->.devbook/arc42/building-blocks/devbook.md#dependencies",
           "source": ".devbook/arc42/building-blocks/devbook-procedures.md#dependencies",
           "target": ".devbook/arc42/building-blocks/devbook.md#dependencies",
@@ -15779,6 +16583,62 @@
           "id": "related:.devbook/arc42/building-blocks/devbook-procedures.md#dependencies->.devbook/arc42/08-crosscutting-concepts.md#layer",
           "source": ".devbook/arc42/building-blocks/devbook-procedures.md#dependencies",
           "target": ".devbook/arc42/08-crosscutting-concepts.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/README.md",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/README.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/devbook.md#dependencies",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/devbook.md#dependencies",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md->.devbook/arc42/building-blocks/delivery.md#dependencies",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "target": ".devbook/arc42/building-blocks/delivery.md#dependencies",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md#show-me->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#show-me",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md#dependencies->.devbook/arc42/08-crosscutting-concepts.md#layer",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "target": ".devbook/arc42/08-crosscutting-concepts.md#layer",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook-skills.md#dependencies->.devbook/arc42/adr/plugin-boundaries.md",
+          "source": ".devbook/arc42/building-blocks/devbook-skills.md#dependencies",
+          "target": ".devbook/arc42/adr/plugin-boundaries.md",
           "type": "related"
         }
       },
@@ -16088,6 +16948,38 @@
       },
       {
         "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#demo->.devbook/arc42/adr/demos.md",
+          "source": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "target": ".devbook/arc42/adr/demos.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#demo->.devbook/arc42/12-glossary.md#demo",
+          "source": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "target": ".devbook/arc42/12-glossary.md#demo",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#demo->.devbook/arc42/building-blocks/devbook.md#change",
+          "source": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "target": ".devbook/arc42/building-blocks/devbook.md#change",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#demo->.devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "source": ".devbook/arc42/building-blocks/devbook.md#demo",
+          "target": ".devbook/arc42/building-blocks/devbook-procedures.md#goal",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
           "id": "related:.devbook/arc42/building-blocks/devbook.md#reference-graph->.devbook/arc42/adr/checks-and-indexes.md",
           "source": ".devbook/arc42/building-blocks/devbook.md#reference-graph",
           "target": ".devbook/arc42/adr/checks-and-indexes.md",
@@ -16171,6 +17063,38 @@
           "id": "related:.devbook/arc42/building-blocks/devbook.md#tech-inventory->.devbook/arc42/building-blocks/devbook.md#devbook-folder",
           "source": ".devbook/arc42/building-blocks/devbook.md#tech-inventory",
           "target": ".devbook/arc42/building-blocks/devbook.md#devbook-folder",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#unit-lister->.devbook/arc42/12-glossary.md#sync-unit",
+          "source": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "target": ".devbook/arc42/12-glossary.md#sync-unit",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#unit-lister->.devbook/arc42/12-glossary.md#sync-group",
+          "source": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "target": ".devbook/arc42/12-glossary.md#sync-group",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#unit-lister->.devbook/arc42/adr/chapter-schema.md",
+          "source": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "target": ".devbook/arc42/adr/chapter-schema.md",
+          "type": "related"
+        }
+      },
+      {
+        "data": {
+          "id": "related:.devbook/arc42/building-blocks/devbook.md#unit-lister->.devbook/arc42/building-blocks/devbook.md#spec-converter",
+          "source": ".devbook/arc42/building-blocks/devbook.md#unit-lister",
+          "target": ".devbook/arc42/building-blocks/devbook.md#spec-converter",
           "type": "related"
         }
       },

@@ -25,9 +25,17 @@ export const NAMING_SCHEMA_VERSION = 1;
 const asList = (value) => (value == null ? [] : Array.isArray(value) ? value : [value]);
 const fold = (name) => String(name).trim().toLowerCase();
 
+// A rule is not a word. A `requirement` or `invariant` chapter's `aliases` are
+// the codes it is cited by elsewhere — a requirement code from the document it
+// came from, shared by every rule one table row was split into — not names of a
+// concept, so the register leaves the behaviour chapters out, and their codes
+// never collide with a term or with each other. Per the checks-and-indexes
+// decision.
+const RULE_KINDS = new Set(["requirement", "invariant"]);
+
 /** Whether a graph node is an entry in the register. */
 function isTerm(node) {
-    if (node.type !== "chapter" || node.folder !== "domain") return false;
+    if (node.type !== "chapter" || node.folder !== "domain" || RULE_KINDS.has(node.kind)) return false;
     return node.kind === "term" || asList(node.aliases).length > 0;
 }
 

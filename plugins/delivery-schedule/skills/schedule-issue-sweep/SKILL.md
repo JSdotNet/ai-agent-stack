@@ -189,62 +189,13 @@ at `high` confidence, and nothing lowers that.
     aside with their reason: an issue Phase 3 marked needs-info is never resolved in the
     same run.
 
-13. For each selected issue, in order, and never two at once:
-
-    a. **Claim.** Add `in-progress` and assign `@me`; create the label if absent. A claim that
-       fails skips the issue with a line in the brief.
-
-    b. **Branch.** `schedule/issue-sweep/<YYYY-MM-DD>/<number>-<slug>` from an up-to-date
-       base, in a worktree of its own under a temporary root, so the checkout this session
-       runs from stays clean:
-
-       ```bash
-       git fetch origin <base branch>
-       git worktree add "${TMPDIR:-/tmp}/issue-sweep/<number>-<slug>" \
-         -b schedule/issue-sweep/<YYYY-MM-DD>/<number>-<slug> origin/<base branch>
-       ```
-
-       Resolve the path to an absolute one — the script anchors every agent to it.
-
-    c. **Resolve.** Invoke the `Workflow` tool with `resolve-issue.workflow.js` beside this
-       skill — `worktree`, `branch`, `baseBranch`, `changeKind` from the triage verdict,
-       `maxRepairAttempts`, and the issue. It runs scope discovery, a failing test first and
-       the smallest change that passes it, build and unit tests with bounded repair, and two
-       review lenses with a fix pass, spending at most eleven agents, and returns `outcome`,
-       `route`, `parkReasons`, and the summaries the pull request body needs.
-
-    d. **`outcome: "ready"` → draft pull request.** Verify the diff is non-empty and confined
-       to the worktree; an empty diff is a failed run, not an empty pull request. Commit with
-       `<type>(<scope>): <what changed>` under 72 characters, a body stating what changed and
-       why and the criteria met, `Refs #<number>`, and the co-author line. Push and open:
-
-       ```bash
-       git -C "<worktree>" push -u origin <branch>
-       gh pr create --repo <owner/repo> --base <base branch> --head <branch> --draft \
-         --title "<subject line>" --body-file -
-       ```
-
-       The body carries, in this order: `Closes #<number>`; **What changed**; **Acceptance
-       criteria**, each with how it is verified; **Verification** — the command, pass and
-       fail counts, repair attempts; **Review** — findings fixed and findings left open;
-       **What could not be proved** — the `parkReasons` verbatim when `route` is
-       `needs-validation`, or *everything was proved by a test* when it is `small-fix`; this
-       is the section to read first, because it is what personal validation has to cover;
-       **Assumptions** taken instead of asking; and a line saying the pull request was opened
-       as a draft by an unattended run of this skill. Follow the repository's pull request
-       template, labels, and reviewer conventions where it has them.
-
-       Comment the pull request URL on the issue and remove `in-progress`.
-
-    e. **Any other outcome** — `escalated`, `blocked`, `red`, `failed` — opens nothing.
-       Comment on the issue with the outcome, the stage it stopped at, and the reason; remove
-       `in-progress`; add `sweep-failed` (create it if absent) so later runs skip the issue
-       until a person clears it — except on `escalated`, where the label names the successor
-       instead (`needs-adr`, `needs-architecture`).
-
-    f. **Remove the worktree** either way — `git worktree remove --force <path>` — and
-       continue with the next issue. A pushed branch is the record; a session with nobody
-       watching has nothing else to keep.
+13. For each selected issue, in order, land it per `../../resources/draft-pr-contract.md` with
+    schedule `issue-sweep`, item `<number>-<slug>`, the issue itself to claim and close, and
+    failure marker `sweep-failed`. The work script is `../../scripts/resolve-issue.workflow.js`,
+    resolved to an absolute path, with `changeKind` from the triage verdict,
+    `maxRepairAttempts`, and the issue. It runs scope discovery, a failing test first and the
+    smallest change that passes it, build and unit tests with bounded repair, and two review
+    lenses with a fix pass, spending at most eleven agents.
 
 ### Phase 6 — Brief
 

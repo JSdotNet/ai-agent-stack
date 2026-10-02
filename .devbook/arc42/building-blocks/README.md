@@ -16,10 +16,11 @@ one block owns are in the [glossary](../12-glossary.md).
 load, so it is already the line a model cannot cross without somebody declaring it. Thirteen
 files follow the thirteen plugin folders under `plugins/`, name for name.
 
-**The code leads.** Each block describes what its plugin ships, so chapter 5 sets the
-[sync direction](../12-glossary.md#sync-direction) `pull` for all of them: a sweep that finds
-a plugin ahead of its block rewrites the block. A block that should lead its plugin instead
-states its own direction in its file-level `meta` block; none does today.
+**The plugins are the truth.** Each file is one sync unit, and chapter 5's file-level block
+sets `sync: pull` for all of them: when a block and its plugin disagree, the sweep rewrites the
+block from what the plugin ships. A block that should lead its plugin instead states its own
+`sync` in its file-level block; none does today. The levels and values are "Sync direction" in
+`devbook-chapter-metadata.md`.
 
 ## The set
 

@@ -1275,8 +1275,10 @@ export function behaviourIssues(type, meta, scenarios = 0, folder = "domain") {
 
     // Only a requirement is held to its scenarios. An invariant's claim is
     // already the case and its `unit` test names it, so one with none is
-    // complete — and one an older chapter still carries is left alone.
-    if (type === "requirement" && scenarios === 0) {
+    // complete — and one an older chapter still carries is left alone. A
+    // deprecated requirement is a withdrawn promise kept as a record, and a
+    // withdrawn promise has no case left to exercise.
+    if (type === "requirement" && scenarios === 0 && resolveStatus(folder, meta).status !== "deprecated") {
         issues.push({
             severity: "warning",
             message: `is a \`${type}\` chapter with no \`#### Scenario:\` under it — a promise with no case that exercises it is one nobody can tell has been broken, and a brief can derive no acceptance check from it.`,

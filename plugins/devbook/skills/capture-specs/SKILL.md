@@ -11,9 +11,9 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`, then the folder rule that file names. Nothing in them is
 repeated here.
 
-**Kind.** One kind and one target per run. The chapter's `type` decides it —
-`aggregate` (with its owned `entity`, `value-object`, `enum`, the shared
-groupings, and its `domain-event`s), `domain-service` (with the events it
+**Kind.** One target per run, and one kind unless it is a sync group. The
+chapter's `type` decides it — `aggregate` (with its owned `entity`,
+`value-object`, `enum`, the shared groupings, and its `domain-event`s), `domain-service` (with the events it
 raises itself), `feature` and `sub-feature`, `feature-flag` and `setting` (one
 kind, `setting`, for both levels) — and the file decides it where the
 folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file under
@@ -22,9 +22,9 @@ folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file unde
 no chapter yet, take the kind the user names, or infer it from the code's shape
 and say so. Any other chapter is out of scope: say which flow owns it.
 
-**Inputs.** The target — a chapter as `<path>#<heading-slug>` or heading, or a
-code type; either end resolves to the other — the bounded context where the kind
-has one, and the repository root. The kind's file lists what else it needs.
+**Inputs.** The target — a chapter as `<path>#<heading-slug>` or heading, a code
+type, or a sync unit or group per **The sync unit** in the protocol — the bounded
+context where the kind has one, and the repository root.
 
 ## Steps
 

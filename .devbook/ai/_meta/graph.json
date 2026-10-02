@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/ai",
   "sources": [
@@ -290,13 +290,14 @@
           "path": ".devbook/arc42/adr/plugin-boundaries.md",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-21",
+          "date": "2026-10-01",
           "related": [
             ".devbook/arc42/09-architecture-decisions.md",
             ".devbook/arc42/05-building-block-view.md#plugin-folder",
             ".devbook/arc42/05-building-block-view.md#config-plugin",
             ".devbook/arc42/05-building-block-view.md#schedule-plugin",
             ".devbook/arc42/building-blocks/README.md",
+            ".devbook/arc42/building-blocks/devbook-skills.md",
             ".devbook/arc42/08-crosscutting-concepts.md#plugin",
             ".devbook/arc42/08-crosscutting-concepts.md#layer",
             ".devbook/arc42/08-crosscutting-concepts.md#role",

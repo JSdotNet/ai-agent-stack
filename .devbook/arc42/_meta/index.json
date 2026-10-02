@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/arc42",
   "sources": [
@@ -123,7 +123,7 @@
           "title": "Chapter Schema",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-28",
+          "date": "2026-10-01",
           "summary": "A devbook is five folders of Markdown chapters under one parent — .devbook/arc42, .devbook/domain, .devbook/tech, .devbook/design, .devbook/ai — and nowhere else, each addressable heading carrying a fenced meta block. status is one field with one ladder per folder; on domain/'s ladder alone sit two…"
         },
         {
@@ -133,7 +133,7 @@
           "title": "Checks and Indexes",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-28",
+          "date": "2026-10-01",
           "summary": "Four checks gate this repository, and .github/workflows/repo-checks.yml runs all of them on every pull request: tools/check-assets.mjs over the manifests, agents, hooks, rules, and skills; the generator's build.mjs --check over .devbook/, which runs the schema validator on every file; node --test…"
         },
         {
@@ -145,6 +145,17 @@
           "statusDeclared": false,
           "date": "2026-09-29",
           "summary": "A repository's wiring is one committed file, .devbook/config.json: the engine's four keys — bindings, extensions, policy, gates — beside every component's components.<name> entry and a committed id. Unknown keys are rejected by name. A config.local.json outside every clone overlays the engine keys…"
+        },
+        {
+          "type": "file",
+          "name": "demos.md",
+          "path": ".devbook/arc42/adr/demos.md",
+          "title": "Demos",
+          "status": "active",
+          "statusDeclared": false,
+          "date": "2026-10-02",
+          "summary": "A demo is the agreed, clickable picture of what a person sees in a bounded context. It is one self-contained HTML file under domain/, and it is a separate artifact from the disposable prototype it grew from. Only /prototype writes or revises one, always as a standalone file, and that file becomes a…",
+          "diagrams": 1
         },
         {
           "type": "file",
@@ -193,7 +204,7 @@
           "title": "Plugin Boundaries",
           "status": "active",
           "statusDeclared": false,
-          "date": "2026-09-21",
+          "date": "2026-10-01",
           "summary": "Every plugin is self-contained under plugins/<name>/ and either works alone or declares what it needs. There are three ways to couple — a declared dependency on a lower layer, a bridge plugin depending on both sides, a surface capability resolved from the live tool list — and a lower layer never…"
         },
         {
@@ -204,7 +215,7 @@
           "status": "active",
           "statusDeclared": false,
           "date": "2026-09-30",
-          "summary": "Every plugin carries the same version — 1.14.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
+          "summary": "Every plugin carries the same version — 1.15.0 — in both manifests and the marketplace entry, moved together on an explicit ask and never one at a time; the history before 1.0.0 is collapsed, because no consumer installed under it. From that baseline a change to a chapter schema, a stamp shape, a…"
         },
         {
           "type": "file",
@@ -340,6 +351,16 @@
           "status": "active",
           "statusDeclared": false,
           "summary": "Responsible for one thing: that a repository has, by name, the five procedures every repository has and no plugin can write — run, how its application is built and comes up; capture, how evidence is taken; diagnose, how a cause is found inside the running application; estimate, how work is sized…"
+        },
+        {
+          "type": "file",
+          "name": "devbook-skills.md",
+          "path": ".devbook/arc42/building-blocks/devbook-skills.md",
+          "title": "devbook-skills",
+          "status": "active",
+          "statusDeclared": false,
+          "summary": "This block makes sure output reads well. It holds reusable guidance that any plugin can name and none has to depend on. Today that is one skill, show-me: put a picture before the prose whenever the content has a shape.",
+          "diagrams": 1
         },
         {
           "type": "file",

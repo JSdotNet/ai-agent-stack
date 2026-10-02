@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 24,
+  "schemaVersion": 25,
   "generatedBy": ".devbook/_tools/devbook-meta/build.mjs",
   "scope": ".devbook/ai",
   "sources": [

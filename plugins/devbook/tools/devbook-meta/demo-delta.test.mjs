@@ -9,8 +9,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { CHANGES_ROOT } from "./metadata.mjs";
 import { buildGraph } from "./graph.mjs";
-import { applyChange, changeFingerprint, checkChange } from "./delta.mjs";
-import { DEMO_SIZE_TARGET, demoFileIssues, isDemoPath } from "./demo.mjs";
+import { applyChange, changeFingerprint, checkChange, checkDemoDelta } from "./delta.mjs";
+import { demoFileIssues } from "./demo.mjs";
 
 let failed = 0;
 const check = (ok, name, detail) => {
@@ -33,63 +33,27 @@ const AT = ".devbook/domain/ordering/features.demo.html";
 const has = (issues, pattern) => errorsOf(issues).some((i) => pattern.test(i.message));
 
 // -- The demo rules ---------------------------------------------------------
-
-check(isDemoPath(".devbook/domain/ordering/demo.html"), "a context's demo.html is a demo path");
-check(isDemoPath(AT), "a page-named demo is a demo path");
-check(!isDemoPath(".devbook/design/features.demo.html"), "a demo outside domain/ is not a demo path");
-check(!isDemoPath(".devbook/domain/ordering/sub/features.demo.html"), "a demo below a context folder is not a demo path");
+// demo.mjs's own rules are demo.test.mjs's; these pin what a demo delta adds.
 
 check(!errorsOf(demoFileIssues(AT, demo())).length, "a demo on the template passes", JSON.stringify(demoFileIssues(AT, demo())));
-check(has(demoFileIssues(".devbook/design/x.demo.html", demo()), /not where a demo lives/), "a demo landing outside domain/<context>/ is an error");
-check(has(demoFileIssues(AT, "<p>not a document</p>"), /not an HTML document/), "a fragment is not a demo");
-check(has(demoFileIssues(AT, demo({ region: false })), /no template managed region/), "a demo with no managed region is an error");
-check(
-    has(demoFileIssues(AT, demo({ app: "<script>alert(1)</script>" })), /outside the template's managed region/),
-    "a script outside the managed region is an error"
-);
-check(
-    !has(demoFileIssues(AT, demo()), /outside the template's managed region/),
-    "the template's own script and demo-model and demo-meta are allowed"
-);
-for (const [what, head] of [
-    ["a script src", `<script src="https://cdn.example/x.js"></script>`],
-    ["a stylesheet link", `<link rel="stylesheet" href="styles.css">`],
-    ["a CSS url()", `<style>.a{background:url("https://x.test/a.png")}</style>`],
-    ["an @import", `<style>@import "x.css";</style>`],
-]) {
-    check(has(demoFileIssues(AT, demo({ head })), /fetches/), `${what} is fetched, an error`);
-}
-check(has(demoFileIssues(AT, demo({ app: `<img src="photo.jpg" alt="">` })), /fetches/), "a relative image is fetched, an error");
-check(
-    !has(demoFileIssues(AT, demo({ app: `<img src="data:image/png;base64,AAAA" alt=""><svg><use href="#i"/><rect fill="url(#g)"/></svg><a href="https://x.test">x</a>` })), /fetches/),
-    "a data: URI, a fragment, and a link a person follows are not fetched"
-);
-check(
-    has(demoFileIssues(AT, demo({ region: false, head: `<!-- template:begin hash=x --><script>fetch("/api")</script><!-- template:end -->` })), /fetches fetch\(\)/),
-    "a network call in a script is an error"
-);
-check(has(demoFileIssues(AT, demo({ model: null })), /no `<script type="application\/json" id="demo-model">`/), "a demo with no demo-model is an error");
-check(has(demoFileIssues(AT, demo().replace(/(id="demo-model">)[^<]*/, "$1{not json")), /demo-model` that is not JSON/), "a demo-model that is not JSON is an error");
-check(has(demoFileIssues(AT, demo({ meta: null })), /no `<script type="application\/json" id="demo-meta">`/), "a demo with no demo-meta is an error");
+check(has(checkDemoDelta(`${CHANGES_ROOT}/x/devbook-delta/design/x.demo.html`, demo()).issues, /not where a demo lives/), "a demo delta landing outside domain/ is an error");
+check(has(checkDemoDelta(`${CHANGES_ROOT}/x/devbook-delta/domain/ordering/sub/x.demo.html`, demo()).issues, /not where a demo lives/), "a demo delta below a context folder is an error");
+check(!checkDemoDelta(`${CHANGES_ROOT}/x/devbook-delta/domain/ordering/demo.html`, demo()).issues.length, "a context's demo.html lands where a demo lives");
 check(has(demoFileIssues(AT, demo({ meta: { question: " " } })), /no `question`/), "a demo-meta with no question is an error");
 check(
     has(demoFileIssues(AT, demo({ meta: { question: "Q?", status: "approved", verdict: "yes" } })), /`status`, `verdict` in its `demo-meta`/),
     "a demo-meta naming a status or verdict is an error"
 );
+check(has(demoFileIssues(AT, demo().replace(/(id="demo-meta">)[^<]*/, "$1{not json")), /demo-meta` that is not valid JSON/), "a demo-meta that is not JSON is an error");
 check(
-    has(demoFileIssues(AT, demo({ head: `<!-- template:begin hash=x --><!-- template:end -->` })), /more than one template managed region/),
-    "a demo with two managed regions is an error"
+    has(checkDemoDelta(`${CHANGES_ROOT}/x/devbook-delta/domain/ordering/features.demo.html`, demo({ app: "<script>alert(1)</script>" })).issues, /outside the template's managed region/),
+    "a demo delta is checked with the demo rules"
 );
 {
     // The shipped sample demo, built on the real template, whose script names the marker in a regex.
     const sample = new URL("../../../devbook-procedures/assets/demo-sample/features.demo.html", import.meta.url);
     const html = await readFile(sample, "utf8").catch(() => null);
     if (html !== null) check(!errorsOf(demoFileIssues(AT, html)).length, "the sample demo on the shipped template passes the demo rules", JSON.stringify(demoFileIssues(AT, html)));
-}
-{
-    const big = demo({ app: `<p>${"x".repeat(DEMO_SIZE_TARGET)}</p>` });
-    const issues = demoFileIssues(AT, big);
-    check(issues.some((i) => i.severity === "warning" && /over the 500 KB/.test(i.message)) && !errorsOf(issues).length, "a demo over 500 KB is a warning, never an error");
 }
 
 // -- The fixture ------------------------------------------------------------

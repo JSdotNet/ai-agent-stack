@@ -337,6 +337,9 @@ const COMMON_OPTIONAL_FIELDS = [
     // Provenance: the change whose merge last touched this chapter. Written by
     // the delta merge, never by hand, and valid in every folder.
     "change",
+    // The places in a click demo that show what the chapter claims. The
+    // addresses are resolved against each demo's `demo-model` by demo.mjs.
+    "demo",
 ];
 
 // A feature flag is a switch, so its `default` is one of two words. A setting's
@@ -836,12 +839,33 @@ function parseScalar(raw) {
     if (value.startsWith("[") && value.endsWith("]")) {
         const inner = value.slice(1, -1).trim();
         if (inner === "") return [];
-        return inner
-            .split(",")
+        return splitListEntries(inner)
             .map((entry) => stripQuotes(entry.trim()))
             .filter((entry) => entry.length > 0);
     }
     return stripQuotes(value);
+}
+
+// A comma inside a quoted entry is part of it: a demo address carries
+// `flags=<key>,<key>`, so `["….demo.html#checkout?flags=a,b"]` is one entry.
+function splitListEntries(inner) {
+    const entries = [];
+    let quote = null;
+    let current = "";
+    for (const char of inner) {
+        if (quote) {
+            if (char === quote) quote = null;
+        } else if (char === '"' || char === "'") {
+            if (current.trim() === "") quote = char;
+        } else if (char === ",") {
+            entries.push(current);
+            current = "";
+            continue;
+        }
+        current += char;
+    }
+    entries.push(current);
+    return entries;
 }
 
 function stripQuotes(value) {
@@ -1836,7 +1860,7 @@ export function isStructuralDocument(relPath) {
  * statuses.mjs. Absent, or where it declares nothing for a block, the folder's
  * built-in ladder applies.
  */
-export function validateDocument(relPath, markdown, { ladder = null, changeHash: changeFingerprint = null } = {}) {
+export function validateDocument(relPath, markdown, { ladder = null, changeHash: changeFingerprint = null, demoText = null } = {}) {
     const kind = folderKindForPath(relPath);
     const named = domainFileName(relPath);
     const fileBase = named.base;
@@ -2193,11 +2217,17 @@ export function validateDocument(relPath, markdown, { ladder = null, changeHash:
         // A proposal's rungs are the whole change's, so its fingerprint covers
         // every delta too — `changeHash`, which only a caller that can read the
         // change folder supplies; without it the record is linted unhashed.
+        // A domain chapter's fingerprint folds in the demos it belongs to, read
+        // through `demoText` when the caller can reach the repository.
         if (kind === "domain" || kind === CHANGES_FOLDER) {
             const claimsHash =
                 chapter.meta[CONTENT_HASH_FIELD] != null || chapter.meta[ACCEPTED_HASH_FIELD] != null;
             const contentHash =
-                kind === CHANGES_FOLDER ? changeFingerprint : claimsHash ? chapterHash(markdown, chapter.line) : null;
+                kind === CHANGES_FOLDER
+                    ? changeFingerprint
+                    : claimsHash
+                      ? chapterFingerprint(relPath, markdown, chapter.line, demoText)
+                      : null;
             for (const issue of approvalIssues(chapter.meta, contentHash)) {
                 issues.push({ severity: issue.severity, message: `${label} ${issue.message}` });
             }
@@ -2563,6 +2593,88 @@ export function chapterHash(markdown, line = 1) {
 }
 
 const digest = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex").slice(0, 8)}`;
+
+/** Whether a path names a click demo: `demo.html`, or any `*.demo.html`. */
+export function isDemoPath(relPath) {
+    const base = String(relPath).replace(/\\/g, "/").split("/").pop();
+    return base === "demo.html" || base.endsWith(".demo.html");
+}
+
+/**
+ * The page a demo is named for: `context.md` for `demo.html`, `<page>.md` for
+ * `<page>.demo.html`, beside it. Null for a path that is no demo. Any name a
+ * demo can carry is page-style, so a free-named demo is told apart by whether
+ * that page exists, not by its name.
+ */
+export function demoPagePath(relPath) {
+    const normalized = String(relPath).replace(/\\/g, "/");
+    if (!isDemoPath(normalized)) return null;
+    const slash = normalized.lastIndexOf("/");
+    const dir = slash === -1 ? "" : normalized.slice(0, slash + 1);
+    const base = normalized.slice(slash + 1);
+    return base === "demo.html" ? `${dir}context.md` : `${dir}${base.slice(0, -".demo.html".length)}.md`;
+}
+
+/**
+ * Whether a demo's name is page-style: `demo.html`, or `<page>.demo.html` whose
+ * first segment is a page `domain/` prescribes — `features.demo.html`,
+ * `features.checkout.demo.html`. Such a demo exists only beside its page. Any
+ * other name belongs to an additional page beside it when one exists, and
+ * otherwise to the chapters whose `demo` field names it.
+ */
+export function isPageNamedDemo(relPath) {
+    if (!isDemoPath(relPath)) return false;
+    const base = String(relPath).replace(/\\/g, "/").split("/").pop();
+    return base === "demo.html" || TYPE_BY_FOLDER.domain.file.includes(base.split(".")[0]);
+}
+
+/** The demo named for a page — the inverse of `demoPagePath`. */
+export function pageDemoPath(relPath) {
+    const normalized = String(relPath).replace(/\\/g, "/");
+    if (!normalized.endsWith(".md")) return null;
+    const slash = normalized.lastIndexOf("/");
+    const dir = slash === -1 ? "" : normalized.slice(0, slash + 1);
+    const base = normalized.slice(slash + 1, -".md".length);
+    return base === "context" ? `${dir}demo.html` : `${dir}${base}.demo.html`;
+}
+
+/**
+ * The fingerprint `approved-hash` and `accepted-hash` record: `chapterHash`,
+ * with every demo the block belongs to folded in, so editing a demo lifts an
+ * approval of what it shows exactly as editing the prose does.
+ *
+ * A block's demos are the ones its `demo` field — or the field of any chapter
+ * nested in it — names by path, and for the file block also the demo named for
+ * the page: `<page>.demo.html` for `<page>.md`, `demo.html` for `context.md`.
+ * `demoText(path)` returns a demo's text, or null when it does not exist. A
+ * block with no demo hashes exactly as `chapterHash` does, so no approval
+ * recorded before demos existed changes value.
+ */
+export function chapterFingerprint(relPath, markdown, line = 1, demoText = null) {
+    const base = chapterHash(markdown, line);
+    if (!demoText) return base;
+    const { chapters } = parseDocument(markdown);
+    const index = chapters.findIndex((entry) => entry.line === line);
+    const level = index === -1 ? 1 : chapters[index].level;
+    const paths = new Set();
+    if (level === 1) {
+        const own = pageDemoPath(relPath);
+        if (own) paths.add(own);
+    }
+    for (let i = Math.max(index, 0); i < chapters.length; i++) {
+        if (i > index && index !== -1 && chapters[i].level <= level) break;
+        for (const ref of toList(chapters[i].meta?.demo)) {
+            const target = String(ref).split("#")[0];
+            if (isDemoPath(target)) paths.add(target);
+        }
+    }
+    const demos = [];
+    for (const demoPath of [...paths].sort()) {
+        const text = demoText(demoPath);
+        if (text != null) demos.push(`${demoPath}\n${String(text).replace(/\r\n?/g, "\n")}`);
+    }
+    return demos.length ? digest([base, ...demos].join("\n")) : base;
+}
 
 /** Lines `from` to `end`, minus the fences labelled in `dropped`, whitespace-normalised. */
 function hashedText(lines, from, end, dropped) {

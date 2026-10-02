@@ -456,7 +456,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **21**, covering the metadata schema a repository authors
+One number, currently **26**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -528,7 +528,12 @@ ships no migration. 23 adopts the change folder, `openspec/changes/`: a change's
 is `type: change` at `status: proposed` with a `category`, each file under its `devbook-delta/`
 is a delta the checker resolves through `delta.mjs`, `archive/` is never indexed, and `change`
 is legal on any chapter as the merge's provenance. A repository without the folder validates
-as before, so it ships no migration.
+as before, so it ships no migration. 24 gives a change's `proposal.md` the `approved` and
+`accepted` rungs for the whole change, fingerprinted over the proposal and every delta. 25 adds
+the optional `sync` direction. 26 learns the click demos: the `demo` field, every address in it
+resolved against the demo's `demo-model`, the HTML contract each `*.demo.html` keeps, and a
+demo folded into the fingerprint of the page it belongs to. Each is an added field or rule a
+corpus without it never meets, so none ships a migration.
 
 ## Folder structure
 

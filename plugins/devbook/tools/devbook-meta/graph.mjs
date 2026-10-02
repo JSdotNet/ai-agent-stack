@@ -36,6 +36,7 @@ import {
 } from "./metadata.mjs";
 import { loadStatusLadder } from "./statuses.mjs";
 import { changeDecisionIssues, changeFiles, checkDelta, readChange } from "./delta.mjs";
+import { demoProblems, demoReader, requirementScenarios } from "./demo.mjs";
 
 /**
  * Every devbook folder this convention recognizes, as the repository path it
@@ -183,7 +184,19 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // `related` names no aggregate or domain service raising it. Absent means
 // `report`, today's behaviour, so nothing written under 24 stops validating
 // and no migration is owed.
-export const CONTRACT_VERSION = 25;
+//
+// Version 26 learns the click demos: the optional `demo` field on any chapter
+// and on a change's `proposal.md` and `solution.md`, each address resolved
+// against the demo's `demo-model`, and a requirement's walkthrough held to one
+// of its own scenarios. Every `*.demo.html` keeps the HTML contract — its
+// screens and anchors listed in `demo-model` once, no script outside the
+// template's managed region but `demo-model` and `demo-meta`, nothing fetched,
+// one variant under domain/, and 500 KB as a warning — and a page-named demo
+// sits beside its page. A demo is folded into the fingerprint of the blocks it
+// belongs to, so editing one lifts their approval. A corpus with no demo and no
+// `demo` field validates and fingerprints exactly as under 25, and no
+// migration is owed.
+export const CONTRACT_VERSION = 26;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -313,7 +326,10 @@ const ATTRIBUTE_FIELDS = [
 // names something in a test project, not a chapter, so it produces no edge — the
 // same reason `role`, `roadmap`, and `.ai`'s `stage` stay attributes — a `role`
 // names something in the authorization configuration.
-const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests"];
+//
+// `demo` is here for the same reason: it names a place in a click demo, which
+// is HTML and no node. demo.mjs resolves each address against the demo itself.
+const LIST_ATTRIBUTE_FIELDS = ["role", "roadmap", "stage", "tests", "demo"];
 
 // Fields authored as an integer scalar. The parser hands back the raw string,
 // so they are coerced here and a viewer can sum or threshold them directly.
@@ -461,6 +477,10 @@ export async function buildGraph(repoRoot, folders = null) {
     // carries — resolved once the whole corpus is read.
     const anchors = new Map();
     const links = [];
+    // Every block carrying a `demo` field, resolved against the demos once the
+    // corpus is read; and the reader both that and the fingerprints share.
+    const demoHolders = [];
+    const demoText = demoReader(repoRoot);
 
     const layout = folders ? null : await discoverLayout(repoRoot);
     const scanned = folders ?? layout.folders;
@@ -555,19 +575,27 @@ export async function buildGraph(repoRoot, folders = null) {
         // open questions are read across the proposal and every delta.
         const proposalOf = changePathParts(relPath)?.part === "proposal" ? await readChange(repoRoot, changePathParts(relPath).name) : null;
         const fileIssues = delta
-            ? (await checkDelta(repoRoot, relPath, raw, { ladder })).issues
+            ? (await checkDelta(repoRoot, relPath, raw, { ladder, demoText })).issues
             : proposalOf
               ? [
                     ...validateDocument(relPath, raw, { ladder, changeHash: changeHash(proposalOf.proposal, proposalOf.deltas) }),
                     ...changeDecisionIssues(proposalOf),
                 ]
-              : validateDocument(relPath, raw, { ladder });
+              : validateDocument(relPath, raw, { ladder, demoText });
         for (const issue of fileIssues) {
             problems.push({
                 severity: issue.severity,
                 path: relPath,
                 message: `${relPath} ${issue.message}`,
             });
+        }
+
+        const scenarios = requirementScenarios(relPath, raw);
+        for (const chapter of chapters) {
+            if (chapter.meta?.demo == null) continue;
+            const id = chapter.level === 1 ? relPath : `${relPath}#${chapter.slug}`;
+            const refs = Array.isArray(chapter.meta.demo) ? chapter.meta.demo : [chapter.meta.demo];
+            demoHolders.push({ id, path: relPath, refs, scenarios: scenarios.get(id) ?? null });
         }
 
         // Track the nearest enclosing addressable heading per level so
@@ -809,6 +837,7 @@ export async function buildGraph(repoRoot, folders = null) {
     }
 
     problems.push(...(await brokenLinkIssues(repoRoot, links, anchors)));
+    problems.push(...(await demoProblems(repoRoot, scanned, demoHolders)));
 
     return { nodes: [...nodes.values()], edges, problems, ledes, syncLevels };
 }

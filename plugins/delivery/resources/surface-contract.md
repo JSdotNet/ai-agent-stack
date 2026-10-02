@@ -99,6 +99,14 @@ that surface's own `runId`:
   `sessionIds` array: a fresh run starts it, and a resumed run — a handoff — appends the new
   id beside the earlier ones, never replacing them and never recording one twice. A surface
   that ignores the argument stays conformant.
+- **Say what started the run.** `start_run` takes three optional arguments for that:
+  `trigger` — `attended` when a person started it, `scheduled` when a schedule fired it —
+  `schedule`, the catalog name of the schedule that fired it, and `repo`, the repository as
+  `owner/name`. A scheduled run sends all three; an attended run may send `trigger` alone.
+  Every scheduled run cuts a new worktree, so a surface keying runs by worktree groups them
+  by `schedule` and `repo` instead. Omitted, a run reads as attended. A surface that ignores
+  them stays conformant, and a caller never omits a field the run needs because some surface
+  ignores it.
 - **Persist gating state** with `set_run_context`: the `changeKind` as soon as it is
   determined, the `approval` decision recorded at every gate, and, as its `runContext` object,
   what the runner resolved — the model, point providers, role bindings, tracker, per-point
@@ -129,6 +137,13 @@ that surface's own `runId`:
   `in_progress`, and continue the same run through the repeated phases instead of starting a
   new one. Record `approval: "pending"` before handing back.
 - **Mark Summary** `in_progress` then `done`, and call `finish_run` with the final status.
+- **A sync sweep passes its verdicts.** `finish_run` takes an optional `verdicts`: the
+  `units` rows of the run's `devbook-sync-report` block — per unit its `unit`, `kind`, `sync`,
+  `syncFrom`, `verdict`, `action`, and `link`, and per chapter its `chapter`, `verdict`, and
+  `evidence`. Pass the rows verbatim, the same ones the brief's fenced block carries; the
+  sweep that writes the block owns its shape. A surface may keep
+  the latest verdict per chapter; one that ignores the argument stays conformant, and a run
+  that verified nothing sends none.
 
 ### Naming the session
 

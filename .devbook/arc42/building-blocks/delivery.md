@@ -633,6 +633,8 @@ Payload:
 - `changeKind` — what kind of change this is, which decides QA depth downstream
 - `worktree` — the path the run is keyed by, so a resumed session finds it again
 - `handoff` — present when this call is reattaching to a parked run rather than opening one
+- `trigger`, `schedule`, `repo` — optional: whether a person started the run or a schedule
+  fired it, which schedule, and the repository as `owner/name`
 
 Consumers: every surface implementation, each answering the lifecycle group or not answering
 at all; and [delivery-schedule](delivery-schedule.md), which publishes the same event for work
@@ -644,6 +646,10 @@ Published language rules:
   it; opening a second beside it is the failure this field exists to prevent.
 - **The phase list is a claim about shape, not a promise about outcome.** A flow that resolves
   its tier at run time reports the resolved names here and nowhere else.
+- **A scheduled run names its schedule and repository.** Every scheduled run cuts a new
+  worktree, so a surface that keys runs by worktree alone scatters a weekly sweep across
+  unrelated runs. `schedule` and `repo` are what it groups them by instead. A run that sends
+  no `trigger` reads as attended, and a surface that ignores all three keeps working.
 
 ### Stage Updated
 
@@ -691,11 +697,14 @@ Payload:
 - `outcome` — delivered, blocked at a gate, or parked with a handoff brief
 - `summary` — what the run produced, in the run's own words
 - `report` — where the exported report was written, when a surface answered the export group
+- `verdicts` — optional: the unit rows of a sync sweep's `devbook-sync-report`, each with its
+  direction, verdict, action, link, and the verdict and evidence per chapter
 
 Consumers: every surface implementation, for the report and for closing the run; and
 [delivery-schedule](delivery-schedule.md)'s issue sweep, whose brief reports every resolution's
 outcome including failure, because a brief that cannot tell a crash from a slow build reports
-nothing a person can act on.
+nothing a person can act on. A surface that keeps `verdicts` can show the last verdict on each
+chapter without reading GitHub.
 
 Published language rules:
 
@@ -705,6 +714,8 @@ Published language rules:
 - **A parked run is not an abandoned one.** Both look idle; only one carries a handoff marker,
   and that difference is what a later `start_run` needs to reattach to one and refuse the
   other.
+- **Verdicts travel verbatim.** They are the same rows the sweep's brief carries in its fenced
+  block, so a surface and a GitHub reader never disagree about a chapter.
 
 ### Gate Decision
 

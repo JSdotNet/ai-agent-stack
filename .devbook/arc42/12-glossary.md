@@ -557,7 +557,8 @@ Owned by [devbook](building-blocks/devbook.md).
 The sync units one sweep run verifies, changes on one branch, and lands as one pull request.
 Usually it is one unit; units join only when a chapter ties them — a requirement naming two
 aggregates and no feature — and never through a link such as `depends-on`. A group whose units
-resolve to different directions is set aside for a person, not acted on.
+resolve to different directions, or that holds more than 40 chapters, is set aside for a
+person, not acted on and never split. `units.mjs --groups` lists them.
 
 ## Sync Unit
 
@@ -571,8 +572,9 @@ Owned by [devbook](building-blocks/devbook.md).
 What one verify pass covers and one sync direction governs: an aggregate with the entities,
 value objects, and enums it owns, the events it raises, its invariants, and the requirements
 and terms that name it; a domain service the same way; a feature with its sub-features and
-requirements; one feature flag or setting; one building block file; one component chapter. A
-chapter the unit owns carries no direction of its own.
+requirements; one feature flag or setting; one building block file; one component chapter; and
+one shared-types unit per context for its shared value objects and enums. A chapter the unit
+owns carries no direction of its own. `units.mjs` lists them with their effective direction.
 
 ## Tier
 

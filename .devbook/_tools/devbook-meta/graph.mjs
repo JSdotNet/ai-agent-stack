@@ -449,9 +449,9 @@ export async function buildGraph(repoRoot, folders = null) {
     // term pointing at a Value Object sub-chapter covered by its parent
     // aggregate's block — so they are materialized on demand.
     const headingIndex = new Map();
-    // The sync level of every block that states `sync`, and every unit root,
-    // keyed by node id. Kept off the nodes: the level follows from the path
-    // and the type, and a consumer resolves it the same way.
+    // The sync level of every block that may state `sync` — every unit root
+    // among them — keyed by node id. Kept off the nodes: the level follows
+    // from the path and the type. `units.mjs` reads it to find the roots.
     const syncLevels = new Map();
     // Each chapter's lede, by node id. Kept off the nodes so graph.json does
     // not change shape; the term register is its one reader.
@@ -801,7 +801,7 @@ export async function buildGraph(repoRoot, folders = null) {
         });
     }
 
-    return { nodes: [...nodes.values()], edges, problems, ledes };
+    return { nodes: [...nodes.values()], edges, problems, ledes, syncLevels };
 }
 
 function summarize(nodes, edges) {

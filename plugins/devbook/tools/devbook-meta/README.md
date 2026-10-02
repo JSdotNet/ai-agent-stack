@@ -33,6 +33,10 @@ node .devbook/_tools/devbook-meta/build.mjs --write --scope tech
 # Point at a repository other than the working directory
 node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo
 
+# The sync units, or the groups the pull sweep picks up, as JSON
+node .devbook/_tools/devbook-meta/units.mjs
+node .devbook/_tools/devbook-meta/units.mjs --direction pull --groups --json
+
 # Resolve one change's deltas; merge them and archive the change
 node .devbook/_tools/devbook-meta/delta.mjs --check add-cache
 node .devbook/_tools/devbook-meta/delta.mjs --apply add-cache
@@ -107,6 +111,7 @@ followed, so a scoped graph stays about its own folder.
 | `build.mjs` | CLI wrapper: writes all four artifacts per scope, prints stats, exits non-zero on errors. |
 | `delta.mjs` | The change folder's merge. `--check <change>` resolves every delta under `openspec/changes/<change>/devbook-delta/` to its target file and heading and lints each merged result; `--apply <change>` does the same, then writes the merges, stamps `change` on every chapter block it touched, and moves the folder to `archive/<date>-<name>/`. The graph build imports `checkDelta`, so an indexed delta is checked exactly as a merge would check it. `gateCheck` is the empty seam before the merge where a check that the change may be merged goes. |
 | `chapter-hash.mjs` | CLI over `metadata.mjs`'s `chapterHash`: prints the content fingerprint of an addressed chapter, the value `approved-hash` records. The approval gate calls it so the value written and the value checked come from one function. |
+| `units.mjs` | Lists the sync units — an aggregate with what it owns and the rules that name it, a domain service, a feature, a switch, a building block, a design component, one shared-types unit per context — each with its chapters and its effective `sync` direction and the block it came from. `--groups` joins units a requirement naming two aggregates and no feature ties together, and sets aside a group of mixed directions or past `--max-group-chapters` (default 40); `--direction pull\|push\|report` keeps what one sweep picks up; `--json` prints it for a sweep. Orphans — an event naming no raiser, a term with two homes, a requirement naming nothing — and a stated direction no unit inherits are listed beside. The rules are "Sync direction" in `devbook-chapter-metadata.md`. Reads the graph and writes nothing. |
 | `*.test.mjs` | Self-contained checks, one per rule that was worth pinning: run one with `node <file>`, all of them with `node --test "*.test.mjs"`. Each prints `PASS`/`FAIL` per case and exits non-zero on the first failure, so no framework is installed to read them. `behaviour-files.test.mjs` covers the `requirements.md` and invariants-subpage types, the subpage naming and placement checks, the three coverage warnings, and the typed `related` pairing; `design-requirements.test.mjs` covers `design/`'s `requirement` type and its `e2e` level; `change-folder.test.mjs` runs a fixture change through the index, `--check`, and `--apply`; `naming.test.mjs` pins the term register's shape and what it counts as a term. |
 
 This folder is self-contained — copy it into a repository as

@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-10-01
+date: 2026-10-02
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -140,7 +140,8 @@ cases. On an invariant they were noise: Given/When/Then in the aggregate's event
 a rule like "the start date is not after the end date" three times over, and the `unit` test in
 `tests` already names the case. Contract 18 takes them off: an `### Invariant:` is one claim in
 the domain's words, the rejection code in parentheses where the type has one, an optional
-sentence of why, and `Enforced at:`. Only a requirement is warned for having no scenario, and
+sentence of why, and `Enforced at:`. Only a requirement is warned for having no scenario —
+never one at `status: deprecated`, a withdrawn promise with no case left to exercise — and
 its scenarios stay, because OpenSpec reads them and a promise to someone outside the model is
 checked by a case. Scenarios already under an invariant are tolerated rather than stripped: the
 text is the author's, and dropping it by script would lose what no one asked to lose. The same
@@ -346,6 +347,7 @@ absent means `report`, today's behaviour, and no migration is owed.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | A `requirement` at `status: deprecated` is no longer warned for having no `#### Scenario:`: it records a withdrawn promise, which has no case left to exercise. The level warning on the `tests` it names still applies. No contract, no migration: a warning narrows and no shape changes. |
 | 2026-10-01 | `sync` — `push`, `pull`, `sync`, `report`, `off` — on `domain/`, `arc42/`, and `design/` blocks says which way a sync unit and its code flow, set on a folder overview, a `context.md`, a context page, or a unit's root chapter, nearest wins, `report` by default. Refused on owned chapters and owned-only pages; a value no unit inherits is warned; a `domain-event` is warned when its `related` names no raiser. Contract 25, additive, no migration. |
 | 2026-09-28 | A change's `proposal.md` carries `approved` and `accepted` with their six fields, for the whole change: the hash covers the proposal and every delta, and `delta.mjs --apply` merges only an accepted change over its current hash, writing no rung onto the chapters it lands in and lifting one it makes stale. Approval lives in both places — chapter rungs for work outside the lane, the proposal's for a change — so `domain/` keeps its rungs and no migration is owed. Contract 24, additive. |
 | 2026-09-28 | The change folder, `openspec/changes/`, is a folder kind stamped as `changes`: each change's `proposal.md` is `type: change` at `status: proposed` with a `category`, each file under `devbook-delta/` a delta the checker resolves through `delta.mjs`, and `archive/` is never indexed. `change` is legal on any chapter as the merge's provenance. The folder sits outside `.devbook/` because the OpenSpec spike found its CLI fixes the path; the rungs above `proposed` wait for the decision on where approval lives. Contract 23, additive, no migration. |

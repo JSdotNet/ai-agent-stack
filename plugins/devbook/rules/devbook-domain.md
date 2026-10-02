@@ -682,7 +682,9 @@ instructions.
   with no case that exercises it is a sentence nobody can tell has been broken,
   and one a brief cannot derive an acceptance check from. It is a warning and
   not an error because the rule is still worth recording before its cases are
-  written — but a chapter left that way is not finished. An invariant with no
+  written — but a chapter left that way is not finished. A requirement at
+  `status: deprecated` is not reported: it records a withdrawn promise, and a
+  withdrawn promise has no case left to exercise. An invariant with no
   scenarios is complete: its claim and its rejection code are the check.
 - `tests` entries are checked against the file they sit in: `unit` for an
   invariant, `e2e` — or `integration` for a policy no user triggers — for a

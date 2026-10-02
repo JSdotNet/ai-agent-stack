@@ -126,7 +126,8 @@ The sortable list SHALL let every item be moved without a pointer.
 
 A design requirement is proved `e2e`: the rendered component driven by
 keyboard or pointer, or compared by a visual test. A requirement with no
-scenario, or whose `tests` reach no `e2e`, is reported as a coverage warning.
+scenario, or whose `tests` reach no `e2e`, is reported as a coverage warning;
+one at `status: deprecated` is not asked for a scenario.
 Guidance a component cannot break on its own — a principle, a rationale, a
 comparison — stays prose in the component chapter.
 

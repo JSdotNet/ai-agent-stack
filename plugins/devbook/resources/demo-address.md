@@ -17,9 +17,9 @@ version, and every message carries it as `v`. Why a demo exists and where it liv
 <file>#walkthrough/<id>[/<step>]
 ```
 
-- **`<file>`** is the demo's path relative to the file that holds the address, as every other
-  `meta` reference is: `demo.html`, `features.checkout.demo.html`, or a path into a change's
-  `devbook-delta/`.
+- **`<file>`** is the demo's repository path, as a `demo` field writes it per
+  `rules/devbook-chapter-metadata.md`. A message leaves it out and starts at `#`: the frame
+  already names the file, and a demo never knows its own path.
 - **`<screen>`** is the `id` of a `section[data-screen]`. Required for a screen address.
 - **`<anchor>`** is a `data-anchor` value inside that screen. It narrows the address to one
   element.

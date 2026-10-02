@@ -11,7 +11,13 @@ requirements, and the component-library recommendation per channel.
 
 It is guideline-level only. Concrete artifacts produced *from* these
 guidelines — wireframes, user flows, prototypes, screenshots — are not stored
-here.
+here. The agreed screens of a bounded context are its demos, in
+`.devbook/domain/<context>/*.demo.html`, per `devbook-domain.md`.
+
+The one HTML file `design/` holds is `demo-template.html`: the template every
+demo is built on, beside the tokens and guidelines it is built from. It changes
+through the same flow as any other `design/` file, carries no `meta` block, and
+has no reading position.
 
 ## Authoritative source
 
@@ -66,6 +72,7 @@ placeholders.
   interaction-guidelines.md  (feedback, motion, input affordances)
   accessibility.md
   component-libraries.md     (per-channel recommendation + rationale)
+  demo-template.html         (optional: the template every demo is built on)
 ```
 
 Add a file only when a topic genuinely does not belong to an existing one, and

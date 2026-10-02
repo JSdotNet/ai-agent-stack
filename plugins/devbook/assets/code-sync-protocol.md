@@ -94,7 +94,9 @@ turns a one-off inference into a durable pairing for the next pass. Propose it i
 the plan — nothing here writes the alias onto the chapter.
 
 The opposite drift is a dead alias: an `aliases` entry that matches no
-identifier anywhere in the source tree. A rename in code leaves one behind, and
+identifier anywhere in the source tree — on any chapter but a `requirement` or
+`invariant`, whose `aliases` are the codes the rule is cited by and name no
+identifier by design (`devbook-domain.md`). A rename in code leaves one behind, and
 a pairing the repository depends on — code in one language, chapters in
 another — breaks without a sign. `verify-change` reports every dead alias in
 scope as its own finding, whatever verdict the chapter reaches through its other

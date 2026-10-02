@@ -117,9 +117,9 @@ reports the size as a warning and never as an error.
 devbook-procedures 1.14.0 moved the `prototype` seed onto the demo template and the design
 system in `ab478e36`. The same release removed `show`, which no flow invoked, and renamed
 `debug` to `diagnose` so it no longer hides Claude Code's `/debug`. The rest of this decision
-is built by the `devbook-click-demo` plan. Its address contract has landed as
-`devbook.demo.address@1`. The folder rules, the checker and fingerprint, the whole-file delta,
-the template and its tool, and the rest of the seed are still to come.
+is built by the `devbook-click-demo` plan. Its folder rules have landed, and so has its
+address contract, as `devbook.demo.address@1`. The checker and fingerprint, the whole-file
+delta, the template and its tool, and the rest of the seed are still to come.
 
 ## Rejected
 

@@ -362,7 +362,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | An `ext.*` key is carried through untouched, unvalidated, and produces no edge | graph build | untested |
 | An annotation's ordinal counts within its own heading and never reaches a subchapter's notes | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | A folder-specific field describes a chapter, so the file-level block carries none of them | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
-| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `deployment` sits on a `bounded-context` chapter or a `context.md` file-level block and is `service` or `module`; `aliases` sits on any chapter that is also a term | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| `domain/`'s `depends-on`, `feature-flag`, and `setting` sit on a `feature` or `sub-feature`; `key`, `default`, and `scope` sit on the switch chapters they describe; `deployment` sits on a `bounded-context` chapter or a `context.md` file-level block and is `service` or `module`; `aliases` sits on any chapter, and on a `requirement` or `invariant` holds the codes the rule is cited by | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | A context's `deployment` is stated alike on its `bounded-context` chapter and on the `context.md` that chapter's `related` names, or on neither | build | `unit:node:plugins/devbook/tools/devbook-meta/deployment-pairing.test.mjs` |
 | An `approved` chapter never carries an open `kind: question` fence — the open question outranks the rung | parse | `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
 | `ai/`'s `stage` is a chapter's own, from the DevOps loop's eight words; a file-level `stage` is an error and a usage without one is reported | parse | `unit:node:plugins/devbook/tools/devbook-meta/ai-loop.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
@@ -532,10 +532,12 @@ versioned as `devbook.demo.address@1`, which this block owns and the demo templa
 spec-manager, and Backlog follow. A demo opened with no parent frame ignores the messages, and
 a host frames it sandboxed without same-origin.
 
-The rest of the decision is recorded and not yet enforced. The `devbook-click-demo` plan adds
-the `demo` field to the folder rules, the checker rules, a page fingerprint that covers its
-demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then nothing in
-this block reads a demo, and the invariants below are what those steps owe.
+The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
+density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
+`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta. Nothing
+enforces it yet. The `devbook-click-demo` plan adds the checker rules, a page fingerprint that
+covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
+the checker reports a `demo` field as unknown, and the invariants below are what those steps owe.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -615,7 +617,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
 the annotation index, and the term register for the repository and for each adopted folder.
 The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
-other `domain/` chapter carrying `aliases`, each with its lede as its definition. It is built
+other `domain/` chapter carrying `aliases` but a `requirement` or `invariant`, whose `aliases`
+are the codes a rule is cited by, each with its lede as its definition. It is built
 from the graph and the ledes the same walk kept, never a second read. It carries its own
 `schemaVersion`, because its first reader is outside this repository. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
@@ -639,7 +642,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | A structural document's heading with no block is not reported | `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
 | A prose link whose file does not exist, or whose anchor no indexed heading renders, is a warning; absolute URLs, code, and fences are not read | `graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/prose-links.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
-| The term register lists `domain/`'s `term` and aliased chapters only, never `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
+| The term register lists `domain/`'s `term` and aliased chapters only, never a `requirement`, an `invariant`, or `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
 
 ### Fence Writer
 
@@ -740,7 +743,8 @@ Counterpart resolution uses **no metadata field** linking a chapter to a code pa
 a block rots on the first refactor and gives no signal when it does. It resolves through
 the chapter's `aliases`, then the building-block view, then the observed naming convention, and
 reports `unresolved` rather than guessing. The same search catches the reverse rot: an alias
-that names no identifier in the source tree is reported by `verify-change` as its own finding,
+that names no identifier in the source tree is reported by `verify-change` as its own finding —
+except on a `requirement` or `invariant`, whose `aliases` are codes and name none by design —
 with a proposal to remove or correct it, and never rewritten. No checker pass duplicates it —
 an identifier search that knows no language would be noisy and slow.
 
@@ -752,7 +756,7 @@ an identifier search that knows no language would be noisy and slow.
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
 | Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
-| `verify-change` reports every alias that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
+| `verify-change` reports every alias outside a `requirement` or `invariant` that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
 
 ### Shared Value Objects
 

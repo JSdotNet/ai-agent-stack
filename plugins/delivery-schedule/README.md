@@ -1,6 +1,6 @@
 # delivery-schedule
 
-The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: seventeen
+The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: eighteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
 report, fourteen trigger files that fire one on a cadence, and four skills that put those
 triggers in the host's scheduler and read them back.
@@ -33,7 +33,8 @@ hand it one. Every one of them is also runnable by hand.
 |---|---|---|
 | `schedule-devbook-validate` | Runs `devbook:validate` over every adopted folder, fixes what it reports, refreshes the committed indexes where `devbook-derived` keeps them | A pull request, and a report naming what `devbook-config:doctor` finds needs a person |
 | `schedule-devbook-update` | Runs `devbook-config:update` with the safe answer at every question, so outstanding migrations run and stale copies are refreshed; never touches the scheduler | A draft pull request, or a report naming the person's step that is left |
-| `schedule-devbook-verify` | Runs `devbook:verify-change` over every adopted folder, one run per kind, and opens an issue per `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such row, and a report with the whole table |
+| `schedule-devbook-sweep` | Takes `direction: pull` or `push`, lists the sync groups whose chapters go that way, verifies them in parallel, and brings up to N level one at a time — pull carries code into chapters, push builds agreed chapters into code — per `resources/devbook-sweep-contract.md` | Draft pull requests, one `devbook-drift` issue per group a person must answer, and a brief closed by a `devbook-sync-report` block |
+| `schedule-devbook-verify` | Runs `devbook:verify-change` over every sync unit at `report`, the default, and opens an issue per unit with a `code-ahead` or `conflict` row nothing already covers; writes no chapter and plans no capture | One `devbook-drift` issue per such unit, and a report with the whole table |
 | `schedule-instruction-review` | Cuts what changes nothing in the instruction assets a model loads, per `resources/instruction-tightening.md` | A draft pull request, one commit per file |
 | `schedule-issue-sweep` | Classifies the unclassified issues in the repository's own labels, closes what high-confidence evidence shows already resolved, resolves up to N of the rest one at a time | Draft pull requests, closed issues, and a brief of what to validate and decide |
 | `schedule-merge-review` | Reviews every pull request waiting on a reviewer, and names the files that keep conflicting with how to split them | One comment per pull request, hotspots in the summary |
@@ -67,7 +68,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `morning-brief` | Weekdays 06:30 | `schedule-morning-brief`, 24-hour window, 72 on a Monday | `delivery-schedule`, `delivery` | A report |
 | `change-report` | Sunday 16:00 | `schedule-whats-new`, 7-day window | `delivery-schedule`, `delivery` | A report |
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
-| `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every adopted folder, report only | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
+| `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every unit at `sync: report` | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
 | `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
 | `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
@@ -79,6 +80,12 @@ requests across several repositories, with a checkpoint and ticket correlation.
 Each is one file under `resources/schedules/`, and every prompt starts with
 `resources/schedule-preamble.md`: the unattended rules, stated once. A repository changes a
 cadence under `components.schedule.overrides` rather than in the catalog.
+
+A chapter says which way it syncs in its own `sync` field — `pull`, `push`, `sync`, `report`, or
+`off`, set on a folder, a context, a page, or a unit and inherited nearest-wins. `devbook-verify`
+reports on the `report` units; `schedule-devbook-sweep` writes to the rest, one group per draft
+pull request; the `devbook-pull-sweep` and `devbook-push-sweep` schedules arrive with the work
+script that lands each direction.
 
 `devbook-validate` is one schedule, not one per folder. The generator walks every adopted folder
 in a single pass, and the failures worth catching — a reference into a chapter another folder

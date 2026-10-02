@@ -120,8 +120,10 @@ system in `ab478e36`. The same release removed `show`, which no flow invoked, an
 is built by the `devbook-click-demo` plan. Its folder rules have landed, and so has its
 address contract, as `devbook.demo.address@1`. The starting template has landed as a
 devbook-procedures asset, with a sample demo built on it for spec-manager and Backlog to test
-against; `init` does not seed it yet. The checker and fingerprint, the whole-file delta, the
-template's tool, and the rest of the seed are still to come.
+against; `init` does not seed it yet. The checker holds every demo to the HTML contract and
+resolves every `demo` address, and a demo is part of the fingerprint of the page it belongs
+to, both in contract 26. The whole-file delta, the template's tool, and the rest of the seed
+are still to come.
 
 ## Rejected
 
@@ -152,6 +154,7 @@ template's tool, and the rest of the seed are still to come.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
 | 2026-10-02 | The starting demo template and a sample demo built on it, shipped by devbook-procedures. |
 | 2026-10-02 | The demo address and the four host-frame messages written down as devbook's `demo-address` contract. |
 | 2026-10-02 | A durable demo per bounded context in `domain/`, written only by `/prototype` and promoted only by an OpenSpec proposal; the file knows its question and not its lifecycle; no product-level demo, a 500 KB target, and the template in `design/`, independent of Storybook. |

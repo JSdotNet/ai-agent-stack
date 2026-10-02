@@ -541,18 +541,22 @@ a host frames it sandboxed without same-origin.
 
 The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
 density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
-`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta. Nothing
-enforces it yet. The `devbook-click-demo` plan adds the checker rules, a page fingerprint that
-covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
-the checker reports a `demo` field as unknown, and the invariants below are what those steps owe.
+`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta.
+`demo.mjs` in the checker enforces the HTML contract and resolves every `demo` address, and
+`chapterFingerprint` folds each demo into the fingerprint of the blocks it belongs to. Still
+to come from the `devbook-click-demo` plan are whole-file replacement in `delta.mjs` and
+`demo-template.mjs`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| A page-named demo exists only beside its page and moves with it on a split | not yet built | untested |
-| Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | not yet built | untested |
-| A demo under `domain/` carries exactly one variant | not yet built | untested |
-| A page's fingerprint covers its demos, so editing one lifts a stale approval | not yet built | untested |
-| A demo over 500 KB is a warning, never an error | not yet built | untested |
+| A page-named demo exists only beside its page and moves with it on a split | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A requirement's walkthrough plays one of its own scenarios | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| Every screen and anchor is listed in `demo-model` once, and no script but `demo-model` and `demo-meta` sits outside the managed region | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A demo fetches nothing from the network | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A demo under `domain/` carries exactly one variant | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A page's fingerprint covers its demos, so editing one lifts a stale approval | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A demo over 500 KB is a warning, never an error | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 
 ### Reference Graph
 

@@ -60,6 +60,9 @@ across `domain/`, ADRs, and code module names where practical.
     flow.<name>.md          #   enough to stand alone. See "A split file" below.
     domain.<name>.invariants.md  # what the aggregate on domain.<name>.md
                                  # enforces, beside it
+    demo.html               # optional: what a person sees in the context,
+                            # counted with context.md
+    <page>.demo.html        # optional: the screens of <page>.md, beside it
 ```
 
 When starting a new bounded context, create the folder with `context.md`,
@@ -234,6 +237,36 @@ skill names `domain.md`, `features.md`, `skills.md`, `requirements.md`,
 `model.md`, or `flow.md`, it means that file or any split file of it; wherever
 one names the invariants subpage, it means `domain.invariants.md` or any
 `domain.<name>.invariants.md`.
+
+**A demo is the one HTML file a context holds.** It is the agreed, clickable
+picture of what a person sees, and it is not a chapter: it carries no `meta`
+block, has no reading position, and names no page. Its name says what it
+belongs to:
+
+| Name | Belongs to |
+|---|---|
+| `demo.html` | The context itself, counted with `context.md`. One per context with a user interface. |
+| `<page>.demo.html` | `<page>.md`, beside it. |
+| Any other `*.demo.html` | The chapters whose `demo` field names it, per `devbook-chapter-metadata.md`. |
+
+A page-named demo pairs the way an invariants subpage does: it exists only
+beside its page, and a split moves it with the chapter — splitting `## Checkout`
+out of `features.md` moves the checkout screens from `features.demo.html` to
+`features.checkout.demo.html` in the same change. There is no product-level
+demo; a journey that crosses contexts belongs to the context it ends in.
+
+A demo under `domain/` carries exactly one variant: the agreed one, with every
+alternative a prototype tried trimmed out before it lands. Its hard-coded data
+is at real density — as many rows, as long a name, as deep a history as the
+product shows — because a screen agreed over three tidy rows is not the screen
+people will use.
+
+The file is one HTML document built on the repository's demo template,
+`.devbook/design/demo-template.html`: every style, script, and image inline and
+nothing fetched, the template's managed region kept byte for byte, and no
+`<script>` outside it except `demo-model`. It aims at 500 KB and may exceed it.
+Only `/prototype` writes one, and it reaches `domain/` only as a delta of a
+change, per `devbook-changes.md`; it is never edited in place.
 
 Reading order comes from this convention, not from a metadata field and not from
 filenames. `context-map.md` is `domain/`'s root document and is read first,

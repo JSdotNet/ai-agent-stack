@@ -14,6 +14,7 @@ path is OpenSpec's and fixed: its CLI resolves `changes/` only under a folder na
 |---|---|---|
 | `proposal.md` | Why, scope, the chapters touched, one category | yes |
 | `devbook-delta/<path>` | One delta per devbook file the change touches | yes |
+| `devbook-delta/domain/<context>/*.demo.html` | A demo the change lands, replaced whole | no |
 | `solution.md` | The chapters to load beyond the delta, then the approach | no |
 | `tasks.md` | The steps, one pull request each | no |
 
@@ -25,8 +26,9 @@ The file-level block is `type: change`, `status: proposed`, and `category` — o
 block. The change is decided as one, so both gates are recorded once, here: `approved`, then
 `accepted`, with the six fields of `devbook-chapter-metadata.md` and both hashes always written.
 The hash covers the proposal and every delta — `chapter-hash.mjs openspec/changes/<name>` — and
-an open `kind: question` anywhere in the change is an error under either rung. `--apply`
-merges only an `accepted` change over its current hash, writes no rung onto a chapter it lands
+an open `kind: question` anywhere in the change is an error under either rung. The block may
+also carry `demo`, per `devbook-chapter-metadata.md`, naming the screens the change is about.
+`--apply` merges only an `accepted` change over its current hash, writes no rung onto a chapter it lands
 in — `change` points at the archived proposal — and lifts a chapter's own rung it makes stale.
 
 ## A delta
@@ -54,12 +56,23 @@ it touched; `change` is provenance, written by the merge and never by hand.
 Run `node .devbook/_tools/devbook-meta/delta.mjs --check <name>` after every edit to a delta: it
 resolves each one to its target file and heading and lints the merged result.
 
+## A demo
+
+A proposal may contain a demo: a standalone prototype from `/prototype`, copied in as a delta at
+the path where it lands — `devbook-delta/domain/ordering/features.demo.html` lands as
+`.devbook/domain/ordering/features.demo.html` — and trimmed to the one variant agreed, per
+`devbook-domain.md`. Its verdict — the question it was prototyped to answer, and the answer — is
+recorded in the proposal's `Why`, never in the file. A demo delta is HTML, not Markdown: it has
+no block and no `ADDED`/`MODIFIED`/`REMOVED` sections, and the merge replaces the target whole.
+Revising a demo starts from a prototype of the current one, never from an edit in place.
+
 ## solution.md and tasks.md
 
-`solution.md` names, by address, the chapters a builder loads beyond the delta and why each
-matters, then the approach. Nothing in it lands in the devbook: a decision the change makes is
+`solution.md` opens with a file-level block holding `demo` when the approach is shown in one,
+and none otherwise. It names, by address, the chapters a builder loads beyond the delta and
+why each matters, then the approach. Nothing in it lands in the devbook: a decision the change makes is
 a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 
 `tasks.md` is `## Step N — title` blocks, one pull request each. Each names the deltas it
-delivers on a `delivers:` line by address, and `owner: me` when a person does it. A prototype,
-where the repository allows one, is `## Step 0 — Prototype: <question>` and is never merged.
+delivers on a `delivers:` line by address, and `owner: me` when a person does it. A prototype
+is no step: it needs no change and no task, and enters one only as a demo delta.

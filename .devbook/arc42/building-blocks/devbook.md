@@ -525,10 +525,12 @@ change's `devbook-delta/` it is a proposed demo, and anywhere else it is a proto
 demo is built on the repository's template at `.devbook/design/demo-template.html`. The
 [demos record](../adr/demos.md) holds the reasons.
 
-The decision is recorded and not yet enforced. The `devbook-click-demo` plan adds the address
-contract, the `demo` field to the folder rules, the checker rules, a page fingerprint that
+The folder rules state it: `devbook-domain.md` the naming, the pairing, one variant at real
+density, and the HTML contract; `devbook-chapter-metadata.md` the `demo` field and the file's
+`demo-meta` script; `devbook-design.md` the template; `devbook-changes.md` the demo delta. Nothing
+enforces it yet. The `devbook-click-demo` plan adds the checker rules, a page fingerprint that
 covers its demos, whole-file replacement in `delta.mjs`, and `demo-template.mjs`. Until then
-nothing in this block reads a demo, and the invariants below are what those steps owe.
+the checker reports a `demo` field as unknown, and the invariants below are what those steps owe.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |

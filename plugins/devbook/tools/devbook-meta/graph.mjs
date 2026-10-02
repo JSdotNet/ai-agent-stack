@@ -22,6 +22,7 @@ import {
     documentNumber,
     isExtensionField,
     parseAnnotations,
+    proseLinks,
     resolveAnnotation,
     parseDeltaHeader,
     changePathParts,
@@ -456,6 +457,10 @@ export async function buildGraph(repoRoot, folders = null) {
     // Each chapter's lede, by node id. Kept off the nodes so graph.json does
     // not change shape; the term register is its one reader.
     const ledes = new Map();
+    // Every anchor each indexed file renders, and every link its prose
+    // carries — resolved once the whole corpus is read.
+    const anchors = new Map();
+    const links = [];
 
     const layout = folders ? null : await discoverLayout(repoRoot);
     const scanned = folders ?? layout.folders;
@@ -487,6 +492,8 @@ export async function buildGraph(repoRoot, folders = null) {
         const raw = await readFile(path.join(repoRoot, relPath), "utf8");
         const { fileTitle, chapters } = parseDocument(raw);
         const lines = raw.split(/\r?\n/);
+        anchors.set(relPath, fileAnchors(chapters));
+        links.push(...proseLinks(raw).map((link) => ({ ...link, from: relPath })));
 
         // Open notes per chapter, counted from the same read. Carrying the
         // count on the node is what lets the canvas badge the chapters nobody
@@ -801,7 +808,86 @@ export async function buildGraph(repoRoot, folders = null) {
         });
     }
 
+    problems.push(...(await brokenLinkIssues(repoRoot, links, anchors)));
+
     return { nodes: [...nodes.values()], edges, problems, ledes, syncLevels };
+}
+
+/**
+ * The anchors GitHub renders for a file's headings: the first heading with a
+ * slug keeps it bare, and each later one gets `-1`, `-2`, … in order. The
+ * graph keeps only the first, since a reference has to be unambiguous; a
+ * link written against GitHub's page may name either.
+ */
+function fileAnchors(chapters) {
+    const seen = new Map();
+    const result = new Set();
+    for (const { slug } of chapters) {
+        const count = seen.get(slug) ?? 0;
+        seen.set(slug, count + 1);
+        result.add(count ? `${slug}-${count}` : slug);
+    }
+    return result;
+}
+
+/**
+ * A prose link that does not resolve: a relative target with no file behind
+ * it, or an anchor no heading in an indexed file renders. `related` and
+ * `depends-on` are checked above; nothing else reads prose, which is how a
+ * link to a deleted chapter outlives it.
+ *
+ * Warnings only — a chapter may link ahead to one not written yet. An absolute
+ * URL is never fetched, and a file outside the indexed corpus is checked for
+ * existence alone: its anchors are not this tool's to know.
+ */
+async function brokenLinkIssues(repoRoot, links, anchors) {
+    const issues = [];
+    for (const { from, line, target } of links) {
+        if (/^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith("//")) continue;
+        const hash = target.indexOf("#");
+        const rawPath = hash === -1 ? target : target.slice(0, hash);
+        const anchor = hash === -1 ? null : safeDecode(target.slice(hash + 1));
+        const decoded = safeDecode(rawPath);
+        const resolved = !decoded
+            ? from
+            : decoded.startsWith("/")
+              ? path.posix.normalize(decoded.slice(1))
+              : path.posix.join(path.posix.dirname(from), decoded);
+        const at = `${from}:${line}`;
+        if (decoded && !(await exists(path.join(repoRoot, resolved)))) {
+            issues.push({
+                severity: "warning",
+                path: from,
+                message: `${at} links to "${target}", but ${resolved} does not exist.`,
+            });
+            continue;
+        }
+        const rendered = anchors.get(resolved);
+        if (!anchor || !rendered || rendered.has(anchor) || rendered.has(anchor.toLowerCase())) continue;
+        issues.push({
+            severity: "warning",
+            path: from,
+            message: `${at} links to "${target}", but no heading in ${resolved} renders the anchor "#${anchor}".`,
+        });
+    }
+    return issues;
+}
+
+function safeDecode(text) {
+    try {
+        return decodeURIComponent(text);
+    } catch {
+        return text;
+    }
+}
+
+async function exists(absolutePath) {
+    try {
+        await stat(absolutePath);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 function summarize(nodes, edges) {

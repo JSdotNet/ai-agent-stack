@@ -1319,6 +1319,39 @@ export function behaviourIssues(type, meta, scenarios = 0, folder = "domain") {
  * outside backticks is still a known false positive; formatting paths as code
  * avoids it.
  */
+/**
+ * Every Markdown link target in a document's prose, with its line: inline
+ * links and images, `[label](target)`, and reference definitions,
+ * `[label]: target`.
+ *
+ * Fenced blocks are skipped whole — the `meta` block, an `annotation`, a
+ * diagram, a code sample — and so are code spans, so a chapter quoting link
+ * syntax is not read as linking. The target comes back as written, `<…>`
+ * brackets and a trailing title removed; resolving it is the caller's job.
+ */
+export function proseLinks(markdown) {
+    const links = [];
+    let fence = null;
+    markdown.split(/\r?\n/).forEach((line, index) => {
+        const marker = /^\s*(`{3,}|~{3,})/.exec(line);
+        if (fence) {
+            if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length) fence = null;
+            return;
+        }
+        if (marker) {
+            fence = marker[1];
+            return;
+        }
+        const prose = line.replace(/(`+)[^`]*?\1/g, (span) => " ".repeat(span.length));
+        const definition = /^\s{0,3}\[[^\]]+\]:\s*(<[^>]*>|\S+)/.exec(prose);
+        if (definition) links.push({ line: index + 1, target: definition[1].replace(/^<|>$/g, "") });
+        for (const match of prose.matchAll(/\]\(\s*(<[^>]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g)) {
+            links.push({ line: index + 1, target: match[1].replace(/^<|>$/g, "") });
+        }
+    });
+    return links;
+}
+
 export function escapeSequenceIssues(markdown) {
     const issues = [];
     let inFence = false;

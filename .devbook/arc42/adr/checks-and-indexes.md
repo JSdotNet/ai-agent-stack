@@ -103,6 +103,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | All three converters also take a sync unit or group as scope, its chapters exactly as `units.mjs` lists them; `capture-specs` and `apply-change` widen this far and no further, because a unit is what one pull request changes and the tool, not the pass, decides what it holds. Any `conflict` stops the group, and an unattended run lands a draft pull request with added chapters at `draft`. `verify-change`'s table gains each chapter's effective `sync` and the sweep that will act. |
 | 2026-10-01 | `build.mjs` writes `_meta/naming.json`, the term register, per scope beside the other three, from `domain/`'s `term` and aliased chapters; `arc42/`'s glossary is not read, and the register carries its own `schemaVersion: 1`. |
 | 2026-09-28 | The checker indexes the change folder's proposals and deltas into the repository rollup only, with no scope or `_meta/` of its own, since OpenSpec would read one as a change; each delta is checked by `delta.mjs`'s `checkDelta`, the same function a merge runs, so an indexed delta fails the check exactly when it would fail to merge. |
 | 2026-09-27 | `repo-checks.yml` runs the tools' `*.test.mjs` files through `node --test`, listed with `git ls-files` because the directory form loads nothing on Windows and misses a test in a new folder silently. |

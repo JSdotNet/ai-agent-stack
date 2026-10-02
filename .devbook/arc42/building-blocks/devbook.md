@@ -40,7 +40,7 @@ change belongs to the engine.
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
 | `annotation-sweep` | skill | A person, on one chapter |
-| `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill and one kind per run, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
+| `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
@@ -197,7 +197,7 @@ change to existing behaviour, or a defect.
 ### verify-change
 
 ```meta
-related: [".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/12-glossary.md#sync-direction", ".devbook/arc42/building-blocks/devbook.md#unit-lister"]
 ```
 
 Report the drift verdict per chapter and write nothing — no chapter, no brief, no status. The
@@ -211,10 +211,15 @@ reads them as files and runs none of them, nor the application — a requirement
 end to end would otherwise go unchecked, and running the product belongs to `capture-specs`.
 
 Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
-still one kind per run and still one table for all of it. Reading is cheap when nothing is
+still one kind per run outside a sync group, and still one table for all of it. Reading is cheap when nothing is
 written, and the question a person actually asks before a review — has this folder drifted —
 is not answerable one chapter at a time. A table per chapter would hide the shape of the
 whole, which is the only thing a folder-wide run adds.
+
+Each row also carries the chapter's effective `sync`, with the level it came from, and the
+sweep that will act on its verdict — or a person, when none will. Both are read from
+`units.mjs`, never inferred, so the report a person reads before setting a direction says
+exactly what the next unattended run will do with it.
 
 ## Structure
 
@@ -709,7 +714,7 @@ prints the result for the sweep to read.
 ### Spec Converter
 
 ```meta
-related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md"]
+related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md", ".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group"]
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
@@ -722,12 +727,27 @@ direction it names is one OpenSpec does not have —
 [debt record 6](../tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) holds
 why the borrowed spelling was dropped.
 
-Invocation semantics: command-invoked, one skill and one kind per run — one target for the
-two that produce something, and a folder or a bounded context for the one that does not. The kind is the
+Invocation semantics: command-invoked, one skill and one kind per run — one target or one sync
+unit or group for the two that produce something, and a folder or a bounded context as well for
+the one that does not. The kind is the
 chapter's `type`, or the file where the folder defines none, and everything a kind needs lives
 once in its own file rather than in a skill per kind and direction. The aggregate is the unit
 rather than its parts, because a consistency boundary decided twice is a boundary decided
 differently; a domain service is the deliberate exception and is its own kind.
+
+A sync unit or a sync group is a scope as well, and the one a sweep passes. Its chapters are
+the ones `units.mjs` lists, never a set the skill works out by reading, so the scope a person
+checks and the scope a sweep acts on are the same. A group is one run across the kinds its
+units carry, each chapter read through its own kind's file, because the requirement that joins
+them is one rule and a rule changed in two pull requests lands half-decided. Any `conflict`
+stops the whole group, and a group drifting both ways is captured before it is applied: the
+two directions never share a pass.
+
+An unattended run carries its own result in, and lands it as a draft pull request: the draft is
+the person the attended path would have asked. A captured chapter it adds arrives at
+`status: draft`, nothing it carries rises above `draft` or touches a decision rung, and on the
+apply side a chapter nobody has agreed is skipped, because the stop-and-confirm has nobody to
+ask.
 
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
@@ -739,7 +759,9 @@ an identifier search that knows no language would be noisy and slow.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| One skill and one kind per run | the three skills | untested |
+| One skill per run, and one kind unless the scope is a sync group | the three skills | untested |
+| A unit's or group's chapters are the ones `units.mjs` lists; any `conflict` stops the group | the code-sync protocol | untested |
+| An unattended run lands a draft pull request, adds chapters at `draft`, and writes nothing above `draft` | the code-sync protocol | untested |
 | The kind is the chapter's `type`, or the file where the folder defines none | the three skills | untested |
 | `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |

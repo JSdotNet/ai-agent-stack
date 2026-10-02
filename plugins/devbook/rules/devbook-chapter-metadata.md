@@ -436,6 +436,25 @@ entries in `related` and in any folder-specific relation field (`depends-on`).
   "[Linking test cases](#linking-test-cases)" for the format, the level and
   runner vocabularies, and why this field exists where a code-path field
   deliberately does not.
+- **demo** (optional) — list of the places in a demo that show what this
+  chapter or file claims, each `<path>#<id>`: the repository path of a
+  `*.demo.html` and the id of a screen, a state, or a walkthrough its
+  `demo-model` lists, or the bare `<path>` for the demo as a whole:
+
+  ```text
+  demo: [.devbook/domain/ordering/features.demo.html#checkout, .devbook/domain/ordering/features.demo.html#checkout-declined]
+  ```
+
+  Available on any chapter in any folder, and on the file-level blocks of a
+  change's `proposal.md` and `solution.md`, per `devbook-changes.md`. A
+  requirement names one walkthrough per scenario, beside its `tests`: the
+  walkthrough shows the scenario, the test proves it. Links run from Markdown to
+  the demo only. A demo names no chapter, and its own metadata script,
+  `<script type="application/json" id="demo-meta">`, holds `question` — the one
+  question it was prototyped to answer — and nothing else: no stage, status,
+  verdict, or page, because where the file sits already says which it is. What
+  a demo is and where it lives is `devbook-domain.md`'s. Omit the field
+  entirely when no demo shows the chapter.
 - **change** (optional) — the change whose merge last touched this chapter or
   file: its folder name under `openspec/changes/`. Written by
   `delta.mjs --apply`, never by hand. Available in every folder. See

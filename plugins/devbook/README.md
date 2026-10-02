@@ -308,6 +308,13 @@ are recorded in the chapter: `approved-*` and `accepted-*`, because they have to
 travel with the content and lapse with it. [`devbook-collaboration`](../devbook-collaboration)'s skills run
 the pass; a repository without that plugin reviews the same way by hand.
 
+### Demo addresses
+
+A chapter's `demo` field, a review note, and a frame hosting a click demo all point into a
+demo the same way. The address and the four `postMessage` messages are
+[`resources/demo-address.md`](resources/demo-address.md), versioned, owned here, and followed
+by the demo template, spec-manager, and Backlog.
+
 ### The `ext` namespace
 
 A plugin layered on top of devbook may keep its own per-chapter state under

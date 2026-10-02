@@ -2,6 +2,7 @@
 
 ```meta
 date: 2026-09-30
+status: proposed
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -12,6 +13,58 @@ outside the engine is a binding resolved at run time — a tracker, a role, an M
 surface — never a dependency, and never named by its provider inside a skill. The runner
 prepends Update Base to every run, holds every gate, and commits at the handback. `verify` is
 the spec check after the pull request; `validate` is the build and the suites.
+
+## Proposed
+
+```meta
+```
+
+**Per-Phase Delivery Config, drafted 2026-09-30 and not yet decided.** It makes the phase the
+unit of configuration instead of the extension point. The configuration half (the `phases`
+map, and model and effort in the committed file) is proposed in
+[Configuration](configuration.md#proposed). It ships in one minor release with its migration,
+per [Releases](releases.md).
+
+- **Two flows.** `flow-update-packages` and `flow-project` fold into `flow-code` as its
+  `dependency` and `project` kinds. Their own stages become the work `implementation` does for
+  that kind. `flow-code` keeps one tier for every kind, so a `config` change also gets review
+  and Build & Test, and a kind sets only how deep Verify goes. `flow-spec` keeps its own
+  shorter tier.
+- **Stable phase ids.** `flow-code` runs `update-base`, `scope-discovery`, `spec-intake`,
+  `plan` (a `create` only), `implementation`, `review`, `build-test`, `verify`,
+  `spec-check`, `personal-validation`, `create-pr`, `report-back`, and `summary`. Refactor
+  Planning moves into `spec-intake`. Reproduction & Root Cause becomes implementation's first
+  seam: the failing test that reproduces the defect.
+- **Renames.** Validation becomes `verify`, which matches Claude Code's `/verify`. The spec
+  check, today's `verify` point, becomes `spec-check`. Work Item Update becomes `report-back`.
+- **Spec Check before the gate.** It moves ahead of Personal Validation, so the approval
+  sees the drift. The bound skill decides whether the phase only reports or also updates. An
+  updating skill touches only `code-ahead` rows in scope, never sets `approved`, and its
+  edits are part of what the person approves.
+- **A `review` phase after implementation.** One reviewer in a fresh context checks the
+  repository's own rules first, then a code-smell baseline, then correctness. Every finding
+  cites a rule or a failure scenario. The reviewer never edits: blockers go back to
+  implementation within `policy.review.retryBudget`, and what is left reaches Personal
+  Validation as open.
+- **Implementation by area.** A top-level `areas` key maps path globs to areas. Implementation
+  runs once per area that has work, in `implementation.order`, each as a forked
+  `phase-implement` with its own brief and `## Context` contract. It drives tests first at the
+  seams `spec-intake` recorded, and stops with `revise: spec-intake` when the spec is wrong
+  instead of redesigning inline.
+- **Report Back by origin.** A run records every work item it started from in `origins`.
+  `report-back.targets` sends the result to `origin`, to `linked` items the change set names,
+  or to a `plugin:skill` destination. `bindings["delivery.tracker"]` stays.
+- **Effort runners.** A sub-agent call can set a model but not an effort, so delivery ships
+  `runner-low` through `runner-max`. A phase that sets an effort runs its agent's body inside
+  one of them, with the runner's tools.
+- **Personal Validation stays fixed.** It refuses every field and always runs inline with
+  the runner.
+
+This retires the closed point set. The phase list replaces it and is just as closed: a
+repository still writes a repo-native `flow-*` skill for another shape, and that skill declares
+its own phase ids. Open before deciding: whether Copilot loads an agent that carries `effort:`,
+the loss of a specialist's tool list inside an effort runner, whether review splits into
+independent reviewers later, and whether the old keys stay as aliases (proposed: no).
 
 ## Why
 

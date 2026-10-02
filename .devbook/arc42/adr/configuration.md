@@ -2,6 +2,7 @@
 
 ```meta
 date: 2026-09-29
+status: proposed
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
 ```
 
@@ -11,6 +12,42 @@ entry and a committed `id`. Unknown keys are rejected by name. A `config.local.j
 outside every clone overlays the engine keys at two layers — the user's devbook config
 directory, and `repos/<id>/` under it — and may add a gate but never remove one. How
 the application starts is not configuration: it is the repository's own `run` recipe.
+
+## Proposed
+
+```meta
+```
+
+**The `phases` map, the configuration half of Per-Phase Delivery Config** (see
+[Flow Engine](flow-engine.md#proposed)). Not yet decided. The engine keys become `bindings`,
+`phases`, `policy`, and `gates`, and a top-level `areas` key joins them.
+
+- **One complete map per flow.** `phases.<flow>.<phase>[:<qualifier>]` holds `agent`,
+  `skill`, `model`, `effort`, `mcp`, `before`, `after`, and a few phase-specific options.
+  The qualifier is the folder in `flow-spec`, and in `flow-code` the kind or the area. Each
+  field resolves on its own, most specific key first, then the session. An absent field
+  inherits the session. The committed file must list exactly the phases its flow has. An
+  overlay names only what it changes, and the overlay's value wins field by field.
+- **Three mechanisms fold in.** `extensions` maps to phase `skill`, `agent`, and hook
+  fields. `bindings["delivery.roles"]` becomes the `agent` of the phases a role drafted.
+  `bindings["delivery.mcp"]` becomes each phase's `mcp`. The categories in the personal
+  `model-selection.md` become `model` entries in the user overlay. The migration does the
+  rewrite. Once it lands, the checker rejects the old keys by name and points at
+  `delivery:update`. A role bound to a bare plugin name resolves to that plugin's single
+  agent. A plugin with more than one agent is reported, never guessed.
+- **Model and effort in the committed file.** Today a model is personal only. The proposal
+  makes committed values team defaults that the overlay always overrides, so nobody's
+  personal choice is taken away.
+- **Gates attach to phase ids**, not to points. An overlay still only adds a gate.
+  `personal-validation` refuses every field, in any map, the way
+  `policy.gate.personalValidation` is refused today.
+- **Doctor rules.** `devbook-config:doctor` resolves a phase's `agent` against the installed
+  agents and the repository's own agent folder, and its `skill` against the installed skills.
+  An agent id in a `skill` field, and an `agent` field that names an agent-only plugin with
+  more than one agent or no agent at all, are warnings that name the fix. An agent id in a
+  `skill` field is the gap that left `extensions.implement: csharp-coding:coding` resolving
+  to nothing, because the doctor's agent fallback covers roles only. Doctor also flags a map
+  left under a retired flow and a leftover `model-selection.md`.
 
 ## Why
 

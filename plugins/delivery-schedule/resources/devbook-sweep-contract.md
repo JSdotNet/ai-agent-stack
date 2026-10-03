@@ -44,8 +44,8 @@ code` for pull, `feat(<slug>): apply <what>` or `fix(<slug>): …` for push.
 
 ## The Work Script's Result
 
-`args` carry `worktree`, `branch`, `baseBranch`, `repo`, `direction`, `maxRepairAttempts`, and
-the group as `units.mjs` printed it with its verdict rows. It returns `outcome` (`ready`,
+`args` carry `worktree`, `branch`, `baseBranch`, `repo`, `direction`, `maxRepairAttempts`,
+`group` as `units.mjs` printed it, and `rows`, its verdict rows from the verify pass. It returns `outcome` (`ready`,
 `escalated`, `blocked`, `red`, `failed`), `stage`, `reason`, `route`, `parkReasons`, the body's
 summaries, and `reverified`: one `{ chapter, verdict }` per chapter it acted on, read by
 running `devbook:verify-change` again in the worktree. A `ready` whose `reverified` is not all

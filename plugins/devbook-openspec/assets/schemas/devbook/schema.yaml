@@ -69,8 +69,7 @@ artifacts:
       Under each heading, a `delivers:` line naming the deltas it delivers by
       address, then — when a person will do the step — a line reading exactly
       `owner: me`, then the step's tasks as `- [ ]` checkboxes, each saying how
-      it is verified. A prototype, only where this repository's rules allow
-      one, is `## Step 0 — Prototype: <question>` and is never merged.
+      it is verified.
     requires:
       - solution
 

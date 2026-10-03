@@ -44,7 +44,7 @@ and only the first is a conversation about intent. Merging them would put an int
 front of an operation people run to change nothing.
 
 The change lane is one more component, `openspec`, written by `devbook-openspec`. `init` asks
-its three questions — is the OpenSpec CLI here, adopt the lane and allow a Step 0 prototype,
+its three questions — is the OpenSpec CLI here, adopt the lane,
 grill an idea before proposing — writes the `spec` and tracker bindings, the optional gates, and
 `bindings["openspec.grill"]`, and leaves the rest to `devbook-openspec:init`. It never installs
 the CLI. `update` fans out to `devbook-openspec:update`, `doctor` reports a missing or

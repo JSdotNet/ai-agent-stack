@@ -62,7 +62,7 @@ component that knows what it materialized, which is why each component's `init` 
 absorbed — the boundary [Engine Configuration](#engine-configuration) holds.
 
 The change lane is one more component with three questions: is the OpenSpec CLI here, adopt the
-lane and allow a Step 0 prototype, and grill an idea before proposing it. Init checks the CLI
+lane, and grill an idea before proposing it. Init checks the CLI
 and prints the install command rather than running it — the same way the issue sweep checks
 `gh` — writes the `spec` and tracker bindings to [devbook-openspec](devbook-openspec.md) and the
 optional gates, adds the change folder to what `devbook:init` adopts, and leaves `openspec init`,

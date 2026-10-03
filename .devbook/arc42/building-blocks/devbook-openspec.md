@@ -59,9 +59,10 @@ cannot hold the `: ` in `` `owner: me` ``; `openspec schema validate devbook` pa
 
 `openspec/config.yaml` with `schema: devbook`, the context every OpenSpec skill is handed, the
 per-artifact rules, and `operations.apply` and `operations.archive` guidance that routes a step
-through a flow and a change through `archive`. Seeded once by `init`, with the Step 0 line only
-where the repository allows a prototype, and the repository's after that — OpenSpec reads only
-one such file.
+through a flow and a change through `archive`. Seeded once by `init` and the repository's after that —
+OpenSpec reads only one such file. A step is never a prototype: a prototype is a standalone
+file, per [the demos decision](../adr/demos.md), and migration `001-no-step-0-prototype` takes
+the Step 0 rule line an earlier `init` seeded out of an installed config.
 
 ### The change rule
 
@@ -106,7 +107,7 @@ exited 0 with only its `## What Changes` warning.
 ```
 
 `components.openspec`: `pluginVersion`, `cli` (the range `init` checked, `>=1.13.2 <2.0.0` by
-default), `tools` (the hosts `openspec init` set up), `prototype`, `workflow` (`single-branch` or
+default), `tools` (the hosts `openspec init` set up), `workflow` (`single-branch` or
 `proposal-first`; absent reads as `single-branch`), and `materialized`. Whether
 OpenSpec may send usage statistics is one machine's answer and lives in the stack-config
 overlay as `ext["devbook-openspec"].telemetry`.

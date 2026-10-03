@@ -27,7 +27,9 @@ and touches no other entry.
 2. **Resolve.** `adopted` from the stamp is the list. Never re-ask what it answers; a
    procedure is added or dropped only when the user asks for it.
 3. **Detect**, **Plan**, **Materialize** exactly as `init` steps 2–4, with one more plan
-   row: a name dropped from `adopted` orphans its three files — reported, never deleted.
+   row: a name dropped from `adopted` orphans its three files — reported, never deleted. The
+   demo template follows `init`'s rule: refreshed only while it still hashes to a shipped
+   release, seeded once `design` is adopted, and skipped, saying so, while it is not.
 4. **Stamp.** Rewrite `components.devbook-procedures` — `pluginVersion`, `adopted`, and
    `materialized`.
 5. **Report** what moved, name every customized file left alone, name each shipped

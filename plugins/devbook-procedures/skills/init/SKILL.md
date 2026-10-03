@@ -26,6 +26,11 @@ entry.
 `run` differs, per `assets/skill-wrappers.md` under *`run`, the exception*: its body is
 `.claude/skills/run-<name>/SKILL.md` and its only wrapper is `.github/skills/run/SKILL.md`.
 
+With `prototype` adopted, `assets/demo-template.html` lands byte-for-byte at
+`.devbook/design/demo-template.html`, managed until the repository edits it — but only where
+`components.devbook.adopted` lists `design`. Without it, say the template was skipped because
+`design/` is not adopted, and that `prototype` builds the app part alone until it is.
+
 **Refuse when `components.devbook-procedures` exists.** Say "already initialized, run
 `devbook-procedures:update`" and stop.
 

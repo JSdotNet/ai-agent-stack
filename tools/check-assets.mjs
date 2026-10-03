@@ -8,7 +8,8 @@
 // expected to catch by eye across the plugins here:
 //
 //   marketplace   every entry has a folder, every folder with a Claude manifest has an
-//                 entry, and name/version/description agree across the three files
+//                 entry, and name/version/description agree across the three files; a
+//                 plugin with no Copilot manifest holds nothing Copilot loads
 //   dependencies  a declared range contains the current version of the plugin it names,
 //                 so the combination the host resolves is reachable, and names this
 //                 marketplace, not a retired one; a Copilot manifest lists only paths
@@ -150,7 +151,14 @@ for (const [name, entry] of listed) {
             error(`${name}: ships skills/ but the Copilot manifest does not declare it, so Copilot sees none of them`);
         }
     } else {
-        error(`${name}: ships only the Claude manifest; every plugin here ships both`);
+        // A plugin ships the manifest of every host that can load something in it: one
+        // holding nothing Copilot loads, such as function-hook modules, carries Claude's alone.
+        const forCopilot = [];
+        for (const p of ["skills", "agents", "hooks.json", "extensions"]) {
+            if (await exists(path.join(dir, p))) forCopilot.push(p);
+        }
+        if (forCopilot.length) error(`${name}: ships ${forCopilot.join(", ")} but only the Claude manifest, so Copilot loads none of it`);
+        else notes.push(`plugins/${name}: nothing in it loads on Copilot, so it ships the Claude manifest alone`);
     }
     // Every agent file the manifest lists must exist, and every agent file must be listed.
     const declared = new Set((claude.agents ?? []).map((a) => a.replace(/^\.\//, "").replace(/\\/g, "/")));

@@ -1,0 +1,566 @@
+import type { Register } from 'claude-code'
+
+import type { FlowMode, FlowRun, FlowStage, FlowWorker } from '../types'
+
+const PANE = 'delivery-run-view'
+const POLL_MS = 3000
+const MAX_RUNS = 8
+
+/** The surfaces that write run files under the profile, in the shape the dashboard defines. */
+const SURFACES = ['delivery-surface-dashboard', 'backlog']
+
+const RUNS = { plugin: 'delivery-run-view', key: 'runs' } as const
+const SELECTED = { plugin: 'delivery-run-view', key: 'selected' } as const
+/** The stage whose detail is open; -1 follows the run (the active stage, else the last one reached). */
+const FOCUS = { plugin: 'delivery-run-view', key: 'focus' } as const
+
+// ── Vocabulary ───────────────────────────────────────────────────────────────
+
+type Tone = 'done' | 'active' | 'waiting' | 'blocked' | 'skipped' | 'pending'
+
+const tone = (status: string): Tone => {
+  const s = (status || '').toLowerCase().replace(/[\s_-]/g, '')
+  if (['done', 'completed', 'complete', 'passed', 'approved', 'success'].includes(s)) return 'done'
+  if (['awaitingapproval', 'waiting', 'pendingapproval'].includes(s)) return 'waiting'
+  if (['inprogress', 'running', 'active', 'started'].includes(s)) return 'active'
+  if (['blocked', 'failed', 'error', 'rejected', 'aborted'].includes(s)) return 'blocked'
+  if (s === 'skipped') return 'skipped'
+  return 'pending'
+}
+
+const COLOR: Record<Tone, string> = {
+  done: 'green',
+  active: 'yellow',
+  waiting: 'magenta',
+  blocked: 'red',
+  skipped: 'gray',
+  pending: 'gray',
+}
+
+const MARK: Record<Tone, string> = { done: '✓', active: '●', waiting: '◆', blocked: '✗', skipped: '–', pending: '○' }
+
+/** One word per way a phase runs; colour repeats it, never replaces it. */
+const MODE_LABEL: Record<FlowMode, string> = { inline: 'inline', delegate: 'delegate', fork: 'fork', gate: 'gate' }
+const MODE_COLOR: Record<FlowMode, string> = { inline: 'gray', delegate: 'cyan', fork: 'blue', gate: 'magenta' }
+
+const isQuiet = (t: Tone) => t === 'pending' || t === 'skipped'
+
+const duration = (ms: number | null | undefined) => {
+  if (!ms || ms <= 0) return ''
+  const seconds = Math.round(ms / 1000)
+  if (seconds < 60) return `${seconds}s`
+  const minutes = Math.round(seconds / 60)
+  return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, '0')}`
+}
+
+const tokens = (n: number | null | undefined) =>
+  !n ? '' : n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1000 ? `${Math.round(n / 1000)}k` : `${n}`
+
+const shortModel = (model: string | null | undefined) =>
+  (model || '').replace(/^claude-/, '').replace(/-\d{8}$/, '').replace(/-(\d+)-(\d+)$/, ' $1.$2')
+
+// ── Reading the run files ────────────────────────────────────────────────────
+
+const slugOf = (root: string) =>
+  (root.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || 'project').replace(/[^a-zA-Z0-9._-]/g, '-')
+
+/** The state folders the surfaces keep for a checkout: `<slug>-<8 hex>`, the hash of the path. */
+async function stateDirs($: any, slug: string): Promise<string[]> {
+  const config = await $.env.get('CLAUDE_CONFIG_DIR')
+  const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME')) ?? ''
+  const profile = (config || `${home}/.claude`).replace(/\\/g, '/')
+  const pattern = new RegExp(`^${slug.replace(/[.]/g, '\\.')}-[0-9a-f]{8}$`)
+  const dirs: string[] = []
+
+  for (const surface of SURFACES) {
+    const base = `${profile}/${surface}`
+    if (!(await $.fs.exists(base))) continue
+    for (const entry of await $.fs.list(base)) {
+      if (entry.kind === 'directory' && pattern.test(entry.name)) dirs.push(`${base}/${entry.name}/runs`)
+    }
+  }
+  return dirs
+}
+
+/** This worktree's own runs; when it has none, the main checkout's, so the pane is never empty in a fresh worktree. */
+async function loadRuns($: any): Promise<FlowRun[]> {
+  const root = (await $.session.root()).replace(/\\/g, '/')
+  const own = await readRuns($, await stateDirs($, slugOf(root)))
+  const main = root.split('/.claude/worktrees/')
+  if (own.length > 0 || main.length < 2) return own
+  return readRuns($, await stateDirs($, slugOf(main[0])))
+}
+
+const phaseKeys = (name: string) => {
+  const slug = name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  return [name, slug, `phase-${slug}`]
+}
+
+/**
+ * How a stage ran. Read from the run when it says — a stage's `execution`, or the resolved
+ * `runContext.phases` map the per-phase config proposal adds — and otherwise inferred:
+ * a stage a sub-agent worked in was delegated, Personal Validation is the gate, the rest ran inline.
+ */
+function stageOf(raw: any, s: any, index: number): FlowStage {
+  const name = String(s.name ?? '?')
+  const flowMap = raw.runContext?.phases?.[raw.skillId] ?? raw.runContext?.phases ?? {}
+  const resolved = phaseKeys(name).map(k => flowMap?.[k]).find(Boolean) ?? {}
+  const execution = { ...resolved, ...(s.execution ?? {}) }
+
+  const insights: any[] = Array.isArray(raw.insights) ? raw.insights : []
+  const workers: FlowWorker[] = insights
+    .filter(i => i.kind === 'agent' && i.stageIndex === index)
+    .map(i => ({
+      name: String(i.agentDisplayName || i.agentName || 'agent'),
+      model: shortModel(i.model),
+      durationMs: typeof i.durationMs === 'number' ? i.durationMs : null,
+      tokens: typeof i.totalTokens === 'number' ? i.totalTokens : null,
+      toolCalls: typeof i.totalToolCalls === 'number' ? i.totalToolCalls : null,
+      isFailed: i.status === 'failed',
+    }))
+  const declared: string[] = Array.isArray(s.agents) ? s.agents.map(String) : []
+  for (const agent of declared) {
+    if (!workers.some(w => w.name === agent)) {
+      workers.push({ name: agent, model: '', durationMs: null, tokens: null, toolCalls: null, isFailed: false })
+    }
+  }
+
+  const recorded = execution.runs ?? execution.mode
+  const mode: FlowMode = /personal validation/i.test(name)
+    ? 'gate'
+    : recorded === 'fork' || recorded === 'delegate' || recorded === 'inline'
+      ? recorded
+      : workers.length > 0
+        ? 'delegate'
+        : 'inline'
+
+  return {
+    name,
+    status: String(s.status ?? 'pending'),
+    mode,
+    isModeRecorded: recorded !== undefined || mode === 'gate',
+    agent: execution.agent ?? (mode === 'delegate' ? (workers[0]?.name ?? null) : null),
+    model: shortModel(execution.model) || null,
+    effort: execution.effort ?? null,
+    passes: typeof s.doneCount === 'number' ? s.doneCount : 0,
+    durationMs: typeof s.durationMs === 'number' ? s.durationMs : null,
+    outputTokens: raw.tokenUsage?.byStage?.[index]?.total?.outputTokens ?? null,
+    toolCalls: insights.filter(i => i.kind === 'tool' && i.stageIndex === index).length,
+    workers,
+    scenarios: Array.isArray(s.scenarios) ? s.scenarios.map((c: any) => ({ name: String(c.name), status: String(c.status) })) : [],
+    links: Array.isArray(s.links) ? s.links.map((l: any) => String(l.label ?? l.url)) : [],
+    output: String(s.output ?? '').slice(0, 600),
+  }
+}
+
+async function readRuns($: any, dirs: string[]): Promise<FlowRun[]> {
+  const sessionId = await $.session.id()
+  const byId = new Map<string, FlowRun>()
+
+  for (const dir of dirs) {
+    if (!(await $.fs.exists(dir))) continue
+    const files = (await $.fs.list(dir))
+      .filter((f: any) => f.kind === 'file' && f.name.endsWith('.json'))
+      .sort((a: any, b: any) => b.mtimeMs - a.mtimeMs)
+      .slice(0, 20)
+
+    for (const file of files) {
+      try {
+        const raw = JSON.parse(await $.fs.read(`${dir}/${file.name}`))
+        if (!raw?.id || !Array.isArray(raw.stages)) continue
+        const run: FlowRun = {
+          id: raw.id,
+          skillId: raw.skillId ?? 'flow',
+          title: raw.title || raw.originalPrompt || raw.id,
+          status: raw.status ?? '',
+          changeKind: raw.changeKind ?? '',
+          approval: raw.approval?.state ?? '',
+          updatedAt: raw.updatedAt ?? '',
+          startedAt: raw.startedAt ?? '',
+          isThisSession: Array.isArray(raw.sessionIds) && raw.sessionIds.includes(sessionId),
+          contextPeak: raw.context?.peakTokens ?? null,
+          contextLimit: raw.context?.tokenLimit ?? null,
+          stages: raw.stages.map((s: any, i: number) => stageOf(raw, s, i)),
+        }
+        const known = byId.get(run.id)
+        if (!known || known.updatedAt < run.updatedAt) byId.set(run.id, run)
+      } catch {
+        // A run file mid-write is read again on the next poll.
+      }
+    }
+  }
+
+  return [...byId.values()]
+    .sort((a, b) =>
+      a.isThisSession !== b.isThisSession ? (a.isThisSession ? -1 : 1) : b.updatedAt.localeCompare(a.updatedAt),
+    )
+    .slice(0, MAX_RUNS)
+}
+
+// ── /flows-demo: a flow-code run in memory only, shaped like the per-phase config proposal ──
+
+const DEMO_STEP_MS = 4000
+type DemoStage = [name: string, mode: FlowMode, agent: string | null, model: string | null, effort: string | null, output: string]
+const DEMO_STAGES: DemoStage[] = [
+  ['update-base', 'inline', null, null, null, 'Fast-forwarded to origin/main (bfcf9b8b).'],
+  ['scope', 'fork', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
+  ['implement', 'fork', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
+  ['review', 'fork', null, 'opus', 'high', 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
+  ['build-test', 'delegate', 'general-purpose', 'sonnet', 'low', 'Build green, 4,312 tests passed.'],
+  ['verify', 'delegate', 'qa:qa', null, null, 'Full depth with capture through Aspire; logs monitored, no errors.'],
+  ['spec-check', 'delegate', 'devbook:verify-change', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
+  ['ready', 'inline', null, null, null, 'Review, build-test, verify and spec-check all recorded green.'],
+  ['personal-validation', 'gate', null, null, null, 'Waiting for your approval. Review links published.'],
+  ['create-pr', 'inline', null, null, null, 'Pushed and opened the pull request.'],
+  ['report-back', 'delegate', null, 'haiku', null, 'Commented on the origin entry and ticked its steps.'],
+  ['summary', 'inline', null, null, null, 'Run summary written.'],
+]
+const DEMO_WORKERS: Record<string, FlowWorker[]> = {
+  implement: [
+    { name: 'csharp-coding:coding · backend', model: 'opus 5.5', durationMs: 192000, tokens: 81000, toolCalls: 41, isFailed: false },
+    { name: 'csharp-coding:coding · frontend', model: 'sonnet 5.5', durationMs: 236000, tokens: 64000, toolCalls: 37, isFailed: false },
+  ],
+  verify: [
+    { name: 'qa:qa', model: 'sonnet 5.5', durationMs: 411000, tokens: 122000, toolCalls: 96, isFailed: false },
+    { name: 'qa:qa-monitor', model: 'haiku 4.5', durationMs: 398000, tokens: 18000, toolCalls: 22, isFailed: false },
+  ],
+}
+let demoStartedAt: number | undefined
+
+function demoRun(now: number): FlowRun {
+  const at = Math.floor((now - (demoStartedAt ?? now)) / DEMO_STEP_MS)
+  const reviewAt = DEMO_STAGES.findIndex(s => s[0] === 'review')
+
+  return {
+    id: 'demo-run',
+    skillId: 'flow-code',
+    title: 'Demo · Undo (Ctrl+Z) for backlog tasks',
+    status: at >= DEMO_STAGES.length ? 'done' : 'in_progress',
+    changeKind: 'feature',
+    approval: at > 8 ? 'approved' : at === 8 ? 'pending' : '',
+    updatedAt: `demo-${Math.min(at, DEMO_STAGES.length)}`,
+    startedAt: new Date(demoStartedAt ?? now).toISOString(),
+    isThisSession: true,
+    contextPeak: 90_000 + Math.min(at, 12) * 21_000,
+    contextLimit: 1_000_000,
+    stages: DEMO_STAGES.map(([name, mode, agent, model, effort, output], i) => {
+      const status = i < at ? 'done' : i === at ? (mode === 'gate' ? 'awaiting_approval' : 'in_progress') : 'pending'
+      const isReached = i <= at
+      return {
+        name,
+        status,
+        mode,
+        isModeRecorded: true,
+        agent,
+        model,
+        effort,
+        passes: (i < at ? 1 : 0) + (name === 'implement' && at > reviewAt ? 1 : 0) + (name === 'review' && at > reviewAt ? 1 : 0),
+        durationMs: i < at ? DEMO_STEP_MS * (4 + ((i * 37) % 60)) : null,
+        outputTokens: i < at && mode !== 'inline' ? 12_000 + i * 9_000 : null,
+        toolCalls: i < at ? 3 + ((i * 13) % 40) : 0,
+        workers: isReached ? (DEMO_WORKERS[name] ?? []) : [],
+        scenarios:
+          name === 'verify' && i < at
+            ? [
+                { name: 'S1 Undo a status change', status: 'pass' },
+                { name: 'S2 Undo a reorder', status: 'pass' },
+                { name: 'S3 Redo after reload', status: 'flaky' },
+              ]
+            : [],
+        links: name === 'personal-validation' && isReached ? ['desktop-web-harness', 'Diff'] : [],
+        output: isReached ? output : '',
+      }
+    }),
+  }
+}
+
+// ── Polling ──────────────────────────────────────────────────────────────────
+
+const signature = (list: FlowRun[]) => list.map(r => `${r.id}@${r.updatedAt}`).join('|')
+
+const currentStage = (run: FlowRun) =>
+  run.stages.find(s => ['active', 'waiting', 'blocked'].includes(tone(s.status)))
+
+async function refresh($: any) {
+  const loaded = await loadRuns($)
+  const fresh = demoStartedAt === undefined ? loaded : [demoRun(await $.clock.now()), ...loaded].slice(0, MAX_RUNS)
+  const { value: current = [] } = await $.state.get(RUNS)
+  if (signature(fresh) !== signature(current)) await $.state.set(RUNS, fresh)
+
+  const mine = fresh.find(r => r.isThisSession && tone(r.status) !== 'done')
+  const stage = mine ? currentStage(mine) : undefined
+  $.ui.status(mine ? `${mine.skillId} · ${stage?.name ?? mine.status}` : undefined)
+}
+
+const openPane = ($: any) => $.ui.open({ id: PANE, title: 'Delivery flows' })
+
+const isSurfaceTool = (tool: string, op: string) => /delivery-surface-/.test(tool) && tool.endsWith(`__${op}`)
+
+// ── Hooks ────────────────────────────────────────────────────────────────────
+
+export const register: Register = on => {
+  on('session.start', async ($, e, next) => {
+    await $.command.register({
+      name: 'flows',
+      description: "Show this worktree's delivery flow runs as a live phase timeline",
+    })
+    await $.command.register({
+      name: 'flows-demo',
+      description: 'Play a simulated flow-code run in the delivery flows pane (in memory only)',
+    })
+    await refresh($)
+    $.clock.every(POLL_MS, () => refresh($))
+    void openPane($)
+
+    return next(e)
+  })
+
+  on('command.run', { command: 'flows' }, async $ => {
+    await refresh($)
+    await openPane($)
+
+    return { text: 'Delivery flows pane opened.' }
+  })
+
+  on('command.run', { command: 'flows-demo' }, async $ => {
+    demoStartedAt = await $.clock.now()
+    await $.state.set(SELECTED, 0)
+    await $.state.set(FOCUS, -1)
+    await refresh($)
+    await openPane($)
+
+    return { text: `Simulating a flow-code run: one phase every ${DEMO_STEP_MS / 1000}s, about 50s in all.` }
+  })
+
+  // The pane: the whole run, top to bottom — one row per phase, its workers hung under it,
+  // and the focused phase opened in place.
+  on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
+    const { Box, Text, Button } = $.ui.resolve(e)
+    const { value: list = [] } = await $.state.get(RUNS)
+    const index = Math.min((await $.state.get(SELECTED)).value ?? 0, Math.max(0, list.length - 1))
+    const pinned = (await $.state.get(FOCUS)).value ?? -1
+    const run = list[index]
+    const columns = (e.props as any)?.bodyColumns ?? e.viewport?.columns ?? 60
+    const isWide = columns >= 72
+
+    if (!run) {
+      return (
+        <Box flexDirection="column">
+          <Text dimColor>No delivery runs for this worktree yet.</Text>
+          <Text dimColor>A flow-* skill reports its phases here as it runs. /flows-demo plays one.</Text>
+        </Box>
+      )
+    }
+
+    const done = run.stages.filter(s => tone(s.status) === 'done').length
+    const live = currentStage(run)
+    const focused =
+      pinned >= 0 && pinned < run.stages.length
+        ? pinned
+        : live
+          ? run.stages.indexOf(live)
+          : run.stages.reduce((last, s, i) => (tone(s.status) === 'pending' ? last : i), 0)
+    const elapsed = run.startedAt && !run.id.startsWith('demo') ? Date.now() - Date.parse(run.startedAt) : null
+    const context = run.contextPeak && run.contextLimit ? `${Math.round((run.contextPeak / run.contextLimit) * 100)}% context` : ''
+    const facts = [run.skillId, run.changeKind, `${done}/${run.stages.length}`, duration(elapsed), context]
+      .filter(Boolean)
+      .join(' · ')
+
+    const badge = (s: FlowStage) => (
+      <Text color={MODE_COLOR[s.mode]} dimColor={!s.isModeRecorded}>
+        {MODE_LABEL[s.mode]}
+        {s.isModeRecorded ? '' : '?'}
+      </Text>
+    )
+    const who = (s: FlowStage) =>
+      [s.agent, [s.model, s.effort].filter(Boolean).join('/')].filter(Boolean).join(' · ')
+
+    return (
+      <Box flexDirection="column">
+        <Box flexDirection="row" justifyContent="space-between">
+          <Text bold wrap="truncate-end">
+            {run.title}
+          </Text>
+          {list.length > 1 && (
+            <Box flexDirection="row" gap={1} flexShrink={0}>
+              <Button key="prev" plain onPress={() => $.state.set(SELECTED, (index - 1 + list.length) % list.length)}>
+                ‹
+              </Button>
+              <Text dimColor>
+                {index + 1}/{list.length}
+              </Text>
+              <Button key="next" plain onPress={() => $.state.set(SELECTED, (index + 1) % list.length)}>
+                ›
+              </Button>
+            </Box>
+          )}
+        </Box>
+        <Text dimColor wrap="truncate-end">
+          {facts}
+          {run.isThisSession ? ' · this session' : ''}
+        </Text>
+        <Box flexDirection="row" gap={2} marginBottom={1}>
+          <Text color={MODE_COLOR.inline}>inline</Text>
+          <Text color={MODE_COLOR.delegate}>delegate</Text>
+          <Text color={MODE_COLOR.fork}>fork</Text>
+          <Text color={MODE_COLOR.gate}>gate</Text>
+          <Text dimColor>? = inferred</Text>
+        </Box>
+
+        {run.stages.map((s, i) => {
+          const t = tone(s.status)
+          const isFocused = i === focused
+          const rail = i === run.stages.length - 1 ? ' ' : '│'
+          const right = [s.passes > 1 ? `↺${s.passes}` : '', duration(s.durationMs)].filter(Boolean).join(' ')
+          return (
+            <Box key={`p${i}`} flexDirection="column">
+              <Box flexDirection="row" gap={1}>
+                <Text color={COLOR[t]}>{MARK[t]}</Text>
+                <Box flexGrow={1} flexShrink={1}>
+                  <Button key={`f${i}`} plain onPress={() => $.state.set(FOCUS, isFocused ? -1 : i)}>
+                    {s.name}
+                  </Button>
+                </Box>
+                {badge(s)}
+                {isWide && who(s) && (
+                  <Text dimColor wrap="truncate-end">
+                    {who(s)}
+                  </Text>
+                )}
+                {right && (
+                  <Text dimColor={!isQuiet(t)} color={s.passes > 1 ? 'yellow' : undefined}>
+                    {right}
+                  </Text>
+                )}
+              </Box>
+              {!isWide && who(s) && !isQuiet(t) && (
+                <Text dimColor wrap="truncate-end">
+                  {rail} {who(s)}
+                </Text>
+              )}
+              {s.workers.map((w, k) => (
+                <Text color={w.isFailed ? 'red' : 'cyan'} dimColor={t === 'done' && !isFocused} wrap="truncate-end">
+                  {k === s.workers.length - 1 ? '╰─▶' : '├─▶'} {w.name}
+                  {[w.model, duration(w.durationMs), w.toolCalls ? `${w.toolCalls} tools` : '', tokens(w.tokens)]
+                    .filter(Boolean)
+                    .map(x => ` · ${x}`)
+                    .join('')}
+                </Text>
+              ))}
+              {isFocused && !isQuiet(t) && (
+                <Box flexDirection="column" marginLeft={2} marginBottom={1} borderStyle="single" borderColor={COLOR[t]} paddingX={1}>
+                  {s.output ? <Text wrap="wrap">{s.output}</Text> : <Text dimColor>No output yet.</Text>}
+                  {s.scenarios.map(c => (
+                    <Text color={c.status === 'pass' ? 'green' : c.status === 'fail' ? 'red' : 'yellow'} wrap="truncate-end">
+                      {c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : '~'} {c.name}
+                    </Text>
+                  ))}
+                  {s.links.length > 0 && <Text color="blue">↗ {s.links.join('  ↗ ')}</Text>}
+                  {(s.outputTokens || s.toolCalls > 0) && (
+                    <Text dimColor>
+                      {[s.outputTokens ? `${tokens(s.outputTokens)} output tokens` : '', s.toolCalls ? `${s.toolCalls} tool calls` : '']
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </Text>
+                  )}
+                </Box>
+              )}
+            </Box>
+          )
+        })}
+      </Box>
+    )
+  })
+
+  // The band: one row above the prompt while this session's run is open — the rail and the phase it is in.
+  on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    if ((e.props as any)?.hasSurvey) return next(e)
+    const { value: list = [] } = await $.state.get(RUNS)
+    const run = list.find(r => r.isThisSession && tone(r.status) !== 'done')
+    if (!run) return next(e)
+
+    const { Box, Text, Button } = $.ui.resolve(e)
+    const live = currentStage(run)
+    return (
+      <Box flexDirection="row" gap={1}>
+        <Text bold>{run.skillId}</Text>
+        <Box flexDirection="row">
+          {run.stages.map(s => (
+            <Text color={COLOR[tone(s.status)]}>{s.mode === 'gate' && tone(s.status) === 'pending' ? '◇' : MARK[tone(s.status)]}</Text>
+          ))}
+        </Box>
+        {live && (
+          <Text wrap="truncate-end">
+            <Text color={COLOR[tone(live.status)]}>{live.name}</Text>
+            <Text color={MODE_COLOR[live.mode]}> {MODE_LABEL[live.mode]}</Text>
+            <Text dimColor>{[live.agent, live.model].filter(Boolean).map(x => ` · ${x}`).join('')}</Text>
+          </Text>
+        )}
+        <Button key="open" plain onPress={() => $.ui.open({ id: PANE, title: 'Delivery flows' })}>
+          details
+        </Button>
+      </Box>
+    )
+  })
+
+  // Inline: a surface call in the transcript reads as the phase change it records, not as JSON.
+  on('ui.render', { component: 'ToolUse' }, async ($, e, next) => {
+    const props = e.props as any
+    const tool = String(props?.tool ?? '')
+    const input = (props?.input ?? {}) as any
+    const isStage = isSurfaceTool(tool, 'update_stage')
+    const isStart = isSurfaceTool(tool, 'start_run')
+    if (!isStage && !isStart) return next(e)
+
+    const { Box, Text } = $.ui.resolve(e)
+    const surface = tool.includes('backlog') ? 'Backlog' : 'dashboard'
+
+    if (isStart) {
+      const names: string[] = Array.isArray(input.stages) ? input.stages.map((s: any) => String(s?.name ?? s)) : []
+      return (
+        <Box flexDirection="column">
+          <Text>
+            <Text bold>▶ {input.skillId ?? 'flow'}</Text>
+            <Text dimColor> started on the {surface} · {names.length} phases</Text>
+          </Text>
+          {names.length > 0 && (
+            <Text dimColor wrap="truncate-end">
+              {'  '}
+              {names.join(' → ')}
+            </Text>
+          )}
+        </Box>
+      )
+    }
+
+    const t = tone(String(input.status ?? ''))
+    const { value: list = [] } = await $.state.get(RUNS)
+    const run = list.find(r => r.isThisSession) ?? list[0]
+    const stage =
+      run?.stages.find(s => s.name === input.stageName) ??
+      (typeof input.stageIndex === 'number' ? run?.stages[input.stageIndex] : undefined)
+    const name = input.stageName ?? stage?.name ?? `stage ${input.stageIndex ?? '?'}`
+    const scenarios: any[] = Array.isArray(input.scenarios) ? input.scenarios : []
+    const passed = scenarios.filter(c => c.status === 'pass').length
+
+    return (
+      <Box flexDirection="column">
+        <Text wrap="truncate-end">
+          <Text color={COLOR[t]}>{MARK[t]} </Text>
+          <Text bold>{name}</Text>
+          <Text color={COLOR[t]}> {String(input.status ?? '').replace(/_/g, ' ')}</Text>
+          {stage && <Text color={MODE_COLOR[stage.mode]}> · {MODE_LABEL[stage.mode]}</Text>}
+          {stage?.agent && <Text dimColor> · {stage.agent}</Text>}
+          {scenarios.length > 0 && <Text dimColor> · {passed}/{scenarios.length} scenarios pass</Text>}
+          <Text dimColor> · {surface}</Text>
+        </Text>
+        {t !== 'active' && input.output && (
+          <Text dimColor wrap="truncate-end">
+            {'  '}
+            {String(input.output).split('\n')[0]}
+          </Text>
+        )}
+      </Box>
+    )
+  })
+}

@@ -5,13 +5,15 @@ cadence: weekly
 cron: "0 4 * * 1"
 target: delivery-schedule:schedule-devbook-sweep
 requires: [delivery-schedule, devbook]
-tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Workflow, Agent]
+tools: [Bash, Read, Write, Edit, Glob, Grep, Skill, Workflow]
 ---
 
-Run `schedule-devbook-sweep` for the repository `{{repo}}` on `{{base}}` with `direction pull`
-and `maxResolve 3`. It verifies every sync group at `pull` or `sync`, files a `devbook-drift`
-issue for each one a person must answer, and captures up to three `code-ahead` groups from their
-code one at a time, each on its own branch under `schedule/{{name}}/<YYYY-MM-DD>/`, each opened as
-a **draft** pull request that writes chapters only, adds them at `status: draft`, and lists them
-under *Status to decide*. Nothing is promoted, nothing is ready for review. Not adopted: say so
-and stop.
+Run `schedule-devbook-sweep` with `direction: pull` for the repository `{{repo}}` on `{{base}}`,
+with `maxResolve 3`. It brings chapters level with the code for every sync group at `pull` or
+`sync`: up to three `code-ahead` groups are carried in one at a time, each on its own branch
+under `schedule/{{name}}/<YYYY-MM-DD>/`, each opened as a **draft** pull request whose body
+lists under *Status to decide* every chapter it added at `draft`. It writes no code, and
+nothing it opens is ready for review.
+
+The brief is the report: the draft pull requests with what to validate, the groups awaiting an
+answer, what did not complete, and the `devbook-sync-report` block.

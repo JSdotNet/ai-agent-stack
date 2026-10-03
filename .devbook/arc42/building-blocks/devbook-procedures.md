@@ -115,15 +115,18 @@ entry points; `capture` returns one file per checkpoint and per failure, under t
 form named honestly; `diagnose` names a cause and proves it, doing the debugging itself and
 leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
 sized against the repository's own finished work and naming the reference compared with, so
-that a pace measured in points means the same across plans; `prototype` answers one design question named up
-front and returns the answer — what the prototype showed and where it lands next — beside one
-standalone HTML file, everything inline and nothing fetched: a logic question as a model anyone
-can drive through a state panel, free play, and walkthroughs in the domain's terms; a visual one
-as two or more structurally different variants on the repository's demo template and in its
-design system, with the guideline, token, or story each came from. Given an existing demo it
-returns the revision with every surviving screen id kept. The prototype is never merged: it
-writes into no `.devbook/` folder and changes no source file, and the answer reaches the devbook
-only through a change. It is the `goal` field of the
+that a pace measured in points means the same across plans; `prototype` starts only from a
+design question stated in one sentence, writes that sentence into the file's `demo-meta` as its
+`question`, and ends with a one-line answer for whoever asked, never recorded in the file, which
+carries no stage, status, verdict, or page. It delivers one standalone HTML file, everything
+inline and nothing fetched: a logic question as a model anyone can drive through a state panel
+labelled in the ubiquitous language, free play, and walkthroughs; a UI one as two or more
+structurally different variants on the repository's demo template, its managed region kept and
+no script outside it but `demo-model` and `demo-meta`, in its design system, with the guideline,
+token, or story each came from. Given an existing demo it returns the revision with every
+surviving screen id and anchor kept. The prototype is never merged: it writes into no
+`.devbook/` folder and changes no source file, and the answer reaches the devbook only through
+a change. It is the `goal` field of the
 plugin's seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
 A repository edits the body to meet it and never edits it.
 
@@ -131,10 +134,11 @@ A repository edits the body to meet it and never edits it.
 stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
 prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
 exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
-delta to `domain.md`, `flow.md`, or an invariants subpage. The seed does not say all of this
-yet. The `devbook-click-demo` plan adds the one-sentence question written into the file, the
-one-line answer kept out of it, the two modes, the 500 KB target, and `init` seeding the
-[demo template](#demo-template) at `.devbook/design/demo-template.html`.
+delta to `domain.md`, `flow.md`, or an invariants subpage. The seed's body carries the rest of
+the record: variants trimmed to the chosen one only when a proposal carries the file, walkthroughs
+listed in `demo-model` by id — the scenario's slug when one is played — data at real density,
+the 500 KB target kept with inline SVG, shared markup, and page demos and allowed to be exceeded,
+and the two things it is not for: a settled design goes to `flow-code`, a bug to `diagnose`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -147,9 +151,11 @@ one-line answer kept out of it, the two modes, the 500 KB target, and `init` see
 related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
 ```
 
-The starting template every demo is built on, shipped as `assets/demo-template.html` and meant
-to land at `.devbook/design/demo-template.html`, where the repository makes it its own through
-`flow-spec`. It is one HTML file. Between `<!-- template:begin hash=… -->` and
+The starting template every demo is built on, shipped as `assets/demo-template.html`. Where
+`prototype` is adopted and devbook's `design/` folder is too, `init` and `update` seed it at
+`.devbook/design/demo-template.html`, where the repository makes it its own through
+`flow-spec`; without `design/` they say so and skip it. Like a body, it is refreshed only while
+it still hashes to a release this plugin shipped, and once edited it is the repository's. It is one HTML file. Between `<!-- template:begin hash=… -->` and
 `<!-- template:end -->` sits the managed region: the design-token styles, the app shell, the
 control panel, and the one script a demo carries. The rest of the file is the demo's own: its
 screens in `main[data-demo-app]`, its `demo-model`, and its `demo-meta`. The comment that opens
@@ -175,6 +181,7 @@ Backlog test against it.
 | The region's begin marker carries the hash of the region | the asset | `tests/demo-template.test.mjs` |
 | The sample holds the template's region byte for byte, and its `demo-model` and screens list each other exactly | the asset | `tests/demo-template.test.mjs` |
 | No script sits outside the region except `demo-model` and `demo-meta`, and nothing is fetched | the asset | `tests/demo-template.test.mjs` |
+| The template lands only where `prototype` and `design` are both adopted, and is refreshed only while it hashes to a shipped release | `init`, `update` | untested |
 
 ## Dependencies
 

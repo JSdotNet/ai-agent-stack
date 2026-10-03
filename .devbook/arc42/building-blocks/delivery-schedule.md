@@ -84,12 +84,12 @@ the failure marker. Pull writes chapters only and adds them at `draft`; push wri
 tests only, from agreed chapters only; neither removes anything or resolves a `conflict`. A
 `sync` group drifting both ways is pulled first and pushed once the capture has merged. The
 brief closes with a `devbook-sync-report` block, which also reaches a bound surface as the run's
-`verdicts`. What the directions share is `resources/devbook-sweep-contract.md`. Pull lands through
-`capture-unit.workflow.js`: `devbook:capture-specs` over the group, the plan carried into the
-chapters under the folder rule, `build.mjs --check` with bounded repair, a folder-rule and a prose
-review lens, and `devbook:verify-change` again, which must read `aligned` on every chapter it
-acted on; the weekly `devbook-pull-sweep` trigger runs it with `maxResolve 3`. Push has no work
-script yet, so it verifies and files without landing anything.
+`verdicts`. What the directions share is `resources/devbook-sweep-contract.md`. Pull lands
+through `capture-unit.workflow.js` beside the skill — `capture-specs` over the group, the plan
+carried into the chapters under the folder rule, `build.mjs --check` with bounded repair,
+folder-rule and prose review lenses, and `verify-change` again, which must read `aligned` on
+every chapter acted on — on the Monday `devbook-pull-sweep` schedule. Push has no work script
+yet, so that direction verifies and files without landing anything.
 
 ### schedule-devbook-update
 

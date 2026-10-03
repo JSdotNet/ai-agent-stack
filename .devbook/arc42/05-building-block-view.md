@@ -19,11 +19,11 @@ concerned.
 ## Level 1: The Plugin Landscape
 
 ```meta
-date: 2026-10-01
+date: 2026-10-03
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Fourteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -50,6 +50,10 @@ flowchart TB
         SC["delivery-surface-canvas<br/>render, one host, no marketplace entry"]
     end
 
+    subgraph VIEW["Viewer - declared by nothing, reads what surfaces write"]
+        RV["delivery-run-view<br/>one host, reads run files"]
+    end
+
     DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
     DPR ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
@@ -60,6 +64,8 @@ flowchart TB
     SL -->|"delivery.surface.*@1"| DEL
     SB -->|"delivery.surface.*@1"| DEL
     SC -->|"delivery.surface.render@1"| DEL
+    RV -.->|"reads their run files"| SD
+    RV -.->|"reads their run files"| SB
 
     SCH -.->|"names prose-check as a target"| DEV
     DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
@@ -139,8 +145,12 @@ way to be loaded and only costs every consumer bytes.
 A plugin ships the manifest of every host that can load something in it, which for almost every
 plugin here is both. `delivery-surface-canvas` is the standing exception: a Copilot canvas extension
 and nothing else, so it carries the Copilot manifest alone and takes no marketplace entry —
-there is nothing in it for Claude to install. The exception is allowed on that test and no
-other, so a plugin holding one host-only asset still ships both.
+there is nothing in it for Claude to install. `delivery-run-view` is the same test from the
+other side: function-hook modules and nothing else, so it carries the Claude manifest alone and
+keeps its marketplace entry, which is how Claude installs it. The exception is allowed on that
+test and no other, so a plugin holding one host-only asset still ships both, and the checker
+fails a plugin that has no Copilot manifest yet ships `skills/`, `agents/`, `hooks.json`, or
+`extensions/`.
 
 The manifests agree on `name`, `version`, and `description`. The Claude manifest lists agent
 files explicitly and omits `skills` and `hooks`, which that host discovers on its own, and it

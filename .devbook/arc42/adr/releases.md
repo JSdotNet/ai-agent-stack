@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-10-03 | `delivery-run-view` joins at `1.15.0`, the last release every plugin shared, rather than at `0.1.0`. |
 | 2026-10-01 | Every plugin is `1.15.0`. It carries `devbook-procedures`' `004-start-binding-is-run` and `delivery-schedule`'s `001-weekend-cadence`, payload-only migrations with no contract bump. |
 | 2026-09-30 | Every plugin is `1.14.0`. It carries `devbook-procedures`' `002-debug-is-diagnose` and `003-show-removed`, payload-only migrations with no contract bump. |
 | 2026-09-29 | Every plugin is `1.13.0`, the one release of the change lane; contracts 22, 23, and 24 ship in it with no migration, each additive. It carries the `requirement` type on `.design`, the change folder under `openspec/changes/` with its rule and the delta merge `delta.mjs`, the two rungs on a change's `proposal.md` and the gates and review queue that write them, the `devbook-openspec` bridge — joining at this version, its `devbook` range raised to `>=1.13.0` — the engine's replan chore, `policy["openspec.scenarios"]`, and `bindings["openspec.grill"]`, and `devbook-config` setting up, updating, and diagnosing the lane, unresolved provider ids included. |

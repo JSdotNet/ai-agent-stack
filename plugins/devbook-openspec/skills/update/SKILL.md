@@ -16,17 +16,20 @@ the CLI check are `../init/SKILL.md`; the stamp and hash rules are devbook's
 
 1. **The CLI.** `openspec --version` against `components.openspec.cli`. Outside it, report the
    installed version and the range and stop; never install, and never widen the range yourself.
-2. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
+2. **Migrate.** Run each script under `../../migrations/` in number order with node, the
+   repository root as the working directory: `migrate.mjs --check`, and while it exits `1`, show
+   its plan, run it without `--check`, and report what moved. `001` removes the Step 0 prototype.
+3. **Detect.** Hash every path in `components.openspec.materialized` and compare it with its
    stamped hash. Equal is stale-or-current and replaceable; different is customized.
-3. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip
+4. **Plan.** One table — `update`, `skip-customized`, `orphan` — and write nothing. Never skip
    this, not even when the plan is empty. A path this release no longer ships is an orphan:
    reported, never deleted. `openspec/config.yaml` is always `skip`: it is the repository's.
-4. **Run `openspec update .`** from the repository root, with `OPENSPEC_TELEMETRY=0` when the
+5. **Run `openspec update .`** from the repository root, with `OPENSPEC_TELEMETRY=0` when the
    overlay's `ext["devbook-openspec"].telemetry` says so. It refreshes OpenSpec's own skills
    for the stamped `tools` and touches neither the schema nor the config.
-5. **Materialize.** Overwrite only what step 2 found replaceable. Delete `openspec/specs/`
+6. **Materialize.** Overwrite only what step 3 found replaceable. Delete `openspec/specs/`
    again when it holds nothing but `.gitkeep`.
-6. **Stamp.** Rewrite `components.openspec` — `pluginVersion` and `materialized`; keep `cli`,
-   `tools`, `prototype`, and `workflow` as they were. A stamp without `workflow` reads as
+7. **Stamp.** Rewrite `components.openspec` — `pluginVersion` and `materialized`; keep `cli`,
+   `tools`, and `workflow` as they were. A stamp without `workflow` reads as
    `single-branch`; leave it absent rather than writing a choice nobody made.
-7. **Verify and report** exactly as `init` does, and leave the commit to the person.
+8. **Verify and report** exactly as `init` does, and leave the commit to the person.

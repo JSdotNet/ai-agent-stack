@@ -59,9 +59,8 @@ record work this skill did not do.
    - **Is the OpenSpec CLI here?** Run `openspec --version`. Absent, print
      `npm install -g @fission-ai/openspec@latest` and wait until it answers; never run it
      yourself. Declined, the lane is not adopted and nothing below is written.
-   - **Adopt the change lane, and allow a Step 0 prototype?** A yes adds `changes` to what
-     `devbook:init` adopts in step 7, and the prototype answer is `devbook-openspec:init`'s
-     to stamp. With delivery adopted, write `"spec": "devbook-openspec:spec"` under
+   - **Adopt the change lane?** A yes adds `changes` to what `devbook:init` adopts in step 7.
+     With delivery adopted, write `"spec": "devbook-openspec:spec"` under
      `extensions` and `{ "provider": "devbook-openspec:tracker" }` as
      `bindings["delivery.tracker"]`, and offer the two optional gates in the bridge's
      README under *What the engine binds*.
@@ -92,7 +91,7 @@ record work this skill did not do.
    invoke that component's own `init` and let it materialize its payload and write its
    own stamp, in the order the report's reconcile list gives — `devbook:init` for the
    devbook folders, `devbook-derived:init` for the committed index, `devbook-openspec:init`
-   for the change lane, with step 4's prototype answer, `devbook-procedures:init`
+   for the change lane, `devbook-procedures:init`
    for the repository's `run`, `capture`, `diagnose`, `estimate`, and `prototype` skills,
    `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
    that one's adoption question from the engine keys just written: `extensions.app.start` of

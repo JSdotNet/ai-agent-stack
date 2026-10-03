@@ -912,8 +912,20 @@ export function parseDocument(markdown) {
     const chapters = [];
     let fileTitle = null;
     let fileMeta = null;
+    // A `#` line inside a fenced block — a Markdown sample, a diagram — is
+    // content, not a chapter.
+    let fence = null;
 
     for (let i = 0; i < lines.length; i++) {
+        const marker = /^\s*(`{3,}|~{3,})/.exec(lines[i]);
+        if (fence) {
+            if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length) fence = null;
+            continue;
+        }
+        if (marker) {
+            fence = marker[1];
+            continue;
+        }
         const headingMatch = /^(#{1,6})\s+(.*)$/.exec(lines[i]);
         if (!headingMatch) continue;
 

@@ -352,6 +352,7 @@ top-level heading carries a block of its own describing the document as a whole.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | A heading is an addressable chapter if and only if it carries a `meta` fence | parse | `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
+| A `#` line inside a fenced block is content, never a heading, to the parser and to every annotation write alike | parse, write | `unit:node:plugins/devbook/tools/devbook-meta/annotations-write.test.mjs` |
 | The fence stays even when the block is empty | parse | untested |
 | Every file carries a file-level block under its top-level heading | parse | untested |
 | `type` is present wherever the folder defines a value set for the level | parse | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |

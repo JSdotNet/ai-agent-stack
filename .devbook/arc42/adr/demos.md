@@ -105,6 +105,11 @@ in every demo. The template is part of the design system, at
 changes through `flow-spec` like any `design/` chapter. It is independent of Storybook, so a
 demo opens anywhere with no toolchain.
 
+The managed region is the template's and not the demo's, so it is the one part of a demo that
+`/prototype` does not write. `demo-template.mjs --refresh` rewrites it in every demo when the
+template changes, and touches nothing else. A region edited by hand is an error, because the
+next refresh would discard the edit.
+
 A demo has a size target of 500 KB. `/prototype` works to stay under it with inline SVG,
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
 reports the size as a warning and never as an error.
@@ -126,7 +131,9 @@ resolves every `demo` address, and a demo is part of the fingerprint of the page
 to, both in contract 26. `delta.mjs` checks a demo delta with those rules and lands it by
 replacing its target whole. The `prototype` seed states the rest of this record: the question in
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
-real density, the size target, and when not to prototype. The template's tool is still to come.
+real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
+managed region against the template, a stale one as a warning and a hand-edited one as an error,
+and `--refresh` rewrites the regions after the template changes.
 
 ## Rejected
 
@@ -157,6 +164,7 @@ real density, the size target, and when not to prototype. The template's tool is
 
 | Date | Change |
 | --- | --- |
+| 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |
 | 2026-10-02 | The starting demo template and a sample demo built on it, shipped by devbook-procedures. |

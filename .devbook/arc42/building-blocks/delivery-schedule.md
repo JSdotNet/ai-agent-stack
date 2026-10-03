@@ -35,7 +35,7 @@ catalog checker, one migration, one hook, and one stamp.
 | `schedule-status`, `schedule-run` | skills | A person, from a session |
 | `resources/schedules/*.schedule.md` | catalog, the shipped trigger files | `init` and `update`, reading a repository's selection against it |
 | `schedule-catalog-contract.md`, `schedule-preamble.md`, `report-contract.md`, `change-window-contract.md`, `instruction-tightening.md`, `draft-pr-contract.md`, `devbook-sweep-contract.md` | contracts | The skills, by path: the schedule file and the stamp; the preamble every prompt opens with; where a report goes and the frame every `report.md` fills; the change window `schedule-morning-brief` and `schedule-weekly-update` share; the tightening standard `schedule-instruction-review` applies; how a sweep lands one item as a draft pull request, its failure marker a parameter; what the two devbook sync sweeps share, down to the `devbook-sync-report` block |
-| `scripts/resolve-issue.workflow.js` | work script | A sweep, through the host's workflow tool, per `draft-pr-contract.md`: scope, a failing test first, build and unit tests with bounded repair, two review lenses |
+| `scripts/resolve-issue.workflow.js` | work script | A sweep, through the host's workflow tool, per `draft-pr-contract.md` — the issue sweep directly, the devbook push sweep from inside `apply-unit.workflow.js`: scope, a failing test first, build and unit tests with bounded repair, two review lenses |
 | `tools/schedule-catalog/check.mjs` | tool | Run before committing a catalog change |
 | `migrations/001-weekend-cadence/` | migration | `update`, in its first step: names the routines whose catalog default moved, which its step 6 re-times; keyed on the stamped `pluginVersion`, since the routine lives in the scheduler |
 | `SessionStart` hook | hook | Either host, at session start: the routing text that sends recurring unattended work here and says never to schedule a flow |
@@ -88,8 +88,13 @@ brief closes with a `devbook-sync-report` block, which also reaches a bound surf
 through `capture-unit.workflow.js` beside the skill — `capture-specs` over the group, the plan
 carried into the chapters under the folder rule, `build.mjs --check` with bounded repair,
 folder-rule and prose review lenses, and `verify-change` again, which must read `aligned` on
-every chapter acted on — on the Monday `devbook-pull-sweep` schedule. Push has no work script
-yet, so that direction verifies and files without landing anything.
+every chapter acted on — on the Monday `devbook-pull-sweep` schedule. Push lands through
+`apply-unit.workflow.js`, on the Wednesday `devbook-push-sweep` schedule, one group a run:
+`apply-change` over the group's agreed `spec-ahead` chapters stops at the brief, the shared
+resolver builds it as an issue's specification — a failing test first, the smallest change,
+build and unit tests with bounded repair, two review lenses — a guard refuses any write under
+`.devbook/` and any removed file or public member, and `verify-change` again must read
+`aligned`. A group with a `code-ahead` chapter never reaches it.
 
 ### schedule-devbook-update
 
@@ -721,7 +726,7 @@ capability — a divergence taken on purpose.
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads this plugin's `skills/` folder to report which `schedule-*` procedures the copy on disk ships, and reads `components.schedule` | The `schedule-` prefix and the stamp shape | That the prefix keeps its meaning and the stamp keeps its shape. It writes neither. |
 | A maintainer, later | Customer-Supplier, this block supplying | The run's report on the scheduler's page, and a pull request from `schedule/<name>/<date>` | `report-contract.md` and the branch convention | That every run reports what it did in the same shape, and that the next run updates its pull request rather than duplicating it. |
 
-**Naming a target is deliberately weaker than depending on one.** One of the fifteen schedules
+**Naming a target is deliberately weaker than depending on one.** One of the sixteen schedules
 targets another plugin's skill, and the plugin declares one dependency. A target that is not
 enabled costs that trigger and nothing else, which is the same degrade-rather-than-fail shape
 the engine uses for a role.

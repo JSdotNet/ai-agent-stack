@@ -175,7 +175,8 @@ report what the sweep and the merge review did. `weekly-retro` takes 09:00 on bo
 and runs at most once a week: its target gates on the plan's remaining credit, so the second
 firing is the retry before the weekly reset. The devbook sweeps are the exception to the
 weekend: their draft pull requests wait on a reviewer, so `devbook-pull-sweep` runs Monday at
-04:00, before the issue sweep, and lands where the week starts. Match a cadence to how
+04:00, before the issue sweep, and lands where the week starts, and `devbook-push-sweep`
+Wednesday at 04:00, two days later, so the chapters a pull carried can be merged first. Match a cadence to how
 fast the output is read, not to how fast input arrives: a daily merge review is read daily; a
 daily package update produces a queue.
 

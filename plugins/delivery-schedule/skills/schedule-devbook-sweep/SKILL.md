@@ -97,7 +97,8 @@ result, the report block — is `../../resources/devbook-sweep-contract.md`.
    — take the top `maxResolve`, and report the rest as deferred.
 6. For each, in order, land it per **Landing** in the contract and `../../resources/draft-pr-contract.md`,
    passing the group and its verdict rows to the direction's work script resolved to an
-   absolute path.
+   absolute path — for push, also the claimed drift issue and `../../scripts/resolve-issue.workflow.js`
+   as `resolver`, absolute too.
 
 ### Phase 5 — Brief
 

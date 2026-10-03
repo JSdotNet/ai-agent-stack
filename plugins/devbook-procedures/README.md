@@ -11,7 +11,7 @@ each procedure is *for*. So this plugin fixes the goal and seeds the procedure:
 | `capture` | Return evidence a reviewer can open: one file per checkpoint and per failure, paths under the worktree root, the form named honestly | the layout, the naming, the tooling |
 | `diagnose` | Name the cause of an observed issue and prove it — a log line, a trace span, a breakpoint's state — without handing the person a debugger, and leave nothing behind in the change | where the logs live, which debugger reaches the app, how a reproduction is set up |
 | `estimate` | Return story points off 1/2/3/5/8/13/21 per unit of work, sized against the repository's reference examples, naming the reference each was compared with | the reference table of finished work per value, and its calibration |
-| `prototype` | Answer one named design question and return the answer — the question, what it showed, where it lands next — beside one standalone HTML file, everything inline, nothing fetched: a logic question as a model with a state panel, free play, and walkthroughs in the domain's terms; a visual one as two or more structurally different variants on the repository's demo template and in its design system, naming the guideline, token, or story each came from; revise an existing demo with its screen ids kept; never merged — write into no `.devbook/` folder and change no source file | where the domain model, template, design system, and Storybook live, what a prototype shows |
+| `prototype` | Start only from a design question stated in one sentence, written into the file's `demo-meta` as its `question`, and end with a one-line answer for whoever asked, never recorded in the file — which carries no stage, status, verdict, or page. One standalone HTML file, everything inline, nothing fetched: a logic question as a model with a state panel in the ubiquitous language, free play, and walkthroughs; a UI one as two or more structurally different variants on the repository's demo template, its managed region kept and no script outside it but `demo-model` and `demo-meta`, in its design system, naming the guideline, token, or story each came from; revise an existing demo with its screen ids and anchors kept; never merged — write into no `.devbook/` folder and change no source file | where the domain model, design system, Storybook, and prototypes live, what a prototype shows |
 
 Each lands as one editable copy under `.agents/skills/<name>.md` with a managed wrapper per
 host that carries the goal — except `run`, whose body is Claude Code's own project recipe at
@@ -38,7 +38,9 @@ repository. It asks which of the five to adopt on the first run and records the 
 `components.devbook-procedures.adopted` in `.devbook/config.json`; a repository with nothing
 to start adopts neither `run` nor `diagnose`, and one that takes no evidence adopts no
 `capture`; `estimate` and `prototype` need neither — without a user interface, `prototype`
-still settles logic questions.
+still settles logic questions. With `prototype` adopted and devbook's `design/` folder too, the
+starting demo template lands at `.devbook/design/demo-template.html`; without `design/`, `init`
+says so and skips it.
 
 ## What it ships
 
@@ -50,7 +52,7 @@ still settles logic questions.
 | `migrations/003-show-removed/` | Removes a `show` procedure's wrappers and stamp entries, and its body unless the repository edited it |
 | `migrations/004-start-binding-is-run/` | Removes an `extensions["app.start"]` binding to `repo:start`, which `001` left naming no skill, or hands its options to the default provider |
 | `assets/skill-wrappers.md` | How a seed lands: one editable copy, a managed wrapper per host, and where the goal sits |
-| `assets/demo-template.html` | The starting demo template, for `.devbook/design/demo-template.html`: the managed region between `template:begin hash=…` and `template:end` — design tokens, app shell, control panel, and the script for devbook's demo address contract — and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
+| `assets/demo-template.html` | The starting demo template, which `init` and `update` seed at `.devbook/design/demo-template.html` when `prototype` is adopted and `design/` is, and refresh only while it still hashes to a shipped release: the managed region between `template:begin hash=…` and `template:end` — design tokens, app shell, control panel, and the script for devbook's demo address contract — and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
 | `assets/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against. `tests/demo-template.test.mjs` keeps its region equal to the template's |
 | `hooks/` | A session-start pointer: invoke the repository's procedure skill rather than guessing a command, a URL, or a layout |
 

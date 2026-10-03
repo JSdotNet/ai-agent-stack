@@ -1,25 +1,41 @@
 ---
 name: prototype
-description: "Settle one design question that talk will not settle with a throwaway, clickable, standalone HTML prototype, and return the answer beside it — a state model someone can drive through its edge cases, or structurally different screen variants on this repository's demo template and in its design system — or revise an existing demo with its screen ids kept. Use when: 'prototype this', 'mock it up', 'show me what it could look like', 'does this state model hold', 'change this demo', a Step 0 prototype, a lifecycle with edge cases nobody can hold in their head, or a screen someone needs to see more than one way. DO NOT USE FOR: finding why existing code misbehaves (diagnose)."
-goal: "Answer the one design question named up front, and return that answer — the question, what the prototype showed, and where the answer lands next — beside one standalone HTML file, every style, script, and image inline and nothing fetched. A logic question gets a model anyone can drive: a labelled state panel, free-play controls, and guided walkthroughs in the domain's own terms. A visual question gets two or more structurally different variants on the repository's demo template when it has one and in its design system, naming the guideline, token, or story each convention came from. Given an existing demo, keep every screen id and anchor that still exists and list the ones removed or renamed. The prototype is never merged: write into no .devbook/ folder and change no source file."
+description: "Settle one design question that talk will not settle with a throwaway, clickable, standalone HTML prototype, and return a one-line answer beside it — a state model someone can drive through its edge cases, or structurally different screen variants on this repository's demo template and in its design system — or revise an existing demo with its screen ids kept. Use when: 'prototype this', 'mock it up', 'show me what it could look like', 'does this state model hold', 'change this demo', a lifecycle with edge cases nobody can hold in their head, or a screen someone needs to see more than one way. DO NOT USE FOR: finding why existing code misbehaves (diagnose), or building a design already settled (flow-code)."
+goal: "Start only from a design question stated in one sentence, write that sentence into the file's demo-meta as its question, and end with a one-line answer for whoever asked, never recorded in the file — which carries no stage, status, verdict, or page. Deliver one standalone HTML file, every style, script, and image inline and nothing fetched. A logic question gets a model anyone can drive: a state panel labelled in the ubiquitous language, free play, and walkthroughs. A UI question gets two or more structurally different variants on the repository's demo template, its managed region kept byte for byte and no script outside it but demo-model and demo-meta, in its design system, naming the guideline, token, or story each convention came from. Given an existing demo, keep every screen id and anchor that still exists and list the ones removed or renamed. The prototype is never merged: write into no .devbook/ folder and change no source file."
 ---
 
 # Prototype a Design Question
 
-Write throwaway code that answers one question, then keep the answer. **Edit this file** — where
-the conventions live and what a prototype shows are yours; the goal in the wrapper is not.
+Write throwaway code that answers one question, then hand back the answer. **Edit this file** —
+where the conventions live, where prototypes are kept, and what a prototype shows are yours; the
+goal in the wrapper is not.
 
 ## Name the question
 
 State the question in one sentence before writing anything: *does the refund lifecycle survive a
-partial cancel?*, *list or board for the dispatch screen?* In a change, it is the
-`## Step 0 — Prototype: <question>` heading. No question, no prototype — ask for one. Then pick
-the kind the question is:
+partial cancel?*, *list or board for the dispatch screen?* No question, no prototype — ask for
+one. The sentence goes into the file, verbatim, and nothing else about the file does:
 
-- **Logic** — a state model, lifecycle, or rule set with edge cases nobody can hold in their head.
-- **Visual** — a screen or flow someone needs to see more than one way.
+```html
+<script type="application/json" id="demo-meta">{"question": "List or board for the dispatch screen?"}</script>
+```
 
-A question that is both is two prototypes. A bug in existing code is `diagnose`, not this.
+No stage, status, verdict, or page name in it, in a comment, or in the markup: the same bytes are
+a prototype, a proposed demo, or the demo, and only where the file sits says which.
+
+Then pick the mode the question is:
+
+- **UI** — what a person sees and how they move between screens.
+- **Logic** — how the model behaves: an aggregate's lifecycle, a rule set with edge cases nobody
+  can hold in their head.
+
+A question that is both is two prototypes.
+
+### When not to prototype
+
+- **The design is settled** — nobody is asking which, only for it to be built: that is
+  `flow-code`. A prototype of an agreed design is a second implementation.
+- **Existing code misbehaves** — that is `diagnose`.
 
 ## Read the conventions
 
@@ -28,11 +44,14 @@ A question that is both is two prototypes. A bug in existing code is `diagnose`,
 
 | Source | Where | Take from it |
 | --- | --- | --- |
-| Domain model | `.devbook/domain/<context>/` — `domain.md`, its `domain.invariants.md`, the ubiquitous language | states, events, and invariants, named as the chapter names them (logic) |
-| Demo template | wherever the repository keeps it, e.g. `.devbook/design/demo-template.html` | the managed region, copied verbatim; the control panel and every line of script (visual) |
+| Domain model | `.devbook/domain/<context>/` — `domain.md`, its `domain.invariants.md`, `flow.md`, the ubiquitous language | states, events, and invariants, named as the chapter names them (logic); the actors, flags, and settings `demo-model` keys by (UI) |
+| Requirements | `.devbook/domain/<context>/requirements.md` | the `#### Scenario:` a walkthrough plays, and its slug |
+| Demo template | `.devbook/design/demo-template.html` | the managed region, copied byte for byte; the comment opening it is the authoring reference (UI) |
+| Existing demo | `.devbook/domain/<context>/demo.html`, `<page>.demo.html` | the file a revision starts from, read and never written (UI) |
 | Design system | `.devbook/design/` — principles, tokens, component guidelines; `src/Orders.Web/theme/tokens.css` | colour, type, spacing, and radius tokens; component anatomy and states; the do/don't rules |
 | Storybook | `src/Orders.Web/**/*.stories.tsx`, run with `npm run storybook` | each component's rendered markup, its variants, and the copy and states the stories show |
 | Existing screens | `src/Orders.Web/Pages/` | layout, navigation, and how screens are composed |
+| Prototypes | `prototypes/<slug>.html`, ignored by git | where this procedure writes — never under `.devbook/` or `openspec/` |
 
 - A token or component the design system names wins over one a story or a screen improvises.
   With Storybook running, take a component's markup from its rendered story.
@@ -51,54 +70,70 @@ A designer, product owner, or domain expert must be able to operate it from its 
 One `.html` file. Styles inline, images as inline SVG or `data:` URIs. No `<link>`, no CDN, no
 web font, no fetch — it opens from disk with the network off.
 
-## Logic: a model to drive
+**Data at real density.** Hard-code as many rows, as long a name, as deep a history as the product
+shows, and the empty, loading, and error states as the design system defines them. A screen
+agreed over three tidy rows is not the screen people will use.
 
-- **The model apart from the page.** One `<script id="model">` holds state, the events, and a
-  pure `next(state, event)` — no DOM in it — so a model the answer validates reads straight
-  into the real code. Rendering lives in its own script.
-- **State panel.** Every field of the current state, labelled in the domain's terms, and each
-  invariant with a live held/broken mark.
-- **Free play.** One button per event, disabled with the reason when the state refuses it.
-- **Walkthroughs.** One tab per scenario the question turns on, stepping through named events —
-  the happy path first, then each edge case, the one that settles the question last.
-- Styled plainly; the demo template and design system are optional here.
+**Aim at 500 KB.** Inline SVG over a bitmap, one block of markup shared by the screens that
+repeat it, and a split into page demos — `features.demo.html`, `features.checkout.demo.html` —
+when one context's screens outgrow one file. Past 500 KB is allowed; say the size and why.
 
-## Visual: variants that disagree
+## UI mode: variants that disagree
 
+- **Start from the template** at `.devbook/design/demo-template.html`, or from the existing demo
+  when one is given. Keep the managed region between `template:begin` and `template:end` byte for
+  byte. No template: build the app part alone and say the template is missing.
 - **Two or more variants that differ in structure** — layout, navigation, what is on one screen
-  versus several — never three tints of one card grid. Name each by its idea.
+  versus several — never three tints of one card grid. Name each by its idea, as a `variants` key.
 - Use the host's design skill for the visual work when the session has one: `/design` on Claude
   Code, or Impeccable's `critique` and `polish` on Copilot. The design system wins where they
   disagree, and a canvas is not the deliverable. When the host will not let this skill invoke
   it, ask the person to type it, and wait.
-- **Start from the template**, or from the existing demo when one is given. Keep the managed
-  region between `template:begin` and `template:end` byte-for-byte. No template: build the app
-  part alone and say the template is missing.
 - **Screens as markup.** Each screen or state is a `<section id="…" data-screen>`, a state
-  variant carries `data-state`, a design variant `data-variant`, and an element someone may
-  comment on `data-anchor`. Move between screens with `href="#id"`; use `<dialog>`, `popover`,
-  and native form validation. No `<script>` outside the template except `demo-model`.
-- **`demo-model`** lists every screen id and anchor, the variants, and the flags, roles, and
-  viewports the panel switches, named by the same `key` as the repository's settings, flags,
-  and actors. Where the panel does not switch variants, give each variant's screens their own
-  ids, `<screen>--<variant>`, and link them.
+  carries `data-state`, a design variant `data-variant`, and an element someone may comment on
+  `data-anchor`. Move between screens with `href="#id"`; use `<dialog>`, `popover`, and native
+  form validation. No `<script>` outside the region except `demo-model` and `demo-meta`.
+- **`demo-model`** lists every screen id and anchor, the variants, and the roles, flags,
+  settings, and viewports the panel switches, each by the same `key` as the repository's actors,
+  flags, and settings.
+- **Walkthroughs** are listed in `demo-model` by `id`, and the id is the scenario's slug when the
+  walkthrough plays a `#### Scenario:` — `a-declined-card-keeps-the-basket` — each step's `text`
+  the scenario line it shows. The happy path first, then each edge case.
+- **Trim to the chosen variant only when a proposal carries the file**: drop every other
+  variant's markup and `demo-model` entries, keep the chosen one's ids and anchors, and list what
+  went. Until then every variant stays.
 - **Revising a demo:** keep every id and anchor that still exists; rename none without cause.
-- Data is hard-coded and realistic; empty, loading, and error states as the design system
-  defines them. Semantic HTML, labelled controls, visible focus, the contrast it requires.
+- Semantic HTML, labelled controls, visible focus, the contrast the design system requires.
+
+## Logic mode: a model to drive
+
+- **The model apart from the page.** One `<script id="model">` holds state, the events, and a
+  pure `next(state, event)` — no DOM in it — so a model the answer validates reads straight into
+  the real code. Rendering lives in its own script.
+- **State panel.** Every field of the current state, labelled in the ubiquitous language as
+  `domain.md` spells it, and each invariant with a live held/broken mark.
+- **Free play.** One button per event, disabled with the reason when the state refuses it.
+- **Walkthroughs.** One tab per scenario the question turns on, stepping through named events —
+  the happy path first, then each edge case, the one that settles the question last.
+- Styled plainly; the template and design system are optional here.
+- **The file is never carried into a proposal.** It is code. Its answer lands as a delta to
+  `domain.md`, `flow.md`, or an invariants subpage, through `flow-spec`.
 
 ## Deliver
 
 - Open it in the host's inline browser when it has one; otherwise give the path.
-- **The answer first:** the question, what the prototype showed, and where it lands next — a
-  decision record or a design delta through `flow-spec`, or the change's next step. A person
-  reads the prototype and decides; the answer is a proposal until they do.
-- Then the path, the screens or walkthroughs shown, per convention the guideline, token, or
-  story it came from, every convention guessed, and — for a revision — the ids and anchors
-  removed or renamed.
+- **The answer, one line, first**, for whoever asked — never written into the file. Then where it
+  lands: a UI answer as the file itself, carried by a proposal as a demo with one variant; a
+  logic answer as a delta to `domain.md`, `flow.md`, or an invariants subpage; or nowhere, the
+  file kept as evidence of what was tried. A person decides; the answer is a proposal until they do.
+- Then the path, the size, the screens or walkthroughs shown, per convention the guideline,
+  token, or story it came from, every convention guessed, and — for a revision or a trim — the
+  ids and anchors removed or renamed.
 
 ## Never
 
-- Write into `.devbook/`. The answer reaches it only through a change.
+- Write into `.devbook/` or `openspec/`. The answer reaches them only through a change.
+- Write a stage, status, verdict, or page name into the file.
 - Change a source file, a story, or a guideline to make the prototype fit. A gap is a finding.
 - Merge the prototype, harden it, or present it as the implementation.
-- Load anything from the network, or split the prototype across files.
+- Load anything from the network, or make one file need another to open.

@@ -70,6 +70,7 @@ requests across several repositories, with a checkpoint and ticket correlation.
 | `devbook-validate` | Daily 03:00 | `schedule-devbook-validate`, every adopted folder | `delivery-schedule`, `devbook` | A pull request when something was fixed |
 | `devbook-verify` | Sunday 05:00 | `schedule-devbook-verify`, every unit at `sync: report` | `delivery-schedule`, `devbook` | One `devbook-drift` issue per new `code-ahead` or `conflict` row, and a report |
 | `devbook-pull-sweep` | Monday 04:00 | `schedule-devbook-sweep`, `direction: pull`, `maxResolve 3` | `delivery-schedule`, `devbook` | Draft pull requests carrying chapters, `devbook-drift` issues, and a brief |
+| `devbook-push-sweep` | Wednesday 04:00 | `schedule-devbook-sweep`, `direction: push`, `maxResolve 1` | `delivery-schedule`, `devbook`, `delivery` | A draft pull request building agreed chapters, `devbook-drift` issues, and a brief |
 | `devbook-update` | Saturday 06:00 | `schedule-devbook-update`, every adopted component bar the scheduler | `delivery-schedule`, `devbook-config`, `devbook` | A draft pull request when something moved |
 | `security-review` | Saturday 08:00 | `schedule-security-review`, all four layers | `delivery-schedule`, `delivery` | One issue per new high finding |
 | `instruction-review` | Sunday 07:00 | `schedule-instruction-review`, all assets, rewrites on | `delivery-schedule`, `delivery` | A draft pull request when something was cut |
@@ -86,7 +87,8 @@ A chapter says which way it syncs in its own `sync` field — `pull`, `push`, `s
 `off`, set on a folder, a context, a page, or a unit and inherited nearest-wins. `devbook-verify`
 reports on the `report` units; `schedule-devbook-sweep` writes to the rest, one group per draft
 pull request. `devbook-pull-sweep` lands the pull direction through `capture-unit.workflow.js`;
-`devbook-push-sweep` arrives with the push direction's work script.
+`devbook-push-sweep` lands the push direction through `apply-unit.workflow.js`, which runs the
+issue sweep's resolver with the change brief as its specification.
 
 `devbook-validate` is one schedule, not one per folder. The generator walks every adopted folder
 in a single pass, and the failures worth catching — a reference into a chapter another folder

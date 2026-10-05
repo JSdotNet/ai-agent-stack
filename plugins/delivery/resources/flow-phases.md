@@ -22,7 +22,7 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
 | **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and where the ready check sits | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Report Back, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-scope`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, and `phase-report-back` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-scope`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, and `phase-report-back` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -147,9 +147,8 @@ redesigning inline. What a kind needs — a dependency move, a project's bootstr
 defect's reproducing test as the first seam — is its work, and it decides whether the change
 needs frontend, backend, or both, and in which order.
 
-`review` is one fresh-context reviewer over the slice's diff against the merge base: the
-repository's rules first, then a code-smell baseline, then correctness, citing `file:line` and
-the rule, smell, or failure scenario for every finding. It never edits. The flow-runner
+`review` is **defined in `skills/phase-review/SKILL.md`**: one fresh-context reviewer over the
+slice's diff against the merge base, citing every finding. It never edits. The flow-runner
 alternates the two per slice — implement, review, implement with the blockers as its brief —
 until the slice is clean or `policy.review.retryBudget` is spent; blockers still open then go
 to the ready check. `policy.phases.review: false` turns review off.

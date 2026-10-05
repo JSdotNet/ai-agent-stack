@@ -8,7 +8,7 @@ description: What phase-implement does inside one slice for each flow-code kind 
 The kind is the one `phase-scope` persisted. It changes what happens inside a slice, never
 which phases run. Test-first follows `tdd-rules.md` wherever a seam exists.
 
-- **feature** — tests first at each seam, then the code; frontend, backend or both.
+- **feature** — tests first at each backend seam, then the code; frontend, backend or both, a frontend slice with no test-first seams.
 - **create** — the unit `phase-plan` laid out, slice by slice in its order.
 - **refactor** — the moves and reference updates scope listed, behaviour held still: the
   existing tests are the seams and stay green; a new test only where scope recorded one.

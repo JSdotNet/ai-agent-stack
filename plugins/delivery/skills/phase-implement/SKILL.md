@@ -1,6 +1,6 @@
 ---
 name: phase-implement
-description: 'Shared Implement phase for flow-code: plans the slices — a seam or an area, frontend, backend or both, in order or in parallel — then builds one slice per call, tests first at each seam scope recorded, running only compile and the touched tests, with the kind''s own procedure for a dependency move or a project scaffold. Treats the spec as fixed input and returns revise: phase-scope on a spec problem. Runs in tandem with phase-review. Invoked by the flow-runner with a brief file; never by a person.'
+description: 'Shared Implement phase for flow-code: plans the slices — a seam or an area, frontend, backend or both, in order or in parallel — then builds one slice per call, tests first at each backend seam scope recorded and none for a frontend slice, running only compile and the touched tests, with the kind''s own procedure for a dependency move or a project scaffold. Treats the spec as fixed input and returns revise: phase-scope on a spec problem. Runs in tandem with phase-review. Invoked by the flow-runner with a brief file; never by a person.'
 context: fork
 model: opus
 effort: high
@@ -12,7 +12,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 Does:
 
-- Tests first at each seam, then the code
+- Tests first at each backend seam, then the code
 - Decides frontend, backend or both, and in order or in parallel
 - Carries the per-kind work: dependency moves, project bootstrap, defect reproduction
 - Runs only compile and the touched tests
@@ -37,7 +37,7 @@ On top of **Context**, for its area only: the `domain/` chapters and guideline A
 
 ## Steps
 
-1. **Plan the slices** when the brief names none, and return without building. Each seam is tagged with its area; with `areas` in the effective config, the first matching glob decides, else the rule `paths` and project names, else one area. Order: backend first when the frontend consumes a contract it builds; parallel only when the two share no file and neither needs the other's new code — one worktree. No seams recorded: name them first, per `../../resources/tdd-rules.md`, never skip. The `dependency`, `project` and `config` kinds are one unsplit slice.
+1. **Plan the slices** when the brief names none, and return without building. Each seam is tagged with its area; with `areas` in the effective config, the first matching glob decides, else the rule `paths` and project names, else one area. Order: backend first when the frontend consumes a contract it builds; parallel only when the two share no file and neither needs the other's new code — one worktree. A frontend slice has no test-first seams. A backend slice with no seams recorded: name them first, per `../../resources/tdd-rules.md`, never skip. The `dependency`, `project` and `config` kinds are one unsplit slice.
 2. **Build the slice** by its kind in `../../resources/implement-kinds.md`, red → green one seam at a time per `../../resources/tdd-rules.md`.
 3. **Fast loop only.** Compile and the touched test files or projects, as often as useful. Never the full suite, never the app.
 4. **Spec is fixed.** A seam that cannot be built as specified, a criterion that contradicts another, a missing contract: stop and return `revise: phase-scope` with the reason. A new decision escalates per **Escalation** in `../../resources/flow-execution-model.md`.

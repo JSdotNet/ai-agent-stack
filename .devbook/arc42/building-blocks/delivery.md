@@ -774,7 +774,7 @@ kind changes the work inside `implement` and the depth of `verify`:
 
 | Kind | Covers | Inside `implement` | `verify` depth |
 | --- | --- | --- | --- |
-| `feature` | New or changed behaviour, a small UI tweak | Tests first at each seam; frontend, backend, or both, as the skill judges | Full with capture for new behaviour, targeted for a change |
+| `feature` | New or changed behaviour, a small UI tweak | Tests first at each backend seam, none on the frontend; frontend, backend, or both, as the skill judges | Full with capture for new behaviour, targeted for a change |
 | `create` | A new module, service, or first runnable increment | The new unit, after `plan` | Full with capture |
 | `refactor` | Layout moves, behaviour held still | The moves and reference updates `scope` listed | Targeted, on the affected flows |
 | `defect` | Something is broken | The failing test that reproduces it, then the fix | Targeted: the reproduction plus the regression scenario |

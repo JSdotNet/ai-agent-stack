@@ -1,7 +1,7 @@
 # Flow Engine
 
 ```meta
-date: 2026-10-05
+date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -61,6 +61,11 @@ flowchart LR
   plans a refactor's target layout, and selects the devbook chapters every later brief loads,
   as one list. Refactor Planning moves into it, and a defect's reproduction becomes
   implement's first seam: the failing test that reproduces it.
+- **Unit seams are backend only.** `scope` derives them from the chapters: each invariant's
+  `Enforced at:` line is a unit seam `implement` tests first, and each `#### Scenario:` is an
+  end-to-end or integration seam left to `verify` and the e2e suite. A frontend slice has no
+  test-first seams; its behaviour is covered by the scenarios, which observe it where a person
+  does, rather than by unit tests coupled to a component tree that changes with every redesign.
 - **`implement` picks its areas.** `phase-implement` decides from the seams and paths whether
   the change needs frontend, backend, or both, and in which order: in order when one side
   consumes the other's new contracts or they share a file, in parallel only when neither holds.
@@ -145,6 +150,8 @@ restates none of devbook's rules — it loads the repository's own instruction f
   implementer's agent and context, exactly what a fresh review must not share.
 - Splitting review into independent standards and correctness reviewers now. Revisited after a
   few runs, if Personal Validation keeps finding what a combined review missed.
+- Tests first at every recorded seam, frontend included: frontend unit tests break on every
+  redesign that keeps behaviour, and the scenarios `verify` runs already prove it.
 - `areas` and their order as required configuration: the skill sees the seams and paths, which
   no static setting does.
 - Stopping the run when the retry budgets are spent: the gate, with the open items in view, is
@@ -165,6 +172,7 @@ restates none of devbook's rules — it loads the repository's own instruction f
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | Unit seams narrowed to the backend area: `scope` derives one per invariant's `Enforced at:` line and leaves each `#### Scenario:` to `verify` and the e2e suite, so a frontend slice has no test-first seams. Decided by the Devbook Skill Intake proposal; implement no longer writes tests at every recorded seam whatever its area. |
 | 2026-10-05 | Per-Phase Delivery Config decided. The phase replaces the extension point as the unit of configuration; `flow-update-packages` and `flow-project` fold into `flow-code` as the `dependency` and `project` kinds; `scope` merges scope discovery, spec intake, and context loading; `review` runs in tandem with `implement` per slice, before Build & Test; `phase-implement` picks its areas and their order; Validation, the old `verify`, and Work Item Update become `verify`, `spec-check`, and `report-back`; `spec-check` runs before the gate; a ready check sends missing work back and hands what is left to the gate once the budgets are spent; Report Back goes to every origin by kind. Effort runners ship for Claude only and drop the specialist's tool list; splitting review is revisited later. Three mechanisms nobody could read in one place became one entry per phase. |
 | 2026-09-30 | A `single-branch` step is `done` once its tasks are ticked in a commit on `change/<name>`, not on a merge: its one pull request opens on the closing run, after the acceptance that required every step done, so waiting for a merge would never close the change. Acceptance on that workflow is taken in the session; the pull request's review is the last look. |
 | 2026-09-29 | The change lane in the engine: an item the tracker reports as part of a change runs `single-branch` or `proposal-first`, which names its branches and pull requests, and a proposal's status follows its pull request. A `flow.start` chore may replan and stop the run on a stale plan; a chore id may carry `--flag` arguments. No new point: the workflow is read off the tracker, and the replan is a chore. |

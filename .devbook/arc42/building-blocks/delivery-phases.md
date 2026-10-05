@@ -46,7 +46,9 @@ related: [".devbook/arc42/building-blocks/delivery.md#change-kind"]
 ```
 
 Restate the request, derive the kind and the acceptance criteria, and record the seams
-`implement` tests at. For a refactor it plans the target layout and the references to update.
+`implement` tests at. Unit seams are recorded for the backend area only, one per invariant's
+`Enforced at:` line, while each `#### Scenario:` is an end-to-end or integration seam left to
+`verify` and the e2e suite, so the frontend gets no test-first seams. For a refactor it plans the target layout and the references to update.
 In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
 to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
@@ -69,7 +71,7 @@ no code.
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/arc42/building-blocks/delivery-phases.md#phase-review"]
 ```
 
-Write the tests at each recorded seam, then the code, running only compile and the touched
+Write the tests at each recorded backend seam, then the code, running only compile and the touched
 tests. Its first call plans the slices and builds nothing: each slice is a seam or an area, and
 it decides whether the change needs frontend, backend, or both, and whether they run in order
 or in parallel. Every later call builds one slice and returns, so the flow-runner can review it.

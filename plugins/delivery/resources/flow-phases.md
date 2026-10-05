@@ -216,7 +216,7 @@ it can approve, skip, or soften the gate below.
 
 The mandatory instance of the gate pattern in **Gates** (`engine-contract.md`), placed after
 the ready check, with purpose `handoff`. A repository may declare further gates **in front of**
-this one — `{ "at": "phase-build-test", "when": "after", "purpose": "risk" }` is the usual
+this one — `{ "at": "build-test", "when": "after", "purpose": "risk" }` is the usual
 shape — and that is the whole of what configuration may change here.
 
 - **Do not delegate to an agent and do not auto-approve.** Wait for the user's explicit

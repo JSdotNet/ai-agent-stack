@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, the full definition of the phases no skill of their own holds yet (Implement and the Personal Validation gate), and a pointer to each phase skill.
+description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, the full definition of the Personal Validation gate, and a pointer to each phase skill.
 ---
 
 # Flow Phases (Engine-Owned)
@@ -114,12 +114,12 @@ escalates per **Escalation** in `flow-execution-model.md`. Persist the change ki
 
 ## Phase: Implement ⇄ Review
 
-`flow-code`. `implement` writes tests first at each seam Scope recorded, then the code, running
-only compile and the touched tests; the full suite is Build & Test's. It treats the
-specification as fixed input and returns `revise: scope` on a spec problem rather than
-redesigning inline. What a kind needs — a dependency move, a project's bootstrap and scaffold, a
-defect's reproducing test as the first seam — is its work, and it decides whether the change
-needs frontend, backend, or both, and in which order.
+`flow-code`. `implement` is **defined in `skills/phase-implement/SKILL.md`**: on its first call
+it plans the slices — a seam or an area, in order or in parallel — then builds one slice per
+call, tests first at each seam Scope recorded, running only compile and the touched tests; the
+full suite is Build & Test's. The specification is fixed input: a spec problem returns
+`revise: phase-scope` rather than a redesign inline. What a kind needs is in
+`implement-kinds.md`.
 
 `review` is **defined in `skills/phase-review/SKILL.md`**: one fresh-context reviewer over the
 slice's diff against the merge base, citing every finding. It never edits. The flow-runner

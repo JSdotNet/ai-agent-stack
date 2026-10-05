@@ -40,7 +40,7 @@ another block or a repository conforms to.
 | `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `tdd-rules.md`, `implement-kinds.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
 
 ### flow-code
 
@@ -118,9 +118,14 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/
 ```
 
 Write the tests at each recorded seam, then the code, running only compile and the touched
-tests. It carries the per-kind work, and it decides whether the change needs frontend, backend,
-or both, and in which order. Each area runs as its own fork with its own context. The spec is
-fixed input: a spec problem returns `revise: scope` rather than a redesign inline. It never
+tests. Its first call plans the slices and builds nothing: each slice is a seam or an area, and
+it decides whether the change needs frontend, backend, or both, and whether they run in order
+or in parallel. Every later call builds one slice and returns, so the flow-runner can review it.
+Each area runs as its own fork with its own context contract. With no seams recorded it names
+them before any test, and never skips test-first silently. The per-kind work, the dependency
+move and the project bootstrap and scaffold included, is in `implement-kinds.md`, and the
+test-first rules ported from Matt Pocock's `/tdd` are in `tdd-rules.md`. The spec is
+fixed input: a spec problem returns `revise: phase-scope` rather than a redesign inline. It never
 runs the full suite, commits, or reviews its own work.
 
 ### phase-review
@@ -1119,7 +1124,7 @@ sequenceDiagram
   the run for lacking it. A flow that only works on a well-specified request is a flow nobody
   reaches.
 - **The spec is fixed input.** An implementer that finds a spec problem returns
-  `revise: scope` with the reason, and a new decision escalates to `flow-spec`.
+  `revise: phase-scope` with the reason, and a new decision escalates to `flow-spec`.
 - **Areas are the skill's call.** `phase-implement` runs frontend and backend in order when
   one side consumes the other's new contracts or they share a file, and in parallel only when
   neither holds.

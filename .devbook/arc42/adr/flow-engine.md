@@ -66,7 +66,7 @@ flowchart LR
   consumes the other's new contracts or they share a file, in parallel only when neither holds.
   Each area runs as its own fork with its own context. A top-level `areas` key is an optional
   hint for a repository whose paths are ambiguous. The spec is fixed input: a spec problem
-  returns `revise: scope` rather than a redesign inline.
+  returns `revise: phase-scope` rather than a redesign inline.
 - **`review` runs in tandem with `implement`, per slice, before Build & Test.** The runner
   alternates the two forks: a slice implemented, reviewed, its blockers fixed, then the next.
   One reviewer in a fresh context checks the repository's own rules, then a code-smell baseline,

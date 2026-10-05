@@ -127,7 +127,7 @@ everything it reads is the engine keys or a skill the repository owns. `init` wr
 rewrites it to the installed version and refuses where it does not.
 
 **Release what an earlier engine seeded.** An engine before the procedures moved out of it —
-into a plugin of their own, and from there into [devbook](devbook.md#procedure) — wrote `start`
+into a plugin of their own, and from there into [devbook](devbook-procedures.md#procedure) — wrote `start`
 and `capture` with a wrapper per host and stamped them under `components.delivery.materialized`.
 `update` drops those entries and deletes no file: each stays the repository's until
 `devbook:update` adopts it.

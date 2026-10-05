@@ -41,7 +41,7 @@ trigger's target: the catalog names a `schedule-*` entry point or, as with `pros
 ### schedule-devbook-verify
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
 Run `devbook:verify-change` over every sync unit at `report` — the direction a chapter has when
@@ -56,7 +56,7 @@ It reports and never writes a chapter or plans a capture on its own. The weekly
 ### schedule-devbook-sweep
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#unit-lister", ".devbook/arc42/building-blocks/devbook.md#verify-change", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep", ".devbook/arc42/building-blocks/delivery.md#dependencies"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#unit-lister", ".devbook/arc42/building-blocks/devbook-code-sync.md#verify-change", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep", ".devbook/arc42/building-blocks/delivery.md#dependencies"]
 ```
 
 Bring chapters and code level in the direction each chapter states in its own `sync` field,

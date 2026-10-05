@@ -1,6 +1,6 @@
 ---
 name: run
-description: "Build and launch this repository's application the way this repository says to, and leave it running. Use when: running or starting the app locally, 'run it', 'start the app', resuming work on a branch, or a flow needs a runtime at app.start."
+description: "Build and launch this repository's application the way this repository says to, and leave it running. Use when: running or starting the app locally, 'run it', 'start the app', resuming work on a branch, or a flow's verify phase needs the application running."
 goal: "Leave this repository's application running and healthy, and report the command that started it, the health verdict, and its entry points. Never hand the person a command to run themselves."
 ---
 

@@ -6,8 +6,8 @@ description: What evidence a flow captures for the feature being built, when it 
 # Capture Contract (Engine-Owned)
 
 Evidence is what a reviewer looks at instead of taking a run's word for it. **The phase owns
-this contract, not the QA provider**, so a repository with no QA plugin, no `qa.run` binding
-and no capture skill still gets every rule below. The engine says *what* is captured and
+this contract, not the QA provider**, so a repository with no QA plugin, no agent on
+`phase-verify`, and no capture skill still gets every rule below. The engine says *what* is captured and
 *when*; the repository says *how*.
 
 ## Who captures
@@ -16,7 +16,7 @@ Resolved in order, first hit wins, named once in the stage output:
 
 1. **The repository's `capture` skill**, its own at `.agents/skills/capture.md`, reached by
    name through the host's wrapper. The normal case.
-2. **The `qa.run` provider**, when one is bound and offers capture of its own.
+2. **The agent `phase-verify` runs on**, when one is bound and offers capture of its own.
 3. **The phase itself**, driving the browser server directly per this contract.
 
 Neither a capture skill nor a QA plugin is a dependency. A missing one changes *who runs

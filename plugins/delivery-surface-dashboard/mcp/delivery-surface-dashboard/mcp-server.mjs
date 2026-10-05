@@ -875,7 +875,7 @@ const tools = [
                     type: "object",
                     additionalProperties: true,
                     description:
-                        "What the runner resolved for this run and a resumed session must read back rather than resolve again: the model, point providers, role bindings, tracker, per-point MCP servers, policy values, and gate list. Stored verbatim and returned by get_run. Merged shallowly over what is already stored, so pass only the keys that changed.",
+                        "What the runner resolved for this run and a resumed session must read back rather than resolve again: the model, each phase's agent, skill, and MCP servers, the tracker, policy values, and gate list. Stored verbatim and returned by get_run. Merged shallowly over what is already stored, so pass only the keys that changed.",
                 },
             },
             required: ["runId"],

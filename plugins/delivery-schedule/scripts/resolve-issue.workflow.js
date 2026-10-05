@@ -6,8 +6,8 @@ export const meta = {
   phases: [
     { title: 'Scope', detail: 'read-only sweep for impacted paths and governing instructions' },
     { title: 'Implement', detail: 'failing test first, then the change' },
-    { title: 'Build & Test', detail: 'build and unit tests, with bounded repair attempts' },
     { title: 'Review', detail: 'correctness and guideline lenses, then fix confirmed blockers' },
+    { title: 'Build & Test', detail: 'build and unit tests over the reviewed change, with bounded repair attempts' },
   ],
 }
 
@@ -316,7 +316,90 @@ if (!impl || impl.blocked) {
 log(`Implementation: ${impl.filesChanged.length} file(s) changed, ${(impl.testsAdded || []).length} test(s) added.`)
 
 // ---------------------------------------------------------------------------
-// Phase 3 — Build & Test, with bounded repair
+// Phase 3 — Review, then fix confirmed blockers; Build & Test runs after, as in every flow
+// ---------------------------------------------------------------------------
+phase('Review')
+
+const LENSES = [
+  {
+    key: 'correctness',
+    brief:
+      'Correctness and completeness: does the change actually satisfy every acceptance criterion, ' +
+      'and does it break an adjacent behaviour? Look for off-by-one and boundary handling, null and ' +
+      'empty cases, error paths, async/await misuse, and state left inconsistent on failure.',
+  },
+  {
+    key: 'guidelines',
+    brief:
+      'Repository fit: does the change follow the governing instructions named in scope, ' +
+      'and does it read like the code around it? Look for duplicated logic that an existing helper ' +
+      'already covers, naming that departs from the surrounding module, layering violations, and ' +
+      'test coverage that asserts implementation detail instead of behaviour.',
+  },
+]
+
+const reviews = await parallel(
+  LENSES.map((lens) => () =>
+    agent(
+      `${WORKTREE_RULE}
+
+Review the uncommitted change set for issue #${issue.number} through ONE lens only:
+
+${lens.brief}
+
+Read the diff first: \`cd "${wt}" && git --no-pager diff\` and \`git --no-pager status --short\`.
+
+${SCOPE_BRIEF}
+
+Report only defects you can point at in the diff, each with the file and a concrete failure
+scenario. Do not report style preferences, do not restate what the change does, and do not
+report anything outside the diff. An empty findings list is a valid and useful answer.
+
+Severity: 'blocker' means the change is wrong or incomplete as it stands; 'major' means it
+works but carries a real risk; 'minor' is everything else.`,
+      { label: `review:${lens.key}`, phase: 'Review', schema: REVIEW_SCHEMA },
+    ),
+  ),
+)
+
+const findings = reviews.filter(Boolean).flatMap((r) => r.findings || [])
+const blockers = findings.filter((f) => f.severity === 'blocker')
+log(`Review: ${findings.length} finding(s), ${blockers.length} blocker(s).`)
+
+if (blockers.length > 0) {
+  const fix = await agent(
+    `${WORKTREE_RULE}
+
+Review of the change set for issue #${issue.number} raised ${blockers.length} blocking finding(s).
+Fix each one. Build & Test runs next, so leave the suite to it.
+
+Blocking findings:
+${blockers.map((f, i) => `${i + 1}. [${f.file}${f.line ? ':' + f.line : ''}] ${f.summary}${f.suggestedFix ? ' — suggested: ' + f.suggestedFix : ''}`).join('\n')}
+
+${SCOPE_BRIEF}
+
+Fix only these findings. If one of them is wrong — the reviewer misread the code — say so and
+leave that code alone rather than changing correct code to satisfy a bad finding.`,
+    { label: `review-fix:#${issue.number}`, phase: 'Review', schema: IMPL_SCHEMA },
+  )
+
+  if (!fix || fix.blocked) {
+    return {
+      outcome: 'blocked',
+      stage: 'Review',
+      reason: (fix && fix.blockedReason) || 'Review-fix agent returned no result.',
+      scope,
+      implementation: impl,
+      findings,
+    }
+  }
+
+  impl.filesChanged = Array.from(new Set([...impl.filesChanged, ...(fix.filesChanged || [])]))
+  impl.summary = `${impl.summary}\n\nReview fixes: ${fix.summary}`
+}
+
+// ---------------------------------------------------------------------------
+// Phase 4 — Build & Test over the reviewed change set, with bounded repair
 // ---------------------------------------------------------------------------
 phase('Build & Test')
 
@@ -372,6 +455,7 @@ to this change, say so and leave it alone.`,
       scope,
       implementation: impl,
       verification: verify,
+      findings,
       repairAttempts: repairs,
     }
   }
@@ -393,119 +477,12 @@ if (!verify || !verify.buildPassed || !verify.testsPassed) {
     scope,
     implementation: impl,
     verification: verify,
+    findings,
     repairAttempts: repairs,
   }
 }
 
 log(`Build & test green after ${repairs} repair attempt(s).`)
-
-// ---------------------------------------------------------------------------
-// Phase 4 — Review, then fix confirmed blockers
-// ---------------------------------------------------------------------------
-phase('Review')
-
-const LENSES = [
-  {
-    key: 'correctness',
-    brief:
-      'Correctness and completeness: does the change actually satisfy every acceptance criterion, ' +
-      'and does it break an adjacent behaviour? Look for off-by-one and boundary handling, null and ' +
-      'empty cases, error paths, async/await misuse, and state left inconsistent on failure.',
-  },
-  {
-    key: 'guidelines',
-    brief:
-      'Repository fit: does the change follow the governing instructions named in scope, ' +
-      'and does it read like the code around it? Look for duplicated logic that an existing helper ' +
-      'already covers, naming that departs from the surrounding module, layering violations, and ' +
-      'test coverage that asserts implementation detail instead of behaviour.',
-  },
-]
-
-const reviews = await parallel(
-  LENSES.map((lens) => () =>
-    agent(
-      `${WORKTREE_RULE}
-
-Review the uncommitted change set for issue #${issue.number} through ONE lens only:
-
-${lens.brief}
-
-Read the diff first: \`cd "${wt}" && git --no-pager diff\` and \`git --no-pager status --short\`.
-
-${SCOPE_BRIEF}
-
-Report only defects you can point at in the diff, each with the file and a concrete failure
-scenario. Do not report style preferences, do not restate what the change does, and do not
-report anything outside the diff. An empty findings list is a valid and useful answer.
-
-Severity: 'blocker' means the change is wrong or incomplete as it stands; 'major' means it
-works but carries a real risk; 'minor' is everything else.`,
-      { label: `review:${lens.key}`, phase: 'Review', schema: REVIEW_SCHEMA },
-    ),
-  ),
-)
-
-const findings = reviews.filter(Boolean).flatMap((r) => r.findings || [])
-const blockers = findings.filter((f) => f.severity === 'blocker')
-log(`Review: ${findings.length} finding(s), ${blockers.length} blocker(s).`)
-
-let reviewFixVerification = null
-
-if (blockers.length > 0) {
-  const fix = await agent(
-    `${WORKTREE_RULE}
-
-Review of the change set for issue #${issue.number} raised ${blockers.length} blocking finding(s).
-Fix each one, then re-run the build and the full unit test suite and confirm they are green.
-
-Blocking findings:
-${blockers.map((f, i) => `${i + 1}. [${f.file}${f.line ? ':' + f.line : ''}] ${f.summary}${f.suggestedFix ? ' — suggested: ' + f.suggestedFix : ''}`).join('\n')}
-
-${SCOPE_BRIEF}
-
-Fix only these findings. If one of them is wrong — the reviewer misread the code — say so and
-leave that code alone rather than changing correct code to satisfy a bad finding.`,
-    { label: `review-fix:#${issue.number}`, phase: 'Review', schema: IMPL_SCHEMA },
-  )
-
-  if (!fix || fix.blocked) {
-    return {
-      outcome: 'blocked',
-      stage: 'Review',
-      reason: (fix && fix.blockedReason) || 'Review-fix agent returned no result.',
-      scope,
-      implementation: impl,
-      verification: verify,
-      findings,
-      repairAttempts: repairs,
-    }
-  }
-
-  reviewFixVerification = await agent(
-    `${WORKTREE_RULE}
-
-Re-run the build and the full unit test suite after the review fixes for issue #${issue.number}.
-Report the result exactly as it happened. Do not fix anything.`,
-    { label: `verify-review-fix:#${issue.number}`, phase: 'Review', schema: VERIFY_SCHEMA },
-  )
-
-  if (!reviewFixVerification || !reviewFixVerification.buildPassed || !reviewFixVerification.testsPassed) {
-    return {
-      outcome: 'red',
-      stage: 'Review',
-      reason: 'Build or tests went red after applying review fixes.',
-      scope,
-      implementation: impl,
-      verification: reviewFixVerification || verify,
-      findings,
-      repairAttempts: repairs,
-    }
-  }
-
-  impl.filesChanged = Array.from(new Set([...impl.filesChanged, ...(fix.filesChanged || [])]))
-  impl.summary = `${impl.summary}\n\nReview fixes: ${fix.summary}`
-}
 
 // ---------------------------------------------------------------------------
 // Routing — evidence-based, decided on what the change turned out to be
@@ -555,7 +532,7 @@ return {
   changeKind,
   scope,
   implementation: impl,
-  verification: reviewFixVerification || verify,
+  verification: verify,
   repairAttempts: repairs,
   findings,
   openFindings: findings.filter((f) => f.severity !== 'blocker'),

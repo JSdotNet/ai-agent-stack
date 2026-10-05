@@ -162,7 +162,7 @@ skill changes who runs capture, never whether it runs.
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/phase-resolution.md` | How a phase entry resolves into inline, delegated, or forked, and the effort runners |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
-| `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
+| `resources/config.schema.json` | The engine-owned keys — `bindings`, `phases`, `areas`, `policy`, `gates` — and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/config.local-template.json` | A starting point for the personal overlay, copied outside the repository |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |

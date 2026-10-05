@@ -202,25 +202,25 @@ async function readRuns($: any, dirs: string[]): Promise<FlowRun[]> {
 const DEMO_STEP_MS = 4000
 type DemoStage = [name: string, mode: FlowMode, agent: string | null, model: string | null, effort: string | null, output: string]
 const DEMO_STAGES: DemoStage[] = [
-  ['update-base', 'inline', null, null, null, 'Fast-forwarded to origin/main (bfcf9b8b).'],
-  ['scope', 'fork', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
-  ['implement', 'fork', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
-  ['review', 'fork', null, 'opus', 'high', 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
-  ['build-test', 'delegate', 'general-purpose', 'sonnet', 'low', 'Build green, 4,312 tests passed.'],
-  ['verify', 'delegate', 'qa:qa', null, null, 'Full depth with capture through Aspire; logs monitored, no errors.'],
-  ['spec-check', 'delegate', 'devbook:verify-change', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
-  ['ready', 'inline', null, null, null, 'Review, build-test, verify and spec-check all recorded green.'],
-  ['personal-validation', 'gate', null, null, null, 'Waiting for your approval. Review links published.'],
-  ['create-pr', 'inline', null, null, null, 'Pushed and opened the pull request.'],
-  ['report-back', 'delegate', null, 'haiku', null, 'Commented on the origin entry and ticked its steps.'],
-  ['summary', 'inline', null, null, null, 'Run summary written.'],
+  ['Update Base', 'inline', null, null, null, 'Fast-forwarded to origin/main (bfcf9b8b).'],
+  ['Scope', 'fork', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
+  ['Implement', 'fork', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
+  ['Review', 'fork', null, 'opus', 'high', 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
+  ['Build & Test', 'delegate', 'general-purpose', 'sonnet', 'low', 'Build green, 4,312 tests passed.'],
+  ['Verify', 'delegate', 'qa:qa', null, null, 'Full depth with capture through Aspire; logs monitored, no errors.'],
+  ['Spec Check', 'delegate', 'devbook:verify-change', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
+  ['Ready', 'inline', null, null, null, 'Review, build-test, verify and spec-check all recorded green.'],
+  ['Personal Validation', 'gate', null, null, null, 'Waiting for your approval. Review links published.'],
+  ['Create Pull Request', 'inline', null, null, null, 'Pushed and opened the pull request.'],
+  ['Report Back', 'delegate', null, 'haiku', null, 'Commented on the origin entry and ticked its steps.'],
+  ['Summary', 'inline', null, null, null, 'Run summary written.'],
 ]
 const DEMO_WORKERS: Record<string, FlowWorker[]> = {
-  implement: [
+  Implement: [
     { name: 'csharp-coding:coding · backend', model: 'opus 5.5', durationMs: 192000, tokens: 81000, toolCalls: 41, isFailed: false },
     { name: 'csharp-coding:coding · frontend', model: 'sonnet 5.5', durationMs: 236000, tokens: 64000, toolCalls: 37, isFailed: false },
   ],
-  verify: [
+  Verify: [
     { name: 'qa:qa', model: 'sonnet 5.5', durationMs: 411000, tokens: 122000, toolCalls: 96, isFailed: false },
     { name: 'qa:qa-monitor', model: 'haiku 4.5', durationMs: 398000, tokens: 18000, toolCalls: 22, isFailed: false },
   ],
@@ -229,7 +229,7 @@ let demoStartedAt: number | undefined
 
 function demoRun(now: number): FlowRun {
   const at = Math.floor((now - (demoStartedAt ?? now)) / DEMO_STEP_MS)
-  const reviewAt = DEMO_STAGES.findIndex(s => s[0] === 'review')
+  const reviewAt = DEMO_STAGES.findIndex(s => s[0] === 'Review')
 
   return {
     id: 'demo-run',
@@ -254,20 +254,20 @@ function demoRun(now: number): FlowRun {
         agent,
         model,
         effort,
-        passes: (i < at ? 1 : 0) + (name === 'implement' && at > reviewAt ? 1 : 0) + (name === 'review' && at > reviewAt ? 1 : 0),
+        passes: (i < at ? 1 : 0) + (name === 'Implement' && at > reviewAt ? 1 : 0) + (name === 'Review' && at > reviewAt ? 1 : 0),
         durationMs: i < at ? DEMO_STEP_MS * (4 + ((i * 37) % 60)) : null,
         outputTokens: i < at && mode !== 'inline' ? 12_000 + i * 9_000 : null,
         toolCalls: i < at ? 3 + ((i * 13) % 40) : 0,
         workers: isReached ? (DEMO_WORKERS[name] ?? []) : [],
         scenarios:
-          name === 'verify' && i < at
+          name === 'Verify' && i < at
             ? [
                 { name: 'S1 Undo a status change', status: 'pass' },
                 { name: 'S2 Undo a reorder', status: 'pass' },
                 { name: 'S3 Redo after reload', status: 'flaky' },
               ]
             : [],
-        links: name === 'personal-validation' && isReached ? ['desktop-web-harness', 'Diff'] : [],
+        links: name === 'Personal Validation' && isReached ? ['desktop-web-harness', 'Diff'] : [],
         output: isReached ? output : '',
       }
     }),

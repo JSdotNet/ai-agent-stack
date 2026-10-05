@@ -17,16 +17,15 @@ a sibling declare it and the host enforces it.
 | --- | --- | --- |
 | Devbook | `devbook`, `devbook-derived`, `devbook-collaboration` | Addressed Markdown chapters under `.devbook/` with parseable `meta` blocks, generated `_meta/` indexes, a reference-graph canvas, converters between chapters and code, the five repository-owned procedure skills, and review and approval workflows over the chapters. |
 | Skills | `devbook-skills` | Reusable guidance any plugin names and none depends on: `show-me`, which puts a diagram, tree, signature, diff, or table before the prose. |
-| Delivery | `delivery` | Four `flow-*` procedures that carry a change from request to a validated commit — the code, the devbook folders, the dependencies, the project — plus the pull-request lane and the single-item pickup. |
+| Delivery | `delivery` | Two `flow-*` procedures that carry a change from request to a validated commit — the code, a dependency move and a new project among its kinds, and the devbook folders — each a sequence of phase skills, plus the pull-request lane and the single-item pickup. |
 | Surfaces | `delivery-surface-dashboard`, `delivery-surface-collector`, `delivery-surface-backlog` (and `delivery-surface-canvas` on Copilot) | Where a run is watched or recorded: a live dashboard, a headless collector, the Backlog desktop app while it is open, and a diagram and document viewer that is a Copilot canvas rather than an entry in this marketplace. A surface is any installed `delivery-surface-*` plugin, resolved at run time; none is a dependency. |
 | Viewer | `delivery-run-view` (Claude Code only) | A run drawn inside Claude Code from the files the surfaces write: a `/flows` pane with one row per phase and how it ran, a band above the prompt and the status line while this session's run is open, and surface calls in the transcript drawn as one-line phase transitions. Not a surface: it records nothing and answers no operation. |
 | Unattended | `delivery-schedule` | Work that runs with nobody watching: sixteen `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a report, and thirteen triggers a repository selects from and syncs into the host's scheduler — its Routines page in Claude Code, its Automations page in the GitHub Copilot app. |
-| Config | `devbook-config` | The repository's `.devbook/config.json` — written by `init` before anything installs, moved forward by `update`, and checked by `doctor` against every component's stamp — plus `ask`, which answers what this marketplace is, what you have installed against what is published, and how a repository has wired its roles, extension points, gates, and policy, `adoption`, which reports where the `ai/` adoption record no longer matches what is installed, and `local`, which writes what is true of one machine outside the repository. |
+| Config | `devbook-config` | The repository's `.devbook/config.json` — written by `init` before anything installs, moved forward by `update`, and checked by `doctor` against every component's stamp — plus `ask`, which answers what this marketplace is, what you have installed against what is published, and how a repository has wired its phases, gates, and policy, `adoption`, which reports where the `ai/` adoption record no longer matches what is installed, and `local`, which writes what is true of one machine outside the repository. |
 
-**No specialist ships here.** The `architecture`, `qa`, `domain`, `ux`, `product`, `security`,
-and `docs` roles and the `spec`, `implement`, `validate`, `app.start`, `qa.run`, `deliver`, and `verify`
-services are points the engine declares and a repository fills, naming whichever specialist plugin it installed in
-`.devbook/config.json`. Unbound, a flow loses that stage's expertise and runs on — a
+**No specialist ships here.** Each phase of a flow takes the agent, skill, and MCP servers a
+repository names for it in its `phases` map in `.devbook/config.json`, from whichever specialist
+plugin it installed. Unbound, a phase runs its own procedure and loses that expertise — a
 provider that does not resolve costs capability, never a load. The seven specialists that used
 to live here are [published from their own marketplace](.devbook/arc42/adr/plugin-boundaries.md).
 

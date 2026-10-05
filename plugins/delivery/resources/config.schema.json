@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/JSdotNet/devbook/plugins/delivery/resources/config.schema.json",
   "title": "config.json — delivery-owned keys",
-  "description": "The four top-level keys the delivery engine owns in .devbook/config.json — bindings, extensions, policy, gates — and `id`, which names the repository so a machine can find its overlay for it. Other components own their own entry under `components` and are not described here.",
+  "description": "The keys the delivery engine owns in .devbook/config.json — bindings, phases, policy, gates, and the optional areas — and `id`, which names the repository so a machine can find its overlay for it. Other components own their own entry under `components` and are not described here. The `x-` keywords are read by tools/stack-config/check.mjs and are not JSON Schema.",
   "type": "object",
   "properties": {
     "id": {
@@ -50,20 +50,6 @@
             "pattern": "^delivery-surface-[a-z0-9]+(-[a-z0-9]+)*$"
           }
         },
-        "delivery.roles": {
-          "description": "Which plugin fills each specialist role. null means deliberately unbound; an absent key means nobody has decided yet. A role is never a plugin dependency.",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "architecture": { "$ref": "#/$defs/roleBinding" },
-            "qa": { "$ref": "#/$defs/roleBinding" },
-            "domain": { "$ref": "#/$defs/roleBinding" },
-            "ux": { "$ref": "#/$defs/roleBinding" },
-            "product": { "$ref": "#/$defs/roleBinding" },
-            "security": { "$ref": "#/$defs/roleBinding" },
-            "docs": { "$ref": "#/$defs/roleBinding" }
-          }
-        },
         "delivery.slots": {
           "description": "Host slot bindings. Nothing binds a slot unless a repository does; an unset slot takes its documented unbound default.",
           "type": "object",
@@ -76,43 +62,52 @@
         "openspec.grill": {
           "description": "The skill that interrogates an idea before a change is proposed, as plugin:skill. The engine never reads it: the change lane's own skills do. null means deliberately none, and explore runs alone. May be set per machine in an overlay.",
           "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/providerId" }]
-        },
-        "delivery.mcp": {
-          "description": "Which MCP servers each flow extension point uses, by the server id the repository's own MCP configuration declares. A stage resolves the servers of the point it serves from the live tool list; a server that does not answer costs that stage its grounding, never the run. An absent point takes the engine default; null means deliberately none. A server is never a plugin dependency.",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "session.start": { "$ref": "#/$defs/mcpServers" },
-            "flow.start": { "$ref": "#/$defs/mcpServers" },
-            "spec": { "$ref": "#/$defs/mcpServers" },
-            "implement": { "$ref": "#/$defs/mcpServers" },
-            "validate": { "$ref": "#/$defs/mcpServers" },
-            "data.prepare": { "$ref": "#/$defs/mcpServers" },
-            "app.start": { "$ref": "#/$defs/mcpServers" },
-            "qa.run": { "$ref": "#/$defs/mcpServers" },
-            "verify": { "$ref": "#/$defs/mcpServers" },
-            "deliver": { "$ref": "#/$defs/mcpServers" },
-            "flow.end": { "$ref": "#/$defs/mcpServers" }
-          }
         }
       }
     },
-    "extensions": {
-      "description": "What runs at each flow extension point. The point set is closed and declared by the engine; a repository fills points, never invents them.",
+    "phases": {
+      "description": "Who runs each phase of a flow, and how: one map per flow, keyed by the flow's skill name — flow-code, flow-spec, or a repo-native flow-* — and inside it one entry per phase, keyed by the phase's skill name, phase-<id>[:<qualifier>]. The qualifier is the folder on phase-drafting in flow-spec and an area on phase-implement. Every field resolves on its own, most specific key first, then the session, so an absent field inherits the session's model, effort, and inline runner, and {} is a complete entry. A committed map lists exactly the phases its flow has — a qualified phase counts when its bare entry or one entry per qualifier is there; an overlay names only what it changes, field by field. Nothing crosses flows. phase-personal-validation and phase-ready take no entry in any map.",
       "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "session.start": { "$ref": "#/$defs/chorePoint" },
-        "flow.start": { "$ref": "#/$defs/chorePoint" },
-        "spec": { "$ref": "#/$defs/servicePoint" },
-        "implement": { "$ref": "#/$defs/servicePoint" },
-        "validate": { "$ref": "#/$defs/servicePoint" },
-        "data.prepare": { "$ref": "#/$defs/chorePoint" },
-        "app.start": { "$ref": "#/$defs/servicePoint" },
-        "qa.run": { "$ref": "#/$defs/servicePoint" },
-        "verify": { "$ref": "#/$defs/servicePoint" },
-        "deliver": { "$ref": "#/$defs/servicePoint" },
-        "flow.end": { "$ref": "#/$defs/chorePoint" }
+      "x-flows": {
+        "flow-code": {
+          "phases": [
+            "phase-update-base", "phase-scope", "phase-plan", "phase-implement", "phase-review",
+            "phase-build-test", "phase-verify", "phase-spec-check", "phase-create-pr",
+            "phase-report-back", "phase-summary"
+          ],
+          "qualifiers": { "phase-implement": "areas" }
+        },
+        "flow-spec": {
+          "phases": [
+            "phase-update-base", "phase-scope", "phase-drafting", "phase-check-review",
+            "phase-create-pr", "phase-report-back", "phase-summary"
+          ],
+          "qualifiers": { "phase-drafting": ["arc42", "domain", "tech", "design", "ai"] }
+        }
+      },
+      "x-defaultAreas": ["frontend", "backend"],
+      "x-unconfigured": {
+        "phase-personal-validation": "refuses every field: it runs inline in the session the person is reading, and the gate after it is the runner's. Remove the entry.",
+        "phase-ready": "takes no configuration: it decides from what the earlier phases recorded and does no new work. Remove the entry."
+      },
+      "x-options": {
+        "phase-verify": {
+          "app": {
+            "description": "The provider that starts the application and returns its URLs and a health verdict. null means nothing to start.",
+            "$ref": "#/$defs/servicePoint"
+          }
+        },
+        "phase-report-back": {
+          "targets": { "$ref": "#/$defs/reportTargets" }
+        }
+      }
+    },
+    "areas": {
+      "description": "An optional hint for phase-implement in a repository whose paths do not say which code is which: path globs per area, in order, first match wins. Each area name may qualify phase-implement, and phase-implement:<area> overrides the bare entry field by field. Absent, the skill decides from the seams and the paths, and the area qualifiers are frontend and backend.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "title": "a path glob", "type": "string", "minLength": 1 }
       }
     },
     "policy": {
@@ -123,6 +118,16 @@
         "qa.depth": { "enum": ["full", "targeted", "startup-only", "skipped"] },
         "qa.ceiling": { "enum": ["full", "targeted", "startup-only", "skipped"] },
         "validate.retryBudget": { "type": "integer", "minimum": 0 },
+        "review.retryBudget": {
+          "description": "How many times one slice's review blockers go back to phase-implement before the open ones go to Personal Validation, marked open. Default 1.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "ready.retryBudget": {
+          "description": "How many times the ready check sends a run back to phase-implement — phase-drafting in flow-spec — before the open items go to the gate, listed first. Default 2.",
+          "type": "integer",
+          "minimum": 0
+        },
         "gate.reviseBudget": { "type": "integer", "minimum": 0 },
         "gate.personalValidation": { "const": "required" },
         "commit.at": {
@@ -132,12 +137,16 @@
         "pr.required": { "type": "boolean" },
         "pr.base": {
           "title": "a well-formed git ref name",
-          "description": "The branch a pull request opens against. Checked here for the shape of a git ref name only — git-check-ref-format's rules, so free prose is rejected; whether the ref exists is resolved against the remote at flow time, by the stages that use it — Update Base fetches it, the pull-request lane opens against it.",
+          "description": "The branch a pull request opens against. Checked here for the shape of a git ref name only — git-check-ref-format's rules, so free prose is rejected; whether the ref exists is resolved against the remote at flow time, by the phases that use it — Update Base fetches it, the pull-request lane opens against it.",
           "type": "string",
           "minLength": 1,
           "pattern": "^(?![./])(?!.*(?:/[.]|//|[.][.]|@[{]|[.]lock(?:/|$)))(?!.*[/.]$)[^\\s~^:?*[\\\\]+$"
         },
         "phases.updateBase": { "type": "boolean" },
+        "phases.review": {
+          "description": "Whether flow-code runs phase-review. Default true.",
+          "type": "boolean"
+        },
         "phases.verification": { "type": "boolean" },
         "phases.workItemUpdate": { "type": "boolean" },
         "openspec.scenarios": {
@@ -147,7 +156,7 @@
       }
     },
     "gates": {
-      "description": "Extra human checkpoints. Configuration may add a gate anywhere; it may never remove the mandatory Personal Validation gate or hand a gate to a plugin.",
+      "description": "Extra human checkpoints, each attached to a phase id. Configuration may add a gate anywhere; it may never remove the mandatory Personal Validation gate or hand a gate to a plugin.",
       "type": "array",
       "items": {
         "type": "object",
@@ -155,9 +164,10 @@
         "additionalProperties": false,
         "properties": {
           "at": {
+            "description": "The phase whose output the gate presents (`after`) or that it holds back (`before`).",
             "enum": [
-              "session.start", "flow.start", "spec", "implement", "validate",
-              "data.prepare", "app.start", "qa.run", "verify", "deliver", "flow.end"
+              "update-base", "scope", "plan", "implement", "review", "build-test", "verify",
+              "spec-check", "drafting", "check-review", "create-pr", "report-back", "summary"
             ]
           },
           "when": { "enum": ["before", "after"] },
@@ -169,6 +179,24 @@
       }
     }
   },
+  "x-retired": {
+    "description": "What 1.14.0 removed. Each is refused by name with a pointer to delivery:update, whose migration rewrites it; none is an alias.",
+    "keys": {
+      "extensions": "each extension point is now a phase's skill, agent, app, or before and after chores"
+    },
+    "bindings": {
+      "delivery.roles": "a role is now the agent of the phases it ran",
+      "delivery.mcp": "an extension point's servers are now its phase's mcp"
+    },
+    "flows": {
+      "flow-update-packages": "it folded into flow-code as the dependency kind",
+      "flow-project": "it folded into flow-code as the project kind"
+    },
+    "gatePoints": [
+      "session.start", "flow.start", "spec", "validate", "data.prepare", "app.start", "qa.run",
+      "deliver", "flow.end"
+    ]
+  },
   "$defs": {
     "nullableString": { "type": ["string", "null"] },
     "mcpServerId": {
@@ -177,24 +205,31 @@
       "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "mcpServers": {
-      "description": "The servers a point uses, in preference order, or null for deliberately none.",
+      "description": "The servers a phase uses, in preference order, or null for deliberately none. Absent, the phase takes the engine default servers.",
       "oneOf": [
         { "type": "null" },
         { "type": "array", "items": { "$ref": "#/$defs/mcpServerId" } }
       ]
     },
-    "roleBinding": {
-      "description": "A plugin or plugin:skill id, or null for deliberately unbound.",
-      "type": ["string", "null"],
-      "pattern": "^[a-z0-9-]+(:[a-z0-9-]+)?$"
-    },
     "providerId": {
-      "description": "plugin:skill, a bare plugin resolved through its role, or repo:<skill> for a repo-native skill.",
+      "title": "a provider id — plugin:skill, or repo:<skill>",
+      "description": "plugin:skill, or repo:<skill> for a skill the repository ships itself.",
       "type": "string",
-      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)$"
+      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+:[a-z0-9-]+)$"
+    },
+    "agentId": {
+      "description": "plugin:agent, a bare plugin resolved to its single agent, or repo:<agent> for one in the repository's own agent folder. null runs the phase inline even when a model or an effort is set.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "title": "an agent id — plugin:agent, a bare plugin, or repo:<agent>",
+          "type": "string",
+          "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)$"
+        }
+      ]
     },
     "servicePoint": {
-      "description": "Exactly one provider. A string, or an object whose `provider` names it and whose other keys are options that provider understands.",
+      "description": "Exactly one provider. A provider id, or an object whose `provider` names it and whose other keys are options that provider understands, or null for deliberately none.",
       "oneOf": [
         { "$ref": "#/$defs/providerId" },
         {
@@ -209,9 +244,9 @@
       "title": "a provider id, optionally followed by --flag arguments",
       "description": "A provider id as providerId spells it, optionally followed by space-separated --flags the chore's skill receives as its arguments — plugin:skill --replan.",
       "type": "string",
-      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+(:[a-z0-9-]+)?)( --[a-z0-9]+(-[a-z0-9]+)*)*$"
+      "pattern": "^(repo:[a-z0-9-]+|[a-z0-9-]+:[a-z0-9-]+)( --[a-z0-9]+(-[a-z0-9]+)*)*$"
     },
-    "chorePoint": {
+    "chores": {
       "description": "Zero or more chores, run in declared order. `on-failure` defaults to advisory.",
       "type": "array",
       "items": {
@@ -227,6 +262,41 @@
             }
           }
         ]
+      }
+    },
+    "reportTargets": {
+      "description": "Where phase-report-back sends the result, in order: `origin` is every work item the run started from, `linked` every item the change set names, and a provider id a custom destination. Absent, [\"origin\"].",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "enum": ["origin", "linked"] },
+          { "$ref": "#/$defs/providerId" }
+        ]
+      }
+    },
+    "phaseEntry": {
+      "description": "One phase in one flow. Every field is optional; an absent one inherits from the less specific key, then the session. A phase listed under x-options takes those keys as well.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agent": { "$ref": "#/$defs/agentId" },
+        "skill": {
+          "description": "The procedure the agent follows. Absent, the phase's own skill — delivery:phase-<id>.",
+          "$ref": "#/$defs/providerId"
+        },
+        "model": {
+          "title": "a model alias — opus, sonnet, haiku, fable, inherit — or a full model id",
+          "description": "The model the phase runs on: an alias, inherit, or a full model id pinned deliberately. A committed value is the team default, and an overlay's wins.",
+          "type": "string",
+          "pattern": "^(opus|sonnet|haiku|fable|inherit|claude-[a-z0-9]+(-[a-z0-9]+)*(\\[1m\\])?|[a-z0-9-]+(\\.[a-z0-9-]+)+(:[0-9]+)?)$"
+        },
+        "effort": {
+          "description": "The effort the phase runs at. A committed value is the team default, and an overlay's wins.",
+          "enum": ["low", "medium", "high", "xhigh", "max", "inherit"]
+        },
+        "mcp": { "$ref": "#/$defs/mcpServers" },
+        "before": { "$ref": "#/$defs/chores" },
+        "after": { "$ref": "#/$defs/chores" }
       }
     }
   }

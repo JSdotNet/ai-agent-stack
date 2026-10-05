@@ -574,10 +574,10 @@ qualifier after a colon is the folder on `phase-drafting` in `flow-spec`, or an 
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| The phase list is closed; a phase a flow lacks, or a map under an unknown flow, is rejected by name | config validation | untested |
-| The committed file lists exactly the phases each flow has, and an overlay names only what it changes | config validation | untested |
+| The phase list is closed; a phase a flow lacks, or a map under an unknown flow, is rejected by name | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
+| The committed file lists exactly the phases each flow has, and an overlay names only what it changes | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Nothing crosses flows: `flow-spec` never reads `flow-code`'s entries | phase resolution | untested |
-| The ready check and Personal Validation take no entry, and a `phase-personal-validation` key is refused in any map | config validation | untested |
+| The ready check and Personal Validation take no entry, and a `phase-personal-validation` key is refused in any map | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Chores run zero or more times, in declared order | chore invocation | untested |
 | A chore may declare itself required and stop the run; it may never rewrite a result or stand in for a gate | chore invocation | untested |
 | A server in a phase's `mcp` that does not answer costs that phase its grounding, never the run, and is reported once | phase resolution | untested |
@@ -644,12 +644,12 @@ devbook folder present, which is the reason the file could move there at all.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | An unknown key is rejected, never ignored: a typo is an error, not a silently absent setting | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | `check.mjs` | untested |
+| `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Nobody writes another owner's key | all mutations | untested |
 | The engine keys are written by `devbook-config`'s `init` and `update`, and by nothing else | all mutations | untested |
 | `policy` is a closed set of switches | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | A machine-scope overlay may add a gate and never remove one, at each of its two layers | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| A model or an effort in the committed file is a team default, and an overlay's value wins | `check.mjs --print` | untested |
+| A model or an effort in the committed file is a team default, and an overlay's value wins | `check.mjs --print` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | An overlay never carries the `id` that located it | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | A flow reads its effective configuration from `check.mjs --print`, never by merging layers itself; a refused layer prints nothing | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | An overlay may not weaken what the committed file requires: the pull request, the QA ceiling, Personal Validation, and the scenarios policy are locked | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |

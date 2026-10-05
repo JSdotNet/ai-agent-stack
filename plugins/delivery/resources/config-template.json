@@ -1,51 +1,66 @@
 {
-  "$comment": "Copy the keys you need into .devbook/config.json. Every key is optional; an absent key takes the engine's documented default. `id` names the repository — lowercase, digits, hyphens — and is what a machine keys its own overlay for this repository on; pick it once and never rename it. Roles and services start unbound: fill each with a provider id — `plugin:skill`, a bare `plugin` resolved through its role, or `repo:<skill>` — naming whichever specialist plugin you installed. A service that takes options is an object instead, e.g. { \"provider\": \"…\", \"host\": \"aspire\" }. A chore may carry --flag arguments after its id, handed to its skill; the flow.start sample is a replan chore, which stops a run whose agreed plan the base has moved under. A spec provider may return a specification already approved elsewhere; the run then uses it as returned and derives none inline. delivery.tracker takes github, jira, markdown, or backlog, or a plugin:skill that implements read_item, update_item, and comment. delivery.surface lists the surface servers a run uses — every listed one that opens records the run, and render and export take the first that answers; only a server named delivery-surface-* is a surface — and is usually set per machine in an overlay; absent, every installed surface records the run and render and export go alphabetical by server name. delivery.mcp binds MCP servers per extension point by the id your own MCP configuration declares; a point left out takes the engine default, and mcp-template.json / mcp-vscode-template.json beside this file declare those default servers for .mcp.json and .vscode/mcp.json. Validate with tools/stack-config/check.mjs. The contract is resources/engine-contract.md. Never put a model or a secret in this file.",
+  "$comment": "Copy the keys you need into .devbook/config.json. Every key is optional; an absent key takes the engine's documented default. `id` names the repository — lowercase, digits, hyphens — and is what a machine keys its own overlay for this repository on; pick it once and never rename it. `phases` holds one map per flow, keyed by the flow's skill name, and a committed map lists every phase its flow has: {} is a complete entry, running the phase's own skill on the session's model and effort. An entry may name the `agent` that runs the phase (plugin:agent, a bare plugin with one agent, repo:<agent>, or null for inline), the `skill` it follows (plugin:skill or repo:<skill>), its `model` and `effort` — team defaults a user overlay overrides — its `mcp` servers by the id your own MCP configuration declares, and `before` and `after` chores; phase-verify takes `app` and phase-report-back `targets`. The models below are the cost profile the engine shipped with; the agents start unset: fill each with whichever specialist you installed. A qualifier after a colon is the folder on phase-drafting and an area on phase-implement; `areas` is an optional hint of path globs per area. phase-personal-validation and phase-ready take no entry. A chore may carry --flag arguments after its id; the scope.after sample is a replan chore, which stops a run whose agreed plan the base has moved under. delivery.tracker takes github, jira, markdown, or backlog, or a plugin:skill that implements read_item, update_item, and comment. delivery.surface lists the surface servers a run uses — every listed one that opens records the run, and render and export take the first that answers; only a server named delivery-surface-* is a surface — and is usually set per machine in an overlay. A gate attaches to a phase id. mcp-template.json / mcp-vscode-template.json beside this file declare the default servers for .mcp.json and .vscode/mcp.json. Validate with tools/stack-config/check.mjs. The contract is resources/engine-contract.md. Never put a secret in this file.",
   "id": "your-repo",
   "bindings": {
     "delivery.tracker": { "provider": "your-tracker-plugin:your-tracker-skill" },
-    "delivery.surface": ["delivery-surface-dashboard", "delivery-surface-collector"],
-    "delivery.roles": {
-      "architecture": null,
-      "qa": null,
-      "domain": null,
-      "ux": null,
-      "docs": null,
-      "product": null,
-      "security": null
-    },
-    "delivery.mcp": {
-      "spec": ["your-guidelines-server"]
-    }
+    "delivery.surface": ["delivery-surface-dashboard", "delivery-surface-collector"]
   },
-  "extensions": {
-    "session.start": ["devbook:validate"],
-    "flow.start": [{ "run": "devbook-openspec:status --replan", "on-failure": "required" }],
-    "spec": "your-spec-plugin:your-approved-spec-skill",
-    "implement": null,
-    "validate": null,
-    "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }],
-    "app.start": null,
-    "qa.run": null,
-    "verify": "devbook:verify-change",
-    "flow.end": ["devbook:update"]
+  "phases": {
+    "flow-code": {
+      "phase-update-base": { "before": ["devbook:validate"] },
+      "phase-scope": {
+        "skill": "your-spec-plugin:your-approved-spec-skill",
+        "model": "opus",
+        "mcp": ["your-guidelines-server"],
+        "after": [{ "run": "devbook-openspec:status --replan", "on-failure": "required" }]
+      },
+      "phase-plan": { "model": "opus" },
+      "phase-implement": { "model": "opus" },
+      "phase-review": { "model": "opus" },
+      "phase-build-test": { "model": "sonnet" },
+      "phase-verify": {
+        "model": "sonnet",
+        "before": [{ "run": "repo:seed-test-data", "on-failure": "required" }]
+      },
+      "phase-spec-check": { "skill": "devbook:verify-change", "model": "opus" },
+      "phase-create-pr": {},
+      "phase-report-back": { "model": "haiku", "targets": ["origin", "linked"] },
+      "phase-summary": { "after": ["devbook:update"] }
+    },
+    "flow-spec": {
+      "phase-update-base": { "before": ["devbook:validate"] },
+      "phase-scope": {},
+      "phase-drafting:arc42": { "model": "opus" },
+      "phase-drafting:domain": { "model": "opus" },
+      "phase-drafting:tech": { "model": "opus" },
+      "phase-drafting:design": { "model": "sonnet" },
+      "phase-drafting:ai": { "model": "haiku" },
+      "phase-check-review": {},
+      "phase-create-pr": {},
+      "phase-report-back": { "model": "haiku" },
+      "phase-summary": { "after": ["devbook:update"] }
+    }
   },
   "policy": {
     "qa.depth": "targeted",
     "qa.ceiling": "full",
     "validate.retryBudget": 2,
+    "review.retryBudget": 1,
+    "ready.retryBudget": 2,
     "gate.reviseBudget": 3,
     "gate.personalValidation": "required",
     "commit.at": "gate",
     "pr.required": true,
     "pr.base": "main",
     "phases.updateBase": true,
+    "phases.review": true,
     "phases.verification": true,
     "phases.workItemUpdate": true,
     "openspec.scenarios": "advisory"
   },
   "gates": [
     {
-      "at": "spec",
+      "at": "scope",
       "when": "after",
       "purpose": "approval",
       "prompt": "Spec approved, or revise?",
@@ -53,7 +68,7 @@
       "unattended": "block"
     },
     {
-      "at": "app.start",
+      "at": "verify",
       "when": "before",
       "purpose": "resource",
       "prompt": "Only one runtime instance runs here. OK to start?",

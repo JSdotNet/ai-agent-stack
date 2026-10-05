@@ -1,6 +1,6 @@
 ---
 name: capture-specs
-description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. By default delivers a capture plan as a Markdown artifact and writes nothing; in write mode, as a spec-check binding runs it, carries the code-ahead entries into the chapters and runs the devbook check. Never writes a source or test file. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
+description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of seven kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, a user or technical actor in actors.md or context.md with the roles, policies, or client registrations that represent it, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, a role or client in code no actor names, document what we built, capture from code, domain/ is stale. By default delivers a capture plan as a Markdown artifact and writes nothing; in write mode, as a spec-check binding runs it, carries the code-ahead entries into the chapters and runs the devbook check. Never writes a source or test file. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
 updates: true
 ---
 
@@ -16,7 +16,8 @@ repeated here.
 chapter's `type` decides it — `aggregate` (with its owned `entity`,
 `value-object`, `enum`, the shared groupings, and its `domain-event`s), `domain-service` (with the events it
 raises itself), `feature` and `sub-feature`, `feature-flag` and `setting` (one
-kind, `setting`, for both levels) — and the file decides it where the
+kind, `setting`, for both levels), `user` and `technical` (one kind, `actor`; an
+`organisation` is no unit) — and the file decides it where the
 folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file under
 `.devbook/arc42/building-blocks/` are `building-block`,
 `.devbook/design/component-libraries.md` is `design-component`. Starting from code with

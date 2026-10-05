@@ -203,7 +203,7 @@ is why it reads code — not to change it, but to establish what is already ther
 so the brief asks only for the delta, and an update brief lists where the
 current behaviour lives.
 
-Each skill covers six kinds, decided by the chapter's `type` — or by the file,
+Each skill covers seven kinds, decided by the chapter's `type` — or by the file,
 where the folder defines no `type`:
 
 | Kind | Target | `type` value(s) | Kind file |
@@ -212,6 +212,7 @@ where the folder defines no `type`:
 | `domain-service` | `.devbook/domain/<context>/domain.md` and `domain.invariants.md`, or the split `domain.<name>.md` and its `domain.<name>.invariants.md` | `domain-service`, plus `domain-event` for events the service itself raises and `invariants`/`invariant` for the rules it enforces | `assets/spec-kinds/domain-service.md` |
 | `feature` | `.devbook/domain/<context>/features.md`, or `skills.md` where the context describes skills, and `requirements.md`, or the files split from them | `feature`, `sub-feature`, plus `requirements` and `requirement` for what it promises | `assets/spec-kinds/feature.md` |
 | `setting` | `.devbook/domain/<context>/context.md` | `feature-flag`, `setting` | `assets/spec-kinds/setting.md` |
+| `actor` | `.devbook/domain/<context>/actors.md`, or `context.md` while the actors live there | `user`, `technical` — an `organisation` is no unit | `assets/spec-kinds/actor.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
 
@@ -425,7 +426,7 @@ for technologies that do not appear in package manifests.
 | `assets/procedures/skill-wrappers.md` | How a procedure lands: one editable copy, a managed wrapper per host, where the goal sits, and `run`'s exception |
 | `assets/procedures/demo-template.html` | The starting demo template, seeded at `.devbook/design/demo-template.html` when `prototype` and `design/` are adopted: the managed region between `template:begin hash=…` and `template:end`, and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
 | `assets/procedures/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against, its region kept equal to the template's by `tools/devbook-meta/demo-template.test.mjs` |
-| `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
+| `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `actor`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
 

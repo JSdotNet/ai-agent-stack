@@ -638,8 +638,10 @@ export const SYNC_DIRECTIONS = ["push", "pull", "sync", "report", "off"];
 export const DEFAULT_SYNC_DIRECTION = "report";
 
 // The root chapters of a sync unit in `.domain`, one per converter kind: an
-// aggregate, a domain service, a feature, and the two switch chapters.
-const SYNC_UNIT_TYPES = ["aggregate", "domain-service", "feature", "feature-flag", "setting"];
+// aggregate, a domain service, a feature, the two switch chapters, and the two
+// actors code represents, a `user` and a `technical` actor. An `organisation`
+// is modelled and never authenticated, so it roots no unit.
+const SYNC_UNIT_TYPES = ["aggregate", "domain-service", "feature", "feature-flag", "setting", "user", "technical"];
 
 // Chapters a unit owns. They are captured and briefed with that unit, so a
 // direction of their own would let half a unit go one way and half the other.
@@ -662,8 +664,8 @@ const SYNC_FOLDER_FILES = {
 };
 
 // Context pages whose file-level block sets a default for the units on them.
-// `actors.md` is one although no unit lives there yet: an actor kind is a
-// later change, and until it exists a value there is reported as inherited by
+// On `actors.md` those are its `user` and `technical` chapters; one holding
+// only organisations has none, and a value there is reported as inherited by
 // nothing rather than refused.
 const SYNC_PAGE_BASES = ["domain", "features", "skills", "actors"];
 

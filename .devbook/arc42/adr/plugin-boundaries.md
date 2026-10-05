@@ -171,6 +171,14 @@ brief and writes nothing, so one skill serves every place a brief lands — a de
 options, an OpenSpec change's `research.md`, a ticket — without knowing any of them. Without
 it, each caller cites the primary source itself or leaves the fact open.
 
+`pr-body` joins them: a pull request description as Summary, Evidence, and Merge Danger, the
+last declaring a one-way or two-way door and its blast radius. `delivery`'s Create Pull Request
+phase and `delivery-schedule`'s draft pull request contract name it, and `schedule-merge-review`
+weighs its verdict by the declared door. The door is the reviewer's question, so it is
+written where the reviewer reads: a one-way door — a migration, a renamed config key or stamp
+field, deleted data, an edited `accepted` chapter — links the decision record it rests on. A
+repository's own pull request template still wins; the skill fills the sections that match.
+
 ## Rejected
 
 ```meta
@@ -219,6 +227,7 @@ it, each caller cites the primary source itself or leaves the fact open.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. |
 | 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
 | 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |
 | 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |

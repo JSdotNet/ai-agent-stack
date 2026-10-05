@@ -22,6 +22,7 @@ Then enable `devbook-skills` with `/plugin`. There is nothing to install into th
 | --- | --- | --- |
 | `show-me` | Puts a picture before the prose whenever the content has a shape, and keeps the words to what the picture cannot say | `devbook`'s `devbook-writing` rule, for every chapter except `domain.md` and its splits; `delivery`, for pull request descriptions and its report back to the person; and anyone who types `/show-me` |
 | `research-brief` | Answers one question about something outside the repository from primary sources only, every claim cited with a confidence, and lists what the sources leave open. Returns the brief and writes nothing | `delivery`'s Scope phase, when a fact outside the repository decides scope, and its Drafting phase for `arc42/` and `tech/`; and anyone who types `/research-brief` |
+| `pr-body` | Writes a pull request description as Summary, Evidence, and Merge Danger: one picture of the change, a tiered before and after, and a one-way or two-way door with its blast radius. A one-way door links its decision record | `delivery`'s Create Pull Request phase, `delivery-schedule`'s draft pull requests, whose door `schedule-merge-review` weighs its verdict by; and anyone who types `/pr-body` |
 
 `show-me` writes plain Markdown only: Mermaid, fenced code, and tables. That is what a
 chapter, a pull request, and a chat reply can all render.
@@ -30,7 +31,12 @@ chapter, a pull request, and a chat reply can all render.
 decision record's options through `flow-spec`, `openspec/changes/<id>/research.md`, a ticket,
 or the chat.
 
+`pr-body` fills a repository's own pull request template rather than replacing it. In a
+repository with devbook, a change is a one-way door when it ships a migration, renames a
+`.devbook/config.json` key or a stamp field, deletes data, or touches an `accepted` chapter.
+
 ## Credits
 
 `research-brief` is adapted from the `research` skill in
-[mattpocock/skills](https://github.com/mattpocock/skills), MIT licensed.
+[mattpocock/skills](https://github.com/mattpocock/skills), MIT licensed, and `pr-body` from its
+`pr` skill, whose Summary guidance credits Dex Horthy's `show-me`.

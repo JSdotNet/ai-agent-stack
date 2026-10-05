@@ -193,6 +193,13 @@ file per entry, regenerate a generated one. A hotspot is the code's problem, not
 request's, so it is reported, never fixed: the fix is a person's change through the code flow.
 Conflicts are found with `git merge-tree`, which never touches the working tree.
 
+Each verdict is weighed by the door the pull request declares in the Merge Danger section the
+`pr-body` skill writes. A one-way door — a migration, a renamed config key or stamp field, deleted
+data, an edited `accepted` chapter — cannot be walked back by a revert, so it needs the decision
+record it rests on and is `ready` only with no Important finding left. A diff that is one-way
+while its body says otherwise is Blocking: the declaration is a claim the review checks, never
+one it trusts.
+
 ### schedule-morning-brief
 
 ```meta
@@ -715,6 +722,7 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets, and the sync sweep lists its groups with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
+| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names the skill `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares | The skill name alone | A reviewer weighs a merge by whether it can be walked back. Without the skill, the contract's body still states the door, and the review finds a one-way diff from the diff itself. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, and the issues a skill opens for a finding | The preamble's publishing rules | A change reaches a person as a pull request; the report stays in the run's session. This lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |

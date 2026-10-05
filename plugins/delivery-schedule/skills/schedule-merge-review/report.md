@@ -14,8 +14,8 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 | Blocked: <the blocking finding, own words> | [#<n>](<url>) | [review comment](<url>) |
 
 ### Reviewed
-| Pull request | Author | Verdict | Blocking | Comment |
-| --- | --- | --- | --- | --- |
+| Pull request | Author | Door | Verdict | Blocking | Comment |
+| --- | --- | --- | --- | --- | --- |
 
 ### Conflict hotspots
 | File | Conflicts | Open PRs touching it | Suggestion |

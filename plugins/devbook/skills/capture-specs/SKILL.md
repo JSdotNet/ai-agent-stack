@@ -1,6 +1,7 @@
 ---
 name: capture-specs
-description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. Delivers a capture plan as a Markdown artifact and writes nothing — no chapter, no source, no test. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
+description: 'Read an implementation and its tests and plan the devbook chapter that is missing, thin, or stale, for any of six kinds — an aggregate whole (root, owned entities, value objects, enums, the events it raises) or a domain service in .devbook/domain/<context>/domain.md or a domain.<name>.md split from it, a feature in features.md or a split of it (this one runs the application), a feature flag or setting in context.md, the building block view in arc42/, or a component guideline in design/ — with the invariants their unit tests establish and the requirements their e2e tests do. Use when: the code has something the chapter does not, a chapter is missing, a stub, or stale, an event is raised with no chapter, a feature shipped that features.md does not list, projects were restructured, a library is in use with no guideline, document what we built, capture from code, domain/ is stale. By default delivers a capture plan as a Markdown artifact and writes nothing; in write mode, as a spec-check binding runs it, carries the code-ahead entries into the chapters and runs the devbook check. Never writes a source or test file. DO NOT USE FOR: implementing an agreed but unbuilt chapter (apply-change), or checking drift without planning a chapter (verify-change).'
+updates: true
 ---
 
 # capture-specs
@@ -21,6 +22,10 @@ folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file unde
 `.devbook/design/component-libraries.md` is `design-component`. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape
 and say so. Any other chapter is out of scope: say which flow owns it.
+
+**Mode.** Plan, the default, writes nothing. Write, when the caller asks for it — a
+`phase-spec-check` binding does — carries the plan in per **Carrying a plan in** in the
+protocol.
 
 **Inputs.** The target — a chapter as `<path>#<heading-slug>` or heading, a code
 type, or a sync unit or group per **The sync unit** in the protocol — the bounded
@@ -50,15 +55,16 @@ context where the kind has one, and the repository root.
    `ADDED` / `MODIFIED` / `REMOVED` by heading, per **The capture plan** in the
    protocol — and close it with the protocol's report table, one row per
    chapter in scope, `aligned` rows included.
-7. Deliver the plan to the person as a Markdown artifact, and stop there.
+7. Plan mode: deliver the plan to the person as a Markdown artifact, and stop there.
+   Write mode: carry in the `code-ahead` entries, run the check, and return the report
+   table with every chapter edit listed — file, verdict row, what changed.
 
 ## Do not
 
-- Do not write a devbook file, and never edit a source or test tree. The plan
-  is the result; carrying it into a chapter is a person's move, through the
-  folder's flow.
-- Do not put a `status` line in the plan, for a new chapter or an existing one.
-  Code is evidence, not agreement, and a status is a decision a person makes.
+- Never edit a source or test tree. Outside write mode, write no devbook file:
+  the plan is the result, and carrying it in is a person's move.
+- Do not put a `status` line in the plan, and never write `approved` or another
+  decision rung, in either mode. Code is evidence, not agreement.
 - Do not plan over a chapter someone is still deciding about. Where the target
   is a `draft`, report what the code has beside what the draft says, per the
   protocol's status table; where it is `deprecated`, report and stop.

@@ -19,7 +19,7 @@ instead of by repository.
 | Kind | Members |
 |---|---|
 | `flow-*` (4) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-code`, `flow-spec`, `flow-update-packages`, `flow-project` |
-| `phase-*` (3) | A shared step inside a flow, invoked by a flow and never directly: `phase-build-test`, `phase-validation`, `phase-personal-validation` |
+| `phase-*` (12) | A shared step inside a flow, invoked by a flow and never directly: `phase-update-base`, `phase-scope`, `phase-plan`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
 | `init`, `update` (2) | The engine's stamp under `components.delivery`, written once and moved forward; hidden from the menu and reached through `devbook-config` |

@@ -79,10 +79,7 @@ and full domain modeling belongs to `flow-spec`.
 
 One middle stage, selected by the kind. *feature* and *config* skip it.
 
-**create — Implementation Planning.** Map the recorded design onto the project structure;
-define the data contracts, error handling, and — for a service — service discovery, the host
-project's references, the configuration model, and the health and observability signals;
-plan the integration points; break the work into incremental slices. *Agents:* the
+**create — Implementation Planning.** Run `skills/phase-plan/SKILL.md`. *Agents:* the
 `architecture` role.
 
 **refactor — Refactor Planning.** List the exact moves and renames before touching a file,

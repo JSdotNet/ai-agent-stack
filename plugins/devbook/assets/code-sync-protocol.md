@@ -37,8 +37,8 @@ silent everywhere else.
 | Starting point | Implementation exists | Chapter exists and is agreed | Both exist |
 | Missing thing | The chapter | The implementation | The knowledge of which side moved |
 | Reads | Source, tests, and the chapter as it stands | The chapter, plus code only to establish what is already there | Source, tests, and the chapter |
-| Writes | Nothing. A capture plan, delivered to the person | A change brief, handed to the code-side flow | The report table, and nothing else |
-| Never | Writes a file in the repository, source or chapter alike | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
+| Writes | Nothing by default: a capture plan, delivered to the person. In write mode, the plan's `code-ahead` entries, carried into the chapters | A change brief, handed to the code-side flow | The report table, and nothing else |
+| Never | Writes a source or test file; writes a chapter outside write mode | Edits a source tree, a test tree, or the chapter's substance itself | Writes a chapter or a brief |
 
 A single request often needs both directions, in sequence: `capture-specs` what is
 built, a person carrying its plan into the chapter, then `apply-change` what the
@@ -332,7 +332,7 @@ The target is then the chapter as the delta would leave it, which
 **Capture writes no status at all.** Finding an implementation is not agreement
 that the implementation is the intended model, and a capture pass produces a
 plan rather than a chapter, so — with the one exception in
-[Carrying a plan in unattended](#carrying-a-plan-in-unattended):
+[Carrying a plan in](#carrying-a-plan-in):
 
 - A plan for a chapter that does not exist yet proposes content and no `status`
   line. What the chapter is worth is decided when someone carries the plan in,
@@ -374,11 +374,12 @@ answering it, writes `approved`, `approved-by`, and `approved-at`.
 
 ## The capture plan
 
-A capture pass writes nothing. Its whole result is a **capture plan**, delivered to
-the person as a Markdown artifact, and what happens to it afterwards is theirs: they
+By default a capture pass writes nothing. Its whole result is a **capture plan**, delivered
+to the person as a Markdown artifact, and what happens to it afterwards is theirs: they
 carry it into the folder through whatever flow covers it, take part of it, or leave
 it. Code is evidence, not agreement, and a pass that wrote the chapter would be
-agreeing on the person's behalf.
+agreeing on the person's behalf. Write mode carries the plan in only where a person
+approves the result afterwards, per [Carrying a plan in](#carrying-a-plan-in).
 
 The plan has three parts.
 
@@ -408,13 +409,21 @@ outside the headings it lists. Where the target is a chapter still being decided
 `draft` — the plan proposes no replacement for it: it reports what the code has
 beside what the draft says and leaves the two for the person to reconcile.
 
-## Carrying a plan in unattended
+## Carrying a plan in
 
-An unattended run — a sweep, with nobody watching — carries the plan in itself, on
-its own branch, and lands it as a **draft pull request**. The draft is the person:
-nothing it carries counts as agreed until someone reviews and merges it. The
-sweep's own contract owns the branch, the body, and the labels; this section owns
-what the carried chapters may say.
+Two callers carry the plan in themselves, and the same rules bind both:
+
+- **An unattended run** — a sweep, with nobody watching — on its own branch, landing it as a
+  **draft pull request**. The draft is the person: nothing it carries counts as agreed until
+  someone reviews and merges it. The sweep's own contract owns the branch, the body, and the
+  labels.
+- **Write mode** — `capture-specs` asked to write, which is how a `phase-spec-check` binding
+  runs it — into the change set the caller is building. Personal Validation is the person:
+  every chapter edit is listed beside the code, and a rejected one is reverted. Only
+  `code-ahead` rows are carried, and only for the chapters the caller put in scope; every other
+  verdict stays a row in the report.
+
+This section owns what the carried chapters may say.
 
 - **`ADDED` chapters arrive at `status: draft`.** A plan carries no status, so the
   carrier writes the one value that says nobody has agreed yet. Promoting it is the
@@ -427,6 +436,10 @@ what the carried chapters may say.
 - **`REMOVED` is never carried.** It stays a finding for a person.
 - **Only the chapters the plan lists.** Nothing outside its headings, and no
   `annotation` fence.
+- **Each carried chapter with its `meta` block, written in the same edit**, per the folder
+  rule and `devbook-chapter-metadata.md`, then [the check](#the-check), run by the carrier
+  and passing. A failing check is fixed in the source Markdown or the run stops with its
+  output; a failing chapter is never handed on.
 
 The apply direction has the same shape: the brief goes to the resolver as its
 specification, and the change lands as a draft pull request. The status gate's
@@ -532,10 +545,10 @@ no flow knows these skills exist, and a brief reaches a flow as ordinary input.
 
 ## The check
 
-None of the three skills writes a chapter, so none of them runs the check. Where a
-capture plan would add, rename, or re-link a chapter, it says so and names the check
-the person runs once they have carried it in, at the scope of the folder that
-changed:
+Only a carrier of a capture plan writes a chapter, so only it runs the check: write mode
+and an unattended run, after every carried chapter. Otherwise, where a capture plan would
+add, rename, or re-link a chapter, it says so and names the check the person runs once
+they have carried it in, at the scope of the folder that changed:
 
 ```bash
 node .devbook/_tools/devbook-meta/build.mjs --scope <folder> --check

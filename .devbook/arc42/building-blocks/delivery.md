@@ -40,7 +40,7 @@ another block or a repository conforms to.
 | `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
 
 ### flow-code
 
@@ -97,7 +97,9 @@ Restate the request, derive the kind and the acceptance criteria, and record the
 `implement` tests at. For a refactor it plans the target layout and the references to update.
 In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
-to `flow-spec`. It implements nothing and writes no chapter.
+to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
+the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
+a folder whole or an annotation fence.
 
 ### phase-plan
 
@@ -138,8 +140,10 @@ code, never checks conformance to the spec, and never spawns agents. Its blocker
 related: [".devbook/arc42/building-blocks/delivery.md#flow"]
 ```
 
-Build every project and run the unit and end-to-end suites, failing fast on the first red
-result. It is the one full run of the suites, once every slice is reviewed clean.
+Build every project and run the unit and end-to-end suites, and return the failing targets
+with the error lines that matter. It is the one full run of the suites, once every slice is
+reviewed clean. It never fixes a failure and never continues on red: a red result is recorded,
+and the ready check sends it back to `implement`.
 
 ### phase-verify
 
@@ -165,14 +169,15 @@ directly. A missing piece changes who captures, never whether capture happens.
 ### phase-spec-check
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#capture-specs"]
 ```
 
 Check the change set against the specification the run built on and the chapters it touches,
 one verdict per item, before Personal Validation. The bound skill decides whether the phase
 only reports or also updates. An updating skill touches only `code-ahead` rows in scope, never
 sets `approved`, and runs the devbook check after it, and its edits are part of what the person
-approves.
+approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
+`capture-specs` does, and `verify-change`, the default binding, does not.
 
 ### phase-ready
 
@@ -182,8 +187,10 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-runner"]
 
 Decide whether the run is ready for Personal Validation from what review, Build & Test,
 `verify`, `spec-check`, and `scope` recorded. Not ready sends a brief of what is missing back to
-`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. It does no new
-work and takes no configuration.
+`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. Once the budget
+is spent, the run reaches the gate with the open items listed first, and an unattended run
+parks instead. `code-ahead` and `unresolved` rows never send the run back, because they need a
+person. It does no new work, runs inline, and takes no configuration.
 
 ### phase-personal-validation
 
@@ -475,6 +482,7 @@ another block.
 | A run belongs to one session; a resumed run reattaches to the same run rather than opening a second | `start_run()` | untested |
 | Every flow opens with Update Base, prepended by the runner and named by no skill | phase sequencing | untested |
 | `implement` with `review` per slice, and the ready check back to `implement` or `drafting`, are the only cycles, bounded by `policy.review.retryBudget` and `policy.ready.retryBudget` | the flow-runner | untested |
+| Every review finding cites `file:line` and a rule, a smell, or a concrete failure scenario, or it is dropped; the reviewer never edits and never delegates | `phase-review` | untested |
 | When both budgets are spent, the open items reach Personal Validation listed first, and an unattended run parks instead | `phase-ready` | untested |
 | `spec-check` runs before Personal Validation and reports one verdict per item of the run's specification and the chapters the change set touches; an updating skill's edits are part of what the person approves | `phase-spec-check` | untested |
 | Personal Validation is reached before `create-pr` and never inside it | gate evaluation | untested |

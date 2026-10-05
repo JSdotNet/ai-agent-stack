@@ -99,15 +99,9 @@ those contracts; it does not re-decide them per skill.
    artifacts, say so once, and never block a stage. A capability that resolves but whose
    required operation errors is a tooling failure: mark the run blocked and report the error
    text rather than falling back to chat-only tracking.
-6. **Update the base before the flow's first phase.** Run **Update Base** per
-   `flow-phases.md`: take the branch **Git Workflows** in `engine-contract.md` names when the
-   tracker reports the item as part of a change, fetch `policy.pr.base`, fast-forward a branch that carries
-   no commits of its own, and otherwise rebase its commits onto the fetched tip. A worktree is
-   cut from the local checkout and never from the remote, so the branch starts stale whenever
-   the local default branch is behind, and no later stage notices. Skip on a dirty tree, an
-   open pull request, or no remote; block on a conflict and stop there rather than resolving it
-   inside a run started for something else. **Never stash** to get past a dirty tree — the
-   stash stack is shared with every other worktree of the repository.
+6. **Update the base before the flow's first phase.** Run `skills/phase-update-base/SKILL.md`
+   inline: it skips on a dirty tree, an open pull request, or no remote, blocks on a conflict,
+   and **never stashes**. A block stops the run there.
 7. **Run each phase the way it resolved.** Run its `before` chores, the phase, then its
    `after` chores, in declared order; a chore that declared `on-failure: "required"` stops the
    run when it fails, and a chore never changes a phase's decision or stands in for a gate.
@@ -129,8 +123,8 @@ those contracts; it does not re-decide them per skill.
      session, one level deep; a forked `implement` is never relied on to fork the reviewer.
      Blockers still open go to the ready check. `policy.phases.review: false` runs `implement`
      alone. A `revise: scope` from `implement` re-runs Scope rather than redesigning inline.
-   - **The ready check, back to implement.** Before Personal Validation, run **The Ready
-     Check** in `flow-phases.md` inline: it reads what the earlier phases recorded and does no
+   - **The ready check, back to implement.** Before Personal Validation, run `phase-ready`
+     inline, never configured: it reads what the earlier phases recorded and does no
      new work. Not ready with `policy.ready.retryBudget` left: write a brief of exactly what
      is missing, send the run back to `phase-implement` — `phase-drafting` in `flow-spec` —
      and run every phase after it again, through this check. Budget spent: go to the gate with
@@ -262,5 +256,6 @@ itself spawned as a sub-agent.
 - `resources/phase-resolution.md`
 - `runners/runner-<effort>.agent.md`
 - `skills/phase-build-test/SKILL.md`
-- `skills/phase-validation/SKILL.md` — `phase-verify` until it is renamed
+- `skills/phase-verify/SKILL.md`
+- `skills/phase-ready/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`

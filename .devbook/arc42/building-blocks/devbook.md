@@ -134,16 +134,24 @@ Chapter-scoped, so a person sees what is about to go before it does.
 ### capture-specs
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/building-blocks/devbook.md#catching-up-with-the-code"]
+related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/building-blocks/devbook.md#catching-up-with-the-code", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
 Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
-for any of the six kinds. It writes nothing. Its result is a capture plan handed to the
-person: the drafts to the folder's template, arranged as a delta against the target file —
-`ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind it,
-and the report table. Code is evidence, not agreement, so the pass that found the code does
-not also decide what the chapter says; a person carries the plan into the folder, or does
-not. The kind is the chapter's `type`, or the file where the
+for any of the six kinds. By default it writes nothing. Its result is a capture plan handed
+to the person: the drafts to the folder's template, arranged as a delta against the target
+file — `ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind
+it, and the report table. Code is evidence, not agreement, so the pass that found the code
+does not also decide what the chapter says; a person carries the plan into the folder, or
+does not.
+
+Write mode is the one exception, and it exists for `flow-code`'s Spec Check. The skill's
+frontmatter declares `updates: true`, which is how a `phase-spec-check` binding knows it may
+update. Bound there, it carries the plan's `code-ahead` entries into the chapters the change
+is scoped to, each with its `meta` block, and runs the devbook check after them. It never
+writes `approved` or any other decision rung, and it never carries a `REMOVED` entry. Every
+edit is listed for Personal Validation beside the code, so the person still decides what the
+chapter says, only later in the run. Called by a person, it stays plan-only. The kind is the chapter's `type`, or the file where the
 folder defines none, and what a kind needs is read from its own file rather than carried in
 the skill. A skill is a direction, because ten skills carried one procedure ten times and the
 kind-specific part was a mapping table each pair restated from its two ends.
@@ -798,6 +806,7 @@ an identifier search that knows no language would be noisy and slow.
 | An unattended run lands a draft pull request, adds chapters at `draft`, and writes nothing above `draft` | the code-sync protocol | untested |
 | The kind is the chapter's `type`, or the file where the folder defines none | the three skills | untested |
 | `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
+| `capture-specs` writes a chapter only in write mode, carries only `code-ahead` entries in scope, and never writes a decision rung | the code-sync protocol | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
 | Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |

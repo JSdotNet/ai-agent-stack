@@ -16,7 +16,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 Turn one tracker work item into work in progress. Fetch the open items matching a filter, select
 a single item, claim it, decide which `flow-*` flow its type calls for, and run that flow **in
-this session** with the item context and origin metadata baked in.
+this session** with the item context and its origins baked in.
 
 This is the attended counterpart of the unattended issue sweep a higher layer ships: any
 filter, any item type, routed to the matching flow, in this session.
@@ -30,7 +30,7 @@ provider maps an item to. Name the operation, never a provider's command.
 
 With no tracker bound there is nothing to pick up: say so and stop. A `plugin:skill` tracker
 implements no `find_item`, so it has nothing to pick up either: say so and stop — its items
-reach a flow through that plugin's own entry skill, which hands the flow the origin metadata.
+reach a flow through that plugin's own entry skill, which hands the flow its origins.
 
 ## One Item Per Run
 
@@ -133,18 +133,32 @@ item, because the previous one is filtered out as in flight.
    If the claim fails, stop and report it. Never start work on an item that could not be
    claimed.
 
-10. Run the routed flow in **this session** with the context below. Pass the origin as the run's
-    tracker metadata to `start_run`, so Work Item Update reports its captured result and QA
-    report back to this item.
+10. Run the routed flow in **this session** with the context below, and record the run's
+    **`origins`** — always an array, one entry per work item the run starts from, each with a
+    `kind` — in the run context with `set_run_context`, so Report Back returns the result to
+    every one of them (`skills/phase-report-back/SKILL.md`).
+
+    | Field | Value |
+    |---|---|
+    | `kind` | `issue` for a GitHub issue or Jira ticket, `entry` for a Backlog entry or plan item, `annotation` for a devbook review note, `change` for an OpenSpec change step |
+    | `tracker` | The provider `bindings["delivery.tracker"]` names |
+    | `target` | The repository, project, or folder |
+    | `id`, `url` | The item's id and URL |
+
+    The selected item is the first origin. Every work item it names as its own source — a
+    Backlog plan item that references a GitHub issue, a ticket raised from an annotation — is
+    an origin of its own after it, with its own `kind`. A `linked` item the change set merely
+    references is not an origin; Report Back finds those itself.
 
     ```text
     Work item <id>: "<item title>"
 
-    Work item origin:
-    Tracker: <the provider bindings["delivery.tracker"] names>
-    Target: <repository, project, or folder>
-    Item Id: <id>
-    Item URL: <item url>
+    Work item origins:
+    - kind: <kind>
+      Tracker: <tracker>
+      Target: <repository, project, or folder>
+      Item Id: <id>
+      Item URL: <item url>
 
     Item description:
     <item body>
@@ -194,8 +208,8 @@ the source of truth.
   Filter Out Work Already In Flight, Select One Item, Route to an Flow, Claim and Run,
   Summary.
   Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
-- The flow in Phase 5 opens its own run, with this run's tracker metadata
-  carried into its `start_run`. Reference that run id in the Claim and Run stage output
+- The flow in Phase 5 opens its own run, with this run's `origins` carried into its run
+  context. Reference that run id in the Claim and Run stage output
   rather than duplicating its stages here.
 
 ## Output

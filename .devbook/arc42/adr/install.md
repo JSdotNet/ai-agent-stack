@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-10-05
+date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -69,8 +69,10 @@ which hash-matching cannot do, so `devbook-procedures` shipped the first migrati
 no ledger — the shape it removes is the record that it ran — until the fold below carried it
 into devbook's. `001` rewrote only the stamp, so an
 `extensions["app.start"]` bound to `repo:start` kept naming a skill that was gone;
-`004-start-binding-is-run` removes it, since the default provider invokes `run`, or hands its
-options to that provider. `extensions` is the engine's, and this is the one write another
+`004-start-binding-is-run` removes it, since an unset `app.start` falls back to the `run`
+recipe, or hands its options to `repo:run`. Delivery's `001-phase-maps` guards the same id in
+every layer, because 004 reads only the committed file and runs first only under
+`devbook-config:update`. `extensions` is the engine's, and this is the one write another
 component makes there: the rename exception devbook's reconcile protocol grants for an id another
 entry spells, extended to the procedure a `devbook-procedures` migration renamed.
 
@@ -163,6 +165,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`; it wrote `delivery:phase-validation`, a phase skill retired since. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. |
 | 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. |
 | 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |
 | 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. |

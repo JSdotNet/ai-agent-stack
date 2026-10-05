@@ -121,7 +121,7 @@ question stops the run at the gate rather than becoming a line item.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -278,7 +278,7 @@ invariant.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#entry-point", ".devbook/arc42/12-glossary.md#personal-validation"]
+related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
 Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
@@ -296,7 +296,7 @@ not be proved written in the body.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/12-glossary.md#park"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/12-glossary.md#park"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -320,7 +320,7 @@ unread.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/08-crosscutting-concepts.md#host-slot"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/08-crosscutting-concepts.md#host-slot"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -419,7 +419,7 @@ prototyping returns a revised prototype that keeps every surviving screen id and
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#phase", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-phases.md#phase", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).

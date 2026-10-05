@@ -189,7 +189,7 @@ No skill in this marketplace spawns a session. Fan-out across sessions and workt
 own subsystem and prefix, `fleet-`, until 2026-09-21, when the one thing anyone wanted from it
 — a backlog swept, closed, and worked with nobody watching — turned out to want one session
 and hours rather than five sessions and minutes; it is the issue sweep in
-[delivery-schedule](building-blocks/delivery-schedule.md#schedule-issue-sweep) now, and the
+[delivery-schedule](building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep) now, and the
 reason is in [the plugin boundaries record](adr/plugin-boundaries.md).
 
 ## Schedule

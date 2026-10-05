@@ -2,7 +2,7 @@
 
 ```meta
 index: root
-related: [".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/arc42/building-blocks/devbook-skills.md"]
+related: [".devbook/arc42/05-building-block-view.md", ".devbook/arc42/08-crosscutting-concepts.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/building-blocks/delivery-phases.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md"]
 ```
 
 One file per plugin: its responsibility, the interfaces it exposes, the parts inside it, the
@@ -15,6 +15,16 @@ one block owns are in the [glossary](../12-glossary.md).
 **One plugin, one block.** A plugin is the unit a host installs, versions, and can refuse to
 load, so it is already the line a model cannot cross without somebody declaring it. Fourteen
 files follow the fourteen plugin folders under `plugins/`, name for name.
+
+**A block that outgrows one sweep nests the next level in.** The pull sweep sets aside any
+file past forty chapters, because one agent cannot verify more against the code in one pass.
+A plugin that grows past that keeps its own file as the white box and moves a part with its own
+responsibility into `<plugin>-<part>.md` beside it, the way arc42 opens a level 2 block inside
+a level 1 one. The part's file names its parent in its first sentence and in `related`, and
+the parent links to it and restates nothing about it. Three parts have a file today:
+[delivery-phases](delivery-phases.md) and [delivery-pr-lane](delivery-pr-lane.md) inside
+delivery, and [delivery-schedule-entry-points](delivery-schedule-entry-points.md) inside
+delivery-schedule. Raising the cap instead would hand one agent a unit too large to read whole.
 
 **The plugins are the truth.** Each file is one sync unit, and chapter 5's file-level block
 sets `sync: pull` for all of them: when a block and its plugin disagree, the sweep rewrites the
@@ -36,7 +46,10 @@ block from what the plugin ships. A block that should lead its plugin instead st
 | [devbook-skills](devbook-skills.md) | L0 foundation | Reusable guidance any plugin names and none depends on: `show-me`, a picture before the prose, `research-brief`, a cited answer from primary sources, `pr-body`, a pull request description that declares its door, and `retro`, what to change after a session went badly; and `wayfinder`, an effort too big for one session planned as a map of decision tickets |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
+| [delivery-phases](delivery-phases.md) | Inside delivery | The closed list of phases a flow runs, and the gates a repository may add to them and never remove |
+| [delivery-pr-lane](delivery-pr-lane.md) | Inside delivery | A finished change taken to merge-ready, whether a flow produced it or not |
 | [delivery-schedule](delivery-schedule.md) | L1 on delivery | Work that runs with nobody watching, and the catalog of triggers that fires it |
+| [delivery-schedule-entry-points](delivery-schedule-entry-points.md) | Inside delivery-schedule | The procedures a schedule fires, each picking its own input and publishing what it did |
 | [delivery-surface-dashboard](delivery-surface-dashboard.md) | Surface | The live view of a run, measured by hooks rather than told |
 | [delivery-surface-canvas](delivery-surface-canvas.md) | Surface | Mermaid and Markdown rendered live beside the files they came from |
 | [delivery-surface-collector](delivery-surface-collector.md) | Surface | A run recorded to disk rather than watched, for unattended sessions |

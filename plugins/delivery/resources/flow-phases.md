@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Update Base, the ready check, the Personal Validation gate, Create Pull Request, Summary).
+description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Update Base, the Personal Validation gate, Create Pull Request, Summary).
 ---
 
 # Flow Phases (Engine-Owned)
@@ -20,9 +20,9 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `phase-resolution.md` | How a phase's entry resolves into inline, delegated, or forked, and the effort runners | Once, before `start_run` |
 | `engine-contract.md` | The phase list and the `phases` map, the gates mechanism, policy, the stack config, bindings, and host slots | Once, when the stack config is resolved |
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
-| **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and the ready check | Once, at the start of the run |
+| **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and where the ready check sits | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Report Back, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-build-test`, `phase-validation` (Verify), `phase-spec-check`, `phase-personal-validation`, and `phase-report-back` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-scope`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, and `phase-report-back` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -131,7 +131,7 @@ govern them, and selects the devbook chapters every later brief loads, as one li
 records the seams `implement` tests at, the constraints and integration points, and for a
 refactor the target layout and the references to update. A new decision or bounded context
 escalates per **Escalation** in `flow-execution-model.md`. Persist the change kind with
-`set_run_context` as soon as it is known.
+`set_run_context` as soon as it is known. In full: `skills/phase-scope/SKILL.md`.
 
 ## Phase: Plan
 
@@ -168,7 +168,7 @@ ready check, which sends it back to `implement`.
 `flow-code`. Runs after Build & Test. Starts the application through the repository's `run`
 recipe, or `phase-verify.app` when set, and drives the scenarios at the kind's depth.
 
-**Defined in `skills/phase-validation/SKILL.md`** — depth selection per change kind, the
+**Defined in `skills/phase-verify/SKILL.md`** — depth selection per change kind, the
 required-tooling policy, Playwright and Aspire preflight, evidence rules, and repo context all
 live there. What stays here is the contract around the phase:
 
@@ -202,25 +202,14 @@ reopens this phase.
 ## The Ready Check
 
 Both flows, right before Personal Validation. Run by the flow-runner inline, never configured,
-and never a phase an agent can be bound to. It does no new work: it reads what the earlier
-phases recorded and decides.
+and never a phase an agent can be bound to.
 
-| Not ready when | Recorded by |
-| --- | --- |
-| A review blocker is still open | review |
-| The build or a suite is red | build-test |
-| A Verify scenario failed, or required tooling was missing | verify |
-| An acceptance criterion or seam in scope has no passing test, or Spec Check reports it `spec-ahead` or `conflict` | scope, spec-check |
-| `flow-spec`: the devbook check fails, or a chapter in scope lacks its `meta` block | check-review |
-
-- **Not ready, budget left:** write a brief of exactly what is missing and send the run back
-  to `implement` — `drafting` in `flow-spec` — then run every phase after it again, through
-  this check. Bounded by `policy.ready.retryBudget`.
-- **Not a reason to go back:** `code-ahead` and `unresolved` rows. They need a person, so they
-  go to the gate as questions.
-- **Budget spent:** go to Personal Validation anyway, with every open item listed first. Never
-  present unfinished work as finished, and never loop past the budget. An unattended run parks
-  instead, with the open items in its handoff brief.
+**Defined in `skills/phase-ready/SKILL.md`** — what makes a run not ready, the brief, the
+round count, and what a spent budget does. What stays here is its place in the order: it reads
+what review, Build & Test, Verify, Spec Check, and the scope recorded; sends a brief back to
+`implement` — `drafting` in `flow-spec` — within `policy.ready.retryBudget`; never sends
+`code-ahead` or `unresolved` rows back; and once the budget is spent hands the open items to
+the gate first, or parks an unattended run.
 
 ## Phase: Personal Validation
 

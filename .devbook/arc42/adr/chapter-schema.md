@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-10-02
+date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -306,6 +306,22 @@ Trigger names it only in prose; it is a warning so a corpus written before keeps
 fingerprints already exclude `meta` blocks, so a flip lapses no approval. Contract 25, additive:
 absent means `report`, today's behaviour, and no migration is owed.
 
+**A diagram is a view, not a unit.** `model.md`, `flow.md`, and their splits draw what other
+chapters claim. A class diagram's ownership, cardinalities, and id-only references are the
+aggregate's consistency boundary and relationships. A state machine is the aggregate's
+lifecycle, which the aggregate kind already verifies transition by transition. A sequence
+across aggregates is a domain service's coordination or a feature's requirement, proved by its
+unit or e2e test. A `flow.<name>.md` beside a skill is the other half of that skill's chapter.
+A `flow` kind would give each of those claims a second owner and so two verdicts for one
+transition, which the sync unit's roll-up could settle only by joining the flow to every
+aggregate it walks: a group that grows with the diagram rather than with the rule, and the
+merge the feature unit was kept out of for the same reason. So neither file has a converter
+kind, a sync unit, or a place for `sync`; their `##` sections keep no blocks, and a sweep
+reads them as context and never writes them. The cost is that a diagram can go stale beside a
+chapter that is right: no verdict reports it, and `prose-check` skips Mermaid fences. Closing
+that is a reading change — a unit's verify pass loading the diagrams that name it — and never
+a kind.
+
 ## Rejected
 
 ```meta
@@ -336,6 +352,8 @@ absent means `report`, today's behaviour, and no migration is owed.
 - The sync direction as a map under `components.schedule` in `.devbook/config.json`, or as an
   `ext.delivery-schedule.sync` key; a direction on owned chapters; a single folder-wide switch
   with no closer override.
+- A `flow` kind, whether its own unit or joined to the aggregates it walks; a `model` kind;
+  `sync` on `model.md`, `flow.md`, or their splits.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -347,6 +365,7 @@ absent means `report`, today's behaviour, and no migration is owed.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | `model.md`, `flow.md`, and their splits stay context: no converter kind, no sync unit, no `sync`. Every claim they draw belongs to an aggregate, domain service, feature, or skill chapter that has a kind. No contract, no migration. |
 | 2026-10-02 | A `requirement` at `status: deprecated` is no longer warned for having no `#### Scenario:`: it records a withdrawn promise, which has no case left to exercise. The level warning on the `tests` it names still applies. No contract, no migration: a warning narrows and no shape changes. |
 | 2026-10-01 | `sync` — `push`, `pull`, `sync`, `report`, `off` — on `domain/`, `arc42/`, and `design/` blocks says which way a sync unit and its code flow, set on a folder overview, a `context.md`, a context page, or a unit's root chapter, nearest wins, `report` by default. Refused on owned chapters and owned-only pages; a value no unit inherits is warned; a `domain-event` is warned when its `related` names no raiser. Contract 25, additive, no migration. |
 | 2026-09-28 | A change's `proposal.md` carries `approved` and `accepted` with their six fields, for the whole change: the hash covers the proposal and every delta, and `delta.mjs --apply` merges only an accepted change over its current hash, writing no rung onto the chapters it lands in and lifting one it makes stale. Approval lives in both places — chapter rungs for work outside the lane, the proposal's for a change — so `domain/` keeps its rungs and no migration is owed. Contract 24, additive. |

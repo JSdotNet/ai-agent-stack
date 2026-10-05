@@ -20,7 +20,8 @@
 //                 plugin's alone), and a role plugin's agent carries no
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
 //                 Holds No Flow Control")
-//   hooks         hooks/hooks.json never uses type: prompt on SessionStart
+//   hooks         hooks/hooks.json never uses type: prompt on SessionStart, and Copilot's
+//                 sessionStart prompt holds the text of hooks/session-start-context.md
 //   rules         every .agents/rules/<topic>.md has a wrapper per host, the wrappers'
 //                 globs and description are derived from it, and neither wrapper has
 //                 grown a rule of its own (see the decision "One Rule, One Wrapper Per
@@ -272,6 +273,20 @@ for (const folder of folders) {
             if (hook.type === "prompt") error(`${folder}/hooks/hooks.json: SessionStart type: prompt fails silently in Claude Code; author it as a command hook`);
         }
     }
+}
+
+// The session-start text is hand-authored twice: Copilot's sessionStart prompt and the file
+// Claude's command hook prints. Routing changed in one and not the other routes each host
+// differently, so the two must hold the same text.
+for (const folder of folders) {
+    const contextPath = path.join(PLUGINS, folder, "hooks", "session-start-context.md");
+    const copilotPath = path.join(PLUGINS, folder, "hooks.json");
+    if (!(await exists(contextPath)) || !(await exists(copilotPath))) continue;
+    const doc = await json(copilotPath);
+    const prompts = ((doc.hooks ?? doc).sessionStart ?? []).filter((h) => h.type === "prompt").map((h) => h.prompt);
+    const text = (await readFile(contextPath, "utf8")).trim();
+    if (prompts.length !== 1) error(`${folder}/hooks.json: one sessionStart prompt hook twins hooks/session-start-context.md; found ${prompts.length}`);
+    else if (prompts[0].trim() !== text) error(`${folder}: hooks.json's sessionStart prompt differs from hooks/session-start-context.md; change both twins together`);
 }
 
 // ── rules ───────────────────────────────────────────────────────────────────

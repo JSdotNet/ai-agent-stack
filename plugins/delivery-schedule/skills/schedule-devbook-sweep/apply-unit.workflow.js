@@ -214,7 +214,7 @@ log(`Brief: ${brief.category}, ${brief.chapters.length} chapter(s).`)
 // ---------------------------------------------------------------------------
 phase('Resolve')
 
-const CHANGE_KIND = brief.category === 'defect' ? 'bug-fix' : 'new-functionality'
+const CHANGE_KIND = brief.category === 'defect' ? 'defect' : 'feature'
 
 const resolved = await workflow({ scriptPath: args.resolver }, {
   worktree: wt,

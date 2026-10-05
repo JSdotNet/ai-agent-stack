@@ -12,6 +12,10 @@ Open the reply with `delivery-schedule@<version>`, `version` read from `../../.c
 Scan a .NET solution for outdated NuGet packages, apply safe updates,
 verify the build and tests still pass, then open a pull request with the changes.
 
+This is the unattended form of `flow-code`'s `dependency` kind in `delivery`: a move a person
+drives — a major bump, a framework upgrade, one package on request — runs through `flow-code`,
+whose gate a scheduled run cannot pass.
+
 ## Inputs
 
 - Update strategy: `minor-and-patch` (default, safe) or `major` (includes breaking changes; requires confirmation).
@@ -146,7 +150,7 @@ the source of truth.
 ## Notes
 
 - Major version bumps are opt-in: run by hand, confirm with the person first; unattended,
-  they are listed and left out.
+  they are listed and left out, each one a `flow-code` run of the `dependency` kind.
 - Packages that break tests are skipped and flagged, not force-updated.
 - Run this skill weekly to keep dependency debt low.
 - The Aspire phase is skipped automatically when no `.AppHost` project is present.

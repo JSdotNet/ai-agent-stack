@@ -31,7 +31,12 @@ const SUPPORTED_PROTOCOLS = ["2025-06-18", "2025-03-26", "2024-11-05"];
 const VALID_STATUSES = ["pending", "in_progress", "done", "blocked", "skipped", "cancelled"];
 const VALID_SCENARIO_STATUSES = ["pass", "fail", "flaky"];
 const VALID_FINDING_LEVELS = ["error", "critical", "warning", "info"];
-const VALID_CHANGE_KINDS = ["new-functionality", "bug-fix", "dependency-update", "none"];
+// The change kinds flow-code derives in Scope. The four before them are the 1.13.0 kinds, kept
+// so a caller or a run file from before the per-phase flows still validates.
+const VALID_CHANGE_KINDS = [
+    "feature", "create", "refactor", "defect", "config", "dependency", "project",
+    "new-functionality", "bug-fix", "dependency-update", "none",
+];
 const VALID_APPROVAL_STATES = ["pending", "approved", "rejected"];
 const VALID_PROMPT_KINDS = ["initial", "follow-up"];
 
@@ -263,7 +268,7 @@ const tools = [
                 },
                 workItem: {
                     type: "object",
-                    description: "Originating work item — a GitHub issue, a Jira ticket, a planning chapter. Any of url, number, title, repo. When omitted, a Work Item Update stage is hidden from the report as not relevant.",
+                    description: "Originating work item — a GitHub issue, a Jira ticket, a planning chapter. Any of url, number, title, repo. When omitted and runContext.origins is empty, a Report Back stage that never ran is hidden from the report as not relevant; a 1.13.0 Work Item Update stage is treated the same way.",
                 },
                 changeKind: {
                     type: "string",

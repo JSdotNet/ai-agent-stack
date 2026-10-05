@@ -4,8 +4,8 @@ export const meta = {
   whenToUse:
     'The work script a sweep runs per resources/draft-pr-contract.md, after it has claimed the issue and provisioned a worktree. Not a standalone entrypoint: it expects args.worktree to exist and args.issue to be claimed.',
   phases: [
-    { title: 'Scope Discovery', detail: 'read-only sweep for impacted paths and governing instructions' },
-    { title: 'Implementation', detail: 'failing test first, then the change' },
+    { title: 'Scope', detail: 'read-only sweep for impacted paths and governing instructions' },
+    { title: 'Implement', detail: 'failing test first, then the change' },
     { title: 'Build & Test', detail: 'build and unit tests, with bounded repair attempts' },
     { title: 'Review', detail: 'correctness and guideline lenses, then fix confirmed blockers' },
   ],
@@ -19,7 +19,7 @@ export const meta = {
 //   branch:     branch checked out in that worktree
 //   baseBranch: branch it was cut from
 //   issue:      { repo, number, title, body, labels, url }
-//   changeKind: 'bug-fix' | 'new-functionality' | 'dependency-update' | 'none'
+//   changeKind: a flow-code kind — 'feature' | 'create' | 'refactor' | 'defect' | 'config' | 'dependency'
 //   maxRepairAttempts: integer, default 2
 // }
 
@@ -35,7 +35,7 @@ if (!args || !args.worktree || !args.issue || !args.issue.number || !args.branch
 
 const wt = args.worktree
 const issue = args.issue
-const changeKind = args.changeKind || 'new-functionality'
+const changeKind = args.changeKind || 'feature'
 const MAX_REPAIRS = Number.isInteger(args.maxRepairAttempts) ? args.maxRepairAttempts : 2
 
 // Every agent runs in the session's working directory, not the worktree. This preamble is
@@ -196,9 +196,9 @@ const REVIEW_SCHEMA = {
 }
 
 // ---------------------------------------------------------------------------
-// Phase 1 — Scope Discovery (read-only)
+// Phase 1 — Scope (read-only)
 // ---------------------------------------------------------------------------
-phase('Scope Discovery')
+phase('Scope')
 
 const scope = await agent(
   `${WORKTREE_RULE}
@@ -225,18 +225,18 @@ absent acceptance criteria, or a one-sentence issue does NOT escalate — derive
 assumption instead.
 
 Report the paths and the conclusion, not file contents.`,
-  { label: `scope:#${issue.number}`, phase: 'Scope Discovery', schema: SCOPE_SCHEMA },
+  { label: `scope:#${issue.number}`, phase: 'Scope', schema: SCOPE_SCHEMA },
 )
 
 if (!scope) {
-  return { outcome: 'failed', stage: 'Scope Discovery', reason: 'Scope discovery agent returned no result.' }
+  return { outcome: 'failed', stage: 'Scope', reason: 'Scope discovery agent returned no result.' }
 }
 
 if (scope.escalate && scope.escalate.needed) {
   log(`Escalating #${issue.number}: ${scope.escalate.reason || 'decision not owned by this run'}`)
   return {
     outcome: 'escalated',
-    stage: 'Scope Discovery',
+    stage: 'Scope',
     routeTo: scope.escalate.routeTo || 'flow-spec',
     reason: scope.escalate.reason,
     scope,
@@ -265,9 +265,9 @@ ${scope.acceptanceCriteria.map((c, i) => `${i + 1}. ${c}`).join('\n')}
 `.trim()
 
 // ---------------------------------------------------------------------------
-// Phase 2 — Implementation (test first)
+// Phase 2 — Implement (test first)
 // ---------------------------------------------------------------------------
-phase('Implementation')
+phase('Implement')
 
 const impl = await agent(
   `${WORKTREE_RULE}
@@ -300,13 +300,13 @@ needs a human to validate it. Report what is true, not what would be convenient:
 - touchesRuntimeSurface: true when the change alters something a unit test cannot prove —
   rendered UI, a public API or event contract, a data migration, deployment or runtime
   configuration, or an external integration. When true, say what a human would need to look at.`,
-  { label: `implement:#${issue.number}`, phase: 'Implementation', schema: IMPL_SCHEMA },
+  { label: `implement:#${issue.number}`, phase: 'Implement', schema: IMPL_SCHEMA },
 )
 
 if (!impl || impl.blocked) {
   return {
     outcome: 'blocked',
-    stage: 'Implementation',
+    stage: 'Implement',
     reason: (impl && impl.blockedReason) || 'Implementation agent returned no result.',
     scope,
     implementation: impl,
@@ -415,7 +415,7 @@ const LENSES = [
   {
     key: 'guidelines',
     brief:
-      'Repository fit: does the change follow the governing instructions named in scope discovery, ' +
+      'Repository fit: does the change follow the governing instructions named in scope, ' +
       'and does it read like the code around it? Look for duplicated logic that an existing helper ' +
       'already covers, naming that departs from the surrounding module, layering violations, and ' +
       'test coverage that asserts implementation detail instead of behaviour.',

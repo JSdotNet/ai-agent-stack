@@ -1,6 +1,6 @@
 ---
 name: spec
-description: 'Return an approved change''s specification unchanged — its proposal, the deltas a step delivers, its solution, and the step itself — for a run to build from, and refuse a change whose proposal is not approved or whose approval has lapsed. The provider an engine binds at its spec point as "devbook-openspec:spec". Use when: a run builds one step of a change under openspec/changes/, "what does this step have to build", "hand me the approved spec for step N". Writes nothing.'
+description: 'Return an approved change''s specification unchanged — its proposal, the deltas a step delivers, its solution, and the step itself — for a run to build from, and refuse a change whose proposal is not approved or whose approval has lapsed. The skill an engine binds as its Scope phase''s skill, "devbook-openspec:spec". Use when: a run builds one step of a change under openspec/changes/, "what does this step have to build", "hand me the approved spec for step N". Writes nothing.'
 ---
 
 # devbook-openspec spec

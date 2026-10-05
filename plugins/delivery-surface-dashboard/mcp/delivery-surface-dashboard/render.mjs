@@ -430,8 +430,11 @@ export function renderShell() {
       return -1;
     }
 
-    function isWorkItemUpdateStage(stage) {
-      return /^work item update$/i.test(String((stage && stage.name) || "").trim());
+    // Report Back is hidden when the run recorded no origin and the stage never ran: a report that
+    // lists it as "pending" implies something is owed that never existed. A 1.13.0 run names the
+    // stage Work Item Update and records its origin as workItem; both still read here.
+    function isReportBackStage(stage) {
+      return /^(report back|work item update)$/i.test(String((stage && stage.name) || "").trim());
     }
 
     function hasWorkItem(run) {
@@ -439,9 +442,18 @@ export function renderShell() {
       return Boolean(item && (item.url || item.number || item.issueNumber));
     }
 
+    function hasOrigin(run) {
+      const origins = run && run.runContext && run.runContext.origins;
+      return (Array.isArray(origins) && origins.length > 0) || hasWorkItem(run);
+    }
+
+    function stageRan(stage) {
+      return ["in_progress", "done", "blocked"].includes(stage && stage.status);
+    }
+
     function visibleStages(run) {
       return (run.stages || []).map((stage, index) => ({ stage, index }))
-        .filter(({ stage }) => !isWorkItemUpdateStage(stage) || hasWorkItem(run));
+        .filter(({ stage }) => !isReportBackStage(stage) || hasOrigin(run) || stageRan(stage));
     }
 
     function renderStageNav(run) {

@@ -38,7 +38,7 @@ another block or a repository conforms to.
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
-| `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents, the effort runners, Claude Code only | The flow-runner, when a phase's configured effort overrides its skill's own default |
+| `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
 
@@ -707,6 +707,10 @@ flowchart TD
     effort -->|no| call["agent call: the named agent or general-purpose, with the model"]
     effort -->|yes| runner["runner-effort runs the named agent's body"]
 ```
+
+A forked or delegated phase gets a brief file, never the conversation: the runner writes
+`<phase>-brief.md` into the run folder, under the surface's state directory or the host's
+scratch directory, and never into the worktree, so no brief lands in the change set.
 
 A sub-agent call can set a model but not an effort, which is why the effort runners exist.
 Each carries `effort:` and nothing else, and a phase run inside one gets the runner's tools,

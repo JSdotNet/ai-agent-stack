@@ -43,7 +43,9 @@ setting one makes the phase delegated.
 
 **A fork or a delegated phase gets a brief, never the conversation.** The flow-runner writes
 `<phase>-brief.md` into the run folder — what to read, the scope record's chapter list, and for
-a fix round the blockers — and passes its path. The skill's `## Context` contract says what it
+a fix round the blockers — and passes its path. The run folder is `runs/<runId>/` under the
+surface's `stateDir`, or the host's scratch directory with no surface bound; never the
+worktree, so no brief lands in the change set. The skill's `## Context` contract says what it
 may load; it refuses a brief that asks for more. Every sub-agent works in the owner's worktree,
 per **Sub-Agent Constraints** in `flow-execution-model.md`.
 

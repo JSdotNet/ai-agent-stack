@@ -75,7 +75,9 @@ and ignore the keys they do not recognise, which is why an asset has one authore
 ```
 
 A named persona with its own tool allowlist, as `agents/<role>.agent.md`. Copilot calls it a
-custom agent, Claude a subagent. Delegation targets live in the body prose, because only one of
+custom agent, Claude a subagent. An agent only Claude may load lives in `runners/` instead and
+is listed in the Claude manifest alone, because Copilot's manifest names agent directories and
+loads everything under `agents/`. Delegation targets live in the body prose, because only one of
 the two hosts reads a `handoffs` key.
 
 ## Skill
@@ -255,7 +257,8 @@ from what the other phases recorded.
 A phase whose configured effort overrides its skill's own default runs on Claude inside one of
 the `runner-<effort>` agents, because a sub-agent call can set a model but not an effort. The
 runner keeps the specialist's instructions and drops its tool list. Copilot has no runner and
-runs that phase on the session's effort.
+runs that phase on the session's effort. The runners carry no tool list at all, which the
+asset checker allows for the runner plugin's agents only.
 
 ## Gate
 

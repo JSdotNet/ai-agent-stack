@@ -316,8 +316,8 @@ that would otherwise follow it in a session already this full.
   with no marker is abandoned, whatever the conversation claims. See **Session Handoff**
   above.
 - **Persist the decisions that gate later phases** with `set_run_context`:
-  - `changeKind` (`new-functionality` / `bug-fix` / `dependency-update` / `none`) as soon
-    as it is known, so a resumed run selects the same QA depth.
+  - `changeKind`, the kind `flow-code`'s Scope derives, as soon as it is known, so a
+    resumed run selects the same Verify depth.
   - `approval` (`pending` / `approved` / `rejected`) at every Personal Validation decision.
 - **Never create a pull request unless the persisted `approval` is `approved`.** If the
   run state says `pending` after a resume, re-run Personal Validation — do not rely on

@@ -72,7 +72,7 @@ const JUDGEMENT_SCHEMA = {
     },
     detail: { type: 'string', description: 'The evidence for the verdict — a commit, a file, a PR, a sibling issue' },
     confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
-    changeKind: { type: 'string', enum: ['bug-fix', 'new-functionality', 'dependency-update', 'none'] },
+    changeKind: { type: 'string', enum: ['feature', 'create', 'refactor', 'defect', 'config', 'dependency', 'none'] },
     likelyPaths: {
       type: 'array',
       description: 'Paths this issue would most likely change, for the conflict scan. Best effort, not a scope decision.',

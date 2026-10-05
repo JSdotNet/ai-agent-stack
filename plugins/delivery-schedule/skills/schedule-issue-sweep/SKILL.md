@@ -192,10 +192,10 @@ at `high` confidence, and nothing lowers that.
 13. For each selected issue, in order, land it per `../../resources/draft-pr-contract.md` with
     schedule `issue-sweep`, item `<number>-<slug>`, the issue itself to claim and close, and
     failure marker `sweep-failed`. The work script is `../../scripts/resolve-issue.workflow.js`,
-    resolved to an absolute path, with `changeKind` from the triage verdict,
-    `maxRepairAttempts`, and the issue. It runs scope discovery, a failing test first and the
-    smallest change that passes it, build and unit tests with bounded repair, and two review
-    lenses with a fix pass, spending at most eleven agents.
+    resolved to an absolute path, with `changeKind` — a `flow-code` kind — from the triage verdict,
+    `maxRepairAttempts`, and the issue. It runs Scope; Implement, a failing test first and the
+    smallest change that passes it; Build & Test, the unit suite with bounded repair; and
+    Review, two lenses with a fix pass — spending at most eleven agents.
 
 ### Phase 6 — Brief
 

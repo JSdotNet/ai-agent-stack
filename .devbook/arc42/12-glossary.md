@@ -211,12 +211,12 @@ related: [".devbook/arc42/building-blocks/devbook-config.md", ".devbook/arc42/bu
 
 Owned by [devbook-config](building-blocks/devbook-config.md).
 
-Also called: bindings, extensions, policy, gates.
+Also called: bindings, phases, policy, gates, areas.
 
-One of the four top-level keys of `.devbook/config.json` that the engine owns and devbook-config
-writes. Everything else in that file is a `components.<name>` stamp belonging to the component
+One of the top-level keys of `.devbook/config.json` that the engine owns and devbook-config
+writes — the four, and the optional `areas`. Everything else in that file is a `components.<name>` stamp belonging to the component
 that materialized it. The word marks the boundary rather than the file: one file, two kinds of
-key, and nobody writes another owner's. The four keys themselves belong to
+key, and nobody writes another owner's. The keys themselves belong to
 [delivery](building-blocks/delivery.md#stack-config).
 
 ## Headless
@@ -416,18 +416,18 @@ prototyping returns a revised prototype that keeps every surviving screen id and
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#extension-point", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#phase", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
 
 Also called: implementation, binding target.
 
-Whatever a repository names to fill an extension point. A service has exactly one and a chore
-has zero or more; a provider never performs a gate on its own behalf, and a chore's provider
-never changes an outcome. The word is deliberately not *plugin*: what fills a point may be a
-plugin's skill, a repo-native skill, or nothing at all, and the point's contract is the same in
-every case.
+Whatever a repository names in a phase's entry: the `skill` it follows, the `agent` that runs
+it, or a chore in its `before` or `after`. A provider never performs a gate on its own behalf,
+and a chore's provider never changes an outcome. The word is deliberately not *plugin*: what
+fills a phase may be a plugin's skill, a repo-native skill, or nothing at all, and the phase's
+contract is the same in every case.
 
 ## Reconcile
 

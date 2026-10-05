@@ -10,12 +10,12 @@ that it can be moved forward in one run, that its installation can be diagnosed 
 and that every answer it gives about the stack names
 the file it came from.
 
-Inside the block: the four engine-owned keys of the stack config, the read-only report behind
+Inside the block: the engine-owned keys of the stack config, the read-only report behind
 every fact, the scope verdict that decides what an update touches, and the drift report against
 the adoption record.
 
 Outside it: every `components.<name>` stamp, which belongs to that component's own `init` and
-`update`; the schema of the four keys, which is [delivery](delivery.md)'s; and writing a chapter,
+`update`; the schema of the engine keys, which is [delivery](delivery.md)'s; and writing a chapter,
 which is a flow's. This block names every plugin in the marketplace and declares none.
 
 ## Interfaces
@@ -37,15 +37,15 @@ the one script all six read through. None of them writes a key another component
 | `scripts/report.mjs` | script, the read-only report | The six skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
 | `resources/setup-report.md` | template, the setup report | `init` and `update` at their close; one shape for both, so a run compares against the last one |
 | The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
-| The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` |
+| The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md` |
 
 ### init
 
 ```meta
 ```
 
-Write a repository's four engine-owned keys for the first time — which provider fills each
-point, which plugin fills each role, which tracker, which policy switches, which gates — then
+Write a repository's engine-owned keys for the first time — which tracker, which agent runs
+each phase of each flow and on which model and effort, which policy switches, which gates — then
 invoke every component's own `init` rather than reimplementing any of them. It refuses where
 `.devbook/config.json` already exists: "already initialized, run update". The service is
 [Init Service](#init-service); the run is drawn under
@@ -57,7 +57,7 @@ the stack forward.
 It closes on the setup report `update` closes on too: what is adopted, the procedures and
 routines, every plugin's version, and what the run changed.
 
-Stop at the engine keys: four keys and no more. Every `components.<name>` stamp stays with the
+Stop at the engine keys and write nothing more. Every `components.<name>` stamp stays with the
 component that knows what it materialized, which is why each component's `init` is invoked and not
 absorbed — the boundary [Engine Configuration](#engine-configuration) holds.
 
@@ -100,13 +100,20 @@ used to ask that reads every stamp — moved here because this is the one contex
 them all, and a devbook skill never names another plugin. Hard drift fails; staleness and
 customization are reported and do not.
 
-It also resolves every provider id the effective configuration binds — read through delivery's
-`check.mjs --print`, never merged by hand — against the installed plugins' skills and, for
-`repo:`, the repository's own skill folder. The engine's checker validates a provider's shape
-and never whether it exists, so a binding to a skill that migration 015 retired would otherwise
-do nothing at every run and say so only in that run's summary. A retired id is hard drift,
-named with its successor and `devbook:update` as the fix; any other unresolved id is a warning,
-because the flow degrades past it. An unbound point is not a finding.
+It also resolves every phase's `agent` and `skill` in the effective configuration — read
+through delivery's `check.mjs --print`, never merged by hand. An agent resolves against the
+installed agents and the repository's own agent folder, and a skill against the installed
+plugins' skills and, for `repo:`, the repository's own skill folder. The engine's checker
+validates a field's shape and never whether it exists, so a skill that migration 015 retired
+would otherwise do nothing at every run and say so only in that run's summary. A retired id is
+hard drift, named with its successor and `devbook:update` as the fix. Any other unresolved id
+is a warning, because the flow degrades past it, and so are an agent id in a `skill` field and
+an `agent` naming a plugin with more than one agent or none. A phase with no `agent` or `skill`
+is not a finding.
+
+It flags a `phases` map left under a retired flow, `flow-update-packages` or `flow-project`,
+and a leftover `model-selection.md` in the user's devbook config directory. Both name the skill
+that moves them: `delivery:update` for the map and `local` for the file.
 
 Where the change lane is stamped, it checks the OpenSpec CLI against `components.openspec.cli`
 and lists every open change whose proposal is still `proposed` and whose folder nobody has
@@ -140,15 +147,17 @@ is [Adoption Drift](#adoption-drift).
 ### local
 
 ```meta
-date: 2026-09-21
-related: [".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/configuration.md"]
+date: 2026-10-05
+related: [".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/08-crosscutting-concepts.md#phase"]
 ```
 
 Ask what is true of this machine and write it where the stack reads it: a
 [machine overlay](#engine-configuration) at the user layer by default, the repository layer when
-an answer is about one repository; the model-selection file the engine's `model-override` slot
-resolves to; and `AGENTS.local.md` — all under the user's devbook config directory, none in
-the clone. Every question is optional and the default is nothing. A grill skill of the
+an answer is about one repository, and `AGENTS.local.md` — all under the user's devbook config
+directory, none in the clone. For each phase it asks which agent, model, and effort this person
+wants, and writes the answers into the overlay's `phases` map, where they win field by field
+over the team's defaults. An existing `model-selection.md` is converted into those entries and
+retired. Every question is optional and the default is nothing. A grill skill of the
 person's own is one of them: `bindings["openspec.grill"]` in an overlay wins over the
 repository's, and `null` there skips grilling on this machine.
 
@@ -163,7 +172,7 @@ says when no user layer exists.
 related: [".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-Two aggregates and four services: what the report reads, what the four keys are, and where the
+Two aggregates and four services: what the report reads, what the engine keys are, and where the
 line runs between what this block writes and what it only looks at.
 
 ### Model
@@ -200,9 +209,10 @@ classDiagram
     }
     class EngineConfiguration {
         +bindings
-        +extensions
+        +phases
         +policy
         +gates
+        +areas
     }
     class MachineOverlay {
         +scope: user | repository
@@ -237,8 +247,8 @@ classDiagram
   not there" rather than "there is nothing".
 - **`PluginRow` names every plugin and depends on none.** A plugin it cannot find becomes a row
   reading `not installed` — the same degrade-rather-than-fail shape the engine uses for an
-  unbound role, applied to a report.
-- **`EngineConfiguration` conforms to a schema this block does not own.** The four field names
+  unresolved agent, applied to a report.
+- **`EngineConfiguration` conforms to a schema this block does not own.** The field names
   and their meanings are [delivery](delivery.md)'s; what this block owns is being the only
   writer of them.
 - **Nothing in this model reads a devbook chapter.** It reads which folders exist and in which
@@ -296,9 +306,10 @@ The parts it owns:
 related: [".devbook/arc42/building-blocks/delivery.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/12-glossary.md#engine-key"]
 ```
 
-The four keys this block writes into `.devbook/config.json` — `bindings`, `extensions`,
-`policy`, `gates`, each an [engine key](../12-glossary.md#engine-key) — and nothing else in that
-file. The schema is [delivery](delivery.md#stack-config)'s and this block conforms to it; what
+The keys this block writes into `.devbook/config.json` — `bindings`, `phases`, `policy`,
+`gates`, and the optional `areas`, each an [engine key](../12-glossary.md#engine-key) — and
+nothing else in that file. `phases` holds one complete map per flow, and a phase's model and
+effort are legal in it as the team's defaults. The schema is [delivery](delivery.md#stack-config)'s and this block conforms to it; what
 this block owns is the writing.
 
 The boundary is by key and it is absolute. A `components.<name>` stamp is written by that
@@ -307,11 +318,12 @@ is also why `devbook:init` and `devbook:update` did not move here.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| Only the four engine keys are written here | `init()`, `update()` | untested |
+| Only the engine keys are written here | `init()`, `update()` | untested |
 | No component's stamp is ever written or dropped by this block | `init()`, `update()`, `doctor()` | untested |
 | The result validates against the engine's schema, which rejects an unknown key | validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Init runs before any component initializes itself, and hands each component its own `init` | `init()` | untested |
-| Model choice is never written: it is personal, so there is no repository-level override | `init()` | untested |
+| A model or an effort `init` or `update` writes is a team default in the committed file; a person's own choice goes into an overlay, which only `local` writes | `init()`, `update()`, `local()` | untested |
+| `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | validation | untested |
 
 The value it holds:
 
@@ -321,7 +333,8 @@ The value it holds:
   devbook config directory and never in a clone, so a fresh worktree runs with the same
   settings as the last. Each may add a gate and may never remove one — the same asymmetry the
   engine holds for configuration, applied one layer down, at every layer — and none may carry
-  the `id` that found it. Every layer is absent by default, and none is private: nothing secret
+  the `id` that found it. Its `phases` entries name only what they change and win field by
+  field, so a model or an effort set here overrides the team's default. Every layer is absent by default, and none is private: nothing secret
   goes in either. An overlay may carry `ext.<plugin>.<key>`, a plugin's own machine-scope
   state, which the engine merges and never reads; the committed file may not. `local` writes an
   overlay for the person running it; a plugin writes its own `ext` namespace there and nothing
@@ -333,19 +346,19 @@ The value it holds:
 related: [".devbook/arc42/12-glossary.md#engine-key"]
 ```
 
-Writes a repository's four engine keys for the first time, then invokes each component's own
+Writes a repository's engine keys for the first time, then invokes each component's own
 `init` rather than reimplementing any of them. The `init` skill is its entry, and refuses a
 repository whose config already exists.
 
-Invocation semantics: command-invoked, and it is a conversation about intent — which roles,
-which tracker, which providers, which gates. That is why it stays separate from
+Invocation semantics: command-invoked, and it is a conversation about intent — which tracker,
+which agent runs each phase and how, which gates. That is why it stays separate from
 [Update Service](#update-service): the two answer *what should this repository use?* and *is
 what it uses current?*, and merging them would put an interview in front of an operation people
 run to change nothing.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
-| It writes the four engine keys and invokes each component's own `init`, reimplementing none | `init` | untested |
+| It writes the engine keys and invokes each component's own `init`, reimplementing none | `init` | untested |
 | Command-invoked, and a conversation about intent — which is why it stays apart from `update` | `init` | untested |
 
 ### Update Service
@@ -426,7 +439,7 @@ Two flows: a repository being set up once, and the whole stack being moved forwa
 ```
 
 Init asks which installed components the repository adopts, writes `id` and — only when the
-engine is among them — the four engine keys, and then gets out of the way. Everything that
+engine is among them — the engine keys, and then gets out of the way. Everything that
 materializes anything is invoked, never reimplemented.
 
 ```mermaid
@@ -438,8 +451,8 @@ flowchart TD
     laneAsk --> delivery{"delivery among them?"}
     lane -->|no| delivery
     delivery -->|no| idOnly["Write id alone. Nothing here reads an engine key"]
-    delivery -->|yes| intent["Ask about intent: roles, tracker, providers, policy, gates"]
-    intent --> keys["Write id, bindings, extensions, policy, gates"]
+    delivery -->|yes| intent["Ask about intent: tracker, each phase's agent, model, and effort, policy, gates"]
+    intent --> keys["Write id, bindings, phases, policy, gates"]
     keys --> validate{"Validates against the engine's schema?"}
     validate -->|"unknown key"| reject["Reject. A typo is an error, never a silently absent setting"]
     validate -->|clean| fanout["Invoke each adopted component's own init"]
@@ -465,7 +478,7 @@ flowchart TD
 - **Nothing is set up that this machine has not installed.** Installing a plugin is the user's
   act; a stamp written for one the machine lacks is `blocked` on the very next update.
 - **The engine keys exist only for the engine.** They are `delivery.*` settings, so a repository
-  adopting devbook without `delivery` is asked nothing about roles, points, policy, or gates.
+  adopting devbook without `delivery` is asked nothing about phases, policy, or gates.
   `bindings["openspec.grill"]` is the one exception: the change lane reads it, not the engine.
 - **The fan-out is a delegation, always.** A component's own `init` and `update` are the only things that
   know what that component materialized, which is why nothing here writes a stamp.
@@ -524,7 +537,7 @@ included. That is the whole shape of it.
 
 | Depends on | Pattern | Mechanism | Contract | Why |
 | --- | --- | --- | --- | --- |
-| [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `extensions`, `policy`, `gates`; validates with the engine's own checker, and `doctor` reads the effective configuration through its `--print` | `resources/config.schema.json` | The four keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
+| [delivery](delivery.md#dependencies) | Conformist, and the only writer | Writes `bindings`, `phases`, `policy`, `gates`, and `areas`; validates with the engine's own checker, and `doctor` reads the effective configuration through its `--print` | `resources/config.schema.json` | The engine keys are the engine's schema and this block's to write. It conforms to a shape it does not own. |
 | [devbook](devbook.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/`, invokes `devbook:init` during init and `devbook:update` during update, and runs its migrations with `--check` from `doctor` | The folder layout, the two skill names, and `migrate.mjs --check` | It is named for the folder it writes into, not for a plugin it needs. One it names but cannot find is reported as not installed. |
 | [devbook-derived](devbook-derived.md#dependencies), [delivery-schedule](delivery-schedule.md#dependencies) | Conformist, read-only | Reads their stamps and invokes their `init` or `update` during a fan-out | The stamp shape and each component's two skill names | Every component's stamp stays with the component. This block decides *whether* one runs and never what it does. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Conformist, read-only | Reads its stamp, invokes its `init` or `update` during a fan-out, and writes the provider ids it exposes into the engine keys | Its stamp, its two skill names, and the ids `devbook-openspec:spec` and `devbook-openspec:tracker` | The lane's questions are asked here because the bindings they answer are engine keys; everything OpenSpec materializes is the bridge's. |
@@ -547,7 +560,7 @@ included. That is the whole shape of it.
 
 **Naming every plugin and depending on none is the position, and it is deliberate.** A plugin it
 cannot find is reported as `not installed` — the same degrade-rather-than-fail shape the engine
-uses for an unbound role — which is what keeps this block outside the layer order rather than
+uses for an unresolved agent — which is what keeps this block outside the layer order rather than
 under it.
 
 **The host-path row is the one divergence, and it is recorded rather than hidden.** This is the
@@ -559,5 +572,5 @@ has no member for *where this host keeps its plugins*.
 while the catalog half still answers. The report says which files it read and which were absent,
 which is what keeps an empty table legible rather than misleading.
 
-**It writes four keys and calls other people's `init` and `update`.** Everything else it does, it
+**It writes the engine keys and calls other people's `init` and `update`.** Everything else it does, it
 reads.

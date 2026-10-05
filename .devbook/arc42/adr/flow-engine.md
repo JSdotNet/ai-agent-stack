@@ -1,141 +1,159 @@
 # Flow Engine
 
 ```meta
-date: 2026-09-30
-status: proposed
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
+date: 2026-10-05
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
 ```
 
-`delivery` is a flow engine: four flows named for what changes — `flow-code`, `flow-spec`,
-`flow-update-packages`, `flow-project` — over a closed set of eleven extension points, seven
-services and four chores, that a repository fills and never extends. Everything a flow talks to
-outside the engine is a binding resolved at run time — a tracker, a role, an MCP server, a
-surface — never a dependency, and never named by its provider inside a skill. The runner
-prepends Update Base to every run, holds every gate, and commits at the handback. `verify` is
-the spec check after the pull request; `validate` is the build and the suites.
-
-## Proposed
-
-```meta
-```
-
-**Per-Phase Delivery Config, drafted 2026-09-30 and not yet decided.** It makes the phase the
-unit of configuration instead of the extension point. The configuration half (the `phases`
-map, and model and effort in the committed file) is proposed in
-[Configuration](configuration.md#proposed). It ships in one minor release with its migration,
-per [Releases](releases.md).
-
-- **Two flows.** `flow-update-packages` and `flow-project` fold into `flow-code` as its
-  `dependency` and `project` kinds. Their own stages become the work `implementation` does for
-  that kind. `flow-code` keeps one tier for every kind, so a `config` change also gets review
-  and Build & Test, and a kind sets only how deep Verify goes. `flow-spec` keeps its own
-  shorter tier.
-- **Stable phase ids.** `flow-code` runs `update-base`, `scope-discovery`, `spec-intake`,
-  `plan` (a `create` only), `implementation`, `review`, `build-test`, `verify`,
-  `spec-check`, `personal-validation`, `create-pr`, `report-back`, and `summary`. Refactor
-  Planning moves into `spec-intake`. Reproduction & Root Cause becomes implementation's first
-  seam: the failing test that reproduces the defect.
-- **Renames.** Validation becomes `verify`, which matches Claude Code's `/verify`. The spec
-  check, today's `verify` point, becomes `spec-check`. Work Item Update becomes `report-back`.
-- **Spec Check before the gate.** It moves ahead of Personal Validation, so the approval
-  sees the drift. The bound skill decides whether the phase only reports or also updates. An
-  updating skill touches only `code-ahead` rows in scope, never sets `approved`, and its
-  edits are part of what the person approves.
-- **A `review` phase after implementation.** One reviewer in a fresh context checks the
-  repository's own rules first, then a code-smell baseline, then correctness. Every finding
-  cites a rule or a failure scenario. The reviewer never edits: blockers go back to
-  implementation within `policy.review.retryBudget`, and what is left reaches Personal
-  Validation as open.
-- **Implementation by area.** A top-level `areas` key maps path globs to areas. Implementation
-  runs once per area that has work, in `implementation.order`, each as a forked
-  `phase-implement` with its own brief and `## Context` contract. It drives tests first at the
-  seams `spec-intake` recorded, and stops with `revise: spec-intake` when the spec is wrong
-  instead of redesigning inline.
-- **Report Back by origin.** A run records every work item it started from in `origins`.
-  `report-back.targets` sends the result to `origin`, to `linked` items the change set names,
-  or to a `plugin:skill` destination. `bindings["delivery.tracker"]` stays.
-- **Effort runners.** A sub-agent call can set a model but not an effort, so delivery ships
-  `runner-low` through `runner-max`. A phase that sets an effort runs its agent's body inside
-  one of them, with the runner's tools.
-- **Personal Validation stays fixed.** It refuses every field and always runs inline with
-  the runner.
-
-This retires the closed point set. The phase list replaces it and is just as closed: a
-repository still writes a repo-native `flow-*` skill for another shape, and that skill declares
-its own phase ids. Open before deciding: whether Copilot loads an agent that carries `effort:`,
-the loss of a specialist's tool list inside an effort runner, whether review splits into
-independent reviewers later, and whether the old keys stay as aliases (proposed: no).
+`delivery` is a flow engine: two flows named for what changes — `flow-code` for every change to
+a repository's code, `flow-spec` for a devbook chapter — over a closed list of phases with
+stable ids, and the phase is the unit a repository configures. Everything a flow talks to
+outside the engine is a binding resolved at run time — a tracker, an agent, an MCP server, a
+surface — never a dependency, and never named by its provider inside a skill. The runner opens
+every run with Update Base, holds every gate, checks the run is ready before Personal
+Validation, and commits at the handback.
 
 ## Why
 
 ```meta
 ```
 
-**The point set is closed.** Configuration chooses among behaviour the engine implements. A
-stage is a prompt, not a program, so a per-repository stage DSL either drops the prose or buries
-paragraphs in JSON, and re-creates once per repository the drift that merging 27 duplicated
-skills removed. A repository that needs a different shape writes a repo-native `flow-*` skill,
-which takes precedence and still reuses the phases. A new point is added here, deliberately, or
-not at all — `verify` was added and `docs.update` removed in one change, and the count held.
-The points, the gates, the config, the host slots, and the surface capability are one contract
-file, because a run reads them all at the same moment.
+**The phase is the unit of configuration.** A phase is one skill, `phase-<id>`, and one entry
+per flow in the [`phases` map](configuration.md): which agent runs it, which skill it follows,
+on which model and at which effort. That replaces eleven extension points, seven roles, and a
+personal model-category table — three mechanisms a person had to cross-read to learn who ran a
+stage. The list is as closed as the points were: configuration chooses among phases the engine
+implements, and a repository that needs another shape writes a repo-native `flow-*` skill,
+which takes precedence, declares its own phase ids, and still reuses the phases.
 
-**A binding, not a name.** The closing phase is Work Item Update, not GitHub Issue Update:
-GitHub issues, Jira tickets, and Markdown chapters are three implementations of `find_item`,
-`read_item`, `create_item`, `comment`, `transition`, and `link_change`. The same rule reaches
-a skill's own id and its commands — the two pickup skills name the operations, and the
-pull-request lane states the `pr-lane` slot read before its first command and what unbound
-means. MCP servers bind per point in `bindings["delivery.mcp"]`, resolved from the live tool
-list at the stage that uses them, one reported once and the stage continuing without it; keyed
-by point because the set is closed and a stage name is a skill's own. Roles are seven and
-closed: `docs` joined because the documentation phase ran in nine flows with no owner a
-repository could point at.
+```mermaid
+flowchart LR
+    ub["update-base"] --> sc["scope"]
+    sc --> pl["plan, create only"]
+    sc --> im["implement"]
+    pl --> im
+    im <--> rv["review, per slice"]
+    rv --> bt["build-test"]
+    bt --> vf["verify"]
+    vf --> sk["spec-check"]
+    sk --> rd{"ready?"}
+    rd -- "not ready, budget left" --> im
+    rd -- "ready, or budget spent" --> pv["personal-validation"]
+    pv --> pr["create-pr"]
+    pr --> rb["report-back"]
+    rb --> su["summary"]
+```
+
+`flow-code` runs the phases above for every kind. `flow-spec` runs `update-base`, `scope`,
+`drafting` (qualified by folder), `check-review`, the ready check, `personal-validation`,
+`create-pr`, `report-back`, and `summary`.
+
+- **Two flows, one tier for code.** `flow-update-packages` and `flow-project` fold into
+  `flow-code` as its `dependency` and `project` kinds, beside `feature`, `create`, `refactor`,
+  `defect`, and `config`. Both already ran flow-code's closing phases; only their own stages
+  differed, and those are now the work `implement` does for that kind. A kind changes what
+  happens inside `implement` and how deep `verify` goes, never which phases run, so a `config`
+  change also gets review and Build & Test, where a broken workflow file fails. Only `plan` is
+  limited to a kind, `create`. `flow-spec` keeps its own shorter tier.
+- **`scope` merges three phases.** Scope Discovery, Specification & Architecture Intake, and
+  Context Loading all answered *what exactly are we doing, and what do we need to know*. One
+  phase derives the kind and the acceptance criteria, records the seams `implement` tests at,
+  plans a refactor's target layout, and selects the devbook chapters every later brief loads,
+  as one list. Refactor Planning moves into it, and a defect's reproduction becomes
+  implement's first seam: the failing test that reproduces it.
+- **`implement` picks its areas.** `phase-implement` decides from the seams and paths whether
+  the change needs frontend, backend, or both, and in which order: in order when one side
+  consumes the other's new contracts or they share a file, in parallel only when neither holds.
+  Each area runs as its own fork with its own context. A top-level `areas` key is an optional
+  hint for a repository whose paths are ambiguous. The spec is fixed input: a spec problem
+  returns `revise: scope` rather than a redesign inline.
+- **`review` runs in tandem with `implement`, per slice, before Build & Test.** The runner
+  alternates the two forks: a slice implemented, reviewed, its blockers fixed, then the next.
+  One reviewer in a fresh context checks the repository's own rules, then a code-smell baseline,
+  then correctness, and cites a rule or a failure scenario for every finding. It never edits;
+  blockers go back to `implement` within `policy.review.retryBudget`. Review stays its own skill
+  and its own key, so it never inherits the implementer's agent or context.
+- **Renames.** Validation becomes `verify`, matching Claude Code's `/verify`, which a phase
+  cannot call because it is user-invoked only; the phase follows the repository's own `show`
+  and `run` procedures. The spec check, the old `verify` point, becomes `spec-check`. Work Item
+  Update becomes `report-back`. Implementation becomes `implement`, matching its skill.
+- **`spec-check` before the gate.** It runs ahead of Personal Validation, so the approval sees
+  the drift. The bound skill decides whether the phase only reports or also updates. An
+  updating skill touches only `code-ahead` rows in scope, never sets `approved`, runs the
+  devbook check after it, and its edits are part of what the person approves.
+- **A ready check before the gate.** `phase-ready` reads what review, Build & Test, `verify`,
+  `spec-check`, and `scope` recorded. Not ready sends a brief of what is missing back to
+  `implement` (`drafting` in `flow-spec`) within `policy.ready.retryBudget`. When the budgets
+  are spent, the open items go to the gate, listed first: the person decides with them in
+  view, and an unattended run parks instead. It takes no configuration.
+- **Report Back by origin.** A run records every work item it started from in `origins`, each
+  with its kind — `issue`, `entry`, `annotation`, `change`, `schedule`. `report-back.targets`
+  sends the result to every `origin`, to every `linked` item the change set names, and to any
+  `plugin:skill` destination, in order; one failed target blocks the stage and names which
+  succeeded. `bindings["delivery.tracker"]` stays: it says which tooling reaches an item.
+- **Effort runners ship for Claude only.** A sub-agent call can set a model but not an effort,
+  so delivery ships `runner-low` through `runner-max`, each carrying `effort:` and nothing
+  else. A phase whose configured effort overrides its skill's own default runs the named
+  agent's body inside one of them, with the runner's tools: the specialist's tool list is
+  dropped. Copilot gets no runner and runs an effort-set phase on the session's effort, and the
+  run says so once. A specialist that needs its tool list kept declares its own effort.
+- **Personal Validation stays fixed.** It refuses every field, has no entry in any map, and
+  always runs inline with the runner.
+
+**A binding, not a name.** The closing phase is Report Back, not GitHub Issue Update: GitHub
+issues, Jira tickets, Backlog entries, and Markdown chapters are implementations of
+`find_item`, `read_item`, `create_item`, `comment`, `transition`, and `link_change`. The same
+rule reaches a skill's own id and its commands — the two pickup skills name the operations, and
+the pull-request lane states the `pr-lane` slot read before its first command and what unbound
+means. An MCP server is a phase's `mcp` field, resolved from the live tool list at the phase
+that uses it, one reported once and the phase continuing without it.
 
 **Flow control lives in one place per run.** Personal Validation's review handoff is a
 `phase-*` skill, because it is a procedure every flow runs identically and it loads late; the
 gate — approve, revise, decline — stays with the runner, because a skill that could record an
-approval is a second place. Raising a pull request is a phase and not a skill: one command over
-arguments the run computed, and the `deliver` service point is the seam a repository binds for
-a different shape. Update Base is prepended by the runner rather than named in each flow, since
-the opening phase is identical everywhere and the closing tier is not; it rebases while the
-branch is private, blocks on a conflict, never stashes, and honestly skips. With
-`policy.commit.at: gate` the handback is the commit point — one commit per validation round,
-never amended — so a reviewer reads what the user was asked to approve.
+approval is a second place. The ready check is the runner's for the same reason: it decides from
+recorded results and does no new work. Update Base is prepended by the runner rather than named
+in each flow, since the opening phase is identical everywhere; it rebases while the branch is
+private, blocks on a conflict, never stashes, and honestly skips. With `policy.commit.at: gate`
+the handback is the commit point — one commit per validation round, never amended — so a
+reviewer reads what the user was asked to approve.
 
-**The engine owns the capture contract; the repository owns the procedure.** The evidence rules
-lived in an external QA plugin, so the phase that guarantees evidence could only hope one was
-installed. `resources/capture-contract.md` holds with no QA plugin bound, and an unavailable
-capture marks the stage `blocked`. Capture is not an extension point — the guardrail is as
-strong either way and adding a point later is easy. How one product's application comes up is
-prose the repository edits: a `run` recipe at `.claude/skills/run-<name>/SKILL.md` and a `capture`
-skill under `.agents/skills/`.
+**The engine owns the capture contract; the repository owns the procedure.**
+`resources/capture-contract.md` holds with no QA plugin bound, and an unavailable capture marks
+the stage `blocked`. How one product's application comes up is prose the repository edits: a
+`run` recipe at `.claude/skills/run-<name>/SKILL.md` and a `capture` skill under
+`.agents/skills/`.
 
-**Four flows, named for what changes.** Sixteen names drew lines the bodies did not: the three
-`create-*` flows were `flow-feature` with a stage added, the five folder flows shared four
-stages line for line, and each escalated to the other when Scope Discovery found the request was
-"really" another kind. The kind is settled inside the flow; the folder still picks the role and
-the role the model. There is no fallback because nothing is left to fall through, and the folder
-flows restate none of devbook's rules — they load the repository's own instruction files.
-
-**Verification, not Documentation Update.** Build & Test, QA, and the point behind them answer
-*does it run*; nothing answered *is it what we agreed*. `verify` is that check, one verdict per
-item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — after the pull request,
-report-only, so a `spec-ahead` row is new work and never a loop back into implementation. It
-replaces the phase that asked the runner to judge staleness with no evidence and then commit onto
-a branch a reviewer was reading. The word follows OpenSpec's `verify-change`, which devbook's
-own audit already used.
+**Flows named for what changes.** Sixteen names drew lines the bodies did not, and four still
+did: the dependency and project flows were flow-code with different work inside one phase. The
+kind is settled inside the flow by `scope`; the folder still picks the drafting agent in
+`flow-spec`. There is no fallback because nothing is left to fall through, and `flow-spec`
+restates none of devbook's rules — it loads the repository's own instruction files.
 
 ## Rejected
 
 ```meta
 ```
 
-- A per-repository stage definition in config, and an open point set.
-- Recording `gh` as the lane's assumed provider, or `capture` as a twelfth point.
+- A per-repository stage definition in config, and an open phase list: a stage is a prompt,
+  not a program, and a stage DSL either drops the prose or buries paragraphs in JSON.
+- Keeping `flow-update-packages` and `flow-project` as flows: three maps and three routing
+  targets for one shape.
+- Review as a qualifier of implement (`phase-implement:review`): a qualifier inherits the
+  implementer's agent and context, exactly what a fresh review must not share.
+- Splitting review into independent standards and correctness reviewers now. Revisited after a
+  few runs, if Personal Validation keeps finding what a combined review missed.
+- `areas` and their order as required configuration: the skill sees the seams and paths, which
+  no static setting does.
+- Stopping the run when the retry budgets are spent: the gate, with the open items in view, is
+  where a person decides.
+- Calling Claude Code's `/verify` or `/code-review` from a phase: the first is user-invoked
+  only, the second spawns its own agents against the reviewer's no-recursion rule.
+- Spec Check after the pull request, report-only: the approval missed the drift, and an
+  updating skill's edits would land after the review.
+- Recording `gh` as the lane's assumed provider, or `capture` as a phase.
 - The gate as a skill; a commit per implementation pass; Update Base named per flow; merge
   instead of rebase on a private branch.
-- Verification between QA and the gate: a gate input in a phase with no way to act on it,
-  leaving the documentation refresh in place beside it.
 - A `create-pull-request` skill: one command per host, and the file that goes stale first.
 
 ## History
@@ -145,6 +163,7 @@ own audit already used.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | Per-Phase Delivery Config decided. The phase replaces the extension point as the unit of configuration; `flow-update-packages` and `flow-project` fold into `flow-code` as the `dependency` and `project` kinds; `scope` merges scope discovery, spec intake, and context loading; `review` runs in tandem with `implement` per slice, before Build & Test; `phase-implement` picks its areas and their order; Validation, the old `verify`, and Work Item Update become `verify`, `spec-check`, and `report-back`; `spec-check` runs before the gate; a ready check sends missing work back and hands what is left to the gate once the budgets are spent; Report Back goes to every origin by kind. Effort runners ship for Claude only and drop the specialist's tool list; splitting review is revisited later. Three mechanisms nobody could read in one place became one entry per phase. |
 | 2026-09-30 | A `single-branch` step is `done` once its tasks are ticked in a commit on `change/<name>`, not on a merge: its one pull request opens on the closing run, after the acceptance that required every step done, so waiting for a merge would never close the change. Acceptance on that workflow is taken in the session; the pull request's review is the last look. |
 | 2026-09-29 | The change lane in the engine: an item the tracker reports as part of a change runs `single-branch` or `proposal-first`, which names its branches and pull requests, and a proposal's status follows its pull request. A `flow.start` chore may replan and stop the run on a stale plan; a chore id may carry `--flag` arguments. No new point: the workflow is read off the tracker, and the replan is a chore. |
 | 2026-09-23 | The tracker may be a `plugin:skill` provider implementing `read_item`, `update_item`, and `comment`; a step's pull request is its state; a `spec` provider may return an already-approved specification. No new point: both fill a binding and a service that already exist. |

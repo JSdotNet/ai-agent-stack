@@ -18,11 +18,12 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill"]
 date: 2026-09-02
 ```
 
-Task categories route to a `flow-<category>` skill that runs the category end to end.
+A change routes to the flow named for what it changes, which runs it end to end.
 
-- **Used for** — every category of change to a repository that has the engine enabled:
-  `delivery` ships four flows — the code, the five devbook folders, the dependencies, the
-  project — so an edit to `.devbook/` routes through `flow-spec` and a code change through `flow-code`.
+- **Used for** — every change to a repository that has the engine enabled: `delivery` ships two
+  flows, `flow-code` for the code, a dependency move and a new project included, and `flow-spec`
+  for the five devbook folders. An edit to `.devbook/` routes through `flow-spec` and a code
+  change through `flow-code`.
   `.claude/settings.json` enables five plugins for every session here — `devbook`,
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
   `.devbook/config.json` record what they materialized: `devbook` 1.9.0 over `arc42`, `tech`,
@@ -32,20 +33,21 @@ Task categories route to a `flow-<category>` skill that runs the category end to
   with no application to run has none of its own. A surface is enabled per person too: a run reports into
   every one bound — `delivery-surface-dashboard` and `delivery-surface-backlog` where they were
   enabled, `delivery-surface-canvas` being a Copilot canvas this marketplace does not offer — and
-  resolves its points from `.devbook/config.json`: the GitHub tracker, `devbook:validate` at
-  session start, `devbook:verify-change` at `verify`, `devbook:update` at `flow.end`, an
-  approval gate before `deliver`, and every role and MCP point bound to `null` on purpose. `repo-instructions`
-  resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file, and
-  every category takes its default model. `stage-delegation` and `surface` still
-  answer, being read from the live session rather than bound.
+  resolves its phases from `.devbook/config.json`: the GitHub tracker, `devbook:validate` before
+  `update-base`, `devbook:verify-change` as the skill of `spec-check`, `devbook:update` after
+  `summary`, and an approval gate before `create-pr`. No phase names an agent, a model, or an
+  MCP server, so every phase runs inline on the session's model. `repo-instructions`
+  resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file.
+  `stage-delegation` and `surface` still answer, being read from the live session rather than
+  bound.
 - **Adopted by** — nobody yet. Every change to this repository so far was carried by hand under
   `CLAUDE.md`, including the ones that built the flows.
-- **Evidence** — none yet. Every stage now names the role or service it delegates to rather
-  than a plugin, so nothing dangles and nothing resolves either: the seven specialists that
-  answered `spec`, `implement`, `validate`, `app.start`, `qa.run`, and five roles
+- **Evidence** — none yet. A specialist is the agent a phase's entry names in the config, never
+  a plugin named in a skill, so nothing dangles and nothing resolves either: the seven
+  specialists that once ran `scope`, `implement`, `verify`, and the drafting of each folder
   [left the marketplace](../arc42/adr/plugin-boundaries.md).
-  A flow run here therefore runs those stages unbound unless the specialist marketplace is
-  installed too. What is untested is the routing itself. Promote to `adopted` once a change
+  A flow run here therefore runs every phase inline unless the specialist marketplace is
+  installed and a phase names one of its agents. What is untested is the routing itself. Promote to `adopted` once a change
   here has been carried by a flow end to end, reporting into one of those surfaces.
 - **Limits** — a session loads the released `jsdotnet-devbook` marketplace from its GitHub
   clone, so a flow changed on a branch is not the one that runs here until it is released or

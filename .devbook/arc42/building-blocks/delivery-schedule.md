@@ -201,7 +201,7 @@ different windows, stated once in the plugin's change window contract.
 ### schedule-package-update
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-update-packages"]
+related: [".devbook/arc42/building-blocks/delivery.md#flow-code"]
 ```
 
 Update what is outdated, verify the build, and open a pull request. The shipped trigger restricts
@@ -736,7 +736,7 @@ names a host capability as its subject. The catalog itself stays host-neutral da
 scheduler resolution knows a tool answered — see
 [the plugin boundaries record](../adr/plugin-boundaries.md).
 
-**This block owns no flow, holds no gate, and adds no extension point.** That is what makes it
+**This block owns no flow, holds no gate, and adds no phase.** That is what makes it
 an extension rather than a second engine: everything it runs, the engine already had.
 
 **The line between committed and personal is the one to hold.** The selection and the cadence

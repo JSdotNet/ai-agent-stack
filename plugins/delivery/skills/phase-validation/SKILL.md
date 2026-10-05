@@ -27,8 +27,8 @@ summary. Delegated, the owner session pays for the QA *result* instead of the QA
 
 - **Invoke the `qa.run` provider with a single `Agent` call** in the **same worktree** (never
   `isolation: "worktree"` — an isolated checkout cannot see the change set under test or
-  reach the running application), using the model resolved for this phase's category per
-  `resources/flow-model-selection.md`.
+  reach the running application), using the model resolved for this phase per
+  `resources/phase-resolution.md`.
 - **Keep the runtime monitor a separate background agent** — the log-and-trace watcher the
   `qa.run` provider supplies alongside its scenario driver. Its own context window is the
   point:

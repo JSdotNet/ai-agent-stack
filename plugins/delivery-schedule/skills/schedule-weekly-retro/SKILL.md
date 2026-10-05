@@ -61,8 +61,8 @@ week's sessions get further.
 
 ### Phase 2 — Resolve the Reviewer
 
-3. Read the personal file the `model-override` slot resolves to, per *Personal Global
-   Override File* in `../../../delivery/resources/flow-model-selection.md`, and take its
+3. Read the personal file the `model-override` slot resolves to — **Host Slots** in
+   `../../../delivery/resources/engine-contract.md` — and take its
    `Retrospective` row. No file, or no row: `opus`. Say which, and that it came from there.
 
 ### Phase 3 — Gather

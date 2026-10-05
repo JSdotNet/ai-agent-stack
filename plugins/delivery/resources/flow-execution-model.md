@@ -10,21 +10,20 @@ Read this file once, at the start of a run.
 
 ## Code-Modifying Flow Context
 
-- `flow-code`, `flow-update-packages`, and `flow-project` are **implementation-focused**
-  flows.
-- Each of these skills **owns establishing its own implementation context** in its first
-  stage — scope, acceptance or verification criteria, impacted code paths, and the
-  governing instructions and guidelines for the affected area.
+- `flow-code` is the **implementation-focused** flow, for every kind — including a dependency
+  move and a new repository's scaffold.
+- Its **Scope** phase establishes the implementation context — scope, acceptance or
+  verification criteria, seams, impacted code paths, the governing instructions and
+  guidelines for the affected area, and the devbook chapters every later brief loads.
 - When a specification, acceptance criteria, architecture decision, or equivalent
-  implementation note already exists, that first stage is a short intake: read it, align
-  to it, and continue. The devbook flow — `flow-spec` — remains the preferred upstream
-  source of that context when it has already run.
-- When it does not exist, the first stage **derives it from the request and the codebase**
-  and records the derived assumptions before continuing. Missing context is a reason to run
-  that stage — never a reason to stop, hand the request back, or skip the flow and
-  implement inline.
-- Ad-hoc, incremental, and one-line requests are in scope for these skills. They enter
-  through the same first stage as fully specified work.
+  implementation note already exists, Scope is a short intake: read it, align to it, and
+  continue. The devbook flow — `flow-spec` — remains the preferred upstream source of that
+  context when it has already run.
+- When it does not exist, Scope **derives it from the request and the codebase** and records
+  the derived assumptions before continuing. Missing context is a reason to run Scope — never
+  a reason to stop, hand the request back, or skip the flow and implement inline.
+- Ad-hoc, incremental, and one-line requests are in scope. They enter through the same Scope
+  phase as fully specified work.
 
 ### Escalation (the only stop conditions)
 
@@ -41,55 +40,44 @@ user to run something themselves.
 | Accepting known debt instead of fixing it | `flow-spec`, as a technical debt record |
 
 Everything else — an unwritten specification, absent acceptance criteria, a bug with no
-reproduction, a request that arrived as one sentence — is derived in the skill's first
-stage, not escalated. Adding a field, an entity, or a method inside an existing aggregate is
-ordinary implementation work: only a change to the documented model itself escalates.
+reproduction, a request that arrived as one sentence — is derived in Scope, not escalated.
+Adding a field, an entity, or a method inside an existing aggregate is ordinary
+implementation work: only a change to the documented model itself escalates. A later phase
+that hits a spec problem returns `revise: scope` rather than redesigning inline.
 
-That first stage is named **Stage 0: Scope Discovery** in every code-modifying skill, and it
-is split between a delegated search half and an inline decision half — see **Splitting Scope
-Discovery** below.
+Scope searches in a sub-agent and decides in the owner session — see **Scope Searches,
+the Runner Decides** below.
 
 ## MCP Server Strategy (Shared)
 
 This plugin ships no MCP server and requires none. A repository declares its servers in its
-own MCP configuration and binds them per extension point under `bindings["delivery.mcp"]` in
-`.devbook/config.json` — see **Bindings** in `engine-contract.md`. A
-stage uses the servers bound to the point it serves:
+own MCP configuration and names them per phase in that phase's `mcp` field — see **Phases** in
+`engine-contract.md`. A phase uses the servers its `mcp` resolves to, per
+`phase-resolution.md`, and these defaults when the field is absent:
 
-| Stage | Point |
-| --- | --- |
-| Scope Discovery; every intake, retrieval, drafting, and review stage of a documentation/config flow | `spec` |
-| Implementation, refactor, scaffolding, and configuration-writing stages | `implement` |
-| Build & Test | `validate` |
-| Validation | `app.start`, `qa.run` |
-| Create Pull Request, Work Item Update | `deliver` |
-| Verification | `verify` |
-| Update Base, Personal Validation, Summary | none |
-
-Defaults, for a point the repository leaves absent:
-
-- `implement` and `validate`: `microsoft-learn`, for targeted official Microsoft/.NET/Azure/Aspire
-  lookups tied to the stack being changed — never a broad research pass.
-- `app.start` and `qa.run`: `aspire` and `playwright`, under the required-tooling rule in
+- `phase-implement` and `phase-build-test`: `microsoft-learn`, for targeted official
+  Microsoft/.NET/Azure/Aspire lookups tied to the stack being changed — never a broad research
+  pass.
+- `phase-verify`: `aspire` and `playwright`, under the required-tooling rule in
   `flow-phases.md`; not used when the depth is startup-only or the change has no
   browser surface.
-- Every other point: none. The stage grounds itself in the repository's own instruction
+- Every other phase: none. The phase grounds itself in the repository's own instruction
   files — the `repo-instructions` slot, matching `**/*.instructions.md`, and the checked-in
-  devbook chapters and ADRs.
+  devbook chapters and ADRs. `null` binds none, overriding a default.
 
 A default is only a name until the repository declares the server behind it.
 `resources/mcp-template.json` declares all three in the `.mcp.json` shape, which Claude Code
 and the Copilot CLI both read from the repository root; `resources/mcp-vscode-template.json`
 is the same three in the `.vscode/mcp.json` shape VS Code reads. `devbook-config:init` copies
-them into a repository that has neither, and `flow-project` runs that setup; a repository that already declares
+them into a repository that has neither, and `flow-code`'s `project` kind runs that setup; a repository that already declares
 its servers keeps its own files and adds only the ids it is missing.
 
-A bound server is matched from the live tool list by pattern at the stage that uses it, since
+A bound server is matched from the live tool list by pattern at the phase that uses it, since
 a host may namespace it (`mcp__<id>__*`, or `mcp__plugin_<plugin>_<id>__*`). A server that
-does not answer is a normal outcome: the stage falls back to the repository's own instruction
+does not answer is a normal outcome: the phase falls back to the repository's own instruction
 files, records once that the server was absent, and continues. It never stops the run and
 never becomes an MCP setup task. QA's required tooling is the one place absence marks a phase
-`blocked` — still never the run. Query the servers the point names and no others.
+`blocked` — still never the run. Query the servers the phase names and no others.
 
 ## Execution Model (Shared)
 
@@ -108,65 +96,66 @@ Defines *where* a flow runs and *how* its progress is tracked. Applies to every
 
 ### Delegation Order
 
-1. **Do it inline** for short, decision-heavy steps that need the run's context.
-2. **Delegate to a sub-agent (the default for heavy work, not a suggestion).** A sub-agent
-   gets its own context but the **same worktree**, so evidence paths, the change set, and the
-   running application all stay valid for the owner session. This keeps verbose output out of
-   the flow-runner's context without breaking the run record.
-
-   Five kinds of work are delegated by default, and running them inline is a defect in the
-   run rather than a shortcut:
-   - **Build & Test** — per `skills/phase-build-test/SKILL.md`.
-   - **Validation** — per `skills/phase-validation/SKILL.md`.
-   - **Verification's reading** — the change set and its tests against the
-     specification and the chapters, per the phase in `flow-phases.md`; the verdict table
-     comes back, the reading stays out.
-   - **Scope Discovery's search half** — see **Splitting Scope Discovery** below.
+1. **The phase's resolution decides first.** Every phase runs inline, forked, or delegated
+   exactly as `phase-resolution.md` resolves it from its `phases` entry and its skill's
+   frontmatter: a configured agent, model, or effort delegates it, a `context: fork` skill
+   forks it, and otherwise it runs inline. Personal Validation and the ready check always run
+   inline. Never run a phase inline that resolved to a model or an effort other than the
+   session's — the `model` on an `Agent` call is the only place a resolved model takes
+   effect, so running it inline silently discards the choice.
+2. **Inside an inline phase, delegate heavy work to a sub-agent.** A sub-agent gets its own
+   context but the **same worktree**, so evidence paths, the change set, and the running
+   application all stay valid for the owner session. Three kinds of work leave the owner
+   session even when their phase runs inline, and running them inline is a defect in the run
+   rather than a shortcut:
+   - **Spec Check's reading**, when no skill is bound — the change set and its tests against
+     the specification and the chapters, per the phase in `flow-phases.md`; the verdict
+     table comes back, the reading stays out.
+   - **Scope's search** — see **Scope Searches, the Runner Decides** below.
    - **Broad exploration and large edits** — reading across many files to find something,
      or a refactor whose diff is larger than the reasoning about it.
 
    The test is what the step *leaves behind*: a step whose output is large and whose
    conclusion is small belongs in a sub-agent, because the owner session only needs the
-   conclusion but pays for the output on every remaining turn of the run.
-3. **Run a background sub-agent only for genuinely concurrent long-running work** — in
+   conclusion but pays for the output on every remaining turn of the run. Such a sub-agent
+   runs on the phase's resolved model.
+3. **Alternate `implement` and `review` as two forks, from the owner session.** Each fork is
+   one level deep; a forked `implement` is never relied on to fork the reviewer itself. Pass
+   each a brief file, per `phase-resolution.md`.
+4. **Run a background sub-agent only for genuinely concurrent long-running work** — in
    practice, the runtime monitor tailing Aspire logs while Playwright drives scenarios. Launch
    it with the `Agent` tool's `run_in_background`, steer it with `SendMessage`, and do not
    background work merely to save context.
-4. **Stop every background sub-agent you started, in the same phase that started it.**
+5. **Stop every background sub-agent you started, in the same phase that started it.**
    The runtime monitor is built to poll until told otherwise — its own instructions say not to stop
    monitoring — so nothing ends it on its own. Ask it for its final summary with
    `SendMessage`, then end it with `TaskStop`. A monitor left running keeps polling Aspire
    after the run has moved on, and a phase must never complete with a background agent it
    started still alive.
 
-Whichever form is used, pass the model resolved for that stage's category per
-`flow-model-selection.md` in the `Agent` call's `model`. That
-parameter is the *only* place a category model takes effect — an inline stage runs on the
-session's model no matter what the table says, so skipping delegation silently discards the
-model choice along with the context saving.
+### Scope Searches, the Runner Decides
 
-### Splitting Scope Discovery
-
-Every code-modifying skill opens with a **Scope Discovery** stage (`Stage 0`, or the
-equivalent intake stage). It does two different jobs, and only one of them belongs inline:
+Scope does two different jobs, and only one of them belongs in the owner session:
 
 | Half | Work | Where it runs |
 |---|---|---|
-| **Search** | Identify the impacted or suspected code paths and the integration points they touch; identify the governing instructions — the `repo-instructions` slot, matching `**/*.instructions.md`, guidelines and ADRs | A **read-only search sub-agent** in the same worktree |
-| **Decision** | Restate the requested behavior, derive the acceptance or verification criteria, record the derived scope and assumptions, decide whether to escalate | **Inline**, in the owner session |
+| **Search** | Identify the impacted or suspected code paths and the integration points they touch; identify the governing instructions — the `repo-instructions` slot, matching `**/*.instructions.md`, guidelines and ADRs — and the devbook chapters that name those paths or the scope's terms | `phase-scope` as a fork, or a **read-only search sub-agent** when Scope runs inline — the same worktree either way |
+| **Decision** | Accept the restated request, the kind, and the acceptance criteria; decide whether to escalate; ask the user what only they can answer | **Inline**, in the owner session |
 
-The split follows the same test as every other delegation: the search half reads widely and
-concludes briefly, while the decision half is short, judgement-heavy, and feeds every later
-stage. Run whole and inline, Scope Discovery loads the codebase into the context that then
-has to survive Implementation, QA, and the approval gate.
+The split follows the same test as every other delegation: the search reads widely and
+concludes briefly, while the decision is short, judgement-heavy, and feeds every later phase.
+Run whole and inline, Scope loads the codebase into the context that then has to survive
+implementation, QA, and the approval gate.
 
-- **Ask the search sub-agent for a findings list**, not for file contents: the paths, the
-  integration points, and the governing instructions that actually apply, each with one line
-  of why. It does not propose scope, derive criteria, or decide escalation.
-- **The flow-runner keeps the decision half**, because escalation and acceptance criteria
-  are the run's own judgement and cannot be handed to an agent that cannot ask the user.
-- **Skip the split when the search is trivially small** — a named file, a one-line change, or
-  an already-approved specification that names its own impacted paths. The sub-agent is
+- **Ask for a findings list and a draft scope record**, not for file contents: the paths, the
+  integration points, the governing instructions, and the chapter list that actually apply,
+  each with one line of why, plus the proposed kind, criteria, and seams. An escalation it
+  sees comes back as a question, never a decision.
+- **The flow-runner keeps the decision**, because escalation and acceptance are the run's own
+  judgement and cannot be handed to an agent that cannot ask the user. It writes the scope
+  record every later brief draws from.
+- **Skip the search when it is trivially small** — a named file, a one-line change, or an
+  already-approved specification that names its own impacted paths. The sub-agent is
   overhead when there is nothing to search.
 
 ### Turn Cost
@@ -334,8 +323,8 @@ that would otherwise follow it in a session already this full.
   run state says `pending` after a resume, re-run Personal Validation — do not rely on
   conversation memory of an approval.
 - **When Personal Validation rejects or requests changes**, set `approval: "rejected"` with
-  the user's wording, return to the appropriate implementation/specification stage, mark that
-  stage `in_progress`, apply the requested changes, and then repeat Build & Test,
-  Validation, and Personal Validation. Before the repeated Personal Validation handoff, reset
+  the user's wording, return to the phase the change belongs to, mark that stage
+  `in_progress`, apply the requested changes, and then repeat every phase after it through
+  the ready check and Personal Validation. Before the repeated Personal Validation handoff, reset
   `approval: "pending"` so Create Pull Request remains locked until the user approves the
   revised change set.

@@ -8,7 +8,7 @@ description: 'Run any change to a devbook folder — an arc42/ chapter, decision
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice follows
-`resources/flow-model-selection.md`. What a chapter must look like is the repository's rule,
+`resources/phase-resolution.md`. What a chapter must look like is the repository's rule,
 not this flow's: the instruction files that govern the target path and the check the
 repository ships own structure, metadata, templates, status, and every folder-specific rule.
 This flow restates none of them.
@@ -25,15 +25,15 @@ contents, and continue.
 
 ## Folder → Role
 
-The folder decides who drafts, and the role decides the model category:
+The folder decides who drafts, and its `phases` entry decides the agent, model, and effort:
 
-| Folder | Role | Model category (`flow-model-selection.md`) |
+| Folder | Role | `phases` entry |
 |---|---|---|
-| `arc42/` | `architecture` | Architecture & Design |
-| `domain/` | `domain` | Domain Design |
-| `tech/` | `architecture` | Architecture & Design |
-| `design/` | `ux` | Design Authoring |
-| `ai/` | `docs` | Documentation & Low-Complexity |
+| `arc42/` | `architecture` | `phase-drafting:arc42` |
+| `domain/` | `domain` | `phase-drafting:domain` |
+| `tech/` | `architecture` | `phase-drafting:tech` |
+| `design/` | `ux` | `phase-drafting:design` |
+| `ai/` | `docs` | `phase-drafting:ai` |
 
 A repository binds a different agent per folder through `bindings["delivery.roles"]`; a
 person picks a different model per folder through the personal override for that category.

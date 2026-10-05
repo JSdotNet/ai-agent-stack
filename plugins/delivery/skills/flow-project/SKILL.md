@@ -17,7 +17,7 @@ repository when they do not. Missing notes are a reason to run Stage 6, never a 
 stop or to scaffold outside this flow.
 
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
-follows `resources/flow-model-selection.md`.
+follows `resources/phase-resolution.md`.
 
 ## GitHub Lane
 

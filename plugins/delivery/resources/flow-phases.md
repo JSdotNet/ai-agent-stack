@@ -41,7 +41,7 @@ A kind changes what happens inside `implement` and how deep `verify` goes, never
 run. A `config` change still gets review and Build & Test, because a broken workflow file or
 script fails there.
 
-**`flow-spec`** runs the documentation tier:
+**`flow-spec`** runs its own, shorter tier:
 
 update-base → scope → drafting → check-review → ready → personal-validation → create-pr →
 report-back → summary

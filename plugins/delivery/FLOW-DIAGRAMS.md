@@ -60,7 +60,7 @@ flowchart TD
 
 ## flow-spec
 
-The documentation tier: drafting and check & review stand where `flow-code` implements, builds,
+Its own, shorter tier: drafting and check & review stand where `flow-code` implements, builds,
 verifies, and checks the spec.
 
 ```mermaid

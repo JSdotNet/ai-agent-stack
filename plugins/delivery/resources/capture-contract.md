@@ -1,6 +1,6 @@
 ---
 name: capture-contract
-description: What evidence a flow captures for the feature being built, when it is required, what shape comes back, and how the Validation phase gets it with or without a capture skill or a QA provider bound. Engine-owned; the procedure that produces it is the repository's.
+description: What evidence a flow captures for the feature being built, when it is required, what shape comes back, and how the Verify phase gets it with or without a capture skill or a QA provider bound. Engine-owned; the procedure that produces it is the repository's.
 ---
 
 # Capture Contract (Engine-Owned)
@@ -58,8 +58,9 @@ One live preflight decides it: navigate to a target page and capture one frame b
 scenarios begin. If that fails, capture is unavailable for the run.
 
 - Where capture is **required**, the phase is `blocked` — never `done`, never `skipped`.
-  Name the missing server or tool and the action that would fix it, and stop before Personal
-  Validation, the pull request, the work-item update, and the Summary.
+  Name the missing server or tool and the action that would fix it, and record it for the
+  ready check (`skills/phase-ready/SKILL.md`), which keeps it from reaching Personal
+  Validation as finished work.
 - Where it is **not required**, record the limitation in the stage output and continue.
 
 Completing a required-capture phase through a manual or narrated substitute is the one

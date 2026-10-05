@@ -97,7 +97,9 @@ Restate the request, derive the kind and the acceptance criteria, and record the
 `implement` tests at. For a refactor it plans the target layout and the references to update.
 In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
-to `flow-spec`. It implements nothing and writes no chapter.
+to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
+the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
+a folder whole or an annotation fence.
 
 ### phase-plan
 
@@ -138,8 +140,10 @@ code, never checks conformance to the spec, and never spawns agents. Its blocker
 related: [".devbook/arc42/building-blocks/delivery.md#flow"]
 ```
 
-Build every project and run the unit and end-to-end suites, failing fast on the first red
-result. It is the one full run of the suites, once every slice is reviewed clean.
+Build every project and run the unit and end-to-end suites, and return the failing targets
+with the error lines that matter. It is the one full run of the suites, once every slice is
+reviewed clean. It never fixes a failure and never continues on red: a red result is recorded,
+and the ready check sends it back to `implement`.
 
 ### phase-verify
 
@@ -182,8 +186,10 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow-runner"]
 
 Decide whether the run is ready for Personal Validation from what review, Build & Test,
 `verify`, `spec-check`, and `scope` recorded. Not ready sends a brief of what is missing back to
-`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. It does no new
-work and takes no configuration.
+`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. Once the budget
+is spent, the run reaches the gate with the open items listed first, and an unattended run
+parks instead. `code-ahead` and `unresolved` rows never send the run back, because they need a
+person. It does no new work, runs inline, and takes no configuration.
 
 ### phase-personal-validation
 

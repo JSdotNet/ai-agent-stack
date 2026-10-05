@@ -104,7 +104,7 @@ those contracts; it does not re-decide them per skill.
 9. **Run the remaining shared phases in order** for the tier, per **Phase Tiers** in
    `flow-phases.md`.
 10. **Invoke the phase skills rather than re-describing their logic.** `phase-build-test` and
-    `phase-validation` own build, test, and QA; pass the change kind so QA depth is selected
+    `phase-verify` own build, test, and QA; pass the change kind so QA depth is selected
     automatically, together with the resolved repo context. Both are **delegated by default** —
     one `Agent` call each in the same worktree, returning a summary rather than build logs or
     browser snapshots. Running them inline is the single most expensive mistake available to a
@@ -229,5 +229,6 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 - `resources/surface-contract.md`
 - `resources/phase-resolution.md`
 - `skills/phase-build-test/SKILL.md`
-- `skills/phase-validation/SKILL.md`
+- `skills/phase-verify/SKILL.md`
+- `skills/phase-ready/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`

@@ -116,13 +116,16 @@ those contracts; it does not re-decide them per skill.
    set. Every sub-agent works in this worktree, per **Sub-Agent Constraints** in
    `flow-execution-model.md`.
 9. **Run the phases in the flow's order, with its two bounded loops.**
-   - **Implement ⇄ review, per slice** (`flow-code`). Fork `phase-implement` with the slice's
-     brief, then `phase-review` over that slice's diff against the merge base, then
+   - **Implement ⇄ review, per slice** (`flow-code`). Fork `phase-implement` once with no
+     slice: it returns the slice plan in `implement.md`. Then per slice, resolved under
+     `phase-implement:<area>` — two marked `parallel-with` each other may fork together — fork
+     `phase-implement` with the slice's brief, then `phase-review` over that slice's diff
+     against the merge base, then
      `phase-implement` again with the blockers as a fix brief — until the slice is clean or
      `policy.review.retryBudget` rounds are spent, then the next slice. Both run from this
      session, one level deep; a forked `implement` is never relied on to fork the reviewer.
      Blockers still open go to the ready check. `policy.phases.review: false` runs `implement`
-     alone. A `revise: scope` from `implement` re-runs Scope rather than redesigning inline.
+     alone. A `revise: phase-scope` from `implement` re-runs Scope rather than redesigning inline.
    - **The ready check, back to implement.** Before Personal Validation, run `phase-ready`
      inline, never configured: it reads what the earlier phases recorded and does no
      new work. Not ready with `policy.ready.retryBudget` left: write a brief of exactly what

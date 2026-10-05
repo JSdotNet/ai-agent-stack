@@ -43,7 +43,7 @@ Everything else — an unwritten specification, absent acceptance criteria, a bu
 reproduction, a request that arrived as one sentence — is derived in Scope, not escalated.
 Adding a field, an entity, or a method inside an existing aggregate is ordinary
 implementation work: only a change to the documented model itself escalates. A later phase
-that hits a spec problem returns `revise: scope` rather than redesigning inline.
+that hits a spec problem returns `revise: phase-scope` rather than redesigning inline.
 
 Scope searches in a sub-agent and decides in the owner session — see **Scope Searches,
 the Runner Decides** below.

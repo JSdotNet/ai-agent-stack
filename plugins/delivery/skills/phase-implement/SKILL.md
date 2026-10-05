@@ -1,0 +1,48 @@
+---
+name: phase-implement
+description: 'Shared Implement phase for flow-code: plans the slices — a seam or an area, frontend, backend or both, in order or in parallel — then builds one slice per call, tests first at each seam scope recorded, running only compile and the touched tests, with the kind''s own procedure for a dependency move or a project scaffold. Treats the spec as fixed input and returns revise: phase-scope on a spec problem. Runs in tandem with phase-review. Invoked by the flow-runner with a brief file; never by a person.'
+context: fork
+model: opus
+effort: high
+---
+
+# Phase: Implement
+
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
+Does:
+
+- Tests first at each seam, then the code
+- Decides frontend, backend or both, and in order or in parallel
+- Carries the per-kind work: dependency moves, project bootstrap, defect reproduction
+- Runs only compile and the touched tests
+
+Doesn't:
+
+- Redesign the spec: it returns revise: scope
+- Run the full suite (build-test does)
+- Commit, or review its own work
+
+## Context
+
+Loads the brief's run folder and slice, and from `scope.md` (and `plan.md` for a `create`): the spec, criteria and seams, the impacted paths, the rule files whose `paths` match them, and the guideline ADRs and chapters it names, by id. A fix brief adds that slice's open blockers from `review.md`; a ready brief, the open items. Never loads the run transcript, any other chapter, QA evidence, or review findings outside a fix brief. Refuse a brief that asks for more.
+
+## Context: frontend
+
+On top of **Context**, for its area only: `.agents/rules/ui-components.md` and `storybook.md` where they exist, the `design/` chapters the scope names, the component library, and the backend slice's interface summary. Never backend source outside that summary, nor a `domain/` chapter.
+
+## Context: backend
+
+On top of **Context**, for its area only: the `domain/` chapters and guideline ADRs the scope names. Never a `design/` chapter, a UI rule, or the component library.
+
+## Steps
+
+1. **Plan the slices** when the brief names none, and return without building. Each seam is tagged with its area; with `areas` in the effective config, the first matching glob decides, else the rule `paths` and project names, else one area. Order: backend first when the frontend consumes a contract it builds; parallel only when the two share no file and neither needs the other's new code — one worktree. No seams recorded: name them first, per `../../resources/tdd-rules.md`, never skip. The `dependency`, `project` and `config` kinds are one unsplit slice.
+2. **Build the slice** by its kind in `../../resources/implement-kinds.md`, red → green one seam at a time per `../../resources/tdd-rules.md`.
+3. **Fast loop only.** Compile and the touched test files or projects, as often as useful. Never the full suite, never the app.
+4. **Spec is fixed.** A seam that cannot be built as specified, a criterion that contradicts another, a missing contract: stop and return `revise: phase-scope` with the reason. A new decision escalates per **Escalation** in `../../resources/flow-execution-model.md`.
+5. **Fix round.** Address only the brief's blockers or open items, each marked `fixed` or with why not.
+
+## Output
+
+Write `implement.md` in the run folder: the slice plan — id, area, seams, `after`, `parallel-with` — then per slice the tests added, files touched, inner-loop result, and for a backend slice its interface summary. Return its path, the slice done, and the next, never file contents. The flow-runner resolves `phase-implement:<area>` per slice and runs `phase-review` on it. Phase order: `../../resources/flow-phases.md`.

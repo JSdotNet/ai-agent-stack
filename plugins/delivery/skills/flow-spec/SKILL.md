@@ -16,7 +16,7 @@ Required input: the change goal. The folder, the chapters in scope, and the kind
 
 ## Phases
 
-The documentation tier, defined in `resources/flow-phases.md`; who runs each phase is resolved
+Its own, shorter tier, defined in `resources/flow-phases.md`; who runs each phase is resolved
 per `resources/phase-resolution.md`:
 
 `phase-update-base` → `phase-scope` → `phase-drafting` → `phase-check-review` → `phase-ready`,

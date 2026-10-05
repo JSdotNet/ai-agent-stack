@@ -88,7 +88,8 @@ flowchart LR
   are spent, the open items go to the gate, listed first: the person decides with them in
   view, and an unattended run parks instead. It takes no configuration.
 - **Report Back by origin.** A run records every work item it started from in `origins`, each
-  with its kind — `issue`, `entry`, `annotation`, `change`, `schedule`. `report-back.targets`
+  with its kind — `issue`, `entry`, `annotation`, `change` — and an ad-hoc request has none; an
+  unattended run parks at the gate and never reports back. `report-back.targets`
   sends the result to every `origin`, to every `linked` item the change set names, and to any
   `plugin:skill` destination, in order; one failed target blocks the stage and names which
   succeeded. `bindings["delivery.tracker"]` stays: it says which tooling reaches an item.

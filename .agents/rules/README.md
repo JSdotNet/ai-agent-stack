@@ -48,7 +48,7 @@ wrappers derive from there, per
 by name and fails when it has drifted from the plugin file; every other rule here still
 declares its own `paths`. The procedure trio — `.agents/skills/<name>.md` with a wrapper
 under `.claude/skills/` and `.github/skills/` — is checked the same way, against
-[skill-wrappers.md](../../plugins/devbook-procedures/assets/skill-wrappers.md).
+[skill-wrappers.md](../../plugins/devbook/assets/procedures/skill-wrappers.md).
 
 A shared file may point at a plugin instruction file rather than restate it, when that plugin
 file is already the one authored copy. The rule stays one hop from the wrapper either way;

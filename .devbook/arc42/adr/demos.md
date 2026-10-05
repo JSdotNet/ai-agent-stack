@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
 ```
 
 A demo is the agreed, clickable picture of what a person sees in a bounded context. It is one
@@ -124,9 +124,9 @@ system in `ab478e36`. The same release removed `show`, which no flow invoked, an
 `debug` to `diagnose` so it no longer hides Claude Code's `/debug`. The rest of this decision
 is built by the `devbook-click-demo` plan. Its folder rules have landed, and so has its
 address contract, as `devbook.demo.address@1`. The starting template has landed as a
-devbook-procedures asset, with a sample demo built on it for spec-manager and Backlog to test
-against, and devbook-procedures 1.16.0 seeds it at `.devbook/design/demo-template.html` where
-`design/` is adopted. The checker holds every demo to the HTML contract and
+`devbook` asset, with a sample demo built on it for spec-manager and Backlog to test
+against, and `devbook` seeds it at `.devbook/design/demo-template.html` where `prototype` and
+`design/` are adopted. The checker holds every demo to the HTML contract and
 resolves every `demo` address, and a demo is part of the fingerprint of the page it belongs
 to, both in contract 26. `delta.mjs` checks a demo delta with those rules and lands it by
 replacing its target whole. The `prototype` seed states the rest of this record: the question in

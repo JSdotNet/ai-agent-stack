@@ -1,7 +1,7 @@
 # 003 — `show` is removed, from 1.14.0
 
 ```meta
-appliesTo: [devbook-procedures]
+appliesTo: [procedures]
 breaking: yes
 ```
 

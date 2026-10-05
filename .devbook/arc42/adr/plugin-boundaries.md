@@ -12,9 +12,8 @@ and a lower layer never names a higher one. What the marketplace ships is the co
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
 change lane, and unattended work, an L0 plugin of guidance callers name by skill, four surfaces,
 and a guide that names every plugin and depends on none. The repository's procedures are part of
-the convention: a repository adopts them in `devbook`'s stamp the way it adopts a folder. Until
-the change that folds them in lands, `devbook-procedures` still ships them as an L1 over
-`devbook`. An extension owns procedure, never schema or state. The specialists are published
+the convention: a repository adopts them in `devbook`'s stamp the way it adopts a folder. An
+extension owns procedure, never schema or state. The specialists are published
 from another marketplace and are bound per repository, never depended on.
 
 ## Why
@@ -219,6 +218,7 @@ it, each caller cites the primary source itself or leaves the fact open.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | The fold lands: the seeds, the wrapper shape, and the demo template and sample move under `devbook`'s `assets/procedures/`, `devbook:init` and `devbook:update` adopt and reconcile the procedures, the session-start paragraph joins devbook's hook, and `devbook-procedures` leaves the marketplace. |
 | 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
 | 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |
 | 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |

@@ -23,7 +23,7 @@ date: 2026-10-05
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
-Fourteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
+Thirteen plugin folders, grouped by [layer](08-crosscutting-concepts.md#layer) — which is
 not a manifest field but what each `dependencies` array says, read as a sentence.
 
 ```mermaid
@@ -37,7 +37,6 @@ flowchart TB
 
     subgraph L1["L1 extension - one declared foundation"]
         DBD["devbook-derived 1.15.0"]
-        DPR["devbook-procedures 1.15.0"]
         DBC["devbook-collaboration 1.15.0"]
         DOS["devbook-openspec 1.15.0"]
         SCH["delivery-schedule 1.15.0"]
@@ -55,7 +54,6 @@ flowchart TB
     end
 
     DBD ==>|"devbook >=1.1.0 &lt;2.0.0"| DEV
-    DPR ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DBC ==>|"devbook >=1.0.0 &lt;2.0.0"| DEV
     DOS ==>|"devbook >=1.13.0 &lt;2.0.0"| DEV
     SCH ==>|"delivery >=1.0.0 &lt;2.0.0"| DEL
@@ -69,7 +67,7 @@ flowchart TB
 
     SCH -.->|"names prose-check as a target"| DEV
     DEL -.->|"undeclared - flow-spec, TDR 4"| DEV
-    DEL -.->|"names the skills start and capture, never the plugin"| DPR
+    DEL -.->|"names the procedures run and capture, never the plugin"| DEV
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
     DEL -.->|"flow-code's project kind runs devbook-config:init"| CFG
@@ -98,12 +96,12 @@ for every code change, works with devbook absent, so it is not an L1 extension; 
 rather than two, so it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
 
-The dashed `delivery → devbook-procedures` edge is a different kind: the engine names two
-skills, `run` and `capture`, and the paths they live at — `.claude/skills/run-<name>/SKILL.md`
+The second dashed `delivery → devbook` edge is a different kind: the engine names two
+procedures, `run` and `capture`, and the paths they live at — `.claude/skills/run-<name>/SKILL.md`
 for the recipe Claude Code's `run` follows, `.agents/skills/capture.md` — and never the plugin
 that seeds them. A repository may write both by hand and the engine is none
 the wiser; absent, a flow does without and says so. The seam is the skill name, which is why
-`devbook-procedures` can sit over `devbook` and the engine can stay capability-free — see
+the procedures can ship inside `devbook` and the engine can stay capability-free — see
 [the plugin boundaries record](adr/plugin-boundaries.md).
 
 The dashed `devbook-openspec → delivery` edge runs the same way as the procedures one: the
@@ -484,10 +482,10 @@ Nobody writes another owner's key. `delivery` ships the schema for its keys in
 ignoring it, so a typo is an error rather than a silently absent setting.
 
 Five components stamp themselves, each through its own `init` and `update`: `components.devbook`
-from `devbook`'s, `components.derived` from `devbook-derived`'s for the refresh script, its
-workflows, and its rule, `components.devbook-procedures` from `devbook-procedures`'s for the `run`,
-`capture`, and `diagnose` copies it seeds and the `adopted` list that selects them,
-`components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
+from `devbook`'s, which records the procedure copies it seeds beside the folders and the
+`procedures.adopted` list that selects them, `components.derived` from `devbook-derived`'s for
+the refresh script, its workflows, and its rule, `components.openspec` from
+`devbook-openspec`'s, `components.delivery` from `delivery`'s — `pluginVersion` alone, since the engine
 materializes nothing — and `components.schedule` from `delivery-schedule`'s.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([the annotations record](adr/annotations.md)). That puts `delivery` on both sides

@@ -153,7 +153,7 @@ and the ready check sends it back to `implement`.
 ### phase-verify
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-procedures.md"]
+related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#procedure"]
 ```
 
 Check the running application, at a depth the change kind decides. New behaviour gets a browser
@@ -329,10 +329,11 @@ everything it reads is the engine keys or a skill the repository owns. `init` wr
 `components.delivery` as `pluginVersion` alone and refuses where that entry exists; `update`
 rewrites it to the installed version and refuses where it does not.
 
-**Release what an earlier engine seeded.** An engine before the procedures moved to
-[devbook-procedures](devbook-procedures.md) wrote `start` and `capture` with a wrapper per host
-and stamped them under `components.delivery.materialized`. `update` drops those entries and
-deletes no file: each stays the repository's until the procedures component adopts it.
+**Release what an earlier engine seeded.** An engine before the procedures moved out of it —
+into a plugin of their own, and from there into [devbook](devbook.md#procedure) — wrote `start`
+and `capture` with a wrapper per host and stamped them under `components.delivery.materialized`.
+`update` drops those entries and deletes no file: each stays the repository's until
+`devbook:update` adopts it.
 
 **Rewrite the old configuration keys.** `update` runs the migration that folds `extensions`,
 `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` into one complete `phases` map per

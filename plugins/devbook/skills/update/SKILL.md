@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository that already has devbook forward — refresh the devbook-meta checker, the folder rules with a wrapper per host, and devbook''s section of AGENTS.md, run outstanding schema migrations, create a folder adopted since or orphan one dropped, and re-stamp. One idempotent operation covering a plugin upgrade, a change in which folders are adopted, and migration-only. Refused where no components.devbook stamp exists: run devbook:init first. Use when: upgrading devbook, adding or dropping a devbook folder, or a migration is outstanding. Triggers on: "devbook update", "update devbook", "upgrade devbook", "devbook sync", "run devbook migrations", "adopt another devbook folder", "drop a devbook folder".'
+description: 'Move a repository that already has devbook forward — refresh the devbook-meta checker, the folder rules with a wrapper per host, and devbook''s section of AGENTS.md, run outstanding schema migrations, create a folder adopted since or orphan one dropped, refresh the procedure skills — run, capture, diagnose, estimate, prototype — and their wrappers, seed one adopted since or orphan one dropped, and re-stamp. One idempotent operation covering a plugin upgrade, a change in which folders are adopted, and migration-only. Refused where no components.devbook stamp exists: run devbook:init first. Use when: upgrading devbook, adding or dropping a devbook folder or a procedure, a migration is outstanding, a procedure skill is missing, or components.devbook-procedures is still in the stamp. Triggers on: "devbook update", "update devbook", "upgrade devbook", "devbook sync", "run devbook migrations", "adopt another devbook folder", "drop a devbook folder", "adopt the diagnose skill", "adopt the estimate skill", "adopt the prototype skill", "drop the capture skill".'
 user-invocable: false
 ---
 
@@ -24,11 +24,12 @@ are one operation — the stamp says which.
    `tools/devbook-meta/graph.mjs` stops here: upgrade through the previous
    major's last release first.
 2. **Resolve.** Ask only about genuinely new choices — a folder that appeared on disk
-   unstamped, or one the user asks to adopt or drop. A newly adopted folder is created per
-   *Creating a folder* in `../init/SKILL.md`.
+   unstamped, or a folder or procedure the user asks to adopt or drop. A newly adopted folder
+   is created per *Creating a folder* in `../init/SKILL.md`.
 3. **Plan.** Show the diff table and write nothing. Never skip this.
 4. **Migrate.** Ledger forward, oldest first, `--check` before and after each.
-5. **Materialize.** Overwrite stale, report customized, never both.
+5. **Materialize.** Overwrite stale, report customized, never both — the procedures too,
+   per `assets/procedures/skill-wrappers.md` under *What lands, and how*.
 6. **Stamp and verify.** Rewrite the entry, run `devbook:validate`, report.
 
 ## Notes

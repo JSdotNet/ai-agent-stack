@@ -1,7 +1,7 @@
 # 004 — an `app.start` binding to `repo:start` is gone, from 1.15.0
 
 ```meta
-appliesTo: [devbook-procedures]
+appliesTo: [procedures]
 breaking: yes
 ```
 

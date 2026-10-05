@@ -40,7 +40,7 @@ another block or a repository conforms to.
 | `flow-runner` | agent | The session's main loop: a person runs the session as this agent and invokes a `flow-*` skill in it; never spawned by another agent |
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents, the effort runners, Claude Code only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
-| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
+| `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
 
 ### flow-code
 
@@ -482,6 +482,7 @@ another block.
 | A run belongs to one session; a resumed run reattaches to the same run rather than opening a second | `start_run()` | untested |
 | Every flow opens with Update Base, prepended by the runner and named by no skill | phase sequencing | untested |
 | `implement` with `review` per slice, and the ready check back to `implement` or `drafting`, are the only cycles, bounded by `policy.review.retryBudget` and `policy.ready.retryBudget` | the flow-runner | untested |
+| Every review finding cites `file:line` and a rule, a smell, or a concrete failure scenario, or it is dropped; the reviewer never edits and never delegates | `phase-review` | untested |
 | When both budgets are spent, the open items reach Personal Validation listed first, and an unattended run parks instead | `phase-ready` | untested |
 | `spec-check` runs before Personal Validation and reports one verdict per item of the run's specification and the chapters the change set touches; an updating skill's edits are part of what the person approves | `phase-spec-check` | untested |
 | Personal Validation is reached before `create-pr` and never inside it | gate evaluation | untested |

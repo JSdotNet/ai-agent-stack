@@ -147,9 +147,8 @@ redesigning inline. What a kind needs — a dependency move, a project's bootstr
 defect's reproducing test as the first seam — is its work, and it decides whether the change
 needs frontend, backend, or both, and in which order.
 
-`review` is one fresh-context reviewer over the slice's diff against the merge base: the
-repository's rules first, then a code-smell baseline, then correctness, citing `file:line` and
-the rule, smell, or failure scenario for every finding. It never edits. The flow-runner
+`review` is **defined in `skills/phase-review/SKILL.md`**: one fresh-context reviewer over the
+slice's diff against the merge base, citing every finding. It never edits. The flow-runner
 alternates the two per slice — implement, review, implement with the blockers as its brief —
 until the slice is clean or `policy.review.retryBudget` is spent; blockers still open then go
 to the ready check. `policy.phases.review: false` turns review off.

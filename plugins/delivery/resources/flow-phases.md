@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Update Base, Spec Check, the ready check, the Personal Validation gate, Create Pull Request, Report Back, Summary).
+description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Scope, Implement and Review, Spec Check, the ready check, the Personal Validation gate, Report Back), and a pointer to each phase skill.
 ---
 
 # Flow Phases (Engine-Owned)
@@ -20,9 +20,9 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `phase-resolution.md` | How a phase's entry resolves into inline, delegated, or forked, and the effort runners | Once, before `start_run` |
 | `engine-contract.md` | The phase list and the `phases` map, the gates mechanism, policy, the stack config, bindings, and host slots | Once, when the stack config is resolved |
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
-| **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and the ready check | Once, at the start of the run |
-| **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Report Back, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-build-test`, `phase-validation` (Verify), and `phase-personal-validation` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| **This file, through the Ready Check** | The phase order, Scope through Spec Check, and the ready check | Once, at the start of the run |
+| **This file, from Personal Validation onward** | The Personal Validation gate and Report Back | **Only when the run reaches Personal Validation** — not at the start |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-update-base`, `phase-plan`, `phase-build-test`, `phase-validation` (Verify), `phase-personal-validation`, `phase-create-pr`, and `phase-summary` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -90,37 +90,12 @@ there is nothing runnable, and the chapter it writes is the specification.
 ## Phase: Update Base
 
 Every flow. Runs **first**, before the flow's own phases, so the work starts from the current
-base instead of from whatever commit the branch was cut at. A worktree is created from the
-local checkout and never from the remote, so a branch is already stale when the local default
-branch is behind — and nothing later in the run notices.
+base. The flow-runner prepends it to the stage list it passes to `start_run` and runs it
+inline.
 
-- **Prepended by the engine.** The flow-runner puts this phase at the head of the stage list
-  it passes to `start_run`, and reports it like any other stage.
-- **Resolve the base** from `policy.pr.base`, falling back to the repository's default
-  branch, and fetch it. No remote, or a fetch that fails, marks the phase `skipped` with the
-  reason — never `blocked`. Working offline is not an error. A `project` run with no remote yet
-  is the usual case.
-- **Take the workflow's branch** when the tracker reports the item as part of a change: check
-  out the branch **Git Workflows** (`engine-contract.md`) names, or cut it from the fetched
-  base, before anything below. No change reported, stay on the current branch.
-- **Refuse to touch a dirty tree.** With uncommitted changes present, mark the phase
-  `skipped` and name the files. **Never stash.** The stash stack is shared by every worktree
-  of the repository, so an entry left here can be popped by another session.
-- **Fast-forward when the branch carries no commits of its own** — the common case for a
-  freshly cut worktree.
-- **Otherwise rebase the branch's own commits onto the fetched base tip.** That history is
-  still private, so rewriting it is safe here and keeps the branch linear.
-- **Never rebase a branch that already has an open pull request.** Mark the phase `skipped`
-  and name `update-pr-branch`, which does that job under review-safe rules: a reviewer may
-  already be reading the branch, and a rewrite silently detaches review comments and changes
-  code under someone mid-review.
-- **Block on conflict.** Abort the rebase so the tree is exactly as it was, mark the phase
-  `blocked` with the conflicting paths, and stop before the flow's first phase. Resolving a
-  base conflict is work with its own scope; never fold it silently into a run the user started
-  for something else.
-- **Already current is `done`**, with an output saying so. Create no commit, and never push.
-- **`policy.phases.updateBase: false`** turns the phase off. It is then `skipped` with that
-  reason, for a repository that tracks a long-lived branch or has no remote to sync with.
+**Defined in `skills/phase-update-base/SKILL.md`** — resolving and fetching the base, taking
+the workflow's branch, the dirty-tree and open-pull-request refusals, fast-forward or rebase,
+and blocking on conflict.
 
 ## Phase: Scope
 
@@ -135,8 +110,7 @@ escalates per **Escalation** in `flow-execution-model.md`. Persist the change ki
 
 ## Phase: Plan
 
-`flow-code`, `create` kind only. Maps the recorded design onto the project structure —
-contracts, wiring, health and observability, slices — and writes no code.
+`flow-code`, `create` kind only, after Scope. **Defined in `skills/phase-plan/SKILL.md`.**
 
 ## Phase: Implement ⇄ Review
 
@@ -306,7 +280,7 @@ shape — and that is the whole of what configuration may change here.
 - **Do not leave a runtime running behind an unanswered gate.** The app must stay up while
   the user reviews, but the flow still owns it. If the user defers, ends the session, or
   steps away without deciding, shut down the runtime and any flow-owned browser windows
-  under the same rules as **Create Pull Request**, leave `approval: "pending"`, and record
+  under the shutdown rules of `skills/phase-create-pr/SKILL.md`, leave `approval: "pending"`, and record
   in the stage output that the gate is still open and the app was stopped. A resumed run
   re-runs the review handoff before asking again.
 
@@ -323,7 +297,7 @@ user's turn, so it is their decision; it is not a new task and it does not end t
   the gate run first — a button does not skip Build & Test, Verify, Spec Check, or the ready
   check, and a red build still goes back through it — and say so in one line before
   continuing.
-- **Then run Create Pull Request as this file defines it,** following the host instruction's
+- **Then run Create Pull Request per `skills/phase-create-pr/SKILL.md`,** following the host instruction's
   own steps for committing, pushing, and opening, and pass the pull request URL in `links`
   on that stage.
 - **Then continue** through Report Back and Summary, and call `finish_run`. The run ends
@@ -333,38 +307,11 @@ user's turn, so it is their decision; it is not a new task and it does not end t
 
 ## Phase: Create Pull Request
 
-Both flows. Open the change for review under whatever the `pr-lane` slot resolves to. With no
-PR lane available, produce the change set and the description as file artifacts, say so once,
-and continue.
-
-- **Create the pull request only after explicit user approval** in Personal Validation —
-  never before, and only when the persisted `approval` is `approved`. `policy.pr.required`
-  states whether a flow must end in one; `policy.pr.base` names the base branch.
-- **Shut down validation runtime first** — and, more generally, before the run leaves your
-  hands by any exit: a pull request, a `blocked` or `cancelled` finish, or a gate the user
-  has stepped away from. If Verify or Personal Validation started a local application
-  runtime, stop it and confirm it is no longer running before invoking any PR creation
-  command. Prefer the repository's proven shutdown command. Block this phase with the actual
-  shutdown error if the runtime cannot be stopped safely.
-- **Close flow-owned browser windows first.** Close only windows or tabs opened for QA,
-  evidence capture, or Personal Validation review. Never close the surface's own tabs or
-  unrelated user browser sessions.
-- **Write the PR description** from the change set, the review outcome, the verify evidence,
-  and the spec-check table. Follow the repository's own PR template when it has one, and link
-  every origin — `Closes` when merging resolves it, `Refs` when it does not. When the `show-me`
-  skill is available, write each section per that skill.
-- **Open it through the lane, and validate nothing twice.** Push the branch, then raise the PR
-  with the host's own pull-request action when the session offers one, otherwise `gh pr create`
-  or the bound GitHub tooling. Build & Test, Verify, Spec Check, and the recorded approval
-  **are** the validation: never rebuild, re-run tests or QA, or ask for a second confirmation
-  here.
-- **Follow the change's workflow** when the item is part of one, per **Git Workflows** in
-  `engine-contract.md`: a `proposal-first` proposal opens as a draft; a `single-branch` run
-  that does not close the change pushes its branch and opens nothing, and says so.
-- **Apply PR-time improvements** — final polish, labels, changelog — as part of this phase.
-- **Report the pull request URL in `links`** on this stage, per **Reporting Contract** in
-  `surface-contract.md`, however the pull request was opened.
-- **Skip this phase** (`skipped`) when the run produces no change set to submit.
+Both flows, after an approved Personal Validation. **Defined in
+`skills/phase-create-pr/SKILL.md`** — the approval check, shutting down the runtime and the
+flow-owned browser windows, the description, the change's git workflow, and opening the pull
+request through the lane without validating anything twice. Its shutdown rules hold for every
+exit the run takes, not only a pull request.
 
 ## Phase: Report Back
 
@@ -408,13 +355,5 @@ started from, each with a `kind`; the phase sends the result to every entry in
 
 ## Phase: Summary
 
-Both flows. This is where the `phase-summary.after` chores run: each contributes to the run
-summary and captures what this run learned. A chore may fail without failing the run unless it
-declared itself required.
-
-- **Summarize the delivered outcome**, the created pull request if any, and what Report Back
-  reached. When the `show-me` skill is available, write it per that skill.
-- **Emit the run summary** once the pull request and Report Back are complete, or the run
-  concludes without them.
-- **Never author measured numbers.** Token, context, and timing figures come from the
-  surface's own telemetry; the summary describes what the run did, not what it cost.
+Both flows, last. **Defined in `skills/phase-summary/SKILL.md`** — the run summary, the
+`phase-summary.after` chores, and the rule that measured numbers come from the surface.

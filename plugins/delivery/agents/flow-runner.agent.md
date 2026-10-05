@@ -87,15 +87,9 @@ those contracts; it does not re-decide them per skill.
    artifacts, say so once, and never block a stage. A capability that resolves but whose
    required operation errors is a tooling failure: mark the run blocked and report the error
    text rather than falling back to chat-only tracking.
-6. **Update the base before the flow's first stage.** Run **Update Base** per
-   `flow-phases.md`: take the branch **Git Workflows** in `engine-contract.md` names when the
-   tracker reports the item as part of a change, fetch `policy.pr.base`, fast-forward a branch that carries
-   no commits of its own, and otherwise rebase its commits onto the fetched tip. A worktree is
-   cut from the local checkout and never from the remote, so the branch starts stale whenever
-   the local default branch is behind, and no later stage notices. Skip on a dirty tree, an
-   open pull request, or no remote; block on a conflict and stop there rather than resolving it
-   inside a run started for something else. **Never stash** to get past a dirty tree — the
-   stash stack is shared with every other worktree of the repository.
+6. **Update the base before the flow's first stage.** Run `skills/phase-update-base/SKILL.md`
+   inline: it skips on a dirty tree, an open pull request, or no remote, blocks on a conflict,
+   and **never stashes**. A block stops the run there.
 7. **Run each extension point through its provider.** A service point takes the one provider
    the stack config names, or its default provider when unbound; a chore point runs its
    ordered list, and a chore that declared `on-failure: "required"` stops the run when it

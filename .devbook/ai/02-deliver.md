@@ -61,7 +61,7 @@ status: candidate
 type: skill
 stage: [plan, code]
 depends-on: [".devbook/tech/hosts.md#claude-code-cli"]
-related: [".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep", ".devbook/arc42/adr/plugin-boundaries.md"]
+related: [".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep", ".devbook/arc42/adr/plugin-boundaries.md"]
 date: 2026-09-21
 ```
 

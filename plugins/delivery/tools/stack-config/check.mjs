@@ -18,6 +18,12 @@
 // untouched and read by the plugin that owns the namespace, never by the engine. A top-level
 // key that is none of these is a misspelling of one of them and is reported by name.
 //
+// `phases` is checked against the phase lists the schema declares under its `x-flows`: an
+// unknown flow, a phase its flow lacks, a qualifier the phase does not take, and an entry for
+// a phase that takes no configuration are refused by name in every layer, and the committed
+// file must list every phase of each map it carries. A key 1.14.0 removed is refused with a
+// pointer to delivery:update, which rewrites it; none is an alias.
+//
 //   node check.mjs [path-to-config.json]            validate; status lines on stdout
 //   node check.mjs [path-to-config.json] --print    validate, then print the merged config
 //
@@ -166,16 +172,171 @@ function checkExt(ext, errors) {
     }
 }
 
+const FLOW_NAME = /^flow-[a-z0-9]+(-[a-z0-9]+)*$/;
+const PHASE_KEY = /^phase-[a-z0-9]+(-[a-z0-9]+)*(:[a-z0-9]+(-[a-z0-9]+)*)?$/;
+const AREA_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+function retiredMessage(path, reason) {
+    return `${path}: removed in 1.14.0 — ${reason}. Run delivery:update, which rewrites it.`;
+}
+
+/**
+ * The qualifiers `phase` takes in a declared flow, or null when it takes none. An area
+ * qualifier is a key of `areas` when the layer declares some, else the default pair.
+ */
+function qualifiersFor(declared, phase, areas, spec) {
+    const qualifiers = declared.qualifiers?.[phase];
+    if (qualifiers === undefined) return null;
+    if (qualifiers !== 'areas') return qualifiers;
+    return isPlainObject(areas) && Object.keys(areas).length ? Object.keys(areas) : spec['x-defaultAreas'];
+}
+
+/** The schema one phase's entry validates against: the shared fields plus its own options. */
+function entrySchema(phase, schema) {
+    const base = schema.$defs.phaseEntry;
+    const options = schema.properties.phases['x-options']?.[phase];
+    return options ? { ...base, properties: { ...base.properties, ...options } } : base;
+}
+
+/**
+ * Check every flow map under `phases`. `complete` is the committed file's rule: a map lists
+ * every phase its flow has, a qualified phase counting when its bare entry or one entry per
+ * qualifier is there. `knowAreas` is false for an overlay read alone, whose area qualifier
+ * may name an area only the committed file declares; the merged check settles those.
+ */
+function checkPhases(phases, schema, { areas, complete, knowAreas }, errors) {
+    const spec = schema.properties.phases;
+    const flows = spec['x-flows'];
+    const unconfigured = spec['x-unconfigured'];
+    const retired = schema['x-retired']?.flows ?? {};
+
+    for (const [flow, map] of Object.entries(phases)) {
+        const path = `phases.${flow}`;
+        if (flow in retired) {
+            errors.push(retiredMessage(path, `${retired[flow]}, and its entries belong in flow-code's map`));
+            continue;
+        }
+        if (!FLOW_NAME.test(flow)) {
+            errors.push(
+                `phases: unknown flow "${flow}" — a map is keyed by a flow's skill name: ` +
+                    `${Object.keys(flows).join(', ')}, or a repo-native flow-*`,
+            );
+            continue;
+        }
+        if (!isPlainObject(map)) {
+            errors.push(`${path}: expected an object keyed by phase skill name, got ${typeOf(map)}`);
+            continue;
+        }
+        const declared = flows[flow];
+
+        for (const [key, entry] of Object.entries(map)) {
+            const [phase, qualifier] = key.split(':');
+            if (phase in unconfigured) {
+                errors.push(`${path}.${key}: ${phase} ${unconfigured[phase]}`);
+                continue;
+            }
+            if (!PHASE_KEY.test(key)) {
+                errors.push(`${path}: "${key}" is not a phase key — phase-<id>, optionally followed by :<qualifier>`);
+                continue;
+            }
+            if (declared) {
+                if (!declared.phases.includes(phase)) {
+                    errors.push(`${path}: unknown phase "${phase}" — ${flow} has ${declared.phases.join(', ')}`);
+                    continue;
+                }
+                if (qualifier !== undefined) {
+                    const allowed = qualifiersFor(declared, phase, areas, spec);
+                    const byArea = declared.qualifiers?.[phase] === 'areas';
+                    if (!allowed) {
+                        errors.push(`${path}: "${key}" — ${phase} takes no qualifier in ${flow}`);
+                        continue;
+                    }
+                    if (!allowed.includes(qualifier) && (knowAreas || !byArea)) {
+                        errors.push(
+                            `${path}: "${key}" — ${phase} in ${flow} is qualified by ` +
+                                `${byArea ? 'an area' : 'a folder'}: ${allowed.join(', ')}`,
+                        );
+                        continue;
+                    }
+                }
+            }
+            validate(entry, entrySchema(phase, schema), schema, `${path}.${key}`, errors);
+        }
+
+        if (!declared || !complete) continue;
+        for (const phase of declared.phases) {
+            if (phase in map) continue;
+            const qualifiers = qualifiersFor(declared, phase, areas, spec);
+            if (qualifiers?.length && qualifiers.every((q) => `${phase}:${q}` in map)) continue;
+            errors.push(
+                `${path}: missing "${phase}" — the committed map lists every phase ${flow} has, ` +
+                    'and {} is a complete entry',
+            );
+        }
+    }
+}
+
 /**
  * Validate one layer. `overlay: true` is what an overlay gets and the committed file does
- * not: `ext` is a machine's own state and has no place in a file a reviewer reads.
+ * not: `ext` is a machine's own state and has no place in a file a reviewer reads, and an
+ * overlay's maps are partial. `merged: true` marks the result of a merge, which carries
+ * every layer's `areas`, so its area qualifiers are checked as well.
  */
-export function checkStackConfig(config, schema, { overlay = false } = {}) {
+export function checkStackConfig(config, schema, { overlay = false, merged = false } = {}) {
     const errors = [];
     const owned = ownedKeys(schema);
+    const retired = schema['x-retired'] ?? {};
+
+    for (const [key, reason] of Object.entries(retired.keys ?? {})) {
+        if (key in config) errors.push(retiredMessage(key, reason));
+    }
 
     for (const key of owned) {
-        if (key in config) validate(config[key], schema.properties[key], schema, key, errors);
+        if (!(key in config)) continue;
+        let value = config[key];
+        if (key === 'bindings' && isPlainObject(value)) {
+            value = { ...value };
+            for (const [binding, reason] of Object.entries(retired.bindings ?? {})) {
+                if (!(binding in value)) continue;
+                errors.push(retiredMessage(`bindings["${binding}"]`, reason));
+                delete value[binding];
+            }
+        }
+        const before = errors.length;
+        validate(value, schema.properties[key], schema, key, errors);
+        if (key === 'gates' && Array.isArray(value)) {
+            // A gate on a retired extension point says so, rather than listing the phase ids.
+            value.forEach((gate, i) => {
+                if (!(retired.gatePoints ?? []).includes(gate?.at)) return;
+                const at = `gates[${i}].at:`;
+                const index = errors.findIndex((error, n) => n >= before && error.startsWith(at));
+                const message = retiredMessage(
+                    `gates[${i}].at`,
+                    `"${gate.at}" was an extension point, and a gate now attaches to the phase it belonged to`,
+                );
+                if (index >= 0) errors[index] = message;
+                else errors.push(message);
+            });
+        }
+    }
+
+    if (isPlainObject(config.areas)) {
+        for (const area of Object.keys(config.areas)) {
+            if (AREA_NAME.test(area)) continue;
+            errors.push(
+                `areas: "${area}" is not an area name — lowercase letters, digits, and single ` +
+                    'hyphens, since it qualifies phase-implement',
+            );
+        }
+    }
+
+    if (isPlainObject(config.phases)) {
+        checkPhases(
+            config.phases,
+            schema,
+            { areas: config.areas, complete: !overlay, knowAreas: !overlay || merged },
+            errors,
+        );
     }
 
     if ('ext' in config) {
@@ -194,6 +355,7 @@ export function checkStackConfig(config, schema, { overlay = false } = {}) {
     // the engine knowing any of their names.
     for (const key of Object.keys(config)) {
         if (owned.includes(key) || key === 'components' || key === 'ext' || isAnnotation(key)) continue;
+        if (key in (retired.keys ?? {})) continue;
         errors.push(
             `unknown top-level key "${key}": the engine owns ${owned.join(', ')}, a ` +
                 'component owns its own entry under `components` and its machine-scope state ' +
@@ -246,9 +408,10 @@ export function checkLocalOverlay(local) {
 /**
  * Merge an overlay over the config beneath it.
  *
- * Objects merge key by key and the overlay wins. Arrays replace wholesale rather than
- * concatenating, because an extension point's chore list is an ordered whole and half of
- * one from each file is a run nobody wrote down. `gates` is the deliberate exception: it
+ * Objects merge key by key and the overlay wins, so a phase entry merges field by field: an
+ * overlay naming `phases.flow-code.phase-implement.model` leaves that entry's agent standing.
+ * Arrays replace wholesale rather than concatenating, because a phase's chore list is an
+ * ordered whole and half of one from each file is a run nobody wrote down. `gates` is the deliberate exception: it
  * appends, so an overlay can add a checkpoint and has no way of spelling the removal of
  * one. `null` in an overlay is a value — deliberately unbound — and never a delete.
  *
@@ -327,7 +490,7 @@ export function resolveStackConfig(target, schema, options) {
     if (config === null) {
         // A user overlay applies to every repository, including one that keeps no stack
         // config; it adjusts a repository's wiring and cannot stand in for it.
-        lines.push(`no stack config at ${target} — every point falls back to its default`);
+        lines.push(`no stack config at ${target} — every phase falls back to its default`);
         return { config, layers, merged: null, lines, errors };
     }
 
@@ -350,7 +513,7 @@ export function resolveStackConfig(target, schema, options) {
         lines.push(`${path}: ok (${scope} overlay)`);
 
         merged = mergeStackConfig(merged, overlay);
-        const mergedErrors = checkStackConfig(merged, schema, { overlay: true });
+        const mergedErrors = checkStackConfig(merged, schema, { overlay: true, merged: true });
         if (mergedErrors.length) {
             errors.push({ label: `${target} + ${scope} overlay`, errors: mergedErrors });
             return { config, layers, merged: null, lines, errors };

@@ -21,6 +21,14 @@ const schema = JSON.parse(
 
 const check = (config) => checkStackConfig(config, schema);
 
+const FLOWS = schema.properties.phases['x-flows'];
+const completeMap = (flow) => Object.fromEntries(FLOWS[flow].phases.map((phase) => [phase, {}]));
+const codeMap = () => completeMap('flow-code');
+const specMap = () => completeMap('flow-spec');
+const chore = (list, where = 'phase-summary', key = 'after') => ({
+    phases: { 'flow-code': { ...codeMap(), [where]: { [key]: list } } },
+});
+
 test('an empty config is valid', () => {
     assert.deepEqual(check({}), []);
 });
@@ -61,6 +69,18 @@ test('the shipped template validates as it stands', () => {
     assert.deepEqual(check(template), []);
 });
 
+test('the shipped template carries both complete maps', () => {
+    const template = JSON.parse(
+        readFileSync(join(HERE, '..', '..', 'resources', 'config-template.json'), 'utf8'),
+    );
+    assert.deepEqual(Object.keys(template.phases), ['flow-code', 'flow-spec']);
+    for (const local of [false, true]) {
+        const file = local ? 'config.local-template.json' : 'config-template.json';
+        const { phases } = JSON.parse(readFileSync(join(HERE, '..', '..', 'resources', file), 'utf8'));
+        assert.deepEqual(checkStackConfig({ phases }, schema), [], file);
+    }
+});
+
 test('pr.base takes a git ref name and refuses prose', () => {
     assert.deepEqual(check({ policy: { 'pr.base': 'main' } }), []);
     assert.deepEqual(check({ policy: { 'pr.base': 'release/2.0' } }), []);
@@ -76,21 +96,24 @@ test('pr.base takes a git ref name and refuses prose', () => {
 test('the worked example from the surface contract validates', () => {
     assert.deepEqual(
         check({
-            bindings: {
-                'delivery.tracker': { provider: 'github' },
-                'delivery.roles': { architecture: 'your-architecture-plugin', ux: null },
-                'delivery.mcp': { spec: ['your-guidelines-server'], 'qa.run': ['playwright'] },
+            bindings: { 'delivery.tracker': { provider: 'github' } },
+            phases: {
+                'flow-code': {
+                    ...codeMap(),
+                    'phase-update-base': { before: ['devbook:validate'] },
+                    'phase-scope': { skill: 'your-architecture-plugin:draft-spec', mcp: ['your-guidelines-server'] },
+                    'phase-implement': { agent: 'csharp-coding:coding', model: 'opus', effort: 'high' },
+                    'phase-verify': {
+                        agent: 'qa:qa',
+                        app: { provider: 'your-qa-plugin:qa', host: 'aspire' },
+                        before: [{ run: 'repo:seed-test-data', 'on-failure': 'required' }],
+                    },
+                },
             },
-            extensions: {
-                'session.start': ['devbook:load-context'],
-                spec: 'your-architecture-plugin:draft-spec',
-                'data.prepare': [{ run: 'repo:seed-test-data', 'on-failure': 'required' }],
-                'app.start': { provider: 'your-qa-plugin:qa', host: 'aspire' },
-            },
-            policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2, 'pr.base': 'main' },
+            policy: { 'qa.depth': 'targeted', 'review.retryBudget': 1, 'pr.base': 'main' },
             gates: [
                 {
-                    at: 'spec',
+                    at: 'scope',
                     when: 'after',
                     purpose: 'approval',
                     show: 'artifact',
@@ -108,18 +131,19 @@ test('an unknown policy key is rejected, not ignored', () => {
     assert.match(errors[0], /unknown key "qa\.dept"/);
 });
 
-test('a point outside the closed set is rejected', () => {
-    const errors = check({ extensions: { 'deploy.run': 'repo:ship' } });
+test('a phase outside its flow is rejected by name', () => {
+    const errors = check({ phases: { 'flow-code': { ...codeMap(), 'phase-drafting:arc42': {} } } });
     assert.equal(errors.length, 1);
-    assert.match(errors[0], /unknown key "deploy\.run"/);
+    assert.match(errors[0], /^phases\.flow-code: unknown phase "phase-drafting" — flow-code has phase-update-base/);
+    assert.match(check({ phases: { 'flow-spec': { ...specMap(), 'phase-deploy': {} } } })[0], /unknown phase "phase-deploy"/);
 });
 
-test('validate and verify are two points: the build point takes a retry budget, the spec check does not', () => {
+test('the spec check is a phase with a skill, and takes no retry budget of its own', () => {
     assert.deepEqual(
         check({
-            extensions: { validate: 'your-coding-plugin:coding', verify: 'devbook:verify-change' },
-            policy: { 'validate.retryBudget': 2 },
-            gates: [{ at: 'verify', when: 'after', purpose: 'risk' }],
+            phases: { 'flow-code': { ...codeMap(), 'phase-spec-check': { skill: 'devbook:verify-change' } } },
+            policy: { 'review.retryBudget': 1, 'ready.retryBudget': 2 },
+            gates: [{ at: 'spec-check', when: 'after', purpose: 'risk' }],
         }),
         [],
     );
@@ -152,59 +176,65 @@ test('commit.at takes gate or manual and nothing else', () => {
 });
 
 test('a gate needs at, when, and purpose', () => {
-    const errors = check({ gates: [{ at: 'spec' }] });
+    const errors = check({ gates: [{ at: 'scope' }] });
     assert.equal(errors.length, 2);
     assert.match(errors.join(' '), /missing required key "when"/);
     assert.match(errors.join(' '), /missing required key "purpose"/);
 });
 
-test('a gate may not attach to a point the engine does not declare', () => {
+test('a gate may not attach to a phase the engine does not declare', () => {
     const errors = check({ gates: [{ at: 'deploy', when: 'before', purpose: 'risk' }] });
     assert.equal(errors.length, 1);
     assert.match(errors[0], /"deploy" is not one of/);
+    for (const at of ['personal-validation', 'ready']) {
+        assert.equal(check({ gates: [{ at, when: 'before', purpose: 'risk' }] }).length, 1, at);
+    }
 });
 
 test('a negative budget is rejected', () => {
     assert.equal(check({ policy: { 'gate.reviseBudget': -1 } }).length, 1);
 });
 
-test('a chore point takes a list, not a bare provider', () => {
-    assert.deepEqual(check({ extensions: { 'flow.end': ['delivery:capture-improvement'] } }), []);
-    assert.equal(check({ extensions: { 'flow.end': 'delivery:capture-improvement' } }).length, 1);
+test('a chore list takes a list, not a bare provider', () => {
+    assert.deepEqual(check(chore(['delivery:capture-improvement'])), []);
+    assert.equal(check(chore('delivery:capture-improvement')).length, 1);
 });
 
 test('a chore on-failure value is a closed enum', () => {
-    const errors = check({ extensions: { 'flow.end': [{ run: 'repo:docs', 'on-failure': 'maybe' }] } });
+    const errors = check(chore([{ run: 'repo:docs', 'on-failure': 'maybe' }]));
     assert.equal(errors.length, 1);
 });
 
 test('a chore may carry --flag arguments after its id, in either form', () => {
     assert.deepEqual(
-        check({
-            extensions: {
-                'flow.start': [
-                    'repo:replan --dry-run',
-                    { run: 'your-plugin:status --replan', 'on-failure': 'required' },
-                ],
-            },
-        }),
+        check(
+            chore(
+                ['repo:replan --dry-run', { run: 'your-plugin:status --replan', 'on-failure': 'required' }],
+                'phase-scope',
+            ),
+        ),
         [],
     );
 });
 
 test('a chore argument is a --flag, never free text or a bare word', () => {
     for (const run of ['your-plugin:status replan', 'your-plugin:status --Replan', 'your-plugin:status --replan; rm -rf /']) {
-        assert.equal(check({ extensions: { 'flow.start': [{ run }] } }).length, 1, run);
+        assert.equal(check(chore([{ run }], 'phase-scope')).length, 1, run);
     }
 });
 
-test('a service provider takes no arguments', () => {
-    assert.equal(check({ extensions: { spec: 'your-plugin:spec --replan' } }).length, 1);
+test("a phase's skill takes no arguments", () => {
+    assert.equal(check({ phases: { 'flow-code': { ...codeMap(), 'phase-scope': { skill: 'your-plugin:spec --replan' } } } }).length, 1);
 });
 
-test('null binds a role deliberately, which is not the same as absent', () => {
-    assert.deepEqual(check({ bindings: { 'delivery.roles': { security: null } } }), []);
-    assert.equal(check({ bindings: { 'delivery.roles': { security: 42 } } }).length, 1);
+test('null agent runs a phase inline deliberately, which is not the same as absent', () => {
+    const withAgent = (agent) => check({ phases: { 'flow-code': { ...codeMap(), 'phase-verify': { agent, model: 'sonnet' } } } });
+    assert.deepEqual(withAgent(null), []);
+    assert.deepEqual(withAgent('qa'), []);
+    assert.deepEqual(withAgent('qa:qa'), []);
+    assert.deepEqual(withAgent('repo:reviewer'), []);
+    assert.equal(withAgent(42).length, 1);
+    assert.equal(withAgent('QA:qa').length, 1);
 });
 
 test('the tracker provider set is closed', () => {
@@ -250,22 +280,190 @@ test('a machine may set its own surface preference in an overlay', () => {
     assert.deepEqual(merged.bindings['delivery.surface'], ['delivery-surface-collector']);
 });
 
-test('an MCP server binds to a point in the closed set, never to a free name', () => {
-    assert.deepEqual(check({ bindings: { 'delivery.mcp': { implement: ['microsoft-learn'] } } }), []);
-    const errors = check({ bindings: { 'delivery.mcp': { 'stage-1': ['your-guidelines-server'] } } });
-    assert.equal(errors.length, 1);
-    assert.match(errors[0], /unknown key "stage-1"/);
+test("a phase's MCP servers are a list of server ids", () => {
+    const mcp = (value) => check({ phases: { 'flow-code': { ...codeMap(), 'phase-implement': { mcp: value } } } });
+    assert.deepEqual(mcp(['microsoft-learn']), []);
+    assert.equal(mcp('your-guidelines-server').length, 1);
+    assert.equal(mcp(['mcp__plugin x']).length, 1);
 });
 
-test('a point takes a list of server ids, or null for deliberately none', () => {
-    assert.deepEqual(check({ bindings: { 'delivery.mcp': { spec: null } } }), []);
-    assert.equal(check({ bindings: { 'delivery.mcp': { spec: 'your-guidelines-server' } } }).length, 1);
-    assert.equal(check({ bindings: { 'delivery.mcp': { spec: ['mcp__plugin x'] } } }).length, 1);
+test("a phase's mcp may be null for deliberately none", () => {
+    assert.deepEqual(check({ phases: { 'flow-code': { ...codeMap(), 'phase-scope': { mcp: null } } } }), []);
 });
 
-test('no model key exists anywhere in the engine-owned config', () => {
+test('a model and an effort are phase fields, and nowhere else', () => {
+    const entry = (fields) => check({ phases: { 'flow-code': { ...codeMap(), 'phase-review': fields } } });
+    for (const model of ['opus', 'sonnet', 'haiku', 'fable', 'inherit', 'claude-opus-5-5', 'claude-sonnet-5-5[1m]', 'us.anthropic.claude-opus-5-5-v1:0']) {
+        assert.deepEqual(entry({ model }), [], model);
+    }
+    for (const effort of ['low', 'medium', 'high', 'xhigh', 'max', 'inherit']) {
+        assert.deepEqual(entry({ effort }), [], effort);
+    }
+    assert.match(entry({ model: 'the strong one' })[0], /is not a model alias/);
+    assert.equal(entry({ effort: 'extreme' }).length, 1);
     assert.equal(check({ policy: { model: 'opus' } }).length, 1);
     assert.equal(check({ bindings: { 'delivery.model': 'opus' } }).length, 1);
+});
+
+// The phases map — one complete map per engine flow in the committed file, partial in an
+// overlay, and the keys it replaced refused by name with a pointer to delivery:update.
+
+test('both complete maps validate, and {} is a complete entry', () => {
+    assert.deepEqual(check({ phases: { 'flow-code': codeMap(), 'flow-spec': specMap() } }), []);
+});
+
+test('a committed map missing a phase is rejected, naming the phase', () => {
+    const map = codeMap();
+    delete map['phase-review'];
+    const errors = check({ phases: { 'flow-code': map } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^phases\.flow-code: missing "phase-review"/);
+});
+
+test('an overlay names only what it changes', () => {
+    const overlay = { phases: { 'flow-code': { 'phase-review': { model: 'sonnet' } } } };
+    assert.deepEqual(checkStackConfig(overlay, schema, { overlay: true }), []);
+    assert.deepEqual(checkLocalOverlay(overlay), []);
+});
+
+test('an overlay still may not name a phase its flow lacks', () => {
+    const errors = checkStackConfig({ phases: { 'flow-spec': { 'phase-implement': {} } } }, schema, { overlay: true });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /unknown phase "phase-implement" — flow-spec has/);
+});
+
+test('Personal Validation and the ready check are refused by name in any map and any layer', () => {
+    for (const phase of ['phase-personal-validation', 'phase-ready']) {
+        for (const flow of ['flow-code', 'flow-spec', 'flow-release']) {
+            const base = flow === 'flow-code' ? codeMap() : flow === 'flow-spec' ? specMap() : {};
+            const errors = check({ phases: { [flow]: { ...base, [phase]: {} } } });
+            assert.equal(errors.length, 1, `${flow} ${phase}`);
+            assert.match(errors[0], new RegExp(`^phases\\.${flow}\\.${phase}: ${phase} `));
+            assert.equal(checkStackConfig({ phases: { [flow]: { [phase]: {} } } }, schema, { overlay: true }).length, 1);
+        }
+    }
+    assert.match(check({ phases: { 'flow-code': { ...codeMap(), 'phase-personal-validation': { model: 'opus' } } } })[0], /refuses every field/);
+});
+
+test('an unknown flow is rejected by name', () => {
+    const errors = check({ phases: { code: codeMap() } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^phases: unknown flow "code" — a map is keyed by a flow's skill name: flow-code, flow-spec, or a repo-native flow-\*/);
+});
+
+test('a retired flow is refused with a pointer to delivery:update', () => {
+    for (const flow of ['flow-update-packages', 'flow-project']) {
+        const errors = check({ phases: { [flow]: { 'phase-implement': {} } } });
+        assert.equal(errors.length, 1, flow);
+        assert.match(errors[0], new RegExp(`^phases\\.${flow}: removed in 1\\.14\\.0 — .*flow-code.*Run delivery:update`));
+    }
+});
+
+test('a repo-native flow takes a map of its own phase ids, checked for shape but not completeness', () => {
+    assert.deepEqual(check({ phases: { 'flow-release': { 'phase-tag': { model: 'haiku' }, 'phase-implement': {} } } }), []);
+    assert.match(check({ phases: { 'flow-release': { tag: {} } } })[0], /"tag" is not a phase key/);
+    assert.match(check({ phases: { 'flow-release': { 'phase-tag': { modle: 'haiku' } } } })[0], /unknown key "modle"/);
+});
+
+test("drafting is complete with its bare entry or one entry per folder, and refuses a folder flow-spec lacks", () => {
+    const { 'phase-drafting': _, ...rest } = specMap();
+    const folders = Object.fromEntries(['arc42', 'domain', 'tech', 'design', 'ai'].map((f) => [`phase-drafting:${f}`, {}]));
+    assert.deepEqual(check({ phases: { 'flow-spec': { ...rest, ...folders } } }), []);
+    assert.deepEqual(check({ phases: { 'flow-spec': { ...specMap(), 'phase-drafting:design': { model: 'sonnet' } } } }), []);
+
+    const { 'phase-drafting:ai': __, ...partial } = folders;
+    assert.match(check({ phases: { 'flow-spec': { ...rest, ...partial } } })[0], /missing "phase-drafting"/);
+    assert.match(
+        check({ phases: { 'flow-spec': { ...specMap(), 'phase-drafting:docs': {} } } })[0],
+        /"phase-drafting:docs" — phase-drafting in flow-spec is qualified by a folder: arc42, domain, tech, design, ai/,
+    );
+});
+
+test('a qualifier on a phase that takes none is rejected', () => {
+    assert.match(
+        check({ phases: { 'flow-code': { ...codeMap(), 'phase-review:frontend': {} } } })[0],
+        /"phase-review:frontend" — phase-review takes no qualifier in flow-code/,
+    );
+});
+
+test('implement is qualified by frontend and backend, or by the areas the config declares', () => {
+    assert.deepEqual(check({ phases: { 'flow-code': { ...codeMap(), 'phase-implement:frontend': { model: 'sonnet' } } } }), []);
+    assert.match(check({ phases: { 'flow-code': { ...codeMap(), 'phase-implement:api': {} } } })[0], /qualified by an area: frontend, backend/);
+
+    const areas = { api: ['src/Api/**'], web: ['src/Web/**'] };
+    assert.deepEqual(check({ areas, phases: { 'flow-code': { ...codeMap(), 'phase-implement:api': {} } } }), []);
+    assert.match(check({ areas, phases: { 'flow-code': { ...codeMap(), 'phase-implement:frontend': {} } } })[0], /qualified by an area: api, web/);
+});
+
+test("an overlay's area qualifier is settled against the merge, where the committed areas are", () => {
+    const committed = { areas: { api: ['src/Api/**'] }, phases: { 'flow-code': codeMap() } };
+    const overlay = { phases: { 'flow-code': { 'phase-implement:api': { model: 'sonnet' } } } };
+    assert.deepEqual(checkStackConfig(overlay, schema, { overlay: true }), []);
+    assert.deepEqual(checkStackConfig(mergeStackConfig(committed, overlay), schema, { overlay: true, merged: true }), []);
+
+    const stray = { phases: { 'flow-code': { 'phase-implement:mobile': {} } } };
+    assert.deepEqual(checkStackConfig(stray, schema, { overlay: true }), []);
+    assert.equal(checkStackConfig(mergeStackConfig(committed, stray), schema, { overlay: true, merged: true }).length, 1);
+});
+
+test('areas are path globs per area, and an area name is a qualifier', () => {
+    assert.deepEqual(check({ areas: { frontend: ['src/**/*.UI/**'], backend: ['src/**'] } }), []);
+    assert.equal(check({ areas: { frontend: 'src/**' } }).length, 1);
+    assert.equal(check({ areas: { frontend: [''] } }).length, 1);
+    assert.match(check({ areas: { Front_End: ['src/**'] } })[0], /"Front_End" is not an area name/);
+});
+
+test('app belongs to phase-verify and targets to phase-report-back, and nowhere else', () => {
+    const map = (extra) => check({ phases: { 'flow-code': { ...codeMap(), ...extra } } });
+    assert.deepEqual(map({ 'phase-verify': { app: null } }), []);
+    assert.deepEqual(map({ 'phase-verify': { app: 'repo:run' } }), []);
+    assert.deepEqual(map({ 'phase-report-back': { targets: ['origin', 'linked', 'your-chat:post-result'] } }), []);
+    assert.match(map({ 'phase-build-test': { app: null } })[0], /phase-build-test: unknown key "app"/);
+    assert.match(map({ 'phase-summary': { targets: ['origin'] } })[0], /phase-summary: unknown key "targets"/);
+    assert.equal(map({ 'phase-report-back': { targets: ['everyone'] } }).length, 1);
+    assert.equal(map({ 'phase-report-back': { targets: 'origin' } }).length, 1);
+});
+
+test('extensions, delivery.roles, and delivery.mcp are refused by name with a pointer to delivery:update', () => {
+    const errors = check({
+        bindings: { 'delivery.roles': { qa: null }, 'delivery.mcp': { spec: null }, 'delivery.tracker': null },
+        extensions: { verify: 'devbook:verify-change' },
+    });
+    assert.equal(errors.length, 3);
+    assert.match(errors[0], /^extensions: removed in 1\.14\.0 — .*Run delivery:update/);
+    assert.match(errors[1], /^bindings\["delivery\.roles"\]: removed in 1\.14\.0 — .*Run delivery:update/);
+    assert.match(errors[2], /^bindings\["delivery\.mcp"\]: removed in 1\.14\.0 — .*Run delivery:update/);
+    assert.equal(checkStackConfig({ extensions: {} }, schema, { overlay: true }).length, 1);
+});
+
+test('a gate on a retired extension point is refused with a pointer to delivery:update', () => {
+    const errors = check({ gates: [{ at: 'deliver', when: 'before', purpose: 'approval' }] });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^gates\[0\]\.at: removed in 1\.14\.0 — "deliver" was an extension point.*Run delivery:update/);
+});
+
+test('the review and ready budgets are non-negative integers, and review may be switched off', () => {
+    assert.deepEqual(check({ policy: { 'review.retryBudget': 0, 'ready.retryBudget': 3, 'phases.review': false } }), []);
+    assert.equal(check({ policy: { 'ready.retryBudget': -1 } }).length, 1);
+    assert.equal(check({ policy: { 'review.retryBudget': 1.5 } }).length, 1);
+    assert.equal(check({ policy: { 'phases.review': 'off' } }).length, 1);
+});
+
+test('resolve prints the phase maps with every layer merged in, field by field', () => {
+    const { target, options } = scratch(
+        { id: 'r', phases: { 'flow-code': { ...codeMap(), 'phase-review': { agent: 'repo:reviewer', model: 'opus' } } } },
+        { user: { phases: { 'flow-code': { 'phase-review': { model: 'sonnet' } } } } },
+    );
+    const { merged, errors } = resolveStackConfig(target, schema, options);
+    assert.deepEqual(errors, []);
+    assert.deepEqual(merged.phases['flow-code']['phase-review'], { agent: 'repo:reviewer', model: 'sonnet' });
+});
+
+test('resolve refuses a committed map that is not complete', () => {
+    const { target, options } = scratch({ id: 'r', phases: { 'flow-code': { 'phase-scope': {} } } });
+    const { errors } = resolveStackConfig(target, schema, options);
+    assert.equal(errors.length, 1);
+    assert.match(errors[0].errors[0], /missing "phase-update-base"/);
 });
 
 // The overlay — config.local.json under the user's devbook config directory, one machine's own.
@@ -278,32 +476,35 @@ test('the overlay wins key by key and leaves its siblings standing', () => {
     assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'validate.retryBudget': 2 });
 });
 
-test('the overlay merges into a nested binding without flattening its neighbours', () => {
-    const merged = mergeStackConfig(
-        { bindings: { 'delivery.roles': { qa: null, architecture: 'team-arch' } } },
-        { bindings: { 'delivery.roles': { qa: 'my-local-qa' } } },
-    );
-    assert.deepEqual(merged.bindings['delivery.roles'], {
-        qa: 'my-local-qa',
-        architecture: 'team-arch',
+test('a phase entry merges field by field, later layers winning', () => {
+    const committed = { phases: { 'flow-code': { ...codeMap(), 'phase-implement': { agent: 'csharp-coding:coding', model: 'opus', effort: 'high' } } } };
+    const user = { phases: { 'flow-code': { 'phase-implement': { model: 'sonnet' } } } };
+    const repo = { phases: { 'flow-code': { 'phase-implement': { effort: 'medium' } } } };
+    const merged = [user, repo].reduce(mergeStackConfig, committed);
+    assert.deepEqual(merged.phases['flow-code']['phase-implement'], {
+        agent: 'csharp-coding:coding',
+        model: 'sonnet',
+        effort: 'medium',
     });
+    assert.deepEqual(merged.phases['flow-code']['phase-review'], {});
+    assert.deepEqual(checkStackConfig(merged, schema, { overlay: true, merged: true }), []);
 });
 
 test('an array replaces rather than concatenating — half a chore list runs nothing sane', () => {
     const merged = mergeStackConfig(
-        { extensions: { 'session.start': ['devbook:validate', 'repo:a'] } },
-        { extensions: { 'session.start': ['repo:b'] } },
+        { phases: { 'flow-code': { 'phase-update-base': { before: ['devbook:validate', 'repo:a'] } } } },
+        { phases: { 'flow-code': { 'phase-update-base': { before: ['repo:b'] } } } },
     );
-    assert.deepEqual(merged.extensions['session.start'], ['repo:b']);
+    assert.deepEqual(merged.phases['flow-code']['phase-update-base'].before, ['repo:b']);
 });
 
 test('gates append, so an overlay can add a checkpoint and cannot spell removing one', () => {
-    const base = { gates: [{ at: 'spec', when: 'after', purpose: 'approval' }] };
+    const base = { gates: [{ at: 'scope', when: 'after', purpose: 'approval' }] };
     const merged = mergeStackConfig(base, {
-        gates: [{ at: 'app.start', when: 'before', purpose: 'resource' }],
+        gates: [{ at: 'verify', when: 'before', purpose: 'resource' }],
     });
     assert.equal(merged.gates.length, 2);
-    assert.equal(merged.gates[0].at, 'spec');
+    assert.equal(merged.gates[0].at, 'scope');
 
     // The one that matters: an overlay naming an empty list still keeps every base gate.
     assert.deepEqual(mergeStackConfig(base, { gates: [] }).gates, base.gates);
@@ -341,7 +542,7 @@ test('an ordinary overlay is refused nothing', () => {
     assert.deepEqual(
         checkLocalOverlay({
             policy: { 'qa.depth': 'startup-only', 'validate.retryBudget': 0 },
-            bindings: { 'delivery.roles': { qa: 'my-local-qa' } },
+            phases: { 'flow-code': { 'phase-verify': { agent: null, model: 'sonnet' } } },
             gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
         }),
         [],
@@ -439,19 +640,19 @@ test('no layer is ever inside the clone', () => {
 
 test('layers merge in order: the later wins per key, and every layer keeps its gates', () => {
     const base = {
-        policy: { 'qa.depth': 'full', 'verify.retryBudget': 2 },
-        gates: [{ at: 'spec', when: 'after', purpose: 'approval' }],
+        policy: { 'qa.depth': 'full', 'review.retryBudget': 2 },
+        gates: [{ at: 'scope', when: 'after', purpose: 'approval' }],
     };
-    const user = { policy: { 'verify.retryBudget': 0 }, gates: [] };
+    const user = { policy: { 'review.retryBudget': 0 }, gates: [] };
     const repo = {
         policy: { 'qa.depth': 'targeted' },
         gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
     };
     const merged = [user, repo].reduce(mergeStackConfig, base);
-    assert.deepEqual(merged.policy, { 'qa.depth': 'targeted', 'verify.retryBudget': 0 });
+    assert.deepEqual(merged.policy, { 'qa.depth': 'targeted', 'review.retryBudget': 0 });
     assert.deepEqual(
         merged.gates.map((g) => g.at),
-        ['spec', 'implement'],
+        ['scope', 'implement'],
     );
 });
 

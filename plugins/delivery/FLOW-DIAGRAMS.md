@@ -1,159 +1,92 @@
 # Flow Diagrams
 
-Every flow this plugin ships, drawn once. This keeps the
-individual `SKILL.md` files focused on execution rules while preserving one reviewable
-overview of stage order, approval gates, and PR handoff points.
+Both flows this plugin ships, drawn once. This keeps the `SKILL.md` files focused on execution
+rules while preserving one reviewable overview of phase order, the two loops, the approval
+gate, and the pull-request handoff.
 
-Every diagram below starts at the flow's own first stage. **Update Base** runs before it in
-every flow — the engine prepends that phase, so no diagram and no `SKILL.md` repeats it. See
-`skills/phase-update-base/SKILL.md`.
+Every node is a phase skill, `skills/phase-<id>/SKILL.md`. **Update Base** opens both flows: the
+flow-runner prepends it, so neither `SKILL.md` names it. The ready check sits before Personal
+Validation in both, and neither takes configuration.
 
-The **MCP servers** column names the engine's default servers by id, and *servers bound to a
-point* for whatever the repository binds under `bindings["delivery.mcp"]` — none of which this
-plugin ships. See **MCP Server Strategy** in `resources/flow-execution-model.md`.
-
-## flow-project
-
-```mermaid
-flowchart TD
-    A["Repository Creation (Manual)"] --> S["Stack Setup"]
-    S --> R["README and Repository Instructions"]
-    R --> GV["Repository Governance"]
-    GV --> B["GitHub Actions Workflows"]
-    B --> C["Specification & Architecture Intake"]
-    C --> D["Tooling & Dependencies"]
-    D --> E["Implementation"]
-    E --> F["Build & Test"]
-    F --> G["Validation"]
-    G --> H["Personal Validation"]
-    H --> I{User approves?}
-    I -->|Yes| J["Create Pull Request or Skip"]
-    I -->|No| K["Return to the relevant earlier stage"]
-    K --> S
-    J --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> L["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Repository Creation (Manual) | — | — |
-| Stack Setup | the `implement` service, running `devbook-config:init` | — |
-| README and Repository Instructions | the `docs` role, the `implement` service | servers bound to `spec` |
-| Repository Governance | *(default)*, through the `pr-lane` slot | servers bound to `spec` |
-| GitHub Actions Workflows | the `implement` service | — |
-| Specification & Architecture Intake | the `architecture` role | servers bound to `spec` |
-| Tooling & Dependencies | the `implement` service | `microsoft-learn` |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(capture for new functionality only)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-update-packages
-
-```mermaid
-flowchart TD
-    A["Dependency Analysis"] --> B["Update Planning"]
-    B --> C["Implementation"]
-    C --> D["Security Validation"]
-    D --> N{Framework upgrade?}
-    N -->|Yes| NF["New Feature Adoption"]
-    NF --> E["Build & Test"]
-    N -->|No| E
-    E --> F["Validation"]
-    F --> G["Personal Validation"]
-    G --> H{User approves?}
-    H -->|Yes| I["Create Pull Request or Skip"]
-    H -->|No| J["Return to the relevant earlier stage"]
-    J --> A
-    I --> DU["Verification or Skip"]
-    DU --> U["Work Item Update or Skip"]
-    U --> K["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Dependency Analysis | the `implement` service | `microsoft-learn` |
-| Update Planning | the `implement` service; the `architecture` role for a framework upgrade | `microsoft-learn` |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Security Validation | the `implement` service | — |
-| New Feature Adoption *(framework upgrade)* | the `implement` service, the `architecture` role | `microsoft-learn` |
-| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(smoke checks for a framework upgrade; otherwise only when new user-facing behavior is introduced)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
-
-## flow-spec
-
-```mermaid
-flowchart TD
-    A["Context Loading"] --> B["Drafting"]
-    B --> C["Check & Review"]
-    C --> D["Personal Validation"]
-    D --> E{User approves?}
-    E -->|Yes| F["Create Pull Request or Skip"]
-    E -->|No| G["Return to the relevant earlier stage"]
-    G --> A
-    F --> U["Work Item Update or Skip"]
-    U --> H["Summary"]
-```
-
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Context Loading | — | servers bound to `spec` |
-| Drafting | the role the folder maps to — `architecture` for `arc42/` and `tech/`, `domain`, `ux` for `design/`, `docs` for `ai/` | servers bound to `spec` *(design source for `design/`)* |
-| Check & Review | the same role | — |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
+The **Runs** column is each phase's default from **Phases** in `resources/engine-contract.md`:
+inline in the flow-runner, forked as a `context: fork` skill, or delegated to a sub-agent. A
+repository's `phases` entry changes it per `resources/phase-resolution.md`. MCP servers are
+the phase entry's `mcp` field, resolved from the live tool list; see **MCP Server Strategy** in
+`resources/flow-execution-model.md`.
 
 ## flow-code
 
+One tier for every kind — `feature`, `create`, `refactor`, `defect`, `config`, `dependency`,
+`project`. The kind changes what `implement` does and how deep `verify` goes; only `plan` is
+limited to a kind.
+
 ```mermaid
 flowchart TD
-    S["Scope Discovery"] --> A["Specification & Architecture Intake"]
-    A --> K{Kind?}
-    K -->|create| P["Implementation Planning"]
-    K -->|refactor| R["Refactor Planning"]
-    K -->|defect| Q["Reproduction & Root Cause"]
-    K -->|feature, config| B
-    P --> B["Implementation"]
-    R --> B
-    Q --> B
-    B --> T{Change kind?}
-    T -->|code-modifying| C["Build & Test"]
-    C --> D["Validation"]
-    D --> E["Personal Validation"]
-    T -->|documentation/config| E
-    E --> F{User approves?}
-    F -->|Yes| G["Create Pull Request or Skip"]
-    F -->|No| H["Return to the stage the notes concern"]
-    H --> T
-    G --> DU["Verification or Skip (code-modifying only)"]
-    DU --> U["Work Item Update or Skip"]
-    U --> I["Summary"]
+    UB["Update Base"] --> S["Scope"]
+    S -->|create| P["Plan"]
+    S -->|every other kind| I["Implement"]
+    P --> I
+    I <-->|"per slice, within policy.review.retryBudget"| R["Review"]
+    R -->|every slice clean| BT["Build & Test"]
+    BT --> V["Verify"]
+    V --> SC["Spec Check"]
+    SC --> RD{"Ready?"}
+    RD -->|"not ready, within policy.ready.retryBudget"| I
+    RD -->|"ready, or budget spent"| PV["Personal Validation"]
+    PV --> G{User approves?}
+    G -->|approve| PR["Create Pull Request"]
+    G -->|revise| BACK["Reopen the phase the notes concern"]
+    BACK --> I
+    G -->|decline| X(["Blocked"])
+    PR --> RB["Report Back"]
+    RB --> SU["Summary"]
 ```
 
-| Phase | Roles & services | MCP servers |
-|-------|--------|-------------|
-| Scope Discovery | `flow-runner` agent, optionally the `architecture` role | servers bound to `spec` |
-| Specification & Architecture Intake | the `architecture` role; the `domain` role when a create crosses a context boundary | servers bound to `spec` |
-| Implementation Planning *(create)* | the `architecture` role | — |
-| Refactor Planning *(refactor)* | the `architecture` role, the `implement` service | — |
-| Reproduction & Root Cause *(defect)* | the `implement` service, the `app.start` service | `aspire` |
-| Implementation | the `implement` service | `microsoft-learn` |
-| Build & Test | the `validate` service | `microsoft-learn` *(targeted remediation only)* |
-| Validation | the `qa.run` provider, the runtime monitor | `aspire`, `playwright` *(capture for new functionality only)* |
-| Personal Validation | — | — |
-| Create Pull Request | *(default)* | — |
-| Verification | the `verify` provider, or *(default)* | servers bound to `verify` |
-| Work Item Update | *(default)* | — |
-| Summary | `flow-runner` agent | — |
+| Phase | Skill | Runs | `phases` key |
+|-------|-------|------|--------------|
+| Update Base | `phase-update-base` | inline | `phase-update-base` |
+| Scope | `phase-scope` | fork | `phase-scope` |
+| Plan *(create)* | `phase-plan` | delegated | `phase-plan` |
+| Implement | `phase-implement` | fork, once per slice | `phase-implement`, `phase-implement:<area>` |
+| Review | `phase-review` | fork, once per slice | `phase-review` |
+| Build & Test | `phase-build-test` | delegated | `phase-build-test` |
+| Verify | `phase-verify` | delegated | `phase-verify` |
+| Spec Check | `phase-spec-check` | delegated | `phase-spec-check` |
+| Ready | `phase-ready` | inline | none |
+| Personal Validation | `phase-personal-validation` | inline | none |
+| Create Pull Request | `phase-create-pr` | inline | `phase-create-pr` |
+| Report Back | `phase-report-back` | delegated | `phase-report-back` |
+| Summary | `phase-summary` | inline | `phase-summary` |
+
+## flow-spec
+
+The documentation tier: drafting and check & review stand where `flow-code` implements, builds,
+verifies, and checks the spec.
+
+```mermaid
+flowchart TD
+    UB["Update Base"] --> S["Scope"]
+    S --> D["Drafting, per folder"]
+    D --> C["Check & Review"]
+    C --> RD{"Ready?"}
+    RD -->|"not ready, within policy.ready.retryBudget"| D
+    RD -->|"ready, or budget spent"| PV["Personal Validation"]
+    PV --> G{User approves?}
+    G -->|approve| PR["Create Pull Request"]
+    G -->|revise| D
+    G -->|decline| X(["Blocked"])
+    PR --> RB["Report Back"]
+    RB --> SU["Summary"]
+```
+
+| Phase | Skill | Runs | `phases` key |
+|-------|-------|------|--------------|
+| Update Base | `phase-update-base` | inline | `phase-update-base` |
+| Scope | `phase-scope` | fork | `phase-scope` |
+| Drafting | `phase-drafting` | delegated, per folder | `phase-drafting:arc42`, `:domain`, `:tech`, `:design`, `:ai` |
+| Check & Review | `phase-check-review` | inline | `phase-check-review` |
+| Ready | `phase-ready` | inline | none |
+| Personal Validation | `phase-personal-validation` | inline | none |
+| Create Pull Request | `phase-create-pr` | inline | `phase-create-pr` |
+| Report Back | `phase-report-back` | delegated | `phase-report-back` |
+| Summary | `phase-summary` | inline | `phase-summary` |

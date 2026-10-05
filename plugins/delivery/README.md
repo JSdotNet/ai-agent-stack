@@ -18,22 +18,22 @@ instead of by repository.
 
 | Kind | Members |
 |---|---|
-| `flow-*` (4) | A staged procedure for one category of work, run start to finish in **one** session, ending at the Personal Validation gate: `flow-code`, `flow-spec`, `flow-update-packages`, `flow-project` |
-| `phase-*` (13) | A shared step inside a flow, invoked by a flow and never directly: `phase-update-base`, `phase-scope`, `phase-plan`, `phase-implement`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary` |
+| `flow-*` (2) | A staged procedure named for what changes, run start to finish in **one** session and passing the Personal Validation gate before its pull request: `flow-code` for every change to the code, in seven kinds — `feature`, `create`, `refactor`, `defect`, `config`, `dependency`, `project` — and `flow-spec` for the devbook folders |
+| `phase-*` (15) | One phase of a flow, run by the flow-runner and never directly: `phase-update-base`, `phase-scope`, `phase-plan`, `phase-implement`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary`, and `flow-spec`'s own `phase-drafting` and `phase-check-review` |
 | The pull-request lane (4) | `fix-pr-checks`, `pr-merge-ready`, `push-branch`, `update-pr-branch` — raising a PR is the host's own action or `gh pr create`, not a skill |
 | Pickup (2) | `start-session-from-issue`, `sre-alerts-to-work-items` — both read and write through the bound tracker's operations, never one provider's CLI |
 | `init`, `update` (2) | The engine's stamp under `components.delivery`, written once and moved forward; hidden from the menu and reached through `devbook-config` |
-| Agent | `flow-runner` — the sequencer, tracker, and gatekeeper |
+| Agents | `flow-runner` — the sequencer, tracker, and gatekeeper; `runner-low` through `runner-max` — the effort runners, Claude Code only |
 
 One flow, `flow-spec`, carries a change to any of the five devbook folders — `arc42/`,
-`domain/`, `tech/`, `design/`, `ai/` — the same way the others carry a code change. It owns
+`domain/`, `tech/`, `design/`, `ai/` — the same way `flow-code` carries a code change. It owns
 the procedure and none of the rules: what a chapter must look like comes from the
 instruction files the repository keeps for the folder and the check it ships, which the
 `devbook` plugin materializes and this plugin never names. In a repository that has not
 adopted the folder it stops and says so.
 
-[FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws every flow: stage order, where the approval gate
-sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
+[FLOW-DIAGRAMS.md](FLOW-DIAGRAMS.md) draws both flows: phase order, the two loops, where the
+approval gate sits, and where each one hands off to a pull request. It is the overview the `SKILL.md` files
 deliberately leave out, so they can stay execution rules.
 
 A flow never leaves its session, and nothing in this marketplace spawns one. Work that runs
@@ -43,43 +43,43 @@ unattended lane.
 
 ## How a repository shapes a flow
 
-Three things, and only three, and none of them is a stage definition.
+Four keys, and none of them is a stage definition.
 
-**Extension points.** The point set is closed and declared by the engine. Seven are
-**services** — exactly one provider, returning a result the flow acts on: `spec`,
-`implement`, `validate`, `app.start`, `qa.run`, `verify`, `deliver`. Four are **chores** — zero or more,
-in declared order, contributing side effects and a report and never changing a decision:
-`session.start`, `flow.start`, `data.prepare`, `flow.end`.
+**Phases.** The phase list is closed and declared by the engine. `phases` holds one complete
+map per flow, one entry per phase, keyed by the phase's skill name: which `agent` runs it,
+which `skill` it follows, on which `model`, at which `effort`, with which `mcp` servers, and
+which chores run `before` and `after` it. A qualifier picks a variant — the folder on
+`phase-drafting`, an area on `phase-implement`. An absent field inherits the session, so `{}`
+is a complete entry. Personal Validation and the ready check take no entry.
 
-**Gates.** A gate presents the output of the point it attaches to and asks a question, with
-three outcomes: `approve` continues, `revise` re-runs that point with the human's notes, and
+**Gates.** A gate presents the output of the phase it attaches to and asks a question, with
+three outcomes: `approve` continues, `revise` re-runs that phase with the human's notes, and
 `decline` blocks the stage. Configuration may add a gate anywhere; it may never remove one or
 hand one to a plugin. Personal Validation is the mandatory instance of that pattern, not a
-separate mechanism. `spec → gate → implement` is the highest-value one to turn on.
+separate mechanism. A gate after `phase-scope` is the highest-value one to turn on.
 
-**Bindings and policy.** Which plugin fills each role, which tracker the repository uses,
-which MCP servers each extension point uses, and a closed set of switches — QA depth and its ceiling, the validate retry budget, the gate revise
-budget, whether the flow commits its change set at each handback, whether a pull request is
-required.
+**Bindings and policy.** Which tracker the repository uses, which surfaces it reports to, and
+a closed set of switches — QA depth and its ceiling, the review and ready retry budgets, the
+gate revise budget, whether the flow commits its change set at each handback, whether a pull
+request is required.
 
-All four live in `.devbook/config.json`:
+All of them live in `.devbook/config.json`:
 
 ```json
 {
-  "extensions": {
-    "implement": "your-coding-plugin:coding",
-    "data.prepare": [{ "run": "repo:seed-test-data", "on-failure": "required" }]
+  "phases": {
+    "flow-code": {
+      "phase-implement": { "agent": "your-coding-plugin:coding", "model": "opus" },
+      "phase-verify": { "before": [{ "run": "repo:seed-test-data", "on-failure": "required" }] }
+    }
   },
-  "gates": [{ "at": "spec", "when": "after", "purpose": "approval", "show": "artifact" }],
-  "policy": { "qa.depth": "targeted", "validate.retryBudget": 2 },
-  "bindings": {
-    "delivery.tracker": { "provider": "github" },
-    "delivery.mcp": { "spec": ["your-guidelines-server"] }
-  }
+  "gates": [{ "at": "scope", "when": "after", "purpose": "approval", "show": "artifact" }],
+  "policy": { "qa.depth": "targeted", "review.retryBudget": 1 },
+  "bindings": { "delivery.tracker": { "provider": "github" } }
 }
 ```
 
-Copy `resources/config-template.json` and validate with
+A committed map lists every phase of its flow; the snippet shows two. Copy `resources/config-template.json` and validate with
 `node tools/stack-config/check.mjs <path>` — the default target is `.devbook/config.json`
 under the working directory, so name the file when running from the plugin's folder. An
 unknown key is rejected, not ignored: a typo must
@@ -89,7 +89,7 @@ over the committed file — the user's own under `$XDG_CONFIG_HOME/devbook`
 never a file inside the clone — and `--print` emits the merged result as JSON, which is how a
 flow reads its effective configuration on either host, per *The overlays* in
 `resources/engine-contract.md`. An overlay may also carry `ext.<plugin>.<key>`, a plugin's
-own machine-scope state, which the engine merges and never reads. A point left out of `delivery.mcp` takes the engine
+own machine-scope state, which the engine merges and never reads. A phase whose `mcp` is absent takes the engine
 default — `microsoft-learn`, `aspire`, `playwright` — and `resources/mcp-template.json` and
 `resources/mcp-vscode-template.json` declare those three in the shape each host reads, so
 `devbook-config:init` can copy them into a repository that declares no server yet.
@@ -109,8 +109,8 @@ engine names two skills by name and reads them by path, and writes neither:
 
 | Skill | Fills | Where it comes from |
 |---|---|---|
-| `run` | the facts the `app.start` provider reads — the setup, the command, the entry points, the readiness signals, the credential pointer | `.claude/skills/run-<name>/SKILL.md`, the repository's own recipe, which Claude Code's `run` follows; Copilot's twin at `.github/skills/run/` points at it |
-| `capture` | evidence capture inside Validation — the layout, the naming, the tooling | `.agents/skills/capture.md`, the same shape |
+| `run` | the facts `phase-verify` and Personal Validation read to start the application — the setup, the command, the entry points, the readiness signals, the credential pointer | `.claude/skills/run-<name>/SKILL.md`, the repository's own recipe, which Claude Code's `run` follows; Copilot's twin at `.github/skills/run/` points at it |
+| `capture` | evidence capture inside Verify — the layout, the naming, the tooling | `.agents/skills/capture.md`, the same shape |
 
 Whoever seeds them is the repository's business; the engine only expects a skill by that name
 to exist and to leave behind what its goal says — a running application, evidence paths.
@@ -119,13 +119,13 @@ to exist and to leave behind what its goal says — a running application, evide
 Neither is a dependency, and this is the part worth being precise about: **the guardrail is
 the contract, not the skill.** `resources/capture-contract.md` says what is captured, when it
 is required, and that an unavailable capture blocks the stage rather than degrading it — and
-that holds with no capture skill, no `qa.run` provider, and no QA plugin installed. A missing
+that holds with no capture skill, no agent bound to `phase-verify`, and no QA plugin installed. A missing
 skill changes who runs capture, never whether it runs.
 
 ## What it never depends on
 
 - **Specialist plugins.** An architecture, QA, domain, UX, product, security, or docs
-  specialist is bound as a role per repository, and a coding one as a service. Neither is
+  specialist is bound per repository as the `agent` of the phase it runs. None is
   ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The
   reverse holds too: no specialist ever learns about `delivery`.

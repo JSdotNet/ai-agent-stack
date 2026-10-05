@@ -339,7 +339,9 @@ and `capture` with a wrapper per host and stamped them under `components.deliver
 
 **Rewrite the old configuration keys.** `update` runs the migration that folds `extensions`,
 `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` into one complete `phases` map per
-flow, and moves a map left under a retired flow into `flow-code`. It is
+flow, moves a map left under a retired flow into `flow-code`, renames `policy.phases.verification`,
+`phases.workItemUpdate`, and a gate's `skip-point` to their 1.14.0 names, and drops
+`policy.validate.retryBudget`. It is
 `migrations/001-phase-maps/`, the engine's first, and it lives for the 1.x major per
 [the releases decision](../adr/releases.md). It rewrites the committed file and both overlay
 layers, writing `{}` for every phase the old file never named in the committed one and keeping
@@ -562,6 +564,7 @@ one into something else.
 | Configuration chooses among behaviour the engine already implements and never introduces new behaviour | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | `flow-spec` in a repository that has not adopted the target folder stops at Scope and says so | `phase-scope` | untested |
 | A flow shipped by a higher layer, or a repo-native `flow-*`, declares its own phase ids; the engine never assigns them | phase resolution | untested |
+| A `phases` map under a flow the engine does not declare validates only when the repository ships that `flow-*` skill | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | A flow names a phase and never a plugin | authoring | untested |
 
 ### Phase Tier

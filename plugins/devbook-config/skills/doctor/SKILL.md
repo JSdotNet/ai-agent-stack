@@ -1,6 +1,6 @@
 ---
 name: doctor
-description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every provider id bound in the effective configuration that resolves to no skill, a missing or out-of-range OpenSpec CLI and an unapproved change nobody has touched in a week, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill", "is the OpenSpec CLI current", "stale proposals".'
+description: 'Diagnose a repository''s installation of this marketplace without writing anything — every component''s stamp against what is on disk, outstanding devbook migrations, a stale or customized AGENTS.md section, every agent and provider id the phase maps bind that resolves to nothing, a key or flow map 1.14.0 retired, a leftover model-selection.md, a missing or out-of-range OpenSpec CLI and an unapproved change nobody has touched in a week, and each installed plugin against the newest published — and name the one skill that fixes each finding. Reads every stamp, which is why it lives here and not in any one component. Use when: something may be out of date, a migration may be outstanding, a stamp may have drifted, after an upgrade, or before trusting a repository nobody remembers configuring. Triggers on: "devbook-config doctor", "doctor", "is the stack healthy", "is my installation current", "outstanding migrations", "stamp drift", "is the AGENTS.md section stale", "a binding names a retired skill", "is the OpenSpec CLI current", "stale proposals".'
 ---
 
 # devbook-config doctor
@@ -40,17 +40,25 @@ two writers for one stamp is how a reconcile stops being idempotent.
    | A materialized hash matches nothing ever shipped | customized | Report it and leave it — often deliberate |
    | An `AGENTS.md` section no longer matches its stamped hash | customized | Report it and leave it; the repository has taken the section over |
 
-4. **Resolve every provider.** Run `node <installPath>/tools/stack-config/check.mjs --print`,
+4. **Check the phase maps.** The report's *Retired keys* section names every `extensions`,
+   `delivery.roles`, `delivery.mcp`, gate on an extension point, and map under a retired flow
+   — `phases.flow-update-packages`, `phases.flow-project` — in the committed file or an
+   overlay: each is hard, fixed by `delivery:update`. A `model-selection.md` it names as left
+   over is a warning — nothing reads it — fixed by `devbook-config:local`.
+5. **Resolve every provider.** Run `node <installPath>/tools/stack-config/check.mjs --print`,
    `installPath` being delivery's, with the repository as the working directory — it resolves
    `.devbook/config.json` from there — and read `config` from its stdout; never merge the
-   layers by hand. delivery not installed: say the providers are unchecked, and why. Take every
-   provider id under `extensions` — a string, an object's `provider`, a chore entry's `run`, less any
-   `--flag` arguments after it — and under `bindings`: each `delivery.roles` value,
-   `openspec.grill`, and a `delivery.tracker` provider that
-   is not `github`, `jira`, `markdown`, or `backlog`. `delivery.mcp` names servers, not
-   providers. `null` is an unbound point, not a finding. Resolve each:
-   - `plugin:skill` — `skills/<skill>/SKILL.md` or, for a role, `agents/<skill>.agent.md`
-     under that plugin's `installPath`; a bare `plugin` — the plugin is installed;
+   layers by hand. A non-zero exit is hard, with the checker's lines as the finding. delivery
+   not installed: say the providers are unchecked, and why. Take, from every entry of every
+   map under `phases`, its `agent`, its `skill`, `phase-verify`'s `app` provider, and each
+   `before` and `after` chore's id, less any `--flag` arguments after it; and under
+   `bindings`, `openspec.grill` and a `delivery.tracker` provider that is not `github`,
+   `jira`, `markdown`, or `backlog`. `mcp` names servers, not providers. `null` is a
+   deliberate choice, not a finding. Resolve each:
+   - an `agent` — `agents/<name>.agent.md` under that plugin's `installPath`; a bare `plugin`
+     — it ships exactly one agent, else a warning to name one; `repo:<agent>` —
+     `.claude/agents/<agent>.md` or `.github/agents/<agent>.agent.md`;
+   - any other `plugin:skill` — `skills/<skill>/SKILL.md` under that plugin's `installPath`;
    - `repo:<skill>` — `.agents/skills/<skill>.md`, `.claude/skills/<skill>/SKILL.md`, or
      `.github/skills/<skill>/SKILL.md` in the repository.
 
@@ -59,7 +67,7 @@ two writers for one stamp is how a reconcile stops being idempotent.
    migration that rewrites it. Any other id that resolves to nothing is a warning naming the
    file and key that bind it — the flow degrades past it, so it never fails the run. A
    plugin the report does not list is outside this catalog: say it is unchecked.
-5. **Check the change lane** when `components.openspec` exists. Run `openspec --version`
+6. **Check the change lane** when `components.openspec` exists. Run `openspec --version`
    from the repository root: absent, or outside `components.openspec.cli`, is a warning —
    a fact about this machine, like a plugin it lacks — and the fix is
    `npm install -g @fission-ai/openspec@latest`, run by the person, never here. Then, for
@@ -67,7 +75,7 @@ two writers for one stamp is how a reconcile stops being idempotent.
    block: a change still at `proposed` whose folder `git log -1 --format=%cs` dates more than
    seven days back — or, never committed, whose newest file is — is a warning naming the
    change and its age, fixed by `devbook-collaboration:chapter-approve` on the folder.
-6. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
+7. **Report** one table: finding, component, severity, and the skill that fixes it. Fail on
    hard drift; report staleness, customization, and unresolved providers without failing — a
    stale generated file must not block an unrelated pull request.
 

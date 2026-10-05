@@ -69,19 +69,35 @@ const SCOPE = {
     'out-of-scope': 'not installed and not adopted',
 };
 const DEVBOOK_FOLDERS = ['arc42', 'domain', 'tech', 'design', 'ai'];
-const ENGINE_KEYS = ['bindings', 'extensions', 'policy', 'gates'];
-const SERVICES = ['spec', 'implement', 'validate', 'app.start', 'qa.run', 'verify', 'deliver'];
-const CHORES = ['session.start', 'flow.start', 'data.prepare', 'flow.end'];
+const ENGINE_KEYS = ['bindings', 'phases', 'areas', 'policy', 'gates'];
 
-// The engine default per extension point, from **MCP Server Strategy** in `delivery`'s
-// `resources/flow-execution-model.md`. Repeated here for the same reason COMPONENTS is: the
-// report has to say which server a repository leans on when the delivery plugin is not on
-// this machine. A point not listed defaults to none.
+// What 1.14.0 removed, each refused by delivery's checker and rewritten by delivery:update's
+// `001-phase-maps` migration. Named here so the report says which file still carries one.
+const RETIRED_BINDINGS = ['delivery.roles', 'delivery.mcp'];
+const RETIRED_FLOWS = ['flow-update-packages', 'flow-project'];
+const RETIRED_GATE_POINTS = ['session.start', 'flow.start', 'spec', 'validate', 'data.prepare', 'app.start', 'qa.run', 'deliver', 'flow.end'];
+
+// The phases of each flow, from `x-flows` in delivery's `resources/config.schema.json`.
+// Repeated here for the same reason COMPONENTS is: the report has to describe a repository's
+// wiring when the delivery plugin is not on this machine.
+const FLOWS = {
+    'flow-code': [
+        'phase-update-base', 'phase-scope', 'phase-plan', 'phase-implement', 'phase-review',
+        'phase-build-test', 'phase-verify', 'phase-spec-check', 'phase-create-pr',
+        'phase-report-back', 'phase-summary',
+    ],
+    'flow-spec': [
+        'phase-update-base', 'phase-scope', 'phase-drafting', 'phase-check-review',
+        'phase-create-pr', 'phase-report-back', 'phase-summary',
+    ],
+};
+
+// The engine default servers per phase, from **MCP Server Strategy** in `delivery`'s
+// `resources/flow-execution-model.md`. A phase not listed defaults to none.
 const MCP_DEFAULTS = {
-    implement: ['microsoft-learn'],
-    validate: ['microsoft-learn'],
-    'app.start': ['aspire', 'playwright'],
-    'qa.run': ['aspire', 'playwright'],
+    'phase-implement': ['microsoft-learn'],
+    'phase-build-test': ['microsoft-learn'],
+    'phase-verify': ['aspire', 'playwright'],
 };
 
 // Where a host reads a repository's MCP servers from. `.mcp.json` is read by Claude Code and
@@ -215,8 +231,24 @@ function bindingPlugin(value) {
 }
 
 /**
- * Every `delivery.roles` and `extensions` binding naming a plugin this checkout has not
- * enabled. The engine promises this is a warning and never a failure - a binding is committed
+ * Every provider a phase entry names - its `agent`, its `skill`, and each `before` and `after`
+ * chore - as `{ where, key, value }`, `where` being `phases.<flow>.<phase>`.
+ */
+function phaseBindings(phases) {
+    const found = [];
+    for (const [flow, map] of Object.entries(phases && typeof phases === 'object' ? phases : {})) {
+        for (const [phase, entry] of Object.entries(map && typeof map === 'object' ? map : {})) {
+            if (!entry || typeof entry !== 'object') continue;
+            for (const key of ['agent', 'skill', 'before', 'after']) {
+                if (key in entry) found.push({ where: `phases.${flow}.${phase}`, key, value: entry[key] });
+            }
+        }
+    }
+    return found;
+}
+
+/**
+ * Every phase entry naming a plugin this checkout has not enabled. The engine promises this is a warning and never a failure - a binding is committed
  * and shared, enablement is personal to this checkout, and a stage falls back to what its role
  * reference states. See `resources/engine-contract.md` in the delivery plugin, under Bindings.
  *
@@ -234,14 +266,7 @@ function unenabledBindings(repository, enabled) {
         const missing = [...new Set(named)].filter((name) => !on.has(name));
         if (missing.length) found.push({ where, key, plugins: missing });
     };
-    for (const [role, value] of Object.entries(repository.roles ?? {})) {
-        check('delivery.roles', role, value);
-    }
-    for (const point of [...SERVICES, ...CHORES]) {
-        if (repository.extensions && point in repository.extensions) {
-            check('extensions', point, repository.extensions[point]);
-        }
-    }
+    for (const { where, key, value } of phaseBindings(repository.phases)) check(where, key, value);
     return found;
 }
 
@@ -379,16 +404,20 @@ function buildPluginRows(catalogs, installed, enabled, marketplace, components) 
 }
 
 /**
- * The servers the engine will look for - every id bound under `delivery.mcp`, plus the engine
- * default for each point the binding leaves absent - against the ids the repository's MCP
+ * The servers the engine will look for - every id a phase's `mcp` names, plus the engine
+ * default for each phase that leaves it absent - against the ids the repository's MCP
  * configuration files actually declare. A default is only a name until a host can start the
  * server behind it, so an id in `undeclared` costs its stage its grounding on every machine.
  */
-function mcpServers(repoRoot, mcp) {
+function mcpServers(repoRoot, phases) {
     const wanted = new Set();
-    for (const point of [...SERVICES, ...CHORES]) {
-        const bound = mcp && point in mcp ? mcp[point] : MCP_DEFAULTS[point];
-        for (const id of bound ?? []) wanted.add(id);
+    for (const [flow, list] of Object.entries(FLOWS)) {
+        const map = phases?.[flow] && typeof phases[flow] === 'object' ? phases[flow] : {};
+        for (const phase of list) {
+            const entries = Object.entries(map).filter(([key]) => key.split(':')[0] === phase).map(([, e]) => e);
+            const bound = entries.filter((e) => e && typeof e === 'object' && 'mcp' in e).map((e) => e.mcp);
+            for (const ids of bound.length ? bound : [MCP_DEFAULTS[phase]]) for (const id of ids ?? []) wanted.add(id);
+        }
     }
     const files = MCP_FILES.map(({ path, key }) => {
         const value = load('MCP configuration', join(repoRoot, path));
@@ -453,9 +482,9 @@ function buildRepository(repoRoot) {
         };
     });
 
-    // The personal model-selection file the delivery `model-override` slot resolves to
-    // (plugins/delivery/resources/engine-contract.md, Host Slots): the variable when set, else
-    // the file beside the overlays. Reported so a run at category defaults is a choice.
+    // The retired personal model-selection file, where the delivery `model-override` slot still
+    // says it lives: the variable when set, else the file beside the overlays. Nothing resolves
+    // a model through it since 1.14.0; a leftover is named so `local` converts and retires it.
     const modelSelectionPath = env.CLAUDE_FLOW_MODEL_SELECTION_PATH
         ? resolve(env.CLAUDE_FLOW_MODEL_SELECTION_PATH)
         : join(userDir, 'model-selection.md');
@@ -464,6 +493,22 @@ function buildRepository(repoRoot) {
         present: existsSync(modelSelectionPath),
         source: env.CLAUDE_FLOW_MODEL_SELECTION_PATH ? 'CLAUDE_FLOW_MODEL_SELECTION_PATH' : 'default',
     };
+
+    // Every 1.13.0 key still present, per file: the committed one and each overlay layer.
+    const retired = [{ where: '.devbook/config.json', file: config }, ...overlays.map((layer) => ({
+        where: `${layer.scope} overlay`,
+        file: layer.present ? load(`${layer.scope} overlay`, layer.path) : null,
+    }))].flatMap(({ where, file }) => {
+        if (!file || typeof file !== 'object') return [];
+        return [
+            ...('extensions' in file ? ['extensions'] : []),
+            ...RETIRED_BINDINGS.filter((key) => file.bindings && key in file.bindings).map((key) => `bindings["${key}"]`),
+            ...RETIRED_FLOWS.filter((flow) => file.phases && flow in file.phases).map((flow) => `phases.${flow}`),
+            ...(Array.isArray(file.gates) ? file.gates : [])
+                .map((gate, i) => (gate && typeof gate === 'object' && RETIRED_GATE_POINTS.includes(gate.at) ? `gates[${i}].at "${gate.at}"` : null))
+                .filter(Boolean),
+        ].map((key) => ({ where, key }));
+    });
 
     return {
         path,
@@ -475,12 +520,12 @@ function buildRepository(repoRoot) {
         present: Boolean(config),
         engineKeys: ENGINE_KEYS.filter((key) => config && key in config),
         tracker: config?.bindings?.['delivery.tracker'] ?? null,
-        roles: config?.bindings?.['delivery.roles'] ?? null,
-        mcp: config?.bindings?.['delivery.mcp'] ?? null,
         surface: config?.bindings?.['delivery.surface'] ?? null,
         slots: config?.bindings?.['delivery.slots'] ?? null,
-        mcpServers: mcpServers(repoRoot, config?.bindings?.['delivery.mcp']),
-        extensions: config?.extensions ?? null,
+        mcpServers: mcpServers(repoRoot, config?.phases),
+        phases: config?.phases ?? null,
+        areas: config?.areas ?? null,
+        retired,
         policy: config?.policy ?? null,
         gates: config?.gates ?? null,
         components: config?.components ?? null,
@@ -537,6 +582,39 @@ function describeMcpServers({ wanted, files, undeclared }) {
         lines.push(`Declared in none of them: ${ids(undeclared)}. A host cannot start a server it has not been told about, so the stage that leans on it runs without its grounding on every machine. The delivery plugin's \`resources/mcp-template.json\` (\`.mcp.json\`, read by Claude Code and the Copilot CLI) and \`resources/mcp-vscode-template.json\` (\`.vscode/mcp.json\`) declare the three engine defaults - copy them, or add the missing ids to a file that exists.`);
     }
     return lines.join('\n');
+}
+
+/**
+ * One table per flow map the committed file carries: each phase with what it sets. A flow it
+ * does not carry runs every phase on the session's settings and its built-in procedure.
+ */
+function describePhases(phases, warn) {
+    if (!phases || typeof phases !== 'object' || !Object.keys(phases).length) {
+        return "No `phases` key - every phase runs on the session's model and effort, inline or as its own forked skill, with its built-in procedure.";
+    }
+    const FIELDS = ['agent', 'skill', 'model', 'effort', 'mcp', 'before', 'after'];
+    const cell = (entry, key, where) => (key in entry ? describeValue(entry[key]) + warn(where, key) : '-');
+    const parts = [];
+    for (const [flow, map] of Object.entries(phases)) {
+        const rows = Object.entries(map && typeof map === 'object' ? map : {}).map(([phase, entry]) => {
+            const e = entry && typeof entry === 'object' ? entry : {};
+            const where = `phases.${flow}.${phase}`;
+            const options = Object.keys(e).filter((k) => !FIELDS.includes(k));
+            return [
+                `\`${phase}\``, cell(e, 'agent', where), cell(e, 'skill', where), cell(e, 'model', where),
+                cell(e, 'effort', where), cell(e, 'mcp', where),
+                `${cell(e, 'before', where)} / ${cell(e, 'after', where)}`,
+                options.map((k) => `\`${k}\`: ${describeValue(e[k])}`).join(', ') || '-',
+            ];
+        });
+        parts.push(`**${flow}**${RETIRED_FLOWS.includes(flow) ? ' - a retired flow; `delivery:update` moves it into flow-code' : ''}`);
+        parts.push('');
+        parts.push(rows.length
+            ? table(['Phase', 'Agent', 'Skill', 'Model', 'Effort', 'MCP', 'Before / after', 'Options'], rows)
+            : 'An empty map.');
+        parts.push('');
+    }
+    return parts.join('\n').trimEnd();
 }
 
 function describeValue(value) {
@@ -654,7 +732,7 @@ function render(model) {
         out.push('');
     }
     if (repo.legacyFlowContextPath) {
-        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`run\` recipe at \`.claude/skills/run-<name>/SKILL.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`extensions.app.start\` set to \`null\`. Move what it says and delete it.`);
+        out.push(`\`${repo.legacyFlowContextPath}\` is still present. The flow context file is retired and nothing reads it: its facts belong in the repository's \`run\` recipe at \`.claude/skills/run-<name>/SKILL.md\`, its QA depth in \`policy.qa.depth\`, and nothing-to-start is \`phases.flow-code.phase-verify.app\` set to \`null\`. Move what it says and delete it.`);
         out.push('');
     }
     for (const layer of repo.overlays.filter((l) => l.present)) {
@@ -669,15 +747,21 @@ function render(model) {
     }
     if (!repo.overlays.some((l) => l.present)) {
         const user = repo.overlays.find((l) => l.scope === 'user');
-        out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, role and MCP bindings. Run \`devbook-config:local\` to say what is true of this machine.`);
+        out.push(`No user overlay: neither \`${user.path}\` nor a \`repos/<id>/config.local.json\` beside it exists, so every run on this machine takes the team's defaults - QA depth, retry budget, and each phase's agent, model, and effort. Run \`devbook-config:local\` to say what is true of this machine.`);
         out.push('');
     }
     if (repo.modelSelection.present) {
-        out.push(`\`${repo.modelSelection.path}\` is present (${repo.modelSelection.source === 'default' ? 'the default model-selection path' : 'named by `CLAUDE_FLOW_MODEL_SELECTION_PATH`'}), so a flow resolves each stage's model through it before the category default.`);
-    } else {
-        out.push(`No model-selection file at \`${repo.modelSelection.path}\`${repo.modelSelection.source === 'default' ? '' : ' (named by `CLAUDE_FLOW_MODEL_SELECTION_PATH`)'}: every flow stage runs at its category's default model. \`devbook-config:local\` writes one.`);
+        out.push(`\`${repo.modelSelection.path}\` is still present (${repo.modelSelection.source === 'default' ? 'the default model-selection path' : 'named by `CLAUDE_FLOW_MODEL_SELECTION_PATH`'}). The model categories are retired and nothing reads it: a model is a phase's \`model\` field now. Run \`devbook-config:local\`, which converts it into user-overlay phase entries and retires the file.`);
+        out.push('');
     }
-    out.push('');
+    if (repo.retired.length) {
+        out.push('### Retired keys');
+        out.push('');
+        out.push('1.14.0 refuses these, and a flow stops at the checker until they are rewritten. Run `delivery:update`, whose `001-phase-maps` migration rewrites each into the phase maps.');
+        out.push('');
+        out.push(table(['File', 'Key'], repo.retired.map((r) => [r.where, `\`${r.key}\``])));
+        out.push('');
+    }
     if (repo.present && !repo.id) {
         out.push('`.devbook/config.json` carries no `id`, so no per-repository overlay is looked up for it. Add one - lowercase, digits, hyphens - to let a machine keep settings for this repository outside every clone of it.');
         out.push('');
@@ -688,7 +772,7 @@ function render(model) {
     } else {
         out.push(`\`.devbook/config.json\` declares ${repo.engineKeys.map((k) => `\`${k}\``).join(', ') || 'no engine-owned key'}${repo.components ? ', plus component stamps' : ''}.`);
         out.push('');
-        out.push('### Roles and tracker');
+        out.push('### Tracker and surfaces');
         out.push('');
         out.push(`Tracker: ${describeValue(repo.tracker ?? undefined)}`);
         out.push('');
@@ -700,27 +784,17 @@ function render(model) {
             ? table(['Slot', 'Bound to'], Object.entries(repo.slots).map(([k, v]) => [`\`${k}\``, describeValue(v)]))
             : 'No `delivery.slots` binding - every host slot takes its documented default.');
         out.push('');
-        out.push(repo.roles
-            ? table(['Role', 'Bound to'], Object.entries(repo.roles).map(([k, v]) => [`\`${k}\``, describeValue(v) + warn('delivery.roles', k)]))
-            : 'No `delivery.roles` binding - a flow consults no specialist by name.');
+        out.push('### Phases');
         out.push('');
-        out.push(repo.mcp
-            ? table(['Point', 'MCP servers'], Object.entries(repo.mcp).map(([k, v]) => [`\`${k}\``, v === null ? '`null` - deliberately none' : v.map((s) => `\`${s}\``).join(', ')]))
-            : 'No `delivery.mcp` binding - every point takes the engine default MCP servers.');
+        out.push(describePhases(repo.phases, warn));
         out.push('');
+        if (repo.areas && typeof repo.areas === 'object') {
+            out.push(`Areas, first match wins: ${Object.keys(repo.areas).map((a) => `\`${a}\``).join(', ')}.`);
+            out.push('');
+        }
         out.push(describeMcpServers(repo.mcpServers));
         out.push('');
-        out.push('### Extension points');
-        out.push('');
-        out.push(table(
-            ['Point', 'Kind', 'Provider'],
-            [
-                ...SERVICES.map((p) => [`\`${p}\``, 'service', describeValue(repo.extensions?.[p]) + warn('extensions', p)]),
-                ...CHORES.map((p) => [`\`${p}\``, 'chore', describeValue(repo.extensions?.[p]) + warn('extensions', p)]),
-            ],
-        ));
-        out.push('');
-        if (model.unenabled === null && (repo.roles || repo.extensions)) {
+        if (model.unenabled === null && repo.phases) {
             out.push('No settings file was readable, so nothing is said about whether the plugins these bindings name are enabled here.');
             out.push('');
         } else if (model.unenabled?.length) {
@@ -733,7 +807,7 @@ function render(model) {
                 model.unenabled.map((w) => [
                     `\`${w.where}\``,
                     `\`${w.key}\``,
-                    describeValue(repo[w.where === 'delivery.roles' ? 'roles' : 'extensions']?.[w.key]),
+                    describeValue(phaseBindings(repo.phases).find((b) => b.where === w.where && b.key === w.key)?.value),
                     w.plugins.map((n) => `\`${n}\``).join(', '),
                 ]),
             ));
@@ -901,4 +975,4 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import
     process.exit(main(process.argv.slice(2)));
 }
 
-export { compareVersions, projectPaths, resolveInstalled, selectInstall, buildPluginRows, buildRepository, bindingPlugin, describeStamp, unenabledBindings, parseArgs };
+export { compareVersions, projectPaths, resolveInstalled, selectInstall, buildPluginRows, buildRepository, bindingPlugin, describeStamp, phaseBindings, unenabledBindings, parseArgs };

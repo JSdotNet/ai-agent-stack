@@ -67,3 +67,22 @@ test('projectPaths names a worktree and then its main checkout', () => {
     assert.equal(selectInstall([{ ...here, projectPath: main }], [first, second]).projectPath, main);
     assert.equal(projectPaths(main).length, 1);
 });
+
+test('phaseBindings names every provider a phase entry binds, and unenabledBindings checks them', async () => {
+    const { phaseBindings, unenabledBindings } = await import('./report.mjs');
+    const phases = {
+        'flow-code': {
+            'phase-implement': { agent: 'csharp-coding:coding', model: 'opus' },
+            'phase-update-base': { before: ['devbook:validate'] },
+            'phase-verify': { agent: null, skill: 'repo:show' },
+        },
+    };
+    assert.deepEqual(phaseBindings(phases).map((b) => `${b.where}.${b.key}`), [
+        'phases.flow-code.phase-implement.agent',
+        'phases.flow-code.phase-update-base.before',
+        'phases.flow-code.phase-verify.agent',
+        'phases.flow-code.phase-verify.skill',
+    ]);
+    const missing = unenabledBindings({ phases }, { 'devbook@m': true });
+    assert.deepEqual(missing, [{ where: 'phases.flow-code.phase-implement', key: 'agent', plugins: ['csharp-coding'] }]);
+});

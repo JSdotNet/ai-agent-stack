@@ -1,6 +1,6 @@
 ---
 name: local
-description: 'Say what is true of this machine and nobody else''s — QA depth inside the repository''s ceiling, the retry budget, a role or MCP binding that exists only here, an extra checkpoint of your own, a personal grill skill for the change lane, the model each flow category uses, and machine-only instructions — and write it where the stack reads it: the user layer of the stack-config overlay by default, the repository layer when an answer is about one repository, the model-selection file, and AGENTS.local.md — all under your devbook config directory, none inside the clone. Never the committed config. Use when: a first run would otherwise take the team''s defaults without saying so, the report says no user overlay exists, or a personal setting should stop being re-asked. Triggers on: "devbook-config local", "set up my overlay", "what is true of my machine", "remember my QA depth", "set my model preferences", "create AGENTS.local.md".'
+description: 'Say what is true of this machine and nobody else''s — QA depth inside the repository''s ceiling, the retry budget, the agent, model, and effort each phase runs with here, an MCP server that exists only here, an extra checkpoint of your own, a personal grill skill for the change lane, and machine-only instructions — and write it where the stack reads it: the user layer of the stack-config overlay by default, the repository layer when an answer is about one repository, and AGENTS.local.md — all under your devbook config directory, none inside the clone. Converts a retired model-selection.md into overlay phase entries and retires it. Never the committed config. Use when: a first run would otherwise take the team''s defaults without saying so, the report says no user overlay exists or a model-selection.md is left over, or a personal setting should stop being re-asked. Triggers on: "devbook-config local", "set up my overlay", "what is true of my machine", "remember my QA depth", "set my model preferences", "set my effort per phase", "convert my model-selection", "create AGENTS.local.md".'
 ---
 
 # devbook-config local
@@ -10,40 +10,48 @@ Open the reply with `devbook-config@<version>`, `version` read from `../../.clau
 `init` and `update` write what is true of the repository; this writes what is true of you on
 this machine, and it is the only skill here that does. Every layer, its merge rules, and what
 an overlay may not say are *The overlays* in the delivery plugin's `resources/engine-contract.md`;
-the model-selection file is *The retired model table* in `resources/phase-resolution.md`.
+a phase entry's fields are its *Phases*, and how they resolve is `resources/phase-resolution.md`.
 
 ## Steps
 
 1. **Look first.** Run `node scripts/report.mjs --root <repository>` from this plugin's root:
-   it names both overlay paths and the model-selection path, says which exist, and
-   which keys and `ext.<plugin>` namespaces each carries. Read a present file before asking
-   about anything it already answers.
-2. **Ask what is true of this machine.** Every question is optional and the default is
-   nothing. QA depth, inside `policy.qa.ceiling`; `validate.retryBudget`; a role or MCP
-   server bound here and nowhere else; a grill skill of your own as `bindings["openspec.grill"]`,
-   which wins over the repository's — or `null` to skip grilling on this machine; a gate of your own; a model per flow category; and whether you want an
-   `AGENTS.local.md`. Offer each in the words of the contract, never invent a key.
-3. **Pick the layer per answer.** User — `<config dir>/config.local.json` — by default;
+   it names both overlay paths, says which exist, which keys and `ext.<plugin>` namespaces each
+   carries, and whether a retired `model-selection.md` is left over. Read a present file before
+   asking about anything it already answers.
+2. **Convert a leftover `model-selection.md`** before asking anything. Run
+   `node scripts/model-selection.mjs`: it prints the user-overlay `phases` the file's
+   categories become, and every row naming no phase. Show both, and carry the phases into
+   step 5 as answers already given.
+3. **Ask what is true of this machine.** Every question is optional and the default is
+   nothing. QA depth, inside `policy.qa.ceiling`; `validate.retryBudget`; then, per phase of
+   each flow map the merged config carries — `--print` from step 5 shows it — the `agent`,
+   `model`, and `effort` you want here, beside the team's value; `inherit` cancels a team
+   default. An MCP server bound here and nowhere else, as that phase's `mcp`; a grill skill of
+   your own as `bindings["openspec.grill"]`, which wins over the repository's — or `null` to
+   skip grilling on this machine; a gate of your own; and whether you want an `AGENTS.local.md`.
+   Offer each in the words of the contract, never invent a key.
+4. **Pick the layer per answer.** User — `<config dir>/config.local.json` — by default;
    repository — `repos/<id>/` under it, which needs a committed `id` — when the answer is
    about this repository alone. Nothing goes inside the clone, gitignored or not.
-4. **Write the overlay.** Merge into the file that is there: set only the keys answered and
-   remove nothing. Start an absent one from the delivery plugin's `resources/config.local-template.json`,
-   keeping only the keys chosen. Validate with that plugin's `tools/stack-config/check.mjs`
-   against this repository's config, and fix until it exits `0`; `--print` shows the merge.
-   The checker validates the overlay's shape and does not compare `qa.depth` with the
-   repository's `qa.ceiling`: the ceiling caps the result at run time, so a depth above it
-   is accepted here and capped there.
-5. **Write the model-selection file** when a category was answered: the `Category` / `Model`
-   table at the path the report names, listing only the categories chosen.
-6. **Create `AGENTS.local.md`** when asked, at the layer chosen in step 3, holding a heading
+5. **Write the overlay.** Merge into the file that is there: set only the keys answered and
+   remove nothing. A phase map here names only the phases it changes, field by field. Start
+   an absent one from the delivery plugin's `resources/config.local-template.json`, keeping
+   only the keys chosen. Validate with that plugin's `tools/stack-config/check.mjs` against
+   this repository's config, and fix until it exits `0`; `--print` shows the merge. The
+   checker does not compare `qa.depth` with the repository's `qa.ceiling`: the ceiling caps
+   the result at run time.
+6. **Retire `model-selection.md`** once the overlay that replaces it validates: ask, and on a
+   yes delete it. Nothing reads it any more, and a kept copy reads as a setting that applies.
+7. **Create `AGENTS.local.md`** when asked, at the layer chosen in step 4, holding a heading
    and nothing else. What goes in it is yours to write.
-7. **Report** each file written or left alone, by path and layer, and re-run the report.
+8. **Report** each file written, left alone, or retired, by path and layer, and re-run the
+   report.
 
 ## Do not
 
 - Never touch `.devbook/config.json`. Nothing here is true of the repository.
 - Never write `id`, `components`, `policy.pr.required`, `policy.qa.ceiling`,
-  `policy.gate.personalValidation`, or `policy.openspec.scenarios` in an overlay; the
-  checker refuses each by name.
+  `policy.gate.personalValidation`, `policy.openspec.scenarios`, or a
+  `phase-personal-validation` entry in an overlay; the checker refuses each by name.
 - Never write a secret. Gitignored is not private, and neither is a home directory.
 - Never write an overlay for someone else: on a shared account, say so and stop.

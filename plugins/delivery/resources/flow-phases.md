@@ -1,6 +1,6 @@
 ---
 name: flow-phases
-description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Update Base, Spec Check, the ready check, the Personal Validation gate, Create Pull Request, Report Back, Summary).
+description: The shared phase contract every flow-* flow runs — the phase order of flow-code and flow-spec, which file owns each part, and the full definition of the phases no skill of their own holds yet (Update Base, the ready check, the Personal Validation gate, Create Pull Request, Summary).
 ---
 
 # Flow Phases (Engine-Owned)
@@ -22,7 +22,7 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
 | **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and the ready check | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Report Back, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-build-test`, `phase-validation` (Verify), and `phase-personal-validation` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-build-test`, `phase-validation` (Verify), `phase-spec-check`, `phase-personal-validation`, and `phase-report-back` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -190,38 +190,14 @@ live there. What stays here is the contract around the phase:
 ## Phase: Spec Check
 
 `flow-code`. Runs after Verify and **before** the ready check and Personal Validation, so the
-approval sees the drift. Build & Test and Verify say whether the change **runs**; this phase
-says whether it is **what was agreed**, and whether what the repository has written down is
-still true — one verdict per item.
+approval sees the drift.
 
-- **What it checks against.** The specification Scope recorded — the approved version when a
-  gate sat after `phase-scope` — and its acceptance criteria, and the governed chapters the
-  change set touches or the scope names, in the adopted devbook folders.
-- **The bound skill decides whether it also updates.** It returns one verdict per item with the
-  evidence that settles it: `aligned`; `spec-ahead`, agreed and not built; `code-ahead`, built
-  and not written down; `conflict`; or `unresolved`. A skill that declares `updates: true` in
-  its contract also brings `code-ahead` chapters level, inside the change set:
-  - only `code-ahead` rows, and only chapters in scope — a drifted chapter elsewhere is
-    reported, not fixed in this run;
-  - following the folder's own instruction files and `meta` block, with the devbook check run
-    after and passing;
-  - never setting the `approved` status, which stays a person's decision;
-  - every edit listed for Personal Validation beside the code, where a rejected chapter edit
-    reopens this phase.
-
-  `spec-ahead`, `conflict`, and `unresolved` rows are always reported, never edited. Any other
-  skill only reports, and the phase changes nothing in the change set.
-- **Unbound**, the flow-runner reaches the same verdicts through a read-only sub-agent in the
-  same worktree, with only code that executes and tests that pass counting as evidence.
-- **List the unverified scenarios.** Every scenario in the specification whose chapter names
-  no test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
-  reports it, `linked` reports it as what will refuse acceptance.
-- **Record the table** in the stage output; Personal Validation presents it, Create Pull
-  Request puts it in the description, and Report Back carries it to every target.
-- **Skip this phase** (`skipped`) with the reason when the run recorded no specification and
-  no acceptance criteria and the change set touches no governed chapter — a dependency update
-  with no functional change is the usual case. **`policy.phases.verification: false`** turns
-  it off.
+**Defined in `skills/phase-spec-check/SKILL.md`** — the verdicts, how the bound skill's
+`updates: true` decides between check-only and check-and-update, the limits on an update, and
+the edit list Personal Validation presents. What stays here is its place in the order: one
+verdict per item against the specification and the governed chapters in scope, recorded for
+the ready check, which reads `spec-ahead` and `conflict` as not ready. A rejected chapter edit
+reopens this phase.
 
 ## The Ready Check
 
@@ -369,42 +345,13 @@ and continue.
 ## Phase: Report Back
 
 Both flows. Runs after the pull request, before Summary, and returns the result to wherever
-the run answers to. Both sides are arrays: a run records **`origins`**, every work item it
-started from, each with a `kind`; the phase sends the result to every entry in
-`phase-report-back.targets`, in order, default `[ "origin" ]`.
+the run answers to.
 
-| Target | Means |
-| --- | --- |
-| `origin` | Every origin the run recorded, each handled by its kind below |
-| `linked` | Work items the change set links but the run did not start from — a `Closes #123` in a commit or the PR body, a Backlog entry id. Each gets a comment, never a status move |
-| `plugin:skill`, `repo:<skill>` | A custom destination — a team channel post, a release-notes draft — receiving the same result payload |
-
-| Origin kind | Started from | Report Back does |
-| --- | --- | --- |
-| `issue` | A GitHub issue or a Jira ticket, including one that asked for a `flow-spec` run | Comments with the result and moves the status |
-| `entry` | A Backlog entry or plan item | Comments on the entry and ticks the steps this run completed |
-| `annotation` | A devbook review note on a chapter | Resolves the annotation with the outcome and links the PR |
-| `change` | An OpenSpec change step | Ticks the step's tasks and sets the step state from its branch and pull request |
-| `schedule` | A scheduled run | Writes into the run's brief, which the schedule publishes |
-
-- **Detect the origins** from what a pickup skill recorded when it claimed the work and routed
-  this flow — the tracker, the repository or project, the item id, its URL, and its kind — and
-  from the run's tracker metadata. An ad-hoc chat request has none.
-- **The payload** is the outcome, the pull request link, the Personal Validation decision, the
-  recorded QA report — or the reason Verify was skipped or did not apply — and the spec-check
-  table, or the reason it was skipped. Never invent a result.
-- **Add a new comment; never rewrite an item's body or create an item.** Ticking a task
-  through the provider's own operation — `update_item` for a `plugin:skill` tracker, per
-  **Bindings → Tracker** (`engine-contract.md`) — is the one other edit; a provider with no
-  task list skips it and says so.
-- **Reach an item through the bound tracker's tooling first**, then the host's CLI for that
-  tracker. `bindings["delivery.tracker"]` says which tooling reaches an issue or an entry.
-- **Attempt every target, and fail loudly.** One that fails marks the stage `blocked` with its
-  error, naming which targets succeeded; never `done`, and never silently continue. An item
-  that is both an origin and linked is reported once.
-- **Skip this phase** (`skipped`) with the reason when no target is left — no origin, nothing
-  linked, no custom destination — or when **`policy.phases.workItemUpdate: false`** turns it
-  off. The summary is then the report.
+**Defined in `skills/phase-report-back/SKILL.md`** — the targets, the origin kinds, the
+payload, and the failure rule. What stays here is the contract around it: a run records
+**`origins`**, every work item it started from, each with a `kind`, and the phase sends the
+result to every entry in `phase-report-back.targets`. Every target is attempted; one that
+fails blocks the stage and names which succeeded.
 
 ## Phase: Summary
 

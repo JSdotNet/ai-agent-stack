@@ -32,8 +32,8 @@ week's sessions get further.
 - Edit only instruction assets — `AGENTS.md`, `CLAUDE.md` and their host twins, rules and their
   wrappers, skills, agents and their `## Model` sections, contracts, hooks — the repository's
   own checks and scripts, and chapters in its adopted devbook folders, the `ai/` record and
-  `arc42/` among them. Product code and the person's own model, effort, or settings are listed,
-  never edited: model choice is personal.
+  `arc42/` among them. Product code and the person's own overlay — their model, effort, or
+  settings — are listed, never edited: the overlay lives outside the repository.
 - A chapter edit follows that folder's instruction file and `devbook-chapter-metadata.md`, as
   `flow-spec` would: its `meta` block in the same commit, never an `annotation` fence, never a
   file under `_meta/`. The draft pull request stands in for `flow-spec`'s approval gate, so a
@@ -61,9 +61,9 @@ week's sessions get further.
 
 ### Phase 2 — Resolve the Reviewer
 
-3. Read the personal file the `model-override` slot resolves to — **Host Slots** in
-   `../../../delivery/resources/engine-contract.md` — and take its
-   `Retrospective` row. No file, or no row: `opus`. Say which, and that it came from there.
+3. Run the delivery plugin's `tools/stack-config/check.mjs --print` from the repository root
+   and take the `model` of `phases.flow-code.phase-review` — the team's default with this
+   machine's overlay merged over it. None set: `opus`. Say which, and where it came from.
 
 ### Phase 3 — Gather
 

@@ -115,6 +115,9 @@ engine names two skills by name and reads them by path, and writes neither:
 Whoever seeds them is the repository's business; the engine only expects a skill by that name
 to exist and to leave behind what its goal says — a running application, evidence paths.
 `delivery:init` and `delivery:update` materialize nothing and record the engine's version alone.
+`delivery:update` also runs `migrations/` oldest first: `001-phase-maps` rewrites a 1.13.0
+config's `extensions`, `delivery.roles`, and `delivery.mcp` into the phase maps, in the
+committed file and both overlay layers.
 
 Neither is a dependency, and this is the part worth being precise about: **the guardrail is
 the contract, not the skill.** `resources/capture-contract.md` says what is captured, when it

@@ -16,7 +16,8 @@
 //                 that exist, and lists skills/ when the folder is there; no plugin
 //                 carries an UPGRADING.md
 //   agents        name equals the filename, a description exists, a model pin is a value
-//                 Claude accepts, Skill is granted, and a role plugin's agent carries no
+//                 Claude accepts, Skill is granted (no tools key grants it, and is a runner
+//                 plugin's alone), and a role plugin's agent carries no
 //                 session-spawning or delegation tool (see the decision "A Role Plugin
 //                 Holds No Flow Control")
 //   hooks         hooks/hooks.json never uses type: prompt on SessionStart
@@ -162,9 +163,11 @@ for (const [name, entry] of listed) {
     }
     // Every agent file the manifest lists must exist, and every agent file must be listed.
     const declared = new Set((claude.agents ?? []).map((a) => a.replace(/^\.\//, "").replace(/\\/g, "/")));
-    const agentFiles = (await exists(path.join(dir, "agents")))
-        ? (await walk(path.join(dir, "agents"))).filter((f) => f.endsWith(".agent.md")).map((f) => path.relative(dir, f).replace(/\\/g, "/"))
-        : [];
+    const agentFiles = [];
+    for (const sub of ["agents", "runners"]) {
+        if (!(await exists(path.join(dir, sub)))) continue;
+        agentFiles.push(...(await walk(path.join(dir, sub))).filter((f) => f.endsWith(".agent.md")).map((f) => path.relative(dir, f).replace(/\\/g, "/")));
+    }
     for (const f of agentFiles) if (!declared.has(f)) error(`${name}: ${f} is not listed under agents in the Claude manifest, so handoffs to it dangle`);
     for (const d of declared) if (!(await exists(path.join(dir, d)))) error(`${name}: Claude manifest lists ${d}, which does not exist`);
 }
@@ -220,10 +223,16 @@ for (const folder of folders) {
 
 // ── agents ──────────────────────────────────────────────────────────────────
 
+// An agent outside agents/ is one the Claude manifest lists and Copilot's agents/ never loads —
+// the delivery effort runners. It is linted the same way.
 for (const folder of folders) {
     const agentsDir = path.join(PLUGINS, folder, "agents");
-    if (!(await exists(agentsDir))) continue;
-    for (const file of (await walk(agentsDir)).filter((f) => f.endsWith(".agent.md"))) {
+    const files = new Set((await exists(agentsDir)) ? (await walk(agentsDir)).filter((f) => f.endsWith(".agent.md")) : []);
+    for (const d of manifests.get(folder)?.agents ?? []) {
+        const file = path.join(PLUGINS, folder, d);
+        if (await exists(file)) files.add(file);
+    }
+    for (const file of files) {
         const { fm, body } = frontmatter(await readFile(file, "utf8"));
         const label = rel(file);
         const expected = path.basename(file, ".agent.md");
@@ -232,8 +241,11 @@ for (const folder of folders) {
         if (!/^description:\s*\S/m.test(fm)) error(`${label}: description is required; Claude refuses to load an agent without one`);
         const model = (/^model:\s*['"]?([^'"\r\n]+)['"]?\s*$/m.exec(fm) ?? [])[1];
         if (model && !MODEL_PIN.test(model.trim())) error(`${label}: model "${model}" is not a value Claude accepts; put the preference in a ## Model section`);
+        // No tools key is no restriction: every tool, Skill and the flow-control ones included.
+        const unrestricted = !/^tools:/m.test(fm);
         const tools = new Set([...fm.matchAll(/['"]([^'"]+)['"]/g)].map((m) => m[1]));
-        if (!tools.has("Skill")) error(`${label}: tools does not include Skill, so the agent cannot reach plugin skills`);
+        if (!unrestricted && !tools.has("Skill")) error(`${label}: tools does not include Skill, so the agent cannot reach plugin skills`);
+        if (unrestricted && !RUNNER_PLUGINS.has(folder)) error(`${label}: no tools key grants every tool, flow control included; only a runner plugin's agent may`);
         if (!RUNNER_PLUGINS.has(folder)) {
             const carried = [...tools].filter((t) => FLOW_CONTROL_TOOLS.has(t));
             if (carried.length) error(`${label}: only a runner plugin's agent may carry flow-control tools: ${carried.join(", ")}`);

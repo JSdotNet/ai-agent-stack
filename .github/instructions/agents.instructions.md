@@ -1,5 +1,5 @@
 ---
-applyTo: 'plugins/*/agents/**/*.agent.md'
+applyTo: 'plugins/*/agents/**/*.agent.md,plugins/*/runners/*.agent.md'
 description: Frontmatter, tools and handoff rules for a plugin agent file.
 ---
 

@@ -3,6 +3,7 @@ name: agents
 description: Frontmatter, tools and handoff rules for a plugin agent file.
 paths:
   - "plugins/*/agents/**/*.agent.md"
+  - "plugins/*/runners/*.agent.md"
 ---
 
 # Agents
@@ -11,11 +12,14 @@ paths:
 - No `model` pin unless the value is `opus`/`sonnet`/`haiku`/`fable`/`inherit` or a real
   `claude-*` id; anything else fails to load. Put the preference in a `## Model` body section.
 - `tools` is an exact-match allowlist. Include `Skill` to let the agent reach plugin skills,
-  and `Agent` only when it delegates. Only a runner plugin's agent carries flow control —
+  and `Agent` only when it delegates. No `tools` key grants every tool, so only a runner
+  plugin's agent omits it. Only a runner plugin's agent carries flow control —
   `.devbook/arc42/adr/plugin-boundaries.md`.
 - For MCP, grant the whole server and emit both spellings — `mcp__plugin_<plugin>_<server>`
   (plugin-provided, namespaced) and `mcp__<server>` (from a repo `.mcp.json`) — because the
   prefix depends on how the server was registered.
+- A Claude-only agent lives in `runners/`, listed in the Claude manifest alone: Copilot's
+  `agents` field names directories, so anything under `agents/` loads on both hosts.
 - Claude ignores the `handoffs` key: name every handoff target in the body prose.
 - An instruction file reaches Claude only when something references its path — a plugin
   cannot ship rules. Reference every one explicitly from the agent that depends on it, per

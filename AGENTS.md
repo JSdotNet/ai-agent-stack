@@ -74,6 +74,7 @@ plugins/<name>/
   .claude-plugin/plugin.json      Claude manifest
   .github/plugin/plugin.json      Copilot manifest — same name, version, description
   agents/<role>.agent.md          frontmatter name must equal <role>
+  runners/<role>.agent.md         a Claude-only agent, listed in the Claude manifest alone
   skills/<skill>/SKILL.md
   rules/<name>.md                 a rule the install writes into a repository; name and
                                   description only. Only a plugin that delivers rules has this

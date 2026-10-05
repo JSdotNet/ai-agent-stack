@@ -43,7 +43,9 @@ setting one makes the phase delegated.
 
 **A fork or a delegated phase gets a brief, never the conversation.** The flow-runner writes
 `<phase>-brief.md` into the run folder — what to read, the scope record's chapter list, and for
-a fix round the blockers — and passes its path. The skill's `## Context` contract says what it
+a fix round the blockers — and passes its path. The run folder is `runs/<runId>/` under the
+surface's `stateDir`, or the host's scratch directory with no surface bound; never the
+worktree, so no brief lands in the change set. The skill's `## Context` contract says what it
 may load; it refuses a brief that asks for more. Every sub-agent works in the owner's worktree,
 per **Sub-Agent Constraints** in `flow-execution-model.md`.
 
@@ -59,8 +61,9 @@ skill's body, with no agent named — passed as its instructions.
 - **The specialist's tool list is dropped.** The runner keeps the agent's instructions and
   gets the runner's tools, all of them. A specialist that needs its own list kept declares its
   own effort, and the phase then leaves `effort` unset.
-- **Claude Code only.** Copilot ships no runner: it runs an effort-set phase on the session's
-  effort, and the run says so once.
+- **Claude Code only.** The runners live in `runners/`, which only the Claude manifest lists.
+  Copilot gets no runner: it runs an effort-set phase on the session's effort, and the run
+  says so once.
 
 ## The retired model table
 

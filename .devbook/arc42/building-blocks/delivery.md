@@ -335,7 +335,24 @@ deletes no file: each stays the repository's until the procedures component adop
 
 **Rewrite the old configuration keys.** `update` runs the migration that folds `extensions`,
 `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` into one complete `phases` map per
-flow, and moves a map left under a retired flow into `flow-code`.
+flow, and moves a map left under a retired flow into `flow-code`. It is
+`migrations/001-phase-maps/`, the engine's first, and it lives for the 1.x major per
+[the releases decision](../adr/releases.md). It rewrites the committed file and both overlay
+layers, writing `{}` for every phase the old file never named in the committed one and keeping
+an overlay partial, and it re-points a gate on an extension point at the phase that point
+belonged to. A role bound to a bare plugin becomes that plugin's single agent. A plugin with
+several agents, or one not installed on this machine, is written as found and listed among the
+notes `update` shows beside the diff, because the script never guesses an agent. `update`
+then re-validates and re-stamps.
+
+```mermaid
+flowchart LR
+  C[".devbook/config.json and overlays"] --> K{"migrate.mjs --check"}
+  K -- "exit 0" --> D["Detect, plan, orphan"]
+  K -- "exit 1: plan and notes" --> M["migrate.mjs"]
+  M --> V["check.mjs"] --> DIFF["git diff shown"] --> D
+  D --> S["components.delivery re-stamped"]
+```
 
 ## Structure
 
@@ -658,6 +675,7 @@ devbook folder present, which is the reason the file could move there at all.
 | --- | --- | --- |
 | An unknown key is rejected, never ignored: a typo is an error, not a silently absent setting | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
+| The migration's committed result lists every phase of both flows and validates; a second run changes nothing, and an overlay stays partial | `001-phase-maps/migrate.mjs` | `unit:node:plugins/delivery/migrations/001-phase-maps/migrate.test.mjs` |
 | Nobody writes another owner's key | all mutations | untested |
 | The engine keys are written by `devbook-config`'s `init` and `update`, and by nothing else | all mutations | untested |
 | `policy` is a closed set of switches | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |

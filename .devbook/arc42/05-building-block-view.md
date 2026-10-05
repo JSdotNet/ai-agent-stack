@@ -317,7 +317,7 @@ marketplace are [published from their own](adr/plugin-boundaries.md).
 | `implement` | `flow-code` | A change set, tests first at each seam, with the work the kind needs: a dependency move, a project's bootstrap and scaffold, a defect's reproducing test. It decides whether the change needs frontend, backend, or both, and runs each area as its own fork |
 | `review` | `flow-code` | One fresh-context review per slice, against the repository's rules, a code-smell baseline, and correctness, with every finding cited. It never edits |
 | `build-test` | `flow-code` | Build and suite results. Default procedure: `phase-build-test` |
-| `verify` | `flow-code` | A running application and evidence from it, through the repository's own `show` and `run` procedures. `phase-verify.app` names the provider that starts the application, and the evidence rules hold from `capture-contract.md` whichever provider answers |
+| `verify` | `flow-code` | A running application, started through the repository's own `run` procedure, and evidence from it through its `capture` procedure. `phase-verify.app` names the provider that starts the application, and the evidence rules hold from `capture-contract.md` whichever provider answers |
 | `spec-check` | `flow-code` | Before the gate, one verdict per item of the specification and the chapters the change set touches. A repository with devbook chapters names `devbook:verify-change` as its skill |
 | `drafting:<folder>` | `flow-spec` | The chapter, drafted by the agent the folder's entry names |
 | `report-back` | both | The result, sent to every origin, every linked item, and every target in `phase-report-back.targets` |

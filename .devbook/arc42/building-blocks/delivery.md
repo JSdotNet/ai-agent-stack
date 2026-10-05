@@ -153,14 +153,15 @@ and the ready check sends it back to `implement`.
 ### phase-verify
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-procedures.md"]
 ```
 
 Check the running application, at a depth the change kind decides. New behaviour gets a browser
 pass with captured evidence, a change to existing behaviour gets targeted verification, and a
-`config` or `dependency` change gets startup only. It follows the repository's own `show` and
-`run` procedures. `phase-verify.app` names the provider that starts the application, and
-`null` there means nothing to start.
+`config` or `dependency` change gets startup only. It starts the application through the
+repository's own `run` procedure and takes evidence through its `capture` procedure.
+`phase-verify.app` names the provider that starts the application, and `null` there means
+nothing to start.
 
 **Record the depth honestly.** A shallower depth is reported as the depth it was, never as
 verification that did not happen. This is the one guarantee that makes the other depths usable

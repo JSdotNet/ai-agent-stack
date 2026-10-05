@@ -153,10 +153,10 @@ recipe, or `phase-verify.app` when set, and drives the scenarios at the kind's d
 required-tooling policy, Playwright and Aspire preflight, evidence rules, and repo context all
 live there. What stays here is the contract around the phase:
 
-- **Depth follows the change kind** the flow-runner persisted with `set_run_context`: new
-  functionality gets Playwright QA with capture, a bug fix or a change to existing behavior
-  gets targeted verification, a dependency update gets startup-only validation, and a change
-  with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
+- **Depth follows the kind** Scope persisted as `changeKind`: a `feature` adding behaviour,
+  `create`, and `project` get Playwright QA with capture; a `feature` changing existing
+  behaviour, `defect`, and `refactor` get targeted verification; `config` and `dependency` get
+  startup-only; nothing to run is `skipped` with the reason recorded. This selection is the last resort:
   `policy.qa.depth` outranks it, and `policy.qa.ceiling` caps the result — the full order is
   in `engine-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire

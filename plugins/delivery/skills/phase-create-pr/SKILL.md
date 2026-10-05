@@ -29,8 +29,9 @@ so once, and continue. Nothing to submit is `skipped`.
    never the surface's tabs or the person's own.
 3. **Write the description** from the change set, the review outcome, the verify evidence, and
    the spec-check table, in the repository's PR template when it has one. Link every origin:
-   `Closes` when merging resolves it, `Refs` when not. With the `show-me` skill available, write
-   each section per it.
+   `Closes` when merging resolves it, `Refs` when not. With the `pr-body` skill available, write
+   the description per it — Summary, Evidence at the depth Validation reached, Merge Danger;
+   else, with the `show-me` skill available, write each section per it.
 4. **Follow the change's workflow** per **Git Workflows** in `resources/engine-contract.md`: a
    `proposal-first` proposal opens as a draft; a `single-branch` run that does not close the
    change pushes its branch, opens nothing, and says so.

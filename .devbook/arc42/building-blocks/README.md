@@ -33,7 +33,7 @@ block from what the plugin ships. A block that should lead its plugin instead st
 | [devbook-derived](devbook-derived.md) | L1 on devbook | The committed `_meta/` index, its refresh paths, and the canvas that draws the graph |
 | [devbook-openspec](devbook-openspec.md) | L1 on devbook | The change lane: OpenSpec installed and configured so a change is a set of deltas against the chapters, proposed, agreed, built step by step, and archived |
 | [devbook-collaboration](devbook-collaboration.md) | L1 on devbook | Who owes the next move on a chapter: review requests, findings, and the approval decision |
-| [devbook-skills](devbook-skills.md) | L0 foundation | Reusable guidance any plugin names and none depends on: `show-me`, a picture before the prose, and `research-brief`, a cited answer from primary sources |
+| [devbook-skills](devbook-skills.md) | L0 foundation | Reusable guidance any plugin names and none depends on: `show-me`, a picture before the prose, `research-brief`, a cited answer from primary sources, and `pr-body`, a pull request description that declares its door |
 | [devbook-config](devbook-config.md) | L0 foundation | What this stack is, what this machine has, and how this repository is wired |
 | [delivery](delivery.md) | L0 foundation | One unit of work carried from request to review-ready change inside one session |
 | [delivery-schedule](delivery-schedule.md) | L1 on delivery | Work that runs with nobody watching, and the catalog of triggers that fires it |

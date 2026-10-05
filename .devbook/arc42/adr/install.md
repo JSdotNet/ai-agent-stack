@@ -1,7 +1,7 @@
 # Install
 
 ```meta
-date: 2026-09-30
+date: 2026-10-05
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -86,6 +86,18 @@ wants to see a change working types `/verify`, which follows the same `run` reci
 is removed; `003-show-removed` deletes its wrappers and an unedited body, and leaves an edited
 one as the repository's own.
 
+**Procedures install with `devbook`.** Once `devbook-procedures` folds into `devbook`
+([plugin boundaries](plugin-boundaries.md)), `devbook:init` asks about procedures beside
+folders and `devbook:update` reconciles them in the same pass. The procedures keep their
+`adopted` list and each copy's hash, now under `components.devbook`, and nothing about the
+trio, the wrapper's goal, or the body's ownership changes. Moving the entry is a stamp-shape
+change, so the fold ships a `devbook` migration in the same commit, per
+[releases](releases.md): it rewrites `components.devbook-procedures` under
+`components.devbook`, keeps `adopted` and every hash, and leaves each copy where it is. The
+four `devbook-procedures` migrations move into `devbook` with it, under the reconcile
+protocol's rule that a shipped migration id is never invented, renamed, or removed. Until the
+fold lands, `devbook-procedures` keeps its own stamp and pair.
+
 **OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
 the marketplace uses it, so a person who knows one tool reads the other without translating.
 One `install` covering first setup and upgrade asked a stamped repository what its stamp already
@@ -148,6 +160,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |
 | 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. |
 | 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches, so `update` re-times it and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. |
 | 2026-09-30 | `show` is removed: no flow invoked it, and `/verify` answers a person on Claude Code; `devbook-procedures` ships `003-show-removed`, and `chapter-accept` starts the application through `run`. |

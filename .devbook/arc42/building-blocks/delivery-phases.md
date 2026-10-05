@@ -105,7 +105,7 @@ and the ready check sends it back to `implement`.
 ### phase-verify
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#procedure"]
+related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-procedures.md#procedure"]
 ```
 
 Check the running application, at a depth the change kind decides. New behaviour gets a browser
@@ -127,7 +127,7 @@ directly. A missing piece changes who captures, never whether capture happens.
 ### phase-spec-check
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#capture-specs"]
+related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs"]
 ```
 
 Check the change set against the specification the run built on and the chapters it touches,
@@ -367,7 +367,7 @@ rows below are the ones that run through a phase.
 | [delivery](delivery.md#flow-runner) | Same plugin | The flow-runner sequences the phases, resolves each entry, runs the ready check, and enforces the gate | `resources/flow-phases.md`, `resources/phase-resolution.md` | A phase never runs itself: who runs it, on which model, and whether a person sees it next is the runner's call. |
 | A bound agent per phase | Binding, never a dependency | A phase entry's `agent` field | The phase's brief and the skill it follows | With no agent, the runner runs the phase inline. |
 | The consuming repository's `run` and `capture` procedures | Named by skill name | `phase-verify` starts the application and takes evidence through them, and `phase-personal-validation` brings the application up | The skill names | Absent, a phase does the work directly or records the depth it reached, never more. |
-| [devbook](devbook.md#verify-change) | Named by skill name | `phase-spec-check` binds `verify-change` by default, or an updating skill such as `capture-specs` | The `updates: true` frontmatter key | The verdict is devbook's to give; the phase only decides when it runs and whether its edits reach the gate. |
+| [devbook](devbook-code-sync.md#verify-change) | Named by skill name | `phase-spec-check` binds `verify-change` by default, or an updating skill such as `capture-specs` | The `updates: true` frontmatter key | The verdict is devbook's to give; the phase only decides when it runs and whether its edits reach the gate. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `phase-create-pr` names `pr-body`, `phase-scope` and `phase-drafting` name `research-brief`, and `phase-summary` offers `retro` | The skill name alone | Without them, the phase writes the prose itself and offers no retro. |
 
 ### Inbound

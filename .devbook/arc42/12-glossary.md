@@ -50,7 +50,7 @@ an MCP server.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -104,7 +104,7 @@ the code, and not a pull request, which is one step of a change.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#apply-change", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#apply-change", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -191,7 +191,7 @@ so the refresh belongs to automation, and the check that runs in a session write
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -259,7 +259,7 @@ to reattach to one and refuse the other.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -388,10 +388,10 @@ documentation plugin's sense, which is a standalone document.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/12-glossary.md#demo"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo"]
 ```
 
-Owned by [devbook](building-blocks/devbook.md#goal).
+Owned by [devbook](building-blocks/devbook-procedures.md#goal).
 
 One standalone HTML file that answers one question, in UI mode or logic mode. It needs no
 change, no task, and no approval, and it is never a source of truth. It carries its question
@@ -403,10 +403,10 @@ nobody takes further stays where it is, as evidence of what was tried.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
 ```
 
-Owned by [devbook](building-blocks/devbook.md#goal).
+Owned by [devbook](building-blocks/devbook-procedures.md#goal).
 
 Also called: `/prototype`.
 
@@ -468,7 +468,7 @@ as *this file was not there* rather than as *there is nothing*.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -567,7 +567,7 @@ person, not acted on and never split. `units.mjs --groups` lists them.
 
 ```meta
 date: 2026-10-01
-related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).

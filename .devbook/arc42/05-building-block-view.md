@@ -86,7 +86,8 @@ interchangeable: read this one for what a host enforces, and that one for who ha
 whose model. What each plugin owns, exposes, and depends on is its own file under
 [`building-blocks/`](building-blocks/README.md); nothing below restates a block that has one.
 A plugin too large for one file opens its level 2 there as well: delivery's phases and its
-pull-request lane, and delivery-schedule's entry points, each have a file beside their plugin's.
+pull-request lane, delivery-schedule's entry points, and devbook's code sync and procedures
+each have a file beside their plugin's.
 
 | Style | Means | Where a missing target lands |
 | --- | --- | --- |

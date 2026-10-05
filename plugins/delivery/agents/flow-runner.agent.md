@@ -139,8 +139,9 @@ those contracts; it does not re-decide them per skill.
     browser snapshots — and running them inline is the single most expensive mistake available
     to a run. A phase whose skill does not exist yet runs its procedure from `flow-phases.md`.
     `phase-personal-validation` is the opposite case and is **never delegated** — see step 12.
-11. **Enforce Build & Test first.** Never start Verify or Personal Validation on a red
-    build or failing tests. Mark the failing stage `blocked`, report, and stop for fixes.
+11. **Enforce Build & Test first.** Never start Verify on a red build or failing tests:
+    record the red result, mark Verify and Spec Check `skipped` for it, and go to the ready
+    check, which sends the run back to `phase-implement`.
 12. **Run every gate the config declares, and the mandatory one always.** A gate presents the
     output of the phase it attaches to and asks its question. `approve` continues; `revise`
     re-runs that phase with the human's notes, bounded by `policy.gate.reviseBudget`;

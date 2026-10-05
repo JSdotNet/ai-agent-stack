@@ -88,50 +88,59 @@ stateDiagram-v2
 ## A Flow Run
 
 ```meta
-related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md", ".devbook/arc42/building-blocks/delivery-surface-canvas.md", ".devbook/arc42/building-blocks/delivery-surface-collector.md", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#surface", ".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-surface-dashboard.md", ".devbook/arc42/building-blocks/delivery-surface-canvas.md", ".devbook/arc42/building-blocks/delivery-surface-collector.md", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
-What a [flow skill](08-crosscutting-concepts.md#flow-skill) does with the closed set of
-[extension points](08-crosscutting-concepts.md#extension-point), in one session. Services are
-on the spine; chores hang off it and may never move it. The engine
-([delivery](building-blocks/delivery.md)) owns the spine, the providers a repository binds fill
-the points, and whichever [surface](08-crosscutting-concepts.md#surface) answers renders it.
+What a [flow skill](08-crosscutting-concepts.md#flow-skill) does with its
+[phases](08-crosscutting-concepts.md#phase), in one session. The engine
+([delivery](building-blocks/delivery.md)) owns the order, the repository's `phases` map says who
+runs each phase and how, and whichever [surface](08-crosscutting-concepts.md#surface) answers
+renders it. The picture is `flow-code`'s.
 
 ```mermaid
 flowchart TD
-    sessionStart(["session.start · chore"]) --> stage0["Stage 0 · resolve scope"]
-    stage0 --> flowStart(["flow.start · chore"])
-    flowStart --> spec["spec · service"]
-    spec --> implement["implement · service"]
-    implement --> validate["validate · service"]
-    validate -->|failing| implement
-    validate -->|green| dataPrepare(["data.prepare · chore"])
-    dataPrepare --> appStart["app.start · service"]
-    appStart --> qaRun["qa.run · service"]
-    qaRun --> gate{"Personal Validation"}
-    gate -->|approve| deliver["deliver · service"]
-    gate -->|revise| implement
-    gate -->|decline| stop(["Blocked · never a silent skip"])
-    deliver --> verify["verify · service"]
-    verify --> flowEnd(["flow.end · chore"])
+    ub["update-base"] --> sc["scope"]
+    sc --> pl["plan, create only"]
+    sc --> im["implement"]
+    pl --> im
+    im <-->|"per slice"| rv["review"]
+    rv --> bt["build-test"]
+    bt --> vf["verify"]
+    vf --> sk["spec-check"]
+    sk --> rd{"ready?"}
+    rd -->|"not ready, budget left"| im
+    rd -->|"ready, or budget spent"| gate{"Personal Validation"}
+    gate -->|approve| pr["create-pr"]
+    gate -->|revise| im
+    gate -->|decline| stop(["Blocked, never a silent skip"])
+    pr --> rb["report-back"]
+    rb --> su["summary"]
 ```
 
 - **The gate is the only place a run stops for a human, and configuration may only add more.**
-  It sits before `deliver` and never inside it, so approval is a recorded decision rather than
-  a step a provider can perform on its own behalf.
-- `implement` and `validate` are the only cycle. It is bounded by the flow, not by the providers,
-  which is why the two commonly bind to one provider and resolve their model per stage.
-- `verify` is the last service, after `deliver`, and repairs nothing: the change set against the
-  specification the run built on and the chapters it touches, one verdict per item, reported
-  where the reviewer reads.
-- **A point with no provider costs capability, not the run.** Unbound, `spec` is written inline
-  and `deliver` produces file artifacts only; the run continues and says so once.
+  It sits before `create-pr` and never inside it, so approval is a recorded decision rather
+  than a step an agent can perform on its own behalf. Personal Validation runs inline with the
+  runner and takes no configuration.
+- **`implement` and `review` alternate per slice, before Build & Test.** A slice is implemented,
+  reviewed, and its blockers fixed before the next starts, within `policy.review.retryBudget`.
+- **The ready check is the one loop back after Build & Test.** It reads what review, Build &
+  Test, `verify`, `spec-check`, and `scope` recorded, and sends a brief of what is missing back
+  to `implement` within `policy.ready.retryBudget`. Once the budgets are spent, the open items
+  go to the gate, listed first.
+- `spec-check` runs before the gate, so the approval sees the drift: the change set against the
+  specification the run built on and the chapters it touches, one verdict per item. A skill
+  that also updates touches only `code-ahead` rows, and its edits are part of what the person
+  approves.
+- A kind changes what happens inside `implement` and how deep `verify` goes, never which phases
+  run. Only `plan` is limited to a kind, `create`.
+- Chores hang off a phase as its `before` and `after` and never move the spine.
+- **A phase with nothing configured costs nothing.** It runs inline on the session's model with
+  its own skill. With no `pr-lane`, `create-pr` produces file artifacts only, and the run
+  continues and says so once.
 - Whether the surface renders any of this is resolved from the live tool list, and none
   answering is normal — the file artifacts are written either way.
-- The documentation tier of flows runs the same picture without `implement`, `validate`,
-  `data.prepare`, `app.start`, `qa.run`, and `verify`: gate, then `deliver`. The tier a bridge
-  plugin's flow declares is its own, because the engine may not name a skill in a layer above
-  it.
+- `flow-spec` runs a shorter tier: `update-base`, `scope`, `drafting` qualified by folder,
+  `check-review`, the ready check, the gate, `create-pr`, `report-back`, and `summary`.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
   never self-approves, which is the boundary between a flow and a
   [schedule entry point](building-blocks/delivery-schedule.md#entry-point).

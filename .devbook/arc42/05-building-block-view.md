@@ -19,7 +19,7 @@ concerned.
 ## Level 1: The Plugin Landscape
 
 ```meta
-date: 2026-10-03
+date: 2026-10-05
 related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
@@ -72,7 +72,7 @@ flowchart TB
     DEL -.->|"names the skills start and capture, never the plugin"| DPR
     CFG -.->|"reads every plugin, declares none"| DEV
     CFG -.->|"reads every plugin, declares none"| DEL
-    DEL -.->|"flow-project runs devbook-config:init"| CFG
+    DEL -.->|"flow-code's project kind runs devbook-config:init"| CFG
     DOS -.->|"spec and tracker providers, bound by name"| DEL
     DEV -.->|"names the skill show-me, never the plugin"| SKL
     DEL -.->|"names the skill show-me, never the plugin"| SKL
@@ -93,9 +93,9 @@ whose model. What each plugin owns, exposes, and depends on is its own file unde
 | Plain, labelled with a capability | Conformance to a published language neither side declares | The caller resolves the group unanswered and continues |
 | Dashed | Real in the assets and in no manifest | Reported and skipped, or — in one case — nothing warns at all |
 
-The dashed `delivery → devbook` edge is the one to read twice. Three of the engine's four
-flows work with devbook absent, so it is not an L1 extension; it is one stack rather than two, so
-it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
+The dashed `delivery → devbook` edge is the one to read twice. `flow-code`, the engine's flow
+for every code change, works with devbook absent, so it is not an L1 extension; it is one stack
+rather than two, so it is not a bridge. Undeclared is the only position left, and an undeclared coupling has nowhere
 for a check to live — see [debt record 4](tdr/4-delivery-depends-on-devbook.md).
 
 The dashed `delivery → devbook-procedures` edge is a different kind: the engine names two
@@ -224,7 +224,7 @@ carries it as inert payload — templates, generators, migration scripts — and
 ## Level 2: What Lands in a Repository
 
 ```meta
-date: 2026-09-21
+date: 2026-10-05
 related: [".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/08-crosscutting-concepts.md#stamp"]
 ```
 
@@ -253,7 +253,7 @@ flowchart TB
         wf[".github/workflows/ - the check, and the nightly refresh"]
         tools[".devbook/_tools/ - devbook's checker, at the path flows name"]
         agents["AGENTS.md - one marker-fenced section"]
-        cfgE[".devbook/config.json<br/>bindings, extensions, policy, gates"]
+        cfgE[".devbook/config.json<br/>bindings, phases, policy, gates, areas"]
         cfgC[".devbook/config.json<br/>components.&lt;name&gt;"]
     end
 
@@ -282,7 +282,7 @@ wrappers are where the plugin keeps the one thing it does own: the goal, refresh
 upgrade, so `run` means the same across every repository while how it is done never does.
 
 One file with two writers and no shared key is the shape worth naming. `devbook-config` writes
-the four engine-owned keys and stops; each `components.<name>` stamp stays with the component
+the engine-owned keys and stops; each `components.<name>` stamp stays with the component
 that knows what it materialized, which is why
 [`devbook:init` and `devbook:update` did not move](adr/plugin-boundaries.md)
 into the config plugin and why its `init` and `update` end by invoking them.
@@ -300,45 +300,49 @@ because two branches each touching one chapter both rewrite the same JSON.
 ## Roles and Services
 
 ```meta
-date: 2026-09-07
-related: [".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#extension-point", ".devbook/arc42/adr/plugin-boundaries.md"]
+date: 2026-10-05
+related: [".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
-**No specialist plugin ships here.** Where a flow needs expertise it names a point, and a
-repository names the plugin that fills it: a role in `bindings["delivery.roles"]`, a service in
-`extensions`. The seven that used to live in this marketplace are
-[published from their own](adr/plugin-boundaries.md).
+**No specialist plugin ships here.** Roles and services were the two ways a flow reached a
+specialist, and both are now a [phase](08-crosscutting-concepts.md#phase)'s fields. Where a flow
+needs expertise, a repository names the agent that runs the phase, and the skill it follows, in
+that phase's entry of the `phases` map. The seven specialists that used to live in this
+marketplace are [published from their own](adr/plugin-boundaries.md).
 
-| Point | Kind | What a provider brings |
+| Phase | Flow | What its agent or skill brings |
 | --- | --- | --- |
-| `architecture` | role | arc42 sections, decision and debt records, C4, sequence, state and deployment diagrams |
-| `qa` | role | Running the app, driving browser scenarios, and reading logs and traces while they run |
-| `domain` | role | Bounded contexts, ubiquitous language, model and context-map design |
-| `ux` | role | Wireframes, user flows, design guidelines, UI review |
-| `docs` | role | How-to guides, explanations, articles, proposals, profiles |
-| `product`, `security` | role | Nothing here fills them, and nothing did. Both are `null` in the stack config template, which the vocabulary distinguishes from absent: deliberately unbound |
-| `spec` | service | The specification the rest of a flow builds on. Unbound, the flow-runner writes it inline |
-| `implement` | service | A change set and what was tested |
-| `validate` | service | Build and suite results. Default provider: `phase-build-test` |
-| `app.start`, `qa.run` | service | A running application and evidence from it. Default provider: `phase-validation`. `app.start` is normally filled by the seeded `repo:start`, and the evidence rules hold from `capture-contract.md` whichever provider answers |
-| `verify` | service | After the pull request, one verdict per item of the specification the run built on and the chapters the change set touches, with the evidence — report-only, where a documentation refresh used to run. No default provider: unbound, the flow-runner reaches the verdicts itself; a repository with devbook chapters binds `devbook:verify-change` |
+| `scope` | both | The kind, the acceptance criteria, the seams `implement` tests at, a refactor's target layout, and the chapters every later brief loads |
+| `plan` | `flow-code`, `create` only | The design mapped onto the project structure |
+| `implement` | `flow-code` | A change set, tests first at each seam, with the work the kind needs: a dependency move, a project's bootstrap and scaffold, a defect's reproducing test. It decides whether the change needs frontend, backend, or both, and runs each area as its own fork |
+| `review` | `flow-code` | One fresh-context review per slice, against the repository's rules, a code-smell baseline, and correctness, with every finding cited. It never edits |
+| `build-test` | `flow-code` | Build and suite results. Default procedure: `phase-build-test` |
+| `verify` | `flow-code` | A running application and evidence from it, through the repository's own `show` and `run` procedures. `phase-verify.app` names the provider that starts the application, and the evidence rules hold from `capture-contract.md` whichever provider answers |
+| `spec-check` | `flow-code` | Before the gate, one verdict per item of the specification and the chapters the change set touches. A repository with devbook chapters names `devbook:verify-change` as its skill |
+| `drafting:<folder>` | `flow-spec` | The chapter, drafted by the agent the folder's entry names |
+| `report-back` | both | The result, sent to every origin, every linked item, and every target in `phase-report-back.targets` |
 
-A missing provider costs capability, not a load. `delivery` and `devbook-flows` used to carry
-over two hundred `plugin:asset` references naming the seven; every one is now the point it was
-filling, so the engine names no plugin it does not publish and there is nothing left to dangle.
-A repository's own binding is the only place a specialist's name appears.
+`update-base`, `check-review`, `create-pr`, and `summary` take an entry like the rest, usually
+`{}`. Personal Validation and the ready check take none. An absent `agent` runs the phase inline
+with the runner, and an absent `skill` runs the phase's own `phase-<id>` skill.
 
-A role key is not a plugin name, and never becomes one. The role is the slot a flow asks for
-and the plugin is whatever is installed in it; binding the key to its current occupant would
-make the key un-rebindable, which is the one thing a binding must stay.
+A missing specialist costs capability, not a load. `delivery` and `devbook-flows` used to carry
+over two hundred `plugin:asset` references naming the seven. Every one became the point it was
+filling, and every point is now a phase's field, so the engine names no plugin it does not
+publish and there is nothing left to dangle. A repository's `phases` map and the overlays over
+it are the only places a specialist's name appears.
 
-Implementation is not a role. It owns a phase, carries a toolchain, and loops with
-validation, so it binds as the `implement` and `validate` services instead — commonly to one
-provider, which is why model selection resolves those two per stage rather than per provider.
+An agent is named as `plugin:agent`, never by its plugin alone. A plugin with several agents
+leaves a bare name nothing to resolve to, and an agent id in a `skill` field resolves to nothing;
+`devbook-config:doctor` reports both against what is installed.
+
+`implement` and `review` are two entries on purpose. Review stays its own skill and its own key,
+so it never inherits the implementer's agent or context, and a repository can run it on a
+stronger model than its Build & Test.
 
 Nothing here holds flow control either, and that stays true now that no specialist ships from
-this marketplace: sequencing, gates, session spawning, and delegation belong to whatever
-consults a point — see [the decision](adr/plugin-boundaries.md).
+this marketplace: sequencing, gates, session spawning, and delegation belong to the runner that
+consults a phase — see [the decision](adr/plugin-boundaries.md).
 
 ## Surface Plugins
 
@@ -375,8 +379,8 @@ group.
 ## Host Slots
 
 ```meta
-date: 2026-09-23
-related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md"]
+date: 2026-10-05
+related: [".devbook/arc42/08-crosscutting-concepts.md#host-slot", ".devbook/arc42/adr/hosts.md", ".devbook/arc42/08-crosscutting-concepts.md#phase"]
 ```
 
 `delivery` declares a closed set of six names a shared asset reads instead of a host's own
@@ -388,17 +392,17 @@ browser-pane tool, which [stand on purpose](adr/hosts.md).
 | Slot | Where an answer can come from | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | `bindings["delivery.slots"]` | `AGENTS.md` if present, else nothing |
-| `pr-lane` | `bindings["delivery.slots"]` | no pull request; `deliver` writes file artifacts only |
+| `pr-lane` | `bindings["delivery.slots"]` | no pull request; `create-pr` writes file artifacts only |
 | `stage-delegation` | the live session | stages run inline |
 | `surface` | the live tool list | file artifacts only |
-| `model-override` | nothing, deliberately | category defaults |
+| `model-override` | nothing, deliberately | each phase's resolved model |
 | `session-id` | the host's substitution into skill content | `start_run` carries no `sessionId` |
 
 The first three are host facts a repository can state. `stage-delegation` and `surface` are
 capability answers resolved at run time, which is what keeps two hosts from re-diverging the
-moment one gains what the other has. `model-override` takes no binding from anywhere: model
-choice is personal, so a repository may not set it, and with no profile left to name a path,
-every category takes its default. `session-id` is answered by the host alone: Claude Code
+moment one gains what the other has. `model-override` takes no binding from anywhere: a
+phase's model is a field of its `phases` entry, committed as the team's default and overridden
+per machine in an overlay, so the slot has nothing left to answer. `session-id` is answered by the host alone: Claude Code
 substitutes `${CLAUDE_SESSION_ID}` in skill content, so each skill that calls `start_run`
 carries that token verbatim, and Copilot CLI substitutes nothing and hands its session id only
 to hooks — a token still reading as a placeholder is the unbound case.
@@ -409,7 +413,7 @@ rather than silent.
 ## Config Plugin
 
 ```meta
-date: 2026-09-07
+date: 2026-10-05
 related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#flow-skill", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/adr/plugin-boundaries.md"]
 ```
 
@@ -420,12 +424,12 @@ because no other plugin is allowed to name every plugin.
 
 | Skill | Writes |
 | --- | --- |
-| `init` | The four engine-owned keys of a repository's stack config, for the first time, before any component initializes itself |
-| `update` | The same four keys, moved forward, after each component reconciled itself |
+| `init` | The engine-owned keys of a repository's stack config, for the first time, before any component initializes itself |
+| `update` | The same keys, moved forward, after each component reconciled itself |
 | `doctor` | Nothing. It reads every component's stamp against the disk, outstanding migrations, and the AGENTS.md sections, and names the `update` that fixes each finding |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
-| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, the model-selection file, `AGENTS.local.md`. Never the committed config |
+| `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md`. Never the committed config |
 
 The six take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
@@ -463,8 +467,8 @@ leaves the other host's rows empty while the catalog half still answers.
 ## Stack Config
 
 ```meta
-date: 2026-09-21
-related: [".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/adr/configuration.md"]
+date: 2026-10-05
+related: [".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/configuration.md"]
 ```
 
 `.devbook/config.json` is the one file a consuming repository commits for the whole
@@ -472,10 +476,10 @@ stack, and it holds two kinds of top-level key:
 
 | Key | Owned by | Holds |
 | --- | --- | --- |
-| `bindings`, `extensions`, `policy`, `gates` | `delivery` | Which provider fills each flow extension point, which plugin fills each role, which tracker the repository uses, which MCP servers each point uses, the closed set of policy switches, and any human gates beyond the mandatory one. |
+| `bindings`, `phases`, `policy`, `gates`, and the optional `areas` | `delivery` | Which tracker and other bindings the repository uses; one complete map per flow saying which agent runs each [phase](08-crosscutting-concepts.md#phase), which skill it follows, on which model and effort, with which MCP servers and chores; the closed set of policy switches; any human gates beyond the mandatory one, attached to phase ids; and a path hint for `implement`'s areas. |
 | `components.<name>` | that component's own install skill — or the person, for a component that ships none | What the component materialized into the repository, and its migration ledger; or, for one that materializes nothing, its selection. |
 
-Nobody writes another owner's key. `delivery` ships the schema for its four in
+Nobody writes another owner's key. `delivery` ships the schema for its keys in
 `resources/config.schema.json` and a checker that rejects an unknown key rather than
 ignoring it, so a typo is an error rather than a silently absent setting.
 
@@ -487,7 +491,7 @@ workflows, and its rule, `components.devbook-procedures` from `devbook-procedure
 materializes nothing — and `components.schedule` from `delivery-schedule`'s.
 `devbook-collaboration` materializes nothing and stamps nothing
 ([the annotations record](adr/annotations.md)). That puts `delivery` on both sides
-of the table at once — schema owner for the four engine keys, holder of one stamp — and the
+of the table at once — schema owner for the engine keys, holder of one stamp — and the
 boundary still holds, because the halves are different skills and neither reads the other's key.
 `devbook-config` maps the five to their install skills by hand: a manifest cannot say which
 plugin is behind a stamp whose plugin this machine has not installed.

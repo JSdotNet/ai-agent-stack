@@ -1,53 +1,18 @@
 # Configuration
 
 ```meta
-date: 2026-09-29
-status: proposed
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md"]
+date: 2026-10-05
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/adr/releases.md"]
 ```
 
 A repository's wiring is one committed file, `.devbook/config.json`: the engine's four keys —
-`bindings`, `extensions`, `policy`, `gates` — beside every component's `components.<name>`
-entry and a committed `id`. Unknown keys are rejected by name. A `config.local.json`
-outside every clone overlays the engine keys at two layers — the user's devbook config
-directory, and `repos/<id>/` under it — and may add a gate but never remove one. How
-the application starts is not configuration: it is the repository's own `run` recipe.
-
-## Proposed
-
-```meta
-```
-
-**The `phases` map, the configuration half of Per-Phase Delivery Config** (see
-[Flow Engine](flow-engine.md#proposed)). Not yet decided. The engine keys become `bindings`,
-`phases`, `policy`, and `gates`, and a top-level `areas` key joins them.
-
-- **One complete map per flow.** `phases.<flow>.<phase>[:<qualifier>]` holds `agent`,
-  `skill`, `model`, `effort`, `mcp`, `before`, `after`, and a few phase-specific options.
-  The qualifier is the folder in `flow-spec`, and in `flow-code` the kind or the area. Each
-  field resolves on its own, most specific key first, then the session. An absent field
-  inherits the session. The committed file must list exactly the phases its flow has. An
-  overlay names only what it changes, and the overlay's value wins field by field.
-- **Three mechanisms fold in.** `extensions` maps to phase `skill`, `agent`, and hook
-  fields. `bindings["delivery.roles"]` becomes the `agent` of the phases a role drafted.
-  `bindings["delivery.mcp"]` becomes each phase's `mcp`. The categories in the personal
-  `model-selection.md` become `model` entries in the user overlay. The migration does the
-  rewrite. Once it lands, the checker rejects the old keys by name and points at
-  `delivery:update`. A role bound to a bare plugin name resolves to that plugin's single
-  agent. A plugin with more than one agent is reported, never guessed.
-- **Model and effort in the committed file.** Today a model is personal only. The proposal
-  makes committed values team defaults that the overlay always overrides, so nobody's
-  personal choice is taken away.
-- **Gates attach to phase ids**, not to points. An overlay still only adds a gate.
-  `personal-validation` refuses every field, in any map, the way
-  `policy.gate.personalValidation` is refused today.
-- **Doctor rules.** `devbook-config:doctor` resolves a phase's `agent` against the installed
-  agents and the repository's own agent folder, and its `skill` against the installed skills.
-  An agent id in a `skill` field, and an `agent` field that names an agent-only plugin with
-  more than one agent or no agent at all, are warnings that name the fix. An agent id in a
-  `skill` field is the gap that left `extensions.implement: csharp-coding:coding` resolving
-  to nothing, because the doctor's agent fallback covers roles only. Doctor also flags a map
-  left under a retired flow and a leftover `model-selection.md`.
+`bindings`, `phases`, `policy`, `gates` — and the optional `areas`, beside every component's
+`components.<name>` entry and a committed `id`. Unknown keys are rejected by name. `phases`
+holds one complete map per flow, and model and effort are legal in it as team defaults. A
+`config.local.json` outside every clone overlays the engine keys at two layers — the user's
+devbook config directory, and `repos/<id>/` under it — wins field by field, and may add a gate
+but never remove one. How the application starts is not configuration: it is the repository's
+own `run` recipe.
 
 ## Why
 
@@ -60,6 +25,53 @@ Two files would give the repository two places to disagree with itself. Each com
 only its own entry, and `policy` keys are closed enums with documented defaults, so an absent
 key means the engine's choice and a hand edit is safe.
 
+**One complete map per flow.** `phases.<flow>.<phase>[:<qualifier>]` holds `agent`, `skill`,
+`model`, `effort`, `mcp`, `before`, `after`, and a few options a phase takes for itself —
+`phase-verify.app`, the provider that starts the application, and `phase-report-back.targets`.
+The first level is the flow's skill name, the second the phase's (`phase-implement`), and the
+qualifier is the folder in `flow-spec` or an area on `phase-implement`; there is no kind
+qualifier, because what a kind needs is `phase-implement`'s call. Each field resolves on its
+own, most specific key first, then the session, so an absent field inherits the session's
+model, effort, and inline runner, and `{}` is a complete entry. The committed file lists
+exactly the phases its flow has: a missing phase, a phase the flow lacks, or a map under an
+unknown flow is rejected by name. Nothing crosses flows, so each map reads as that flow's whole
+wiring with no second place to look. The ready check and Personal Validation take no entry, and
+a `phase-personal-validation` key is refused in any map, as `policy.gate.personalValidation`
+is. The config templates ship both maps filled in, carrying the cost profile the old model
+categories gave.
+
+**Three mechanisms fold into it.** `extensions` became each phase's `skill`, `agent`, and
+`before` and `after` chores; `bindings["delivery.roles"]` became the `agent` of the phases a
+role ran; `bindings["delivery.mcp"]` became each phase's `mcp`; the categories in the personal
+`model-selection.md` became `model` entries in the user overlay. One question — who runs this
+phase, how — had three answers in three places. The migration does the rewrite, and resolves a
+role bound to a bare plugin name to that plugin's single agent, reporting one with more than
+one agent rather than guessing.
+
+**Model and effort are team defaults.** A model was personal only, so a committed value could
+not change every collaborator's cost. A committed value now sets the team's default and the
+overlay always wins, so nobody's own choice is taken away, and a repository can record that its
+review runs on a stronger model than its Build & Test without every contributor writing it down.
+
+**No aliases for the old keys.** `extensions`, `bindings["delivery.roles"]`, and
+`bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update`.
+[Releases](releases.md) ships one migration per contract change, and an alias would leave two
+ways to say the same thing for a whole major.
+
+**Gates attach to phase ids.** `{ "at": "scope", "when": "after" }` names the phase whose
+output the gate presents. An overlay still only adds a gate.
+
+**`areas` is a hint.** Path globs per area, first match wins, for a repository whose paths do
+not tell `phase-implement` which code is frontend. Without it the skill decides from the seams
+and the paths, and a `phase-implement:<area>` entry overrides the bare one field by field.
+
+**Doctor resolves what the checker cannot.** The checker validates shape. `devbook-config:doctor`
+resolves a phase's `agent` against the installed agents and the repository's own agent folder,
+and its `skill` against the installed skills. An agent id in a `skill` field, and an `agent`
+field naming a plugin with more than one agent or none, are warnings that name the fix: an agent
+id in a provider slot is what left `extensions.implement: csharp-coding:coding` resolving to
+nothing. It also flags a map left under a retired flow and a leftover `model-selection.md`.
+
 **Under `.devbook/`.** It was `.github/ai-agent-stack.json`, and `.github/` is one host's
 folder — a file both hosts read belongs in neither's. `.devbook/` already holds the
 repository's own account of how it works, of which the config is the machine-readable half.
@@ -69,9 +81,10 @@ names the old file while it exists.
 
 **The overlay may only tighten.** A file no reviewer sees may not weaken what a reviewer sees:
 `gates` append, `policy.pr.required`, `policy.qa.ceiling`, `policy.gate.personalValidation`,
-`policy.openspec.scenarios` and `components` are refused, and the check validates the overlay alone and the merged result.
-Trusting the overlay because its author could edit the committed file fails on visibility, not
-capability — the committed edit shows in review and the overlay never does.
+`policy.openspec.scenarios` and `components` are refused, and the check validates the overlay
+alone and the merged result. A model or an effort is a cost choice, not a guard, so the overlay
+overrides it. Trusting the overlay because its author could edit the committed file fails on
+visibility, not capability — the committed edit shows in review and the overlay never does.
 
 **`ext` is the overlay's `components`.** A plugin that must remember something about one
 machine — the environment and model a routine runs with — had no legal key: the engine
@@ -96,9 +109,9 @@ to ignore, and devbook's `.gitignore` block went with it.
 
 **Runtime facts live in the `run` recipe, not a `runtime` key.** The flow context file had
 eight sections; three were answered by config and `.mcp.json`, one spelled `null` in Markdown,
-and the rest were facts the start procedure — `run` since 1.12.0 — consumed in its next line. Configuration chooses
-among behaviour the engine implements, and how one product's application comes up is prose the
-repository owns. Nothing to start is `extensions.app.start: null`.
+and the rest were facts the start procedure — `run` since 1.12.0 — consumed in its next line.
+Configuration chooses among behaviour the engine implements, and how one product's application
+comes up is prose the repository owns. Nothing to start is `phase-verify.app: null`.
 
 **A component entry may be hand-written.** The dashboard computes a session title from
 `components.delivery-surface-dashboard.sessionNaming.labels`; it materializes nothing and ships
@@ -113,6 +126,11 @@ makes two developers' session lists readable to each other.
 ```
 
 - A second file for the engine keys, and a second supported path for the config.
+- Shared phase entries inherited across flows, and a partial committed map: either puts a
+  flow's wiring in two places.
+- A kind qualifier on a phase (`phase-implement:defect`): what a kind needs is the skill's call.
+- The old keys kept as deprecated aliases.
+- Model choice kept personal only: the team had no way to record the cost profile it agreed.
 - Resolving the overlay from the main worktree via `git rev-parse --git-common-dir`: still
   inside a clone, so `git clean -x` and a re-clone take it.
 - A `runtime` key for the application's facts, and a per-user file for session-naming words.
@@ -126,6 +144,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | The engine keys become `bindings`, `phases`, `policy`, `gates`, and the optional `areas`. `phases` holds one complete map per flow, keyed by skill name; `extensions`, `bindings["delivery.roles"]`, `bindings["delivery.mcp"]`, and the personal `model-selection.md` fold into it, with no aliases. Model and effort are legal in the committed file as team defaults the overlay overrides, replacing the rule that a model is personal only. Gates attach to phase ids. `policy.review.retryBudget`, `policy.ready.retryBudget`, and `policy.phases.review` join the policy enums. Per [Flow Engine](flow-engine.md). |
 | 2026-09-29 | `bindings["openspec.grill"]` names the change lane's grill skill, or `null`. The engine carries it and never reads it; `devbook-config:init` writes it with the lane's `spec` and tracker bindings, and `devbook-config:local` may bind one per machine in an overlay. |
 | 2026-09-29 | `policy["openspec.scenarios"]`: `advisory` by default, `linked` refusing a change's acceptance while a scenario names no test. Locked against overlays, beside `pr.required` and `qa.ceiling`: what acceptance requires is the repository's. A chore's `run` may carry `--flag` arguments; a service's provider may not. |
 | 2026-09-27 | `devbook-config:doctor` resolves every provider id in the effective configuration against the installed skills and the repository's own skill folder: an id migration 015 retired is hard drift naming its successor, any other unresolved id a warning, and an unbound point nothing. The checker still validates shape only. |

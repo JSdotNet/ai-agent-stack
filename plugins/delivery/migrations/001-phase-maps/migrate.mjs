@@ -253,7 +253,7 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
                 continue;
             }
             if (found.kind === null && found.why) notes.push(`${from}: ${found.why} — written as found`);
-            for (const [flow] of targets(null, phase).filter(([f]) => point === "spec" || point === "deliver" || f === "flow-code")) {
+            for (const [flow] of targets(null, phase).filter(([f]) => point === "deliver" || f === "flow-code")) {
                 set(flow, phase, "skill", provider, from);
             }
             continue;

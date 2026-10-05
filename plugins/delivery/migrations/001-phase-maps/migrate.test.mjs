@@ -70,6 +70,7 @@ test('the committed file comes out complete, valid, and in the mapping table', (
     const spec = config.phases['flow-spec'];
     assert.deepEqual(code['phase-update-base'], { before: ['devbook:validate'] });
     assert.deepEqual(spec['phase-update-base'], { before: ['devbook:validate'] });
+    assert.deepEqual(spec['phase-scope'], { agent: 'architecture:architect', mcp: ['backlog'] });
     assert.deepEqual(code['phase-scope'], { skill: 'devbook-openspec:spec', agent: 'architecture:architect', mcp: ['backlog'] });
     assert.deepEqual(code['phase-plan'], { agent: 'architecture:architect' });
     assert.deepEqual(code['phase-implement'], { agent: 'csharp-coding:coding' });
@@ -175,3 +176,8 @@ test('a leftover repo:start is never carried into phase-verify.app, committed or
     assert.deepEqual(other.config.phases['flow-code']['phase-verify'], { app: 'repo:launch' });
 });
 
+test('the spec point lands on flow-code only', () => {
+    const { config } = migrateConfig({ extensions: { spec: 'devbook-openspec:spec' } }, { resolve });
+    assert.deepEqual(config.phases['flow-code']['phase-scope'], { skill: 'devbook-openspec:spec' });
+    assert.deepEqual(config.phases['flow-spec']['phase-scope'], {});
+});

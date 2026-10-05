@@ -14,7 +14,8 @@ per `.devbook/arc42/adr/configuration.md` in the marketplace. The script rewrite
 | 1.13.0 | 1.14.0 |
 | --- | --- |
 | `extensions.session.start` · `flow.start` · `flow.end` | `phase-update-base.before` · `phase-scope.after` · `phase-summary.after`, in both maps |
-| `extensions.spec` · `deliver` | `phase-scope.skill` · `phase-create-pr.skill`, in both maps |
+| `extensions.spec` | flow-code `phase-scope.skill`: the spec it returns is built from, and flow-spec builds none |
+| `extensions.deliver` | `phase-create-pr.skill`, in both maps |
 | `extensions.implement` | flow-code `phase-implement.agent`, or `.skill` when the provider is one; `null` is `agent: null` |
 | `extensions.validate` · `verify` | flow-code `phase-build-test.skill` · `phase-spec-check.skill` |
 | `extensions.app.start` | flow-code `phase-verify.app`, as written — except the retired `repo:start`, which is dropped, or becomes `repo:run` when it carries options |

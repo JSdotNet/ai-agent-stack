@@ -63,8 +63,8 @@ there is nothing runnable, and the chapter it writes is the specification.
 
 ## How Skills Reference These Phases
 
-- **No skill names Update Base or the ready check.** Both are identical for every flow, so the
-  flow-runner prepends the first and inserts the second before Personal Validation.
+- **Every flow names Update Base first and the ready check right before Personal
+  Validation.** Both are identical in every flow and defined once, in their own skills.
 - A flow lists its phases under a `## Phases` heading and links here. This file is the source
   of truth; the skill only names which phases it runs and adds skill-specific notes, such as
   the kinds table and the Verify depth per kind.
@@ -90,8 +90,7 @@ there is nothing runnable, and the chapter it writes is the specification.
 ## Phase: Update Base
 
 Every flow. Runs **first**, before the flow's own phases, so the work starts from the current
-base. The flow-runner prepends it to the stage list it passes to `start_run` and runs it
-inline.
+base. It heads the stage list passed to `start_run`, and the flow-runner runs it inline.
 
 **Defined in `skills/phase-update-base/SKILL.md`** — resolving and fetching the base, taking
 the workflow's branch, the dirty-tree and open-pull-request refusals, fast-forward or rebase,

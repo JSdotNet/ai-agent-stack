@@ -4,9 +4,9 @@ Both flows this plugin ships, drawn once. This keeps the `SKILL.md` files focuse
 rules while preserving one reviewable overview of phase order, the two loops, the approval
 gate, and the pull-request handoff.
 
-Every node is a phase skill, `skills/phase-<id>/SKILL.md`. **Update Base** opens both flows: the
-flow-runner prepends it, so neither `SKILL.md` names it. The ready check sits before Personal
-Validation in both, and neither takes configuration.
+Every node is a phase skill, `skills/phase-<id>/SKILL.md`. **Update Base** opens both flows, and the
+ready check sits right before Personal Validation in both; each flow's `SKILL.md` names them
+in its phase list. The ready check takes no configuration.
 
 The **Runs** column is each phase's default from **Phases** in `resources/engine-contract.md`:
 inline in the flow-runner, forked as a `context: fork` skill, or delegated to a sub-agent. A

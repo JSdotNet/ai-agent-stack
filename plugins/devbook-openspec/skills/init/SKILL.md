@@ -53,8 +53,8 @@ not where this repository's behaviour lives, and `archive` recreates it empty, w
 4. **Verify.** `openspec schema validate devbook`, `openspec schema which devbook` answering
    `Source: project`, and `node .devbook/_tools/devbook-meta/build.mjs --check`. A failing check
    is reported as failing, never as initialized.
-5. **Report** what landed and what the engine binds — `"spec": "devbook-openspec:spec"` and
-   `bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`, and the
-   replan chore `"flow.start": [{ "run": "devbook-openspec:status --replan", "on-failure":
-   "required" }]` — which are the engine's keys to write, not this skill's. Offer `devbook-openspec:onboard`, and leave the
+5. **Report** what landed and what the engine binds — `devbook-openspec:spec` as the `skill` of
+   `phases.flow-code.phase-scope`, the replan chore
+   `{ "run": "devbook-openspec:status --replan", "on-failure": "required" }` in its `after`, and
+   `bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }` — which are the engine's keys to write, not this skill's. Offer `devbook-openspec:onboard`, and leave the
    commit to the person.

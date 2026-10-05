@@ -7,9 +7,9 @@ around it — `/opsx:explore`, `/opsx:propose`, `/opsx:apply`, and the rest. Thi
 and configures OpenSpec so its skills write devbook changes, and never copies one of them.
 
 An L1 extension: it depends on `devbook` and nothing else. The engine appears only as provider
-strings a repository binds in `.devbook/config.json` — `"spec": "devbook-openspec:spec"` and
-`bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`, and
-`"flow.start": [{ "run": "devbook-openspec:status --replan", "on-failure": "required" }]`; without them,
+strings a repository binds in `.devbook/config.json` — `devbook-openspec:spec` as the `skill` of
+`flow-code`'s `phase-scope`, the replan chore `devbook-openspec:status --replan` after it, and
+`bindings["delivery.tracker"]` as `{ "provider": "devbook-openspec:tracker" }`; without them,
 OpenSpec's `/opsx:apply` builds each step itself.
 
 ## Installation
@@ -37,28 +37,36 @@ after `devbook` has adopted the change folder. The plugin never installs the CLI
 |---|---|
 | `init` | Checks the CLI, runs `openspec init` at the repository root, writes the schema, the config, and the rule, removes the scaffolded `specs/`, and stamps `components.openspec`. Refused where that stamp exists |
 | `update` | Checks the CLI against the stamped range, runs `openspec update`, replaces every managed file that still hashes to what landed, and re-stamps, after running any outstanding migration. Refused where no stamp exists |
-| `spec` | The provider for an engine's `spec` point: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change below `approved` or whose approval has lapsed |
+| `spec` | The skill an engine's Scope phase follows for a step of a change: returns an approved change's proposal, the deltas a step delivers, its solution, and the step, unchanged. Refuses a change below `approved` or whose approval has lapsed |
 | `tracker` | The provider for an engine's tracker: `tasks.md` as the work items, with `read_item`, `update_item`, and `comment`, and a step's state — `open`, `in progress`, `in review`, `done` — read off its `branch:` and `PR:` lines and the pull request |
-| `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. With `--replan`, the engine's `flow.start` chore: re-checks the deltas, the open steps, and the related chapters against `main` and fails on any flag. Writes nothing |
+| `status` | Artifacts, steps, the `verify-change` verdict per delta, and both gates with whether each fingerprint holds, in one report, and the one next move. With `--replan`, a chore after the engine's Scope phase: re-checks the deltas, the open steps, and the related chapters against `main` and fails on any flag. Writes nothing |
 | `archive` | Checks both gates, merges every delta with `delta.mjs --apply --no-move`, then lets `openspec archive` move the folder |
 | `onboard` | Walks a person through a first real change, one move at a time |
 
 ## What the engine binds
 
-`devbook-config:init` writes these into `.devbook/config.json`; this plugin never does. The two
-gates are optional and show a change's own gates inside a run: approval as the run starts one
-step, and the verdicts as it ends.
+`devbook-config:init` writes these into `.devbook/config.json`; this plugin never does. The
+entry is one phase of the complete `flow-code` map the engine's contract requires, shown alone
+here. The two gates are optional and show a change's own gates inside a run: approval once Scope
+has the step, and the verdicts once Spec Check has them.
 
 ```json
-"extensions": { "spec": "devbook-openspec:spec" },
+"phases": {
+  "flow-code": {
+    "phase-scope": {
+      "skill": "devbook-openspec:spec",
+      "after": [{ "run": "devbook-openspec:status --replan", "on-failure": "required" }]
+    }
+  }
+},
 "bindings": {
   "delivery.tracker": { "provider": "devbook-openspec:tracker" },
   "openspec.grill": "<plugin>:<grill-skill>"
 },
 "gates": [
-  { "at": "spec", "when": "after", "purpose": "approval", "show": "artifact",
+  { "at": "scope", "when": "after", "purpose": "approval", "show": "artifact",
     "prompt": "This run builds one step of an approved change. Proceed?" },
-  { "at": "verify", "when": "after", "purpose": "risk", "show": "summary",
+  { "at": "spec-check", "when": "after", "purpose": "risk", "show": "summary",
     "prompt": "Verdicts above. Any row not aligned stays open on the change." }
 ]
 ```

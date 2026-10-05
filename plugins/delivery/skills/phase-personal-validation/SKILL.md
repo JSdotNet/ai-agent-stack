@@ -82,7 +82,9 @@ look, what to do, and what should happen.**
 
 ## Step 4 — Present The Reviews
 
-- **The code review** of the change set, for the person to read.
+- **The code review**: `review.md` from `phase-review`, open blockers first, then the fixed
+  blockers and the advisories, each with its citation. When review was off or did not run,
+  say so.
 - **The recorded QA review** when Validation ran: the scenarios in order, each with its
   pass/fail and its evidence, then the monitoring findings. When it was skipped, say so and
   why — never imply a result that was not produced.

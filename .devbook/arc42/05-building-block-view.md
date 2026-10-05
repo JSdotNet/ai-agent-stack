@@ -551,7 +551,7 @@ It named a third until the specialists
 what a target delegates to is a binding the consuming repository makes, not a plugin the
 schedule can require.
 
-State splits by who it belongs to. The selection and any cadence override are repository
+State splits by who it belongs to. The selection and any cadence or `maxResolve` override are repository
 facts and go in `components.schedule` of the [stack config](#stack-config), written by
 `delivery-schedule:init` and `delivery-schedule:update` only. The scheduler ids, the checkout's path, and the tools a routine
 was approved for are personal and live in the scheduler — every schedule is a local routine on

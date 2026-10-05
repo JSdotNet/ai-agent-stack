@@ -236,7 +236,7 @@ The values it holds:
 related: [".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/05-building-block-view.md#stack-config"]
 ```
 
-Which schedules this repository chose and any cadence it overrode, recorded under
+Which schedules this repository chose and any cadence or `maxResolve` it overrode, recorded under
 `components.schedule` in the stack config and written by this block's `init` and `update` alone.
 
 The split is by who the fact belongs to. The selection and the overrides are repository facts

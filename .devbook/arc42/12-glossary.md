@@ -79,7 +79,7 @@ Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 Also called: schedule catalog, trigger files.
 
 The set of schedule files the plugin ships — the defaults, readable as defaults. A repository
-selects from it and overrides a cadence in its own stamp rather than by editing the file, so an
+selects from it and overrides a cadence or a `maxResolve` in its own stamp rather than by editing the file, so an
 upgrade can move a shipped default without silently reverting or silently keeping somebody's
 choice.
 

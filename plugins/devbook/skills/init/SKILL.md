@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Bring devbook into a repository for the first time — adopt the arc42, domain, tech, design, and ai folders under .devbook/ and the change folder under openspec/changes/, scaffold one starting chapter per adopted folder, install the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption", "adopt the change folder".'
+description: 'Bring devbook into a repository for the first time — adopt the arc42, domain, tech, design, and ai folders under .devbook/ and the change folder under openspec/changes/, scaffold one starting chapter per adopted folder, seed the repository-owned procedure skills it adopts — run, capture, diagnose, estimate, prototype — each with a managed wrapper per host carrying its fixed goal, install the devbook-meta checker and its CI workflow, install its folder rules with a wrapper per host, write devbook''s section of AGENTS.md, and write the stamp. Refused where components.devbook already exists: that repository is initialized, and devbook:update moves it forward. Use when: adopting devbook in a repository that has never had it. Triggers on: "devbook init", "init devbook", "install devbook", "set up devbook", "adopt the devbook folders", "scaffold arc42/", "scaffold domain/", "set up tech/", "set up design/", "track AI adoption", "adopt the change folder", "seed the run skill", "generate the run skill", "seed the capture skill", "seed the diagnose skill", "seed the estimate skill", "seed the prototype skill".'
 user-invocable: false
 ---
 
@@ -19,12 +19,14 @@ init would ask again what the stamp already answers.
 1. **Detect.** Installed version and disk state. A devbook folder already on disk with no
    stamp is adopted as found, never recreated.
 2. **Resolve.** Ask adoption as one question naming all five folders and the change folder; `ai/`'s stage set is a
-   follow-up, asked only when `ai/` was adopted. Adopt only folders the repository will
+   follow-up, asked only when `ai/` was adopted. Then ask which procedures to adopt, offering
+   all five; what each needs and what lands is `assets/procedures/skill-wrappers.md`. Adopt only folders the repository will
    actually maintain — an empty devbook folder is worse than an absent one, and partial
    adoption is the normal case.
 3. **Plan.** Show the diff table and write nothing. Never skip this.
 4. **Materialize.** Create each adopted folder per *Creating a folder* below, then copy the
-   asset table.
+   asset table, then seed each adopted procedure per `assets/procedures/skill-wrappers.md`
+   under *What lands, and how*.
 5. **Stamp and verify.** Run every shipped migration's `--check`, oldest first; a folder
    already on disk may still hold an old shape, and one that exits `1` is applied and
    re-checked exactly as in the reconcile's phase 4. Write the entry at the plugin's

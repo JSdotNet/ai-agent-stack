@@ -37,7 +37,7 @@ Plugins upgraded by the user: <plugin old → new, or none>.
 
 | Procedure | Where | State |
 | --- | --- | --- |
-| `<run / show / capture / debug / estimate / prototype>` | <path to the repository's copy> | <seeded / customized / orphaned> |
+| `<run / capture / diagnose / estimate / prototype>` | <path to the repository's copy> | <seeded / customized / orphaned> |
 
 Flows reachable: <flow-* the installed delivery ships, or none — delivery not adopted>.
 

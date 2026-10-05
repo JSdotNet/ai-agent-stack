@@ -84,7 +84,7 @@ function replaceEntry(text, entry) {
     return text.slice(0, open) + rendered + text.slice(end + 1);
 }
 
-const seed = split(await readFile(path.join(PLUGIN, "assets", "skills", "run.md"), "utf8")).fm;
+const seed = split(await readFile(path.join(PLUGIN, "assets", "procedures", "skills", "run.md"), "utf8")).fm;
 // The release this migration ships in, stamped as `from` on what it writes.
 const version = "1.12.0";
 

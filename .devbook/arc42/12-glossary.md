@@ -388,10 +388,10 @@ documentation plugin's sense, which is a standalone document.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/12-glossary.md#demo"]
 ```
 
-Owned by [devbook-procedures](building-blocks/devbook-procedures.md).
+Owned by [devbook](building-blocks/devbook.md#goal).
 
 One standalone HTML file that answers one question, in UI mode or logic mode. It needs no
 change, no task, and no approval, and it is never a source of truth. It carries its question
@@ -403,10 +403,10 @@ nobody takes further stays where it is, as evidence of what was tried.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal"]
 ```
 
-Owned by [devbook-procedures](building-blocks/devbook-procedures.md).
+Owned by [devbook](building-blocks/devbook.md#goal).
 
 Also called: `/prototype`.
 

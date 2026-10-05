@@ -30,7 +30,7 @@ const DEFAULT_MARKETPLACE = 'jsdotnet-devbook';
 //
 // `contract: false` is not "has not got round to it". Only a component whose update rewrites
 // content the repository authored takes a contract version and a ledger; one that copies files
-// it owns whole has hash-matching as its whole migration mechanism. So five of these six will
+// it owns whole has hash-matching as its whole migration mechanism. So four of these five will
 // never carry those fields, and the table below says `payload-only` rather than leaving a gap
 // that reads like drift. See
 // `.devbook/arc42/adr/install.md`.
@@ -41,7 +41,6 @@ const COMPONENTS = {
     devbook: { plugin: 'devbook', init: 'devbook:init', update: 'devbook:update', contract: true },
     derived: { plugin: 'devbook-derived', init: 'devbook-derived:init', update: 'devbook-derived:update', contract: false },
     openspec: { plugin: 'devbook-openspec', init: 'devbook-openspec:init', update: 'devbook-openspec:update', contract: false },
-    'devbook-procedures': { plugin: 'devbook-procedures', init: 'devbook-procedures:init', update: 'devbook-procedures:update', contract: false },
     delivery: { plugin: 'delivery', init: 'delivery:init', update: 'delivery:update', contract: false },
     schedule: { plugin: 'delivery-schedule', init: 'delivery-schedule:init', update: 'delivery-schedule:update', contract: false },
 };
@@ -50,11 +49,18 @@ const COMPONENTS = {
 // refuses to run until `components.devbook` names an adopted folder, and delivery-schedule
 // checks its targets against the plugins this repository enables, so it wants the settled
 // state. `devbook-openspec` follows devbook because its init refuses until `components.devbook`
-// adopts the change folder at contract 24. `devbook-procedures` sits before `delivery` so that a `start` it moves to `run`, or a `capture` an older
-// engine seeded is adopted or replaced before the engine's update releases its claim on it,
-// and both sit before schedule because schedule's targets call those procedures. Anything not
-// named here follows, alphabetically.
-const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-openspec', 'devbook-procedures', 'delivery', 'delivery-schedule'];
+// adopts the change folder at contract 24. devbook reconciles the procedures too, so a `start`
+// it moves to `run`, or a `capture` an older engine seeded, is settled before `delivery`'s
+// update releases its claim on it, and before schedule, whose targets call those procedures.
+// Anything not named here follows, alphabetically.
+const RECONCILE_ORDER = ['devbook', 'devbook-derived', 'devbook-openspec', 'delivery', 'delivery-schedule'];
+
+// A stamp entry whose plugin folded into another: the entry is stale on sight, and the update
+// named here runs the migration that moves it. `devbook-procedures` folded into `devbook`
+// (`.devbook/arc42/adr/plugin-boundaries.md`); `027-procedures-in-devbook` moves the entry.
+const FOLDED_STAMPS = {
+    'devbook-procedures': { into: 'devbook', update: 'devbook:update', migration: '027-procedures-in-devbook' },
+};
 
 // What an update run does with each plugin. The three inputs are orthogonal: installed is a
 // fact about this machine, enabled about this checkout, stamped about the repository and
@@ -552,6 +558,11 @@ function describeStamp(stamp) {
         : null;
     if (files !== null) parts.push(files === 1 ? '1 file' : `${files} files`);
     if (Array.isArray(stamp?.adopted)) parts.push(stamp.adopted.length ? `adopted \`${stamp.adopted.join('`, `')}\`` : 'adopted none');
+    if (Array.isArray(stamp?.procedures?.adopted)) {
+        parts.push(stamp.procedures.adopted.length
+            ? `procedures \`${stamp.procedures.adopted.join('`, `')}\``
+            : 'no procedures');
+    }
     if (Array.isArray(stamp?.enabled)) {
         parts.push(stamp.enabled.length
             ? `enabled \`${stamp.enabled.join('`, `')}\``
@@ -694,7 +705,7 @@ function render(model) {
         .filter((p) => p.scope === 'reconcile')
         .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
     if (reconcile.length) {
-        out.push('Run these **in this order** — derived needs devbook adopted first, procedures settle before the engine releases an older seed, and schedule reads the settled enable state — and let each write its own stamp:');
+        out.push('Run these **in this order** — derived needs devbook adopted first, devbook settles the procedures before the engine releases an older seed, and schedule reads the settled enable state — and let each write its own stamp:');
         out.push('');
         for (const p of reconcile) {
             const drift = p.stampedVersion && p.stampedVersion !== p.installed
@@ -832,8 +843,9 @@ function render(model) {
                     // null for a component this script has never heard of: read its fields and
                     // report what is there, rather than calling it payload-only on no evidence.
                     const versioned = COMPONENTS[name]?.contract ?? null;
+                    const folded = FOLDED_STAMPS[name];
                     return [
-                        `\`${name}\``,
+                        `\`${name}\`${folded ? ` - folded into \`${folded.into}\`; \`${folded.update}\` moves it` : ''}`,
                         stamp?.pluginVersion ?? (COMPONENTS[name] ? '-' : 'no stamp'),
                         describeStamp(stamp),
                         versioned === false

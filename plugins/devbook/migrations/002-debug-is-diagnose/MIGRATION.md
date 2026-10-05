@@ -1,7 +1,7 @@
 # 002 — `debug` is `diagnose`, from 1.14.0
 
 ```meta
-appliesTo: [devbook-procedures]
+appliesTo: [procedures]
 breaking: yes
 ```
 
@@ -19,7 +19,7 @@ The procedure that finds the cause of an observed issue is `diagnose`, not `debu
 
 A body is edited when its hash differs from the one its stamp entry recorded. The script
 rewrites only the `components.devbook-procedures` entry of the stamp and writes no wrapper:
-`devbook-procedures:update` runs it first and then materializes `diagnose` like any other
+`devbook:update` runs it first and then materializes `diagnose` like any other
 adopted procedure.
 
 ## Why

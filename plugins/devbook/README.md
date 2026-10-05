@@ -64,12 +64,43 @@ stamp at `.devbook/config.json` — and refuses where that stamp already exists.
 `devbook:update` moves a stamped repository forward: a plugin upgrade, a change in
 which folders are adopted, and an outstanding migration are one idempotent
 operation, and it refuses where no stamp exists. Both write devbook's
-marker-fenced section of `AGENTS.md`, rendered from the adopted folders. The
-protocol is in `assets/reconcile-protocol.md`.
+marker-fenced section of `AGENTS.md`, rendered from the adopted folders, and
+reconcile the adopted procedures below. The protocol is in
+`assets/reconcile-protocol.md`.
 
 **Trigger keywords:** `devbook init`, `set up devbook`, `adopt the devbook folders`,
 `scaffold arc42/`, `scaffold domain/`, `set up tech/` for `init`; `devbook update`,
 `devbook sync`, `upgrade devbook`, `run devbook migrations` for `update`
+
+### Procedures: `run`, `capture`, `diagnose`, `estimate`, `prototype`
+
+The five procedures every repository has and no plugin can write. One product runs
+`aspire start`, the next `docker compose up`; one has tracing, the next has screenshots. What
+never varies is what each procedure is *for*, so devbook fixes the goal and seeds the
+procedure:
+
+| Procedure | Goal, fixed by devbook | The repository owns |
+|---|---|---|
+| `run` | Leave the application running and healthy; report the command, the health verdict, the entry points | the setup, the command, the readiness signals, the entry points, the credential pointer |
+| `capture` | Return evidence a reviewer can open: one file per checkpoint and per failure, paths under the worktree root, the form named honestly | the layout, the naming, the tooling |
+| `diagnose` | Name the cause of an observed issue and prove it — a log line, a trace span, a breakpoint's state — without handing the person a debugger, and leave nothing behind in the change | where the logs live, which debugger reaches the app, how a reproduction is set up |
+| `estimate` | Return story points off 1/2/3/5/8/13/21 per unit of work, sized against the repository's reference examples, naming the reference each was compared with | the reference table of finished work per value, and its calibration |
+| `prototype` | Settle a design question stated in one sentence with one throwaway standalone HTML file — a state model to drive, or structurally different variants on the repository's demo template — and answer it in one line kept out of the file; never merged, writing into no `.devbook/` folder and no source file | where the domain model, design system, Storybook, and prototypes live, what a prototype shows |
+
+A repository adopts them in `devbook:init` beside the folders, and `devbook:update` reconciles
+them in the same pass; `components.devbook.procedures.adopted` records which. Each lands as
+one editable copy under `.agents/skills/<name>.md` with a managed wrapper per host carrying
+the goal — except `run`, whose body is Claude Code's project recipe at
+`.claude/skills/run-<name>/SKILL.md`, written by `/run-skill-generator`, with a Copilot twin at
+`.github/skills/run/SKILL.md`. Edit the copy and it is yours: its hash matches no release, so
+every later reconcile reports it and leaves it alone. With `prototype` and `design/` both
+adopted, the starting demo template lands at `.devbook/design/demo-template.html`. The shape,
+the goal, and what lands where are
+[`assets/procedures/skill-wrappers.md`](assets/procedures/skill-wrappers.md).
+
+Nothing depends on a procedure. A flow engine that wants a runtime or evidence names the skill
+`run` or `capture` and finds it or does without; a session without one invokes `diagnose` by
+name like any other skill.
 
 ### Skill: `validate`
 
@@ -390,13 +421,18 @@ for technologies that do not appear in package manifests.
 | `assets/rule-wrappers.md` | How the rules land in an adopting repository: the verbatim copy under `.agents/rules/`, the `paths` wrapper Claude reads, the `applyTo` wrapper Copilot reads, and what `rules/rules.json` decides |
 | `assets/routing-snippet.md` | Optional repository-local context-loading and routing policy |
 | `assets/code-sync-protocol.md` | Shared rules for `capture-specs`, `apply-change`, and `verify-change`: counterpart resolution, evidence rules including why unit tests are first-class evidence for capture, the five-way drift verdict, status rules, the capture plan, the check, and the report table. An asset rather than an instruction, because an honest `paths` list for these rules would have to cover source trees and would break the plugin's silence in non-adopting repositories |
+| `assets/procedures/skills/<name>.md` | The five procedure seeds: `name`, `description`, and `goal` in the frontmatter, an example-filled procedure below. `run.md` lands only where `/run-skill-generator` cannot run |
+| `assets/procedures/skill-wrappers.md` | How a procedure lands: one editable copy, a managed wrapper per host, where the goal sits, and `run`'s exception |
+| `assets/procedures/demo-template.html` | The starting demo template, seeded at `.devbook/design/demo-template.html` when `prototype` and `design/` are adopted: the managed region between `template:begin hash=…` and `template:end`, and a placeholder `main[data-demo-app]`. The comment opening the region is the authoring reference |
+| `assets/procedures/demo-sample/features.demo.html` | A demo built on the template, with realistic data and one walkthrough: the fixture spec-manager and Backlog test against, its region kept equal to the template's by `tools/devbook-meta/demo-template.test.mjs` |
 | `assets/spec-kinds/<kind>.md` | One file per chapter kind the three converters cover — `aggregate`, `domain-service`, `feature`, `setting`, `building-block`, `design-component`: the chapters and file it covers, the folder rule, the spec-to-code mapping with an evidence column and a requirements column, and what each direction does differently there. Long by kind: a mapping stated by half is wrong |
 
 ### Hook configuration
 
 - `hooks.json` adds a session-start guardrail: devbook folders are task-scoped
   context rather than baseline context, `meta` blocks are mandatory on every
-  chapter, and `_meta/` is never hand-edited.
+  chapter, and `_meta/` is never hand-edited. It also points a session at the
+  repository's procedure skills rather than a guessed command, URL, or layout.
 
 ### Migrations
 
@@ -425,7 +461,13 @@ the sixth is `017-invariants-under-domain`, which moves `invariants.md` and
 reference to them; the seventh is `018-behaviour-titles`, which titles the two behaviour
 files by kind, a `requirements.<name>.md` by its feature, and takes the `#### Scenario:` cases
 off an `### Invariant:`; the eighth is `021-no-review-triad`, which deletes `review`,
-`reviewer`, and `review-at` from every `meta` block and reports the review state it took off.
+`reviewer`, and `review-at` from every `meta` block and reports the review state it took off;
+the ninth is `027-procedures-in-devbook`, which moves `components.devbook-procedures` under
+`components.devbook`, keeping `adopted` and every hash, now that the procedures are devbook's.
+`001-start-is-run`, `002-debug-is-diagnose`, `003-show-removed`, and
+`004-start-binding-is-run` shipped in `devbook-procedures` and moved here with it under their
+shipped ids, because a ledger id is never renamed: they rewrite the old entry, so ledger order
+runs them before `027`, and their `appliesTo` is `procedures`.
 Contract 14 owed none. The
 migrations written before 1.0.0 moved repositories between states no repository is in any
 more and were dropped at the reset, per
@@ -461,7 +503,7 @@ that ships no migration is normal.
 
 ### `contractVersion`
 
-One number, currently **26**, covering the metadata schema a repository authors
+One number, currently **27**, covering the metadata schema a repository authors
 and the derived artifacts a consumer reads — `schemaVersion` in `graph.json` and
 `index.json` is the same number under the name those files stamp themselves
 with. It moves only when something repo-visible changes shape, so most plugin
@@ -538,7 +580,9 @@ as before, so it ships no migration. 24 gives a change's `proposal.md` the `appr
 the optional `sync` direction. 26 learns the click demos: the `demo` field, every address in it
 resolved against the demo's `demo-model`, the HTML contract each `*.demo.html` keeps, and a
 demo folded into the fingerprint of the page it belongs to. Each is an added field or rule a
-corpus without it never meets, so none ships a migration.
+corpus without it never meets, so none ships a migration. 27 changes no chapter: the
+procedures' stamp entry moves under `components.devbook`, and it ships as
+`027-procedures-in-devbook`.
 
 ## Folder structure
 

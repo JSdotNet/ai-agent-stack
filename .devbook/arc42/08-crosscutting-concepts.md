@@ -447,7 +447,7 @@ plugins it may name. A lower layer never names a higher one.
 | Layer | Depends on | Example |
 | --- | --- | --- |
 | L0 foundation | Nothing. Works with only itself installed | `devbook` |
-| L1 extension | One foundation | `devbook-derived`, `devbook-procedures`, `devbook-collaboration`, `devbook-openspec` |
+| L1 extension | One foundation | `devbook-derived`, `devbook-collaboration`, `devbook-openspec` |
 | L2b bridge | Two stacks at once, deliberately | none |
 | L3 surface | Neither direction, and never declared: resolved from the live tool list | the four `delivery-surface-*` plugins — a surface is not a layer, as the sentence below says; `devbook-graph` is not one either, ships inside `devbook-derived`, an L1, and reads the checker's modules rather than its files |
 
@@ -566,7 +566,7 @@ What one block publishes and others conform to without either side declaring the
 | --- | --- | --- | --- |
 | The `meta` block schema and chapter addressing | [devbook](building-blocks/devbook.md) | Every block that writes a chapter | `rules/devbook-chapter-metadata.md`, materialized into a repository |
 | The checker's CLI — `--check`, `--print`, `--write`, `--scope` | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md)'s refresh paths, CI, and every skill that runs the check | `tools/devbook-meta/build.mjs` |
-| The procedure goal — one sentence per `run`, `capture`, `diagnose`, `estimate`, `prototype` that holds whatever the body says | [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md)'s `verify` phase, and any session invoking the skill by name | The `goal` field of each seed, rendered into the managed wrapper per host |
+| The procedure goal — one sentence per `run`, `capture`, `diagnose`, `estimate`, `prototype` that holds whatever the body says | [devbook](building-blocks/devbook.md#goal) | [delivery](building-blocks/delivery.md)'s `verify` phase, and any session invoking the skill by name | The `goal` field of each seed, rendered into the managed wrapper per host |
 | The derived-artifacts envelope — `_meta/graph.json`, `index.json`, `annotations.json` and their `schemaVersion` | [devbook-derived](building-blocks/devbook-derived.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md)'s queue and the Backlog app off disk | `rules/devbook-derived-artifacts.md`, materialized into a repository |
 
 | The decision rungs — `approved` and `accepted` on `domain/`'s ladder and a change's `proposal.md`, each with a signer, a day, and a content fingerprint, optional on a chapter and covering the whole change on a proposal | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md)'s approval and acceptance gates, and anyone writing a rung by hand | Two `status` values and six fields scoped to `domain/` and a proposal in `rules/devbook-chapter-metadata.md` and `rules/devbook-changes.md`; the fingerprint is computed by `tools/devbook-meta/chapter-hash.mjs` |
@@ -622,10 +622,9 @@ supporting.
 | This chapter | every block | Shared Kernel | No — it is the vocabulary, not a plugin |
 | [devbook](building-blocks/devbook.md) | [devbook-derived](building-blocks/devbook-derived.md) | Customer/Supplier | Yes, `devbook >=1.1.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-collaboration](building-blocks/devbook-collaboration.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
-| [devbook](building-blocks/devbook.md) | [devbook-procedures](building-blocks/devbook-procedures.md) | Customer/Supplier | Yes, `devbook >=1.0.0 <2.0.0` |
 | [devbook](building-blocks/devbook.md) | [devbook-openspec](building-blocks/devbook-openspec.md) | Customer/Supplier | Yes, `devbook >=1.13.0 <2.0.0` |
 | [devbook-openspec](building-blocks/devbook-openspec.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — a repository binds its `spec` and `tracker` providers by name; unbound, OpenSpec's `/opsx:apply` builds the step |
-| [devbook-procedures](building-blocks/devbook-procedures.md) | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
+| [devbook](building-blocks/devbook.md#procedure), for the procedures | [delivery](building-blocks/delivery.md) | Separate Ways | No — the engine names the skills `run` and `capture` and their paths, never the plugin; absent, a flow does without |
 | [delivery](building-blocks/delivery.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Customer/Supplier | Yes, `delivery >=1.0.0 <2.0.0` |
 | [delivery](building-blocks/delivery.md) | the four surfaces — [dashboard](building-blocks/delivery-surface-dashboard.md), [canvas](building-blocks/delivery-surface-canvas.md), [collector](building-blocks/delivery-surface-collector.md), [backlog](building-blocks/delivery-surface-backlog.md) | OHS + Published Language | No, deliberately — a surface is resolved from the live tool list |
 | [devbook](building-blocks/devbook.md) | [delivery-schedule](building-blocks/delivery-schedule.md) | Separate Ways | No — `prose-check` is named as a target and skipped when absent |

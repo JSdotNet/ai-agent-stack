@@ -10,8 +10,10 @@ upgrade it, and be told when the two have drifted apart.
 
 Inside the block: the `meta` block and its field set, the address a chapter is reached by, the
 annotation fence, the reconcile that materializes the convention into a repository, the
-change folder and the merge of its deltas, and the two directions between a chapter and the
-code that implements it.
+change folder and the merge of its deltas, the two directions between a chapter and the
+code that implements it, and the five procedures every repository has and no plugin can
+write — `run`, `capture`, `diagnose`, `estimate`, `prototype` — each with a goal this block
+fixes and a body the repository owns.
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter
@@ -50,6 +52,8 @@ change belongs to the engine.
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
+| `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
+| `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, by spec-manager and Backlog as a test fixture |
 | `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
 
 ### init
@@ -58,8 +62,8 @@ change belongs to the engine.
 related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#reconciling-a-repository"]
 ```
 
-Bring devbook into a repository that has none: ask which folders to adopt, scaffold each, copy
-the payload, and write the stamp. It refuses where `components.devbook` already exists —
+Bring devbook into a repository that has none: ask which folders and which procedures to
+adopt, scaffold each folder, copy the payload, seed each procedure, and write the stamp. It refuses where `components.devbook` already exists —
 "already initialized, run update" — because the stamp is what the next run reads, and a second
 init would ask again what it already answers.
 
@@ -76,8 +80,10 @@ It refuses where no stamp exists, since with no provenance every file on disk wo
 customized.
 
 It is the only writer of everything it materializes — the rules and their per-host wrappers,
-the CI workflow, the tooling, and one marker-fenced section of the repository's agent
-instructions. A materialized file that changed underneath is reported and left, never
+the CI workflow, the tooling, the procedures and their wrappers, and one marker-fenced section
+of the repository's agent instructions. A procedure dropped from `procedures.adopted` orphans
+its three files, reported and never deleted; a path once written and no longer is moves
+through a migration, since hash-matching cannot move a customized body. A materialized file that changed underneath is reported and left, never
 overwritten; an edit inside a marker-fenced section makes the next reconcile skip the section,
 which is what the markers exist for.
 
@@ -528,7 +534,7 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 ### Demo
 
 ```meta
-related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook.md#goal"]
 ```
 
 The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.html` that shows
@@ -539,8 +545,8 @@ the chapters whose `demo` field names it. Links run from Markdown to the demo on
 records its question and nothing about its lifecycle: under `domain/` it is the demo, under a
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
-starting copy and a sample demo built on it are
-[devbook-procedures](devbook-procedures.md#demo-template)'s. The
+starting copy and a sample demo built on it ship with this block, under
+[Demo Template](#demo-template). The
 [demos record](../adr/demos.md) holds the reasons.
 
 A `demo` field and a note point into a demo by an address, and a frame that hosts a demo
@@ -582,6 +588,130 @@ the page the demo belongs to.
 | A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | `devbook-delta/` holds Markdown deltas and demos directly in a `domain/<context>/` folder, and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
+
+### Procedure
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/building-blocks/devbook.md#init", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
+```
+
+Also called: procedure skill, repository skill, seeded skill.
+
+One of five named things a repository knows how to do and a plugin cannot: `run`,
+`capture`, `diagnose`, `estimate`, `prototype`. In a repository it is three files — the body at
+`.agents/skills/<name>.md`, and a wrapper per host at `.claude/skills/<name>/SKILL.md` and
+`.github/skills/<name>/SKILL.md` — and one stamp entry per file under
+`components.devbook.materialized`. The body is seeded once and is the repository's
+from its first edit: a hash matching no shipped release marks it `managed: false`, reported on
+every reconcile and never overwritten. The wrappers stay managed. A name in the stamp's
+`procedures.adopted` list is a procedure the repository has; one dropped from the list orphans its three
+files, reported and never deleted.
+
+`run` is two files. Claude Code ships a `run` skill that follows a project recipe at
+`.claude/skills/run-<name>/SKILL.md`, which its `/run-skill-generator` records, so that recipe
+is the body — the generator's, or the `run` seed where no host can run it — stamped
+`managed: false` from the moment it lands, and Claude Code's own `run` is its Claude wrapper.
+Copilot's twin at `.github/skills/run/SKILL.md` carries the goal and points at every recipe.
+One name reaches it on both hosts. `migrations/001-start-is-run/` moves a `start` procedure
+into that shape.
+
+No procedure shares a name with a command or skill a host bundles: a project skill replaces
+the host's own of the same name. `diagnose` was `debug` until it was found to hide Claude
+Code's `/debug`; `migrations/002-debug-is-diagnose/` renames it.
+
+None is a dependency of anything; `diagnose` invokes `run` by name. `show`, which walked
+the branch's feature for a reviewer through `run` and `capture`, was removed because no flow
+invoked it; `migrations/003-show-removed/` takes it out of a repository.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| A procedure is three files — the body and one wrapper per host — with one stamp entry each | `init`, `update` | untested |
+| A body whose hash matches no shipped release is marked `managed: false`, reported on every reconcile and never overwritten | `init`, `update` | untested |
+| The wrappers stay managed whatever the body's state | `init`, `update` | untested |
+| A name dropped from `adopted` orphans its three files, reported and never deleted | `init`, `update` | untested |
+| `run`'s body is a `.claude/skills/run-<name>/SKILL.md` recipe, never written after it lands, and Copilot's twin points at every one | `init`, `update`, `tools/check-assets.mjs` | `check-assets` over this repository |
+| No procedure other than `run` takes the name of a command or skill a host bundles | the seeds under `assets/procedures/skills/` | untested |
+
+### Goal
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#procedure", ".devbook/arc42/08-crosscutting-concepts.md#published-languages", ".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#prototype"]
+```
+
+The one sentence a procedure must satisfy whatever its body says: what a caller gets back.
+`run` leaves the application running and reports the command, the health verdict, and the
+entry points; `capture` returns one file per checkpoint and per failure, under the worktree root, the
+form named honestly; `diagnose` names a cause and proves it, doing the debugging itself and
+leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
+sized against the repository's own finished work and naming the reference compared with, so
+that a pace measured in points means the same across plans; `prototype` starts only from a
+design question stated in one sentence, writes that sentence into the file's `demo-meta` as its
+`question`, and ends with a one-line answer for whoever asked, never recorded in the file, which
+carries no stage, status, verdict, or page. It delivers one standalone HTML file, everything
+inline and nothing fetched: a logic question as a model anyone can drive through a state panel
+labelled in the ubiquitous language, free play, and walkthroughs; a UI one as two or more
+structurally different variants on the repository's demo template, its managed region kept and
+no script outside it but `demo-model` and `demo-meta`, in its design system, with the guideline,
+token, or story each came from. Given an existing demo it returns the revision with every
+surviving screen id and anchor kept. The prototype is never merged: it writes into no
+`.devbook/` folder and changes no source file, and the answer reaches the devbook only through
+a change. It is the `goal` field of the
+seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
+A repository edits the body to meet it and never edits it.
+
+`prototype` is the only writer of a demo outside the template's managed region, per the
+[demos record](../adr/demos.md). Its file
+stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
+prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
+exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
+delta to `domain.md`, `flow.md`, or an invariants subpage. The seed's body carries the rest of
+the record: variants trimmed to the chosen one only when a proposal carries the file, walkthroughs
+listed in `demo-model` by id — the scenario's slug when one is played — data at real density,
+the 500 KB target kept with inline SVG, shared markup, and page demos and allowed to be exceeded,
+and the two things it is not for: a settled design goes to `flow-code`, a bug to `diagnose`.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| Every seed carries a `goal`, rendered into both wrappers above the pointer | `init`, `update` | untested |
+| A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `init`, `update` | untested |
+
+### Demo Template
+
+```meta
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook.md#goal"]
+```
+
+The starting template every demo is built on, shipped as `assets/procedures/demo-template.html`. Where
+`prototype` is adopted and the `design/` folder is too, `init` and `update` seed it at
+`.devbook/design/demo-template.html`, where the repository makes it its own through
+`flow-spec`; without `design/` they say so and skip it. Like a body, it is refreshed only while
+it still hashes to a shipped release, and once edited it is the repository's. It is one HTML file. Between `<!-- template:begin hash=… -->` and
+`<!-- template:end -->` sits the managed region: the design-token styles, the app shell, the
+control panel, and the one script a demo carries. The rest of the file is the demo's own: its
+screens in `main[data-demo-app]`, its `demo-model`, and its `demo-meta`. The comment that opens
+the region is the authoring reference for both.
+
+The hash is `sha256:` over the region's text between the two markers, every CRLF read as LF,
+spelled as the reconcile protocol spells a file's. The panel reads it back from the marker and
+sends it as the template version in `demo:ready`, so a host and a later check tell one release
+of the region from another without a version number of their own.
+
+The panel jumps to any screen or state, plays walkthroughs with their scenario lines beside the
+screen, switches role, flags, settings, viewport, and, while there are two or more, variants,
+and shows the pins a host sends. Its script implements the four messages of
+`resources/demo-address.md`. It is dark, monospaced, and hazard-striped, so nobody takes it for
+the product.
+
+`assets/procedures/demo-sample/features.demo.html` is a demo built on it: an ordering context's screens at
+real density with one walkthrough, `a-declined-card-keeps-the-basket`. spec-manager and
+Backlog test against it.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The region's begin marker carries the hash of the region | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
+| The sample holds the template's region byte for byte, and its `demo-model` and screens list each other exactly | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
+| No script sits outside the region except `demo-model` and `demo-meta`, and nothing is fetched | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
+| The template lands only where `prototype` and `design` are both adopted, and is refreshed only while it hashes to a shipped release | `init`, `update` | untested |
 
 ### Reference Graph
 
@@ -635,8 +765,8 @@ and writes nothing, because one writer is what makes re-running safe.
 
 It coordinates the [Devbook Folder](#devbook-folder) aggregate and the component stamp, and
 it is the only thing in this block that touches a file outside a devbook folder: the rule
-wrappers each host reads, the CI workflow templates, and devbook's own marker-fenced section
-of `AGENTS.md`.
+wrappers each host reads, the CI workflow templates, the procedures and their wrappers, and
+devbook's own marker-fenced section of `AGENTS.md`.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -1021,7 +1151,7 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `devbook-writing.md` names the skill `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Pictures read faster than prose. Without the skill, the rule's own table of diagram kinds applies, so nothing is declared. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper `init` writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
-| A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema | The convention only exists where it has been installed, and the stamp is the record of what landed. |
+| A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, the adopted procedures, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema, each procedure's `goal` | The convention only exists where it has been installed, and the stamp is the record of what landed. A procedure's body is the repository's from its first edit; only the goal is refreshed. |
 
 ### Inbound
 
@@ -1031,12 +1161,13 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
-| [devbook-procedures](devbook-procedures.md#dependencies) | Customer-Supplier, declared | Follows this block's reconcile protocol — the stamp's two shared fields, the hash rules, the plan-before-write phase — and stamps `components.devbook-procedures` beside this block's entry | `assets/reconcile-protocol.md` under **The stamp** | That the protocol and the stamp keep their shape; it reads no chapter and runs no check. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Annotation fences written through `annotations.mjs`; writes devbook's `approved` and `accepted` rungs | The annotation fence and the `status` ladder | That a fence keeps its schema and its open/resolved/gone lifecycle, and that the two rungs and their records keep their meaning. |
 | [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
+| [delivery](delivery.md#dependencies), for the procedures | Separate Ways | Names `run` at its `app.start` point and `capture` inside Validation, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this block | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
+| Any session, either host | Conformist | Invokes `run`, `capture`, `diagnose`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
-| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders are adopted under `.devbook/` and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
+| [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
 
 **The undeclared row is the one that matters.** `delivery` cannot be declared a dependent
@@ -1044,6 +1175,12 @@ without demoting all fourteen of its skills wherever this block is absent, and c
 left silent without the next payload-path rename landing the way `.backlog` did. The debt
 record holds the four remediation options; the first — name the coupling in prose and stop
 restating this block's rules — is the one to take.
+
+**A procedure's goal is the seam.** Every procedure's body differs per repository; the one
+sentence that does not is what a caller may rely on, and it lives in the wrapper this block
+keeps rewriting rather than the body the repository owns. The engine names two skill names
+and a path, so a repository that writes both by hand is indistinguishable to it, and the
+engine never follows this block for them.
 
 **Nothing here ships a flow.** The engine's flows appear in this block only as the routing a
 repository's session-start hook performs; how a chapter change is carried is the engine's, and the two meet only in a repository that installed both.

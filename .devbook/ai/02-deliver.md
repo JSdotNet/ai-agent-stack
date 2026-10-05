@@ -28,8 +28,8 @@ A change routes to the flow named for what it changes, which runs it end to end.
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
   `.devbook/config.json` record what they materialized: `devbook` 1.9.0 over `arc42`, `tech`,
   `design`, and `ai`; `delivery` and `schedule` 1.9.0; `devbook-derived` 1.9.0, with its
-  refresh script, its nightly and drift workflows, its rule trio, and its `AGENTS.md` section. `devbook-procedures` is not adopted: the
-  procedures are this marketplace's product, kept as seeds in the plugin, and a repository
+  refresh script, its nightly and drift workflows, its rule trio, and its `AGENTS.md` section. No procedure is adopted: the
+  procedures are this marketplace's product, kept as seeds in `devbook`, and a repository
   with no application to run has none of its own. A surface is enabled per person too: a run reports into
   every one bound — `delivery-surface-dashboard` and `delivery-surface-backlog` where they were
   enabled, `delivery-surface-canvas` being a Copilot canvas this marketplace does not offer — and

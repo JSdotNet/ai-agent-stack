@@ -28,7 +28,7 @@
 //                 Host"); a rule named for a plugins/*/rules/<name>.md is a delivered
 //                 copy — verbatim, globs from that plugin's rules.json
 //   procedures    every .agents/skills/<name>.md has a wrapper per host, rendered from
-//                 the devbook-procedures seed and pointing at the copy; run is a
+//                 the devbook procedure seed and pointing at the copy; run is a
 //                 .claude/skills/run-<name>/ recipe with a Copilot twin pointing at it
 //   plugin rules  every plugins/*/rules/<name>.md has a name matching its filename, a
 //                 description, no glob of its own, and an entry with globs in the
@@ -405,13 +405,13 @@ if (await exists(SHARED_RULES)) {
 
 // ── procedures ──────────────────────────────────────────────────────────────
 //
-// The rule trio with the ownership reversed (see plugins/devbook-procedures/assets/
+// The rule trio with the ownership reversed (see plugins/devbook/assets/procedures/
 // skill-wrappers.md): .agents/skills/<name>.md is the repository's and may say anything, so
 // only its name and goal are checked; each host's wrapper is rendered from the plugin's seed,
 // so its name and description must be the seed's and its body must point at the copy.
 
 const SHARED_SKILLS = path.join(ROOT, ".agents", "skills");
-const SEEDS = path.join(PLUGINS, "devbook-procedures", "assets", "skills");
+const SEEDS = path.join(PLUGINS, "devbook", "assets", "procedures", "skills");
 const SKILL_WRAPPERS = [[".claude", "skills"], [".github", "skills"]];
 
 if (await exists(SHARED_SKILLS)) {

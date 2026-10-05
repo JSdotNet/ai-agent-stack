@@ -1,7 +1,7 @@
 # 001 — `start` is `run`, from 1.12.0
 
 ```meta
-appliesTo: [devbook-procedures]
+appliesTo: [procedures]
 breaking: yes
 ```
 

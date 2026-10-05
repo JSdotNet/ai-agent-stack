@@ -122,7 +122,7 @@ that surface's own `runId`:
 - **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends
   `done`, so a surface shows the pull request against the run that produced it. A pull
   request that reaches no surface is invisible there, however it was opened.
-- **For Validation**, also pass `scenarios` (one entry per tested scenario with
+- **For Verify**, also pass `scenarios` (one entry per tested scenario with
   `status: "pass"|"fail"|"flaky"`, `notes`, and optional evidence paths) and `monitoring` (the
   log and trace summary with any error findings), so evidence renders inline. A scenario the
   run's specification carries also takes `test` — the `tests` link that proves it,
@@ -223,7 +223,7 @@ the session's own tool calls and transcript. The flow-runner reads these; it nev
 - **Read the sub-agent subtotal the opposite way:** it is the share of a stage kept *out* of
   the owner session's context window. A heavy stage with a large subtotal is delegation
   working; a heavy stage with none ran inline and charged the whole run for it. Build & Test
-  and Validation are delegated by default, so a zero subtotal on either is a finding.
+  and Verify are delegated by default, so a zero subtotal on either is a finding.
 - **Act on the run-level gauge before it forces compaction.** The ladder is in
   `flow-execution-model.md`: **Delegation Order** first, then **Session Handoff**
   once delegation is no longer enough. The gauge ignores sub-agent samples, so delegating

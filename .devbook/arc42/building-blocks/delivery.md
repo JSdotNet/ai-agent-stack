@@ -529,7 +529,7 @@ one long step, and a resumed session and a report both depend on that difference
 **Run Context** (value object) is what the run is about, set once and refined rather than
 accumulated: the change kind, the item being worked, the branch, and the worktree it lives in.
 It also holds `origins`, every work item the run started from, each with its kind: `issue`,
-`entry`, `annotation`, `change`, or `schedule`. It is a value because nothing in it has
+`entry`, `annotation`, or `change`, and none for an ad-hoc request. It is a value because nothing in it has
 identity. Replacing it wholesale is the only sensible update, and two runs with the same
 context are still two runs.
 
@@ -572,8 +572,8 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/12-
 
 The enum [Flow](#flow) owns: which phases a flow runs. `flow-code` runs one tier for every
 kind, and only `plan` is limited to a kind, `create`. A `config` change therefore also gets
-review and Build & Test, where a broken workflow file fails. `flow-spec` keeps the shorter
-documentation tier. It drafts and checks in place of implementing, building, verifying, and
+review and Build & Test, where a broken workflow file fails. `flow-spec` keeps a shorter tier
+of its own. It drafts and checks in place of implementing, building, verifying, and
 checking the spec, because there is nothing runnable and the chapter it writes is the
 specification.
 
@@ -584,7 +584,7 @@ stage the run has reached when the context gauge crosses its threshold.
 | --- | --- | --- |
 | `flow-code` runs the same phases for every kind; only `plan` is limited to `create` | `flow-code` | untested |
 | A kind changes what `implement` does and how deep `verify` goes, never which phases run | phase sequencing | untested |
-| The documentation tier runs `drafting` and `check-review` and none of `implement` through `spec-check`, and still runs the ready check, Personal Validation, and the pull request | `flow-spec` | untested |
+| The `flow-spec` tier runs `drafting` and `check-review` and none of `implement` through `spec-check`, and still runs the ready check, Personal Validation, and the pull request | `flow-spec` | untested |
 | Session Handoff belongs to no tier, firing at whatever stage the run has reached | the flow-runner | untested |
 
 ### Phase
@@ -727,7 +727,7 @@ related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/d
 
 Also called: runner, sequencer.
 
-The agent that runs a session's flow. It sequences the flow's phases and prepends Update Base.
+The agent that runs a session's flow. It sequences the phases the flow names, Update Base first.
 It resolves each phase's agent, skill, model, and effort, runs the phase the way those fields
 say, tracks the run against the surface, runs the ready check, and enforces the gate.
 
@@ -737,7 +737,7 @@ flowchart TD
     pv -->|yes| inline["inline, no agent, no model"]
     pv -->|no| resolve["resolve agent, skill, model, effort, field by field"]
     resolve --> set{"agent, model, or effort set?"}
-    set -->|no| own["the skill's own default, forked or inline"]
+    set -->|no| own["the contract's default: inline, forked, or delegated"]
     set -->|yes| effort{"effort overrides the skill's default?"}
     effort -->|no| call["agent call: the named agent or general-purpose, with the model"]
     effort -->|yes| runner["runner-effort runs the named agent's body"]
@@ -767,7 +767,7 @@ recorded.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | One runner per run, holding the session for the run's whole length | the flow-runner | untested |
-| It prepends Update Base, resolves each phase's fields most specific key first and then the session, and tracks the run against the surface | the flow-runner | untested |
+| It runs Update Base first, resolves each phase's fields most specific key first and then the session, and tracks the run against the surface | the flow-runner | untested |
 | A phase whose configured effort overrides its skill's default runs inside `runner-<effort>` on Claude Code, and on the session's effort on Copilot | the flow-runner | untested |
 | `implement` and `review` alternate per slice as two forks, each one level deep | the flow-runner | untested |
 | Personal Validation always runs inline with the runner | the flow-runner | untested |
@@ -1031,7 +1031,7 @@ flowchart TD
 ```
 
 Same opening, same close, different middle. The tier belongs to the flow: `flow-code` runs the
-code tier for every kind, and `flow-spec` runs the documentation tier.
+code tier for every kind, and `flow-spec` runs its own, shorter tier.
 
 ```mermaid
 flowchart LR
@@ -1048,7 +1048,7 @@ flowchart LR
         c9 --> c10["Create PR, Report Back, Summary"]
     end
 
-    subgraph docs["Documentation tier, flow-spec"]
+    subgraph docs["Spec tier, flow-spec"]
         direction TB
         d1["Update Base"] --> d2["Scope"]
         d2 --> d3["Drafting, per folder"]
@@ -1059,14 +1059,15 @@ flowchart LR
     end
 ```
 
-- **The documentation tier drafts and checks in place of building, verifying, and checking the
+- **The `flow-spec` tier drafts and checks in place of building, verifying, and checking the
   spec.** There is nothing runnable to verify and nothing to check a chapter against, since the
   chapter is the specification. A chapter change still passes the ready check and Personal
   Validation and still opens for review.
-- **Verify's depth inside the code tier is driven by change kind.** New functionality gets a
-  browser pass with captured evidence, an existing-flow change gets targeted verification, and
-  a `config` or `dependency` change gets startup only. Where there is no runnable application
-  the depth is recorded as skipped rather than claimed.
+- **Verify's depth inside the code tier is driven by the kind.** A `feature` adding behaviour,
+  `create`, and `project` get a browser pass with captured evidence; a `feature` changing
+  existing behaviour, `defect`, and `refactor` get targeted verification; `config` and
+  `dependency` get startup only. Where there is no runnable application the depth is recorded
+  as skipped rather than claimed, and missing Playwright or Aspire tooling blocks the phase.
 - **A flow shipped by a higher layer declares its own phase ids.** The engine never enumerates a
   skill in a layer above it, so a tier is not something it can assign from here.
 

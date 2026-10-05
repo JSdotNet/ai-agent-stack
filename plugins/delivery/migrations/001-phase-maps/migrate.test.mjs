@@ -181,3 +181,8 @@ test('the spec point lands on flow-code only', () => {
     assert.deepEqual(config.phases['flow-code']['phase-scope'], { skill: 'devbook-openspec:spec' });
     assert.deepEqual(config.phases['flow-spec']['phase-scope'], {});
 });
+
+test('the retired skill an earlier 004 wrote is not carried either', () => {
+    const { config } = migrateConfig({ extensions: { 'app.start': { provider: 'delivery:phase-validation', host: 'aspire' } } }, { resolve });
+    assert.deepEqual(config.phases['flow-code']['phase-verify'], { app: { provider: 'repo:run', host: 'aspire' } });
+});

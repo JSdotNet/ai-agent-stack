@@ -18,7 +18,7 @@ per `.devbook/arc42/adr/configuration.md` in the marketplace. The script rewrite
 | `extensions.deliver` | `phase-create-pr.skill`, in both maps |
 | `extensions.implement` | flow-code `phase-implement.agent`, or `.skill` when the provider is one; `null` is `agent: null` |
 | `extensions.validate` · `verify` | flow-code `phase-build-test.skill` · `phase-spec-check.skill` |
-| `extensions.app.start` | flow-code `phase-verify.app`, as written — except the retired `repo:start`, which is dropped, or becomes `repo:run` when it carries options |
+| `extensions.app.start` | flow-code `phase-verify.app`, as written — except the retired `repo:start` or `delivery:phase-validation`, which is dropped, or becomes `repo:run` when it carries options |
 | `extensions.qa.run` | flow-code `phase-verify.agent`, or `.skill` when the provider is one; `null` writes nothing |
 | `extensions.data.prepare` | flow-code `phase-verify.before` |
 | `delivery.roles.architecture` | `phase-scope.agent` in both maps, flow-code `phase-plan`, flow-spec `phase-drafting:arc42` and `:tech` |
@@ -37,7 +37,8 @@ place in a phase entry and are reported as dropped. `extensions.qa.run: null` me
 its own procedure and a `qa` role still lands as its agent; `agent: null` would instead force the
 phase inline, which the old value never said. `implement: null` keeps meaning inline. A
 `repo:start` left in any layer — devbook's `004-start-binding-is-run` retires it only in the
-committed file, and only when it runs first — is never carried: the run recipe is
+committed file, and only when it runs first — is never carried, nor the
+`delivery:phase-validation` an earlier 004 wrote in its place: the run recipe is
 `phase-verify`'s default. Every other key and `components` are left
 as they are; the file is re-serialized in its own indent and key order, `phases` where
 `extensions` was.

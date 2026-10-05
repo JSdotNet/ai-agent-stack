@@ -83,9 +83,10 @@ const ROLES = {
 };
 const DROPPED_ROLES = ["product", "security"];
 
-// devbook's 004 retires this `app.start` provider, but only where it runs first and only in the
-// committed file; 001 never carries it either way. Its options move to the run recipe's id.
-const RETIRED_START = "repo:start";
+// devbook's 004 retires `repo:start`, but only where it runs first and only in the committed
+// file, and an earlier 004 rewrote it to `delivery:phase-validation`, retired since. 001 carries
+// neither: options move to the run recipe's id.
+const RETIRED_START = ["repo:start", "delivery:phase-validation"];
 const RUN = "repo:run";
 
 // A gate on one of these is unambiguously 1.13.0. `implement` and `verify` are phase ids as
@@ -220,13 +221,14 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
             continue;
         }
         if (rule.field === "app") {
-            if (value === RETIRED_START || (isObject(value) && value.provider === RETIRED_START)) {
+            const retired = RETIRED_START.find((id) => value === id || (isObject(value) && value.provider === id));
+            if (retired) {
                 const { provider: _p, ...options } = isObject(value) ? value : {};
                 if (!Object.keys(options).length) {
-                    notes.push(`${from}: ${RETIRED_START} is retired — nothing is written, and phase-verify starts the app through the run recipe`);
+                    notes.push(`${from}: ${retired} is retired — nothing is written, and phase-verify starts the app through the run recipe`);
                     continue;
                 }
-                notes.push(`${from}: ${RETIRED_START} is retired — its options move to ${RUN}`);
+                notes.push(`${from}: ${retired} is retired — its options move to ${RUN}`);
                 set("flow-code", phase, "app", { provider: RUN, ...options }, from);
                 continue;
             }

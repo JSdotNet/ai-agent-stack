@@ -144,7 +144,11 @@ chapter is the **spec**.
   person as a Markdown artifact — the drafts, as a delta against the target file
   marked `ADDED` / `MODIFIED` / `REMOVED` by heading, and the report table. What
   happens to it is theirs, per **The capture plan** in
-  `assets/code-sync-protocol.md`.
+  `assets/code-sync-protocol.md`. Its frontmatter declares `updates: true`, so a
+  `phase-spec-check` binding runs it in write mode: it carries the plan's
+  `code-ahead` entries into the chapters in scope, each with its `meta` block,
+  runs the devbook check, never sets a decision rung, and lists every edit for
+  Personal Validation, per **Carrying a plan in** in the protocol.
 - **`apply-change`** — a chapter is agreed but unbuilt, so turn it into a
   change brief (outcomes, invariants, ubiquitous language, out of scope,
   acceptance checks) plus a change category, and hand the brief to the flow that
@@ -244,7 +248,8 @@ building-block view, then the observed naming convention, and reports
 `unresolved` rather than guessing.
 
 The dependency on the flows is one-way, and `capture-specs` has none at all: it
-hands its plan to a person, and a person opens the folder's flow. `apply-change`
+hands its plan to a person, and a person opens the folder's flow, or a flow binds it
+for Spec Check and the person approves its edits at Personal Validation. `apply-change`
 names its category's flow and hands over grounded input. No flow knows these
 skills exist.
 

@@ -169,14 +169,15 @@ directly. A missing piece changes who captures, never whether capture happens.
 ### phase-spec-check
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#capture-specs"]
 ```
 
 Check the change set against the specification the run built on and the chapters it touches,
 one verdict per item, before Personal Validation. The bound skill decides whether the phase
 only reports or also updates. An updating skill touches only `code-ahead` rows in scope, never
 sets `approved`, and runs the devbook check after it, and its edits are part of what the person
-approves.
+approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
+`capture-specs` does, and `verify-change`, the default binding, does not.
 
 ### phase-ready
 

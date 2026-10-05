@@ -51,7 +51,7 @@ check(
 );
 {
     // The shipped sample demo, built on the real template, whose script names the marker in a regex.
-    const sample = new URL("../../../devbook-procedures/assets/demo-sample/features.demo.html", import.meta.url);
+    const sample = new URL("../../assets/procedures/demo-sample/features.demo.html", import.meta.url);
     const html = await readFile(sample, "utf8").catch(() => null);
     if (html !== null) check(!errorsOf(demoFileIssues(AT, html)).length, "the sample demo on the shipped template passes the demo rules", JSON.stringify(demoFileIssues(AT, html)));
 }

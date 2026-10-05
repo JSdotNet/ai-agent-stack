@@ -92,11 +92,10 @@ record work this skill did not do.
 7. **Let each adopted component initialize itself.** For every component chosen in step 2,
    invoke that component's own `init` and let it materialize its payload and write its
    own stamp, in the order the report's reconcile list gives — `devbook:init` for the
-   devbook folders, `devbook-derived:init` for the committed index, `devbook-openspec:init`
-   for the change lane, `devbook-procedures:init`
-   for the repository's `run`, `capture`, `diagnose`, `estimate`, and `prototype` skills,
-   `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
-   that one's adoption question from the engine keys just written: flow-code's
+   devbook folders and the repository's `run`, `capture`, `diagnose`, `estimate`, and
+   `prototype` skills, `devbook-derived:init` for the committed index, `devbook-openspec:init`
+   for the change lane, `delivery:init` for the engine's stamp, `delivery-schedule:init` for
+   its schedules. Answer devbook's procedures question from the engine keys just written: flow-code's
    `phase-verify.app` of `null` drops `run` and `diagnose`; `policy.qa.depth` of `skipped` drops `capture`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
    by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 

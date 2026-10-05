@@ -1,9 +1,13 @@
 // demo-template.test.mjs — every demo's managed region against the repository's
 // template: current, stale, and hand-edited under --check, and --refresh
-// rewriting the region and nothing else.
+// rewriting the region and nothing else. Then the shipped template and the
+// sample demo themselves: the sample holds the template's region byte for byte,
+// neither has a script outside it but its two JSON parts or fetches anything,
+// and every screen, anchor, and walkthrough step resolves against its demo-model.
 //
 // Each case writes a small repository to a temporary folder, holding the
-// starting template devbook-procedures ships and the sample demo built on it.
+// starting template devbook ships under assets/procedures/ and the sample demo
+// built on it.
 //
 // Run: node --test plugins/devbook/tools/devbook-meta/demo-template.test.mjs
 
@@ -24,14 +28,14 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRootOf = (dir) => {
     for (let at = dir; ; at = path.dirname(at)) {
         try {
-            readFileSync(path.join(at, "plugins/devbook-procedures/assets/demo-template.html"));
+            readFileSync(path.join(at, "plugins/devbook/assets/procedures/demo-template.html"));
             return at;
         } catch {
-            if (path.dirname(at) === at) throw new Error("no plugins/devbook-procedures above this test");
+            if (path.dirname(at) === at) throw new Error("no plugins/devbook/assets/procedures above this test");
         }
     }
 };
-const assets = path.join(repoRootOf(here), "plugins/devbook-procedures/assets");
+const assets = path.join(repoRootOf(here), "plugins/devbook/assets/procedures");
 const asset = (rel) => readFileSync(path.join(assets, rel), "utf8").replace(/\r\n/g, "\n");
 const TEMPLATE = asset("demo-template.html");
 const SAMPLE = asset("demo-sample/features.demo.html");
@@ -230,5 +234,70 @@ test("build.mjs --check fails on a hand-edited region and passes on a stale one"
         assert.doesNotMatch(result.stdout, /\[error\]/, result.stdout);
     } finally {
         await t.done();
+    }
+});
+
+// -- The shipped template and sample ------------------------------------------
+
+/** The demo's own parts: the HTML with the managed region cut out. */
+const outsideRegion = (html) => {
+    const r = readRegion(html);
+    return html.slice(0, r.start) + html.slice(r.end);
+};
+
+function model(html) {
+    const m = /<script type="application\/json" id="demo-model">([\s\S]*?)<\/script>/.exec(outsideRegion(html));
+    assert.ok(m, "a demo-model script");
+    return JSON.parse(m[1]);
+}
+
+/** Each section[data-screen] with the data-anchor values inside it, read from the markup. */
+function screens(html) {
+    const main = /<main data-demo-app>([\s\S]*)<\/main>/.exec(outsideRegion(html))[1];
+    const out = new Map();
+    for (const s of main.split(/(?=<section id=")/).slice(1)) {
+        const id = /^<section id="([^"]+)"[^>]*\bdata-screen\b/.exec(s)[1];
+        assert.ok(!out.has(id), `screen ${id} appears once`);
+        out.set(id, [...s.matchAll(/data-anchor="([^"]+)"/g)].map((a) => a[1]));
+    }
+    return out;
+}
+
+test("the sample carries the template's region byte for byte", () => {
+    const t = readRegion(TEMPLATE), s = readRegion(SAMPLE);
+    assert.equal(s.declared, t.declared);
+    assert.equal(s.text, t.text);
+});
+
+for (const [name, html] of [["template", TEMPLATE], ["sample", SAMPLE]]) {
+    test(`the ${name} has no script outside the region but its two JSON parts, and fetches nothing`, () => {
+        const scripts = [...outsideRegion(html).matchAll(/<script\b([^>]*)>/g)].map((m) => m[1]);
+        assert.deepEqual(scripts.map((a) => /id="([^"]+)"/.exec(a)?.[1]).sort(), ["demo-meta", "demo-model"]);
+        assert.ok(scripts.every((a) => /type="application\/json"/.test(a)));
+        assert.doesNotMatch(html, /\b(?:src|href)="(?:https?:)?\/\//);
+        assert.doesNotMatch(html, /<link\b|@import|\bfetch\(|XMLHttpRequest/);
+    });
+
+    test(`the ${name}'s demo-model and its screens list each other exactly`, () => {
+        const m = model(html), found = screens(html);
+        assert.deepEqual(m.screens.map((s) => s.id).sort(), [...found.keys()].sort());
+        for (const s of m.screens) {
+            assert.equal(new Set(s.anchors).size, s.anchors.length, `${s.id}: no anchor listed twice`);
+            assert.deepEqual([...s.anchors].sort(), [...found.get(s.id)].sort(), `${s.id}: anchors`);
+            if (s.of) assert.ok(found.has(s.of), `${s.id}: of names a screen`);
+        }
+        assert.ok(found.has(m.app.home), "app.home names a screen");
+    });
+}
+
+test("the sample has one walkthrough, and each step resolves", () => {
+    const m = model(SAMPLE), found = screens(SAMPLE);
+    assert.equal(m.walkthroughs.length, 1);
+    assert.deepEqual(m.variants, [], "a demo bound for domain/ carries one variant");
+    for (const w of m.walkthroughs) for (const st of w.steps) {
+        assert.ok(found.has(st.screen), `${w.id}: ${st.screen}`);
+        if (st.anchor) assert.ok(found.get(st.screen).includes(st.anchor), `${w.id}: ${st.screen}/${st.anchor}`);
+        if (st.role) assert.ok(m.roles.some((r) => r.key === st.role), `${w.id}: role ${st.role}`);
+        assert.ok(st.text, `${w.id}: every step says its scenario line`);
     }
 });

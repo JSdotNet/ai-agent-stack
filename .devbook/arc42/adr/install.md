@@ -64,9 +64,10 @@ look for `.claude/skills/run-<name>/SKILL.md`, and a `start` procedure beside th
 recipe neither read. So the body of `run` is that recipe — the generator's, or the seed where no
 host can run it — `managed: false` from the moment it lands, and Copilot gets a managed twin at
 `.github/skills/run/SKILL.md` pointing at it. The rename moved a path a customized body sat at,
-which hash-matching cannot do, so `devbook-procedures` ships the first migration outside
+which hash-matching cannot do, so `devbook-procedures` shipped the first migration outside
 `devbook`: `001-start-is-run`, numbered in its own sequence and idempotent by its `--check`, with
-no ledger — the shape it removes is the record that it ran. `001` rewrote only the stamp, so an
+no ledger — the shape it removes is the record that it ran — until the fold below carried it
+into devbook's. `001` rewrote only the stamp, so an
 `extensions["app.start"]` bound to `repo:start` kept naming a skill that was gone;
 `004-start-binding-is-run` removes it, since the default provider invokes `run`, or hands its
 options to that provider. `extensions` is the engine's, and this is the one write another
@@ -86,17 +87,19 @@ wants to see a change working types `/verify`, which follows the same `run` reci
 is removed; `003-show-removed` deletes its wrappers and an unedited body, and leaves an edited
 one as the repository's own.
 
-**Procedures install with `devbook`.** Once `devbook-procedures` folds into `devbook`
+**Procedures install with `devbook`.** Since `devbook-procedures` folded into `devbook`
 ([plugin boundaries](plugin-boundaries.md)), `devbook:init` asks about procedures beside
 folders and `devbook:update` reconciles them in the same pass. The procedures keep their
 `adopted` list and each copy's hash, now under `components.devbook`, and nothing about the
 trio, the wrapper's goal, or the body's ownership changes. Moving the entry is a stamp-shape
 change, so the fold ships a `devbook` migration in the same commit, per
-[releases](releases.md): it rewrites `components.devbook-procedures` under
-`components.devbook`, keeps `adopted` and every hash, and leaves each copy where it is. The
-four `devbook-procedures` migrations move into `devbook` with it, under the reconcile
-protocol's rule that a shipped migration id is never invented, renamed, or removed. Until the
-fold lands, `devbook-procedures` keeps its own stamp and pair.
+[releases](releases.md): `027-procedures-in-devbook`, at contract 27, rewrites
+`components.devbook-procedures` as `components.devbook.procedures.adopted` and merges every
+hash into devbook's `materialized`, leaving each copy where it is. The four
+`devbook-procedures` migrations move into `devbook` with it under their shipped ids, per the
+reconcile protocol's rule that a migration id is never invented, renamed, or removed, and enter
+devbook's ledger with `appliesTo: [procedures]`. They rewrite the old entry, so ledger order
+runs them before `027`.
 
 **OpenSpec's verbs: `init` and `update`, `validate` and `doctor`.** Where OpenSpec has a word,
 the marketplace uses it, so a person who knows one tool reads the other without translating.
@@ -113,8 +116,8 @@ addressed `plugin:init` and `plugin:update`, because the plugin name already car
 **`devbook-config` is the front door; a component's own pair is hidden from the menu.**
 `devbook-config:init` and `devbook-config:update` fan out to every adopted component's pair,
 so a menu listing both the orchestrator and five component pairs offered two ways to do one
-thing and no hint which to pick. The pairs of `devbook`, `delivery`, `devbook-derived`, and
-`devbook-procedures` carry `user-invocable: false`: gone from the `/` menu, still invocable by
+thing and no hint which to pick. The pairs of `devbook`, `delivery`, and `devbook-derived`
+carry `user-invocable: false`: gone from the `/` menu, still invocable by
 the model, which is what the fan-out needs — `disable-model-invocation` would be the opposite
 and break it. They are not removed, because no plugin depends on `devbook-config` and a
 repository with `devbook` alone still reaches `devbook:init` by asking for it in words.
@@ -160,6 +163,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. |
 | 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |
 | 2026-10-01 | `devbook-procedures` ships `004-start-binding-is-run`: an `app.start` binding to `repo:start`, which `001` left dangling, is removed or handed to the default provider. The reconcile protocol's rename exception extends to `devbook-procedures`, the one component other than `devbook` that writes an engine key, and only to rename an id it retired. |
 | 2026-10-01 | The weekly schedules move to the weekend; `delivery-schedule` ships `001-weekend-cadence`, with no ledger. What it moves is a routine in the machine's scheduler, which neither a hash nor a script reaches, so `update` re-times it and the stamped `pluginVersion` is the record: `--check` exits `1` below the release that ships it. |

@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { projectPaths, resolveInstalled, selectInstall } from './report.mjs';
 
@@ -85,4 +86,22 @@ test('phaseBindings names every provider a phase entry binds, and unenabledBindi
     ]);
     const missing = unenabledBindings({ phases }, { 'devbook@m': true });
     assert.deepEqual(missing, [{ where: 'phases.flow-code.phase-implement', key: 'agent', plugins: ['csharp-coding'] }]);
+});
+
+test('the stamps table names the procedures devbook adopted and a folded devbook-procedures entry', () => {
+    const root = mkdtempSync(join(tmpdir(), 'report-folded-'));
+    mkdirSync(join(root, '.devbook'));
+    writeFileSync(join(root, '.devbook', 'config.json'), JSON.stringify({
+        id: 'x',
+        components: {
+            devbook: { pluginVersion: '1.16.0', adopted: ['arc42'], procedures: { adopted: ['run', 'capture'] } },
+            'devbook-procedures': { pluginVersion: '1.16.0', adopted: ['run'] },
+        },
+    }));
+    const out = execFileSync(process.execPath, [fileURLToPath(new URL('./report.mjs', import.meta.url)), '--root', root], {
+        encoding: 'utf8',
+        env: { ...process.env, CLAUDE_CONFIG_DIR: join(root, 'no-config') },
+    });
+    assert.match(out, /\| `devbook` \| 1\.16\.0 \| adopted `arc42`; procedures `run`, `capture` \|/);
+    assert.match(out, /\| `devbook-procedures` - folded into `devbook`; `devbook:update` moves it \|/);
 });

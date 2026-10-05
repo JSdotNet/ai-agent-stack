@@ -34,6 +34,7 @@ two writers for one stamp is how a reconcile stops being idempotent.
    | The stamped `contractVersion` is below `MINIMUM_CONTRACT_VERSION` in devbook's `tools/devbook-meta/graph.mjs` | hard | Upgrade through the previous major's last release first, then `devbook:update` |
    | A file a stamp says was materialized is gone | hard | That component's `update` |
    | A devbook folder on disk that `adopted` does not list, or the reverse | hard | `devbook:update` |
+   | A `components.devbook-procedures` entry, which the report marks as folded | hard | `devbook:update`, whose `027-procedures-in-devbook` moves it under `components.devbook` |
    | A component's `AGENTS.md` section, or one of its markers, is missing | hard | That component's `update` |
    | A materialized hash matches an older release | stale | That component's `update`; nothing is broken |
    | An `AGENTS.md` section matches its stamped hash but not what its template renders now | stale | That component's `update` |

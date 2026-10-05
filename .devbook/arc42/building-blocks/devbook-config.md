@@ -463,16 +463,14 @@ flowchart TD
     validate -->|"unknown key"| reject["Reject. A typo is an error, never a silently absent setting"]
     validate -->|clean| fanout["Invoke each adopted component's own init"]
     idOnly --> fanout
-    fanout --> devbookInstall["devbook:init"]
+    fanout --> devbookInstall["devbook:init, the procedures with it"]
     fanout --> derivedInstall["devbook-derived:init"]
     fanout --> openspecInstall["devbook-openspec:init"]
-    fanout --> proceduresInstall["devbook-procedures:init"]
     fanout --> deliveryInstall["delivery:init"]
     fanout --> scheduleInstall["delivery-schedule:init"]
     devbookInstall --> stamps["Each writes its own components.&lt;name&gt; stamp"]
     derivedInstall --> stamps
     openspecInstall --> stamps
-    proceduresInstall --> stamps
     deliveryInstall --> stamps
     scheduleInstall --> stamps
     stamps --> done(["Configured, and every component stamped by its owner"])

@@ -196,7 +196,14 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // belongs to, so editing one lifts their approval. A corpus with no demo and no
 // `demo` field validates and fingerprints exactly as under 25, and no
 // migration is owed.
-export const CONTRACT_VERSION = 26;
+//
+// Version 27 changes no chapter: the procedures fold into devbook, so their
+// stamp entry moves from `components.devbook-procedures` to
+// `components.devbook` — `procedures.adopted` beside the folders' `adopted`,
+// and every procedure file in devbook's `materialized`, hashes kept. It ships
+// as `migrations/027-procedures-in-devbook/`, with the procedures' own
+// `001`–`004` carried over under their shipped ids.
+export const CONTRACT_VERSION = 27;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

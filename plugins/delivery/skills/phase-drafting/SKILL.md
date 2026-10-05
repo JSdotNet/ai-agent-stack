@@ -1,0 +1,48 @@
+---
+name: phase-drafting
+description: 'Shared Drafting phase of flow-spec: writes the devbook chapter, decision record, or debt record the scope settled, through the agent its folder qualifier binds — phase-drafting:arc42, :domain, :tech, :design, :ai — under the repository''s own instruction files for that folder. Delegated by the flow-runner agent with a brief file, never invoked directly.'
+---
+
+# Phase: Drafting
+
+Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
+
+**Does**
+- Drafts the chapter through the folder's agent
+- Links decision and debt records instead of restating them
+
+**Doesn't**
+- Set the approved status
+- Touch code
+
+`flow-spec`, after `phase-scope`, and again whenever the ready check or a gate's `revise` sends
+the run back. It runs delegated, per `resources/phase-resolution.md`, resolved under
+`phase-drafting:<folder>` — the folder scope derived — then `phase-drafting`, then the
+session. No agent resolved: the flow-runner drafts inline under the same files.
+
+## Context
+
+Loads the brief: the scope record — folder, chapter kind, goal — and its chapter list, plus the
+open items on a retry round. Then the instruction files that govern the target path, read
+directly because a rule fires only when a host opens a matching file and a new chapter has
+none yet: `.agents/rules/devbook-<folder>.md`, `devbook-chapter-metadata.md`, and
+`devbook-writing.md`. Never a folder whole, an `annotation` fence, anything under `_meta/`, or
+source code.
+
+## Steps
+
+1. **Write to the kind scope settled.** For `arc42/`, a proposal is a decision record in
+   `proposed` status, never a loose document.
+2. **Follow the folder's instruction files** for structure, template, and status, and write
+   each touched chapter's `meta` block in the same edit.
+3. **Link, never restate,** a decision or debt record. Keep terms to the ubiquitous language
+   in `domain/` where the repository keeps one.
+4. **On a retry round,** fix exactly the open items the brief names, nothing else.
+5. **Leave the decision rung alone.** `approved` is a person's answer at a gate.
+
+## Output
+
+The changed files and one line each on what changed, every status the draft set, and a
+rendered copy through `render_markdown` and `render_diagram` per **Reporting Contract** in
+`resources/surface-contract.md`. Report as the `Drafting` stage. Its place in the order:
+`resources/flow-phases.md`.

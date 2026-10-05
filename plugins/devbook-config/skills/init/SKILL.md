@@ -1,6 +1,6 @@
 ---
 name: init
-description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, extensions, policy, gates) — the change lane''s spec, tracker, and grill bindings among them when devbook-openspec is adopted — validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo", "set up the change lane".'
+description: 'Set a repository up for this marketplace for the first time — decide which installed plugins it will actually use, write .devbook/config.json with its id and, when the delivery engine is among them, the engine-owned keys (bindings, phases, policy, gates, and the optional areas) — the change lane''s spec, tracker, and grill bindings among them when devbook-openspec is adopted — validate them against the schema, and then hand each adopted component its own init skill to materialize what it installs. Writes the engine keys only, never another component''s stamp, and never sets up a plugin this machine has not installed. Refused where .devbook/config.json already exists: run devbook-config:update. Use when: adopting the stack in a repository, wiring flows for the first time, or creating the stack config. Triggers on: "devbook-config init", "init the stack", "set up the stack here", "adopt the delivery engine", "create the stack config", "create .devbook/config.json", "wire up my flows", "onboard this repo", "set up the change lane".'
 ---
 
 # devbook-config init
@@ -16,7 +16,7 @@ component initializes itself**: the config is what a component's `init` reads to
 it is installing into, so writing it first is the difference between a component asking the repository and a
 component guessing.
 
-This skill owns `id` and the four engine keys — `bindings`, `extensions`, `policy`, `gates` —
+This skill owns `id` and the engine keys — `bindings`, `phases`, `areas`, `policy`, `gates` —
 and nothing else. Every `components.<name>` entry belongs to that component's own `init` and
 `update`, the only things that know what it materialized; writing one from here would
 record work this skill did not do.
@@ -38,21 +38,23 @@ record work this skill did not do.
    the repository name is usually right — and never rename it after: it is what a machine
    keys its own overlay for this repository on.
 
-   The four engine keys are `delivery.*` settings and are written **only when `delivery` is
-   among the components adopted in step 2**. Nothing else reads them, so a role or a point
-   bound where no flow ever runs is a setting nobody maintains. Without delivery, the whole
+   The engine keys are `delivery.*` settings and are written **only when `delivery` is
+   among the components adopted in step 2**. Nothing else reads them, so a phase wired where
+   no flow ever runs is a setting nobody maintains. Without delivery, the whole
    file is `{ "id": "<name>" }` plus step 4's grill binding; validate in step 5 only where
    delivery is installed, and skip step 6.
 
-   With delivery: ask which roles, tracker, extension points, policy switches, and gates
-   this repository really has a provider or a reason for. Bind a role only to a plugin the
-   report shows installed and enabled, and an extension point only to a provider that
-   exists here. An unset key takes the engine's documented default, which is almost always
-   better than a binding nobody maintains. Start from the delivery plugin's
+   With delivery: ask which tracker, policy switches, and gates this repository really has
+   a reason for, and per phase of each flow the agent, skill, model, and effort the team
+   runs it with. Name an agent only from a plugin the report shows installed and enabled,
+   and a skill only where one exists here. Start from the delivery plugin's
    `resources/config-template.json` — its checkout root is the report's catalog line, or the
-   plugin's `installPath` from `--json` — and keep only the keys chosen. Read
-   `resources/engine-contract.md` in that same plugin for what each point and gate means.
-   Never put a model or a secret in this file.
+   plugin's `installPath` from `--json`: it carries both flow maps complete, at the cost
+   profile the engine ships with. Keep each map whole — a committed map lists every phase its
+   flow has, and `{}` is a complete entry — and drop a top-level key nobody chose. Read
+   `resources/engine-contract.md` in that same plugin, under *Phases*, for each field and
+   gate. A model and an effort here are team defaults each person's overlay may override;
+   never put a secret in this file.
 
 4. **The change lane**, when `devbook-openspec` is among the components adopted in step 2.
    Ask its three questions, in this order:
@@ -60,8 +62,8 @@ record work this skill did not do.
      `npm install -g @fission-ai/openspec@latest` and wait until it answers; never run it
      yourself. Declined, the lane is not adopted and nothing below is written.
    - **Adopt the change lane?** A yes adds `changes` to what `devbook:init` adopts in step 7.
-     With delivery adopted, write `"spec": "devbook-openspec:spec"` under
-     `extensions` and `{ "provider": "devbook-openspec:tracker" }` as
+     With delivery adopted, write `"skill": "devbook-openspec:spec"` on `phase-scope` in
+     both flow maps and `{ "provider": "devbook-openspec:tracker" }` as
      `bindings["delivery.tracker"]`, and offer the two optional gates in the bridge's
      README under *What the engine binds*.
    - **Grill an idea before proposing it?** Name the `plugin:skill` the person uses — it
@@ -76,8 +78,8 @@ record work this skill did not do.
    true of the person running this and of nobody they set a repository up for, and step 9
    offers `devbook-config:local`, which writes it.
 
-6. **Declare the default MCP servers.** Every point left absent in step 3 takes the engine
-   default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
+6. **Declare the default MCP servers.** Every phase whose `mcp` step 3 left absent takes the
+   engine default — `microsoft-learn`, `aspire`, `playwright` — and a default is only a name until a
    host can start the server. The report's **MCP servers** lines say which of those ids
    `.mcp.json`, `.vscode/mcp.json`, and `.github/mcp.json` already declare. When the
    repository has none of the three files, copy the delivery plugin's
@@ -94,16 +96,16 @@ record work this skill did not do.
    for the change lane, `devbook-procedures:init`
    for the repository's `run`, `capture`, `diagnose`, `estimate`, and `prototype` skills,
    `delivery:init` for the engine's stamp, `delivery-schedule:init` for its schedules. Answer
-   that one's adoption question from the engine keys just written: `extensions.app.start` of
-   `null` drops `run` and `diagnose`; `policy.qa.depth` of `skipped` drops `capture`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
+   that one's adoption question from the engine keys just written: flow-code's
+   `phase-verify.app` of `null` drops `run` and `diagnose`; `policy.qa.depth` of `skipped` drops `capture`; no engine key answers `estimate` or `prototype`, so ask them. Do not copy a component's files
    by hand: a copy made here lands unstamped, and the next reconcile cannot tell it from a file someone deliberately customized.
 
 8. **Verify.** Re-run the report and run `devbook-config:doctor`. An init that ends on a
    failing check is reported as failing, never as done.
 
-9. **Offer `devbook-config:local`.** The report now says whether a user overlay and a
-   model-selection file exist for the person running this. When neither does, say that the
-   first flow here runs at the team's defaults, and offer to run `local` now. Their machine, their answer.
+9. **Offer `devbook-config:local`.** The report now says whether a user overlay exists for
+   the person running this. When none does, say that the first flow here runs at the team's
+   defaults, and offer to run `local` now. Their machine, their answer.
 
 10. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
     as the last thing in the reply: every component this run initialized under *This run*,
@@ -126,6 +128,6 @@ forward — version drift, migrations, the fan-out across components — belongs
   person running it.
 - Do not rewrite an existing MCP configuration file. Add a missing default id; never remove,
   rename, or reshape a server somebody declared.
-- Do not invent a policy switch, an extension point, or a gate purpose. All three sets are
-  closed and declared by the engine; configuration chooses among behaviour it already has.
+- Do not invent a policy switch, a phase, or a gate purpose. All three sets are closed and
+  declared by the engine; configuration chooses among behaviour it already has.
 - Do not remove a gate. Configuration may add one anywhere and may never take one away.

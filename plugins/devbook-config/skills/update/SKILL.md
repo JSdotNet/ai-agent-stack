@@ -1,6 +1,6 @@
 ---
 name: update
-description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own update skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json and the overlays over it. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
+description: 'Move a repository''s whole configured stack forward in one run — refresh the catalog, report which installed plugins are behind, then fan out to every adopted component''s own update skill so outstanding migrations run and stale files are re-materialized, and re-validate the engine-owned keys of .devbook/config.json — the phase maps among them — and the overlays over it. Skips what this machine has not installed and what this checkout has not enabled, without ever dropping a stamp. Use when: upgrading the stack, a plugin is out of date, a migration is outstanding, the config still carries extensions or delivery.roles, or the config no longer validates after an upgrade. Triggers on: "update the stack", "upgrade the stack", "update everything", "am I on the latest", "update my plugins", "run outstanding migrations", "the config stopped validating", "the stack config is still in .github", "there is still a flow-context.md".'
 ---
 
 # devbook-config update
@@ -13,7 +13,7 @@ This file exceeds the 40-line body budget on purpose: it is one staged procedure
 
 One skill for the whole stack. It is `devbook-config:init`'s other half — init writes the
 engine keys into a repository that has none, this moves an already-configured one forward —
-and it owns the same four keys with the same boundary: a `components.<name>` stamp is written
+and it owns the same engine keys with the same boundary: a `components.<name>` stamp is written
 by that component's own `init` and `update` and by nothing else.
 
 So this **orchestrates and never installs**. It resolves what is in scope, runs each
@@ -73,7 +73,9 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    change folder current, and stops on an OpenSpec CLI outside its stamped range — print
    the install command and never run it; procedures' `update` moves a `start` to `run` and asks about a
    `capture` an older engine seeded before `delivery:update` releases its claim on it; and
-   schedule checks its targets against what the repository enables. Each is **required**: a
+   schedule checks its targets against what the repository enables. `delivery:update` is the
+   one that rewrites a 1.13.0 config's `extensions`, `delivery.roles`, and `delivery.mcp` into
+   the phase maps; show the diff it shows and its notes. Each is **required**: a
    failure does not abort the rest, and does make the whole run report as failing.
 
 5. **Re-validate the engine keys.** Run the delivery plugin's `tools/stack-config/check.mjs`
@@ -81,16 +83,20 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    `installPath` from `--json`. It picks up both overlays on its own, from the devbook
    config directory and the committed `id`.
    An upgrade can retire a key, and an unknown key is an error rather than a
-   silently absent setting. Fix against `resources/engine-contract.md` in that same plugin.
+   silently absent setting. A committed flow map that leaves a phase out, names one its flow
+   lacks, or sits under a retired flow fails here by name. Fix against
+   `resources/engine-contract.md` in that same plugin, under *Phases*; never by hand where
+   the report's *Retired keys* section names a key `delivery:update` rewrites.
 
 6. **Verify.** Re-run the report and `devbook-config:doctor`. Pass on the report's *Bindings
    nobody has enabled* section as the warning it is — enablement is personal to this checkout
    — and change neither file for it. An update that ends on a failing check is reported as
    failing.
 
-7. **Offer `devbook-config:local`** when the report says no user overlay or model-selection
-   file exists for the person running this: the stack runs at the team's defaults on this
-   machine until they say otherwise, and that is theirs to decide, once.
+7. **Offer `devbook-config:local`** when the report says no user overlay exists for the
+   person running this — the stack runs at the team's defaults on this machine until they
+   say otherwise, and that is theirs to decide, once — or names a leftover
+   `model-selection.md`, which `local` converts into overlay phase entries and retires.
 
 8. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
    as the last thing in the reply, a run that changed nothing included: under *This run*,

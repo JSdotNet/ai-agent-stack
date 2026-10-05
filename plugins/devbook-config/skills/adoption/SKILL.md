@@ -29,7 +29,7 @@ skill reports the first half and never asserts the second.
    | --- | --- |
    | `plugins[]` — installed, enabled, version | A chapter naming a plugin, skill, agent, hook, or MCP server not installed here; something installed with no chapter at all |
    | `deliverySkills`, `scheduleSkills` | Every `flow-*`, `phase-*`, or `schedule-*` name or count quoted in prose |
-   | `repository` — roles, tracker, mcp, extensions, policy, gates | Which slots a run resolves, and which take their unbound default |
+   | `repository` — tracker, phases, areas, policy, gates | Which slots a run resolves, and which take their unbound default |
    | `repository.folders` | Which folders exist, and in which layout |
 
 4. **Sort the drift into three.** A quoted fact that moved; something on disk with no

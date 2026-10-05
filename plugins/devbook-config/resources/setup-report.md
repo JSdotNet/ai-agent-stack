@@ -53,5 +53,5 @@ Scheduler: <created or updated on the host's page / prompts printed — no sched
 
 - <doctor finding, and the skill that fixes it>
 - <a plugin not installed and therefore not offered or skipped>
-- <no user overlay or model-selection file: `devbook-config:local` offered>
+- <no user overlay, or a leftover model-selection file: `devbook-config:local` offered>
 ```

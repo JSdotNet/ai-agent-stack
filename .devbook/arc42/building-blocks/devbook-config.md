@@ -35,6 +35,7 @@ the one script all six read through. None of them writes a key another component
 | `adoption` | skill | A person checking the `ai/` adoption record against what is installed |
 | `local` | skill | A person saying what is true of their machine — after `init` or `update` offers it, or when the report says no user overlay exists |
 | `scripts/report.mjs` | script, the read-only report | The six skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
+| `scripts/model-selection.mjs` | script, the category converter | `local`, which merges what it prints into the user overlay; it writes nothing |
 | `resources/setup-report.md` | template, the setup report | `init` and `update` at their close; one shape for both, so a run compares against the last one |
 | The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
 | The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md` |
@@ -157,7 +158,8 @@ an answer is about one repository, and `AGENTS.local.md` — all under the user'
 directory, none in the clone. For each phase it asks which agent, model, and effort this person
 wants, and writes the answers into the overlay's `phases` map, where they win field by field
 over the team's defaults. An existing `model-selection.md` is converted into those entries and
-retired. Every question is optional and the default is nothing. A grill skill of the
+retired: `scripts/model-selection.mjs` maps each 1.13.0 category onto the phases its stages
+became, and `local` deletes the file on the person's yes once the overlay validates. Every question is optional and the default is nothing. A grill skill of the
 person's own is one of them: `bindings["openspec.grill"]` in an overlay wins over the
 repository's, and `null` there skips grilling on this machine.
 
@@ -264,7 +266,9 @@ related: [".devbook/arc42/12-glossary.md#report"]
 What is on disk, read and nothing else: the catalog in the working tree and in the host's clone,
 the host's installed-plugin state, three settings layers merged nearest-last, the stack config
 and every machine overlay layer, the devbook folders under `.devbook/`, and the `skills/`
-folders of the engine and the schedule plugin. It is the [report](../12-glossary.md#report)
+folders of the engine and the schedule plugin. It shows each flow's phase map as a table and
+names every key 1.14.0 retired that a config file still carries, and a leftover
+`model-selection.md`, each with the skill that moves it. It is the [report](../12-glossary.md#report)
 behind every answer this block gives.
 
 It is the aggregate because a fact here is only usable with its source attached. "Already
@@ -279,6 +283,7 @@ the report prints both, and the commit behind each.
 | The installed version is the one install that applies to this repository, as the host picks it — local, then project scope naming the root or a worktree's main checkout, then user; an install made for another project never counts, whatever its version | report | `unit:node:plugins/devbook-config/scripts/report.test.mjs` |
 | An empty table is legible as "this file was absent", never as "there is nothing" | report | untested |
 | The three scope inputs stay orthogonal — installed is per machine, enabled is per checkout, stamped is per repository | scope resolution | untested |
+| Every agent, skill, and chore a phase entry names is checked against the plugins this checkout enables | report | `unit:node:plugins/devbook-config/scripts/report.test.mjs` |
 
 The parts it owns:
 
@@ -323,6 +328,7 @@ is also why `devbook:init` and `devbook:update` did not move here.
 | The result validates against the engine's schema, which rejects an unknown key | validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | Init runs before any component initializes itself, and hands each component its own `init` | `init()` | untested |
 | A model or an effort `init` or `update` writes is a team default in the committed file; a person's own choice goes into an overlay, which only `local` writes | `init()`, `update()`, `local()` | untested |
+| A `model-selection.md` converts category by category into the overlay phases its stages became, and a category naming no phase is reported | `scripts/model-selection.mjs` | `unit:node:plugins/devbook-config/scripts/model-selection.test.mjs` |
 | `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | validation | untested |
 
 The value it holds:

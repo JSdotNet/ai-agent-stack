@@ -23,10 +23,10 @@ instead of by repository.
 | --- | --- |
 | [`init`](skills/init/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component initializes itself, then runs each adopted component's `init`. Refused where the config exists. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own `update`, and a re-validated config. |
-| [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, a bound provider id that resolves to no skill — a retired one named with its successor — and installed against newest, each finding with the skill that fixes it. |
+| [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, an agent or provider a phase map binds that resolves to nothing — a retired one named with its successor — a key or flow map 1.14.0 retired, a leftover `model-selection.md`, and installed against newest, each finding with the skill that fixes it. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s engine and surface contracts. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
-| [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer, the model-selection file, `AGENTS.local.md` — all under your devbook config directory. The one skill here that writes outside the repository, and the one that never writes the committed config. `init` and `update` close by offering it. |
+| [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer — your agent, model, and effort per phase among it — and `AGENTS.local.md`, all under your devbook config directory. It converts a retired `model-selection.md` into overlay phase entries and retires the file. The one skill here that writes outside the repository, and the one that never writes the committed config. `init` and `update` close by offering it. |
 
 `devbook-config:adoption` is the one that writes nothing at all, and deliberately: `ai/` rates whether
 people actually work a certain way, and the report can only see what is on disk. It says which
@@ -70,9 +70,10 @@ node scripts/report.mjs --root <repository>
 | The marketplace catalog, in the working tree and in the host's clone | What the newest published version of each plugin is — and whether the clone is stale, which is the usual reason "already latest" is wrong |
 | The host's installed-plugin state | Which version of each plugin is actually on disk |
 | The user, project, and local settings, merged nearest-last | Which plugins are enabled here |
-| `.devbook/config.json` | Roles, tracker, every service and chore extension point, policy switches, gates, and each component's stamp |
-| The overlays — `config.local.json` under the user's devbook config directory for every repository and for this repository's `id` — and `model-selection.md` beside them | Which layers this machine applies over the committed config, which engine keys and `ext.<plugin>` namespaces each touches, and which are absent — a machine with no user layer runs at the team's defaults, and the report says so and names `local` |
-| `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids `delivery.mcp` binds or the engine defaults — a server in use that no file declares is named |
+| `.devbook/config.json` | The tracker and surfaces, each flow's phase map — every phase's agent, skill, model, effort, MCP servers, and chores — areas, policy switches, gates, and each component's stamp |
+| The overlays — `config.local.json` under the user's devbook config directory for every repository and for this repository's `id` | Which layers this machine applies over the committed config, which engine keys and `ext.<plugin>` namespaces each touches, and which are absent — a machine with no user layer runs at the team's defaults, and the report says so and names `local` |
+| Every 1.13.0 key in those files, and a `model-selection.md` beside the overlays | What 1.14.0 retired and is still there: `extensions`, `delivery.roles`, `delivery.mcp`, a gate on an extension point, a map under `flow-update-packages` or `flow-project` — each named with `delivery:update`, whose migration rewrites it — and a model-selection file nothing reads, named with `local` |
+| `.mcp.json`, `.vscode/mcp.json`, `.github/mcp.json` | Which MCP servers the hosts can start here, against the ids each phase's `mcp` binds or the engine defaults — a server in use that no file declares is named |
 | The devbook folders under `.devbook/` | Which of the five this repository adopted, and any stray root-level copy that has to move |
 | The `skills/` folders of `delivery` and `delivery-schedule` | Which `flow-*`, `phase-*`, and `schedule-*` procedures the copies on disk ship |
 
@@ -95,11 +96,11 @@ shares it:
 is personal and per-machine, so a component this machine lacks is skipped and left stamped.
 Dropping the entry would un-adopt it for everyone on the next commit.
 
-It cross-references the bindings against that same enabled set. A `delivery.roles` or
-`extensions` row naming a plugin nobody has enabled is flagged in place and collected under
+It cross-references the bindings against that same enabled set. A phase whose agent, skill,
+or chore names a plugin nobody has enabled is flagged in place and collected under
 **Bindings nobody has enabled**, which names both files — the config that binds it and the
 settings that do not enable it. It is a warning and never a failure: `delivery`'s
-[engine contract](../delivery/resources/engine-contract.md) makes an unreachable role a
+[engine contract](../delivery/resources/engine-contract.md) makes an unreachable agent a
 fallback rather than a stop, and enablement is personal to one checkout while a binding is
 committed and shared.
 
@@ -109,9 +110,9 @@ committed and shared.
 
 - **Any plugin here.** It names all of them and declares none. A plugin it cannot find is
   reported as `not installed` — the same degrade-rather-than-fail shape `delivery` uses for a
-  role or a service whose provider does not resolve. That is what keeps this outside the
+  phase whose agent or skill does not resolve. That is what keeps this outside the
   [layer](../../.devbook/arc42/08-crosscutting-concepts.md#layer) order rather than under it.
-- **Writing anything a component owns.** `devbook-config:init` and `devbook-config:update` write the four
+- **Writing anything a component owns.** `devbook-config:init` and `devbook-config:update` write the
   engine-owned keys and stop, and `doctor` writes nothing. Every `components.<name>` stamp stays
   with that component's own `init` and `update`, the only things that know what it materialized.
   That is also why `devbook:init` and `devbook:update` did not move here, and why `doctor` only
@@ -128,8 +129,9 @@ committed and shared.
 | `skills/doctor/SKILL.md` | The installation diagnosis: stamps, ledger, `AGENTS.md` sections, unresolved providers, versions |
 | `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
-| `skills/local/SKILL.md` | The machine-scope settings: overlays, the model-selection file, `AGENTS.local.md` |
+| `skills/local/SKILL.md` | The machine-scope settings: overlays and `AGENTS.local.md` |
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
+| `scripts/model-selection.mjs` | Turns a retired `model-selection.md` into the user-overlay phase entries that replace it, and writes nothing |
 | `resources/setup-report.md` | The setup report `init` and `update` close on: what is adopted, the procedures, the routines, the versions, and what this run changed |
 
 ## Known gap

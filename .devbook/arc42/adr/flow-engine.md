@@ -74,9 +74,10 @@ flowchart LR
   blockers go back to `implement` within `policy.review.retryBudget`. Review stays its own skill
   and its own key, so it never inherits the implementer's agent or context.
 - **Renames.** Validation becomes `verify`, matching Claude Code's `/verify`, which a phase
-  cannot call because it is user-invoked only; the phase follows the repository's own `show`
-  and `run` procedures. The spec check, the old `verify` point, becomes `spec-check`. Work Item
-  Update becomes `report-back`. Implementation becomes `implement`, matching its skill.
+  cannot call because it is user-invoked only; the phase starts the application through the
+  repository's own `run` procedure and takes evidence through its `capture` procedure. The
+  spec check, the old `verify` point, becomes `spec-check`. Work Item Update becomes
+  `report-back`. Implementation becomes `implement`, matching its skill.
 - **`spec-check` before the gate.** It runs ahead of Personal Validation, so the approval sees
   the drift. The bound skill decides whether the phase only reports or also updates. An
   updating skill touches only `code-ahead` rows in scope, never sets `approved`, runs the

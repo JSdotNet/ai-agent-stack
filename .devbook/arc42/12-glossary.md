@@ -62,7 +62,10 @@ template, arranged as a delta against the target file — `ADDED`, `MODIFIED`, o
 heading — each claim carrying the evidence behind it, and the report table. It is the markers
 OpenSpec's own deltas use, so a bridge can carry a plan across without translating it. Code is
 evidence, not agreement: the plan is a proposal the person carries into the folder, or does
-not.
+not. Two callers carry it in before the person sees it, and the person still decides: an
+unattended sweep lands it as a draft pull request, and Spec Check, binding `capture-specs` in
+write mode, writes the plan's `code-ahead` entries into the chapters for Personal Validation
+to approve or reject.
 
 ## Catalog
 

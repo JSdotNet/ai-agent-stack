@@ -171,6 +171,7 @@ outlives the session — which is why lifecycle and export are answered here and
 | The record lists every session that drove it in `sessionIds`: a reattach appends the caller's `sessionId`, never replaces one, never records one twice, and drops a token the host left unsubstituted | `start_run()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | A stage finishing twice is recorded twice | `update_stage()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | The gate decision is recorded, so a resumed session re-runs the gate rather than trusting a conversation it cannot read | `update_stage()` | untested |
+| A change kind is one `flow-code` derives, or a 1.13.0 kind a run file from before the per-phase flows still carries | `start_run()`, `set_run_context()` | untested |
 | No token counts, no per-stage cost, no context gauge — nothing here observes a session | all mutations | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | Idleness is derived on read and never stored | `get_run()`, `list_runs()` | untested |
 | The declared tool surface is exactly the two answered groups' names, and the render names are absent | server start | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
@@ -224,6 +225,7 @@ in the result rather than failing the run over a file extension.
 | Markdown, and only Markdown | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | A request for another format still writes Markdown and says so in the result, never failing the run | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | The report carries the prompt history, stage output and links, QA scenarios with evidence cited by path, monitoring findings, the gate decision, and the summary | `export_report()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
+| A Report Back stage is left out when the run recorded no origin and the stage never ran; a 1.13.0 Work Item Update stage reads the same way | `export_report()` | untested |
 
 ## Runtime
 

@@ -210,6 +210,7 @@ result.
 | One record per run, keyed by worktree; a `start_run` for the same skill as a parked run reattaches rather than opening a second | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | The record lists every session that drove it in `sessionIds`: a reattach appends the caller's `sessionId`, never replaces one, never records one twice, and drops a token the host left unsubstituted | `start_run()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | A stage finishing twice is recorded twice | `update_stage()` | untested |
+| A change kind is one `flow-code` derives, or a 1.13.0 kind a run file from before the per-phase flows still carries | `start_run()`, `set_run_context()` | untested |
 | Evidence paths resolve inside the git worktree root; anything outside is refused | `update_stage()` | untested |
 | Telemetry is captured from tool events and never accepted from a caller | telemetry hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
 | Idleness and the session title are derived on read, never stored as status | `get_run()`, `list_runs()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/session-title-test.mjs` |
@@ -327,6 +328,7 @@ every part of it at once.
 | The report is written from what was recorded, read across every part of the record at once | `export_report()` | untested |
 | Markdown, or self-contained HTML with the evidence inlined | `export_report()` | untested |
 | Command-invoked, at the end of a run or long after it | `export_report()` | untested |
+| A Report Back stage is left out when the run recorded no origin and the stage never ran; a 1.13.0 Work Item Update stage reads the same way | `export_report()`, the run timeline | untested |
 
 ### Telemetry Capture
 

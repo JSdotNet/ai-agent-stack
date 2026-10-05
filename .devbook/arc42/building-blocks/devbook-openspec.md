@@ -29,9 +29,9 @@ configured here, never copied.
 | `init` | skill | A person, or `devbook-config:init` during a fan-out |
 | `update` | skill | A person, or `devbook-config:update` during a fan-out |
 | `onboard` | skill | A person making a first change |
-| `spec` | skill, provider | The engine's `spec` point, as `"spec": "devbook-openspec:spec"` |
+| `spec` | skill, provider | The engine's Scope phase, as the `skill` of `phases.flow-code.phase-scope` |
 | `tracker` | skill, provider | `bindings["delivery.tracker"]`, as `{ "provider": "devbook-openspec:tracker" }` |
-| `status` | skill | A person, `archive` as its gate check, and the engine's `flow.start` point as `devbook-openspec:status --replan` |
+| `status` | skill | A person, `archive` as its gate check, and a chore after the engine's `phase-scope` as `devbook-openspec:status --replan` |
 | `archive` | skill | A person, once the change is accepted |
 | `devbook-openspec-change` | rule | Both hosts, when a file under `openspec/changes/` is opened |
 

@@ -10,7 +10,7 @@ what it needs. There are three ways to couple — a declared dependency on a low
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
-change lane, and unattended work, an L0 plugin of guidance callers name by skill, four surfaces,
+change lane, and unattended work, an L0 plugin of guidance callers name by skill and of planning a person runs, four surfaces,
 and a guide that names every plugin and depends on none. The repository's procedures are part of
 the convention: a repository adopts them in `devbook`'s stamp the way it adopts a folder. An
 extension owns procedure, never schema or state. The specialists are published
@@ -188,6 +188,18 @@ run something. Its one rule carried from upstream decides where a finding lands:
 violation gets a check, because a check fires every time and a written rule costs context on
 every load and still fails.
 
+`wayfinder` widens what the plugin is. The other four are guidance a caller names; `wayfinder`
+is a procedure a person invokes, no plugin names it, and it writes — a `wayfinder:map` issue and
+its decision tickets on the repository's tracker. It belongs here anyway, because what it
+needs is what L0 allows: the host's issue CLI, `research-brief` beside it, and a `grilling` or
+`prototype` skill named alone, with an inline fallback for grilling. It writes nothing in the
+repository and stamps nothing, so the plugin still installs nothing and declares nothing. A map
+spans many sessions and resolves one decision per session, which a flow cannot be: a flow is one
+session ending at a gate. Nor does it name the engine or the change lane — the destination a
+map reaches, a spec or a decision, is handed to whichever lane the person picks. The issue sweep
+leaves its issues alone by label, so an unattended run never claims or closes a ticket that
+belongs to a person's map.
+
 ## Rejected
 
 ```meta
@@ -225,6 +237,9 @@ every load and still fails.
   `devbook-skills`: the four still need the install machinery, which needs either a
   dependency on `devbook`, the layering problem again, or a copy of the reconcile protocol,
   which breaks one rule, one file.
+- `wayfinder` as a flow in `delivery`, or inside `devbook-openspec`: a flow is one session
+  ending at a gate and a map spans many, and the change lane starts from a proposal, which is
+  what a map finds its way to. Naming either would make an L0 plugin name a higher layer.
 - Keeping `devbook-procedures` as an L1 plugin of its own: it duplicates the adoption, stamp,
   and migration surface `devbook` already has, for a plugin no repository can install without
   `devbook`.
@@ -236,6 +251,7 @@ every load and still fails.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | `devbook-skills` ships `wayfinder`, adapted from `mattpocock/skills`, and widens from guidance callers name to planning a person runs: a `wayfinder:map` issue with decision tickets as child issues linked by native blocking, one ticket per session, on the repository's tracker through the host's issue CLI. It stays L0, names `research-brief` and a `grilling` skill alone, and never names the engine or the change lane. |
 | 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. |
 | 2026-10-05 | The fold lands: the seeds, the wrapper shape, and the demo template and sample move under `devbook`'s `assets/procedures/`, `devbook:init` and `devbook:update` adopt and reconcile the procedures, the session-start paragraph joins devbook's hook, and `devbook-procedures` leaves the marketplace. |
 | 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. |

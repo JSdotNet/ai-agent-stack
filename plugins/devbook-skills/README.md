@@ -1,11 +1,13 @@
 # devbook-skills
 
-Reusable guidance any plugin can name and none has to depend on.
+Reusable guidance any plugin can name and none has to depend on, and planning a person runs
+by hand.
 
 An L0 plugin with no dependencies. It ships skills and nothing else: no rule, no install, no
 hook, and no entry in the stamp. Other plugins name its skills by name alone and keep their
 own short rule for when it is absent, so enabling it improves what they write and disabling it
-breaks nothing. The decision is recorded in
+breaks nothing. `wayfinder` is named by no plugin: a person invokes it, and it writes issues,
+never files. The decision is recorded in
 [plugin-boundaries.md](../../.devbook/arc42/adr/plugin-boundaries.md).
 
 ## Installation
@@ -24,6 +26,7 @@ Then enable `devbook-skills` with `/plugin`. There is nothing to install into th
 | `research-brief` | Answers one question about something outside the repository from primary sources only, every claim cited with a confidence, and lists what the sources leave open. Returns the brief and writes nothing | `delivery`'s Scope phase, when a fact outside the repository decides scope, and its Drafting phase for `arc42/` and `tech/`; and anyone who types `/research-brief` |
 | `pr-body` | Writes a pull request description as Summary, Evidence, and Merge Danger: one picture of the change, a tiered before and after, and a one-way or two-way door with its blast radius. A one-way door links its decision record | `delivery`'s Create Pull Request phase, `delivery-schedule`'s draft pull requests, whose door `schedule-merge-review` weighs its verdict by; and anyone who types `/pr-body` |
 | `retro` | Runs a retrospective over one session or one delivery run with the person present, and ranks what would make the next one get further: a pointer, a check, narrower context, a cheaper tool call, a deleted no-op, a model or effort setting. A mechanical violation gets a check, never a written rule. Presents the candidates and writes nothing | `delivery`'s Summary, which offers it after two or more revise rounds at Personal Validation; `delivery-schedule`'s `schedule-weekly-retro`, which reads a week through its lenses; and anyone who types `/retro` |
+| `wayfinder` | Plans an effort too big for one session as a `wayfinder:map` issue whose child issues are decision tickets — research, prototype, grilling, task — linked by native blocking, then resolves one frontier ticket per session until nothing is left to decide. Plans; never builds the destination | Nobody: a person types `/wayfinder`. `delivery-schedule`'s issue sweep leaves every `wayfinder:*` issue alone |
 
 `show-me` writes plain Markdown only: Mermaid, fenced code, and tables. That is what a
 chapter, a pull request, and a chat reply can all render.
@@ -40,9 +43,15 @@ repository with devbook, a change is a one-way door when it ships a migration, r
 them and lands its edits as a draft pull request; `retro` reads one session or run and only
 presents.
 
+`wayfinder` keeps the map on the repository's own tracker through the host's issue CLI, and
+the shapes it writes in [skills/wayfinder/map.md](skills/wayfinder/map.md). A research ticket
+is resolved through `research-brief`, a grilling ticket through a `grilling` skill or inline
+when there is none, and a prototype ticket through the repository's `prototype` skill when it
+has one.
+
 ## Credits
 
 `research-brief` is adapted from the `research` skill in
 [mattpocock/skills](https://github.com/mattpocock/skills), MIT licensed, and `pr-body` from its
-`pr` skill, whose Summary guidance credits Dex Horthy's `show-me`, and `retro` from its `retro`
-skill.
+`pr` skill, whose Summary guidance credits Dex Horthy's `show-me`, `retro` from its `retro`
+skill, and `wayfinder` from its `wayfinder` skill.

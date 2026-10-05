@@ -310,9 +310,9 @@ replan rewrites no chapter change and no step, and never runs on a schedule: a p
 re-checked when someone is about to act on it.
 
 **A `phase-spec-check` skill decides whether the phase updates.** A skill that declares
-`updates: true` in its own contract may bring `code-ahead` chapters level inside the change
-set; any other skill only reports. The limits on an updating skill are in **Phase: Spec
-Check** (`flow-phases.md`).
+`updates: true` in its `SKILL.md` frontmatter may bring `code-ahead` chapters level inside the change
+set; any other skill only reports. The limits on an updating skill are in
+`skills/phase-spec-check/SKILL.md`.
 
 ## Gates
 

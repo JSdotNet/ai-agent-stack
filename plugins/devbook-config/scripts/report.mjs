@@ -239,7 +239,7 @@ function bindingPlugin(value) {
 }
 
 /**
- * Every provider a phase entry names - its `agent`, its `skill`, and each `before` and `after`
+ * Every provider a phase entry names - its `agent`, its `skill`, phase-verify's `app`, and each `before` and `after`
  * chore - as `{ where, key, value }`, `where` being `phases.<flow>.<phase>`.
  */
 function phaseBindings(phases) {
@@ -247,7 +247,7 @@ function phaseBindings(phases) {
     for (const [flow, map] of Object.entries(phases && typeof phases === 'object' ? phases : {})) {
         for (const [phase, entry] of Object.entries(map && typeof map === 'object' ? map : {})) {
             if (!entry || typeof entry !== 'object') continue;
-            for (const key of ['agent', 'skill', 'before', 'after']) {
+            for (const key of ['agent', 'skill', 'app', 'before', 'after']) {
                 if (key in entry) found.push({ where: `phases.${flow}.${phase}`, key, value: entry[key] });
             }
         }

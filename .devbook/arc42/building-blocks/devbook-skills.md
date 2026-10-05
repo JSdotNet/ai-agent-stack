@@ -64,7 +64,7 @@ nothing, so the caller decides where it lands. It is adapted from the `research`
 ### pr-body
 
 ```meta
-related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-merge-review"]
+related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-merge-review"]
 ```
 
 The skill writes three sections. **Summary** is one view of the change, picked per `show-me`.
@@ -81,7 +81,7 @@ catalog in where this one names the skill.
 ### retro
 
 ```meta
-related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-weekly-retro", ".devbook/arc42/building-blocks/delivery.md#phase-summary"]
+related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-weekly-retro", ".devbook/arc42/building-blocks/delivery-phases.md#phase-summary"]
 ```
 
 The skill reads one session — the current one unless another is named — or one delivery run
@@ -99,7 +99,7 @@ and lands its edits as a draft pull request. It is adapted from the `retro` skil
 ### wayfinder
 
 ```meta
-related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep"]
+related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep"]
 ```
 
 The skill plans an effort that no single session can hold. It has two modes. Charting names

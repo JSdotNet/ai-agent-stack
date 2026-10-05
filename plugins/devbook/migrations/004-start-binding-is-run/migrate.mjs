@@ -7,7 +7,7 @@
 //
 // Idempotent by construction: the shape that must not be present is `extensions["app.start"]`
 // naming `repo:start`, as a string or as an object's `provider`. Once the key is gone, or its
-// provider is the engine's default, the migration has nothing to see.
+// provider is the run recipe, the migration has nothing to see.
 
 import { readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -19,8 +19,9 @@ const ROOT = path.resolve(rootIndex !== -1 ? args[rootIndex + 1] : process.cwd()
 
 const STAMP = ".devbook/config.json";
 const OLD = "repo:start";
-// The default `app.start` provider, which starts the application by invoking `run`.
-const DEFAULT = "delivery:phase-validation";
+// The run recipe, which an unset `app.start` — `phase-verify.app` from delivery 1.14.0 — falls
+// back to. Options need a provider to belong to, so they move to it by name.
+const DEFAULT = "repo:run";
 
 const abs = (rel) => path.join(ROOT, rel);
 const lf = (text) => text.replace(/\r\n/g, "\n");
@@ -88,11 +89,11 @@ if (!stale) { console.log("004-start-binding-is-run: nothing to do."); process.e
 
 let next, plan;
 if (options.length === 0) {
-    // The default provider covers it: the key goes, and `extensions` with it once empty.
+    // The run recipe covers it: the key goes, and `extensions` with it once empty.
     next = points.length === 1
         ? removeMember(stampText, root, extIndex)
         : removeMember(stampText, points, atIndex);
-    plan = `remove extensions["app.start"] from ${STAMP}: ${OLD} is gone, and the default provider invokes run`;
+    plan = `remove extensions["app.start"] from ${STAMP}: ${OLD} is gone, and an unset app.start falls back to the run recipe`;
 } else {
     const m = points[atIndex];
     const old = stampText.slice(m.valueStart, m.valueEnd);

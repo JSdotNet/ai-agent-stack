@@ -8,8 +8,9 @@
 // folder does not exist in this marketplace, is a flow-* skill, or sets
 // disable-model-invocation, a plugin in `requires` the
 // marketplace does not list or that omits the target's plugin, a tool list without `Skill`,
-// an empty body, or a placeholder outside the five the contract names — in a body or in the
-// preamble.
+// an empty body, a placeholder outside the five the contract names — in a body or in the
+// preamble — or a `maxResolve` that is not a whole number or that the body never uses as
+// {{maxResolve}}, the one placeholder a schedule carrying that field may add.
 //
 // Dependency-free ESM against node: built-ins, like everything else executable here.
 
@@ -25,8 +26,9 @@ const PREAMBLE = path.join(PLUGIN, "resources", "schedule-preamble.md");
 
 const REQUIRED = ["name", "title", "cadence", "cron", "target", "requires", "tools"];
 const CADENCES = new Set(["daily", "weekdays", "weekly"]);
-const PLACEHOLDER = /\{\{\s*([a-z]+)\s*\}\}/g;
+const PLACEHOLDER = /\{\{\s*([A-Za-z]+)\s*\}\}/g;
 const ALLOWED_PLACEHOLDERS = new Set(["repo", "base", "name", "title", "checkout"]);
+const FIELD_PLACEHOLDERS = new Set(["maxResolve"]);
 
 const errors = [];
 const error = (file, msg) => errors.push(`${path.relative(ROOT, file)}: ${msg}`);
@@ -54,9 +56,9 @@ function frontmatter(text) {
     return { fields, body: m[2] };
 }
 
-function checkPlaceholders(file, text) {
+function checkPlaceholders(file, text, fields = {}) {
     for (const [, key] of text.matchAll(PLACEHOLDER)) {
-        if (!ALLOWED_PLACEHOLDERS.has(key)) error(file, `placeholder {{${key}}} is not one the contract names`);
+        if (!ALLOWED_PLACEHOLDERS.has(key) && !(FIELD_PLACEHOLDERS.has(key) && key in fields)) error(file, `placeholder {{${key}}} is not one the contract names`);
     }
 }
 
@@ -110,7 +112,11 @@ for (const name of files) {
     } else if (fields.tools !== undefined) error(file, "tools is not a list");
 
     if (!body.trim()) error(file, "empty body — the prompt has no task half");
-    checkPlaceholders(file, body);
+    if ("maxResolve" in fields) {
+        if (!/^\d+$/.test(fields.maxResolve)) error(file, `maxResolve ${fields.maxResolve} is not a whole number`);
+        if (!body.includes("{{maxResolve}}")) error(file, "maxResolve is set but the body never says {{maxResolve}}, so an override would change nothing");
+    }
+    checkPlaceholders(file, body, fields);
 }
 
 for (const e of errors) console.error(`error  ${e}`);

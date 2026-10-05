@@ -29,13 +29,15 @@ Copilot app — and one meaning. This plugin says *schedule* and records both as
 | `target` | `<plugin>:<skill>` the prompt invokes. Any plugin's skill that runs unattended, never a `flow-*` one. |
 | `requires` | Plugins that must be enabled in the target repository: the target's own plugin and what the target delegates to. |
 | `tools` | What the target needs, and what the person approves on the routine's first run. `Skill` is what lets it reach the target; leave out what the target never needs. |
+| `maxResolve` | Optional. How many items a resolving sweep carries in per run, a whole number. A schedule that sets it says `{{maxResolve}}` in its body. |
 
 The body is the task half of the prompt: which skill, with which inputs, and what to do with
 what it produces. It never restates the report's shape — the target's `report.md` owns that — and names
 only what is particular to this schedule. Five placeholders, substituted at sync time: `{{repo}}` (`owner/repo`),
 `{{base}}` (the default branch), `{{name}}`, `{{title}}`, and `{{checkout}}` — the absolute
-path of the repository's main checkout on this machine, with forward slashes. A date is
-computed in the session.
+path of the repository's main checkout on this machine, with forward slashes. A schedule that
+sets `maxResolve` adds a sixth, `{{maxResolve}}`: the stamp's override when it has one, else
+the field. A date is computed in the session.
 
 ## The Prompt
 
@@ -142,14 +144,16 @@ and by nothing else, and never another component's key:
     "schedule": {
       "pluginVersion": "1.0.0",
       "enabled": ["package-update", "merge-review", "devbook-validate"],
-      "overrides": { "merge-review": { "cron": "0 7 * * 1-5" } }
+      "overrides": { "merge-review": { "cron": "0 7 * * 1-5" }, "devbook-pull-sweep": { "maxResolve": 1 } }
     }
   }
 }
 ```
 
 `enabled` is the selection; `overrides` carries a per-schedule `cron` where the catalog's
-cadence does not fit the repository. Both are facts about the repository. Deliberately absent:
+cadence does not fit the repository, and a `maxResolve` where the schedule sets one and the
+repository wants fewer or more items per run. An override the schedule has no field for is
+reported and ignored. Both are facts about the repository. Deliberately absent:
 scheduler ids, the checkout's path, the approved tools, and who created them — personal, and
 wrong the moment a second person opens the file. They live in the scheduler.
 

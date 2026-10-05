@@ -45,7 +45,10 @@ Returns the result to wherever the run answers to. Its place in the order is in
 | `entry` | A Backlog entry or plan item | Comments on the entry and ticks the steps this run completed |
 | `annotation` | A devbook review note on a chapter | Resolves the annotation with the outcome and links the PR |
 | `change` | An OpenSpec change step | Ticks the step's tasks and sets the step state from its branch and pull request |
-| `schedule` | A scheduled run | Writes into the run's brief, which the schedule publishes |
+| none | An ad-hoc chat request | Nothing for `origin`; `linked` and custom targets still run |
+
+No `schedule` kind exists: an unattended run parks at Personal Validation and never reaches
+this phase, and the schedule publishes its own brief.
 
 A `flow-spec` comment names the chapters changed and every status change, such as a decision
 record moving to `accepted`.

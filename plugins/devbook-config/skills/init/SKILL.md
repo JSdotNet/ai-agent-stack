@@ -62,8 +62,8 @@ record work this skill did not do.
      `npm install -g @fission-ai/openspec@latest` and wait until it answers; never run it
      yourself. Declined, the lane is not adopted and nothing below is written.
    - **Adopt the change lane?** A yes adds `changes` to what `devbook:init` adopts in step 7.
-     With delivery adopted, write `"skill": "devbook-openspec:spec"` on `phase-scope` in
-     both flow maps and `{ "provider": "devbook-openspec:tracker" }` as
+     With delivery adopted, write `"skill": "devbook-openspec:spec"` on flow-code's
+     `phase-scope` — flow-spec builds no change, so its map never names it — and `{ "provider": "devbook-openspec:tracker" }` as
      `bindings["delivery.tracker"]`, and offer the two optional gates in the bridge's
      README under *What the engine binds*.
    - **Grill an idea before proposing it?** Name the `plugin:skill` the person uses — it

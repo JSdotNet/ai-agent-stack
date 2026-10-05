@@ -1,7 +1,7 @@
 # devbook
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-code-sync.md", ".devbook/arc42/building-blocks/devbook-procedures.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/12-glossary.md#adoption", ".devbook/arc42/12-glossary.md#reconcile", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
 The convention itself. Responsible for three things: that a chapter can be addressed, that
@@ -13,7 +13,22 @@ annotation fence, the reconcile that materializes the convention into a reposito
 change folder and the merge of its deltas, the two directions between a chapter and the
 code that implements it, and the five procedures every repository has and no plugin can
 write — `run`, `capture`, `diagnose`, `estimate`, `prototype` — each with a goal this block
-fixes and a body the repository owns.
+fixes and a body the repository owns. Two of those are blocks of their own one level in,
+each with its own file: the two directions between a chapter and its code are
+[devbook-code-sync](devbook-code-sync.md), and the five procedures are
+[devbook-procedures](devbook-procedures.md). This file is the convention's white box around
+them: the chapter, the folder, the check, and the reconcile.
+
+```mermaid
+flowchart LR
+  subgraph devbook
+    C["chapter, folder, check, reconcile"]
+    S["devbook-code-sync"]
+    P["devbook-procedures"]
+  end
+  S -->|"reads the graph, writes chapters in their shape"| C
+  C -->|"materializes and stamps the seeds"| P
+```
 
 Outside it: what a chapter should *say*. The folder rules describe a shape, not content, and
 the procedure for changing a chapter belongs to [delivery](delivery.md). Who reviews a chapter
@@ -55,6 +70,10 @@ change belongs to the engine.
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
 | `assets/procedures/demo-template.html` | the starting demo template | `prototype`, through the repository's copy at `.devbook/design/demo-template.html`; the sample beside it, by spec-manager and Backlog as a test fixture |
 | `.devbook/statuses.json` | repository file, optional | The check and the canvas lint, reading the repository's own `status` ladder; a viewer's status picker reads the same file |
+
+The three converter skills and `units.mjs` are described in
+[devbook-code-sync](devbook-code-sync.md#interfaces), and the seeds and the demo template in
+[devbook-procedures](devbook-procedures.md#interfaces). The rest are below.
 
 ### init
 
@@ -137,106 +156,6 @@ Delete every resolved annotation fence in one chapter and nothing else — the l
 lifecycle, where `resolved` lives only the rest of the branch and gone is the resting state.
 Chapter-scoped, so a person sees what is about to go before it does.
 
-### capture-specs
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/building-blocks/devbook.md#catching-up-with-the-code", ".devbook/arc42/adr/flow-engine.md"]
-```
-
-Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
-for any of the six kinds. By default it writes nothing. Its result is a capture plan handed
-to the person: the drafts to the folder's template, arranged as a delta against the target
-file — `ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind
-it, and the report table. Code is evidence, not agreement, so the pass that found the code
-does not also decide what the chapter says; a person carries the plan into the folder, or
-does not.
-
-Write mode is the one exception, and it exists for `flow-code`'s Spec Check. The skill's
-frontmatter declares `updates: true`, which is how a `phase-spec-check` binding knows it may
-update. Bound there, it carries the plan's `code-ahead` entries into the chapters the change
-is scoped to, each with its `meta` block, and runs the devbook check after them. It never
-writes `approved` or any other decision rung, and it never carries a `REMOVED` entry. Every
-edit is listed for Personal Validation beside the code, so the person still decides what the
-chapter says, only later in the run. Called by a person, it stays plan-only. The kind is the chapter's `type`, or the file where the
-folder defines none, and what a kind needs is read from its own file rather than carried in
-the skill. A skill is a direction, because ten skills carried one procedure ten times and the
-kind-specific part was a mapping table each pair restated from its two ends.
-
-Two of the three converters carry OpenSpec's verb, so a reader who has met OpenSpec first
-needs no translation: `apply-change` implements an agreed spec there and here, and
-`verify-change` is report-only in both. This one does not, and cannot. OpenSpec's `sync-specs`
-merges the spec deltas a proposal already wrote and never opens source; reading an
-implementation to write the chapter is a move OpenSpec has no skill for at all, because there
-specs lead and code follows. A name that says "the specs catch up" in both places while
-meaning a different feeder in each buys back the translation it was meant to save, so this one
-takes the protocol's own word — **capture** — and the borrowing stops at two.
-
-The aggregate is the unit and not its parts: a consistency boundary decided twice is a
-boundary decided differently. A domain service is the deliberate exception — defined by
-coordinating across boundaries rather than living in one, it is its own kind and owns the
-events it raises.
-
-`features.md` is the one chapter written from the user's point of view, so the feature kind is
-the one capture that **runs the application**. Reading a controller tells you a route exists;
-using the feature tells you what the product lets someone do, in what order, with what
-wording. Screenshots are report evidence and are never committed into a devbook folder.
-
-Behaviour is planned into `requirements.md` and the invariants subpages rather than into the prose it
-belongs beside, one rule per chapter: a requirement with the scenarios that prove it, an
-invariant with the unit test that does. Neither is a kind of
-its own: a feature's promises are that feature's pass and an aggregate's rules are that
-aggregate's, because a rule captured apart from the thing it constrains is a rule decided
-twice. A shared value object's or enum's rules are its grouping's, in `domain.invariants.md`,
-because the type belongs to no one aggregate and pinning them under one decides them for all.
-The split follows who is held to it — a promise made outside the model is a
-requirement, what a type guarantees is an invariant — and that is also what fixes the level
-each is proved at. A design component's rules are requirements under its own chapter in
-`design/`, proved `e2e` or by a visual test, because a component keeps or breaks them in what
-the user sees.
-
-### apply-change
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/12-glossary.md#drift-verdict"]
-```
-
-Turn an agreed but unbuilt chapter of any of the six kinds into a change brief — outcomes,
-invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, and
-hand it to the flow that implements a change of that category, resolved the way the spec-side
-write is: a repo-native flow first, then the engine's, and nowhere when no engine is
-installed, where it stops with the brief. It never edits a source or test tree itself.
-
-It reads code without changing it. Establishing what already exists is what lets the brief
-ask only for the delta, and it is how the change category is decided: new functionality, a
-change to existing behaviour, or a defect.
-
-### verify-change
-
-```meta
-related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/12-glossary.md#sync-direction", ".devbook/arc42/building-blocks/devbook.md#unit-lister"]
-```
-
-Report the drift verdict per chapter and write nothing — no chapter, no brief, no status. The
-report's action column names which of the other two a verdict calls for. It is the step both
-of the others take before they write, offered on its own for the question "is this chapter
-still true".
-
-Its evidence is the source and, per chapter, the tests its `tests` field names at the level
-its type calls for: `unit` for an invariant, `e2e` or `integration` for a requirement. It
-reads them as files and runs none of them, nor the application — a requirement proven only
-end to end would otherwise go unchecked, and running the product belongs to `capture-specs`.
-
-Its scope is the wide one: a chapter, a file, a bounded context, or a whole devbook folder,
-still one kind per run outside a sync group, and still one table for all of it. Reading is cheap when nothing is
-written, and the question a person actually asks before a review — has this folder drifted —
-is not answerable one chapter at a time. A table per chapter would hide the shape of the
-whole, which is the only thing a folder-wide run adds.
-
-Each row also carries the chapter's effective `sync`, with the level it came from, and the
-sweep that will act on its verdict — or a person, when none will. Both are read from
-`units.mjs`, never inferred, so the report a person reads before setting a direction says
-exactly what the next unattended run will do with it.
-
 ## Structure
 
 ```meta
@@ -244,7 +163,10 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbo
 ```
 
 Three aggregates — the chapter, the folder, and the graph derived from a corpus of them —
-six domain services, and the two value objects the aggregates share. The chapter is the
+six domain services, and the two value objects the aggregates share. Two of the services, the
+Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s,
+and the Procedure, its Goal, and the Demo Template are
+[devbook-procedures](devbook-procedures.md#structure)'s; the four services left are below. The chapter is the
 consistency boundary everything else is expressed in terms of.
 
 ### Model
@@ -534,7 +456,7 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 ### Demo
 
 ```meta
-related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook.md#goal"]
+related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/building-blocks/devbook.md#change", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
 ```
 
 The one non-Markdown file a `domain/` folder holds: a self-contained `*.demo.html` that shows
@@ -546,7 +468,7 @@ records its question and nothing about its lifecycle: under `domain/` it is the 
 change's `devbook-delta/` it is a proposed demo, and anywhere else it is a prototype. Every
 demo is built on the repository's template at `.devbook/design/demo-template.html`, whose
 starting copy and a sample demo built on it ship with this block, under
-[Demo Template](#demo-template). The
+[Demo Template](devbook-procedures.md#demo-template). The
 [demos record](../adr/demos.md) holds the reasons.
 
 A `demo` field and a note point into a demo by an address, and a frame that hosts a demo
@@ -588,130 +510,6 @@ the page the demo belongs to.
 | A demo delta lands by replacing its target whole, and only once its file passes the demo rules | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A change's fingerprint covers its demos, so a demo edited after the decision is not merged | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | `devbook-delta/` holds Markdown deltas and demos directly in a `domain/<context>/` folder, and nothing else | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
-
-### Procedure
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/building-blocks/devbook.md#init", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
-```
-
-Also called: procedure skill, repository skill, seeded skill.
-
-One of five named things a repository knows how to do and a plugin cannot: `run`,
-`capture`, `diagnose`, `estimate`, `prototype`. In a repository it is three files — the body at
-`.agents/skills/<name>.md`, and a wrapper per host at `.claude/skills/<name>/SKILL.md` and
-`.github/skills/<name>/SKILL.md` — and one stamp entry per file under
-`components.devbook.materialized`. The body is seeded once and is the repository's
-from its first edit: a hash matching no shipped release marks it `managed: false`, reported on
-every reconcile and never overwritten. The wrappers stay managed. A name in the stamp's
-`procedures.adopted` list is a procedure the repository has; one dropped from the list orphans its three
-files, reported and never deleted.
-
-`run` is two files. Claude Code ships a `run` skill that follows a project recipe at
-`.claude/skills/run-<name>/SKILL.md`, which its `/run-skill-generator` records, so that recipe
-is the body — the generator's, or the `run` seed where no host can run it — stamped
-`managed: false` from the moment it lands, and Claude Code's own `run` is its Claude wrapper.
-Copilot's twin at `.github/skills/run/SKILL.md` carries the goal and points at every recipe.
-One name reaches it on both hosts. `migrations/001-start-is-run/` moves a `start` procedure
-into that shape.
-
-No procedure shares a name with a command or skill a host bundles: a project skill replaces
-the host's own of the same name. `diagnose` was `debug` until it was found to hide Claude
-Code's `/debug`; `migrations/002-debug-is-diagnose/` renames it.
-
-None is a dependency of anything; `diagnose` invokes `run` by name. `show`, which walked
-the branch's feature for a reviewer through `run` and `capture`, was removed because no flow
-invoked it; `migrations/003-show-removed/` takes it out of a repository.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| A procedure is three files — the body and one wrapper per host — with one stamp entry each | `init`, `update` | untested |
-| A body whose hash matches no shipped release is marked `managed: false`, reported on every reconcile and never overwritten | `init`, `update` | untested |
-| The wrappers stay managed whatever the body's state | `init`, `update` | untested |
-| A name dropped from `adopted` orphans its three files, reported and never deleted | `init`, `update` | untested |
-| `run`'s body is a `.claude/skills/run-<name>/SKILL.md` recipe, never written after it lands, and Copilot's twin points at every one | `init`, `update`, `tools/check-assets.mjs` | `check-assets` over this repository |
-| No procedure other than `run` takes the name of a command or skill a host bundles | the seeds under `assets/procedures/skills/` | untested |
-
-### Goal
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook.md#procedure", ".devbook/arc42/08-crosscutting-concepts.md#published-languages", ".devbook/arc42/adr/demos.md", ".devbook/arc42/12-glossary.md#prototype"]
-```
-
-The one sentence a procedure must satisfy whatever its body says: what a caller gets back.
-`run` leaves the application running and reports the command, the health verdict, and the
-entry points; `capture` returns one file per checkpoint and per failure, under the worktree root, the
-form named honestly; `diagnose` names a cause and proves it, doing the debugging itself and
-leaving nothing behind; `estimate` returns story points off 1/2/3/5/8/13/21 per unit of work,
-sized against the repository's own finished work and naming the reference compared with, so
-that a pace measured in points means the same across plans; `prototype` starts only from a
-design question stated in one sentence, writes that sentence into the file's `demo-meta` as its
-`question`, and ends with a one-line answer for whoever asked, never recorded in the file, which
-carries no stage, status, verdict, or page. It delivers one standalone HTML file, everything
-inline and nothing fetched: a logic question as a model anyone can drive through a state panel
-labelled in the ubiquitous language, free play, and walkthroughs; a UI one as two or more
-structurally different variants on the repository's demo template, its managed region kept and
-no script outside it but `demo-model` and `demo-meta`, in its design system, with the guideline,
-token, or story each came from. Given an existing demo it returns the revision with every
-surviving screen id and anchor kept. The prototype is never merged: it writes into no
-`.devbook/` folder and changes no source file, and the answer reaches the devbook only through
-a change. It is the `goal` field of the
-seed, rendered into both wrappers above the pointer, and refreshed on every upgrade.
-A repository edits the body to meet it and never edits it.
-
-`prototype` is the only writer of a demo outside the template's managed region, per the
-[demos record](../adr/demos.md). Its file
-stays a standalone prototype until an OpenSpec proposal carries it into `domain/`, and a
-prototype nobody takes further stays where it is as evidence. A UI prototype is promoted with
-exactly one variant. A logic prototype never is, because it is code, and its answer lands as a
-delta to `domain.md`, `flow.md`, or an invariants subpage. The seed's body carries the rest of
-the record: variants trimmed to the chosen one only when a proposal carries the file, walkthroughs
-listed in `demo-model` by id — the scenario's slug when one is played — data at real density,
-the 500 KB target kept with inline SVG, shared markup, and page demos and allowed to be exceeded,
-and the two things it is not for: a settled design goes to `flow-code`, a bug to `diagnose`.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| Every seed carries a `goal`, rendered into both wrappers above the pointer | `init`, `update` | untested |
-| A goal is refreshed on every upgrade, so a repository meets it by editing the body and never the goal | `init`, `update` | untested |
-
-### Demo Template
-
-```meta
-related: [".devbook/arc42/adr/demos.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook.md#goal"]
-```
-
-The starting template every demo is built on, shipped as `assets/procedures/demo-template.html`. Where
-`prototype` is adopted and the `design/` folder is too, `init` and `update` seed it at
-`.devbook/design/demo-template.html`, where the repository makes it its own through
-`flow-spec`; without `design/` they say so and skip it. Like a body, it is refreshed only while
-it still hashes to a shipped release, and once edited it is the repository's. It is one HTML file. Between `<!-- template:begin hash=… -->` and
-`<!-- template:end -->` sits the managed region: the design-token styles, the app shell, the
-control panel, and the one script a demo carries. The rest of the file is the demo's own: its
-screens in `main[data-demo-app]`, its `demo-model`, and its `demo-meta`. The comment that opens
-the region is the authoring reference for both.
-
-The hash is `sha256:` over the region's text between the two markers, every CRLF read as LF,
-spelled as the reconcile protocol spells a file's. The panel reads it back from the marker and
-sends it as the template version in `demo:ready`, so a host and a later check tell one release
-of the region from another without a version number of their own.
-
-The panel jumps to any screen or state, plays walkthroughs with their scenario lines beside the
-screen, switches role, flags, settings, viewport, and, while there are two or more, variants,
-and shows the pins a host sends. Its script implements the four messages of
-`resources/demo-address.md`. It is dark, monospaced, and hazard-striped, so nobody takes it for
-the product.
-
-`assets/procedures/demo-sample/features.demo.html` is a demo built on it: an ordering context's screens at
-real density with one walkthrough, `a-declined-card-keeps-the-basket`. spec-manager and
-Backlog test against it.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| The region's begin marker carries the hash of the region | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
-| The sample holds the template's region byte for byte, and its `demo-model` and screens list each other exactly | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
-| No script sits outside the region except `demo-model` and `demo-meta`, and nothing is fetched | the asset | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
-| The template lands only where `prototype` and `design` are both adopted, and is refreshed only while it hashes to a shipped release | `init`, `update` | untested |
 
 ### Reference Graph
 
@@ -848,100 +646,6 @@ is visibly not. Materialized by `init` or `update` only where `tech/` is adopted
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
 | Materialized only where `tech/` is adopted | `init`, `update` | untested |
 
-### Unit Lister
-
-```meta
-related: [".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
-```
-
-Also called: `units.mjs`.
-
-`units.mjs` reads the reference graph and lists every sync unit with its chapters, its
-effective `sync` direction, and the block that direction came from. Each chapter belongs to one
-unit, decided from headings, `type`, file names, and `related` alone: an owned type by the
-aggregate it sits under, an event by the raiser its `related` names, an invariant by the
-grouping it sits under, a requirement by the feature it names and only otherwise by the
-aggregate, and a term by the one unit its name or alias resolves into. Shared value objects and
-enums form one shared-types unit per context.
-
-With `--groups` it joins units into the groups a sweep claims. A requirement that names two
-aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
-reference, or a shared type never does, so a feature touching five aggregates does not pull
-all five into one pull request. A group's direction rolls up from its units, a `sync` unit
-going with the one other direction it meets. A group whose units go two other ways, or that
-holds more than 40 chapters, is set aside for a person rather than split. Orphans — an event
-naming no raiser, a term with two homes, a requirement naming nothing — and a stated direction
-no unit inherits are listed beside. `--direction` keeps what one sweep picks up, and `--json`
-prints the result for the sweep to read.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| Every chapter belongs to at most one unit, decided from structure and never from prose | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| A requirement naming a feature belongs to the feature, whatever else it names | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-| The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
-
-### Spec Converter
-
-```meta
-related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md", ".devbook/arc42/12-glossary.md#sync-unit", ".devbook/arc42/12-glossary.md#sync-group"]
-```
-
-The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over six kinds: `capture-specs` reads an
-implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
-into a change brief for the flow that implements it, touching no source or test tree itself,
-and `verify-change` reports the drift verdict and writes nothing. Two of the names are
-OpenSpec's verbs for the same moves; the third is the protocol's own word, because the
-direction it names is one OpenSpec does not have —
-[debt record 6](../tdr/6-sync-specs-borrows-a-name-openspec-uses-for-something-else.md) holds
-why the borrowed spelling was dropped.
-
-Invocation semantics: command-invoked, one skill and one kind per run — one target or one sync
-unit or group for the two that produce something, and a folder or a bounded context as well for
-the one that does not. The kind is the
-chapter's `type`, or the file where the folder defines none, and everything a kind needs lives
-once in its own file rather than in a skill per kind and direction. The aggregate is the unit
-rather than its parts, because a consistency boundary decided twice is a boundary decided
-differently; a domain service is the deliberate exception and is its own kind.
-
-A sync unit or a sync group is a scope as well, and the one a sweep passes. Its chapters are
-the ones `units.mjs` lists, never a set the skill works out by reading, so the scope a person
-checks and the scope a sweep acts on are the same. A group is one run across the kinds its
-units carry, each chapter read through its own kind's file, because the requirement that joins
-them is one rule and a rule changed in two pull requests lands half-decided. Any `conflict`
-stops the whole group, and a group drifting both ways is captured before it is applied: the
-two directions never share a pass.
-
-An unattended run carries its own result in, and lands it as a draft pull request: the draft is
-the person the attended path would have asked. A captured chapter it adds arrives at
-`status: draft`, nothing it carries rises above `draft` or touches a decision rung, and on the
-apply side a chapter nobody has agreed is skipped, because the stop-and-confirm has nobody to
-ask.
-
-Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
-a block rots on the first refactor and gives no signal when it does. It resolves through
-the chapter's `aliases`, then the building-block view, then the observed naming convention, and
-reports `unresolved` rather than guessing. The same search catches the reverse rot: an alias
-that names no identifier in the source tree is reported by `verify-change` as its own finding —
-except on a `requirement` or `invariant`, whose `aliases` are codes and name none by design —
-with a proposal to remove or correct it, and never rewritten. No checker pass duplicates it —
-an identifier search that knows no language would be noisy and slow.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| One skill per run, and one kind unless the scope is a sync group | the three skills | untested |
-| A unit's or group's chapters are the ones `units.mjs` lists; any `conflict` stops the group | the code-sync protocol | untested |
-| An unattended run lands a draft pull request, adds chapters at `draft`, and writes nothing above `draft` | the code-sync protocol | untested |
-| The kind is the chapter's `type`, or the file where the folder defines none | the three skills | untested |
-| `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
-| `capture-specs` writes a chapter only in write mode, carries only `code-ahead` entries in scope, and never writes a decision rung | the code-sync protocol | untested |
-| The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
-| No metadata field links a chapter to a code path | counterpart resolution | untested |
-| Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
-| `verify-change` reports every alias outside a `requirement` or `invariant` that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |
-
 ### Shared Value Objects
 
 ```meta
@@ -982,11 +686,12 @@ is lost.
 ## Runtime
 
 ```meta
-related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/adr/install.md"]
+related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook-code-sync.md#runtime", ".devbook/arc42/adr/install.md"]
 ```
 
-A repository taking the convention on and carrying it forward, a chapter changing its
-standing, and a chapter and its implementation catching up with each other.
+A repository taking the convention on and carrying it forward, and a chapter changing its
+standing. A chapter and its implementation catching up with each other is
+[devbook-code-sync](devbook-code-sync.md#catching-up-with-the-code)'s.
 
 ### Reconciling a Repository
 
@@ -1066,71 +771,6 @@ stateDiagram-v2
   `approved` chapter carrying an open question — because an open question is legal for the
   length of a branch.
 
-### Catching Up With the Code
-
-```meta
-related: [".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/12-glossary.md#drift-verdict"]
-```
-
-Two directions, and the direction is decided by which side already exists. Neither one
-guesses: an unresolved counterpart is reported as unresolved, and a conflict stops and asks.
-Both open with the same resolve-and-verdict step, and `verify-change` is that step on its own
-— the report table, no write in either direction.
-
-```mermaid
-flowchart LR
-    subgraph capture["capture-specs"]
-        code["Implementation and its tests"] --> resolveA["Resolve counterpart"]
-        resolveA --> verdictA{"Drift verdict"}
-        verdictA -->|"code-ahead"| write["Deliver the capture plan to the person"]
-        verdictA -->|"aligned"| noop["Report and stop"]
-        verdictA -->|"conflict"| ask["Stop and ask"]
-        verdictA -->|"unresolved"| ask
-    end
-
-    subgraph build["apply-change"]
-        chapter["Agreed chapter"] --> resolveB["Resolve counterpart"]
-        resolveB --> category{"Change category"}
-        category -->|"no counterpart"| brief["Change brief: new functionality"]
-        category -->|"counterpart, chapter asks for more"| brief2["Change brief: change to existing behaviour"]
-        category -->|"counterpart believed to satisfy it, does not"| brief3["Change brief: defect"]
-        brief --> route{"Code-side flow?"}
-        brief2 --> route
-        brief3 --> route
-        route -->|"repo-native flow, or the engine's flow for the category"| handoff["Hand the brief over as the flow's specification"]
-        route -->|"no engine installed"| stop(["Stop with the brief. No source or test tree touched"])
-    end
-```
-
-- **Neither direction writes the thing it is about.** A capture pass delivers a plan and a
-  person carries it in; an apply pass delivers a brief and a flow builds it. Both name a
-  delta against something that already exists, which is what keeps either from re-specifying
-  work that is done.
-- **`apply-change` reads code without changing it.** Establishing what is already there is
-  what lets the brief ask only for the delta, and it is why the update case can name where the
-  current behaviour lives.
-- **The brief goes where the chapter goes.** The code-side write resolves like the spec-side
-  one: a repo-native `flow-*` skill first, then the engine's flow for the code — `flow-code`,
-  which derives its kind from the category — and nowhere when no engine is installed, where
-  the run stops with the brief and which flow picks it up is the user's decision. No flow
-  knows these skills exist; a brief reaches one as ordinary input, so the dependency still
-  runs one way.
-- **A term chapter has no pair of its own.** Each capture pass that resolves a counterpart by
-  inference proposes the discovered code name as an alias in its plan, which turns a one-off
-  inference into a pairing the next pass can use once someone accepts it.
-- **The target's status decides what each direction may do.** A spec that is ahead of the
-  code stays ahead until a person says otherwise: capture never plans over a `draft` and
-  reports what the code has beside what the draft says instead, verify flags such a verdict
-  `unagreed` — a flag, not a sixth verdict — and apply stops to confirm. Against a
-  `deprecated` chapter capture does not run, verify reports, and apply refuses.
-- **An open invariant row does not stop a chapter being `active`**, and it does stop that one
-  rule being built: the brief names it as needing a decision rather than briefing a rule
-  nobody agreed.
-- **Each converter carries the annotation prohibition itself.** `capture-specs` never writes a
-  fence, `apply-change` never carries one into a brief, and both say so in their own `Do not`
-  section. The session-start prompt states the reading rule; a writing rule has to be at the
-  point of use to survive the session that reaches it.
-
 ## Dependencies
 
 ```meta
@@ -1138,7 +778,10 @@ related: [".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/td
 ```
 
 An L0 foundation: its `dependencies` array is empty, and every relationship below is either a
-conformance to something outside the marketplace or a downstream consumer reaching in.
+conformance to something outside the marketplace or a downstream consumer reaching in. A
+consumer that reaches only the converters or only the procedures is listed in
+[devbook-code-sync](devbook-code-sync.md#inbound) or
+[devbook-procedures](devbook-procedures.md#inbound) instead.
 
 ### Outbound
 
@@ -1164,8 +807,6 @@ conformance to something outside the marketplace or a downstream consumer reachi
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Annotation fences written through `annotations.mjs`; writes devbook's `approved` and `accepted` rungs | The annotation fence and the `status` ladder | That a fence keeps its schema and its open/resolved/gone lifecycle, and that the two rungs and their records keep their meaning. |
 | [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
-| [delivery](delivery.md#dependencies), for the procedures | Separate Ways | Names `run` and `capture` in its verify phase, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this block | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
-| Any session, either host | Conformist | Invokes `run`, `capture`, `diagnose`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |
@@ -1175,12 +816,6 @@ without demoting all fourteen of its skills wherever this block is absent, and c
 left silent without the next payload-path rename landing the way `.backlog` did. The debt
 record holds the four remediation options; the first — name the coupling in prose and stop
 restating this block's rules — is the one to take.
-
-**A procedure's goal is the seam.** Every procedure's body differs per repository; the one
-sentence that does not is what a caller may rely on, and it lives in the wrapper this block
-keeps rewriting rather than the body the repository owns. The engine names two skill names
-and a path, so a repository that writes both by hand is indistinguishable to it, and the
-engine never follows this block for them.
 
 **Nothing here ships a flow.** The engine's flows appear in this block only as the routing a
 repository's session-start hook performs; how a chapter change is carried is the engine's, and the two meet only in a repository that installed both.

@@ -88,7 +88,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
     "pr.base":                "main"
   },
   "gates": [
-    { "at": "phase-scope", "when": "after", "purpose": "approval",
+    { "at": "scope", "when": "after", "purpose": "approval",
       "prompt": "Spec approved, or revise?", "show": "artifact", "unattended": "block" }
   ]
 }
@@ -233,7 +233,7 @@ The qualifier is the flow's own variant: the devbook folder on `phase-drafting`,
 
 | Field | Values | Absent means |
 | --- | --- | --- |
-| `agent` | `plugin:agent`, `repo:<agent>`, or `null` to force inline | The phase skill's own default — see `phase-resolution.md` |
+| `agent` | `plugin:agent`, `repo:<agent>`, or `null` to force inline | The phase's **Runs by default** in the table above — see `phase-resolution.md` |
 | `skill` | `plugin:skill` or `repo:<skill>`: the procedure the phase follows | The phase's built-in procedure, `delivery:phase-<id>` |
 | `model` | `opus`, `sonnet`, `haiku`, `fable`, a full model id, or `inherit` | The session's model |
 | `effort` | `low`, `medium`, `high`, `xhigh`, `max`, or `inherit` | The session's effort |
@@ -327,7 +327,7 @@ below, not a second mechanism.
 
 | Field | Values | Means |
 | --- | --- | --- |
-| `at` | a phase skill name, without qualifier | The phase the gate attaches to — `phase-scope`, `phase-create-pr`. Never `phase-personal-validation` or `phase-ready`. |
+| `at` | a phase id: the phase skill name without `phase-` and without qualifier | The phase the gate attaches to — `scope`, `create-pr`. Never `personal-validation` or `ready`. |
 | `when` | `before`, `after` | Which side of that phase. |
 | `purpose` | `approval`, `resource`, `cost`, `risk`, `handoff` | What kind of question this is, which decides what it must show. |
 | `prompt` | free text | The question, in the user's terms. Optional; the purpose supplies a default. |
@@ -335,7 +335,7 @@ below, not a second mechanism.
 | `unattended` | `block`, `proceed`, `skip-phase` | What an unattended run does here. `skip-phase` skips the phase. Default `block`. |
 
 A gate applies in every flow that has its phase. A gate at a phase the flow lacks is inert in
-that flow, so `{ "at": "phase-verify" }` never stops a `flow-spec` run.
+that flow, so `{ "at": "verify" }` never stops a `flow-spec` run.
 
 | Purpose | Typical placement | What it must show |
 | --- | --- | --- |
@@ -353,8 +353,8 @@ that flow, so `{ "at": "phase-verify" }` never stops a `flow-spec` run.
 | `revise` | Re-run the phase the gate is attached to, carrying the human's notes as input. The flow moves backwards, deliberately. Bounded by `policy.gate.reviseBudget`; when the budget is spent the flow stops and says so rather than cycling on something nobody can settle. |
 | `decline` | Stop. Mark the stage `blocked`. **Never a silent skip** — "don't start the app" must not degrade into "continue without QA". |
 
-Attach a gate to the phase you would want re-run. `{ "at": "phase-scope", "when": "after" }` and
-`{ "at": "phase-implement", "when": "before" }` sit in the same place in the sequence, but only
+Attach a gate to the phase you would want re-run. `{ "at": "scope", "when": "after" }` and
+`{ "at": "implement", "when": "before" }` sit in the same place in the sequence, but only
 the first makes `revise` mean "write the specification again".
 
 ### Unattended runs

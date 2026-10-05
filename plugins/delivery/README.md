@@ -155,12 +155,16 @@ skill changes who runs capture, never whether it runs.
 | Path | Holds |
 |---|---|
 | `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
-| `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
-| `resources/flow-phases.md` | The phase order of both flows, and every phase without a skill of its own, in full |
+| `agents/flow-runner.agent.md` | The agent that runs a flow: sequences the phases, resolves the config, enforces the gate |
+| `runners/runner-<effort>.agent.md` | The five effort runners, `low` through `max`, that carry a delegated phase's effort — Claude Code only |
+| `resources/flow-phases.md` | The phase order of both flows, the Personal Validation gate in full, and a pointer to each phase skill |
 | `resources/engine-contract.md` | The phase list and the `phases` map, gates, policy, the stack config and its overlays, bindings, the two git workflows, and host slots |
 | `resources/surface-contract.md` | The surface capability, how a surface is bound, and the reporting contract every flow follows |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
 | `resources/phase-resolution.md` | How a phase entry resolves into inline, delegated, or forked, and the effort runners |
+| `resources/implement-kinds.md` | What `phase-implement` does for each kind |
+| `resources/tdd-rules.md` | How `phase-implement` names seams and drives red-green at each |
+| `resources/smell-baseline.md` | The twelve code smells `phase-review` checks where the repository's rules say nothing |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The engine-owned keys — `bindings`, `phases`, `areas`, `policy`, `gates` — and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
@@ -169,3 +173,4 @@ skill changes who runs capture, never whether it runs.
 | `resources/mcp-vscode-template.json` | The same three as a `.vscode/mcp.json`, read by VS Code |
 | `hooks/hooks.json`, `hooks.json`, `hooks/session-start-context.md` | The session-start routing guidance: a guarded command hook for Claude Code, a prompt hook for Copilot, one text |
 | `tools/stack-config/check.mjs` | Validates a repository's stack config; `node --test` covers it |
+| `migrations/<nnn>-<slug>/` | A `MIGRATION.md` beside an idempotent `migrate.mjs`, one per config contract change |

@@ -143,4 +143,4 @@ flowchart TD
   `check-review`, the ready check, the gate, `create-pr`, `report-back`, and `summary`.
 - An unattended run does not have this shape at the gate. It **parks** with a handoff brief and
   never self-approves, which is the boundary between a flow and a
-  [schedule entry point](building-blocks/delivery-schedule.md#entry-point).
+  [schedule entry point](building-blocks/delivery-schedule-entry-points.md#entry-point).

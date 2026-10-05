@@ -60,6 +60,10 @@ at `high` confidence, and nothing lowers that.
    through the `Workflow` tool, whose agents are sub-agents; nothing here launches, schedules,
    or waits on another session.
 7. **Never retry an issue that failed** until a person clears `sweep-failed` from it.
+8. **Never touch a `wayfinder:*` issue.** One carrying any label that starts `wayfinder:` is a
+   map or a decision ticket and belongs to the person working the map: it is never
+   classified, labelled, commented on, closed, or resolved, and the brief reports it by count
+   alone.
 
 ## Workflow
 
@@ -74,7 +78,9 @@ at `high` confidence, and nothing lowers that.
 
    Drop, before triage, anything already in flight or off limits: labelled `in-progress`,
    `sweep-failed`, `blocked`, `wip`, or `needs-discussion`; assigned to somebody other than
-   the current user; referenced by an open pull request. Mark each remaining issue
+   the current user; referenced by an open pull request. Drop every issue with a label
+   starting `wayfinder:` first, ahead of every other check, and keep only their count for the
+   brief. Mark each remaining issue
    `triaged: true` when it carries that label — it is judged for relevance and collision only,
    never re-classified. A `needs-info` issue updated since this skill's last comment on it
    loses the mark: the reporter answered, so it is classified again from the answer.
@@ -100,7 +106,8 @@ at `high` confidence, and nothing lowers that.
    git --no-pager branch --all
    ```
 
-4. If no issue survives step 1, publish nothing and stop with a clean no-op in the run log.
+4. If no issue survives step 1, publish nothing and stop with a clean no-op in the run log —
+   the `wayfinder:*` count, when not zero, is its one line.
 
 ### Phase 2 — Triage
 
@@ -124,7 +131,8 @@ at `high` confidence, and nothing lowers that.
 6. The script runs one read-only agent per issue in parallel — classifying it unless already
    triaged, then judging relevance — then a single conflict scan, and returns
    `classifications`, `readyForPickup`, `staleCandidates`, `conflictVerdicts`,
-   `flaggedForInjection`, and `unjudged` / `notTriaged`. Treat the last two as **not
+   `flaggedForInjection`, `excludedWayfinder` — any `wayfinder:*` issue step 1 missed, added
+   to its count — and `unjudged` / `notTriaged`. Treat the last two as **not
    assessed**, never as relevant or as stale.
 
 ### Phase 3 — Write the Triage Back
@@ -210,7 +218,7 @@ at `high` confidence, and nothing lowers that.
     | ③ Flagged | Every issue excluded for agent-directed text, quoted verbatim |
     | ④ Did not complete | Each failed resolution — the stage it stopped at, the reason, the label left on the issue |
     | ⑤ Closed | Each closed issue with the evidence in its closing comment |
-    | ⑥ Triaged and deferred | Counts of classifications written per type and severity; issues judged but not resolved — conflicts (with what), surplus past `maxResolve`, untriaged past `maxTriage` |
+    | ⑥ Triaged and deferred | Counts of classifications written per type and severity; issues judged but not resolved — conflicts (with what), surplus past `maxResolve`, untriaged past `maxTriage`; the count of `wayfinder:*` issues excluded, never their numbers |
 
     Nothing in ① to ④ and nothing closed: the verdict line and *Run* alone.
 

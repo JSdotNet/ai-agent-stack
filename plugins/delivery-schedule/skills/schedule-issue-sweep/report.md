@@ -31,6 +31,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ### Triaged and deferred
 | Type or reason | Count | Issues |
 | --- | --- | --- |
+| excluded: `wayfinder:*` | <n> | — |
 
 ### Run
 | Outcome | What | Why |
@@ -42,3 +43,6 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 The two *Needs you* sections take the frame's place for this skill. A classification below
 `labelConfidence`, a label the repository lacks, a `needs-info` question asked, and a duplicate
 named but not closed are each a proposal row.
+
+The `wayfinder:*` row is a count, never a list: those issues belong to the person working the
+map, so the brief names none of them. Omit the row when the count is zero.

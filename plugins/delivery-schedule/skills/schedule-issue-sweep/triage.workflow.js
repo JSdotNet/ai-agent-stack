@@ -33,8 +33,15 @@ const MAX_TRIAGE = Number.isInteger(args.maxTriage) ? args.maxTriage : 12
 const openWork = args.openWork || { pullRequests: [], worktrees: [], sessions: [] }
 const vocabulary = args.vocabulary || { typeLabels: [], areaLabels: [], severityLabels: [], milestones: [], templates: '' }
 
-const candidates = args.issues.slice(0, MAX_TRIAGE)
-const overflow = args.issues.slice(MAX_TRIAGE)
+// A wayfinder:* issue is a map or a decision ticket and belongs to the person working the map.
+// The skill drops them before calling; this guard holds if a caller forgets.
+const labelName = (l) => (typeof l === 'string' ? l : (l && l.name) || '')
+const isWayfinder = (i) => (i.labels || []).some((l) => labelName(l).startsWith('wayfinder:'))
+const workable = args.issues.filter((i) => !isWayfinder(i))
+const excludedWayfinder = args.issues.length - workable.length
+
+const candidates = workable.slice(0, MAX_TRIAGE)
+const overflow = workable.slice(MAX_TRIAGE)
 
 if (overflow.length > 0) {
   // Never let a cap look like coverage.
@@ -172,7 +179,7 @@ Repository: ${args.repo}
 Issue #${issue.number}: "${issue.title}"
 URL: ${issue.url}
 Opened: ${issue.createdAt}   Last updated: ${issue.updatedAt || 'unknown'}
-Labels: ${(issue.labels || []).join(', ') || 'none'}
+Labels: ${(issue.labels || []).map(labelName).join(', ') || 'none'}
 
 Issue body:
 ${issue.body || '(empty)'}
@@ -273,6 +280,7 @@ log(`Conflict scan: ${conflicting.length} of ${live.length} candidate(s) collide
 // Result — the skill decides what to do with these verdicts
 // ---------------------------------------------------------------------------
 return {
+  excludedWayfinder,
   judged,
   unjudged: candidates.filter((i) => !judged.some((r) => r.number === i.number)).map((i) => i.number),
   notTriaged: overflow.map((i) => i.number),

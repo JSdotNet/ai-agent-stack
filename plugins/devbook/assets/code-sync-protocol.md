@@ -534,7 +534,7 @@ category, resolved in this order:
    which derives its kind from the category — `defect` is its defect kind, the other two its
    feature kind. The brief is the flow's approved specification —
    its outcomes are the requested behaviour, its acceptance checks the
-   acceptance criteria, its invariants the constraints Stage 0 would otherwise
+   acceptance criteria, its invariants the constraints its scope phase would otherwise
    derive.
 3. **Nowhere**, when no flow engine is installed: stop with the brief, which is
    then the whole result, and say so. Which flow picks it up is the user's

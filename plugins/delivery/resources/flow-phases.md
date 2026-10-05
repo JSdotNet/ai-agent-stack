@@ -22,7 +22,7 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
 | **This file, through the Ready Check** | The phase order, Scope through Spec Check, and where the ready check sits | Once, at the start of the run |
 | **This file, from Personal Validation onward** | The Personal Validation gate | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-update-base`, `phase-scope`, `phase-plan`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, and `phase-summary` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-update-base`, `phase-scope`, `phase-plan`, `phase-implement`, `phase-review`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-ready`, `phase-personal-validation`, `phase-create-pr`, `phase-report-back`, `phase-summary`, `phase-drafting`, and `phase-check-review` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -65,9 +65,9 @@ there is nothing runnable, and the chapter it writes is the specification.
 
 - **No skill names Update Base or the ready check.** Both are identical for every flow, so the
   flow-runner prepends the first and inserts the second before Personal Validation.
-- A flow lists its phases under a `## Phases (Shared)` heading and links here. This file is the
-  source of truth; the skill only names which phases it runs and adds skill-specific notes,
-  such as the Verify depth per kind.
+- A flow lists its phases under a `## Phases` heading and links here. This file is the source
+  of truth; the skill only names which phases it runs and adds skill-specific notes, such as
+  the kinds table and the Verify depth per kind.
 - No host auto-inlines an instruction file into a running skill, so each skill names its
   phases explicitly and points at the file that defines them.
 - The `flow-runner` agent (`agents/flow-runner.agent.md`) runs these phases in order, drives
@@ -126,6 +126,15 @@ slice's diff against the merge base, citing every finding. It never edits. The f
 alternates the two per slice — implement, review, implement with the blockers as its brief —
 until the slice is clean or `policy.review.retryBudget` is spent; blockers still open then go
 to the ready check. `policy.phases.review: false` turns review off.
+
+## Phase: Drafting and Check & Review
+
+`flow-spec`, in place of `implement` through `spec-check`. **Drafting is defined in
+`skills/phase-drafting/SKILL.md`**: it writes the chapter through the agent its folder
+qualifier binds, under the repository's instruction files for that folder, and is where the
+ready check sends the run back. **Check & Review is defined in
+`skills/phase-check-review/SKILL.md`**: `meta` blocks and broken references, the repository's
+devbook check, and the status changes the gate lists.
 
 ## Phase: Build & Test
 

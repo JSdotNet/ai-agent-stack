@@ -142,5 +142,4 @@ source of truth.
   still find something new in Phase 1.
 - The `security` role is unbound in the stack config template. When a repository binds one,
   Phase 4 should be delegated to it; until then the checklist is the reviewer.
-- A finding this skill opened is worked through `flow-code` or `flow-update-packages`
-  like any other issue.
+- A finding this skill opened is worked through `flow-code` like any other issue.

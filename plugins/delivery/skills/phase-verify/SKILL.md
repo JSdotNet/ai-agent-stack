@@ -1,6 +1,6 @@
 ---
 name: phase-verify
-description: 'Shared Verify phase for flow-code. Runs after Build & Test: starts the application through the repository''s run recipe and drives the changed scenarios per its show procedure, at a depth the change kind decides (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, config or dependency change = startup-only, nothing to run = skipped). Invoked by the flow-runner agent, never directly.'
+description: 'Shared Verify phase for flow-code. Runs after Build & Test: starts the application through the repository''s run recipe and drives the scenarios drawn from the scope''s acceptance criteria, taking evidence through its capture procedure, at a depth the change kind decides (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, config or dependency change = startup-only, nothing to run = skipped). Invoked by the flow-runner agent, never directly.'
 ---
 
 # Phase: Verify
@@ -22,7 +22,7 @@ The `flow-runner` agent invokes this skill after Build & Test. Its depth is deci
 kind of change, so no flow re-describes QA rules. What it finds is recorded for the ready check
 (`skills/phase-ready/SKILL.md`), which decides whether the run goes back to `phase-implement`.
 Claude Code's `/verify` does the same job by hand, but it is user-invoked only, so this phase
-follows the repository's own `run` and `show` procedures instead.
+follows the repository's own `run` and `capture` procedures instead.
 
 ## When To Run
 
@@ -63,16 +63,16 @@ Evidence paths must still resolve under the running worktree root — see
 
 The repository's runtime facts live in its `run` recipe — `.claude/skills/run-<name>/SKILL.md`,
 the repository's own, which Claude Code's `run` skill follows and Copilot reaches through
-`.github/skills/run/` — and how to show a change working lives in its `show` procedure, the
-`skill` the `phase-verify` entry names (`repo:show` by convention). They reach this phase two
-ways: the provider `phase-verify.app` names — the `run` recipe when unset — returns base URLs
-and a health verdict, and the flow-runner names the files when they exist. Start the app by
-invoking `run`, never by a command read out of the file. Use them as follows:
+`.github/skills/run/` — and evidence is taken through its `capture` procedure, per
+`resources/capture-contract.md`. The runtime facts reach this phase two ways: the provider
+`phase-verify.app` names — the `run` recipe when unset — returns base URLs and a health
+verdict, and the flow-runner names the file when it exists. Start the app by invoking `run`,
+never by a command read out of the file. Use them as follows:
 
 - **How to run** — while the recipe declares the setup, the launch command, and AppHost, never
   discover or guess them, and never ask the user for them.
-- **What to show** — drive the scenarios the `show` procedure names for the changed behaviour,
-  in its order; with no `show` procedure, derive them from the scope's acceptance criteria.
+- **What to drive** — derive the scenarios from the scope's acceptance criteria for the
+  changed behaviour.
 - **Base URLs** — verify against the entry points the start result returned.
 - **Healthy startup** — judge startup against the recipe's readiness signals, and do not report
   the warnings it names as benign as failures.
@@ -185,8 +185,8 @@ and do not ask the user to restart the app manually as the normal path.
 
 - The change kind the flow-runner persisted with `set_run_context`.
 - The affected scenarios or critical paths, and the scope's acceptance criteria.
-- The start result — base URLs, health verdict — and the paths of the repository's `run`
-  recipe and `show` procedure when the flow-runner found them.
+- The start result — base URLs, health verdict — and the path of the repository's `run`
+  recipe when the flow-runner found it.
 
 ## Outputs
 

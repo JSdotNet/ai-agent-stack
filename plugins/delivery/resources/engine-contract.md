@@ -57,7 +57,7 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
       "phase-implement:frontend": { "model": "sonnet" },
       "phase-review":             { "model": "opus", "effort": "high" },
       "phase-build-test":         { "model": "sonnet", "effort": "low" },
-      "phase-verify":             { "agent": "your-qa-plugin:qa", "skill": "repo:show",
+      "phase-verify":             { "agent": "your-qa-plugin:qa",
                                     "before": [ { "run": "repo:seed-test-data", "on-failure": "required" } ] },
       "phase-spec-check":         { "skill": "devbook:verify-change", "model": "opus" },
       "phase-create-pr":          {},

@@ -283,7 +283,8 @@ user's turn, so it is their decision; it is not a new task and it does not end t
 Both flows, after an approved Personal Validation. **Defined in
 `skills/phase-create-pr/SKILL.md`** — the approval check, shutting down the runtime and the
 flow-owned browser windows, the description, the change's git workflow, and opening the pull
-request through the lane without validating anything twice. Its shutdown rules hold for every
+request through the lane without validating anything twice. The description is the `pr-body`
+skill's, by name alone, when it is available. Its shutdown rules hold for every
 exit the run takes, not only a pull request.
 
 ## Phase: Report Back

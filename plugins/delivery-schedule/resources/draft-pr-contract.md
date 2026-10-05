@@ -48,8 +48,11 @@ One item at a time, never two at once, in the session the sweep runs in. The cal
    was proved by a test* when it is `small-fix`; this is the section to read first, because it
    is what personal validation has to cover; **Assumptions** taken instead of asking; and a
    line saying the pull request was opened as a draft by an unattended run of the calling
-   skill. A caller that adds a section names it and its place. Follow the repository's pull
-   request template, labels, and reviewer conventions where it has them.
+   skill. A caller that adds a section names it and its place. With the `pr-body` skill
+   available, write **What changed** as its Summary, **Verification** as its Evidence, and add
+   its **Merge Danger** after **What could not be proved**; without it, still state the door
+   there — one-way or two-way, with the decision record a one-way door rests on. Follow the
+   repository's pull request template, labels, and reviewer conventions where it has them.
 
    Comment the pull request URL on `<issue>` and remove `in-progress`.
 5. **Any other outcome** — `escalated`, `blocked`, `red`, `failed` — opens nothing. Comment on

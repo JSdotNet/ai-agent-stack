@@ -97,7 +97,9 @@ Restate the request, derive the kind and the acceptance criteria, and record the
 `implement` tests at. For a refactor it plans the target layout and the references to update.
 In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
-to `flow-spec`. It implements nothing and writes no chapter.
+to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
+the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
+a folder whole or an annotation fence.
 
 ### phase-plan
 

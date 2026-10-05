@@ -22,7 +22,7 @@ The rest lives in companion files so a run reads the part it is actually in.
 | `surface-contract.md` | The surface capability, how a surface is bound, and its reporting contract | Once, before the first `update_stage` |
 | **This file, through the Ready Check** | The phase order, Update Base, Scope through Spec Check, and where the ready check sits | Once, at the start of the run |
 | **This file, from Personal Validation onward** | Personal Validation, Create Pull Request, Report Back, Summary | **Only when the run reaches Personal Validation** — not at the start |
-| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-build-test`, `phase-verify`, `phase-ready`, and `phase-personal-validation` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
+| `skills/phase-<id>/SKILL.md` | A phase in full, for every phase that has its skill — today `phase-scope`, `phase-build-test`, `phase-verify`, `phase-ready`, and `phase-personal-validation` | When the flow-runner reaches that phase. It reads an inline phase's skill itself; a forked or delegated phase's skill is read by the sub-agent, per `phase-resolution.md` |
 
 **This table is a rule, not a reading suggestion.** Everything read stays in the prompt for
 the rest of the run, so reading ahead is not preparation — it is a cost paid on every
@@ -131,7 +131,7 @@ govern them, and selects the devbook chapters every later brief loads, as one li
 records the seams `implement` tests at, the constraints and integration points, and for a
 refactor the target layout and the references to update. A new decision or bounded context
 escalates per **Escalation** in `flow-execution-model.md`. Persist the change kind with
-`set_run_context` as soon as it is known.
+`set_run_context` as soon as it is known. In full: `skills/phase-scope/SKILL.md`.
 
 ## Phase: Plan
 

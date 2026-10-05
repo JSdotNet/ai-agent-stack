@@ -397,14 +397,15 @@ browser-pane tool, which [stand on purpose](adr/hosts.md).
 | `pr-lane` | `bindings["delivery.slots"]` | no pull request; `create-pr` writes file artifacts only |
 | `stage-delegation` | the live session | stages run inline |
 | `surface` | the live tool list | file artifacts only |
-| `model-override` | nothing, deliberately | each phase's resolved model |
+| `model-override` | `CLAUDE_FLOW_MODEL_SELECTION_PATH`, else `<config dir>/model-selection.md` | no file to convert |
 | `session-id` | the host's substitution into skill content | `start_run` carries no `sessionId` |
 
 The first three are host facts a repository can state. `stage-delegation` and `surface` are
 capability answers resolved at run time, which is what keeps two hosts from re-diverging the
-moment one gains what the other has. `model-override` takes no binding from anywhere: a
-phase's model is a field of its `phases` entry, committed as the team's default and overridden
-per machine in an overlay, so the slot has nothing left to answer. `session-id` is answered by the host alone: Claude Code
+moment one gains what the other has. `model-override` answers one question only: where a
+1.13.0 `model-selection.md` is left over, so `devbook-config:local` can convert it into overlay
+`phases` entries. Phase resolution never reads it — a phase's model is a field of its `phases`
+entry, committed as the team's default and overridden per machine in an overlay. `session-id` is answered by the host alone: Claude Code
 substitutes `${CLAUDE_SESSION_ID}` in skill content, so each skill that calls `start_run`
 carries that token verbatim, and Copilot CLI substitutes nothing and hands its session id only
 to hooks — a token still reading as a placeholder is the unbound case.

@@ -81,6 +81,8 @@ const ENGINE_KEYS = ['bindings', 'phases', 'areas', 'policy', 'gates'];
 // `001-phase-maps` migration. Named here so the report says which file still carries one.
 const RETIRED_BINDINGS = ['delivery.roles', 'delivery.mcp'];
 const RETIRED_FLOWS = ['flow-update-packages', 'flow-project'];
+const RETIRED_POLICY = ['validate.retryBudget', 'phases.verification', 'phases.workItemUpdate'];
+const RETIRED_UNATTENDED = ['skip-point'];
 const RETIRED_GATE_POINTS = ['session.start', 'flow.start', 'spec', 'validate', 'data.prepare', 'app.start', 'qa.run', 'deliver', 'flow.end'];
 
 // The phases of each flow, from `x-flows` in delivery's `resources/config.schema.json`.
@@ -510,8 +512,12 @@ function buildRepository(repoRoot) {
             ...('extensions' in file ? ['extensions'] : []),
             ...RETIRED_BINDINGS.filter((key) => file.bindings && key in file.bindings).map((key) => `bindings["${key}"]`),
             ...RETIRED_FLOWS.filter((flow) => file.phases && flow in file.phases).map((flow) => `phases.${flow}`),
+            ...RETIRED_POLICY.filter((key) => file.policy && key in file.policy).map((key) => `policy["${key}"]`),
             ...(Array.isArray(file.gates) ? file.gates : [])
-                .map((gate, i) => (gate && typeof gate === 'object' && RETIRED_GATE_POINTS.includes(gate.at) ? `gates[${i}].at "${gate.at}"` : null))
+                .flatMap((gate, i) => (gate && typeof gate === 'object' ? [
+                    RETIRED_GATE_POINTS.includes(gate.at) ? `gates[${i}].at "${gate.at}"` : null,
+                    RETIRED_UNATTENDED.includes(gate.unattended) ? `gates[${i}].unattended "${gate.unattended}"` : null,
+                ] : []))
                 .filter(Boolean),
         ].map((key) => ({ where, key }));
     });
@@ -768,7 +774,7 @@ function render(model) {
     if (repo.retired.length) {
         out.push('### Retired keys');
         out.push('');
-        out.push('1.14.0 refuses these, and a flow stops at the checker until they are rewritten. Run `delivery:update`, whose `001-phase-maps` migration rewrites each into the phase maps.');
+        out.push('1.14.0 refuses these, and a flow stops at the checker until they are rewritten. Run `delivery:update`, whose `001-phase-maps` migration rewrites each into the phase maps and the 1.14.0 policy names.');
         out.push('');
         out.push(table(['File', 'Key'], repo.retired.map((r) => [r.where, `\`${r.key}\``])));
         out.push('');

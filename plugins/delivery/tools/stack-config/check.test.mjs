@@ -360,6 +360,7 @@ test('a retired flow is refused with a pointer to delivery:update', () => {
 });
 
 test('a repo-native flow takes a map of its own phase ids, checked for shape but not completeness', () => {
+    // Called with no repository to look in, the flow's name is checked for shape alone.
     assert.deepEqual(check({ phases: { 'flow-release': { 'phase-tag': { model: 'haiku' }, 'phase-implement': {} } } }), []);
     assert.match(check({ phases: { 'flow-release': { tag: {} } } })[0], /"tag" is not a phase key/);
     assert.match(check({ phases: { 'flow-release': { 'phase-tag': { modle: 'haiku' } } } })[0], /unknown key "modle"/);
@@ -466,14 +467,50 @@ test('resolve refuses a committed map that is not complete', () => {
     assert.match(errors[0].errors[0], /missing "phase-update-base"/);
 });
 
+test('a repo-native flow is accepted only when the repository ships that skill', () => {
+    const ships = (name) => name === 'flow-release';
+    const strict = (config) => checkStackConfig(config, schema, { skillExists: ships });
+    assert.deepEqual(strict({ phases: { 'flow-release': { 'phase-tag': {} } } }), []);
+    const errors = strict({ phases: { 'flow-cod': { 'phase-implement': {} } } });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^phases: unknown flow "flow-cod" — .*a repo-native flow-\* skill this repository ships/);
+    assert.deepEqual(strict({ phases: { 'flow-code': codeMap() } }), [], 'an engine flow needs no skill of the repository');
+});
+
+test('resolve finds a repo-native flow by its skill folder beside the config', () => {
+    const { target, options } = scratch({ id: 'r', phases: { 'flow-release': { 'phase-tag': {} } } });
+    assert.match(resolveStackConfig(target, schema, options).errors[0].errors[0], /unknown flow "flow-release"/);
+    mkdirSync(join(dirname(target), '.agents', 'skills', 'flow-release'), { recursive: true });
+    writeFileSync(join(dirname(target), '.agents', 'skills', 'flow-release', 'SKILL.md'), '');
+    assert.deepEqual(resolveStackConfig(target, schema, options).errors, []);
+});
+
+test('a retired or renamed policy key is refused by name with a pointer to delivery:update', () => {
+    for (const [key, hint] of [['validate.retryBudget', /nothing read it/], ['phases.verification', /phases\.specCheck/], ['phases.workItemUpdate', /phases\.reportBack/]]) {
+        const errors = check({ policy: { [key]: key.startsWith('phases') ? true : 2 } });
+        assert.equal(errors.length, 1, key);
+        assert.ok(errors[0].startsWith(`policy["${key}"]: removed in 1.14.0 — `), errors[0]);
+        assert.match(errors[0], hint);
+        assert.match(errors[0], /Run delivery:update/);
+    }
+    assert.deepEqual(check({ policy: { 'phases.specCheck': false, 'phases.reportBack': true } }), []);
+});
+
+test('a gate that skips its point unattended is refused by name; skip-phase is the spelling', () => {
+    const errors = check({ gates: [{ at: 'verify', when: 'before', purpose: 'cost', unattended: 'skip-point' }] });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^gates\[0\]\.unattended: removed in 1\.14\.0 — "skip-point" — it is skip-phase.*Run delivery:update/);
+    assert.deepEqual(check({ gates: [{ at: 'verify', when: 'before', purpose: 'cost', unattended: 'skip-phase' }] }), []);
+});
+
 // The overlay — config.local.json under the user's devbook config directory, one machine's own.
 
 test('the overlay wins key by key and leaves its siblings standing', () => {
     const merged = mergeStackConfig(
-        { policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2 } },
+        { policy: { 'qa.depth': 'targeted', 'review.retryBudget': 2 } },
         { policy: { 'qa.depth': 'startup-only' } },
     );
-    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'validate.retryBudget': 2 });
+    assert.deepEqual(merged.policy, { 'qa.depth': 'startup-only', 'review.retryBudget': 2 });
 });
 
 test('a phase entry merges field by field, later layers winning', () => {
@@ -541,7 +578,7 @@ test('the overlay may not touch what the repository produces', () => {
 test('an ordinary overlay is refused nothing', () => {
     assert.deepEqual(
         checkLocalOverlay({
-            policy: { 'qa.depth': 'startup-only', 'validate.retryBudget': 0 },
+            policy: { 'qa.depth': 'startup-only', 'review.retryBudget': 0 },
             phases: { 'flow-code': { 'phase-verify': { agent: null, model: 'sonnet' } } },
             gates: [{ at: 'implement', when: 'before', purpose: 'cost' }],
         }),

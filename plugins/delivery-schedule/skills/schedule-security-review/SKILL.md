@@ -140,6 +140,5 @@ source of truth.
 
 - Run it weekly. Advisories arrive on their own schedule, so a run after a quiet week can
   still find something new in Phase 1.
-- The `security` role is unbound in the stack config template. When a repository binds one,
-  Phase 4 should be delegated to it; until then the checklist is the reviewer.
+- No phase binds a security specialist, so the checklist is the reviewer in Phase 4.
 - A finding this skill opened is worked through `flow-code` like any other issue.

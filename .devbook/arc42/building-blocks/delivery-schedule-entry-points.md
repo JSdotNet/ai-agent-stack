@@ -273,9 +273,9 @@ draft pull request, one commit per recommendation. Two
 things set it apart from every other entry point. It gates on the plan's credit: it reads the
 plan limits first and stops at or above a threshold, so it spends only what the weekly reset
 would otherwise discard, and its trigger fires on both weekend days because the second firing
-is the retry. And it delegates the review to a model stronger than the week ran on, resolved
-from the personal `model-override` file and never from the repository, because model choice is
-personal. It edits instruction assets, checks, and devbook chapters, each chapter under its
+is the retry. And it delegates the review to a model stronger than the week ran on: the model
+the effective configuration gives `flow-code`'s `phase-review`, so a team default or a
+machine's own overlay picks it, and `opus` when neither does. It edits instruction assets, checks, and devbook chapters, each chapter under its
 folder's own rules; the draft pull request is the approval a chapter would otherwise get from
 `flow-spec`. Product code, or a personal model, effort, or habit, is listed for a person.
 

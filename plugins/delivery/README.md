@@ -166,7 +166,7 @@ skill changes who runs capture, never whether it runs.
 | `resources/tdd-rules.md` | How `phase-implement` names seams and drives red-green at each |
 | `resources/smell-baseline.md` | The twelve code smells `phase-review` checks where the repository's rules say nothing |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
-| `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
+| `resources/config.schema.json` | The engine-owned keys — `bindings`, `phases`, `areas`, `policy`, `gates` — and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |
 | `resources/config.local-template.json` | A starting point for the personal overlay, copied outside the repository |
 | `resources/mcp-template.json` | The three default MCP servers as a `.mcp.json`, read by Claude Code and the Copilot CLI |

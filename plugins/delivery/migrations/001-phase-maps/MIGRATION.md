@@ -28,6 +28,9 @@ per `.devbook/arc42/adr/configuration.md` in the marketplace. The script rewrite
 | `delivery.mcp.<point>` | `phases.<phase>.mcp`, the phase the point belonged to; two points on one phase join |
 | `gates[].at` on a point | the phase id that point belonged to — `deliver` is `create-pr`, `verify` is `spec-check` |
 | `phases.flow-update-packages` · `phases.flow-project` | merged into `phases.flow-code`; what flow-code already sets wins |
+| `policy["phases.verification"]` · `["phases.workItemUpdate"]` | `policy["phases.specCheck"]` · `["phases.reportBack"]`, named for the phase each switches; a new name already set wins |
+| `policy["validate.retryBudget"]` | dropped, and reported: `review.retryBudget` and `ready.retryBudget` bound the only loops |
+| `gates[].unattended: "skip-point"` | `"skip-phase"` |
 
 In the committed file both maps come out complete: a phase the old config never named is `{}`.
 An overlay stays partial and names only what it said. A role or provider bound to a bare plugin
@@ -41,12 +44,14 @@ committed file, and only when it runs first — is never carried, nor the
 `delivery:phase-validation` an earlier 004 wrote in its place: the run recipe is
 `phase-verify`'s default. Every other key and `components` are left
 as they are; the file is re-serialized in its own indent and key order, `phases` where
-`extensions` was.
+`extensions` was. The policy and gate renames run in a file already on the phase maps as well, and
+leave everything else in it as it is.
 
 ## Why
 
 1.14.0's checker refuses `extensions`, `delivery.roles`, `delivery.mcp`, a gate on an
-extension point, and a map under a retired flow by name, so a repository on the old shape stops
+extension point, a map under a retired flow, the three retired policy keys, and `skip-point` by
+name, so a repository on the old shape stops
 validating until it is rewritten.
 
 ## What breaks

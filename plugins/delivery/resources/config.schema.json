@@ -117,7 +117,6 @@
       "properties": {
         "qa.depth": { "enum": ["full", "targeted", "startup-only", "skipped"] },
         "qa.ceiling": { "enum": ["full", "targeted", "startup-only", "skipped"] },
-        "validate.retryBudget": { "type": "integer", "minimum": 0 },
         "review.retryBudget": {
           "description": "How many times one slice's review blockers go back to phase-implement before the open ones go to Personal Validation, marked open. Default 1.",
           "type": "integer",
@@ -147,8 +146,14 @@
           "description": "Whether flow-code runs phase-review. Default true.",
           "type": "boolean"
         },
-        "phases.verification": { "type": "boolean" },
-        "phases.workItemUpdate": { "type": "boolean" },
+        "phases.specCheck": {
+          "description": "Whether a flow runs phase-spec-check. Default true.",
+          "type": "boolean"
+        },
+        "phases.reportBack": {
+          "description": "Whether a flow runs phase-report-back. Default true.",
+          "type": "boolean"
+        },
         "openspec.scenarios": {
           "description": "Whether a change's scenarios must each name the test that proves them before the change is accepted. `advisory`, the default, shows a scenario with no linked test as unverified and never blocks; `linked` refuses acceptance until every scenario names one. Set in the committed config only: an overlay may not weaken what a reviewer sees.",
           "enum": ["advisory", "linked"]
@@ -174,7 +179,7 @@
           "purpose": { "enum": ["approval", "resource", "cost", "risk", "handoff"] },
           "prompt": { "type": "string" },
           "show": { "enum": ["artifact", "summary", "none"], "default": "summary" },
-          "unattended": { "enum": ["block", "proceed", "skip-point"], "default": "block" }
+          "unattended": { "enum": ["block", "proceed", "skip-phase"], "default": "block" }
         }
       }
     }
@@ -187,6 +192,14 @@
     "bindings": {
       "delivery.roles": "a role is now the agent of the phases it ran",
       "delivery.mcp": "an extension point's servers are now its phase's mcp"
+    },
+    "policy": {
+      "validate.retryBudget": "nothing read it, and review.retryBudget and ready.retryBudget bound the only loops",
+      "phases.verification": "it is phases.specCheck, named for phase-spec-check",
+      "phases.workItemUpdate": "it is phases.reportBack, named for phase-report-back"
+    },
+    "gateUnattended": {
+      "skip-point": "it is skip-phase, since a gate attaches to a phase"
     },
     "flows": {
       "flow-update-packages": "it folded into flow-code as the dependency kind",

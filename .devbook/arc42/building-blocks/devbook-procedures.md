@@ -189,7 +189,7 @@ invoking `run` by name is the only reach between the five.
 
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
-| [delivery](delivery.md#dependencies) | Separate Ways | Names `run` at its `app.start` point and `capture` inside Validation, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this block | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
+| [delivery](delivery.md#dependencies) | Separate Ways | Names `run` and `capture` in its verify phase, and reads `.claude/skills/run-<name>/SKILL.md` and `.agents/skills/capture.md` when the flow-runner finds them | The skill names and the path — never this block | Nothing: a repository may hand-write both, and a flow that finds one absent does without and says so. |
 | Any session, either host | Conformist | Invokes `run`, `capture`, `diagnose`, `estimate`, or `prototype` by name | The goal in the wrapper | That the goal holds whatever the body says. |
 
 **A procedure's goal is the seam.** Every procedure's body differs per repository; the one

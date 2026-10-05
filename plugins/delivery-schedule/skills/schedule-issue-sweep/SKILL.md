@@ -202,8 +202,8 @@ at `high` confidence, and nothing lowers that.
     failure marker `sweep-failed`. The work script is `../../scripts/resolve-issue.workflow.js`,
     resolved to an absolute path, with `changeKind` — a `flow-code` kind — from the triage verdict,
     `maxRepairAttempts`, and the issue. It runs Scope; Implement, a failing test first and the
-    smallest change that passes it; Build & Test, the unit suite with bounded repair; and
-    Review, two lenses with a fix pass — spending at most eleven agents.
+    smallest change that passes it; Review, two lenses with a fix pass; and Build & Test, the
+    unit suite over the reviewed change with bounded repair — spending at most ten agents.
 
 ### Phase 6 — Brief
 
@@ -250,7 +250,7 @@ requests, and the brief remain the source of truth.
   that keeps coming back is the brief telling the maintainer the vocabulary has a gap.
 - **Match `maxResolve` to how many draft pull requests you will review the next day**, not to
   how many issues exist. Three a night is a queue you can keep up with.
-- **No QA validation phase.** The resolution verifies with the unit suite only; a change that
+- **No verify phase.** The resolution checks itself with the unit suite only; a change that
   touches a runtime surface says so under *what could not be proved*, and that is what to
   check by hand before flipping the draft. For work that needs a person present from the
   start, use `start-session-from-issue` in `delivery`.

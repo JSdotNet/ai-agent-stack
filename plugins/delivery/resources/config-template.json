@@ -25,7 +25,7 @@
       "phase-spec-check": { "skill": "devbook:verify-change", "model": "opus" },
       "phase-create-pr": {},
       "phase-report-back": { "model": "haiku", "targets": ["origin", "linked"] },
-      "phase-summary": { "after": ["devbook:update"] }
+      "phase-summary": {}
     },
     "flow-spec": {
       "phase-update-base": { "before": ["devbook:validate"] },
@@ -38,13 +38,12 @@
       "phase-check-review": {},
       "phase-create-pr": {},
       "phase-report-back": { "model": "haiku" },
-      "phase-summary": { "after": ["devbook:update"] }
+      "phase-summary": {}
     }
   },
   "policy": {
     "qa.depth": "targeted",
     "qa.ceiling": "full",
-    "validate.retryBudget": 2,
     "review.retryBudget": 1,
     "ready.retryBudget": 2,
     "gate.reviseBudget": 3,
@@ -54,8 +53,8 @@
     "pr.base": "main",
     "phases.updateBase": true,
     "phases.review": true,
-    "phases.verification": true,
-    "phases.workItemUpdate": true,
+    "phases.specCheck": true,
+    "phases.reportBack": true,
     "openspec.scenarios": "advisory"
   },
   "gates": [

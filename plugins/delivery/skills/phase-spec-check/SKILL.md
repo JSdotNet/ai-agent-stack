@@ -98,7 +98,7 @@ its brief; it is the one that edits.
 
 `skipped`, with the reason, when the run recorded no specification and no acceptance criteria
 and the change set touches no governed chapter — a dependency update with no functional change
-is the usual case. **`policy.phases.verification: false`** turns it off.
+is the usual case. **`policy.phases.specCheck: false`** turns it off.
 
 ## Dashboard Reporting
 

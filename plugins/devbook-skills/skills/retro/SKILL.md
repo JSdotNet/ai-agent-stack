@@ -25,7 +25,7 @@ own check command and its CI workflow before proposing a check.
 | No-ops | An instruction that changes nothing against the model's default | Delete it |
 | Tool economy | An expensive, failed, or repeated tool call; a token-heavy tool; a wait on a permission prompt | A cheaper call, a script, or an allowlist entry |
 | Information access | A fact the agent could not reach: server logs, a read-only view of a service | The access |
-| Model and effort | The strongest model on housekeeping; a lighter one on work that needed reruns | The setting, for the person — model choice is personal |
+| Model and effort | The strongest model on housekeeping; a lighter one on work that needed reruns | The setting, for the person — a phase's model in their overlay, or the team default |
 
 **Mechanical gets a check.** A fixed syntactic pattern, a banned API, an import shape, a file
 location: build the check in the repository's own linter, hook, or CI — whichever its

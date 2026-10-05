@@ -76,7 +76,7 @@ record moving to `accepted`.
 ## Skip
 
 `skipped`, with the reason, when no target is left — no origin, nothing linked, no custom
-destination — or when **`policy.phases.workItemUpdate: false`** turns it off. The summary is
+destination — or when **`policy.phases.reportBack: false`** turns it off. The summary is
 then the report.
 
 ## Dashboard Reporting

@@ -31,7 +31,7 @@ Plugins upgraded by the user: <plugin old → new, or none>.
 - **Devbook folders:** <`arc42`, `tech`, … from components.devbook, with its contract version>; not adopted: <…>.
 - **Committed index:** <devbook-derived stamped, or not adopted>.
 - **Change lane:** <devbook-openspec stamped and CLI version, or not adopted>.
-- **Engine:** <delivery stamped, or not adopted>. Bound: <roles, tracker, extension points, and gates actually set>; policy: <switches set>. Everything else takes the engine default.
+- **Engine:** <delivery stamped, or not adopted>. Bound: <tracker, each phase's agent, skill, and MCP servers, and gates actually set>; policy: <switches set>. Everything else takes the engine default.
 
 ### Procedures
 

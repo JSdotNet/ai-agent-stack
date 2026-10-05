@@ -164,6 +164,13 @@ missing skill must cost readability, never a load. `domain.md` and its splits ar
 in the devbook: they keep the diagrams `devbook-domain.md` prescribes, because that rule already
 fixes the model chapter's shape.
 
+The same plugin holds `research-brief`, on the same terms: a cited answer from primary sources
+to a question the repository cannot answer. `delivery`'s Scope phase names it when an external
+fact decides scope, and its Drafting phase names it for `arc42/` and `tech/`. It returns the
+brief and writes nothing, so one skill serves every place a brief lands — a decision record's
+options, an OpenSpec change's `research.md`, a ticket — without knowing any of them. Without
+it, each caller cites the primary source itself or leaves the fact open.
+
 ## Rejected
 
 ```meta
@@ -213,6 +220,7 @@ fixes the model chapter's shape.
 | Date | Change |
 | --- | --- |
 | 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
+| 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |
 | 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |
 | 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. |
 | 2026-09-28 | `devbook-openspec` is the change lane's plugin, an L1 over `devbook`: it installs and configures the OpenSpec CLI at `openspec/` in the repository root, provides `spec` and `tracker` to an engine by name, and lands a change by merging through devbook's `delta.mjs` before `openspec archive` moves the folder. |

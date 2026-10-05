@@ -1,7 +1,7 @@
 {
   "name": "devbook-skills",
   "version": "1.15.0",
-  "description": "Reusable guidance any plugin can name and none has to depend on. Ships show-me: put a picture before the prose whenever the content has a shape — a Mermaid sequence, state, or flow diagram, a file tree labelled with what each entry is for, a type signature, a diff, a call stack, pseudocode, or a table — and keep the prose after it to the reasons, the exceptions, and the limits. Named by skill, never declared: devbook's devbook-writing rule names it for every chapter but domain.md, and the delivery engine names it for pull request descriptions and its report back to the person, each keeping its own rule when it is absent. Materializes nothing into a repository and stamps nothing.",
+  "description": "Reusable guidance any plugin can name and none has to depend on. Ships show-me: put a picture before the prose whenever the content has a shape — a Mermaid sequence, state, or flow diagram, a file tree labelled with what each entry is for, a type signature, a diff, a call stack, pseudocode, or a table — and keep the prose after it to the reasons, the exceptions, and the limits. Ships research-brief: answer one question about something outside the repository from primary sources only, every claim cited with a confidence, and say what the sources leave open; it returns the brief and writes nothing, so the caller decides where it lands. Named by skill, never declared: devbook's devbook-writing rule names show-me for every chapter but domain.md, the delivery engine names it for pull request descriptions and its report back to the person, and the engine's scope and arc42 and tech drafting name research-brief, each keeping its own rule when the skill is absent. Materializes nothing into a repository and stamps nothing.",
   "author": {
     "name": "Job Schepers"
   },
@@ -12,6 +12,9 @@
     "diagram",
     "mermaid",
     "readability",
-    "explain"
+    "explain",
+    "research",
+    "citations",
+    "primary-sources"
   ]
 }

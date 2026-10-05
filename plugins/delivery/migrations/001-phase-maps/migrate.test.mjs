@@ -125,3 +125,32 @@ test('a null implement forces the phase inline', () => {
     assert.deepEqual(config.phases['flow-code']['phase-implement'], { agent: null });
     assert.deepEqual(config.phases['flow-code']['phase-spec-check'], {});
 });
+
+test('the renamed policy keys and gate value are rewritten in place, on a file already on phase maps too', () => {
+    const input = {
+        policy: { 'qa.depth': 'targeted', 'validate.retryBudget': 2, 'phases.verification': false, 'phases.workItemUpdate': true },
+        gates: [{ at: 'verify', when: 'before', purpose: 'cost', unattended: 'skip-point' }],
+    };
+    assert.equal(needsMigration(input), true);
+    const { config, notes, changed } = migrateConfig(input, { overlay: true, resolve });
+    assert.equal(changed, true);
+    assert.deepEqual(config, {
+        policy: { 'qa.depth': 'targeted', 'phases.specCheck': false, 'phases.reportBack': true },
+        gates: [{ at: 'verify', when: 'before', purpose: 'cost', unattended: 'skip-phase' }],
+    });
+    assert.ok(notes.some((n) => n.includes('validate.retryBudget')));
+    assert.deepEqual(checkStackConfig(config, schema, { overlay: true }), []);
+    assert.equal(needsMigration(config), false, 'a second run has nothing to do');
+});
+
+test('a renamed policy key already set under its new name keeps the new one', () => {
+    const { config, notes } = migrateConfig({ policy: { 'phases.verification': true, 'phases.specCheck': false } }, { overlay: true, resolve });
+    assert.deepEqual(config.policy, { 'phases.specCheck': false });
+    assert.ok(notes.some((n) => n.includes('already sets phases.specCheck')));
+});
+
+test('a 1.13.0 file has its policy renamed along with its phase maps', () => {
+    const { config } = migrateConfig({ extensions: { implement: null }, policy: { 'validate.retryBudget': 1 } }, { resolve });
+    assert.deepEqual(config.policy, {});
+    assert.deepEqual(checkStackConfig(config, schema), []);
+});

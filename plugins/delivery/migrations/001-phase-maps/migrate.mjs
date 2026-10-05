@@ -9,8 +9,10 @@
 // Rewrites `extensions`, `bindings["delivery.roles"]`, `bindings["delivery.mcp"]`, a gate on
 // an extension point, and a `phases` map under a retired flow into the 1.14.0 phase maps — in
 // the committed config, where both maps come out complete, and in both overlay layers, where
-// they stay partial. Idempotent by construction: once none of those shapes is left in a file
-// the migration has nothing to see there.
+// they stay partial. It also renames the policy keys and the gate value 1.14.0 renamed, and
+// drops `validate.retryBudget`, in a file already on the phase maps as well. Idempotent by
+// construction: once none of those shapes is left in a file the migration has nothing to see
+// there.
 //
 // An agent id is resolved against the plugin that ships it — a `--plugin name=path` root
 // first, then this repository's own `plugins/<name>` when it is a marketplace, then the host's
@@ -87,12 +89,30 @@ const DROPPED_ROLES = ["product", "security"];
 // well, so a gate on either is read as the old point only in a file migrated for another reason.
 const RETIRED_GATE_POINTS = Object.keys(POINT_PHASE).filter((p) => p !== "implement" && p !== "verify");
 
+// Policy keys 1.14.0 renamed after the phase they switch, and the one it dropped.
+export const RENAMED_POLICY = {
+    "phases.verification": "phases.specCheck",
+    "phases.workItemUpdate": "phases.reportBack",
+};
+const DROPPED_POLICY = ["validate.retryBudget"];
+const RENAMED_UNATTENDED = { "skip-point": "skip-phase" };
+
 const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
 const json = (v) => JSON.stringify(v);
+
+/** Whether a config file carries a policy key or a gate value this migration renames. */
+function needsRenames(config) {
+    if (isObject(config.policy) && [...Object.keys(RENAMED_POLICY), ...DROPPED_POLICY].some((k) => k in config.policy)) return true;
+    return Array.isArray(config.gates) && config.gates.some((g) => isObject(g) && g.unattended in RENAMED_UNATTENDED);
+}
 
 /** Whether a config file carries anything this migration rewrites. */
 export function needsMigration(config) {
     if (!isObject(config)) return false;
+    return needsPhaseMaps(config) || needsRenames(config);
+}
+
+function needsPhaseMaps(config) {
     if ("extensions" in config) return true;
     if (isObject(config.bindings) && ("delivery.roles" in config.bindings || "delivery.mcp" in config.bindings)) return true;
     if (Array.isArray(config.gates) && config.gates.some((g) => isObject(g) && RETIRED_GATE_POINTS.includes(g.at))) return true;
@@ -188,6 +208,39 @@ function targets(flow, phase) {
 export function migrateConfig(input, { overlay = false, resolve = () => ({ kind: null }) } = {}) {
     if (!needsMigration(input)) return { config: input, notes: [], changed: false };
     const notes = [];
+    const mapped = needsPhaseMaps(input) ? toPhaseMaps(input, { overlay, resolve }, notes) : input;
+    const config = renameKeys(mapped, notes);
+    return { config, notes, changed: json(config) !== json(input) };
+}
+
+/** The policy keys and gate value renamed, in the file's own key order; the dropped key noted. */
+function renameKeys(input, notes) {
+    const config = { ...input };
+    if (isObject(input.policy)) {
+        const policy = {};
+        for (const [key, value] of Object.entries(input.policy)) {
+            if (DROPPED_POLICY.includes(key)) {
+                notes.push(`policy["${key}"]: nothing reads it — review.retryBudget and ready.retryBudget bound the loops; dropped`);
+                continue;
+            }
+            const name = RENAMED_POLICY[key] ?? key;
+            if (name !== key && name in input.policy) {
+                notes.push(`policy["${key}"]: the file already sets ${name} — kept ${json(input.policy[name])}, dropped ${json(value)}`);
+                continue;
+            }
+            policy[name] = value;
+        }
+        config.policy = policy;
+    }
+    if (Array.isArray(input.gates)) {
+        config.gates = input.gates.map((gate) =>
+            isObject(gate) && gate.unattended in RENAMED_UNATTENDED ? { ...gate, unattended: RENAMED_UNATTENDED[gate.unattended] } : gate,
+        );
+    }
+    return config;
+}
+
+function toPhaseMaps(input, { overlay, resolve }, notes) {
     const phases = {};
     const set = (flow, phase, field, value, from) => {
         phases[flow] ??= {};
@@ -399,7 +452,7 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
     }
     if (!placed) place();
 
-    return { config, notes, changed: json(config) !== json(input) };
+    return config;
 }
 
 function userConfigDir(env = process.env) {
@@ -450,7 +503,7 @@ function main(argv) {
         const { config, notes, changed } = migrateConfig(parsed, { overlay, resolve });
         if (!changed) continue;
         pending++;
-        console.log(`- rewrite ${label} (${file}) into phase maps`);
+        console.log(`- rewrite ${label} (${file}) into phase maps and the 1.14.0 policy names`);
         for (const note of notes) console.log(`  · ${note}`);
         if (checkOnly) continue;
         const eol = text.includes("\r\n") ? "\r\n" : "\n";

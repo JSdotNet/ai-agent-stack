@@ -23,7 +23,7 @@ a phase entry's fields are its *Phases*, and how they resolve is `resources/phas
    categories become, and every row naming no phase. Show both, and carry the phases into
    step 5 as answers already given.
 3. **Ask what is true of this machine.** Every question is optional and the default is
-   nothing. QA depth, inside `policy.qa.ceiling`; `validate.retryBudget`; then, per phase of
+   nothing. QA depth, inside `policy.qa.ceiling`; `review.retryBudget` and `ready.retryBudget`; then, per phase of
    each flow map the merged config carries — `--print` from step 5 shows it — the `agent`,
    `model`, and `effort` you want here, beside the team's value; `inherit` cancels a team
    default. An MCP server bound here and nowhere else, as that phase's `mcp`; a grill skill of

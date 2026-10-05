@@ -21,8 +21,11 @@
 // `phases` is checked against the phase lists the schema declares under its `x-flows`: an
 // unknown flow, a phase its flow lacks, a qualifier the phase does not take, and an entry for
 // a phase that takes no configuration are refused by name in every layer, and the committed
-// file must list every phase of each map it carries. A key 1.14.0 removed is refused with a
-// pointer to delivery:update, which rewrites it; none is an alias.
+// file must list every phase of each map it carries. A map under a flow the engine does not
+// declare is accepted only when the repository ships that flow-* skill itself; called with no
+// `skillExists`, as a unit test does, the name's shape is all that is checked. A key 1.14.0
+// removed or renamed is refused with a pointer to delivery:update, which rewrites it; none is
+// an alias.
 //
 //   node check.mjs [path-to-config.json]            validate; status lines on stdout
 //   node check.mjs [path-to-config.json] --print    validate, then print the merged config
@@ -37,7 +40,7 @@
 
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -176,6 +179,14 @@ const FLOW_NAME = /^flow-[a-z0-9]+(-[a-z0-9]+)*$/;
 const PHASE_KEY = /^phase-[a-z0-9]+(-[a-z0-9]+)*(:[a-z0-9]+(-[a-z0-9]+)*)?$/;
 const AREA_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
+// Where a repository keeps its own skills, one folder per skill, per host.
+const REPO_SKILL_DIRS = ['.claude/skills', '.agents/skills', '.github/skills'];
+
+/** Whether the repository at `root` ships a skill named `name` in any host's skill folder. */
+export function repoSkillExists(root) {
+    return (name) => REPO_SKILL_DIRS.some((dir) => existsSync(join(root, dir, name, 'SKILL.md')));
+}
+
 function retiredMessage(path, reason) {
     return `${path}: removed in 1.14.0 — ${reason}. Run delivery:update, which rewrites it.`;
 }
@@ -204,7 +215,7 @@ function entrySchema(phase, schema) {
  * qualifier is there. `knowAreas` is false for an overlay read alone, whose area qualifier
  * may name an area only the committed file declares; the merged check settles those.
  */
-function checkPhases(phases, schema, { areas, complete, knowAreas }, errors) {
+function checkPhases(phases, schema, { areas, complete, knowAreas, skillExists }, errors) {
     const spec = schema.properties.phases;
     const flows = spec['x-flows'];
     const unconfigured = spec['x-unconfigured'];
@@ -216,10 +227,11 @@ function checkPhases(phases, schema, { areas, complete, knowAreas }, errors) {
             errors.push(retiredMessage(path, `${retired[flow]}, and its entries belong in flow-code's map`));
             continue;
         }
-        if (!FLOW_NAME.test(flow)) {
+        if (!FLOW_NAME.test(flow) || (!(flow in flows) && skillExists && !skillExists(flow))) {
             errors.push(
                 `phases: unknown flow "${flow}" — a map is keyed by a flow's skill name: ` +
-                    `${Object.keys(flows).join(', ')}, or a repo-native flow-*`,
+                    `${Object.keys(flows).join(', ')}, or a repo-native flow-* skill this repository ships ` +
+                    `under ${REPO_SKILL_DIRS.join(', ')}`,
             );
             continue;
         }
@@ -282,7 +294,7 @@ function checkPhases(phases, schema, { areas, complete, knowAreas }, errors) {
  * overlay's maps are partial. `merged: true` marks the result of a merge, which carries
  * every layer's `areas`, so its area qualifiers are checked as well.
  */
-export function checkStackConfig(config, schema, { overlay = false, merged = false } = {}) {
+export function checkStackConfig(config, schema, { overlay = false, merged = false, skillExists } = {}) {
     const errors = [];
     const owned = ownedKeys(schema);
     const retired = schema['x-retired'] ?? {};
@@ -301,6 +313,23 @@ export function checkStackConfig(config, schema, { overlay = false, merged = fal
                 errors.push(retiredMessage(`bindings["${binding}"]`, reason));
                 delete value[binding];
             }
+        }
+        if (key === 'policy' && isPlainObject(value)) {
+            value = { ...value };
+            for (const [name, reason] of Object.entries(retired.policy ?? {})) {
+                if (!(name in value)) continue;
+                errors.push(retiredMessage(`policy["${name}"]`, reason));
+                delete value[name];
+            }
+        }
+        if (key === 'gates' && Array.isArray(value)) {
+            value = value.map((gate, i) => {
+                const reason = retired.gateUnattended?.[gate?.unattended];
+                if (!isPlainObject(gate) || reason === undefined) return gate;
+                errors.push(retiredMessage(`gates[${i}].unattended`, `"${gate.unattended}" — ${reason}`));
+                const { unattended: _, ...rest } = gate;
+                return rest;
+            });
         }
         const before = errors.length;
         validate(value, schema.properties[key], schema, key, errors);
@@ -334,7 +363,7 @@ export function checkStackConfig(config, schema, { overlay = false, merged = fal
         checkPhases(
             config.phases,
             schema,
-            { areas: config.areas, complete: !overlay, knowAreas: !overlay || merged },
+            { areas: config.areas, complete: !overlay, knowAreas: !overlay || merged, skillExists },
             errors,
         );
     }
@@ -494,7 +523,12 @@ export function resolveStackConfig(target, schema, options) {
         return { config, layers, merged: null, lines, errors };
     }
 
-    const committedErrors = checkStackConfig(config, schema);
+    // A repo-native flow's map is accepted only when the repository ships that skill, so a
+    // misspelt flow-code is refused rather than read as a flow nobody runs. The repository is
+    // the folder holding .devbook/, or the target's own folder for a config read from elsewhere.
+    const folder = dirname(target);
+    const skillExists = options?.skillExists ?? repoSkillExists(basename(folder) === '.devbook' ? dirname(folder) : folder);
+    const committedErrors = checkStackConfig(config, schema, { skillExists });
     if (committedErrors.length) errors.push({ label: target, errors: committedErrors });
     else lines.push(`${target}: ok`);
 
@@ -505,7 +539,7 @@ export function resolveStackConfig(target, schema, options) {
     // committed file's: it may carry `ext`.
     let merged = config;
     for (const { scope, path, overlay } of layers.filter((layer) => layer.present)) {
-        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema, { overlay: true })];
+        const localErrors = [...checkLocalOverlay(overlay), ...checkStackConfig(overlay, schema, { overlay: true, skillExists })];
         if (localErrors.length) {
             errors.push({ label: path, errors: localErrors });
             return { config, layers, merged: null, lines, errors };
@@ -513,7 +547,7 @@ export function resolveStackConfig(target, schema, options) {
         lines.push(`${path}: ok (${scope} overlay)`);
 
         merged = mergeStackConfig(merged, overlay);
-        const mergedErrors = checkStackConfig(merged, schema, { overlay: true, merged: true });
+        const mergedErrors = checkStackConfig(merged, schema, { overlay: true, merged: true, skillExists });
         if (mergedErrors.length) {
             errors.push({ label: `${target} + ${scope} overlay`, errors: mergedErrors });
             return { config, layers, merged: null, lines, errors };

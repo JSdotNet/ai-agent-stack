@@ -8,7 +8,7 @@
       "phase-implement": { "model": "opus" },
       "phase-review": { "model": "opus" },
       "phase-build-test": { "model": "sonnet" },
-      "phase-verify": { "agent": null, "model": "sonnet" },
+      "phase-verify": { "model": "sonnet" },
       "phase-spec-check": { "model": "opus" },
       "phase-create-pr": {},
       "phase-report-back": { "model": "haiku" },
@@ -29,8 +29,7 @@
     }
   },
   "policy": {
-    "qa.depth": "startup-only",
-    "validate.retryBudget": 0
+    "qa.depth": "startup-only"
   },
   "gates": [
     {

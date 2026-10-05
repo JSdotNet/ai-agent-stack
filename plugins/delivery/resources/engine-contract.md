@@ -332,7 +332,7 @@ below, not a second mechanism.
 | `purpose` | `approval`, `resource`, `cost`, `risk`, `handoff` | What kind of question this is, which decides what it must show. |
 | `prompt` | free text | The question, in the user's terms. Optional; the purpose supplies a default. |
 | `show` | `artifact`, `summary`, `none` | `artifact` renders the phase's output through the surface — the specification itself, not a description of it. Default `summary`. |
-| `unattended` | `block`, `proceed`, `skip-point` | What an unattended run does here. `skip-point` skips the phase. Default `block`. |
+| `unattended` | `block`, `proceed`, `skip-phase` | What an unattended run does here. `skip-phase` skips the phase. Default `block`. |
 
 A gate applies in every flow that has its phase. A gate at a phase the flow lacks is inert in
 that flow, so `{ "at": "phase-verify" }` never stops a `flow-spec` run.
@@ -366,7 +366,7 @@ what is done, what is not, the exact resume invocation — not "wait forever". A
 that parks after `phase-scope` with the specification in its brief is strictly better than one
 that implements something speculative for an hour first.
 
-`proceed` is for a gate that only exists to inform an attended run. Reach for `skip-point`
+`proceed` is for a gate that only exists to inform an attended run. Reach for `skip-phase`
 rarely: a gate before `phase-verify` that skips the phase silently drops QA, which is the
 degradation the `decline` row exists to prevent.
 
@@ -381,7 +381,6 @@ key means the engine's own choice rather than undefined.
 | `qa.ceiling` | same set | `full` |
 | `review.retryBudget` | integer ≥ 0 | `1` — rounds of review blockers back to `phase-implement`, per slice |
 | `ready.retryBudget` | integer ≥ 0 | `2` — rounds the ready check sends back to `phase-implement`, or `phase-drafting` |
-| `validate.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
 | `commit.at` | `gate`, `manual` | `manual` |
@@ -389,8 +388,8 @@ key means the engine's own choice rather than undefined.
 | `pr.base` | a branch name | the repository's default branch |
 | `phases.updateBase` | boolean | `true` |
 | `phases.review` | boolean | `true` |
-| `phases.verification` | boolean | `true` — turns `phase-spec-check` on or off |
-| `phases.workItemUpdate` | boolean | `true` — turns `phase-report-back` on or off |
+| `phases.specCheck` | boolean | `true` — turns `phase-spec-check` on or off |
+| `phases.reportBack` | boolean | `true` — turns `phase-report-back` on or off |
 | `openspec.scenarios` | `advisory`, `linked` | `advisory` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that

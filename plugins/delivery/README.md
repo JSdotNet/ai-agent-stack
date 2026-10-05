@@ -153,11 +153,11 @@ skill changes who runs capture, never whether it runs.
 |---|---|
 | `FLOW-DIAGRAMS.md` | Stage order, gates, and handoff points for every flow — read by people, loaded by no host |
 | `agents/flow-runner.agent.md` | The one agent: sequences the phases, resolves the config, enforces the gate |
-| `resources/flow-phases.md` | Which phases each tier runs, and the opening and closing phases in full |
-| `resources/engine-contract.md` | Extension points, gates, policy, the stack config and its overlays, bindings, the two git workflows, and host slots |
+| `resources/flow-phases.md` | The phase order of both flows, and every phase without a skill of its own, in full |
+| `resources/engine-contract.md` | The phase list and the `phases` map, gates, policy, the stack config and its overlays, bindings, the two git workflows, and host slots |
 | `resources/surface-contract.md` | The surface capability, how a surface is bound, and the reporting contract every flow follows |
 | `resources/flow-execution-model.md` | Session ownership, delegation order, sub-agent constraints, session handoff |
-| `resources/flow-model-selection.md` | Category → model resolution and the personal override |
+| `resources/phase-resolution.md` | How a phase entry resolves into inline, delegated, or forked, and the effort runners |
 | `resources/capture-contract.md` | What evidence is captured, when it is required, and what an unavailable capture blocks |
 | `resources/config.schema.json` | The four engine-owned keys and the repository `id`, as a schema |
 | `resources/config-template.json` | A filled-in starting point to copy |

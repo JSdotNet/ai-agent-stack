@@ -30,8 +30,8 @@ owner session's context for the rest of the run — re-sent, and re-billed, on e
 turn. Run in a sub-agent it costs one summary instead.
 
 - **Invoke it with a single `Agent` call** in the **same worktree** (no `isolation`), using
-  the model resolved for this phase's category per
-  `resources/flow-model-selection.md`.
+  the model resolved for this phase per
+  `resources/phase-resolution.md`.
 - **Ask for a summary, never logs.** The sub-agent returns the structured **Outputs** below:
   results, counts, and the failing targets with the specific error lines that matter. It
   does not return build transcripts, full test output, or restated command invocations.

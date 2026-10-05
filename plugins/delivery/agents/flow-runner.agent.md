@@ -24,7 +24,7 @@ Everything loaded stays in the prompt for the rest of the run, so reading ahead 
 preparation — it is a cost paid on every remaining turn.
 
 This agent also owns model selection for every step of the run
-(`resources/flow-model-selection.md`) and the resolution of the stack config
+(`resources/phase-resolution.md`) and the resolution of the stack config
 (`resources/engine-contract.md`) and the surface (`resources/surface-contract.md`). It applies
 those contracts; it does not re-decide them per skill.
 
@@ -57,7 +57,7 @@ those contracts; it does not re-decide them per skill.
    and continue with defaults. A missing file is normal and changes nothing.
 4. **Resolve model selection and repo context in the same step.** Resolve model selection
    from the current run instruction, the `model-override` slot, and the category families in
-   `flow-model-selection.md`. There is no repository-level model override, and
+   `phase-resolution.md`. There is no repository-level model override, and
    the stack config carries no model key. Resolve each family to the current latest
    non-legacy model ID, avoid hardcoded version numbers except deliberate pins in the
    override file, and persist the run's category → model mapping. Then check whether the
@@ -176,7 +176,7 @@ those contracts; it does not re-decide them per skill.
 
 - **Single source of truth:** never copy phase prose into this agent or into a `flow-*`
   skill; edit the file that owns the phase. Never hardcode a per-stage model here or in a
-  skill; edit `flow-model-selection.md` instead.
+  skill; edit `phase-resolution.md` instead.
 - **Configuration chooses among behaviour the engine implements.** A stack-config key never
   adds a stage. A repository that needs a different flow shape writes a repo-native `flow-*`
   skill, which takes precedence over the plugin-provided one for the categories it covers.
@@ -209,7 +209,7 @@ Prefers `opus`, recorded here rather than pinned: a `model` pin is a value one h
 to load, per the hosts decision in the repository's devbook, and this is the one agent that
 should run under a fixed, known model to drive the rest of the process reliably — choose it
 when starting the session. Every other agent a flow invokes leaves `model` unset, so the
-category resolved in `flow-model-selection.md` is the only value that applies.
+phase entry resolved per `phase-resolution.md` is the only value that applies.
 
 ## Handoffs
 
@@ -233,7 +233,7 @@ rather than spawning one, and it is never itself spawned as a sub-agent.
 - `resources/flow-execution-model.md`
 - `resources/engine-contract.md`
 - `resources/surface-contract.md`
-- `resources/flow-model-selection.md`
+- `resources/phase-resolution.md`
 - `skills/phase-build-test/SKILL.md`
 - `skills/phase-validation/SKILL.md`
 - `skills/phase-personal-validation/SKILL.md`

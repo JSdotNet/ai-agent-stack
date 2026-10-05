@@ -8,7 +8,7 @@ description: 'Run any change to a repository outside its devbook folders, end to
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
-follows `resources/flow-model-selection.md`.
+follows `resources/phase-resolution.md`.
 
 ## Input Expectations
 
@@ -54,7 +54,7 @@ architectural decision, a new bounded context, or a cross-cutting redesign goes 
 first, and the user decides.
 
 **Agents:** the flow-runner owns the decision half; the identification bullets go to a
-read-only search sub-agent per **Splitting Scope Discovery** in
+read-only search sub-agent per **Scope Searches, the Runner Decides** in
 `resources/flow-execution-model.md`. The `architecture` role only when architectural
 impact is suspected.
 

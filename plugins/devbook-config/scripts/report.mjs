@@ -454,7 +454,7 @@ function buildRepository(repoRoot) {
     });
 
     // The personal model-selection file the delivery `model-override` slot resolves to
-    // (plugins/delivery/resources/flow-model-selection.md): the variable when set, else
+    // (plugins/delivery/resources/engine-contract.md, Host Slots): the variable when set, else
     // the file beside the overlays. Reported so a run at category defaults is a choice.
     const modelSelectionPath = env.CLAUDE_FLOW_MODEL_SELECTION_PATH
         ? resolve(env.CLAUDE_FLOW_MODEL_SELECTION_PATH)

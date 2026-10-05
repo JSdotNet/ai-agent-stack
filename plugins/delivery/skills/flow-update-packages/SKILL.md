@@ -22,7 +22,7 @@ major-version adoption, supported framework baselines — or when adopting a new
 changes the target architecture. Recommend `flow-spec` to record it, and ask the user.
 
 Agent transitions follow `resources/flow-phases.md`; per-stage model choice
-follows `resources/flow-model-selection.md`.
+follows `resources/phase-resolution.md`.
 
 ## Input Expectations
 

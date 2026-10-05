@@ -1,36 +1,38 @@
 ---
 name: engine-contract
-description: The contract between the delivery engine and everything a repository plugs into it — the closed set of flow extension points (services and chores), the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the two git workflows a change runs in, and the host slots.
+description: The contract between the delivery engine and everything a repository plugs into it — the closed phase list and the phases map that configures each phase, the gates mechanism, the policy keys, the .devbook/config.json stack config and the overlays a machine keeps over it, the bindings, the two git workflows a change runs in, and the host slots.
 ---
 
 # Engine Contract
 
-Everything a repository plugs into the engine is named here: the points it fills with
-providers, the gates it adds, the policy it sets, and the roles, tracker, and host slots it
-binds. The surface a run reports through is `surface-contract.md` beside this file. Read this
-file once, when the run resolves its stack config.
+Everything a repository plugs into the engine is named here: who runs each phase and how, the
+gates it adds, the policy it sets, and the tracker, surface, and host slots it binds. The
+surface a run reports through is `surface-contract.md` beside this file, and how one phase's
+fields resolve into the way it runs is `phase-resolution.md`. Read this file once, when the run
+resolves its stack config.
 
 Three rules hold across all of it, and they are the reason the engine stays reusable:
 
-1. **The engine names; the repository fills.** The point set, the gate mechanism, the policy
+1. **The engine names; the repository fills.** The phase list, the gate mechanism, the policy
    keys, and the surface capabilities are closed and declared by the engine. A repository
-   picks what runs at a point; it never invents a point, a policy key, or a stage.
+   picks who runs a phase and how; it never invents a phase, a policy key, or a stage.
 2. **Configuration chooses among behaviour the engine already implements.** It never
    introduces new behaviour. A repository that needs a different stage sequence writes a
    repo-native `flow-*` skill, which takes precedence for the categories it covers.
 3. **A lower layer never names a higher one, and the engine names no specialist.** It names
-   points, roles, and capabilities; a repository names the plugin that fills one. No
+   phases and capabilities; a repository names the agent or skill that runs one. No
    specialist, content plugin, or surface is ever modified to know about the engine, and the
    `your-*` and `repo:*` ids below are placeholders — for whatever you installed, and for a
    skill the repository writes itself. Every other id in an example names a skill that ships.
 
 ## The Stack Config
 
-`.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys
-and never edits another component's. `components` belongs to each component's own `init` and `update` skills.
+`.devbook/config.json`, repo-scope and committed. The engine owns four top-level keys —
+`bindings`, `phases`, `policy`, `gates` — and the optional `areas`, and never edits another
+component's. `components` belongs to each component's own `init` and `update` skills.
 The one write a component makes to an engine key is a migration renaming an id it retired, per
 devbook's `assets/reconcile-protocol.md` under *The stamp*.
-`id` sits beside the four and is not a setting: it names the repository, once, so a machine can
+`id` sits beside them and is not a setting: it names the repository, once, so a machine can
 keep an overlay for it — see below.
 
 The path is a path, not a dependency: the engine reads that file whether or not the repository
@@ -40,61 +42,77 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 {
   "id": "your-repo",
   "bindings": {
-    "delivery.tracker": { "provider": "github" },
-    "delivery.roles": {
-      "architecture": "your-architecture-plugin",
-      "qa":           "your-qa-plugin",
-      "domain":       "your-domain-plugin",
-      "ux":           "your-ux-plugin",
-      "docs":         "your-docs-plugin",
-      "product":      null,
-      "security":     null
-    },
-    "delivery.mcp": {
-      "spec":        [ "your-guidelines-server" ]
-    }
+    "delivery.tracker": { "provider": "github" }
   },
-  "extensions": {
-    "session.start": [ "devbook:validate" ],
-    "spec":          "your-architecture-plugin:draft-spec",
-    "implement":     "your-coding-plugin:coding",
-    "validate":        "your-coding-plugin:coding",
-    "data.prepare":  [ { "run": "repo:seed-test-data", "on-failure": "required" } ],
-    "app.start":     { "provider": "your-qa-plugin:qa", "host": "aspire" },
-    "qa.run":        { "provider": "your-qa-plugin:qa" },
-    "verify":        "devbook:verify-change",
-    "flow.end":      [ "repo:capture-improvement" ]
+  "areas": {
+    "frontend": [ "src/**/*.UI/**" ],
+    "backend":  [ "src/**", "tests/**" ]
+  },
+  "phases": {
+    "flow-code": {
+      "phase-update-base":        { "before": [ "devbook:validate" ] },
+      "phase-scope":              { "agent": "your-architecture-plugin:architect", "model": "opus", "mcp": [ "your-guidelines-server" ] },
+      "phase-plan":               { "agent": "your-architecture-plugin:architect", "model": "opus" },
+      "phase-implement":          { "agent": "your-coding-plugin:coding", "model": "opus", "effort": "high" },
+      "phase-implement:frontend": { "model": "sonnet" },
+      "phase-review":             { "model": "opus", "effort": "high" },
+      "phase-build-test":         { "model": "sonnet", "effort": "low" },
+      "phase-verify":             { "agent": "your-qa-plugin:qa", "skill": "repo:show",
+                                    "before": [ { "run": "repo:seed-test-data", "on-failure": "required" } ] },
+      "phase-spec-check":         { "skill": "devbook:verify-change", "model": "opus" },
+      "phase-create-pr":          {},
+      "phase-report-back":        { "model": "haiku", "targets": [ "origin", "linked" ] },
+      "phase-summary":            { "after": [ "repo:capture-improvement" ] }
+    },
+    "flow-spec": {
+      "phase-update-base":     {},
+      "phase-scope":           {},
+      "phase-drafting:arc42":  { "agent": "your-architecture-plugin:architect", "model": "opus" },
+      "phase-drafting:tech":   { "agent": "your-architecture-plugin:architect", "model": "opus" },
+      "phase-drafting:domain": { "agent": "your-domain-plugin:domain-architect", "model": "opus" },
+      "phase-drafting:design": { "agent": "your-ux-plugin:ux-designer", "model": "sonnet" },
+      "phase-drafting:ai":     { "agent": "your-docs-plugin:documentation", "model": "haiku" },
+      "phase-check-review":    {},
+      "phase-create-pr":       {},
+      "phase-report-back":     { "model": "haiku" },
+      "phase-summary":         {}
+    }
   },
   "policy": {
     "qa.depth":               "targeted",
-    "validate.retryBudget":     2,
+    "review.retryBudget":     1,
+    "ready.retryBudget":      2,
     "gate.reviseBudget":      3,
     "commit.at":              "gate",
     "pr.required":            true,
     "pr.base":                "main"
   },
   "gates": [
-    { "at": "spec", "when": "after", "purpose": "approval",
+    { "at": "phase-scope", "when": "after", "purpose": "approval",
       "prompt": "Spec approved, or revise?", "show": "artifact", "unattended": "block" }
   ]
 }
 ```
 
-- **The file is optional, and so is every engine key in it.** Absent, every point falls back
-  to its default provider, no extra gate exists, and every policy key takes the default in the
-  table below. Only the engine reads the four keys, so a repository that adopted devbook and
-  not `delivery` carries `id` alone and validates. A malformed file is reported once and then
-  ignored; it never blocks a run.
+- **The file is optional, and so is every engine key in it.** Absent, every phase runs its
+  built-in procedure on the session's settings, no extra gate exists, and every policy key
+  takes the default in the table below. Only the engine reads its keys, so a repository that
+  adopted devbook and not `delivery` carries `id` alone and validates. A malformed file is
+  reported once and then ignored; it never blocks a run. A present `phases` map is checked for
+  completeness — see **Phases** below.
 - **An unknown key is rejected, not ignored** — the same way a plugin manifest rejects an
   unknown field. Report it by name and stop, so a typo is never a silently absent setting.
+  `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by
+  name with "run delivery:update": the migration rewrites them into `phases`, and no alias
+  keeps them alive.
 - **`null` means deliberately unbound**, which is different from absent. Absent means nobody
   has decided; `null` means somebody decided no.
-- **No model ever appears in this file.** Model choice is personal — see
-  `flow-model-selection.md`.
+- **A model or an effort here is a team default.** Every overlay below wins field by field,
+  so nobody's own cost choice is taken away — see `phase-resolution.md`.
 - **No secrets.** The file is committed. A credential pointer belongs in the repository's
   `run` recipe, and the value belongs in a secret store.
 - **Validate it before trusting it.** `node tools/stack-config/check.mjs [path]` checks `id` and the
-  four engine-owned keys against `resources/config.schema.json` and exits non-zero on
+  engine-owned keys against `resources/config.schema.json` and exits non-zero on
   the first problem. It ignores `components`, which each component validates itself, and
   rejects by name any *other* top-level key — the only two owners are the engine and a
   component, so a third name is a misspelling of one of them.
@@ -131,15 +149,18 @@ when nothing personal is ever written into it. The repository layer is keyed on 
 than on a path or a remote because an id survives a move, a re-clone, and a worktree, and is
 absent only when the repository never chose one — then that layer is skipped.
 
-Every layer carries the same four keys, validated against the same schema, and merges the
+Every layer carries the same engine keys, validated against the same schema, and merges the
 same way:
 
 | Shape | Merges by |
 | --- | --- |
-| Object | Key by key, the overlay winning. A sibling the overlay does not name is left standing. |
+| Object | Key by key, the overlay winning. A sibling the overlay does not name is left standing. A phase entry is an object, so an overlay's `{ "effort": "xhigh" }` changes that one field and keeps the committed agent and model. |
 | Array | Replaced whole. A chore list is an ordered whole, and half of one from each file is a run nobody wrote down. |
 | `gates` | **Appended.** An overlay can add a checkpoint and has no way of spelling the removal of one — at any layer, of any layer beneath it. |
 | `null` | A value — deliberately unbound — never a delete. |
+
+An overlay's `phases` is partial: it names only the flows and phases it changes. Completeness
+is checked on the committed file alone.
 
 Six things an overlay may not say, and the checker refuses each by name:
 
@@ -156,8 +177,9 @@ That list is the whole safety story, and it is worth stating plainly: **a file n
 sees must never be able to weaken what a reviewer sees.** Everything a reader of the committed
 config would conclude about the gates a run passes, the pull request it opens, and the deepest
 QA it may reach stays true no matter what any overlay says. What an overlay changes is the cost
-and the wiring of your own run — shallower QA, a local role binding, a different MCP server, a
-zeroed retry budget, an extra checkpoint of your own.
+and the wiring of your own run — shallower QA, a phase's agent, model, or effort, a different
+MCP server, a zeroed retry budget, an extra checkpoint of your own. A model or an effort is a
+cost choice, not a guard, which is why an overlay may override one.
 
 One thing an overlay may say that the committed file may not: **`ext`**, the machine-scope
 counterpart of `components`. `ext.<plugin>.<key>` holds what a plugin needs to remember about
@@ -176,56 +198,99 @@ together and naming the layer that broke it; `--print` then hands the merge to w
 `devbook-config:local` writes one from your answers.
 
 **Gitignored is not private, and neither is your home directory.** No secret, the same as
-the committed file, and no model the engine reads — flow model choice stays in the file the
-`model-override` slot names: an overlay is read by every agent in your session and pasted
-into a bug report as readily as anything else.
+the committed file: an overlay is read by every agent in your session and pasted into a bug
+report as readily as anything else.
 
-## Extension Points
+## Phases
 
-The point set is closed. Every point is either a **service** — exactly one provider,
-returning a result the flow acts on — or a **chore** — zero or more, in declared order,
-producing side effects and a report.
+The phase list is closed. A phase has a stable id, is one skill named `phase-<id>`, and has one
+entry per flow in `phases`. Configuration chooses who runs a phase and how; it never adds,
+removes, or reorders one. The order each flow runs them in, and what each phase does, are in
+`flow-phases.md`.
 
-| Point | Kind | When | Contract |
+| Phase skill | `flow-code` | `flow-spec` | Runs by default |
 | --- | --- | --- | --- |
-| `session.start` | chore | Once, before the first flow | Load context, check environment and tooling, warn early. Distinct from the host's own session-start hook, which is settings-level and knows nothing about flows. |
-| `flow.start` | chore | After Stage 0 resolves scope | Augment the scope record with repository-specific constraints. May not redefine it; a replan chore, below, may stop the run instead. |
-| `spec` | service | Specification and architecture intake | Scope and acceptance criteria → the specification the rest of the flow builds on. Unbound: the flow-runner writes it inline. The highest-value gate attaches here. |
-| `implement` | service | The implementation stage | An area plus a change brief, or a `validate` failure to repair → a change set and what was tested. Unbound: the flow implements inline with generic practice and says so in the summary. |
-| `validate` | service | After each `implement` pass | An area and its change set → build result, suite results, failing targets with the error lines that matter. Default provider: `phase-build-test`. |
-| `data.prepare` | chore | Before `app.start` and `qa.run` | Seed data, fixtures, credentials. The most repository-specific point in the set — usually a `repo:` skill. |
-| `app.start` | service | Runtime is needed | Start the application → base URLs, a health verdict, a log and trace stream. Default provider: `phase-validation`. |
-| `qa.run` | service | QA depth is not `skipped` | Scenarios → evidence. Default provider: `phase-validation`. |
-| `deliver` | service | After approval | Open the change for review and, once `verify` has reported, update the work item. Default provider: the `pr-lane` slot plus the bound tracker. |
-| `verify` | service | After the pull request, before Work Item Update | The specification the run built on, the governed chapters the change set touches, and the change set → one verdict per item — `aligned`, `spec-ahead`, `code-ahead`, `conflict`, `unresolved` — with the evidence that settles it and what each calls for. Report-only: it edits nothing and commits nothing. Unbound: the flow-runner reaches the verdicts itself. |
-| `flow.end` | chore | Always, last | Contribute to the run summary and capture what this run learned. |
+| `phase-update-base` | yes | yes | inline |
+| `phase-scope` | yes | yes | fork |
+| `phase-plan` | `create` kind only | — | delegated |
+| `phase-implement[:<area>]` | yes | — | fork |
+| `phase-review` | yes | — | fork |
+| `phase-build-test` | yes | — | delegated |
+| `phase-verify` | yes | — | delegated |
+| `phase-spec-check` | yes | — | delegated |
+| `phase-drafting[:<folder>]` | — | yes | delegated, per folder |
+| `phase-check-review` | — | yes | inline |
+| `phase-ready` | yes, never configured | yes, never configured | inline |
+| `phase-personal-validation` | yes, never configured | yes, never configured | inline |
+| `phase-create-pr` | yes | yes | inline |
+| `phase-report-back` | yes | yes | delegated |
+| `phase-summary` | yes | yes | inline |
 
-**Services decide; chores contribute.** A chore may fail, and its failure is fatal when it
-declared `on-failure: "required"` — but a chore can never alter the flow's decision, rewrite
+**The map.** `phases.<flow>.<phase>[:<qualifier>]`. The first level is the flow's skill name —
+`flow-code`, `flow-spec`, or a repo-native `flow-*` — and the second the phase's skill name.
+The qualifier is the flow's own variant: the devbook folder on `phase-drafting`, an area on
+`phase-implement`. There is no kind qualifier: what a kind needs is `phase-implement`'s call.
+
+| Field | Values | Absent means |
+| --- | --- | --- |
+| `agent` | `plugin:agent`, `repo:<agent>`, or `null` to force inline | The phase skill's own default — see `phase-resolution.md` |
+| `skill` | `plugin:skill` or `repo:<skill>`: the procedure the phase follows | The phase's built-in procedure, `delivery:phase-<id>` |
+| `model` | `opus`, `sonnet`, `haiku`, `fable`, a full model id, or `inherit` | The session's model |
+| `effort` | `low`, `medium`, `high`, `xhigh`, `max`, or `inherit` | The session's effort |
+| `mcp` | Server ids from the repository's own MCP configuration, or `null` for none | The phase's default servers — **MCP Server Strategy** in `flow-execution-model.md` |
+| `before`, `after` | Chore lists, below | No chores |
+| `app` | `phase-verify` only: the provider that starts the application and returns base URLs and a health verdict, or `null` for nothing to start | The repository's `run` recipe |
+| `targets` | `phase-report-back` only: an array of `origin`, `linked`, and `plugin:skill` or `repo:<skill>` destinations | `[ "origin" ]` |
+
+**Rules the checker enforces:**
+
+- **Each committed map is complete.** It lists every phase its flow has, and nothing else: a
+  missing phase, a phase the flow lacks — a drafting entry under `flow-code` — or a map under
+  an unknown flow is rejected by name. `{}` is a complete entry, meaning the session's
+  settings and the built-in procedure. A repo-native `flow-*` declares its phase ids in its
+  body, and the checker accepts a map under its name.
+- **A qualified phase is complete with its bare entry or one entry per qualifier.** A qualifier
+  entry beside a bare one overrides it field by field.
+- **Nothing crosses flows.** `flow-spec` never reads `flow-code`'s entries; the shared closing
+  phases are written once per map.
+- **Personal Validation and the ready check take no entry.** A `phase-personal-validation` or
+  `phase-ready` key is refused in any map, at any layer, the way an override of
+  `policy.gate.personalValidation` is.
+
+**Chores.** `before` and `after` hold zero or more chores, in declared order, each producing
+side effects and a report. An entry is a string or `{ "run": …, "on-failure": "required"|"advisory" }`;
+`advisory` is the default and puts a failure in the summary instead of stopping the run. A
+chore's id may carry `--flag` arguments after it — `your-plugin:your-skill --replan` — which
+the skill receives as its arguments; they are no part of the id it resolves by. A phase's
+`skill` takes none. Where the 1.13.0 chore points went:
+
+| Was | Is |
+| --- | --- |
+| `session.start` | `phase-update-base.before` |
+| `flow.start` | `phase-scope.after` |
+| `data.prepare` | `phase-verify.before` |
+| `flow.end` | `phase-summary.after` |
+
+**Phases decide; chores contribute.** A chore may fail, and its failure is fatal when it
+declared `on-failure: "required"` — but a chore can never alter a phase's decision, rewrite
 a stage's result, or stand in for a gate. Without that line an injected chore becomes an
 invisible second implementation of the flow, which is the thing the engine exists to prevent.
 
-**Declaring a provider.** A service takes one provider — a string, or an object whose
-`provider` key names it and whose other keys are options that provider understands. A chore
-takes an array, each entry a string or `{ "run": …, "on-failure": "required"|"advisory" }`;
-`advisory` is the default and puts a failure in the summary instead of stopping the run.
-A chore's id may carry `--flag` arguments after it — `your-plugin:your-skill --replan` — which
-the skill receives as its arguments; they are no part of the id it resolves by.
+**Ids.** An `agent` is `plugin:agent` or `repo:<agent>`; a `skill` or a chore is
+`plugin:skill` or `repo:<skill>`, a repo-native skill the host loads with no marketplace
+involved. An id that does not resolve degrades to the phase's built-in behaviour, named once
+in the run summary — never a silent skip, and never a reason to fail the run.
+`devbook-config:doctor` resolves them ahead of time.
 
-A provider id is `plugin:skill`, a bare `plugin` (resolved through its role), or
-`repo:<skill>` for a repo-native skill the host loads with no marketplace involved. A
-provider that does not resolve degrades to the point's unbound behaviour, named once in the
-run summary — never a silent skip, and never a reason to fail the run.
+**A `phase-scope` skill may return a specification approved elsewhere.** Bound as
+`"skill": "your-spec-plugin:your-approved-spec-skill"`, it reads the specification the work
+item points at, already approved where it was written, and returns it unchanged. The
+flow-runner uses what it returns as the run's specification: it derives nothing inline and
+neither rewrites nor supplements it. A gate after `phase-scope` with `show: artifact` renders
+that returned specification — what the skill returned, not a summary of it — and `revise`
+re-runs it with the notes, as at any phase.
 
-**A `spec` provider may return a specification approved elsewhere.** Bound as
-`"spec": "your-spec-plugin:your-approved-spec-skill"`, it reads the specification the work item
-points at, already approved where it was written, and returns it unchanged. The flow-runner
-uses what it returns as the run's specification: it derives nothing inline and neither
-rewrites nor supplements it. A `spec` approval gate with `show: artifact` renders that
-returned specification — what the provider returned, not a summary of it — and `revise`
-re-runs the provider with the notes, as at any point.
-
-**A `flow.start` chore may replan.** A run that builds one step of a larger agreed change
+**A `phase-scope.after` chore may replan.** A run that builds one step of a larger agreed change
 starts from a plan agreed before the base moved under it. Update Base fixes the branch and says
 nothing about whether the plan still holds, so a replan chore — bound as
 `{ "run": "your-change-plugin:your-status-skill --replan", "on-failure": "required" }` — checks
@@ -244,9 +309,14 @@ the change's own revision, and a revised chapter change goes back through its ap
 replan rewrites no chapter change and no step, and never runs on a schedule: a plan is
 re-checked when someone is about to act on it.
 
+**A `phase-spec-check` skill decides whether the phase updates.** A skill that declares
+`updates: true` in its own contract may bring `code-ahead` chapters level inside the change
+set; any other skill only reports. The limits on an updating skill are in **Phase: Spec
+Check** (`flow-phases.md`).
+
 ## Gates
 
-A gate is the human-in-the-loop mechanism. It presents the output of the point it is attached
+A gate is the human-in-the-loop mechanism. It presents the output of the phase it is attached
 to and asks a question about it.
 
 **The asymmetry is what makes gates safe: configuration may add a gate anywhere; it may never
@@ -257,32 +327,35 @@ below, not a second mechanism.
 
 | Field | Values | Means |
 | --- | --- | --- |
-| `at` | any point name | The point the gate attaches to. |
-| `when` | `before`, `after` | Which side of that point. |
+| `at` | a phase skill name, without qualifier | The phase the gate attaches to — `phase-scope`, `phase-create-pr`. Never `phase-personal-validation` or `phase-ready`. |
+| `when` | `before`, `after` | Which side of that phase. |
 | `purpose` | `approval`, `resource`, `cost`, `risk`, `handoff` | What kind of question this is, which decides what it must show. |
 | `prompt` | free text | The question, in the user's terms. Optional; the purpose supplies a default. |
-| `show` | `artifact`, `summary`, `none` | `artifact` renders the point's output through the surface — the specification itself, not a description of it. Default `summary`. |
-| `unattended` | `block`, `proceed`, `skip-point` | What an unattended run does here. Default `block`. |
+| `show` | `artifact`, `summary`, `none` | `artifact` renders the phase's output through the surface — the specification itself, not a description of it. Default `summary`. |
+| `unattended` | `block`, `proceed`, `skip-point` | What an unattended run does here. `skip-point` skips the phase. Default `block`. |
+
+A gate applies in every flow that has its phase. A gate at a phase the flow lacks is inert in
+that flow, so `{ "at": "phase-verify" }` never stops a `flow-spec` run.
 
 | Purpose | Typical placement | What it must show |
 | --- | --- | --- |
-| `approval` | after `spec` | The specification itself, rendered. The one most repositories should turn on. |
-| `resource` | before `app.start` | Just the question — "only one runtime instance runs here, OK to start?" |
-| `cost` | before `qa.run` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
-| `risk` | after `validate` | What the change set actually touched — migrations, auth, a public contract. |
-| `handoff` | Personal Validation | The code review, the QA evidence, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
+| `approval` | after `phase-scope` | The specification itself, rendered. The one most repositories should turn on. |
+| `resource` | before `phase-verify` | Just the question — "only one runtime instance runs here, OK to start?" |
+| `cost` | before `phase-verify` | An estimate. A gate that cannot say what it is about to spend is not helping anyone decide. |
+| `risk` | after `phase-build-test` | What the change set actually touched — migrations, auth, a public contract. |
+| `handoff` | Personal Validation | The review, the QA evidence, the spec-check table, the running application, and what to check by hand — assembled by `skills/phase-personal-validation/SKILL.md`. |
 
 ### Three outcomes, not two
 
 | Outcome | Effect |
 | --- | --- |
 | `approve` | Continue. |
-| `revise` | Re-run the point the gate is attached to, carrying the human's notes as input. The flow moves backwards, deliberately. Bounded by `policy.gate.reviseBudget`; when the budget is spent the flow stops and says so rather than cycling on something nobody can settle. |
+| `revise` | Re-run the phase the gate is attached to, carrying the human's notes as input. The flow moves backwards, deliberately. Bounded by `policy.gate.reviseBudget`; when the budget is spent the flow stops and says so rather than cycling on something nobody can settle. |
 | `decline` | Stop. Mark the stage `blocked`. **Never a silent skip** — "don't start the app" must not degrade into "continue without QA". |
 
-Attach a gate to the point you would want re-run. `{ "at": "spec", "when": "after" }` and
-`{ "at": "implement", "when": "before" }` sit in the same place in the sequence, but only the
-first makes `revise` mean "write the specification again".
+Attach a gate to the phase you would want re-run. `{ "at": "phase-scope", "when": "after" }` and
+`{ "at": "phase-implement", "when": "before" }` sit in the same place in the sequence, but only
+the first makes `revise` mean "write the specification again".
 
 ### Unattended runs
 
@@ -290,11 +363,11 @@ Many runs are unattended: a higher layer's `schedule-*` entry points fire on a c
 and a spawned worker session has no user turn. A gate that waits for a human would deadlock all of
 them, so `unattended` defaults to `block`, and `block` means **park with a handoff brief** —
 what is done, what is not, the exact resume invocation — not "wait forever". An unattended run
-that parks after `spec` with the specification in its brief is strictly better than one that
-implements something speculative for an hour first.
+that parks after `phase-scope` with the specification in its brief is strictly better than one
+that implements something speculative for an hour first.
 
 `proceed` is for a gate that only exists to inform an attended run. Reach for `skip-point`
-rarely: a gate on `app.start` that skips the point silently drops QA, which is the
+rarely: a gate before `phase-verify` that skips the phase silently drops QA, which is the
 degradation the `decline` row exists to prevent.
 
 ## Policy
@@ -304,8 +377,10 @@ key means the engine's own choice rather than undefined.
 
 | Key | Values | Default |
 | --- | --- | --- |
-| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-validation` |
+| `qa.depth` | `full`, `targeted`, `startup-only`, `skipped` | change-kind selection in `phase-verify` |
 | `qa.ceiling` | same set | `full` |
+| `review.retryBudget` | integer ≥ 0 | `1` — rounds of review blockers back to `phase-implement`, per slice |
+| `ready.retryBudget` | integer ≥ 0 | `2` — rounds the ready check sends back to `phase-implement`, or `phase-drafting` |
 | `validate.retryBudget` | integer ≥ 0 | `2` |
 | `gate.reviseBudget` | integer ≥ 0 | `3` |
 | `gate.personalValidation` | `required` | `required` — the key states the fact, it cannot soften it |
@@ -313,13 +388,14 @@ key means the engine's own choice rather than undefined.
 | `pr.required` | boolean | `true` |
 | `pr.base` | a branch name | the repository's default branch |
 | `phases.updateBase` | boolean | `true` |
-| `phases.verification` | boolean | `true` |
-| `phases.workItemUpdate` | boolean | `true` |
+| `phases.review` | boolean | `true` |
+| `phases.verification` | boolean | `true` — turns `phase-spec-check` on or off |
+| `phases.workItemUpdate` | boolean | `true` — turns `phase-report-back` on or off |
 | `openspec.scenarios` | `advisory`, `linked` | `advisory` |
 
 `commit.at` is the one policy key that binds a stage running long before the phase that
 defines it: `gate` makes Personal Validation the flow's single commit point, so **no earlier
-stage commits** and every `implement` provider is briefed to leave committing to that phase.
+stage commits** and `phase-implement` is briefed to leave committing to that phase.
 The mechanics — one commit per handback, a new commit per revise round — are in **Personal
 Validation** (`flow-phases.md`). `manual` leaves committing to the user.
 
@@ -333,39 +409,37 @@ fail offline, in a fresh repository with no remote, and on a base branch not yet
 acceptance. A scenario is proven by the test its chapter's `tests` link names; one that names
 none is **unverified**. `advisory` shows every unverified scenario at acceptance and never
 blocks on it, the way an open review note is shown at a gate; `linked` refuses acceptance
-while any scenario is unverified. The engine's part is the evidence: Validation reports each
-scenario with its link (**Reporting Contract**, `surface-contract.md`) and Verification lists
+while any scenario is unverified. The engine's part is the evidence: Verify reports each
+scenario with its link (**Reporting Contract**, `surface-contract.md`) and Spec Check lists
 the unverified ones. The refusal belongs to whatever runs the acceptance decision, which reads
 the key from the effective configuration. It is the repository's, so no overlay may set it.
 
 **QA depth resolves in one order, highest first:** `policy.qa.depth` here, then
-`phase-validation`'s change-kind selection. The first one present wins, and
+`phase-verify`'s change-kind selection. The first one present wins, and
 `policy.qa.ceiling` caps the result however it was reached. The repository's `run` recipe
 describes the application and never sets a depth. `qa.depth` may be overlaid per machine,
 `qa.ceiling` may not.
 
 ## Bindings
 
-A role, a tracker, and a host slot are bound per repository and are **never** plugin
-dependencies: one missing specialist must not demote every skill that names it.
+A tracker, a surface, and a host slot are bound per repository and are **never** plugin
+dependencies: one missing integration must not demote every skill that names it. Who runs a
+phase and which MCP servers it uses are not bindings: they are fields of the phase's entry,
+above.
 
-- **Roles.** `architecture`, `qa`, `domain`, `ux`, `product`, `security`, `docs`. A skill names the
-  role; `bindings["delivery.roles"]` says which plugin fills it. Every role reference states
-  its fallback, so no flow is ever dead because a role is unbound — a stage reads
-  *preferred: role `architecture`; fallback: inline, using the ADR template in
-  `instructions/`*. A role bound to a plugin nobody has enabled is a warning naming both
-  files, not a failure.
 - **Tracker.** `bindings["delivery.tracker"]` names the work-item system: `github` resolves
   items to issues, `jira` to tickets in a named project, `markdown` to chapters in the folder
   its `folder` key names, for a repository that plans work as Markdown, and `backlog` to entries in the
   Backlog desktop application. Operations: `find_item`, `read_item`, `create_item`, `comment`,
   `transition`, `link_change`. Unbound, a flow runs to its file artifacts and opens, comments
-  on, and transitions nothing.
+  on, and transitions nothing. The tracker says which tooling reaches an item; where a run's
+  result goes is `phase-report-back.targets`.
   Every operation resolves the same way, reported once when it first does: the bound tracker's
   own tooling first — an installed tracker plugin skill or MCP integration — then the host's
   CLI for that tracker. A skill names the operation and never the provider's command. A bound
   tracker whose tooling does not answer is reported once and the run continues as if unbound —
-  the rule the `delivery.mcp` bullet below states for a server, applied to the tracker.
+  the rule **MCP Server Strategy** (`flow-execution-model.md`) states for a server, applied to
+  the tracker.
   `backlog` resolves through its MCP integration and has no CLI behind it: the six operations
   are the `backlog` server's tools of the same name, `transition` rewrites the entry's status
   token so the entry's own lifecycle refuses an illegal move rather than the engine deciding
@@ -385,23 +459,10 @@ dependencies: one missing specialist must not demote every skill that names it.
 - **Surface.** `bindings["delivery.surface"]` orders the installed surfaces: the lifecycle
   group fans out to every one that opens, and render and export take the first that answers;
   **The Surface Capability** in `surface-contract.md` states the rule.
-- **MCP servers.** `bindings["delivery.mcp"]` says which servers each point uses, by the id
-  the repository's own MCP configuration declares — `{ "spec": ["your-guidelines-server"] }`.
-  A stage resolves the servers of the point it serves from the live tool list, by pattern,
-  since a host may namespace them. A server that does not answer is reported once, and the
-  stage continues on the repository's own instruction files and chapters — it costs that
-  stage its grounding, never the run. An absent point takes the engine default in **MCP
-  Server Strategy** (`flow-execution-model.md`); `null` binds none. The engine
-  names no server of its own beyond those defaults, and no server is ever a dependency;
-  `resources/mcp-template.json` and `resources/mcp-vscode-template.json` declare the
-  defaults in each host's shape for a repository to copy.
 - **Grill.** `bindings["openspec.grill"]` names the skill that interrogates an idea before a
   change is proposed, as `plugin:skill`, or `null` for none. The engine never reads it; it is
   carried here so the change lane's skills find it in the same effective configuration, and
   so a machine may bind its own in an overlay.
-- **Implementation is not a role.** It owns a phase, carries a toolchain, and loops with
-  validation, so it binds as the `implement` and `validate` services above rather than as an
-  advisor a stage delegates a question to.
 
 ## Git Workflows
 
@@ -446,10 +507,10 @@ is the normal case and never a gap.
 | Slot | What it resolves to | Unbound |
 | --- | --- | --- |
 | `repo-instructions` | The repository's root agent instruction file | Read `AGENTS.md` if present, else nothing |
-| `model-override` | Where a user's personal model preferences live: `CLAUDE_FLOW_MODEL_SELECTION_PATH` when set, else `<config dir>/model-selection.md` beside the overlays | Category defaults |
+| `model-override` | Where a 1.13.0 personal `model-selection.md` lives: `CLAUDE_FLOW_MODEL_SELECTION_PATH` when set, else `<config dir>/model-selection.md`. Phase resolution never reads it; `devbook-config:local` converts it into overlay `phases` entries | No file to convert |
 | `stage-delegation` | Whether sub-agents are available | Run stages inline |
 | `surface` | Which installed `delivery-surface-*` server provides each capability in `surface-contract.md`, in `bindings["delivery.surface"]` order | No surface; file artifacts only |
-| `pr-lane` | The pull-request CLI or API | No pull request — `deliver` produces file artifacts only |
+| `pr-lane` | The pull-request CLI or API | No pull request — `phase-create-pr` produces file artifacts only |
 | `session-id` | The host's own id for the current agent session. Claude Code substitutes `${CLAUDE_SESSION_ID}` in skill content, so a skill that calls `start_run` carries that token verbatim; Copilot CLI substitutes nothing in skill content and hands its session id only to hooks, in their payload | Omit `sessionId` — a token still reading `${…}` is the unbound case |
 
 **Behavioural divergence is a capability, not a host.** `stage-delegation` asks whether

@@ -73,7 +73,7 @@ test('the committed file comes out complete, valid, and in the mapping table', (
     assert.deepEqual(code['phase-scope'], { skill: 'devbook-openspec:spec', agent: 'architecture:architect', mcp: ['backlog'] });
     assert.deepEqual(code['phase-plan'], { agent: 'architecture:architect' });
     assert.deepEqual(code['phase-implement'], { agent: 'csharp-coding:coding' });
-    assert.deepEqual(code['phase-verify'], { skill: 'qa:playwright-validation', app: null });
+    assert.deepEqual(code['phase-verify'], { skill: 'qa:playwright-validation', app: null, agent: 'qa' });
     assert.deepEqual(code['phase-spec-check'], { skill: 'devbook:verify-change' });
     assert.deepEqual(code['phase-create-pr'], { mcp: ['backlog'] });
     assert.deepEqual(code['phase-summary'], { after: ['devbook:update'] });
@@ -125,3 +125,53 @@ test('a null implement forces the phase inline', () => {
     assert.deepEqual(config.phases['flow-code']['phase-implement'], { agent: null });
     assert.deepEqual(config.phases['flow-code']['phase-spec-check'], {});
 });
+
+test('a retired flow listed before flow-code still lands in flow-code', () => {
+    const input = {
+        phases: {
+            'flow-update-packages': { 'phase-implement': { effort: 'low' } },
+            'flow-project': { 'phase-plan': { model: 'opus' } },
+            'flow-code': { 'phase-implement': { model: 'sonnet' } },
+        },
+    };
+    const { config } = migrateConfig(input, { resolve });
+    assert.deepEqual(config.phases['flow-code']['phase-implement'], { model: 'sonnet', effort: 'low' });
+    assert.deepEqual(config.phases['flow-code']['phase-plan'], { model: 'opus' });
+});
+
+test('the qa role still lands when qa.run is a skill', () => {
+    const { config, notes } = migrateConfig(
+        { extensions: { 'qa.run': 'qa:playwright-validation' }, bindings: { 'delivery.roles': { qa: 'qa:qa' } } },
+        { resolve },
+    );
+    assert.deepEqual(config.phases['flow-code']['phase-verify'], { skill: 'qa:playwright-validation', agent: 'qa:qa' });
+    assert.equal(notes.some((n) => n.includes('the role is not written')), false);
+});
+
+test('a qa.run agent still wins over the qa role', () => {
+    const { config } = migrateConfig(
+        { extensions: { 'qa.run': 'qa:qa-monitor' }, bindings: { 'delivery.roles': { qa: 'qa:qa' } } },
+        { resolve },
+    );
+    assert.deepEqual(config.phases['flow-code']['phase-verify'], { agent: 'qa:qa-monitor' });
+});
+
+test('a null qa.run binds no provider, and the qa role still lands', () => {
+    const alone = migrateConfig({ extensions: { 'qa.run': null } }, { resolve });
+    assert.deepEqual(alone.config.phases['flow-code']['phase-verify'], {});
+    const withRole = migrateConfig({ extensions: { 'qa.run': null }, bindings: { 'delivery.roles': { qa: 'qa:qa' } } }, { resolve });
+    assert.deepEqual(withRole.config.phases['flow-code']['phase-verify'], { agent: 'qa:qa' });
+});
+
+test('a leftover repo:start is never carried into phase-verify.app, committed or overlay', () => {
+    const bare = migrateConfig({ extensions: { 'app.start': 'repo:start' } }, { resolve });
+    assert.deepEqual(bare.config.phases['flow-code']['phase-verify'], {});
+    assert.ok(bare.notes.some((n) => n.includes('repo:start')));
+    const wrapped = migrateConfig({ extensions: { 'app.start': { provider: 'repo:start' } } }, { overlay: true, resolve });
+    assert.deepEqual(wrapped.config, {});
+    const options = migrateConfig({ extensions: { 'app.start': { provider: 'repo:start', host: 'aspire' } } }, { resolve });
+    assert.deepEqual(options.config.phases['flow-code']['phase-verify'], { app: { provider: 'repo:run', host: 'aspire' } });
+    const other = migrateConfig({ extensions: { 'app.start': 'repo:launch' } }, { resolve });
+    assert.deepEqual(other.config.phases['flow-code']['phase-verify'], { app: 'repo:launch' });
+});
+

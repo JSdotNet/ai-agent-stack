@@ -17,11 +17,11 @@ per `.devbook/arc42/adr/configuration.md` in the marketplace. The script rewrite
 | `extensions.spec` · `deliver` | `phase-scope.skill` · `phase-create-pr.skill`, in both maps |
 | `extensions.implement` | flow-code `phase-implement.agent`, or `.skill` when the provider is one; `null` is `agent: null` |
 | `extensions.validate` · `verify` | flow-code `phase-build-test.skill` · `phase-spec-check.skill` |
-| `extensions.app.start` | flow-code `phase-verify.app`, as written |
-| `extensions.qa.run` | flow-code `phase-verify.agent`, or `.skill` when the provider is one |
+| `extensions.app.start` | flow-code `phase-verify.app`, as written — except the retired `repo:start`, which is dropped, or becomes `repo:run` when it carries options |
+| `extensions.qa.run` | flow-code `phase-verify.agent`, or `.skill` when the provider is one; `null` writes nothing |
 | `extensions.data.prepare` | flow-code `phase-verify.before` |
 | `delivery.roles.architecture` | `phase-scope.agent` in both maps, flow-code `phase-plan`, flow-spec `phase-drafting:arc42` and `:tech` |
-| `delivery.roles.qa` | flow-code `phase-verify.agent`, unless `qa.run` set it |
+| `delivery.roles.qa` | flow-code `phase-verify.agent`, unless `qa.run` set the agent; beside a `qa.run` skill it lands |
 | `delivery.roles.domain` · `ux` · `docs` | flow-spec `phase-drafting:domain` · `:design` · `:ai` |
 | `delivery.roles.product` · `security` | dropped, and reported: no phase names them |
 | `delivery.mcp.<point>` | `phases.<phase>.mcp`, the phase the point belonged to; two points on one phase join |
@@ -32,7 +32,12 @@ In the committed file both maps come out complete: a phase the old config never 
 An overlay stays partial and names only what it said. A role or provider bound to a bare plugin
 resolves to that plugin's single agent; a plugin with more than one, or one not installed here,
 is written as found and reported. Options on a service point other than `app.start` have no
-place in a phase entry and are reported as dropped. Every other key and `components` are left
+place in a phase entry and are reported as dropped. `extensions.qa.run: null` meant no QA provider bound. It writes nothing, so `phase-verify` runs
+its own procedure and a `qa` role still lands as its agent; `agent: null` would instead force the
+phase inline, which the old value never said. `implement: null` keeps meaning inline. A
+`repo:start` left in any layer — devbook's `004-start-binding-is-run` retires it only in the
+committed file, and only when it runs first — is never carried: the run recipe is
+`phase-verify`'s default. Every other key and `components` are left
 as they are; the file is re-serialized in its own indent and key order, `phases` where
 `extensions` was.
 

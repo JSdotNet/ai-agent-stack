@@ -83,6 +83,11 @@ const ROLES = {
 };
 const DROPPED_ROLES = ["product", "security"];
 
+// devbook's 004 retires this `app.start` provider, but only where it runs first and only in the
+// committed file; 001 never carries it either way. Its options move to the run recipe's id.
+const RETIRED_START = "repo:start";
+const RUN = "repo:run";
+
 // A gate on one of these is unambiguously 1.13.0. `implement` and `verify` are phase ids as
 // well, so a gate on either is read as the old point only in a file migrated for another reason.
 const RETIRED_GATE_POINTS = Object.keys(POINT_PHASE).filter((p) => p !== "implement" && p !== "verify");
@@ -215,6 +220,16 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
             continue;
         }
         if (rule.field === "app") {
+            if (value === RETIRED_START || (isObject(value) && value.provider === RETIRED_START)) {
+                const { provider: _p, ...options } = isObject(value) ? value : {};
+                if (!Object.keys(options).length) {
+                    notes.push(`${from}: ${RETIRED_START} is retired — nothing is written, and phase-verify starts the app through the run recipe`);
+                    continue;
+                }
+                notes.push(`${from}: ${RETIRED_START} is retired — its options move to ${RUN}`);
+                set("flow-code", phase, "app", { provider: RUN, ...options }, from);
+                continue;
+            }
             set("flow-code", phase, "app", value, from);
             continue;
         }
@@ -222,8 +237,10 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
         const options = isObject(value) ? Object.keys(value).filter((k) => k !== "provider") : [];
         if (options.length) notes.push(`${from}: options ${options.join(", ")} have no place in a phase entry — dropped`);
         if (value === null) {
-            if (rule.field === "either") {
+            if (point === "implement") {
                 for (const [flow] of targets("flow-code", phase)) set(flow, phase, "agent", null, from);
+            } else if (point === "qa.run") {
+                notes.push(`${from}: null — no QA provider; phase-verify runs its own procedure, so nothing is written`);
             } else {
                 notes.push(`${from}: null — the phase runs its own procedure, so nothing is written`);
             }
@@ -249,7 +266,7 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
 
     const bindings = isObject(input.bindings) ? input.bindings : {};
 
-    // Roles, after extensions: `qa` only lands where `qa.run` set no agent.
+    // Roles, after extensions: `qa` only lands where `qa.run` set no agent; a skill sits beside it.
     for (const [role, value] of Object.entries(isObject(bindings["delivery.roles"]) ? bindings["delivery.roles"] : {})) {
         const from = `bindings["delivery.roles"].${role}`;
         if (DROPPED_ROLES.includes(role)) {
@@ -273,7 +290,7 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
         } else notes.push(`${from}: ${found.why ?? `${json(value)} could not be resolved`} — written as found; check it`);
         if (agent !== value) notes.push(`${from}: ${json(value)} resolved to its single agent, ${agent}`);
         for (const [flow, phase] of ROLES[role].flatMap(([f, p]) => targets(f, p))) {
-            if (role === "qa" && phases[flow]?.[phase] && ("agent" in phases[flow][phase] || "skill" in phases[flow][phase])) {
+            if (role === "qa" && phases[flow]?.[phase] && "agent" in phases[flow][phase]) {
                 notes.push(`${from}: ${flow} › ${phase} already has its provider from extensions["qa.run"] — the role is not written`);
                 continue;
             }
@@ -310,10 +327,11 @@ export function migrateConfig(input, { overlay = false, resolve = () => ({ kind:
     const existing = isObject(input.phases) ? input.phases : {};
     const kept = {};
     for (const [flow, map] of Object.entries(existing)) {
-        if (!RETIRED_FLOWS.includes(flow)) {
-            kept[flow] = isObject(map) ? { ...map } : map;
-            continue;
-        }
+        if (!RETIRED_FLOWS.includes(flow)) kept[flow] = isObject(map) ? { ...map } : map;
+    }
+    // Retired maps after every live one, so flow-code is in `kept` before anything merges into it.
+    for (const [flow, map] of Object.entries(existing)) {
+        if (!RETIRED_FLOWS.includes(flow)) continue;
         for (const [key, entry] of Object.entries(isObject(map) ? map : {})) {
             const phase = key.split(":")[0];
             if (!FLOWS["flow-code"].includes(key) && !FLOWS["flow-code"].includes(phase)) {

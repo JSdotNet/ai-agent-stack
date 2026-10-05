@@ -35,6 +35,8 @@ A design question the scope record does not answer is not settled here: return
 `revise: phase-scope` with the question, and escalate a new decision per **Escalation** in
 `resources/flow-execution-model.md`.
 
-**Output:** the plan, as the stage output and the brief `phase-implement` starts from. Report
+**Output:** `plan.md`, written into the run folder the brief names — the brief
+`phase-implement` loads for a `create` run. Return its path and a short summary as the stage
+output. Report
 the stage per **Reporting Contract** in `resources/surface-contract.md`. Its place in the
 order: `resources/flow-phases.md`.

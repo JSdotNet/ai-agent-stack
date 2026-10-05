@@ -321,6 +321,22 @@ a privilege into the record on the strength of the code that leaked it. The acto
 the whole unit: the `## Rights` matrix is the file's, read per actor column, and a rule about
 rights is a requirement its feature owns. Contract 28, additive, no migration.
 
+**A diagram is a view, not a unit.** `model.md`, `flow.md`, and their splits draw what other
+chapters claim. A class diagram's ownership, cardinalities, and id-only references are the
+aggregate's consistency boundary and relationships. A state machine is the aggregate's
+lifecycle, which the aggregate kind already verifies transition by transition. A sequence
+across aggregates is a domain service's coordination or a feature's requirement, proved by its
+unit or e2e test. A `flow.<name>.md` beside a skill is the other half of that skill's chapter.
+A `flow` kind would give each of those claims a second owner and so two verdicts for one
+transition, which the sync unit's roll-up could settle only by joining the flow to every
+aggregate it walks: a group that grows with the diagram rather than with the rule, and the
+merge the feature unit was kept out of for the same reason. So neither file has a converter
+kind, a sync unit, or a place for `sync`; their `##` sections keep no blocks, and a sweep
+reads them as context and never writes them. The cost is that a diagram can go stale beside a
+chapter that is right: no verdict reports it, and `prose-check` skips Mermaid fences. Closing
+that is a reading change — a unit's verify pass loading the diagrams that name it — and never
+a kind.
+
 ## Rejected
 
 ```meta
@@ -354,6 +370,8 @@ rights is a requirement its feature owns. Contract 28, additive, no migration.
 - An `organisation` as an actor unit, which would give the sweeps a chapter nothing in code
   can confirm; the `## Rights` matrix as a unit of its own, which would split one actor's rights
   from the actor; and a policy or client chapter type beside the actor, a second record of who.
+- A `flow` kind, whether its own unit or joined to the aggregates it walks; a `model` kind;
+  `sync` on `model.md`, `flow.md`, or their splits.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
   layout rung for every consumer to resolve, and a new `type` a second vocabulary for the
   same kind of document.
@@ -366,6 +384,7 @@ rights is a requirement its feature owns. Contract 28, additive, no migration.
 | Date | Change |
 | --- | --- |
 | 2026-10-06 | The `actor` converter kind: a `user` or `technical` chapter roots a sync unit, paired through its `role`, the policies admitting it, and a `technical` actor's client registration, so a `sync` value on `actors.md` is inherited. An `organisation` roots no unit. A grant wider than the chapter is a `conflict`. Contract 28, additive, no migration. |
+| 2026-10-06 | `model.md`, `flow.md`, and their splits stay context: no converter kind, no sync unit, no `sync`. Every claim they draw belongs to an aggregate, domain service, feature, or skill chapter that has a kind. No contract, no migration. |
 | 2026-10-02 | A `requirement` at `status: deprecated` is no longer warned for having no `#### Scenario:`: it records a withdrawn promise, which has no case left to exercise. The level warning on the `tests` it names still applies. No contract, no migration: a warning narrows and no shape changes. |
 | 2026-10-01 | `sync` — `push`, `pull`, `sync`, `report`, `off` — on `domain/`, `arc42/`, and `design/` blocks says which way a sync unit and its code flow, set on a folder overview, a `context.md`, a context page, or a unit's root chapter, nearest wins, `report` by default. Refused on owned chapters and owned-only pages; a value no unit inherits is warned; a `domain-event` is warned when its `related` names no raiser. Contract 25, additive, no migration. |
 | 2026-09-28 | A change's `proposal.md` carries `approved` and `accepted` with their six fields, for the whole change: the hash covers the proposal and every delta, and `delta.mjs --apply` merges only an accepted change over its current hash, writing no rung onto the chapters it lands in and lifting one it makes stale. Approval lives in both places — chapter rungs for work outside the lane, the proposal's for a change — so `domain/` keeps its rungs and no migration is owed. Contract 24, additive. |

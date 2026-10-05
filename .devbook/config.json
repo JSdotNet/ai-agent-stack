@@ -282,8 +282,14 @@
         "devbook-validate",
         "tech-update",
         "merge-review",
-        "package-update"
-      ]
+        "package-update",
+        "devbook-pull-sweep"
+      ],
+      "overrides": {
+        "devbook-pull-sweep": {
+          "maxResolve": 1
+        }
+      }
     },
     "delivery-surface-dashboard": {
       "sessionNaming": {

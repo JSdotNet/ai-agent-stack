@@ -37,9 +37,10 @@ Everything it reads and writes is in `resources/schedule-catalog-contract.md`.
    `enabled: false` on every enabled entry carrying this repository's name prefix; the report
    names each, and deleting one is done on the host's own page.
 6. **Create or update.** For each selected schedule, build the prompt — preamble, blank line,
-   body, placeholders substituted — then `list` and match on `<owner>/<repo> · <title>`:
-   `update` on a match, `create` otherwise, with the cron (the stamp's override when it has
-   one) converted to this machine's timezone and `enabled: true`. Then set `enabled: false`
+   body, placeholders substituted, `{{maxResolve}}` from the stamp's override when it has
+   one — then `list` and match on `<owner>/<repo> · <title>`: `update` on a match, `create`
+   otherwise, with the cron (the stamp's override when it has one) converted to this
+   machine's timezone and `enabled: true`. Then set `enabled: false`
    on every entry carrying this repository's name prefix that is no longer selected, and say
    that deleting one is done on the host's own page.
 7. **Write the stamp.** `components.schedule` — `pluginVersion`, `enabled`, `overrides` —

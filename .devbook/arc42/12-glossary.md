@@ -50,7 +50,7 @@ an MCP server.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -79,7 +79,7 @@ Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
 Also called: schedule catalog, trigger files.
 
 The set of schedule files the plugin ships — the defaults, readable as defaults. A repository
-selects from it and overrides a cadence in its own stamp rather than by editing the file, so an
+selects from it and overrides a cadence or a `maxResolve` in its own stamp rather than by editing the file, so an
 upgrade can move a shipped default without silently reverting or silently keeping somebody's
 choice.
 
@@ -104,7 +104,7 @@ the code, and not a pull request, which is one step of a change.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#apply-change", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#apply-change", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -121,7 +121,7 @@ question stops the run at the gate rather than becoming a line item.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-issue-sweep"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#start-session-from-issue", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#schedule-issue-sweep"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -191,7 +191,7 @@ so the refresh belongs to automation, and the check that runs in a session write
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter"]
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -259,7 +259,7 @@ to reattach to one and refuse the other.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -278,7 +278,7 @@ invariant.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule.md#entry-point", ".devbook/arc42/12-glossary.md#personal-validation"]
+related: [".devbook/arc42/building-blocks/delivery-schedule.md", ".devbook/arc42/building-blocks/delivery-schedule-entry-points.md#entry-point", ".devbook/arc42/12-glossary.md#personal-validation"]
 ```
 
 Owned by [delivery-schedule](building-blocks/delivery-schedule.md).
@@ -296,7 +296,7 @@ not be proved written in the body.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/12-glossary.md#park"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/12-glossary.md#park"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -320,7 +320,7 @@ unread.
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/08-crosscutting-concepts.md#host-slot"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/08-crosscutting-concepts.md#host-slot"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -388,10 +388,10 @@ documentation plugin's sense, which is a standalone document.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal", ".devbook/arc42/12-glossary.md#demo"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo"]
 ```
 
-Owned by [devbook](building-blocks/devbook.md#goal).
+Owned by [devbook](building-blocks/devbook-procedures.md#goal).
 
 One standalone HTML file that answers one question, in UI mode or logic mode. It needs no
 change, no task, and no approval, and it is never a source of truth. It carries its question
@@ -403,10 +403,10 @@ nobody takes further stays where it is, as evidence of what was tried.
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook.md#goal"]
+related: [".devbook/arc42/adr/demos.md#how-prototyping-works", ".devbook/arc42/building-blocks/devbook-procedures.md#goal"]
 ```
 
-Owned by [devbook](building-blocks/devbook.md#goal).
+Owned by [devbook](building-blocks/devbook-procedures.md#goal).
 
 Also called: `/prototype`.
 
@@ -419,7 +419,7 @@ prototyping returns a revised prototype that keeps every surviving screen id and
 
 ```meta
 date: 2026-09-08
-related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery.md#phase", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
+related: [".devbook/arc42/building-blocks/delivery.md", ".devbook/arc42/building-blocks/delivery-phases.md#phase", ".devbook/arc42/building-blocks/delivery.md#stack-config"]
 ```
 
 Owned by [delivery](building-blocks/delivery.md).
@@ -468,7 +468,7 @@ as *this file was not there* rather than as *there is nothing*.
 
 ```meta
 date: 2026-09-24
-related: [".devbook/arc42/building-blocks/devbook.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook-code-sync.md#capture-specs", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -567,7 +567,7 @@ person, not acted on and never split. `units.mjs --groups` lists them.
 
 ```meta
 date: 2026-10-06
-related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
+related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
 Owned by [devbook](building-blocks/devbook.md).
@@ -577,8 +577,7 @@ value objects, and enums it owns, the events it raises, its invariants, and the 
 and terms that name it; a domain service the same way; a feature with its sub-features and
 requirements; one feature flag or setting; one user or technical actor; one building block
 file; one component chapter; and one shared-types unit per context for its shared value
-objects and enums. A chapter the unit
-owns carries no direction of its own. `units.mjs` lists them with their effective direction.
+objects and enums. A chapter the unit owns carries no direction of its own. `units.mjs` lists them with their effective direction.
 
 ## Tier
 

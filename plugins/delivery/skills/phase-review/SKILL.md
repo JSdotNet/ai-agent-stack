@@ -37,7 +37,7 @@ Loads the brief's slice and run folder, the diff against the merge base with unt
 4. **Correctness.** Logic errors, concurrency, error handling, resource leaks, security — reading callers and tests where a change reaches them. A `bug` names a concrete failure: this input or state, this wrong result. It is a blocker. Plausible without one is a `risk`, advisory.
 5. **Cite or drop.** Every finding carries `file:line` and the rule's path and line, the smell's name, or the failure scenario. A finding without one is dropped, not softened.
 
-Run no build and no suite: that is Build & Test's. Whether to loop again is the flow-runner's, against `policy.review.retryBudget`.
+Run no build and no suite: that is Build & Test's. Whether to loop again is the flow-runner's, against `policy.review.retryBudget` (default `1`). `policy.phases.review: false` turns this phase off, and `phase-implement` runs alone.
 
 ## Output
 

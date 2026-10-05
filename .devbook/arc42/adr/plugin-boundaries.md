@@ -1,7 +1,7 @@
 # Plugin Boundaries
 
 ```meta
-date: 2026-10-01
+date: 2026-10-05
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#plugin-folder", ".devbook/arc42/05-building-block-view.md#config-plugin", ".devbook/arc42/05-building-block-view.md#schedule-plugin", ".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/devbook-skills.md", ".devbook/arc42/08-crosscutting-concepts.md#plugin", ".devbook/arc42/08-crosscutting-concepts.md#layer", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md"]
 ```
 
@@ -10,9 +10,12 @@ what it needs. There are three ways to couple — a declared dependency on a low
 bridge plugin depending on both sides, a surface capability resolved from the live tool list —
 and a lower layer never names a higher one. What the marketplace ships is the convention
 (`devbook`), the engine (`delivery`), one extension each for review, the committed index, the
-repository's procedures, the change lane, and unattended work, four surfaces, and a guide that names
-every plugin and depends on none. An extension owns procedure, never schema or state. The specialists
-are published from another marketplace and are bound per repository, never depended on.
+change lane, and unattended work, an L0 plugin of guidance callers name by skill, four surfaces,
+and a guide that names every plugin and depends on none. The repository's procedures are part of
+the convention: a repository adopts them in `devbook`'s stamp the way it adopts a folder. Until
+the change that folds them in lands, `devbook-procedures` still ships them as an L1 over
+`devbook`. An extension owns procedure, never schema or state. The specialists are published
+from another marketplace and are bound per repository, never depended on.
 
 ## Why
 
@@ -126,6 +129,19 @@ repository's from the first edit. `delivery:init` and `delivery:update` survive 
 releases its old claim on the two seeds — the protocol's adoption-changed case, which is why
 the handover ships no migration.
 
+**The procedures fold into `devbook`.** `devbook` is the plugin's only dependency, and what the
+plugin takes from it is the machinery to write copies into a repository: the reconcile
+protocol, the stamp with its per-file hashes, and migrations. `devbook:init` and
+`devbook:update` already reconcile, stamp, and migrate, so the procedures become one more
+part a repository adopts in `devbook`'s stamp, with their own `adopted` list kept. Demos
+already live in `devbook` — `demo.mjs` and the demo address contract — so `prototype` and its
+template sit beside their checker, and the reconcile protocol is read inside the plugin that
+owns it instead of across a boundary. `run`, `capture`, `diagnose`, and `estimate` depend on
+nothing, and the repository-owned copies keep their names, so `delivery` and every other
+caller that names a procedure by skill changes nothing. The marketplace loses a plugin. The
+cost is one stamp migration, which [install](install.md) records; a repository that wants
+`run` and `capture` without a devbook folder already installs `devbook` as the dependency.
+
 **The change lane is an extension over the convention, and OpenSpec is installed, never
 copied.** A change is a set of deltas against devbook chapters, merged by devbook's own
 `delta.mjs` and decided by `devbook-collaboration`'s gates, so everything the lane adds is
@@ -191,6 +207,18 @@ repository's own pull request template still wins; the skill fills the sections 
   improves readability would decide whether a foundation loads.
 - A migration for the seed handover: `delivery` is payload-only and the protocol gives such a
   component hash-matching and orphaning as its whole mechanism.
+- Folding `devbook-procedures` into `devbook-skills`: the procedures need the reconcile
+  protocol, so `devbook-skills` would depend on `devbook` and become L1, while
+  `devbook-writing.md` in `devbook` names `show-me` from it — a lower layer naming a higher
+  one. It would also change what `devbook-skills` is, from skills only to a plugin with an
+  install, a hook, a stamp, and migrations.
+- Splitting the procedures, `prototype` into `devbook` and the other four into
+  `devbook-skills`: the four still need the install machinery, which needs either a
+  dependency on `devbook`, the layering problem again, or a copy of the reconcile protocol,
+  which breaks one rule, one file.
+- Keeping `devbook-procedures` as an L1 plugin of its own: it duplicates the adoption, stamp,
+  and migration surface `devbook` already has, for a plugin no repository can install without
+  `devbook`.
 
 ## History
 
@@ -200,6 +228,7 @@ repository's own pull request template still wins; the skill fills the sections 
 | Date | Change |
 | --- | --- |
 | 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. |
+| 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
 | 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |
 | 2026-10-01 | `devbook-skills` is an L0 plugin shipping `show-me`; `devbook-writing.md` and the engine's pull request and report-back name the skill alone and keep their own rule when it is absent. `domain.md` keeps `devbook-domain.md`'s diagrams. |
 | 2026-09-30 | A scheduled run's report is its session's last message, never a `schedule-report` issue; every reporting entry point carries a `report.md` template on the frame of `delivery-schedule`'s `resources/report-contract.md`. |

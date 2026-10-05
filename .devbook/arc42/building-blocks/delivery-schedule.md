@@ -136,6 +136,11 @@ request whose body says what could not be proved; and publish one brief, needs-y
 weekday `issue-sweep` trigger's target, timed before the morning brief because the brief ranks
 by the labels it writes.
 
+An issue carrying a `wayfinder:*` label is left out before triage. It is a map or a decision
+ticket, and it belongs to the person working the map, so the sweep never classifies, comments
+on, closes, or resolves it. The brief counts these issues and names none of them. The triage
+script drops them as well, so a caller that forgets the filter still cannot judge one.
+
 #### Classify Once, Judge Every Sweep
 
 ```meta

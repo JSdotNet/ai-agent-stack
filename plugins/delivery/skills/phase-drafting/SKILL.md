@@ -37,8 +37,12 @@ source code.
    each touched chapter's `meta` block in the same edit.
 3. **Link, never restate,** a decision or debt record. Keep terms to the ubiquitous language
    in `domain/` where the repository keeps one.
-4. **On a retry round,** fix exactly the open items the brief names, nothing else.
-5. **Leave the decision rung alone.** `approved` is a person's answer at a gate.
+4. **Cite what lies outside the repository.** For `arc42/` and `tech/`, when a claim about an
+   external technology, API, or standard decides the draft — a decision record's options, a
+   rating — ask the `research-brief` skill when it is available and carry its citations into
+   the chapter. Without it, cite the primary source for each such claim or mark it unverified.
+5. **On a retry round,** fix exactly the open items the brief names, nothing else.
+6. **Leave the decision rung alone.** `approved` is a person's answer at a gate.
 
 ## Output
 

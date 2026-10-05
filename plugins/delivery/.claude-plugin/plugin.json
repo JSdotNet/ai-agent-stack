@@ -18,6 +18,11 @@
     "host-neutral"
   ],
   "agents": [
-    "./agents/flow-runner.agent.md"
+    "./agents/flow-runner.agent.md",
+    "./runners/runner-low.agent.md",
+    "./runners/runner-medium.agent.md",
+    "./runners/runner-high.agent.md",
+    "./runners/runner-xhigh.agent.md",
+    "./runners/runner-max.agent.md"
   ]
 }

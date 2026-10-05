@@ -59,8 +59,9 @@ skill's body, with no agent named — passed as its instructions.
 - **The specialist's tool list is dropped.** The runner keeps the agent's instructions and
   gets the runner's tools, all of them. A specialist that needs its own list kept declares its
   own effort, and the phase then leaves `effort` unset.
-- **Claude Code only.** Copilot ships no runner: it runs an effort-set phase on the session's
-  effort, and the run says so once.
+- **Claude Code only.** The runners live in `runners/`, which only the Claude manifest lists.
+  Copilot gets no runner: it runs an effort-set phase on the session's effort, and the run
+  says so once.
 
 ## The retired model table
 

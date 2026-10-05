@@ -233,7 +233,7 @@ The qualifier is the flow's own variant: the devbook folder on `phase-drafting`,
 
 | Field | Values | Absent means |
 | --- | --- | --- |
-| `agent` | `plugin:agent`, `repo:<agent>`, or `null` to force inline | The phase skill's own default — see `phase-resolution.md` |
+| `agent` | `plugin:agent`, `repo:<agent>`, or `null` to force inline | The phase's **Runs by default** in the table above — see `phase-resolution.md` |
 | `skill` | `plugin:skill` or `repo:<skill>`: the procedure the phase follows | The phase's built-in procedure, `delivery:phase-<id>` |
 | `model` | `opus`, `sonnet`, `haiku`, `fable`, a full model id, or `inherit` | The session's model |
 | `effort` | `low`, `medium`, `high`, `xhigh`, `max`, or `inherit` | The session's effort |

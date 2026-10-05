@@ -236,11 +236,11 @@ phase's resolved model, passed on the `Agent` call, is the only value that appli
 This agent hands each phase to whatever its `phases` entry resolves to: the named `agent`,
 `general-purpose` when only a model is set, or `runner-low`, `runner-medium`, `runner-high`,
 `runner-xhigh`, or `runner-max` when the effort overrides the skill's default — each told to
-follow the phase's `skill`. Unconfigured, it forks or runs inline the phase skills of
-**Phases** in `engine-contract.md` — `phase-scope`, `phase-implement`, `phase-review`,
-`phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-drafting`, `phase-report-back`
-and the rest — and runs `phase-personal-validation` and the ready check inline, never
-delegated. It hands a run off to a fresh session rather than spawning one, and it is never
+follow the phase's `skill`. Unconfigured, it runs each phase as **Runs by default** in
+**Phases** in `engine-contract.md` says — `phase-scope`, `phase-implement`, and `phase-review`
+forked; `phase-plan`, `phase-build-test`, `phase-verify`, `phase-spec-check`, `phase-drafting`,
+and `phase-report-back` delegated; the rest inline — and runs `phase-personal-validation`
+and the ready check inline, never delegated. It hands a run off to a fresh session rather than spawning one, and it is never
 itself spawned as a sub-agent.
 
 ## Example Usage

@@ -28,7 +28,7 @@ what happens inside `phase-implement` — in full in `resources/implement-kinds.
 
 | Kind | Covers | Inside `phase-implement` | `phase-verify` depth |
 |---|---|---|---|
-| `feature` | New or changed behaviour, a small UI tweak | Tests first at each seam; frontend, backend, or both | Full with capture for new behaviour, targeted for a change |
+| `feature` | New or changed behaviour, a small UI tweak | Tests first at each backend seam, none on the frontend; frontend, backend, or both | Full with capture for new behaviour, targeted for a change |
 | `create` | A new module, service, or first runnable increment; carving one out | The unit `phase-plan` laid out | Full with capture |
 | `refactor` | Folder, project, or solution layout, test placement, reference updates — behaviour held still | The moves and reference updates scope listed | Targeted, on the affected flows |
 | `defect` | Something is broken | The failing test that reproduces it, then the fix | Targeted: the reproduction plus the regression scenario |

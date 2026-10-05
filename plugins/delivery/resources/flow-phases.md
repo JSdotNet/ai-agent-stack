@@ -116,7 +116,7 @@ escalates per **Escalation** in `flow-execution-model.md`. Persist the change ki
 
 `flow-code`. `implement` is **defined in `skills/phase-implement/SKILL.md`**: on its first call
 it plans the slices — a seam or an area, in order or in parallel — then builds one slice per
-call, tests first at each seam Scope recorded, running only compile and the touched tests; the
+call, tests first at each backend seam Scope recorded and none for a frontend slice, running only compile and the touched tests; the
 full suite is Build & Test's. The specification is fixed input: a spec problem returns
 `revise: phase-scope` rather than a redesign inline. What a kind needs is in
 `implement-kinds.md`.

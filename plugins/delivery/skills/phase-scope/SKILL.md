@@ -13,7 +13,7 @@ Does:
 - Restates the request and derives the kind and acceptance criteria (flow-spec: the folder and the chapter kind)
 - **Selects the relevant devbook chapters**: those naming the impacted paths or the scope's terms, then their `related` and `depends-on` links, read through the devbook database where present
 - Finds the impacted paths and the rules that govern them
-- For code: turns it into the spec implement builds on, with seams, constraints, integration points, and for a refactor the target layout and references to update
+- For code: turns it into the spec implement builds on, with backend unit seams, constraints, integration points, and for a refactor the target layout and references to update
 - Escalates a new decision or bounded context to flow-spec
 - Writes the scope record and the chapter list every later brief draws from
 
@@ -35,7 +35,7 @@ Loads the brief's request and origin, the repository instructions, the rule file
 3. **Paths and rules.** The impacted paths and the integration points they touch — for a refactor, every surface encoding the old layout: solution files, manifests, scripts, CI path filters, links, architecture tests — and the instruction files and guideline ADRs that govern them.
 4. **Chapters.** Select from the corpus as `node .devbook/_tools/devbook-meta/build.mjs --print` emits it, else by search over the adopted folders: each chapter that names an impacted path or a scope term, then one hop of its `related` and `depends-on`. Each gets an id and one line of why.
 5. **Facts from outside.** When a fact the repository cannot answer decides scope — an API's behaviour, a library's limits, a standard — ask the `research-brief` skill when it is available and put its brief's answer and citations in the scope record. Without it, cite the primary source for each such fact, or list it under open questions.
-6. **Spec, for code.** Seams — each public boundary, the behaviour it proves, the criterion it covers, tagged `frontend` or `backend` — then the constraints and integration points; for a refactor, the target layout and the references to update. A spec the brief carries approved is returned unchanged.
+6. **Spec, for code.** Unit seams for the backend area only — each public boundary, the behaviour it proves, the criterion it covers — derived from the selected chapters: each invariant's `Enforced at:` line is a unit seam, each `#### Scenario:` an e2e or integration seam recorded for `phase-verify` and the e2e suite, never for implement. A frontend slice gets no unit seams; its behaviour is proved by those scenarios. Then the constraints and integration points; for a refactor, the target layout and the references to update. A spec the brief carries approved is returned unchanged.
 7. **Escalate, never decide.** A new architectural decision, bounded context, or cross-cutting redesign is a question for `flow-spec` per **Escalation** in `../../resources/flow-execution-model.md`; return it, do not resolve it.
 
 ## Output

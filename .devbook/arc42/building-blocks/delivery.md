@@ -94,7 +94,9 @@ related: [".devbook/arc42/building-blocks/delivery.md#change-kind"]
 ```
 
 Restate the request, derive the kind and the acceptance criteria, and record the seams
-`implement` tests at. For a refactor it plans the target layout and the references to update.
+`implement` tests at. Unit seams are recorded for the backend area only, one per invariant's
+`Enforced at:` line, while each `#### Scenario:` is an end-to-end or integration seam left to
+`verify` and the e2e suite, so the frontend gets no test-first seams. For a refactor it plans the target layout and the references to update.
 In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
 chapters every later brief loads, as one list, and escalates a new decision or bounded context
 to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
@@ -117,7 +119,7 @@ no code.
 related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/arc42/building-blocks/delivery.md#phase-review"]
 ```
 
-Write the tests at each recorded seam, then the code, running only compile and the touched
+Write the tests at each recorded backend seam, then the code, running only compile and the touched
 tests. Its first call plans the slices and builds nothing: each slice is a seam or an area, and
 it decides whether the change needs frontend, backend, or both, and whether they run in order
 or in parallel. Every later call builds one slice and returns, so the flow-runner can review it.
@@ -1113,7 +1115,7 @@ kind changes the work inside `implement` and the depth of `verify`:
 
 | Kind | Covers | Inside `implement` | `verify` depth |
 | --- | --- | --- | --- |
-| `feature` | New or changed behaviour, a small UI tweak | Tests first at each seam; frontend, backend, or both, as the skill judges | Full with capture for new behaviour, targeted for a change |
+| `feature` | New or changed behaviour, a small UI tweak | Tests first at each backend seam, none on the frontend; frontend, backend, or both, as the skill judges | Full with capture for new behaviour, targeted for a change |
 | `create` | A new module, service, or first runnable increment | The new unit, after `plan` | Full with capture |
 | `refactor` | Layout moves, behaviour held still | The moves and reference updates `scope` listed | Targeted, on the affected flows |
 | `defect` | Something is broken | The failing test that reproduces it, then the fix | Targeted: the reproduction plus the regression scenario |

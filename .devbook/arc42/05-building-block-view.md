@@ -313,7 +313,7 @@ marketplace are [published from their own](adr/plugin-boundaries.md).
 | --- | --- | --- |
 | `scope` | both | The kind, the acceptance criteria, the seams `implement` tests at, a refactor's target layout, and the chapters every later brief loads |
 | `plan` | `flow-code`, `create` only | The design mapped onto the project structure |
-| `implement` | `flow-code` | A change set, tests first at each seam, with the work the kind needs: a dependency move, a project's bootstrap and scaffold, a defect's reproducing test. It decides whether the change needs frontend, backend, or both, and runs each area as its own fork |
+| `implement` | `flow-code` | A change set, tests first at each backend seam, with the work the kind needs: a dependency move, a project's bootstrap and scaffold, a defect's reproducing test. It decides whether the change needs frontend, backend, or both, and runs each area as its own fork |
 | `review` | `flow-code` | One fresh-context review per slice, against the repository's rules, a code-smell baseline, and correctness, with every finding cited. It never edits |
 | `build-test` | `flow-code` | Build and suite results. Default procedure: `phase-build-test` |
 | `verify` | `flow-code` | A running application, started through the repository's own `run` procedure, and evidence from it through its `capture` procedure. `phase-verify.app` names the provider that starts the application, and the evidence rules hold from `capture-contract.md` whichever provider answers |

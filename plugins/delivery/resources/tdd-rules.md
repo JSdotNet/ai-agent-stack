@@ -1,6 +1,6 @@
 ---
 name: tdd-rules
-description: The test-first rules phase-implement follows at every seam — where a test goes, what makes it worth keeping, the anti-patterns, when to mock, and the rules of the red-green loop — ported from Matt Pocock's /tdd.
+description: The test-first rules phase-implement follows at every backend seam — where a test goes, what makes it worth keeping, the anti-patterns, when to mock, and the rules of the red-green loop — ported from Matt Pocock's /tdd.
 ---
 
 # Test-First Rules
@@ -15,7 +15,10 @@ A **seam** is the public boundary a test observes behaviour at, never an interna
 only at the seams `phase-scope` recorded, so the effort lands on the critical paths rather
 than on every edge case.
 
-- **No seams recorded** — the quiet failure the sources name, where test-first is skipped
+- **Backend only.** A unit seam is an invariant's `Enforced at:` line. A frontend slice has
+  no test-first seams: its behaviour is the chapters' `#### Scenario:` cases, which
+  `phase-verify` and the e2e suite run.
+- **No seams recorded** on a backend slice — the quiet failure the sources name, where test-first is skipped
   without a word. Name them first: each public boundary, the behaviour it proves, the
   criterion it covers. Write them to `implement.md` before any test, so review and the gate
   see them. Never skip test-first silently.

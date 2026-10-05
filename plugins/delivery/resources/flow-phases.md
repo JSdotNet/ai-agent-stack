@@ -41,7 +41,7 @@ A kind changes what happens inside `implement` and how deep `verify` goes, never
 run. A `config` change still gets review and Build & Test, because a broken workflow file or
 script fails there.
 
-**`flow-spec`** runs the documentation tier:
+**`flow-spec`** runs its own, shorter tier:
 
 update-base → scope → drafting → check-review → ready → personal-validation → create-pr →
 report-back → summary
@@ -63,8 +63,8 @@ there is nothing runnable, and the chapter it writes is the specification.
 
 ## How Skills Reference These Phases
 
-- **No skill names Update Base or the ready check.** Both are identical for every flow, so the
-  flow-runner prepends the first and inserts the second before Personal Validation.
+- **Every flow names Update Base first and the ready check right before Personal
+  Validation.** Both are identical in every flow and defined once, in their own skills.
 - A flow lists its phases under a `## Phases` heading and links here. This file is the source
   of truth; the skill only names which phases it runs and adds skill-specific notes, such as
   the kinds table and the Verify depth per kind.
@@ -90,8 +90,7 @@ there is nothing runnable, and the chapter it writes is the specification.
 ## Phase: Update Base
 
 Every flow. Runs **first**, before the flow's own phases, so the work starts from the current
-base. The flow-runner prepends it to the stage list it passes to `start_run` and runs it
-inline.
+base. It heads the stage list passed to `start_run`, and the flow-runner runs it inline.
 
 **Defined in `skills/phase-update-base/SKILL.md`** — resolving and fetching the base, taking
 the workflow's branch, the dirty-tree and open-pull-request refusals, fast-forward or rebase,
@@ -154,10 +153,10 @@ recipe, or `phase-verify.app` when set, and drives the scenarios at the kind's d
 required-tooling policy, Playwright and Aspire preflight, evidence rules, and repo context all
 live there. What stays here is the contract around the phase:
 
-- **Depth follows the change kind** the flow-runner persisted with `set_run_context`: new
-  functionality gets Playwright QA with capture, a bug fix or a change to existing behavior
-  gets targeted verification, a dependency update gets startup-only validation, and a change
-  with nothing to run is `skipped` with the reason recorded. This selection is the last resort:
+- **Depth follows the kind** Scope persisted as `changeKind`: a `feature` adding behaviour,
+  `create`, and `project` get Playwright QA with capture; a `feature` changing existing
+  behaviour, `defect`, and `refactor` get targeted verification; `config` and `dependency` get
+  startup-only; nothing to run is `skipped` with the reason recorded. This selection is the last resort:
   `policy.qa.depth` outranks it, and `policy.qa.ceiling` caps the result — the full order is
   in `engine-contract.md`.
 - **Required tooling is required.** When the selected depth needs the Playwright or Aspire
@@ -216,7 +215,7 @@ it can approve, skip, or soften the gate below.
 
 The mandatory instance of the gate pattern in **Gates** (`engine-contract.md`), placed after
 the ready check, with purpose `handoff`. A repository may declare further gates **in front of**
-this one — `{ "at": "phase-build-test", "when": "after", "purpose": "risk" }` is the usual
+this one — `{ "at": "build-test", "when": "after", "purpose": "risk" }` is the usual
 shape — and that is the whole of what configuration may change here.
 
 - **Do not delegate to an agent and do not auto-approve.** Wait for the user's explicit

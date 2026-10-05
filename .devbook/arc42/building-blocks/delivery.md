@@ -1,7 +1,7 @@
 # delivery
 
 ```meta
-related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
+related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/building-blocks/delivery-phases.md", ".devbook/arc42/building-blocks/delivery-pr-lane.md", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/surfaces.md", ".devbook/arc42/tdr/4-delivery-depends-on-devbook.md"]
 ```
 
 The delivery engine. Responsible for three things: that one unit of work reaches a review-ready
@@ -10,7 +10,22 @@ the run without being able to weaken it.
 
 Inside the block: the two flows, the closed list of phases they run and a repository
 configures, the human gates it may add and never remove, the engine-owned keys of the stack
-config, and the pull-request lane at the end.
+config, and the pull-request lane at the end. Two of those are blocks of their own one level
+in, each with its own file: the phases and their gates are
+[delivery-phases](delivery-phases.md), and the lane is [delivery-pr-lane](delivery-pr-lane.md).
+This file is the engine's white box around them: the flows, the run, the runner, and the
+configuration.
+
+```mermaid
+flowchart LR
+  subgraph delivery
+    F["flows, run, flow-runner, stack config"]
+    P["delivery-phases"]
+    L["delivery-pr-lane"]
+  end
+  F -->|"sequences, resolves, gates"| P
+  P -->|"create-pr, update-base follow the git workflow"| L
+```
 
 Outside it: deploy, which is where "delivery" stops here; expertise, which is an agent a
 repository binds to a phase; visibility, which is a [surface](delivery-surface-dashboard.md)
@@ -41,6 +56,9 @@ another block or a repository conforms to.
 | `runner-low`, `runner-medium`, `runner-high`, `runner-xhigh`, `runner-max` | agents in `runners/`, the effort runners, listed in the Claude manifest only | The flow-runner, when a phase's configured effort overrides its skill's own default |
 | `SessionStart` | hook, `hooks/hooks.json` and `hooks.json` | Either host, when a session opens |
 | `engine-contract.md`, `surface-contract.md`, `flow-phases.md`, `capture-contract.md`, `flow-execution-model.md`, `phase-resolution.md`, `smell-baseline.md`, `tdd-rules.md`, `implement-kinds.md`, `config.schema.json` | contracts under `resources/` | A surface, a repo-native `flow-*`, a bound agent or skill, and `devbook-config`, by path or by name |
+
+Each phase skill is described in [delivery-phases](delivery-phases.md#interfaces), and each
+lane skill in [delivery-pr-lane](delivery-pr-lane.md#interfaces). The rest are below.
 
 ### flow-code
 
@@ -76,231 +94,6 @@ phase, and the repository's own instruction file for that folder says what a cha
 like. The flow runs the repository's check and never regenerates the derived indexes. It is the
 escalation target when any other flow discovers it needs a decision.
 
-### phase-update-base
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Fetch the base and fast-forward, or rebase the branch's own unpushed commits, and check out the
-branch a change's workflow names. It never stashes and never touches a dirty tree. A conflict
-blocks the phase rather than being resolved here, and a branch with an open pull request
-belongs to `update-pr-branch`.
-
-### phase-scope
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#change-kind"]
-```
-
-Restate the request, derive the kind and the acceptance criteria, and record the seams
-`implement` tests at. Unit seams are recorded for the backend area only, one per invariant's
-`Enforced at:` line, while each `#### Scenario:` is an end-to-end or integration seam left to
-`verify` and the e2e suite, so the frontend gets no test-first seams. For a refactor it plans the target layout and the references to update.
-In `flow-spec` it derives the folder and the chapter kind instead. It selects the devbook
-chapters every later brief loads, as one list, and escalates a new decision or bounded context
-to `flow-spec`. It implements nothing and writes no chapter. It reads chapters from the corpus
-the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
-a folder whole or an annotation fence.
-
-### phase-plan
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run"]
-```
-
-Map the design onto the project structure for a `create`: the contracts, the wiring, health and
-observability, and the slices `implement` works through. It runs for no other kind and writes
-no code.
-
-### phase-implement
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-code-run", ".devbook/arc42/building-blocks/delivery.md#phase-review"]
-```
-
-Write the tests at each recorded backend seam, then the code, running only compile and the touched
-tests. Its first call plans the slices and builds nothing: each slice is a seam or an area, and
-it decides whether the change needs frontend, backend, or both, and whether they run in order
-or in parallel. Every later call builds one slice and returns, so the flow-runner can review it.
-Each area runs as its own fork with its own context contract. With no seams recorded it names
-them before any test, and never skips test-first silently. The per-kind work, the dependency
-move and the project bootstrap and scaffold included, is in `implement-kinds.md`, and the
-test-first rules ported from Matt Pocock's `/tdd` are in `tdd-rules.md`. The spec is
-fixed input: a spec problem returns `revise: phase-scope` rather than a redesign inline. It never
-runs the full suite, commits, or reviews its own work.
-
-### phase-review
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#phase-implement", ".devbook/arc42/building-blocks/delivery.md#flow-code-run"]
-```
-
-Review one slice in a fresh context: the repository's own rules first, then a code-smell
-baseline, then correctness. Every finding cites a rule or a failure scenario. It never edits
-code, never checks conformance to the spec, and never spawns agents. Its blockers go back to
-`implement` within `policy.review.retryBudget`.
-
-### phase-build-test
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow"]
-```
-
-Build every project and run the unit and end-to-end suites, and return the failing targets
-with the error lines that matter. It is the one full run of the suites, once every slice is
-reviewed clean. It never fixes a failure and never continues on red: a red result is recorded,
-and the ready check sends it back to `implement`.
-
-### phase-verify
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#change-kind", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#procedure"]
-```
-
-Check the running application, at a depth the change kind decides. New behaviour gets a browser
-pass with captured evidence, a change to existing behaviour gets targeted verification, and a
-`config` or `dependency` change gets startup only. It starts the application through the
-repository's own `run` procedure and takes evidence through its `capture` procedure.
-`phase-verify.app` names the provider that starts the application, and `null` there means
-nothing to start.
-
-**Record the depth honestly.** A shallower depth is reported as the depth it was, never as
-verification that did not happen. This is the one guarantee that makes the other depths usable
-at all.
-
-**Capture evidence without a QA plugin.** The evidence rules are the engine's own contract, so
-they hold with no QA plugin, no agent bound on `verify`, and no capture skill. Capture resolves
-to the repository's `capture` skill, then the bound agent's, then this phase driving it
-directly. A missing piece changes who captures, never whether capture happens.
-
-### phase-spec-check
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/devbook.md#capture-specs"]
-```
-
-Check the change set against the specification the run built on and the chapters it touches,
-one verdict per item, before Personal Validation. The bound skill decides whether the phase
-only reports or also updates. An updating skill touches only `code-ahead` rows in scope, never
-sets `approved`, and runs the devbook check after it, and its edits are part of what the person
-approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
-`capture-specs` does, and `verify-change`, the default binding, does not.
-
-### phase-ready
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-runner"]
-```
-
-Decide whether the run is ready for Personal Validation from what review, Build & Test,
-`verify`, `spec-check`, and `scope` recorded. Not ready sends a brief of what is missing back to
-`implement`, or to `drafting` in `flow-spec`, within `policy.ready.retryBudget`. Once the budget
-is spent, the run reaches the gate with the open items listed first, and an unattended run
-parks instead. `code-ahead` and `unresolved` rows never send the run back, because they need a
-person. It does no new work, runs inline, and takes no configuration.
-
-### phase-personal-validation
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/building-blocks/delivery.md#gate", ".devbook/arc42/12-glossary.md#personal-validation"]
-```
-
-Hand the run back to a person to look at: bring the application up, publish the review links
-as clickable URLs, say what to check by hand, and present the review findings, the spec-check
-table, and any open items. It runs again on every revise round, because a revised change set is
-a new thing to look at.
-
-**Present, never decide.** The phase produces the review; the approve, revise, or decline
-decision after it belongs to the flow-runner. Nothing in the handoff can approve, skip, or
-soften that [gate](#gate). That is what lets the presentation be a phase skill while the gate
-itself stays out of a repository's reach.
-
-**No entry, no agent, and no model.** It refuses every field, has no entry in any phases map,
-and runs inline in the session the person is reading. A subagent has no user turn to hand back
-to, and a link nobody can click is not a handback. Starting the application is the phase's own
-job: a list of commands for the person to run is a failed handback rather than a shortcut.
-
-### phase-create-pr
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Open the pull request for the approved change set with the host's own action or `gh`, on the
-branch the change's workflow names. With the `pr-lane` slot unbound, it writes file artifacts
-only and opens nothing.
-
-### phase-report-back
-
-```meta
-related: [".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/building-blocks/delivery.md#run"]
-```
-
-Send the result to where the run came from. `phase-report-back.targets` names the
-destinations: every `origin` the run recorded, every `linked` item the change set names, and
-any `plugin:skill`, in order. One failed target blocks the phase, and the report names the
-targets that succeeded.
-
-### phase-summary
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run-finished", ".devbook/arc42/building-blocks/devbook-skills.md#retro"]
-```
-
-Close the run: state what it produced and where it landed, and publish the run's end to the
-surface. Closing chores hang off it as `summary.after`. A run that took two or more revise
-rounds at Personal Validation ends with an offer to run the `retro` skill over it — an offer
-only, never made in an unattended run.
-
-### phase-drafting and phase-check-review
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#flow-spec-run"]
-```
-
-`flow-spec`'s own two phases. `phase-drafting` writes the chapter through the agent its folder
-qualifier binds, under the repository's instruction file for that folder.
-`phase-check-review` checks `meta` blocks and references after renames, runs the devbook check,
-and lists every status change for the gate. It never regenerates `_meta/` and never edits
-code.
-
-### push-branch
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Push the current branch and set its upstream, and stop there. No pull request opens: this is
-the step for getting commits onto the remote so CI runs.
-
-### update-pr-branch
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Bring a pull request branch level with its base, resolve the conflicts, re-validate, and push.
-For a branch that is behind, or that a required up-to-date check is blocking.
-
-### fix-pr-checks
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Read a failing job's logs, reproduce locally, classify the failure, fix it, and push until the
-checks go green.
-
-### pr-merge-ready
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
-```
-
-Score one pull request against the merge-ready checklist and clear its blockers, using the
-other three lane skills as its tools. One pull request per pass.
-
 ### start-session-from-issue
 
 ```meta
@@ -334,7 +127,7 @@ everything it reads is the engine keys or a skill the repository owns. `init` wr
 rewrites it to the installed version and refuses where it does not.
 
 **Release what an earlier engine seeded.** An engine before the procedures moved out of it —
-into a plugin of their own, and from there into [devbook](devbook.md#procedure) — wrote `start`
+into a plugin of their own, and from there into [devbook](devbook-procedures.md#procedure) — wrote `start`
 and `capture` with a wrapper per host and stamped them under `components.delivery.materialized`.
 `update` drops those entries and deletes no file: each stays the repository's until
 `devbook:update` adopts it.
@@ -368,7 +161,10 @@ related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/surfaces.md",
 
 What a run is made of, what a repository declares about it, and where the line runs between
 what the engine owns and what a repository binds. Five aggregates, two domain services, three
-domain events, and the two value objects and one enum more than one aggregate holds. The
+domain events, and the two value objects and one enum more than one aggregate holds, all drawn
+in the model below. Two of the aggregates, Phase and Gate, and the Gate Decision value object
+are described in [delivery-phases](delivery-phases.md#structure), and the Pull Request Lane
+service in [delivery-pr-lane](delivery-pr-lane.md#structure). The
 kernel vocabulary is defined once in [chapter 8](../08-crosscutting-concepts.md): plugin,
 layer, tracker, surface, host slot, phase, and gate. The terms this block owns and no part
 below names are in the [glossary](../12-glossary.md): tier, Personal Validation, PR lane, and
@@ -531,7 +327,7 @@ one long step, and a resumed session and a report both depend on that difference
 **Run Context** (value object) is what the run is about, set once and refined rather than
 accumulated: the change kind, the item being worked, the branch, and the worktree it lives in.
 It also holds `origins`, every work item the run started from, each with its kind: `issue`,
-`entry`, `annotation`, `change`, or `schedule`. It is a value because nothing in it has
+`entry`, `annotation`, or `change`, and none for an ad-hoc request. It is a value because nothing in it has
 identity. Replacing it wholesale is the only sensible update, and two runs with the same
 context are still two runs.
 
@@ -550,7 +346,7 @@ Also called: flow skill, staged procedure.
 A staged procedure named for what changes, run start to finish in one session and passing
 the Personal Validation gate before its pull request. Two ship here: `flow-code` for every
 change to the code and `flow-spec` for the five devbook folders. Each owns its
-[phase](#phase) order and the [tier](#phase-tier) that order makes.
+[phase](delivery-phases.md#phase) order and the [tier](#phase-tier) that order makes.
 
 A flow is the unit a request is routed to, so what it changes is the boundary that matters. A
 repository needing a different shape writes its own `flow-*`, which takes precedence for what
@@ -574,8 +370,8 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/12-
 
 The enum [Flow](#flow) owns: which phases a flow runs. `flow-code` runs one tier for every
 kind, and only `plan` is limited to a kind, `create`. A `config` change therefore also gets
-review and Build & Test, where a broken workflow file fails. `flow-spec` keeps the shorter
-documentation tier. It drafts and checks in place of implementing, building, verifying, and
+review and Build & Test, where a broken workflow file fails. `flow-spec` keeps a shorter tier
+of its own. It drafts and checks in place of implementing, building, verifying, and
 checking the spec, because there is nothing runnable and the chapter it writes is the
 specification.
 
@@ -586,75 +382,8 @@ stage the run has reached when the context gauge crosses its threshold.
 | --- | --- | --- |
 | `flow-code` runs the same phases for every kind; only `plan` is limited to `create` | `flow-code` | untested |
 | A kind changes what `implement` does and how deep `verify` goes, never which phases run | phase sequencing | untested |
-| The documentation tier runs `drafting` and `check-review` and none of `implement` through `spec-check`, and still runs the ready check, Personal Validation, and the pull request | `flow-spec` | untested |
+| The `flow-spec` tier runs `drafting` and `check-review` and none of `implement` through `spec-check`, and still runs the ready check, Personal Validation, and the pull request | `flow-spec` | untested |
 | Session Handoff belongs to no tier, firing at whatever stage the run has reached | the flow-runner | untested |
-
-### Phase
-
-```meta
-related: [".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/configuration.md"]
-```
-
-The unit a repository configures. A phase has a stable id, is one skill named `phase-<id>`,
-and has one entry per flow in the `phases` map. The entry says which agent runs it, which
-skill it follows, on which model, at which effort, with which MCP servers, and which chores run
-before and after it. The list is closed and declared by the engine: a repository picks who runs
-a phase, never what the phases are. That asymmetry keeps configuration from becoming a second,
-undocumented flow language.
-
-Every field resolves on its own, most specific key first, then the session. An absent field
-inherits the session's model, effort, and inline runner, so `{}` is a complete entry. The
-qualifier after a colon is the folder on `phase-drafting` in `flow-spec`, or an area on
-`phase-implement`. No qualifier names a kind, because what a kind needs is
-`phase-implement`'s call.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| The phase list is closed; a phase a flow lacks, or a map under an unknown flow, is rejected by name | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| The committed file lists exactly the phases each flow has, and an overlay names only what it changes | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| Nothing crosses flows: `flow-spec` never reads `flow-code`'s entries | phase resolution | untested |
-| The ready check and Personal Validation take no entry, and a `phase-personal-validation` key is refused in any map | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| Chores run zero or more times, in declared order | chore invocation | untested |
-| A chore may declare itself required and stop the run; it may never rewrite a result or stand in for a gate | chore invocation | untested |
-| A server in a phase's `mcp` that does not answer costs that phase its grounding, never the run, and is reported once | phase resolution | untested |
-| A chore's id may carry `--flag` arguments for its skill; a phase's `skill` takes none | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-
-A **chore** is an entry in a phase's `before` or `after` list. It contributes side effects and
-a report and never changes an outcome. The session's opening chores hang off
-`update-base.before`, test data off `verify.before`, and closing chores off `summary.after`.
-
-A **replan** is the `scope.after` chore that re-checks an agreed change before a run acts on
-it: every proposed chapter change against its target on the base, every open step against the
-code, and the chapters the change relates to. Bound `required`, a flag stops the run. The chore
-rewrites nothing, since revising the plan is the change owner's decision.
-
-### Gate
-
-```meta
-related: [".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/adr/configuration.md"]
-```
-
-A human checkpoint attached to a phase id. `{ "at": "scope", "when": "after" }` presents the
-output of `scope` and asks a question. Personal Validation is the mandatory instance of this
-pattern rather than a second mechanism, so there is one gate concept for configuration and the
-engine alike.
-
-The asymmetry is the whole design. Configuration may add a gate anywhere and may never remove
-one or hand one to a plugin, so a repository's overlay can only ever make a flow more
-conservative.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| Three outcomes and only three: approve, revise, decline | gate evaluation | untested |
-| Revise re-runs the gated phase carrying the human's notes, bounded by the revise budget | gate evaluation | untested |
-| Decline blocks the stage and is never a silent skip | gate evaluation | untested |
-| Configuration may add a gate and may never remove one | config validation | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| No agent or skill performs a gate on its own behalf | gate evaluation | untested |
-| An unattended run parks at a blocking gate with a handoff brief; it never waits and never self-approves | gate evaluation | untested |
-
-**Gate Outcome** (enum) is `approve`, `revise`, or `decline`. There is no fourth value and no
-absent one. A gate that was reached and produced nothing is a run that stopped, recorded as a
-block rather than inferred from silence.
 
 ### Stack Config
 
@@ -724,12 +453,12 @@ vocabulary distinguishes from a key nobody wrote.
 ### Flow Runner
 
 ```meta
-related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/delivery.md#phase"]
+related: [".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/building-blocks/delivery-phases.md#phase"]
 ```
 
 Also called: runner, sequencer.
 
-The agent that runs a session's flow. It sequences the flow's phases and prepends Update Base.
+The agent that runs a session's flow. It sequences the phases the flow names, Update Base first.
 It resolves each phase's agent, skill, model, and effort, runs the phase the way those fields
 say, tracks the run against the surface, runs the ready check, and enforces the gate.
 
@@ -739,7 +468,7 @@ flowchart TD
     pv -->|yes| inline["inline, no agent, no model"]
     pv -->|no| resolve["resolve agent, skill, model, effort, field by field"]
     resolve --> set{"agent, model, or effort set?"}
-    set -->|no| own["the skill's own default, forked or inline"]
+    set -->|no| own["the contract's default: inline, forked, or delegated"]
     set -->|yes| effort{"effort overrides the skill's default?"}
     effort -->|no| call["agent call: the named agent or general-purpose, with the model"]
     effort -->|yes| runner["runner-effort runs the named agent's body"]
@@ -769,42 +498,12 @@ recorded.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | One runner per run, holding the session for the run's whole length | the flow-runner | untested |
-| It prepends Update Base, resolves each phase's fields most specific key first and then the session, and tracks the run against the surface | the flow-runner | untested |
+| It runs Update Base first, resolves each phase's fields most specific key first and then the session, and tracks the run against the surface | the flow-runner | untested |
 | A phase whose configured effort overrides its skill's default runs inside `runner-<effort>` on Claude Code, and on the session's effort on Copilot | the flow-runner | untested |
 | `implement` and `review` alternate per slice as two forks, each one level deep | the flow-runner | untested |
 | Personal Validation always runs inline with the runner | the flow-runner | untested |
 | The ready check and the gate are the runner's, never anything an agent bound to a phase can be | the flow-runner | untested |
 | The commit point is a phase handing back, when policy says so | the flow-runner | untested |
-
-### Pull Request Lane
-
-```meta
-related: [".devbook/arc42/12-glossary.md#pr-lane"]
-```
-
-Getting a finished change reviewed and merge-ready: push the branch, bring it level with its
-base, fix the checks that fail, and score it against the merge-ready checklist. Raising the
-pull request itself is the host's own action rather than a skill here.
-
-Invocation semantics: command-invoked, and separately from a run. These skills are the one
-part of this block routinely used on a change no flow produced. With the `pr-lane` slot
-unbound, `create-pr` writes file artifacts only and opens nothing.
-
-| Invariant | Enforced at | Evidence |
-| --- | --- | --- |
-| Raising the pull request is the host's own action, never a skill here | the lane skills | untested |
-| The lane runs separately from a run, on a change no flow produced | the lane skills | untested |
-| With the `pr-lane` slot unbound, `create-pr` writes file artifacts only and opens nothing | `phase-create-pr` | untested |
-| An item the tracker reports as part of a change runs on the branch its workflow names; the engine reads the workflow and never chooses it | `phase-update-base` | untested |
-| A proposal's status follows its pull request, and the engine writes none of it | `phase-create-pr` | untested |
-
-**Git Workflow** (enum) is `single-branch` or `proposal-first`, reported by the tracker with
-the item. `single-branch` works the whole change on `change/<name>` and opens one pull request
-on the closing run, after the acceptance and archive it carries. A step there is a commit,
-`done` once its tasks are ticked. `proposal-first` gives the proposal `change/<name>`, each
-step `step/<name>/<N>`, and the close `archive/<name>`, one pull request each, the proposal's
-opened as a draft. The step prefix is not `change/` because git refuses a ref that is both a
-leaf and a directory.
 
 ### Run Started
 
@@ -877,7 +576,7 @@ Published language rules:
 ### Run Finished
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane"]
+related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane"]
 ```
 
 Published when a run reaches its Summary phase or stops, and a run that stopped is finished
@@ -907,21 +606,6 @@ Published language rules:
   marker. A later `start_run` needs that difference to reattach to one and refuse the other.
 - **Verdicts travel verbatim.** They are the same rows the sweep's brief carries in its fenced
   block, so a surface and a GitHub reader never disagree about a chapter.
-
-### Gate Decision
-
-```meta
-related: [".devbook/arc42/building-blocks/delivery.md#gate", ".devbook/arc42/building-blocks/delivery.md#run"]
-```
-
-A value object held by more than one aggregate. What a person answered at a gate, with the
-notes they gave: an outcome, the phase it was attached to, and the stage it belonged to. Both
-[Run](#run) and [Gate](#gate) hold it because it is the one fact they must agree on. It is a
-value so that recording it twice is harmless and re-deriving it is impossible.
-
-A resumed session re-runs the gate rather than trusting a decision it cannot see the
-conversation behind. That only works because the decision is written down rather than
-remembered.
 
 ### Host Slot
 
@@ -970,11 +654,12 @@ folder and a chapter kind instead, which pick the drafting agent.
 ## Runtime
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/building-blocks/delivery.md#gate", ".devbook/arc42/adr/flow-engine.md"]
+related: [".devbook/arc42/building-blocks/delivery.md#run", ".devbook/arc42/building-blocks/delivery-phases.md#gate", ".devbook/arc42/adr/flow-engine.md"]
 ```
 
-How a run moves: the phase spine with its two cycles, the two tiers a flow runs, the three
-answers a gate can give, and then each of the two flows. Every flow diagram below runs the same
+How a run moves: the phase spine with its two cycles, the two tiers a flow runs, and then each
+of the two flows. The three answers a gate can give are
+[A Gate, Answered](delivery-phases.md#a-gate-answered). Every flow diagram below runs the same
 spine. The agent, model, and MCP servers each phase resolves are the repository's `phases` map,
 and the config templates ship both maps filled in. This section is the model, not the wiring.
 
@@ -1033,7 +718,7 @@ flowchart TD
 ```
 
 Same opening, same close, different middle. The tier belongs to the flow: `flow-code` runs the
-code tier for every kind, and `flow-spec` runs the documentation tier.
+code tier for every kind, and `flow-spec` runs its own, shorter tier.
 
 ```mermaid
 flowchart LR
@@ -1050,7 +735,7 @@ flowchart LR
         c9 --> c10["Create PR, Report Back, Summary"]
     end
 
-    subgraph docs["Documentation tier, flow-spec"]
+    subgraph docs["Spec tier, flow-spec"]
         direction TB
         d1["Update Base"] --> d2["Scope"]
         d2 --> d3["Drafting, per folder"]
@@ -1061,47 +746,17 @@ flowchart LR
     end
 ```
 
-- **The documentation tier drafts and checks in place of building, verifying, and checking the
+- **The `flow-spec` tier drafts and checks in place of building, verifying, and checking the
   spec.** There is nothing runnable to verify and nothing to check a chapter against, since the
   chapter is the specification. A chapter change still passes the ready check and Personal
   Validation and still opens for review.
-- **Verify's depth inside the code tier is driven by change kind.** New functionality gets a
-  browser pass with captured evidence, an existing-flow change gets targeted verification, and
-  a `config` or `dependency` change gets startup only. Where there is no runnable application
-  the depth is recorded as skipped rather than claimed.
+- **Verify's depth inside the code tier is driven by the kind.** A `feature` adding behaviour,
+  `create`, and `project` get a browser pass with captured evidence; a `feature` changing
+  existing behaviour, `defect`, and `refactor` get targeted verification; `config` and
+  `dependency` get startup only. Where there is no runnable application the depth is recorded
+  as skipped rather than claimed, and missing Playwright or Aspire tooling blocks the phase.
 - **A flow shipped by a higher layer declares its own phase ids.** The engine never enumerates a
   skill in a layer above it, so a tier is not something it can assign from here.
-
-### A Gate, Answered
-
-```meta
-```
-
-Three outcomes, and the difference between them is what happens to the run rather than what
-the person felt about the work.
-
-```mermaid
-stateDiagram-v2
-    [*] --> Presented: the gated phase's output is shown
-    Presented --> Approved: approve
-    Presented --> Revising: revise, notes carried back
-    Presented --> Blocked: decline
-    Revising --> Presented: the phase re-runs, within the revise budget
-    Revising --> Blocked: revise budget exhausted
-    Approved --> [*]: the run continues
-    Blocked --> [*]: the stage is blocked, and says so
-    Presented --> Parked: nobody is watching
-    Parked --> [*]: handoff brief written, run left for a person
-```
-
-- **Decline is never a silent skip.** The stage is recorded as blocked, which is a different
-  claim from a stage nobody ran.
-- **Revise carries the notes.** Re-running the phase without them would be asking the same
-  question and hoping for a different answer.
-- **Parked is not declined and not approved.** An unattended run reaching a blocking gate
-  stops with a brief naming what a person has to look at. It never waits and never
-  self-approves, and that boundary is where [delivery-schedule](delivery-schedule.md) takes
-  over.
 
 ### flow-code run
 

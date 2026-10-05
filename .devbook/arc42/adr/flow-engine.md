@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-10-06
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#roles-and-services", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/08-crosscutting-concepts.md#gate", ".devbook/arc42/08-crosscutting-concepts.md#tracker", ".devbook/arc42/08-crosscutting-concepts.md#role", ".devbook/arc42/08-crosscutting-concepts.md#mcp-server", ".devbook/arc42/building-blocks/delivery-pr-lane.md#pull-request-lane", ".devbook/arc42/adr/configuration.md", ".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/adr/releases.md"]
 ```
 
 `delivery` is a flow engine: two flows named for what changes — `flow-code` for every change to
@@ -93,7 +93,8 @@ flowchart LR
   are spent, the open items go to the gate, listed first: the person decides with them in
   view, and an unattended run parks instead. It takes no configuration.
 - **Report Back by origin.** A run records every work item it started from in `origins`, each
-  with its kind — `issue`, `entry`, `annotation`, `change`, `schedule`. `report-back.targets`
+  with its kind — `issue`, `entry`, `annotation`, `change` — and an ad-hoc request has none; an
+  unattended run parks at the gate and never reports back. `report-back.targets`
   sends the result to every `origin`, to every `linked` item the change set names, and to any
   `plugin:skill` destination, in order; one failed target blocks the stage and names which
   succeeded. `bindings["delivery.tracker"]` stays: it says which tooling reaches an item.

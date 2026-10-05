@@ -1,6 +1,6 @@
 ---
 name: phase-verify
-description: 'Shared Verify phase for flow-code. Runs after Build & Test: starts the application through the repository''s run recipe and drives the scenarios drawn from the scope''s acceptance criteria, taking evidence through its capture procedure, at a depth the change kind decides (new functionality = Playwright QA with capture, bug/existing-flow change = targeted verification, config or dependency change = startup-only, nothing to run = skipped). Invoked by the flow-runner agent, never directly.'
+description: 'Shared Verify phase for flow-code. Runs after Build & Test: starts the application through the repository''s run recipe and drives the scenarios drawn from the scope''s acceptance criteria, taking evidence through its capture procedure, at a depth the kind decides (feature adding behaviour, create, project = Playwright QA with capture; feature changing behaviour, defect, refactor = targeted; config, dependency = startup-only; nothing to run = skipped). Invoked by the flow-runner agent, never directly.'
 ---
 
 # Phase: Verify
@@ -129,13 +129,14 @@ If required MCP tooling is unavailable:
 - Do not complete the phase through a degraded/manual fallback that omits required
   browser automation, evidence capture, or monitoring.
 - Do not describe browser snapshots or smoke output as Playwright MCP screenshots,
-  videos, or traces. They can be noted as fallback render evidence only when the selected
-  depth allows a degraded result; they do not satisfy required Playwright evidence capture.
+  videos, or traces, and never record them as evidence in their place.
 
-Applies when `policy.qa.depth` is absent from the stack config; `policy.qa.ceiling` caps
-whatever is selected, per **QA depth** in `resources/engine-contract.md`.
+The kind `phase-scope` persisted as `changeKind` selects the depth. Applies when
+`policy.qa.depth` is absent from the stack config; `policy.qa.ceiling` caps whatever is
+selected, per **QA depth** in `resources/engine-contract.md`.
 
-- **New functionality → QA verification with capture:**
+- **`feature` adding behaviour, `create`, `project` → QA verification with capture.** For
+  `project`, the scenarios are the app host, the health endpoints, and the smoke checks:
   1. **Run the application locally** via the `phase-verify.app` provider.
   2. **Execute the changed/affected scenarios with Playwright** — via the `playwright` MCP
      server, the bound QA agent drives each scenario, capturing evidence per checkpoint
@@ -155,7 +156,8 @@ whatever is selected, per **QA depth** in `resources/engine-contract.md`.
   Playwright execution stays in the running **worktree** — delegated to a sub-agent
   that shares it, per **Run This Phase In A Sub-Agent** — so it exercises the actual change
   set while its output stays out of the owner session's context.
-- **Bug fix, refactor, or change to existing functionality → targeted QA without required capture:**
+- **`feature` changing existing behaviour, `defect`, `refactor` → targeted QA without
+  required capture:**
   1. **Run the application locally** via the `phase-verify.app` provider and verify the
      affected scenarios — for a defect, the reproduction and the regression scenario.
   2. **Use Playwright when it helps verify the flow**, capturing on failure or on request
@@ -163,13 +165,13 @@ whatever is selected, per **QA depth** in `resources/engine-contract.md`.
      missing MCP availability blocks QA instead of falling back to an incomplete manual
      check.
   3. **Record pass/fail and monitoring findings** for the affected scenarios.
-- **`config` or `dependency` change with no functional change → startup-only:** start the
+- **`config`, `dependency` → startup-only:** start the
   application, confirm the Aspire dashboard and health endpoints report healthy, and confirm
   the logs show no new errors. Full functional Playwright scenarios and capture are not
   required unless the change introduces new user-facing behavior; a framework upgrade adds
   smoke checks.
-- **No functional change and nothing to run → skip:** mark this phase `skipped` and record
-  why.
+- **Nothing to run** — `phase-verify.app` is `null`, or a `config` change touches nothing
+  that runs → skip: mark this phase `skipped` and record why.
 
 ## Reverifying After Requested Changes
 

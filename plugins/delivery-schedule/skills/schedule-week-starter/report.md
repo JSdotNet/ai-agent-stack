@@ -10,7 +10,7 @@ The frame and its rules are `../../resources/report-contract.md`. Follow this sh
 ### Needs you
 | What | Where | Do |
 | --- | --- | --- |
-| <breaking change that touches this repository> | [<version>](<url>) | `flow-update-packages` |
+| <breaking change that touches this repository> | [<version>](<url>) | `flow-code`, dependency kind |
 
 ### <Topic>
 | Date | What | Change | Link |

@@ -1,95 +1,55 @@
 ---
 name: flow-spec
-description: 'Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; a domain/ context map or bounded context; the tech/ technology graph; design/ tokens and guidelines; the ai/ adoption record. One flow for the five folders: it derives the folder and the kind, loads the repository''s own instruction files for that folder, drafts through the role the folder maps to, runs the repository''s check, and closes through the documentation tier. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter (flow-code), the dependency behind a tech/ entry (flow-update-packages), or wireframes, prototypes, and UI reviews (the ux role directly).'
+description: 'Run any change to a devbook folder — an arc42/ chapter, decision record, debt record, or proposal; a domain/ context map or bounded context; the tech/ technology graph; design/ tokens and guidelines; the ai/ adoption record. One flow for the five folders: scope derives the folder and the kind, drafting runs through the agent the folder binds under the repository''s own instruction files, check and review runs the repository''s check, and the ready check and personal approval come before the pull request. The escalation target for a new decision, a cross-cutting redesign, a boundary question, and accepted debt. DO NOT USE FOR: the code that implements a chapter, or the dependency behind a tech/ entry (flow-code), or wireframes, prototypes, and UI reviews (the ux agent directly).'
 ---
 
 # Flow: Devbook Folder (`arc42/`, `domain/`, `tech/`, `design/`, `ai/`)
 
 Open the reply with `delivery@<version>`, `version` read from `../../.claude-plugin/plugin.json`, not recalled.
 
-Agent transitions follow `resources/flow-phases.md`; per-stage model choice follows
-`resources/phase-resolution.md`. What a chapter must look like is the repository's rule,
-not this flow's: the instruction files that govern the target path and the check the
-repository ships own structure, metadata, templates, status, and every folder-specific rule.
-This flow restates none of them.
+What a chapter must look like is the repository's rule, not this flow's: the instruction files
+that govern the target path and the check the repository ships own structure, metadata,
+templates, status, and every folder-specific rule. This flow restates none of them.
 
-## Input Expectations
+Required input: the change goal. The folder, the chapters in scope, and the kind are derived in
+`phase-scope`.
 
-- Target folder and scope: which chapters or files are in scope.
-- Change goal, and whether it is new scaffolding or a refinement of what exists.
-- For `arc42/`, the kind: chapter content, decision record, debt record, or a proposal not
-  yet decided.
+## Phases
 
-If any of these is not stated, derive it in Stage 1 from the request and the folder's
-contents, and continue.
+The documentation tier, defined in `resources/flow-phases.md`; who runs each phase is resolved
+per `resources/phase-resolution.md`:
 
-## Folder → Role
+`phase-update-base` → `phase-scope` → `phase-drafting` → `phase-check-review` → `phase-ready`,
+back to `phase-drafting` while not ready → `phase-personal-validation` → `phase-create-pr` →
+`phase-report-back` → `phase-summary`
 
-The folder decides who drafts, and its `phases` entry decides the agent, model, and effort:
+- **Scope** settles the folder and the kind. For `arc42/`: chapter content, a decision record,
+  a debt record, or a proposal, which is a decision record in `proposed` status. A folder the
+  repository has not adopted stops the run there: adopting one is devbook's own `init` or
+  `update`.
+- **An `ai/` usage whose tool has no `tech/` chapter,** or a `tech/` entry whose choice is an
+  open decision, runs this flow for that folder first.
 
-| Folder | Role | `phases` entry |
+## Folder → Drafting Entry
+
+The folder qualifies `phase-drafting`, so each folder names its own agent, model, and effort:
+
+| Folder | `phases` entry | Drafts |
 |---|---|---|
-| `arc42/` | `architecture` | `phase-drafting:arc42` |
-| `domain/` | `domain` | `phase-drafting:domain` |
-| `tech/` | `architecture` | `phase-drafting:tech` |
-| `design/` | `ux` | `phase-drafting:design` |
-| `ai/` | `docs` | `phase-drafting:ai` |
-
-A repository binds a different agent per folder through `bindings["delivery.roles"]`; a
-person picks a different model per folder through the personal override for that category.
-
-## Stage 1: Context Loading
-
-- Confirm the repository keeps the target folder, at the root or under `.devbook/`. If it
-  does not, stop and say so: adopting a folder is the devbook convention's own `init` or `update`, never
-  a flow's.
-- Load the instruction files that govern the target path — `.agents/rules/devbook-<folder>.md`,
-  and `devbook-chapter-metadata.md` and `devbook-writing.md` beside it, read directly, because a rule fires only when
-  a host opens a matching file and a new chapter has none yet — task-scoped. Load only the
-  chapters in scope plus the ones the change links to — never the whole folder.
-- Settle the kind. A `arc42/` proposal, comparison, or target-architecture draft is a
-  decision record in `proposed` status: written to be decided, not left as a loose document.
-  A `ai/` usage whose tool has no `tech/` chapter, or a `tech/` entry whose choice is an
-  open decision, routes through this flow for that folder first.
-- State the derived folder, scope, kind, and goal before continuing.
-
-**Agents:** none
-
-## Stage 2: Drafting
-
-- Hand off to the role the table maps the folder to. Fallback: draft inline under the same
-  instruction files.
-- Link to a decision or debt record; never restate one inside a chapter. Keep terms aligned
-  with the ubiquitous language in `domain/` when that folder exists.
-- Never write the `approved` rung: that is a person's decision at a gate, not an author's.
-
-**Agents:** the role from the table
-
-## Stage 3: Check & Review
-
-- Every touched chapter carries the `meta` block its instruction file requires.
-- Update every reference elsewhere when a heading or file was renamed or moved.
-- Run the check the repository's `AGENTS.md` devbook section names, and fix what it reports
-  here. Never regenerate `_meta/` in this run: the refresh is the repository's own path.
-- Summarize the changed chapters for the user, naming every status change.
-
-**Agents:** the role from the table
-
-## Final Phases (Shared)
-
-Documentation/config tier of `resources/flow-phases.md`, in order: Personal
-Validation → Create Pull Request → Work Item Update → Summary. That file defines them; change
-them there, for every flow.
+| `arc42/` | `phase-drafting:arc42` | Architecture chapters, decision and debt records |
+| `domain/` | `phase-drafting:domain` | The context map and bounded contexts |
+| `tech/` | `phase-drafting:tech` | The technology graph and its ratings |
+| `design/` | `phase-drafting:design` | Principles, tokens, component guidelines |
+| `ai/` | `phase-drafting:ai` | The AI adoption record |
 
 ## Surface Reporting
 
-Follow the **Reporting Contract** in `resources/surface-contract.md`: every lifecycle call
-goes to each bound surface, with the `runId` that surface's own `start_run` returned. With no
-surface bound, skip the calls, say so once, and continue — file artifacts remain the source
-of truth.
+Per **Reporting Contract** in `resources/surface-contract.md`; with no surface bound, say so
+once and continue on the file artifacts.
 
-- `start_run` with `skillId: "flow-spec"` and stages: Context Loading, Drafting, Check &
-  Review, Personal Validation, Create Pull Request, Work Item Update, Summary.
-  Pass `sessionId: "${CLAUDE_SESSION_ID}"` — the host's session id, per the `session-id` slot.
-- During Drafting, open/update `render_markdown` with the drafted chapter, and
-  `render_diagram` with any changed Mermaid diagram.
+- `start_run` with `skillId: "flow-spec"`, `sessionId: "${CLAUDE_SESSION_ID}"` per the
+  `session-id` slot, and one stage per phase above in order, each named by its phase skill's
+  title: Update Base, Scope, Drafting, Check & Review, Ready, Personal Validation, Create Pull
+  Request, Report Back, Summary.
+- During Drafting, render the drafted chapter with `render_markdown` and any changed Mermaid
+  with `render_diagram`.

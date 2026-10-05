@@ -5,15 +5,17 @@ related: [".devbook/arc42/building-blocks/README.md", ".devbook/arc42/adr/plugin
 ```
 
 This block makes sure output reads well. It holds reusable guidance that any plugin can name
-and none has to depend on. Today that is three skills: `show-me`, which puts a picture before
+and none has to depend on. Today that is four skills: `show-me`, which puts a picture before
 the prose whenever the content has a shape; `research-brief`, which answers a question about
-something outside the repository from primary sources, every claim cited; and `pr-body`, which
-writes a pull request description that says whether the merge can be walked back.
+something outside the repository from primary sources, every claim cited; `pr-body`, which
+writes a pull request description that says whether the merge can be walked back; and
+`retro`, which reads one session or run back and ranks what would make the next one get
+further.
 
 Inside the block: the catalog of picture kinds, the content each one fits, and the rule that
 prose afterwards says only what the picture cannot; and the shape of a research brief, with
 what counts as a primary source; and the three sections of a pull request description, with
-what makes a door one-way. Outside it: where the output goes. A
+what makes a door one-way; and the lenses a retro reads through. Outside it: where the output goes. A
 chapter's sections are its folder rule's, a pull request's structure is the repository's
 template, a flow's report follows the engine's reporting contract, and a brief lands wherever
 its caller puts it. The block owns no state,
@@ -29,6 +31,7 @@ installs nothing into a repository, and stamps nothing.
 | `show-me` | skill | A person who asks to be shown, or a caller that names it: `devbook-writing.md`, and `delivery` when it writes a pull request description and reports back to the person |
 | `research-brief` | skill | A person who asks for research, or a caller that names it: `delivery`'s Scope phase, and its Drafting phase for `arc42/` and `tech/` |
 | `pr-body` | skill | A person writing a pull request, or a caller that names it: `delivery`'s Create Pull Request phase, and `delivery-schedule`'s draft pull request contract; `schedule-merge-review` reads the door it declares |
+| `retro` | skill | A person after a session or run, or a caller that names it: `delivery`'s Summary, which offers it after two or more revise rounds at Personal Validation, and `delivery-schedule`'s `schedule-weekly-retro`, which reads a week through its lenses |
 
 ### show-me
 
@@ -71,12 +74,30 @@ template and a caller's ordered body keep their structure; the skill fills the s
 match. It is adapted from the `pr` skill in `mattpocock/skills`, which copies `show-me`'s
 catalog in where this one names the skill.
 
+### retro
+
+```meta
+related: [".devbook/arc42/adr/plugin-boundaries.md", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-weekly-retro", ".devbook/arc42/building-blocks/delivery.md#phase-summary"]
+```
+
+The skill reads one session — the current one unless another is named — or one delivery run
+the surface recorded, with the person present, and ranks the changes to the agent's
+environment that would have saved the most turns or tokens. It looks through ten lenses:
+navigation, rediscovery, automated checks, coding standards, baseline size, unused context,
+no-ops, tool economy, information access, and model and effort. A mechanical violation gets a check in the
+repository's own linter, hook, or CI, never a written rule; a written rule is kept for a
+judgement call and goes to review rather than implementation. It presents the candidates and
+writes nothing, so each accepted one is a change through the flow that owns the file. The
+lenses live here alone: `schedule-weekly-retro` reads a week of sessions through the same set
+and lands its edits as a draft pull request. It is adapted from the `retro` skill in
+`mattpocock/skills`, merged with the three lenses the weekly retro carried before.
+
 ## Structure
 
 ```meta
 ```
 
-Three parts. The first is `show-me`'s catalog: each row pairs a kind of content with the
+Four parts. The first is `show-me`'s catalog: each row pairs a kind of content with the
 picture that shows it.
 
 | The content describes | Picture |
@@ -93,7 +114,8 @@ picture that shows it.
 
 The second is `research-brief`'s brief: question, answer, one cited claim per row with its
 confidence, and what stays unanswered. The third is `pr-body`'s description: Summary, Evidence,
-Merge Danger.
+Merge Danger. The fourth is `retro`'s ten lenses, each pairing what to look for with the
+change it calls for.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -104,6 +126,8 @@ Merge Danger.
 | A brief writes nothing to the repository | `research-brief` | untested |
 | A one-way door links the decision record it rests on, or says there is none | `pr-body` | untested |
 | Evidence never claims a validation depth that was not reached | `pr-body` | untested |
+| A mechanical violation is answered with a check, never a written rule | `retro` | untested |
+| A retro writes nothing; every candidate names its evidence, and a lens with none gets no candidate | `retro` | untested |
 
 ## Dependencies
 
@@ -116,11 +140,11 @@ alone, and each keeps its own short rule for when the skill is absent.
 
 ```mermaid
 flowchart LR
-    DEV["devbook<br/>devbook-writing.md"] -.->|"names show-me"| SK["devbook-skills<br/>show-me, research-brief, pr-body"]
+    DEV["devbook<br/>devbook-writing.md"] -.->|"names show-me"| SK["devbook-skills<br/>show-me, research-brief, pr-body, retro"]
     DEL["delivery<br/>pull request, report-back"] -.->|"names show-me"| SK
     DELS["delivery<br/>scope, arc42 and tech drafting"] -.->|"names research-brief"| SK
-    DEL -.->|"names pr-body"| SK
-    SCH["delivery-schedule<br/>draft pull requests, merge review"] -.->|"names pr-body"| SK
+    DEL -.->|"names pr-body and retro"| SK
+    SCH["delivery-schedule<br/>draft pull requests, merge review, weekly retro"] -.->|"names pr-body and retro"| SK
 ```
 
 ### Outbound
@@ -141,6 +165,6 @@ flowchart LR
 | Consumer | Pattern | Mechanism | Contract | What it relies on |
 | --- | --- | --- | --- | --- |
 | [devbook](devbook.md#dependencies) | Separate Ways | `devbook-writing.md` names `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Nothing else. Without the skill, the rule's own table of diagram kinds applies. |
-| [delivery](delivery.md#dependencies) | Separate Ways | The Create Pull Request phase names `pr-body`, and `show-me` beneath it; the report-back to the person names `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief` | The skill name alone | Nothing else. Without `pr-body`, the description follows `show-me` or plain prose; without `show-me`, the engine reports in prose as before; without `research-brief`, it cites each external fact's primary source itself or leaves the fact open. |
-| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares | The skill name alone | Nothing else. Without the skill, the contract's body still states the door, and the review judges a one-way diff from the diff itself. |
+| [delivery](delivery.md#dependencies) | Separate Ways | The Create Pull Request phase names `pr-body`, and `show-me` beneath it; the report-back to the person names `show-me`; the Scope phase, and the Drafting phase for `arc42/` and `tech/`, name `research-brief`; the Summary offers `retro` after two or more revise rounds | The skill name alone | Nothing else. Without `retro`, the Summary offers nothing; without `pr-body`, the description follows `show-me` or plain prose; without `show-me`, the engine reports in prose as before; without `research-brief`, it cites each external fact's primary source itself or leaves the fact open. |
+| [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | `draft-pr-contract.md` names `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares; `schedule-weekly-retro` names `retro` for its lenses | The skill name alone | Nothing else. Without `pr-body`, the contract's body still states the door, and the review judges a one-way diff from the diff itself; without `retro`, the weekly retro reads through its own three lenses. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reports whether the plugin is installed and enabled | The marketplace entry and manifests | Nothing: there is no stamp to read and no install to invoke. |

@@ -85,17 +85,15 @@ week's sessions get further.
 ### Phase 4 — Review and Edit, Delegated
 
 9. Hand the bundle and a worktree branch `schedule/weekly-retro/<YYYY-MM-DD>` to one agent on
-   the resolved model. It reads the bundle through three lenses and returns findings for each:
-   - **Bottlenecks** — where turns and time went without progress: exploration repeated across
-     sessions, the same correction given more than once, a stage or check rerun, a gate that
-     took several rounds, a permission prompt that kept the session waiting.
-   - **Context** — what was loaded that the work never used, and what was missing so the agent
-     searched for it: baseline context against session length, compactions and the stage
-     before each, whole folders read where one chapter would do, a fact rediscovered in
-     several sessions that one line in an instruction file would carry.
-   - **Model and effort** — a session or stage whose model or effort did not fit its task: the
-     strongest model or highest effort on housekeeping, a lighter one on a task that needed
-     corrections or reruns, an agent whose `## Model` section the week contradicts.
+   the resolved model. It reads the bundle through the lenses of the `retro` skill, across the
+   week's sessions rather than one, and returns findings for each; a mechanical violation gets
+   a check, never a written rule, as that skill says. Without the skill, three lenses:
+   - **Bottlenecks** — turns and time spent without progress: exploration repeated across
+     sessions, a correction given twice, a stage or check rerun, a gate that took rounds.
+   - **Context** — loaded and never used, or missing so the agent searched: baseline context
+     against session length, compactions, a fact rediscovered across sessions.
+   - **Model and effort** — a session or stage whose model or effort did not fit its task, or
+     an agent whose `## Model` section the week contradicts.
 10. It ranks up to the maximum recommendations by the turns or tokens they would have saved,
     each with its lens, its evidence, and the file or chapter it changes — or, listed only,
     the product code change, or the personal setting and the value to set it to.

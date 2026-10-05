@@ -301,4 +301,5 @@ fails blocks the stage and names which succeeded.
 ## Phase: Summary
 
 Both flows, last. **Defined in `skills/phase-summary/SKILL.md`** — the run summary, the
-`phase-summary.after` chores, and the rule that measured numbers come from the surface.
+`phase-summary.after` chores, the retro offered after two or more revise rounds, and the rule
+that measured numbers come from the surface.

@@ -179,6 +179,16 @@ written where the reviewer reads: a one-way door — a migration, a renamed conf
 field, deleted data, an edited `accepted` chapter — links the decision record it rests on. A
 repository's own pull request template still wins; the skill fills the sections that match.
 
+`retro` joins them too: one session or one delivery run read back with the person present,
+through one set of lenses, ranked by what the next run would save. The weekly retro schedule
+read the same evidence through three lenses of its own, so the set now lives in `retro` alone
+and `schedule-weekly-retro` names the skill for it, keeping its three as the rule for when the
+skill is absent. `delivery`'s Summary offers a retro once a run took two or more revise rounds
+at Personal Validation, because repeated rounds are the clearest sign the environment cost the
+run something. Its one rule carried from upstream decides where a finding lands: a mechanical
+violation gets a check, because a check fires every time and a written rule costs context on
+every load and still fails.
+
 ## Rejected
 
 ```meta
@@ -227,6 +237,7 @@ repository's own pull request template still wins; the skill fills the sections 
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | `devbook-skills` ships `retro`, adapted from `mattpocock/skills` and merged with `schedule-weekly-retro`'s lenses, which now names it for them; the engine's Summary offers it after two or more revise rounds. A mechanical violation gets a check, never a written rule. |
 | 2026-10-05 | `devbook-skills` ships `pr-body`, adapted from `mattpocock/skills`; the engine's Create Pull Request phase and the schedule sweeps' draft pull requests name it alone, and `schedule-merge-review` weighs its verdict by the declared door, a one-way door with no decision record linked being Blocking. |
 | 2026-10-05 | `devbook-procedures` folds into `devbook`: the procedures become a part a repository adopts in `devbook`'s stamp, since `devbook` is the plugin's only dependency and already reconciles, stamps, and migrates, and demos already live there. Decided here; the fold lands as its own change. |
 | 2026-10-05 | `devbook-skills` ships `research-brief`, adapted from `mattpocock/skills`; the engine's Scope phase and its `arc42/` and `tech/` Drafting name it alone and cite external facts themselves when it is absent. It writes nothing. |

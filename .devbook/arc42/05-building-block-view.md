@@ -75,8 +75,8 @@ flowchart TB
     DEL -.->|"flow-code's project kind runs devbook-config:init"| CFG
     DOS -.->|"spec and tracker providers, bound by name"| DEL
     DEV -.->|"names the skill show-me, never the plugin"| SKL
-    DEL -.->|"names the skills show-me, research-brief, and pr-body, never the plugin"| SKL
-    SCH -.->|"names the skill pr-body, never the plugin"| SKL
+    DEL -.->|"names the skills show-me, research-brief, pr-body, and retro, never the plugin"| SKL
+    SCH -.->|"names the skills pr-body and retro, never the plugin"| SKL
 ```
 
 **Arrows point from the plugin that carries the coupling to the plugin it couples to**, which is

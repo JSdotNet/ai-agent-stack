@@ -275,12 +275,13 @@ than estimated.
 ### schedule-weekly-retro
 
 ```meta
-related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-instruction-review"]
+related: [".devbook/arc42/building-blocks/delivery.md#dependencies", ".devbook/arc42/building-blocks/delivery-schedule.md#schedule-instruction-review", ".devbook/arc42/building-blocks/devbook-skills.md#retro"]
 ```
 
 Read how AI was used in the repository over the week — its sessions where the host lists
-them, the runs the surface recorded, and the pull requests they produced — through three
-lenses: the bottlenecks that cost turns, the context loaded that the work did not use or
+them, the runs the surface recorded, and the pull requests they produced — through the lenses
+of `devbook-skills`' `retro` skill, which holds the one set, and without it through three of
+its own: the bottlenecks that cost turns, the context loaded that the work did not use or
 lacked, and the model and effort that did not fit the task. It lands what it recommends as one
 draft pull request, one commit per recommendation. Two
 things set it apart from every other entry point. It gates on the plan's credit: it reads the
@@ -722,7 +723,7 @@ capability — a divergence taken on purpose.
 | --- | --- | --- | --- | --- |
 | [delivery](delivery.md#dependencies) | Customer-Supplier, declared `delivery >=1.0.0 <2.0.0` | Its entry points call the engine's flows and phases | `resources/flow-phases.md`, `resources/engine-contract.md`, `resources/surface-contract.md`, the parking rule at a gate | The entry points are adapters onto flows. The dependency is real, and it is the only declared one. |
 | [devbook](devbook.md#dependencies) | Separate Ways | One catalog entry names `prose-check`, three of its own wrappers invoke `devbook:validate`, `devbook:verify-change`, and `devbook:tech-update` as targets, and the sync sweep lists its groups with the vendored `units.mjs` | The skill names alone | Naming is not depending: a trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled. |
-| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names the skill `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares | The skill name alone | A reviewer weighs a merge by whether it can be walked back. Without the skill, the contract's body still states the door, and the review finds a one-way diff from the diff itself. |
+| [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `draft-pr-contract.md` names the skill `pr-body` for a sweep's draft pull request body, and `schedule-merge-review` reads the door it declares; `schedule-weekly-retro` names the skill `retro` for its lenses | The skill name alone | A reviewer weighs a merge by whether it can be walked back, and a retro's lenses are written once. Without the skill, the contract's body still states the door, and the review finds a one-way diff from the diff itself; without `retro`, the weekly retro reads through its own three lenses. |
 | [devbook-config](devbook-config.md#dependencies) | Separate Ways | `schedule-devbook-update` invokes `devbook-config:update`, and `schedule-devbook-validate` its `doctor` where installed | The skill names alone | The same naming-not-depending shape as devbook: not enabled, the trigger is reported and skipped. |
 | The host's scheduler | Conformist, resolved at run time | Whatever the live session exposes that turns a name, a cron, and a prompt into a local routine; a cloud one only to disable a copy | Resolution by capability, never by name | One capability with two host names — Routines and Automations — and adopting either would name a host. **No scheduler is a normal outcome.** |
 | GitHub, through `gh` | A host fact, not a binding: the lane consults no tracker binding | Pull requests from dated branches, and the issues a skill opens for a finding | The preamble's publishing rules | A change reaches a person as a pull request; the report stays in the run's session. This lane writes to GitHub only, whatever tracker the repository binds for the engine's flows. |

@@ -9,6 +9,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 **Does**
 - Summarizes the outcome and runs the summary.after chores
+- Offers a retro after two or more revise rounds
 
 **Doesn't**
 - Author token, context or timing numbers: those come from the surface
@@ -22,7 +23,11 @@ concludes without them.
 2. **Run the `phase-summary.after` chores** in order. Each contributes to the summary and
    captures what this run learned. A chore may fail without failing the run unless it
    declared itself required; name every failure in the summary.
-3. **Emit the run summary** and call `finish_run`, per **Reporting Contract** in
+3. **Offer a retro** when the run took two or more revise rounds at Personal Validation, read
+   from the surface's pass count or the run's recorded decisions: one line asking whether to
+   run the `retro` skill over this run. Offer, never run it unasked; an unattended run, or a
+   host without the skill, offers nothing.
+4. **Emit the run summary** and call `finish_run`, per **Reporting Contract** in
    `resources/surface-contract.md`.
 
 Describe what the run did, never what it cost: token, context, and timing figures are the

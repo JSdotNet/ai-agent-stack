@@ -13,9 +13,9 @@ exists:
 
 | Before | After |
 | --- | --- |
-| `"app.start": "repo:start"` | the key is gone — the default provider, `phase-validation`, starts the application by invoking `run` |
+| `"app.start": "repo:start"` | the key is gone — unset, the application starts through the `run` recipe |
 | `"app.start": { "provider": "repo:start" }` | the key is gone, as above |
-| `"app.start": { "provider": "repo:start", "host": "aspire" }` | `{ "provider": "delivery:phase-validation", "host": "aspire" }` — the options stay with the default provider |
+| `"app.start": { "provider": "repo:start", "host": "aspire" }` | `{ "provider": "repo:run", "host": "aspire" }` — the options stay with the `run` recipe, which delivery's `001-phase-maps` carries into `phase-verify.app` |
 
 An `extensions` object left empty goes with the key. The script touches no other key and
 leaves every other byte of the file alone. `extensions` is the engine's; the write is the

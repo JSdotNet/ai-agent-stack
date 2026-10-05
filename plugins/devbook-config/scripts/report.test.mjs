@@ -88,6 +88,14 @@ test('phaseBindings names every provider a phase entry binds, and unenabledBindi
     assert.deepEqual(missing, [{ where: 'phases.flow-code.phase-implement', key: 'agent', plugins: ['csharp-coding'] }]);
 });
 
+test('unenabledBindings checks the app provider phase-verify names', async () => {
+    const { unenabledBindings } = await import('./report.mjs');
+    const phases = { 'flow-code': { 'phase-verify': { app: { provider: 'aspire-run:start', host: 'aspire' } } } };
+    assert.deepEqual(unenabledBindings({ phases }, { 'devbook@m': true }), [
+        { where: 'phases.flow-code.phase-verify', key: 'app', plugins: ['aspire-run'] },
+    ]);
+});
+
 test('the stamps table names the procedures devbook adopted and a folded devbook-procedures entry', () => {
     const root = mkdtempSync(join(tmpdir(), 'report-folded-'));
     mkdirSync(join(root, '.devbook'));

@@ -141,8 +141,12 @@ layers, writing `{}` for every phase the old file never named in the committed o
 an overlay partial, and it re-points a gate on an extension point at the phase that point
 belonged to. A role bound to a bare plugin becomes that plugin's single agent. A plugin with
 several agents, or one not installed on this machine, is written as found and listed among the
-notes `update` shows beside the diff, because the script never guesses an agent. `update`
-then re-validates and re-stamps.
+notes `update` shows beside the diff, because the script never guesses an agent. A `qa` role
+lands beside a `qa.run` skill and yields only to a `qa.run` agent, and a null `qa.run` writes
+nothing, since it bound no provider rather than forcing the phase inline. The `spec` point lands
+on `flow-code` alone, the only flow that builds from a specification. An `app.start` naming the
+retired `repo:start` or `delivery:phase-validation` is never carried into `phase-verify.app`.
+`update` then re-validates and re-stamps.
 
 ```mermaid
 flowchart LR
@@ -410,7 +414,7 @@ devbook folder present, which is the reason the file could move there at all.
 | --- | --- | --- |
 | An unknown key is rejected, never ignored: a typo is an error, not a silently absent setting | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
 | `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by name, with a message naming `delivery:update` | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |
-| The migration's committed result lists every phase of both flows and validates; a second run changes nothing, and an overlay stays partial | `001-phase-maps/migrate.mjs` | `unit:node:plugins/delivery/migrations/001-phase-maps/migrate.test.mjs` |
+| The migration's committed result lists every phase of both flows and validates; a second run changes nothing, an overlay stays partial, and a retired flow's map merges into `flow-code` wherever it sits in the file | `001-phase-maps/migrate.mjs` | `unit:node:plugins/delivery/migrations/001-phase-maps/migrate.test.mjs` |
 | Nobody writes another owner's key | all mutations | untested |
 | The engine keys are written by `devbook-config`'s `init` and `update`, and by nothing else | all mutations | untested |
 | `policy` is a closed set of switches | `check.mjs` | `unit:node:plugins/delivery/tools/stack-config/check.test.mjs` |

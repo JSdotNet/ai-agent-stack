@@ -14,8 +14,8 @@ Throughout this file and the files that load it, **capture** is what `capture-sp
 does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
-Each skill covers six kinds — `aggregate`, `domain-service`, `feature`,
-`setting`, `building-block`, `design-component` — and none of them restates
+Each skill covers seven kinds — `aggregate`, `domain-service`, `feature`,
+`setting`, `actor`, `building-block`, `design-component` — and none of them restates
 this file. What
 is specific to a kind lives once in `assets/spec-kinds/<kind>.md`: the chapters
 and the file it covers, the `type` values, the folder rule, the spec-to-code
@@ -55,8 +55,8 @@ scope, named by the unit's root chapter address. A unit is what one pass covers
 and one pull request changes: an aggregate with everything it owns, the events it
 raises, its invariants, and the requirements and terms that name it; a domain
 service the same way; a feature with its sub-features and requirements; one
-feature flag or setting; one building block file; one component chapter; and one
-shared-types unit per context. A group is the units a requirement naming two
+feature flag or setting; one user or technical actor; one building block file; one
+component chapter; and one shared-types unit per context. A group is the units a requirement naming two
 aggregates and no feature ties together, and is usually one unit. The rules are
 "Sync direction" in `devbook-chapter-metadata.md`.
 
@@ -73,8 +73,8 @@ its reason and not acted on, and never split. A group is one run whatever kinds
 its units carry: each chapter is read through its own kind's file, and the run
 still ends in one table.
 
-Feature flags and settings run as the `setting` kind, and a shared-types unit as
-`aggregate`.
+Feature flags and settings run as the `setting` kind, user and technical actors
+as `actor`, and a shared-types unit as `aggregate`.
 
 **The roll-up.** A unit's verdict comes from its chapters', and a group's from
 its units':

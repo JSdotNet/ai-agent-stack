@@ -566,7 +566,7 @@ person, not acted on and never split. `units.mjs --groups` lists them.
 ## Sync Unit
 
 ```meta
-date: 2026-10-01
+date: 2026-10-06
 related: [".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", ".devbook/arc42/adr/chapter-schema.md"]
 ```
 
@@ -575,9 +575,9 @@ Owned by [devbook](building-blocks/devbook.md).
 What one verify pass covers and one sync direction governs: an aggregate with the entities,
 value objects, and enums it owns, the events it raises, its invariants, and the requirements
 and terms that name it; a domain service the same way; a feature with its sub-features and
-requirements; one feature flag or setting; one building block file; one component chapter; and
-one shared-types unit per context for its shared value objects and enums. A chapter the unit
-owns carries no direction of its own. `units.mjs` lists them with their effective direction.
+requirements; one feature flag or setting; one user or technical actor; one building block
+file; one component chapter; and one shared-types unit per context for its shared value
+objects and enums. A chapter the unit owns carries no direction of its own. `units.mjs` lists them with their effective direction.
 
 ## Tier
 

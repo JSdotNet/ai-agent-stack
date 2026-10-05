@@ -8,7 +8,7 @@ The code-sync part of [devbook](devbook.md), a block inside it. Responsible for 
 that a chapter and the code implementing it can be brought back into agreement, in whichever
 direction is behind, without either side being guessed.
 
-Inside the block: the three converter skills over six chapter kinds, the unit lister that
+Inside the block: the three converter skills over seven chapter kinds, the unit lister that
 decides what one run covers, and the two directions they run in.
 
 Outside it: the chapter shape and the check, which are [devbook](devbook.md#structure)'s; the
@@ -22,8 +22,8 @@ unattended sweeps that pass a sync unit or group, which are
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
-Three skills, each over the six kinds — aggregate, domain service, feature, setting, building
-block, and design component — and one CLI.
+Three skills, each over the seven kinds — aggregate, domain service, feature, setting, actor,
+building block, and design component — and one CLI.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -37,7 +37,7 @@ related: [".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", 
 ```
 
 Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
-for any of the six kinds. By default it writes nothing. Its result is a capture plan handed
+for any of the seven kinds. By default it writes nothing. Its result is a capture plan handed
 to the person: the drafts to the folder's template, arranged as a delta against the target
 file — `ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind
 it, and the report table. Code is evidence, not agreement, so the pass that found the code
@@ -93,7 +93,7 @@ the user sees.
 related: [".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
-Turn an agreed but unbuilt chapter of any of the six kinds into a change brief — outcomes,
+Turn an agreed but unbuilt chapter of any of the seven kinds into a change brief — outcomes,
 invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, and
 hand it to the flow that implements a change of that category, resolved the way the spec-side
 write is: a repo-native flow first, then the engine's, and nowhere when no engine is
@@ -153,7 +153,10 @@ unit, decided from headings, `type`, file names, and `related` alone: an owned t
 aggregate it sits under, an event by the raiser its `related` names, an invariant by the
 grouping it sits under, a requirement by the feature it names and only otherwise by the
 aggregate, and a term by the one unit its name or alias resolves into. Shared value objects and
-enums form one shared-types unit per context.
+enums form one shared-types unit per context. A `user` or `technical` actor is a unit of its
+one chapter, in `actors.md` or `context.md`; an `organisation` is modelled and never
+authenticated, so it roots none and stays context, and a direction set on an `actors.md` of
+organisations only is one no unit inherits.
 
 With `--groups` it joins units into the groups a sweep claims. A requirement that names two
 aggregates and no feature is the only thing that joins them; a `depends-on`, a by-id
@@ -169,6 +172,7 @@ prints the result for the sweep to read.
 | --- | --- | --- |
 | Every chapter belongs to at most one unit, decided from structure and never from prose | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A requirement naming a feature belongs to the feature, whatever else it names | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
+| A `user` or `technical` actor roots a unit; an `organisation` roots none | `units.mjs`, `syncLevel` in `metadata.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/sync-field.test.mjs` |
 | Units join only through a requirement naming two aggregates and no feature; links never join | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | A group of mixed directions, or past `maxGroupChapters`, is set aside and never split | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
 | The same corpus prints the same output | `units.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/units.test.mjs` |
@@ -180,7 +184,7 @@ related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/buildin
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over six kinds: `capture-specs` reads an
+says which one a chapter needs, as three skills over seven kinds: `capture-specs` reads an
 implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
 into a change brief for the flow that implements it, touching no source or test tree itself,
 and `verify-change` reports the drift verdict and writes nothing. Two of the names are
@@ -214,7 +218,12 @@ ask.
 Counterpart resolution uses **no metadata field** linking a chapter to a code path — a path in
 a block rots on the first refactor and gives no signal when it does. It resolves through
 the chapter's `aliases`, then the building-block view, then the observed naming convention, and
-reports `unresolved` rather than guessing. The same search catches the reverse rot: an alias
+reports `unresolved` rather than guessing. An actor climbs its own rungs first — the `role`
+at its declaration, the policies that admit it, the client registration a `technical` actor
+authenticates with — because its counterparts sit in the authorization layer rather than under
+a type name, and a guard admitting more than the chapter grants is a `conflict`, never a
+chapter to capture: writing it down would record a privilege on the strength of the code that
+leaked it. The same search catches the reverse rot: an alias
 that names no identifier in the source tree is reported by `verify-change` as its own finding —
 except on a `requirement` or `invariant`, whose `aliases` are codes and name none by design —
 with a proposal to remove or correct it, and never rewritten. No checker pass duplicates it —
@@ -229,6 +238,7 @@ an identifier search that knows no language would be noisy and slow.
 | `apply-change` touches no source or test tree, and `verify-change` writes nothing | the three skills | untested |
 | `capture-specs` writes a chapter only in write mode, carries only `code-ahead` entries in scope, and never writes a decision rung | the code-sync protocol | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
+| A grant in code wider than an actor's chapter is a `conflict`, never captured | the actor kind file | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
 | Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
 | `verify-change` reports every alias outside a `requirement` or `invariant` that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |

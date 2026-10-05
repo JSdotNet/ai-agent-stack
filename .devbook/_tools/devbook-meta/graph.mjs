@@ -203,7 +203,14 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // and every procedure file in devbook's `materialized`, hashes kept. It ships
 // as `migrations/027-procedures-in-devbook/`, with the procedures' own
 // `001`–`004` carried over under their shipped ids.
-export const CONTRACT_VERSION = 27;
+//
+// Version 28 makes a `user` and a `technical` actor chapter a sync unit's
+// root, for the `actor` converter kind: `sync` is legal on them, and a value
+// on `actors.md` is inherited by its users and technical actors. An
+// `organisation` roots no unit, so `sync` on one is still refused and an
+// `actors.md` of organisations only is still warned. Additive: a corpus
+// written under 27 validates unchanged, and no migration is owed.
+export const CONTRACT_VERSION = 28;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the
@@ -824,8 +831,8 @@ export async function buildGraph(repoRoot, folders = null) {
     }
 
     // A stated direction no unit inherits does nothing: every unit below it
-    // states its own, or the level holds no unit at all (`actors.md`, until an
-    // actor kind exists). Each unit resolves nearest-wins through
+    // states its own, or the level holds no unit at all (an `actors.md` of
+    // organisations only). Each unit resolves nearest-wins through
     // `syncSources`; whatever no unit resolved to is reported.
     const inherited = new Set();
     for (const [id, level] of syncLevels) {

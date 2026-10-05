@@ -79,6 +79,6 @@ standard, and a class stated by half reports the wrong sentence.
 ## Notes
 
 - Drift between a chapter and the code it describes is `verify-change`'s question, over the
-  six chapter kinds it covers; this skill reads chapters only.
+  seven chapter kinds it covers; this skill reads chapters only.
 - A `stale-name` after a fold or a rename is the finding this skill exists for: the meta
   references moved with the chapter, the prose did not.

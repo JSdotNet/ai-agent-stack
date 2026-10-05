@@ -300,11 +300,26 @@ leads it, without writing the value on every chapter. A chapter a unit owns (an 
 object, enum, domain event, invariant, requirement, sub-feature, or term) refuses it, as do
 `requirements*.md` and `*.invariants.md`, which hold only such chapters: they are captured and
 briefed with their unit, and half a unit cannot go the other way. A value no unit inherits is a
-warning, which covers `actors.md` until an actor kind exists. For the same grouping a
+warning, which covers an `actors.md` holding only organisations. For the same grouping a
 `domain-event` names the aggregate or domain service that raises it in `related`, because the
 Trigger names it only in prose; it is a warning so a corpus written before keeps passing. The
 fingerprints already exclude `meta` blocks, so a flip lapses no approval. Contract 25, additive:
 absent means `report`, today's behaviour, and no migration is owed.
+
+**A user and a technical actor are sync units; an organisation is not.** Contract 25 accepted
+`sync` on `actors.md` while no converter covered an actor, so the value did nothing. The
+`actor` kind closes that: a `user` or `technical` chapter roots a unit of its one chapter, and
+the converters pair it with what represents it in code — the role or claim `role` spells, the
+policies that admit it, and for a `technical` actor the client registration, service account,
+or job and callback registration it authenticates with. Those counterparts sit in the
+authorization layer and not under a type name, so the kind climbs its own rungs before the
+protocol's. An `organisation` is the context's counterparty, modelled and never authenticated:
+nothing in code represents it, so it roots no unit, `sync` on one stays refused as no level,
+and an `actors.md` of organisations only keeps the warning. A guard admitting more than an
+actor's chapter grants is a `conflict` and never `code-ahead`, because capturing it would write
+a privilege into the record on the strength of the code that leaked it. The actor chapter is
+the whole unit: the `## Rights` matrix is the file's, read per actor column, and a rule about
+rights is a requirement its feature owns. Contract 28, additive, no migration.
 
 **A diagram is a view, not a unit.** `model.md`, `flow.md`, and their splits draw what other
 chapters claim. A class diagram's ownership, cardinalities, and id-only references are the
@@ -352,6 +367,9 @@ a kind.
 - The sync direction as a map under `components.schedule` in `.devbook/config.json`, or as an
   `ext.delivery-schedule.sync` key; a direction on owned chapters; a single folder-wide switch
   with no closer override.
+- An `organisation` as an actor unit, which would give the sweeps a chapter nothing in code
+  can confirm; the `## Rights` matrix as a unit of its own, which would split one actor's rights
+  from the actor; and a policy or client chapter type beside the actor, a second record of who.
 - A `flow` kind, whether its own unit or joined to the aggregates it walks; a `model` kind;
   `sync` on `model.md`, `flow.md`, or their splits.
 - A subfolder per aggregate, or a split-file `type` of its own: a subfolder is a second
@@ -365,6 +383,7 @@ a kind.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | The `actor` converter kind: a `user` or `technical` chapter roots a sync unit, paired through its `role`, the policies admitting it, and a `technical` actor's client registration, so a `sync` value on `actors.md` is inherited. An `organisation` roots no unit. A grant wider than the chapter is a `conflict`. Contract 28, additive, no migration. |
 | 2026-10-06 | `model.md`, `flow.md`, and their splits stay context: no converter kind, no sync unit, no `sync`. Every claim they draw belongs to an aggregate, domain service, feature, or skill chapter that has a kind. No contract, no migration. |
 | 2026-10-02 | A `requirement` at `status: deprecated` is no longer warned for having no `#### Scenario:`: it records a withdrawn promise, which has no case left to exercise. The level warning on the `tests` it names still applies. No contract, no migration: a warning narrows and no shape changes. |
 | 2026-10-01 | `sync` — `push`, `pull`, `sync`, `report`, `off` — on `domain/`, `arc42/`, and `design/` blocks says which way a sync unit and its code flow, set on a folder overview, a `context.md`, a context page, or a unit's root chapter, nearest wins, `report` by default. Refused on owned chapters and owned-only pages; a value no unit inherits is warned; a `domain-event` is warned when its `related` names no raiser. Contract 25, additive, no migration. |

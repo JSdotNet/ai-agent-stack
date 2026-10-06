@@ -2608,6 +2608,21 @@ export function chapterHash(markdown, line = 1) {
 
 const digest = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex").slice(0, 8)}`;
 
+/**
+ * A demo's text as a fingerprint reads it: line endings as LF, and every
+ * managed region — `<!-- template:begin … -->` to `<!-- template:end -->`,
+ * both markers included — left out. The region is the template's, approved
+ * through `design/`, and `demo-template.mjs` already fails a hand edit to it;
+ * leaving it out is what lets `--refresh` bring every demo forward without
+ * lifting the approval of every page a demo belongs to. A begin marker with no
+ * end is kept, so a broken region still changes the value.
+ */
+export function demoFingerprintText(text) {
+    return String(text)
+        .replace(/\r\n?/g, "\n")
+        .replace(/<!--\s*template:begin\b[\s\S]*?<!--\s*template:end\b[^>]*?-->/gi, "");
+}
+
 /** Whether a path names a click demo: `demo.html`, or any `*.demo.html`. */
 export function isDemoPath(relPath) {
     const base = String(relPath).replace(/\\/g, "/").split("/").pop();
@@ -2660,6 +2675,7 @@ export function pageDemoPath(relPath) {
  * A block's demos are the ones its `demo` field — or the field of any chapter
  * nested in it — names by path, and for the file block also the demo named for
  * the page: `<page>.demo.html` for `<page>.md`, `demo.html` for `context.md`.
+ * A demo is read through `demoFingerprintText`, its managed region left out.
  * `demoText(path)` returns a demo's text, or null when it does not exist. A
  * block with no demo hashes exactly as `chapterHash` does, so no approval
  * recorded before demos existed changes value.
@@ -2685,7 +2701,7 @@ export function chapterFingerprint(relPath, markdown, line = 1, demoText = null)
     const demos = [];
     for (const demoPath of [...paths].sort()) {
         const text = demoText(demoPath);
-        if (text != null) demos.push(`${demoPath}\n${String(text).replace(/\r\n?/g, "\n")}`);
+        if (text != null) demos.push(`${demoPath}\n${demoFingerprintText(text)}`);
     }
     return demos.length ? digest([base, ...demos].join("\n")) : base;
 }
@@ -2735,7 +2751,7 @@ function hashedText(lines, from, end, dropped) {
 export function changeHash(proposalMarkdown, deltas) {
     const parts = [chapterHash(proposalMarkdown, parseDocument(proposalMarkdown).chapters.find((c) => c.level === 1)?.line ?? 1)];
     for (const delta of [...deltas].sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0))) {
-        const lines = delta.markdown.split(/\r?\n/);
+        const lines = (isDemoPath(delta.target) ? demoFingerprintText(delta.markdown) : delta.markdown).split(/\r?\n/);
         parts.push(`${delta.target}\n${hashedText(lines, 0, lines.length, ["annotation"])}`);
     }
     return digest(parts.join("\n"));

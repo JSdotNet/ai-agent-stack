@@ -491,8 +491,8 @@ as it shipped, so no list of past versions is kept. `--check`, which `build.mjs 
 reports a region on an earlier version than the template's as stale, a warning, and one whose
 text matches no version as hand-edited, an error. `--refresh` re-stamps the template's marker,
 then rewrites every demo's region from it and nothing else in the file. It is the one write
-into a demo that is not `/prototype`'s, and like any edit to a demo it lifts the approval of
-the page the demo belongs to.
+into a demo that is not `/prototype`'s, and it lifts no approval: the region is the template's,
+so `chapterFingerprint` and a change's fingerprint both leave it out of a demo.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
@@ -504,7 +504,7 @@ the page the demo belongs to.
 | A demo's `demo-meta` holds `question` and nothing else | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A demo fetches nothing from the network | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo under `domain/` carries exactly one variant | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
-| A page's fingerprint covers its demos, so editing one lifts a stale approval | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| A page's fingerprint covers its demos outside the managed region, so editing one lifts a stale approval and a template refresh lifts none | `metadata.mjs` `chapterFingerprint` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo over 500 KB is a warning, never an error | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo's managed region matches a template version, and one on an earlier version than the template's is a warning | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |
 | `--refresh` rewrites only the managed region, and leaves a demo's own parts byte for byte | `demo-template.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-template.test.mjs` |

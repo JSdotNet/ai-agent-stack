@@ -110,6 +110,13 @@ The managed region is the template's and not the demo's, so it is the one part o
 template changes, and touches nothing else. A region edited by hand is an error, because the
 next refresh would discard the edit.
 
+A page's fingerprint leaves the managed region out of every demo it folds in, and so does a
+change's fingerprint for a proposed demo. Without that, one template change would lift the
+approval of every page with a demo, and the approvals would stop meaning anything. What a
+person approved on a page is the app part and its `demo-model`. The panel and runtime around
+it are approved where they are written, in `design/`. The exclusion hides no edit: a region
+edited by hand matches no template version, and the check fails on it.
+
 A demo has a size target of 500 KB. `/prototype` works to stay under it with inline SVG,
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
 reports the size as a warning and never as an error.
@@ -153,6 +160,9 @@ runtime silently drops what it cannot read.
   application, which is where prototyping stops.
 - **A product-level demo.** It would duplicate the screens of every context it crosses and
   belong to none of them.
+- **The managed region inside the fingerprint.** Every template refresh would lift every page
+  approval at once. A person would re-approve pages whose content did not change, and soon
+  stop reading what they approve.
 - **A hard size limit.** A large context can need more than 500 KB, and refusing it would push
   the screens back into a pull-request comment.
 - **Storybook, htmx, WebAssembly, or Markdown with embedded screens.** Storybook needs its
@@ -166,6 +176,7 @@ runtime silently drops what it cannot read.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | A page's and a change's fingerprint leave a demo's managed region out, so a template refresh lifts no approval. |
 | 2026-10-06 | The checker reads `demo-model` only in the shape the template documents and reports any other. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |

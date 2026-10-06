@@ -402,6 +402,13 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
     await writeFile(path.join(root, DEMO), demoHtml({ body: BODY.replace("Pay", "Pay by card") }), "utf8");
     check((await printed(`${CONTEXT}/requirements.md#requirement-pay-by-card`)) !== requirements, "editing a demo changes the fingerprint of a chapter whose `demo` names it");
 
+    // The managed region is the template's: a refresh rewrites it in every
+    // demo, and that lifts no page's approval.
+    const refreshed = await printed(`${CONTEXT}/features.md`);
+    const current = demoHtml({ body: BODY.replace("Pay", "Pay by card") });
+    await writeFile(path.join(root, DEMO), current.replace("<!-- template:begin -->", "<!-- template:begin hash=sha256:feed -->").replace("body{margin:0}", "body{margin:1px}"), "utf8");
+    check((await printed(`${CONTEXT}/features.md`)) === refreshed, "rewriting the managed region leaves the page's fingerprint as it was");
+
     const plain = `${CONTEXT}/model.md`;
     const text = `# Model\n\n${fence("type: model\n")}\nShapes.\n`;
     await writeFile(path.join(root, plain), text, "utf8");
@@ -416,6 +423,9 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
     const before = await changeFingerprint(root, "add-express");
     await writeFile(path.join(root, CHANGE, "devbook-delta/domain/ordering/features.demo.html"), demoHtml({ body: BODY.replace("Pay", "Pay now") }), "utf8");
     check((await changeFingerprint(root, "add-express")) !== before, "editing a proposed demo changes the change's fingerprint");
+    const edited = await changeFingerprint(root, "add-express");
+    await writeFile(path.join(root, CHANGE, "devbook-delta/domain/ordering/features.demo.html"), demoHtml({ body: BODY.replace("Pay", "Pay now") }).replace("body{margin:0}", "body{margin:1px}"), "utf8");
+    check((await changeFingerprint(root, "add-express")) === edited, "rewriting a proposed demo's managed region leaves the change's fingerprint as it was");
 }
 
 {

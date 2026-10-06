@@ -43,7 +43,7 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devb
 ```
 
 Nine skills — six that own the convention in a repository, and three that cross the boundary
-between a chapter and the code implementing it, each over seven chapter kinds — plus the rules
+between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries — plus the rules
 `init` delivers, the tools it materializes, one workflow, one hook, one contract that other
 plugins follow, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a

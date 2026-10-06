@@ -291,7 +291,15 @@ async function refresh($: any) {
   const mine = fresh.find(r => r.isThisSession && tone(r.status) !== 'done')
   const stage = mine ? currentStage(mine) : undefined
   $.ui.status(mine ? `${mine.skillId} · ${stage?.name ?? mine.status}` : undefined)
+
+  // The pane opens itself once, the first time there is a run to show; closed after that, it stays closed.
+  if (!hasOpened && fresh.length > 0) {
+    hasOpened = true
+    void openPane($)
+  }
 }
+
+let hasOpened = false
 
 const openPane = ($: any) => $.ui.open({ id: PANE, title: 'Delivery flows' })
 
@@ -311,7 +319,6 @@ export const register: Register = on => {
     })
     await refresh($)
     $.clock.every(POLL_MS, () => refresh($))
-    void openPane($)
 
     return next(e)
   })

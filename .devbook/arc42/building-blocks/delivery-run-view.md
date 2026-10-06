@@ -26,7 +26,7 @@ record, so this block keeps the subsystem's stem and is named for what it shows.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `/flows` | Command, opening the pane | A person; the pane also opens on session start |
+| `/flows` | Command, opening the pane | A person; the pane also opens on its own the first time a run appears, never when there is none |
 | `/flows-demo` | Command, a simulated `flow-code` run held in memory | A person trying the view with no run to show |
 | Pane, band, inline rows, status line | Function-hook `ui.render` handlers and `$.ui.status` | Claude Code, on every render |
 

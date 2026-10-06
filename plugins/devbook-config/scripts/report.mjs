@@ -257,8 +257,8 @@ function phaseBindings(phases) {
 
 /**
  * Every phase entry naming a plugin this checkout has not enabled. The engine promises this is a warning and never a failure - a binding is committed
- * and shared, enablement is personal to this checkout, and a stage falls back to what its role
- * reference states. See `resources/engine-contract.md` in the delivery plugin, under Bindings.
+ * and shared, enablement is personal to this checkout, and a phase falls back to its
+ * built-in procedure. See `agents/flow-runner.agent.md` in the delivery plugin.
  *
  * Marketplace is stripped from the enabled key on purpose: a repository may bind a plugin from
  * a marketplace this report does not read, and calling that unenabled would be a false alarm.
@@ -817,7 +817,7 @@ function render(model) {
         } else if (model.unenabled?.length) {
             out.push('### Bindings nobody has enabled');
             out.push('');
-            out.push(`These bindings name a plugin this checkout has not enabled. It is a warning and never a failure: a binding is committed and shared, enablement is personal to this checkout, and a stage that cannot reach its plugin falls back to what its role reference states. Reconcile \`${repo.path}\` against ${model.enabledPaths.map((f) => `\`${f}\``).join(', ')} - enable the plugin here, or rebind the key there.`);
+            out.push(`These bindings name a plugin this checkout has not enabled. It is a warning and never a failure: a binding is committed and shared, enablement is personal to this checkout, and a phase that cannot reach its plugin falls back to its built-in procedure. Reconcile \`${repo.path}\` against ${model.enabledPaths.map((f) => `\`${f}\``).join(', ')} - enable the plugin here, or rebind the key there.`);
             out.push('');
             out.push(table(
                 ['Where', 'Key', 'Names', 'Not enabled'],

@@ -92,7 +92,8 @@ const RETIRED_START = ["repo:start", "delivery:phase-validation"];
 const RUN = "repo:run";
 
 // A gate on one of these is unambiguously 1.13.0. `implement` and `verify` are phase ids as
-// well, so a gate on either is read as the old point only in a file migrated for another reason.
+// well, so a gate on either is read as the old point only in a file that also carries 1.13.0
+// keys. A file migrated only for a retired flow map is already on phase ids and keeps its gates.
 const RETIRED_GATE_POINTS = Object.keys(POINT_PHASE).filter((p) => p !== "implement" && p !== "verify");
 
 // Policy keys 1.14.0 renamed after the phase they switch, and the one it dropped.
@@ -119,11 +120,14 @@ export function needsMigration(config) {
 }
 
 function needsPhaseMaps(config) {
+    return carries113(config) || (isObject(config.phases) && RETIRED_FLOWS.some((f) => f in config.phases));
+}
+
+/** Whether a config file carries a key or a gate point only 1.13.0 wrote. */
+function carries113(config) {
     if ("extensions" in config) return true;
     if (isObject(config.bindings) && ("delivery.roles" in config.bindings || "delivery.mcp" in config.bindings)) return true;
-    if (Array.isArray(config.gates) && config.gates.some((g) => isObject(g) && RETIRED_GATE_POINTS.includes(g.at))) return true;
-    if (isObject(config.phases) && RETIRED_FLOWS.some((f) => f in config.phases)) return true;
-    return false;
+    return Array.isArray(config.gates) && config.gates.some((g) => isObject(g) && RETIRED_GATE_POINTS.includes(g.at));
 }
 
 /**
@@ -248,6 +252,7 @@ function renameKeys(input, notes) {
 
 function toPhaseMaps(input, { overlay, resolve }, notes) {
     const phases = {};
+    const legacy = carries113(input);
     const set = (flow, phase, field, value, from) => {
         phases[flow] ??= {};
         const entry = (phases[flow][phase] ??= {});
@@ -461,7 +466,7 @@ function toPhaseMaps(input, { overlay, resolve }, notes) {
         }
         if (key === "gates" && Array.isArray(value)) {
             config.gates = value.map((gate, i) => {
-                if (!isObject(gate) || !(gate.at in POINT_PHASE) || gate.at === "implement") return gate;
+                if (!legacy || !isObject(gate) || !(gate.at in POINT_PHASE) || gate.at === "implement") return gate;
                 const at = POINT_PHASE[gate.at].replace(/^phase-/, "");
                 notes.push(`gates[${i}].at: "${gate.at}" was an extension point — attached to ${at}, the phase it belonged to`);
                 return { ...gate, at };

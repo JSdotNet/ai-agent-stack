@@ -121,6 +121,14 @@ test('a map under a retired flow moves into flow-code, and flow-code wins', () =
     assert.deepEqual(input.phases['flow-code'], { 'phase-implement': { model: 'opus' } }, 'the input is not mutated');
 });
 
+test('a gate on verify moves to spec-check only in a file that also carries 1.13.0 keys', () => {
+    const gate = { at: 'verify', when: 'before', purpose: 'cost' };
+    const phaseShaped = migrateConfig({ phases: { 'flow-project': {} }, gates: [gate] }, { overlay: true, resolve });
+    assert.deepEqual(phaseShaped.config.gates, [gate], 'a retired flow map alone leaves the phase gate standing');
+    const legacy = migrateConfig({ extensions: { implement: null }, gates: [gate] }, { overlay: true, resolve });
+    assert.deepEqual(legacy.config.gates, [{ ...gate, at: 'spec-check' }]);
+});
+
 test('a null implement forces the phase inline', () => {
     const { config } = migrateConfig({ extensions: { implement: null, verify: null } }, { resolve });
     assert.deepEqual(config.phases['flow-code']['phase-implement'], { agent: null });

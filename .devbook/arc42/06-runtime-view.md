@@ -105,7 +105,8 @@ flowchart TD
     pl --> im
     im <-->|"per slice"| rv["review"]
     rv --> bt["build-test"]
-    bt --> vf["verify"]
+    bt -->|green| vf["verify"]
+    bt -->|"red: verify and spec-check skipped"| rd
     vf --> sk["spec-check"]
     sk --> rd{"ready?"}
     rd -->|"not ready, budget left"| im
@@ -125,8 +126,9 @@ flowchart TD
   reviewed, and its blockers fixed before the next starts, within `policy.review.retryBudget`.
 - **The ready check is the one loop back after Build & Test.** It reads what review, Build &
   Test, `verify`, `spec-check`, and `scope` recorded, and sends a brief of what is missing back
-  to `implement` within `policy.ready.retryBudget`. Once the budgets are spent, the open items
-  go to the gate, listed first.
+  to `implement` within `policy.ready.retryBudget`. A red build goes straight to it, with
+  `verify` and `spec-check` marked skipped. Once the budgets are spent, the open items go to
+  the gate, listed first.
 - `spec-check` runs before the gate, so the approval sees the drift: the change set against the
   specification the run built on and the chapters it touches, one verdict per item. A skill
   that also updates touches only `code-ahead` rows, and its edits are part of what the person
@@ -134,8 +136,8 @@ flowchart TD
 - A kind changes what happens inside `implement` and how deep `verify` goes, never which phases
   run. Only `plan` is limited to a kind, `create`.
 - Chores hang off a phase as its `before` and `after` and never move the spine.
-- **A phase with nothing configured costs nothing.** It runs inline on the session's model with
-  its own skill. With no `pr-lane`, `create-pr` produces file artifacts only, and the run
+- **A phase with nothing configured costs nothing.** It runs its own skill on the session's
+  model, inline, forked, or delegated as the engine contract's *Runs by default* column says. With no `pr-lane`, `create-pr` produces file artifacts only, and the run
   continues and says so once.
 - Whether the surface renders any of this is resolved from the live tool list, and none
   answering is normal — the file artifacts are written either way.

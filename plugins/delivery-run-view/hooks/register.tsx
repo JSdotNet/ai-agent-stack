@@ -198,17 +198,18 @@ async function readRuns($: any, dirs: string[]): Promise<FlowRun[]> {
 }
 
 // ── /flows-demo: a flow-code run in memory only, shaped like the per-phase config proposal ──
+// An agent, model, or effort on a phase delegates it; Review is left unconfigured and forks.
 
 const DEMO_STEP_MS = 4000
 type DemoStage = [name: string, mode: FlowMode, agent: string | null, model: string | null, effort: string | null, output: string]
 const DEMO_STAGES: DemoStage[] = [
   ['Update Base', 'inline', null, null, null, 'Fast-forwarded to origin/main (bfcf9b8b).'],
-  ['Scope', 'fork', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
-  ['Implement', 'fork', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
-  ['Review', 'fork', null, 'opus', 'high', 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
+  ['Scope', 'delegate', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
+  ['Implement', 'delegate', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
+  ['Review', 'fork', null, null, null, 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
   ['Build & Test', 'delegate', 'general-purpose', 'sonnet', 'low', 'Build green, 4,312 tests passed.'],
   ['Verify', 'delegate', 'qa:qa', null, null, 'Full depth with capture through Aspire; logs monitored, no errors.'],
-  ['Spec Check', 'delegate', 'devbook:verify-change', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
+  ['Spec Check', 'delegate', 'general-purpose', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
   ['Ready', 'inline', null, null, null, 'Review, build-test, verify and spec-check all recorded green.'],
   ['Personal Validation', 'gate', null, null, null, 'Waiting for your approval. Review links published.'],
   ['Create Pull Request', 'inline', null, null, null, 'Pushed and opened the pull request.'],

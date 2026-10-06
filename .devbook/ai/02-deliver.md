@@ -36,7 +36,8 @@ A change routes to the flow named for what it changes, which runs it end to end.
   resolves its phases from `.devbook/config.json`: the GitHub tracker, `devbook:validate` before
   `update-base`, `devbook:verify-change` as the skill of `spec-check`, `devbook:update` after
   `summary`, and an approval gate before `create-pr`. No phase names an agent, a model, or an
-  MCP server, so every phase runs inline on the session's model. `repo-instructions`
+  MCP server, so every phase runs on the session's model as the engine contract's *Runs by
+  default* column says — inline, forked, or delegated. `repo-instructions`
   resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file.
   `stage-delegation` and `surface` still answer, being read from the live session rather than
   bound.

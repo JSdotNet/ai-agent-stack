@@ -119,8 +119,8 @@ that uses it, one reported once and the phase continuing without it.
 `phase-*` skill, because it is a procedure every flow runs identically and it loads late; the
 gate — approve, revise, decline — stays with the runner, because a skill that could record an
 approval is a second place. The ready check is the runner's for the same reason: it decides from
-recorded results and does no new work. Update Base is prepended by the runner rather than named
-in each flow, since the opening phase is identical everywhere; it rebases while the branch is
+recorded results and does no new work. Update Base opens every flow, the first phase each flow
+skill lists, and runs identically everywhere; it rebases while the branch is
 private, blocks on a conflict, never stashes, and honestly skips. With `policy.commit.at: gate`
 the handback is the commit point — one commit per validation round, never amended — so a
 reviewer reads what the user was asked to approve.
@@ -172,6 +172,7 @@ restates none of devbook's rules — it loads the repository's own instruction f
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | Update Base is listed first by each flow skill rather than prepended by the runner unnamed. An unconfigured phase runs as the engine contract's *Runs by default* says — inline, fork, or delegated — rather than always inline. A red build skips `verify` and `spec-check` and goes to the ready check. |
 | 2026-10-06 | Unit seams narrowed to the backend area: `scope` derives one per invariant's `Enforced at:` line and leaves each `#### Scenario:` to `verify` and the e2e suite, so a frontend slice has no test-first seams. Decided by the Devbook Skill Intake proposal; implement no longer writes tests at every recorded seam whatever its area. |
 | 2026-10-05 | Per-Phase Delivery Config decided. The phase replaces the extension point as the unit of configuration; `flow-update-packages` and `flow-project` fold into `flow-code` as the `dependency` and `project` kinds; `scope` merges scope discovery, spec intake, and context loading; `review` runs in tandem with `implement` per slice, before Build & Test; `phase-implement` picks its areas and their order; Validation, the old `verify`, and Work Item Update become `verify`, `spec-check`, and `report-back`; `spec-check` runs before the gate; a ready check sends missing work back and hands what is left to the gate once the budgets are spent; Report Back goes to every origin by kind. Effort runners ship for Claude only and drop the specialist's tool list; splitting review is revisited later. Three mechanisms nobody could read in one place became one entry per phase. |
 | 2026-09-30 | A `single-branch` step is `done` once its tasks are ticked in a commit on `change/<name>`, not on a merge: its one pull request opens on the closing run, after the acceptance that required every step done, so waiting for a merge would never close the change. Acceptance on that workflow is taken in the session; the pull request's review is the last look. |

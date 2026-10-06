@@ -5,7 +5,7 @@ date: 2026-09-30
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/01-introduction-and-goals.md", ".devbook/arc42/08-crosscutting-concepts.md#marketplace", ".devbook/arc42/08-crosscutting-concepts.md#migration", ".devbook/arc42/adr/install.md"]
 ```
 
-Every plugin carries the same version — `1.18.0` — in both manifests and the marketplace
+Every plugin carries the same version — `1.20.0` — in both manifests and the marketplace
 entry, moved together on an explicit ask and never one at a time; the history before `1.0.0`
 is collapsed, because no consumer installed under it. From that baseline a change to a chapter
 schema, a stamp shape, a config key, or a materialized path ships its migration in the same
@@ -80,6 +80,7 @@ devbook. `devbook` now names the repository, the plugin, and the folder, and pro
 
 | Date | Change |
 | --- | --- |
+| 2026-10-07 | Every plugin is `1.20.0`, closing the spread `devbook` `1.19.0` and `devbook-collaboration` `1.18.1` had opened with the demo spec kind. Contracts 28 and 29 ship in it with no migration: 28 makes a `user` and a `technical` actor chapter a sync unit, and 29 leaves a demo's managed region out of every fingerprint. |
 | 2026-10-06 | Every plugin is `1.18.0`, closing a spread from `1.15.0` to `1.17.0` that single-plugin moves had opened — `delivery` and its `001-phase-maps`, `devbook-openspec` and its `001-no-step-0-prototype`, `devbook-config` `1.15.1`, `delivery-schedule` `1.17.0`. Contracts 25, 26, and 27 ship in it: 25 (`sync`) and 26 (click demos) are additive and owe no migration; 27 folds `devbook-procedures` into `devbook` with `027-procedures-in-devbook`, which moves its stamp under `components.devbook` and carries the procedures' `001`–`004` under their shipped ids, and `devbook-procedures` leaves the marketplace. `devbook-skills` gains `research-brief`, `pr-body`, `retro`, and `wayfinder`, each an added skill that owes nothing. |
 | 2026-10-03 | `delivery-run-view` joins at `1.15.0`, the last release every plugin shared, rather than at `0.1.0`. |
 | 2026-10-01 | Every plugin is `1.15.0`. It carries `devbook-procedures`' `004-start-binding-is-run` and `delivery-schedule`'s `001-weekend-cadence`, payload-only migrations with no contract bump. |

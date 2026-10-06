@@ -3,33 +3,52 @@
   "bindings": {
     "delivery.tracker": {
       "provider": "github"
-    },
-    "delivery.roles": {
-      "architecture": null,
-      "qa": null,
-      "domain": null,
-      "ux": null,
-      "product": null,
-      "security": null,
-      "docs": null
-    },
-    "delivery.mcp": {
-      "implement": null,
-      "validate": null,
-      "app.start": null,
-      "qa.run": null
     }
   },
-  "extensions": {
-    "session.start": [
-      "devbook:validate"
-    ],
-    "app.start": null,
-    "qa.run": null,
-    "verify": "devbook:verify-change",
-    "flow.end": [
-      "devbook:update"
-    ]
+  "phases": {
+    "flow-code": {
+      "phase-update-base": {
+        "before": [
+          "devbook:validate"
+        ]
+      },
+      "phase-scope": {},
+      "phase-plan": {},
+      "phase-implement": {
+        "mcp": null
+      },
+      "phase-review": {},
+      "phase-build-test": {
+        "mcp": null
+      },
+      "phase-verify": {
+        "app": null,
+        "mcp": null
+      },
+      "phase-spec-check": {
+        "skill": "devbook:verify-change"
+      },
+      "phase-create-pr": {},
+      "phase-report-back": {},
+      "phase-summary": {}
+    },
+    "flow-spec": {
+      "phase-update-base": {
+        "before": [
+          "devbook:validate"
+        ]
+      },
+      "phase-scope": {},
+      "phase-drafting:arc42": {},
+      "phase-drafting:domain": {},
+      "phase-drafting:tech": {},
+      "phase-drafting:design": {},
+      "phase-drafting:ai": {},
+      "phase-check-review": {},
+      "phase-create-pr": {},
+      "phase-report-back": {},
+      "phase-summary": {}
+    }
   },
   "policy": {
     "qa.depth": "skipped",
@@ -38,7 +57,7 @@
   },
   "gates": [
     {
-      "at": "deliver",
+      "at": "create-pr",
       "when": "before",
       "purpose": "approval",
       "prompt": "Nothing here is pushed or opened as a pull request until asked. Push and open one now?",
@@ -274,7 +293,7 @@
       }
     },
     "delivery": {
-      "pluginVersion": "1.13.0"
+      "pluginVersion": "1.18.0"
     },
     "schedule": {
       "pluginVersion": "1.9.0",

@@ -1,6 +1,6 @@
 ---
 name: phase-personal-validation
-description: 'Shared Personal Validation review handoff for every flow-* flow. Brings the application up, publishes the review links as clickable URLs, says what to check by hand, and presents the ready check''s open items, the code review, the QA review, and the spec-check table with its chapter edits. Runs again on every revise round. It presents and never decides — the mandatory approval gate stays with the flow-runner. Invoked inline by the flow-runner agent, never configured.'
+description: 'Shared Personal Validation review handoff for every flow-* flow. Brings the application up, publishes the review links as clickable URLs, lists every demo the change implements beside them, says what to check by hand, and presents the ready check''s open items, the code review, the QA review, and the spec-check table with its chapter edits. Runs again on every revise round. It presents and never decides — the mandatory approval gate stays with the flow-runner. Invoked inline by the flow-runner agent, never configured.'
 ---
 
 # Phase: Personal Validation — The Review Handoff
@@ -10,6 +10,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 **Does**
 
 - Starts the app, publishes the review links and a short what-to-check list
+- Lists every demo the change implements beside the app, opened where the chapters point
 - Presents the review, QA and spec-check results, then waits
 - Commits the change set when `commit.at` is `gate`
 
@@ -65,7 +66,9 @@ A link to a process that is not listening is worse than no link.
 - **The demo beside the app.** When the change implements a click demo — a `*.demo.html` under
   the change's `devbook-delta/`, or one the scoped chapters pair or name in their `demo` field
   — publish each by path next to the app link it shows, with every address those chapters
-  name, walkthroughs included. It opens from disk, so it needs no health check.
+  name, walkthroughs included, each a `file:` URL ending in `#<id>` — the demo opens at that
+  screen, state, or walkthrough. It opens from disk, so it needs no health check; report an
+  address whose file is missing instead of publishing it.
 - **Label each one** with what it is for, in the person's terms.
 - **Publish nothing unconfirmed.** Every URL here was reachable in Step 1.
 
@@ -118,7 +121,8 @@ unattended run there is no one to hand back to: park per **The gate**, `approval
 
 - A running application with confirmed health, a `blocked` result naming the startup failure
   and the recovery command, or the recorded reason there was nothing to start.
-- The labelled review links, in the stage's `links` and in the conversation.
+- The labelled review links, in the stage's `links` and in the conversation, with each demo
+  address beside the app link it is compared with.
 - The what-to-check list and the four results of Step 4.
 
 ## Dashboard Reporting

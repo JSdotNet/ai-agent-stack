@@ -208,122 +208,101 @@ function networkFetches(html) {
 
 // ── demo-model ──────────────────────────────────────────────────────────────
 
-/** The keys `demo-model` carries, as the template's header documents them. */
+/** The keys the template reads from `demo-model`, per its authoring reference. */
 const MODEL_KEYS = ["app", "screens", "roles", "flags", "settings", "viewports", "variants", "walkthroughs"];
 
-const isObject = (value) => Boolean(value) && typeof value === "object" && !Array.isArray(value);
-const isId = (value) => typeof value === "string" && value !== "";
-
 /**
- * `demo-model`, read into the sets an address resolves against, in the one
- * shape the template's header documents and its runtime reads: `screens` as
- * `[{ id, anchors: [...] }]`, each panel list as `[{ key }]`, `walkthroughs`
- * as `[{ id, steps: [{ screen, anchor?, role?, flags? }] }]`. The runtime
- * silently drops what it cannot read, so every departure from that shape is
- * collected in `shape` and reported rather than read some other way.
- * `repeated` collects every id the model lists twice in one place.
+ * `demo-model`, read in the one shape the template reads — the authoring
+ * reference in the comment opening its managed region — into the sets an
+ * address resolves against. `screens` is `[{ id, anchors? }]`, each panel
+ * switch `[{ key }]`, `walkthroughs` `[{ id, steps: [{ screen, anchor? }] }]`.
+ * `shape` collects every place the model departs from that; `repeated` every
+ * id it lists twice in one place.
  */
 export function normalizeModel(raw) {
-    if (!isObject(raw)) throw new Error("the model is not a JSON object");
-    const repeated = [];
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("the model is not a JSON object");
     const shape = [];
-
-    for (const key of Object.keys(raw)) {
-        if (MODEL_KEYS.includes(key)) continue;
-        const instead = { actors: "`roles`", anchors: "each screen's `anchors`" }[key];
-        shape.push(`has \`${key}\`, which the template does not read${instead ? ` — write it as ${instead}` : ""}`);
-    }
-    const listOf = (name) => {
+    const repeated = [];
+    const isText = (value) => typeof value === "string" && value !== "";
+    const entries = (name, of) => {
         if (raw[name] === undefined) return [];
         if (Array.isArray(raw[name])) return raw[name];
-        shape.push(`has \`${name}\` as ${typeof raw[name] === "object" ? "an object" : `a ${typeof raw[name]}`}, where the template reads a list`);
+        shape.push(`\`${name}\` is not a list of ${of}`);
         return [];
     };
-    const idsInto = (list, where, into = new Set()) => {
-        for (const id of list) {
-            if (!isId(id)) {
-                shape.push(`lists ${where} ${JSON.stringify(id)}, where the template reads an id string`);
-                continue;
-            }
-            if (into.has(id)) repeated.push(`${where} "${id}"`);
-            into.add(id);
-        }
-        return into;
-    };
-    const keysInto = (name, where) => {
-        const into = new Set();
-        for (const entry of listOf(name)) {
-            if (!isObject(entry) || !isId(entry.key)) {
-                shape.push(`lists ${where} ${JSON.stringify(entry)} in \`${name}\`, where the template reads \`{ "key", "label" }\``);
-                continue;
-            }
-            if (into.has(entry.key)) repeated.push(`${where} "${entry.key}"`);
-            into.add(entry.key);
-        }
-        return into;
-    };
+
+    for (const name of Object.keys(raw)) {
+        if (!MODEL_KEYS.includes(name)) shape.push(`\`${name}\` is not a key the template reads — it reads ${MODEL_KEYS.map((k) => `\`${k}\``).join(", ")}`);
+    }
 
     const screens = new Map();
-    for (const entry of listOf("screens")) {
-        if (!isObject(entry) || !isId(entry.id)) {
-            shape.push(`lists screen ${JSON.stringify(entry)}, where the template reads \`{ "id", "title", "anchors" }\``);
-            continue;
+    entries("screens", "`{ id, anchors? }` objects").forEach((entry, index) => {
+        if (!entry || typeof entry !== "object" || !isText(entry.id)) {
+            shape.push(`\`screens\` entry ${index + 1} has no \`id\` — a screen is \`{ id, anchors? }\``);
+            return;
         }
         if (screens.has(entry.id)) repeated.push(`screen "${entry.id}"`);
-        let anchors = [];
-        if (Array.isArray(entry.anchors)) anchors = entry.anchors;
-        else if (entry.anchors !== undefined) shape.push(`has screen "${entry.id}" with \`anchors\` that is not a list`);
-        screens.set(entry.id, idsInto(anchors, `anchor in screen "${entry.id}"`));
-    }
+        const own = new Set();
+        if (entry.anchors !== undefined && !Array.isArray(entry.anchors)) {
+            shape.push(`screen "${entry.id}" has \`anchors\` that is not a list of ids`);
+        }
+        for (const anchor of Array.isArray(entry.anchors) ? entry.anchors : []) {
+            if (!isText(anchor)) {
+                shape.push(`screen "${entry.id}" lists an anchor that is not an id`);
+                continue;
+            }
+            if (own.has(anchor)) repeated.push(`anchor "${anchor}" in screen "${entry.id}"`);
+            own.add(anchor);
+        }
+        screens.set(entry.id, own);
+    });
+
+    const keyed = (name) => {
+        const into = new Set();
+        entries(name, "`{ key }` objects").forEach((entry, index) => {
+            if (!entry || typeof entry !== "object" || !isText(entry.key)) {
+                shape.push(`\`${name}\` entry ${index + 1} has no \`key\``);
+                return;
+            }
+            if (into.has(entry.key)) repeated.push(`${name.replace(/s$/, "")} "${entry.key}"`);
+            into.add(entry.key);
+        });
+        return into;
+    };
 
     const walkthroughs = new Map();
-    for (const entry of listOf("walkthroughs")) {
-        if (!isObject(entry) || !isId(entry.id) || !Array.isArray(entry.steps)) {
-            shape.push(`lists walkthrough ${JSON.stringify(entry)?.slice(0, 80)}, where the template reads \`{ "id", "title", "steps": [...] }\``);
-            continue;
+    entries("walkthroughs", "`{ id, steps }` objects").forEach((entry, index) => {
+        if (!entry || typeof entry !== "object" || !isText(entry.id) || !Array.isArray(entry.steps)) {
+            shape.push(`\`walkthroughs\` entry ${index + 1} is not \`{ id, steps: [...] }\``);
+            return;
         }
         if (walkthroughs.has(entry.id)) repeated.push(`walkthrough "${entry.id}"`);
-        walkthroughs.set(entry.id, entry.steps);
-    }
-
-    if (raw.app !== undefined && !isObject(raw.app)) shape.push("has `app` that is not `{ \"name\", \"home\" }`");
-    const home = isObject(raw.app) ? raw.app.home : undefined;
+        const steps = [];
+        entry.steps.forEach((step, at) => {
+            if (!step || typeof step !== "object" || !isText(step.screen)) {
+                shape.push(`walkthrough "${entry.id}" step ${at + 1} is not \`{ screen, anchor?, text }\``);
+            }
+            steps.push({ screen: step?.screen ?? null, anchor: step?.anchor ?? null });
+        });
+        walkthroughs.set(entry.id, steps);
+    });
 
     return {
         screens,
         walkthroughs,
-        home: isId(home) ? home : null,
-        variants: keysInto("variants", "variant"),
-        roles: keysInto("roles", "role"),
-        flags: keysInto("flags", "flag"),
-        settings: keysInto("settings", "setting"),
-        viewports: keysInto("viewports", "viewport"),
-        repeated,
+        variants: keyed("variants"),
+        roles: keyed("roles"),
+        flags: keyed("flags"),
+        settings: keyed("settings"),
+        viewports: keyed("viewports"),
         shape,
+        repeated,
     };
 }
 
 /** Whether `anchor` is one the model lists for `screen`. */
 function modelHasAnchor(model, screen, anchor) {
     return Boolean(model.screens.get(screen)?.has(anchor));
-}
-
-/**
- * Why one walkthrough step does not resolve, or null — the test the template
- * runs before it keeps a walkthrough: the screen, the anchor on it, the role,
- * and every flag are ones the model lists.
- */
-function stepProblem(step, model) {
-    if (!isObject(step)) return `is ${JSON.stringify(step)}, where the template reads \`{ "screen", "anchor"?, "text" }\``;
-    if (!isId(step.screen) || !model.screens.has(step.screen)) return `is on screen "${step.screen ?? "(none)"}", which \`${DEMO_MODEL_ID}\` does not list`;
-    if (step.anchor != null && !modelHasAnchor(model, step.screen, step.anchor)) {
-        return `is on anchor "${step.anchor}" of screen "${step.screen}", which \`${DEMO_MODEL_ID}\` does not list`;
-    }
-    if (step.role != null && !model.roles.has(step.role)) return `plays role "${step.role}", which \`${DEMO_MODEL_ID}\` does not list`;
-    if (step.flags !== undefined && !Array.isArray(step.flags)) return "has `flags` that is not a list";
-    const missing = (step.flags ?? []).find((flag) => !model.flags.has(flag));
-    if (missing !== undefined) return `switches flag "${missing}", which \`${DEMO_MODEL_ID}\` does not list`;
-    return null;
 }
 
 /**
@@ -429,7 +408,7 @@ export function demoFileIssues(relPath, html) {
         }
     }
 
-    for (const entry of model.shape) error(`${entry} in \`${DEMO_MODEL_ID}\` — the template's header documents the shape.`);
+    for (const entry of model.shape) error(`has a \`${DEMO_MODEL_ID}\` the template cannot read: ${entry}.`);
     for (const entry of model.repeated) error(`lists ${entry} twice in \`${DEMO_MODEL_ID}\`.`);
 
     const seenScreens = new Set();
@@ -455,14 +434,16 @@ export function demoFileIssues(relPath, html) {
         }
     }
 
-    if (model.home !== null && !model.screens.has(model.home)) {
-        error(`has \`app.home\` "${model.home}", which \`${DEMO_MODEL_ID}\` does not list as a screen.`);
-    }
     for (const [id, steps] of model.walkthroughs) {
-        if (!steps.length) error(`has walkthrough "${id}" with no steps — the template drops it.`);
         steps.forEach((step, index) => {
-            const problem = stepProblem(step, model);
-            if (problem) error(`has walkthrough "${id}" step ${index + 1} that ${problem} — the template drops the whole walkthrough.`);
+            const { screen, anchor } = step;
+            if (!screen) return;
+            const at = `walkthrough "${id}" step ${index + 1}`;
+            if (!model.screens.has(screen)) {
+                error(`has ${at} on screen "${screen}", which \`${DEMO_MODEL_ID}\` does not list.`);
+            } else if (anchor && !modelHasAnchor(model, screen, anchor)) {
+                error(`has ${at} on anchor "${anchor}" of screen "${screen}", which \`${DEMO_MODEL_ID}\` does not list.`);
+            }
         });
     }
     return issues;

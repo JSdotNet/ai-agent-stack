@@ -2608,21 +2608,6 @@ export function chapterHash(markdown, line = 1) {
 
 const digest = (text) => `sha256:${createHash("sha256").update(text, "utf8").digest("hex").slice(0, 8)}`;
 
-/**
- * A demo's text as a fingerprint reads it: line endings as LF, and every
- * managed region — `<!-- template:begin … -->` to `<!-- template:end -->`,
- * both markers included — left out. The region is the template's, approved
- * through `design/`, and `demo-template.mjs` already fails a hand edit to it;
- * leaving it out is what lets `--refresh` bring every demo forward without
- * lifting the approval of every page a demo belongs to. A begin marker with no
- * end is kept, so a broken region still changes the value.
- */
-export function demoFingerprintText(text) {
-    return String(text)
-        .replace(/\r\n?/g, "\n")
-        .replace(/<!--\s*template:begin\b[\s\S]*?<!--\s*template:end\b[^>]*?-->/gi, "");
-}
-
 /** Whether a path names a click demo: `demo.html`, or any `*.demo.html`. */
 export function isDemoPath(relPath) {
     const base = String(relPath).replace(/\\/g, "/").split("/").pop();
@@ -2668,14 +2653,27 @@ export function pageDemoPath(relPath) {
 }
 
 /**
+ * A demo's text as a fingerprint reads it: line endings normalised and every
+ * managed region — `template:begin` through `template:end`, both markers
+ * included — dropped. The region is the template's, checked against it by
+ * `demo-template.mjs`, so `--refresh` rewriting it lifts no approval; what a
+ * page's approval covers is the demo's own screens, model, and question.
+ */
+export function demoFingerprintText(text) {
+    return String(text)
+        .replace(/\r\n?/g, "\n")
+        .replace(/<!--\s*template:begin\b[^>]*?-->[\s\S]*?(?:<!--\s*template:end\b[^>]*?-->|$)/gi, "");
+}
+
+/**
  * The fingerprint `approved-hash` and `accepted-hash` record: `chapterHash`,
  * with every demo the block belongs to folded in, so editing a demo lifts an
- * approval of what it shows exactly as editing the prose does.
+ * approval of what it shows exactly as editing the prose does. A demo's
+ * managed region is left out, per `demoFingerprintText`.
  *
  * A block's demos are the ones its `demo` field — or the field of any chapter
  * nested in it — names by path, and for the file block also the demo named for
  * the page: `<page>.demo.html` for `<page>.md`, `demo.html` for `context.md`.
- * A demo is read through `demoFingerprintText`, its managed region left out.
  * `demoText(path)` returns a demo's text, or null when it does not exist. A
  * block with no demo hashes exactly as `chapterHash` does, so no approval
  * recorded before demos existed changes value.
@@ -2745,13 +2743,18 @@ function hashedText(lines, from, end, dropped) {
  * fences, because in a delta they are content — the header says what kind of
  * change it is, and a `MODIFIED` block is the fields it sets — and drops only
  * its annotation fences. Each delta is keyed by the devbook file it targets,
- * so moving one to another target is an edit. `deltas` is a list of
+ * so moving one to another target is an edit. A demo delta is read as a page
+ * fingerprint reads a demo, its managed region left out. `deltas` is a list of
  * `{ target, markdown }`, in any order.
  */
 export function changeHash(proposalMarkdown, deltas) {
     const parts = [chapterHash(proposalMarkdown, parseDocument(proposalMarkdown).chapters.find((c) => c.level === 1)?.line ?? 1)];
     for (const delta of [...deltas].sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0))) {
-        const lines = (isDemoPath(delta.target) ? demoFingerprintText(delta.markdown) : delta.markdown).split(/\r?\n/);
+        if (isDemoPath(delta.target)) {
+            parts.push(`${delta.target}\n${demoFingerprintText(delta.markdown)}`);
+            continue;
+        }
+        const lines = delta.markdown.split(/\r?\n/);
         parts.push(`${delta.target}\n${hashedText(lines, 0, lines.length, ["annotation"])}`);
     }
     return digest(parts.join("\n"));

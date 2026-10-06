@@ -21,7 +21,7 @@ const errorsOf = (issues) => issues.filter((i) => i.severity === "error");
 const fence = (body) => "```meta\n" + body + "```\n";
 const exists = async (p) => stat(p).then(() => true, () => false);
 
-const demo = ({ head = "", app = "<section data-screen=\"cart\" id=\"cart\"><p>Cart</p></section>", region = true, meta = { question: "Does checkout fit one screen?" }, model = { screens: [{ id: "cart", title: "Cart", anchors: [] }] } } = {}) =>
+const demo = ({ head = "", app = "<section data-screen=\"cart\" id=\"cart\"><p>Cart</p></section>", region = true, meta = { question: "Does checkout fit one screen?" }, model = { screens: [{ id: "cart", title: "Cart" }] } } = {}) =>
     `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n${head}` +
     (region ? `<!-- template:begin hash=sha256:abcd1234 -->\n<style>body{margin:0}</style>\n<script>window.addEventListener("message",()=>{});</script>\n<!-- template:end -->\n` : "") +
     `</head>\n<body>\n<main data-demo-app>${app}</main>\n` +

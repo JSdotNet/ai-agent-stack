@@ -8,7 +8,7 @@ category: feature
 
 ## Why
 
-<!-- The problem or the opportunity, and why now. -->
+<!-- The problem or the opportunity, and why now. A change carrying a demo records the prototype's question and its answer here. -->
 
 ## Scope
 
@@ -16,4 +16,4 @@ category: feature
 
 ## Chapters touched
 
-<!-- One line per chapter, by address: .devbook/<folder>/<file>.md#<slug> -->
+<!-- One line per chapter, by address: .devbook/<folder>/<file>.md#<slug>; a demo by its path: .devbook/domain/<context>/<name>.demo.html -->

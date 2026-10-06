@@ -33,6 +33,9 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 
 | Name | Belongs to |
 | --- | --- |
+| 2026-10-06 | Personal Validation publishes a demo the change implements beside the running app, at the addresses its chapters name, and the what-to-check list compares the two screen by screen. |
+| 2026-10-06 | The `demo` converter kind: a demo rides with its page's unit, `verify-change` compares its screens and walkthroughs with the front end and the e2e tests, `apply-change` briefs them as acceptance checks, and `capture-specs` never writes one. |
+| 2026-10-06 | A demo's managed region stands outside every fingerprint, so a template refresh lifts no approval, and `demo-model` is read only in the template's shape, in contract 29. |
 | `demo.html` | The bounded context itself, counted with `context.md`. One per context with a user interface. |
 | `<page>.demo.html` | `<page>.md`, which it sits beside and moves with when a feature is split out. |
 | Any other `*.demo.html` | The chapters whose `demo` field names it. |
@@ -108,14 +111,10 @@ demo opens anywhere with no toolchain.
 The managed region is the template's and not the demo's, so it is the one part of a demo that
 `/prototype` does not write. `demo-template.mjs --refresh` rewrites it in every demo when the
 template changes, and touches nothing else. A region edited by hand is an error, because the
-next refresh would discard the edit.
-
-A page's fingerprint leaves the managed region out of every demo it folds in, and so does a
-change's fingerprint for a proposed demo. Without that, one template change would lift the
-approval of every page with a demo, and the approvals would stop meaning anything. What a
-person approved on a page is the app part and its `demo-model`. The panel and runtime around
-it are approved where they are written, in `design/`. The exclusion hides no edit: a region
-edited by hand matches no template version, and the check fails on it.
+next refresh would discard the edit. The region stands outside the fingerprint of the page a
+demo belongs to, and of a change carrying it, so a refresh lifts no approval: what a page's
+approval covers is the demo's own screens, model, and question, and the region answers to the
+template and the design system instead.
 
 A demo has a size target of 500 KB. `/prototype` works to stay under it with inline SVG,
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
@@ -140,9 +139,12 @@ replacing its target whole. The `prototype` seed states the rest of this record:
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
 real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
 managed region against the template, a stale one as a warning and a hand-edited one as an error,
-and `--refresh` rewrites the regions after the template changes. The checker reads `demo-model`
-only in the shape the template documents and reports any other shape, because the template's
-runtime silently drops what it cannot read.
+and `--refresh` rewrites the regions after the template changes. `verify-change`, `apply-change`, and `capture-specs` read a demo as the `demo` kind,
+`assets/spec-kinds/demo.md`: it rides with its page's sync unit, its screens and walkthroughs
+are compared with the front end and the e2e tests, and capture never writes one, handing a
+`code-ahead` screen to `/prototype`. In contract 29 the
+fingerprint leaves the region out, and the checker reads `demo-model` only in the shape the
+template's authoring reference states.
 
 ## Rejected
 
@@ -160,9 +162,6 @@ runtime silently drops what it cannot read.
   application, which is where prototyping stops.
 - **A product-level demo.** It would duplicate the screens of every context it crosses and
   belong to none of them.
-- **The managed region inside the fingerprint.** Every template refresh would lift every page
-  approval at once. A person would re-approve pages whose content did not change, and soon
-  stop reading what they approve.
 - **A hard size limit.** A large context can need more than 500 KB, and refusing it would push
   the screens back into a pull-request comment.
 - **Storybook, htmx, WebAssembly, or Markdown with embedded screens.** Storybook needs its
@@ -176,8 +175,6 @@ runtime silently drops what it cannot read.
 
 | Date | Change |
 | --- | --- |
-| 2026-10-06 | A page's and a change's fingerprint leave a demo's managed region out, so a template refresh lifts no approval. |
-| 2026-10-06 | The checker reads `demo-model` only in the shape the template documents and reports any other. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |

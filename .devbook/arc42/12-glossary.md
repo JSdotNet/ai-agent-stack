@@ -307,8 +307,9 @@ The mandatory gate every flow ends at, and an instance of the gate pattern rathe
 mechanism. It uses no agent and no model: it hands control back to the person and waits.
 
 Two parts, deliberately separate. The **review handoff** is a procedure — bring the application
-up, publish the links, say what to check by hand — and it repeats on every revise round, because
-a revised change set is a new thing to look at. The **gate** is the decision, and it happens once
+up, publish the links with any demo the change implements beside them, say what to check by
+hand — and it repeats on every revise round, because a revised change set is a new thing to
+look at. The **gate** is the decision, and it happens once
 per pass. Splitting them lets the presentation be a phase skill without any of it becoming
 configurable: a repository may declare gates in front of this one and may never remove it.
 

@@ -499,6 +499,7 @@ the page the demo belongs to.
 | A page-named demo exists only beside its page and moves with it on a split | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | Every `demo` address resolves to a file, a screen or walkthrough, and an anchor | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A requirement's walkthrough plays one of its own scenarios | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
+| `demo-model` has the shape the template documents, and every walkthrough step resolves as the template resolves it | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | Every screen and anchor is listed in `demo-model` once, and no script but `demo-model` and `demo-meta` sits outside the managed region | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |
 | A demo's `demo-meta` holds `question` and nothing else | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo-delta.test.mjs` |
 | A demo fetches nothing from the network | `demo.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/demo.test.mjs` |

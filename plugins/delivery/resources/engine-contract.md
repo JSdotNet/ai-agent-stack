@@ -97,11 +97,13 @@ adopted a single devbook folder, and `devbook` being absent costs nothing here.
 - **The file is optional, and so is every engine key in it.** Absent, every phase runs its
   built-in procedure on the session's settings, no extra gate exists, and every policy key
   takes the default in the table below. Only the engine reads its keys, so a repository that
-  adopted devbook and not `delivery` carries `id` alone and validates. A malformed file is
-  reported once and then ignored; it never blocks a run. A present `phases` map is checked for
-  completeness — see **Phases** below.
+  adopted devbook and not `delivery` carries `id` alone and validates. A malformed file — one
+  that does not parse as JSON — is reported once and then ignored; it never blocks a run. A
+  file that parses and is refused is not malformed: see the next rule. A present `phases`
+  map is checked for completeness — see **Phases** below.
 - **An unknown key is rejected, not ignored** — the same way a plugin manifest rejects an
-  unknown field. Report it by name and stop, so a typo is never a silently absent setting.
+  unknown field. Report it by name and stop, so a typo is never a silently absent setting and
+  a refused file's gates are never dropped by running on defaults.
   `extensions`, `bindings["delivery.roles"]`, and `bindings["delivery.mcp"]` are rejected by
   name with "run delivery:update": the migration rewrites them into `phases`, and no alias
   keeps them alive.

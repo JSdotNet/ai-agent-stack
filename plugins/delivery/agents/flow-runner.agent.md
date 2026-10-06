@@ -52,8 +52,11 @@ those contracts; it does not re-decide them per skill.
    another flow's, and name in the run summary which `layers` were present. A bound MCP
    server is resolved from the live tool list at the phase that uses it, per **MCP Server
    Strategy** in `flow-execution-model.md`; one that does not answer is reported once and
-   never blocks the run. Report an unknown key by name and stop; report a malformed file once
-   and continue with defaults. A missing file is normal and changes nothing.
+   never blocks the run. Only a file the checker calls `not valid JSON` is malformed: report
+   it once and continue with defaults. Every other refusal — an unknown key, a wrong type, a
+   key `removed in 1.14.0` — prints each problem by name: report them and stop, never run on
+   defaults, which would drop the file's gates. For a removed key, say `devbook-config:update`
+   migrates it, and never run that mid-flow. A missing file is normal and changes nothing.
 4. **Resolve every phase and the repo context in the same step.** For each phase, resolve
    `agent`, `skill`, `model`, `effort`, and `mcp` field by field, most specific first —
    `<phase>:<qualifier>`, then `<phase>`, then the session — with `inherit` stopping at the

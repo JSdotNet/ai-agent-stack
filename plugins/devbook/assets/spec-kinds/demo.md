@@ -1,117 +1,100 @@
 # Kind: demo
 
 What `capture-specs`, `apply-change`, and `verify-change` need to know about a
-demo that `assets/code-sync-protocol.md` does not already say. The protocol
-carries the resolution ladder, the evidence rules, the five verdicts, the status
-rules, the brief contract, and the report table; this file carries the kind.
+click demo that `assets/code-sync-protocol.md` does not already say. The
+protocol carries the resolution ladder, the evidence rules, the five verdicts,
+the status rules, the brief contract, and the report table; this file carries
+the kind.
 
 | | |
 |---|---|
-| Chapters | None: a demo is not a chapter. The unit is one `*.demo.html` and every screen, state, anchor, and walkthrough its `demo-model` lists, with the chapters whose `demo` field names it and the `### Requirement:` chapters whose `demo` names one of its walkthroughs |
-| File | `.devbook/domain/<context>/demo.html`, a `<page>.demo.html` beside its page, or any other `*.demo.html` a `demo` field names — or the same path under a change's `devbook-delta/domain/<context>/` |
-| Folder rule | `devbook-domain.md` for what a demo is and where it lives, `devbook-chapter-metadata.md` for the `demo` field, and `resources/demo-address.md` for what an address resolves against |
-| Context to load | The demo's `demo-meta` and `demo-model`, and the `main[data-demo-app]` screens; the page it belongs to, and the `requirements.md` chapters whose `demo` names its walkthroughs; `context.md` or `actors.md` for the actor and switch keys its panel lists |
-| Plan target | None. Only `/prototype` writes a demo; see **Capturing** below |
+| Chapters | None of its own: a `*.demo.html` file, addressed by screen and walkthrough per `resources/demo-address.md` |
+| File | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or any other `*.demo.html` a chapter's `demo` field names |
+| Folder rule | `devbook-domain.md`, with `devbook-chapter-metadata.md` for the `demo` field |
+| Context to load | The demo's `demo-model`; the page it pairs with and every chapter whose `demo` field names it; the requirements those chapters own, with their `#### Scenario:` cases and `tests`; `domain.md`'s ubiquitous language for the copy |
+| Plan target | None. Only `/prototype` writes a demo, and it reaches `domain/` only as a demo delta of a change, per `devbook-changes.md` |
 | Index scope | `--scope domain` |
-| Extra input | For capturing, a runnable environment on the terms `feature.md` sets: local or disposable, never shared or production |
+| Extra input | The front end that renders the screens, and the e2e tests the requirements' `tests` name beside their walkthroughs |
 
-## Location is agreement
+## It rides with its page
 
-A demo has no `status`, and never will: the file knows its question and nothing
-else, per `.devbook/arc42/adr/demos.md`. Where it sits is the status row of the
-protocol's table:
+A demo is no sync unit and carries no `meta` block, `status`, or `sync` of its
+own. It belongs to the unit of the page it pairs with — `demo.html` to
+`context.md`, `<page>.demo.html` to `<page>.md` — and to the unit of every
+chapter whose `demo` field names it. A run whose scope holds such a chapter
+reads the demo through this file beside that chapter's own kind, and a run
+given a demo by path takes this kind. Its effective `sync` and its status are
+the page's, or the naming chapter's: a demo placed by a `draft` page is a
+sketch, and its verdicts carry `unagreed`.
 
-| Where the file sits | Reads as |
-|---|---|
-| `.devbook/domain/<context>/` | `active` — the agreed screens |
-| A change's `devbook-delta/domain/<context>/` | The change's demo, under the protocol's rule for a change: pending truth once the change is agreed, `proposed` before |
-| Anywhere else | A prototype. Out of scope for all three skills: it was never agreed |
+What the demo is the source of truth for, and what it is not:
 
-A demo is not a sync unit of its own: `units.mjs` lists none, and a demo is
-part of the fingerprint of the page it belongs to. Take it as the scope when a
-person names the file, or as part of a context or folder scope that holds one.
-
-## What is compared
-
-A demo shows four things, and each is compared with what the application
-renders — read from its UI source by `verify-change`, observed running by
-`capture-specs` — and with the e2e tests a requirement's `tests` names beside
-the walkthrough its `demo` names.
-
-| Demo element | Compared with | Not compared |
+| Question | Answered by | When the demo disagrees |
 |---|---|---|
-| Screens — `section[data-screen]` and `demo-model.screens` | The routes, pages, and views the product reaches, and the navigation between them: a screen's place in the shell, the screens its `data-goto` and links reach | Pixel layout and styling, which are `design-component`'s; the template's managed region and control panel |
-| States — a screen's `of` children with `data-state` | The empty, error, refused, and completed states the view renders, and what moves it into each | Transitional states nobody stops at — a spinner, a fade |
-| Copy | The labels, headings, messages, and button text the product shows, and the ubiquitous-language terms they carry | The hard-coded data: names, amounts, and rows are there at real density, never as seed data or a fixture |
-| Walkthroughs — `demo-model.walkthroughs`, one per `#### Scenario:` | The scenario they play and the e2e test the same requirement's `tests` names: the steps the test drives, in order, on the screens the walkthrough visits | A walkthrough no requirement names, beyond the coverage warning below |
+| What a rule guarantees | `requirements.md`, the invariants subpages | The rule wins: a `conflict` inside the spec, resolved by a new prototype of the demo |
+| What a thing is called | `domain.md`'s ubiquitous language | The language wins, as above |
+| Colour, type, spacing, component anatomy | `design/` | The guideline wins, as above |
+| Which screens exist, how a person moves between them, their copy, and their empty, loading, and error states | **The demo** | The demo wins; the code conforms to it |
 
-The panel's switches pair by key. A role, flag, or setting the panel lists is
-the `key` of an actor or switch chapter, and what `data-if-role`,
-`data-if-flag`, and `data-if-setting` show and hide is compared with the role
-and flag checks that gate the same view in code. A panel key no chapter carries
-is `unresolved`, not a capture: the `actor` or `setting` kind settles it first.
+The managed region is the template's and is never evidence: compare the app
+part, `main[data-demo-app]`, and `demo-model` only.
 
-Counterpart resolution runs the protocol's ladder per screen: the `aliases` of
-the chapters whose `demo` names the screen, then the building block that holds
-the user interface, then the repository's routing convention. A screen nothing
-in the product matches is `spec-ahead` once resolution has looked; a screen
-several views could be is `unresolved`.
+## Counterpart ladder
 
-A requirement whose `demo` names a walkthrough and whose `tests` reach no `e2e`
-test, and a walkthrough no requirement names, are coverage warnings beside the
-verdict: the walkthrough shows the scenario, and only the test proves it.
+Before the protocol's rungs, pair each screen through the chapters that place
+the demo: the feature or requirement naming an address resolves to its code by
+its own kind, and the screen's counterpart is the route, page, or component in
+that code that renders it. Then try the screen's `id` and its `title` in
+`demo-model` against route names and component names. A screen with no single
+match is `unresolved`. A walkthrough pairs with the e2e test its requirement's
+`tests` names; one with none pairs only through its screens.
 
-## The verdicts here
+## Mapping
 
-| Verdict | For a demo |
-|---|---|
-| `aligned` | Every screen, state, copy string, and walkthrough step has its counterpart, and the e2e tests drive the steps the walkthroughs show |
-| `code-ahead` | The product renders a screen, a state, a step, or copy the demo does not show. A user-interface change that starts in code, with no demo revision, lands here |
-| `spec-ahead` | The demo shows a screen, a state, a step, or copy the product does not render, or a walkthrough step its e2e test does not drive |
-| `conflict` | Both have the screen and disagree on what it means: a walkthrough step the product refuses, a screen a role sees that the code withholds, copy naming one term where the code uses another for a different concept |
-| `unresolved` | A screen with no single counterpart, or a panel key with no chapter |
+| Demo element | Evidence when verifying | What building it requires |
+|---|---|---|
+| A screen, `section[data-screen]` | The route, page, or component that renders it, reachable the way the demo reaches it | The screen reachable from where the demo reaches it — check navigation and guards |
+| A state, `data-state` on a screen filed `of` another | The branch that renders it: empty list, loading, error, refused | The state rendered under the condition the demo shows — the most easily dropped part |
+| Copy | The interface strings, in the language `domain.md` declares | The demo's words, verbatim where it names a domain term |
+| A `data-anchor` | The element a test or a person targets | The element present, with the role and label the demo gives it |
+| Role, flag, setting, viewport in `demo-model` | The checks that gate the screen in code, by the switch chapters' `key` and the actors' `role` | Each switch gating what the demo shows under it |
+| A walkthrough | The e2e test its requirement's `tests` names, read step against step | The path played end to end, each step's `text` an assertion the test makes |
 
-Copy that differs and names the same concept is `code-ahead` when the
-product's wording is the ubiquitous language's and `spec-ahead` when the
-demo's is; when neither carries the term, it is `unresolved` and the term is
-the question.
+## Capturing — `capture-specs`
 
-## Capturing — `capture-specs` never writes a demo
-
-`capture-specs` reaches the verdicts here and never plans or writes a demo, in
-plan mode or write mode: only `/prototype` writes one, and only a change's
-delta lands it in `domain/`. For a `code-ahead` row the action is a `/prototype`
-revision started from the current demo with its screen ids kept, carried by a
-change, per `.devbook/arc42/adr/demos.md`.
-
-Run the application as `feature.md` says, walk each screen and walkthrough the
-demo lists, and record what the product shows beside what the demo shows. The
-chapters around the demo are still capture's: a promise the product keeps and
-no requirement states is a `feature`-kind entry in the same plan, and a chapter
-that shows a screen and has no `demo` entry for it may gain one — an address
-that resolves against `demo-model`, never a screen id invented for it.
+Capture never writes a demo, in either mode. A screen, state, or step the code
+has and the demo lacks is `code-ahead`: the plan names it by address and hands
+it to `/prototype`, with the current demo as input and its ids kept, so a change
+can carry the revision. In write mode the entry is reported and left; nothing
+is carried into the HTML. A demo is never drafted from code: a demo made by
+reading the app is a screenshot of it, and code never leads.
 
 ## Applying — `apply-change`
 
-A demo is briefed with the page it belongs to, never alone: its screens are the
-picture of the outcomes, not the outcomes. The outcomes and acceptance checks
-are the `### Requirement:` chapters whose `demo` names a walkthrough, quoted as
-they stand; each walkthrough is carried as the demo address beside its
-scenario, so the implementer sees what the scenario looks like. A screen or
-state no requirement covers is carried as an address and named as a
-requirement the page still owes.
+A demo is agreed when the page or chapter that places it is, and its fingerprint
+is part of that approval. The brief quotes each address in scope and turns it
+into acceptance checks: the screen reachable, each state rendered under its
+condition, the copy as written, every walkthrough's steps as an e2e path. The
+demo stays the reference the built work is compared with at Personal Validation.
+Out of scope: the managed region, the panel, variants, and anything the demo
+shows that a requirement or `design/` contradicts — that is a `conflict` to
+settle first.
 
-Ubiquitous language: the copy's terms, with the `aliases` of the chapters that
-name them. Out of scope: the hard-coded data, the panel, the template's region,
-styling beyond the declared tokens, and every screen of the same demo the brief
-does not name. Acceptance checks: each screen and state reachable as the demo
-shows it, the copy as written, each walkthrough's steps driven by an e2e test.
+## Verifying — `verify-change`
+
+One row per screen and per walkthrough in scope, the **Chapter** column carrying
+the demo address. Read the front-end code and the e2e tests as files; start
+nothing. `aligned` when the code renders the screen and its states with the
+demo's copy, and a walkthrough when its test drives the same steps.
+`spec-ahead` when the demo shows what the code does not build. `code-ahead`
+when the code shows a screen, state, or step no demo has — a UI change that
+started in code, with no demo revision. A demo contradicting a requirement or
+the language is `conflict`, whatever the code does.
 
 ## Do not
 
-- Do not write, revise, or trim a demo, in any mode — that is `/prototype`'s,
-  through a change.
-- Do not read a prototype outside `domain/` or a change's delta as a spec.
-- Do not compare the hard-coded data, the panel, or the managed region.
-- Do not treat a walkthrough as proof: the e2e test its requirement names is.
-- Do not add a `status`, a page name, or a verdict to a demo.
+- Do not write, edit, or trim a demo, in any mode or direction.
+- Do not read the managed region or the control panel as product.
+- Do not let a demo override a requirement, an invariant, a term, or a
+  `design/` guideline.
+- Do not give a demo its own status, `sync`, or unit.

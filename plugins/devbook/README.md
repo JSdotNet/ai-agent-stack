@@ -203,8 +203,9 @@ is why it reads code — not to change it, but to establish what is already ther
 so the brief asks only for the delta, and an update brief lists where the
 current behaviour lives.
 
-Each skill covers eight kinds, decided by the chapter's `type` — or by the file,
-where the folder defines no `type`:
+Each skill covers seven kinds, decided by the chapter's `type` — or by the file,
+where the folder defines no `type` — and an eighth, `demo`, that rides with the page
+it belongs to and roots no unit:
 
 | Kind | Target | `type` value(s) | Kind file |
 |------|--------|-----------------|-----------|
@@ -215,7 +216,7 @@ where the folder defines no `type`:
 | `actor` | `.devbook/domain/<context>/actors.md`, or `context.md` while the actors live there | `user`, `technical` — an `organisation` is no unit | `assets/spec-kinds/actor.md` |
 | `building-block` | `.devbook/arc42/05-building-block-view.md`, or `.devbook/arc42/building-blocks/<slug>.md` | none — `arc42/` defines no value set | `assets/spec-kinds/building-block.md` |
 | `design-component` | `.devbook/design/component-libraries.md` | `requirement` for each rule a component keeps or breaks; the component chapter itself is untyped | `assets/spec-kinds/design-component.md` |
-| `demo` | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or another `*.demo.html` a `demo` field names | none — a demo is no chapter; compared with the running product and the e2e tests beside its walkthroughs, and written only by `/prototype` | `assets/spec-kinds/demo.md` |
+| `demo` | `.devbook/domain/<context>/demo.html`, `<page>.demo.html`, or a `*.demo.html` a `demo` field names | none — a demo has no `meta` block; it takes its page's status and `sync`, and capture never writes one | `assets/spec-kinds/demo.md` |
 
 A kind file is what a kind needs that the protocol does not say: the chapters
 and file it covers, the folder rule, the spec-to-code mapping with an evidence

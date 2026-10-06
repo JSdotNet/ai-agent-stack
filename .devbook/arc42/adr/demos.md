@@ -144,7 +144,8 @@ and `--refresh` rewrites the regions after the template changes. `verify-change`
 are compared with the front end and the e2e tests, and capture never writes one, handing a
 `code-ahead` screen to `/prototype`. In contract 29 the
 fingerprint leaves the region out, and the checker reads `demo-model` only in the shape the
-template's authoring reference states.
+template's authoring reference states. The `devbook-openspec` schema and its `spec`, `status`,
+and `archive` skills carry a demo delta from proposal to archive.
 
 ## Rejected
 

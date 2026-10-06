@@ -17,8 +17,9 @@ skipped. Run from the repository root, on a branch of its own.
    `devbook-collaboration:chapter-accept`.
 2. **Merge.** `node .devbook/_tools/devbook-meta/delta.mjs --apply <name> --no-move`. It checks
    the gates again and refuses on the same terms; on a refusal, report it verbatim and stop —
-   nothing is written. On success it has written each target chapter and stamped `change` on
-   every chapter it touched.
+   nothing is written. On success it has written each target chapter, stamped `change` on
+   every chapter it touched, and replaced each demo a demo delta targets whole — a `replaced`
+   line, where a chapter reads `merged`.
    If its output ends in a `moved` line, the repository's copy predates `--no-move` and already
    moved the folder: skip step 3 and say `devbook:update` refreshes the tool.
 3. **Move.** `openspec archive <name> --yes --skip-specs`. Its warning that the proposal lacks
@@ -28,5 +29,5 @@ skipped. Run from the repository root, on a branch of its own.
    step 3 alone. Then delete `openspec/specs/` if the archive recreated it empty.
 4. **Check.** `node .devbook/_tools/devbook-meta/build.mjs --check`. A failure is reported as
    failing, with the chapters the merge wrote, never as archived.
-5. **Report** the chapters merged, the archive path, and the check, and leave the commit to the
+5. **Report** the chapters merged, the demos replaced, the archive path, and the check, and leave the commit to the
    person — one commit holding the merged chapters and the moved folder.

@@ -56,7 +56,8 @@ artifacts:
       a new prototype of the current demo.
 
       A change with no prose delta still writes one: a placeholder holding only
-      the opening meta block, because an empty `devbook-delta/` is unfinished.
+      the opening meta block, because an empty `devbook-delta/` is unfinished
+      and a demo does not match this artifact's glob.
       After every edit run
       `node .devbook/_tools/devbook-meta/delta.mjs --check <change>`.
     requires:

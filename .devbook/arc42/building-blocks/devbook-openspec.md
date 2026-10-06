@@ -57,6 +57,9 @@ under *Chapters touched* and records its verdict under *Why*, `solution.md` name
 in a file-level `demo` block, and a step names it on `delivers:`, per
 [the demos decision](../adr/demos.md). `spec` hands a run a demo delta by path, never inlined.
 
+A demo does not match the `devbook-delta/**/*.md` glob, so a change whose only delta is a demo
+still writes the placeholder, and `archive` reports a demo as replaced rather than merged.
+
 ### Config
 
 ```meta

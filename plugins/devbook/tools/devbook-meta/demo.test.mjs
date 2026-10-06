@@ -271,6 +271,24 @@ for (const [head, needle, name] of [
 }
 
 {
+    // The template drops a walkthrough whose step plays an unlisted role or
+    // switches an unlisted flag, and opens no home screen it does not list.
+    const playing = (extra) => ({ ...MODEL, walkthroughs: [{ id: "card-declined", steps: [{ ...step("checkout"), ...extra }] }] });
+    const role = await demoProblemsOf({ [DEMO]: demoHtml({ model: playing({ role: "admin" }) }) });
+    check(has(role, "error", 'step 1 playing role "admin"'), "a walkthrough step playing an unlisted role errors", dump(role));
+    const listed = await demoProblemsOf({ [DEMO]: demoHtml({ model: playing({ role: "buyer", flags: ["express"] }) }) });
+    check(!has(listed, "error", "card-declined"), "a step playing a listed role and flag resolves", dump(listed));
+    const flag = await demoProblemsOf({ [DEMO]: demoHtml({ model: playing({ flags: ["ghost"] }) }) });
+    check(has(flag, "error", 'step 1 switching flag "ghost"'), "a walkthrough step switching an unlisted flag errors", dump(flag));
+    const notList = await demoProblemsOf({ [DEMO]: demoHtml({ model: playing({ flags: "express" }) }) });
+    check(has(notList, "error", "has `flags` that is not a list of keys"), "a step's flags that are not a list error", dump(notList));
+    const home = await demoProblemsOf({ [DEMO]: demoHtml({ model: { ...MODEL, app: { name: "Ordering", home: "ghost" } } }) });
+    check(has(home, "error", '`app.home` "ghost"'), "an app.home naming no screen errors", dump(home));
+    const fine = await demoProblemsOf({ [DEMO]: demoHtml({ model: { ...MODEL, app: { name: "Ordering", home: "checkout" } } }) });
+    check(!has(fine, "error", "app"), "an app.home naming a listed screen resolves", dump(fine));
+}
+
+{
     const html = demoHtml().replace(/<script type="application\/json" id="demo-model">.*<\/script>\n/, "");
     const problems = await demoProblemsOf({ [DEMO]: html });
     check(has(problems, "error", "has no `<script type=\"application/json\" id=\"demo-model\">`"), "a demo without demo-model errors", dump(problems));

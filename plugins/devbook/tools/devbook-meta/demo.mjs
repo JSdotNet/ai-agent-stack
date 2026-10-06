@@ -282,14 +282,28 @@ export function normalizeModel(raw) {
             if (!step || typeof step !== "object" || !isText(step.screen)) {
                 shape.push(`walkthrough "${entry.id}" step ${at + 1} is not \`{ screen, anchor?, text }\``);
             }
-            steps.push({ screen: step?.screen ?? null, anchor: step?.anchor ?? null });
+            if (step?.flags !== undefined && !Array.isArray(step.flags)) {
+                shape.push(`walkthrough "${entry.id}" step ${at + 1} has \`flags\` that is not a list of keys`);
+            }
+            steps.push({
+                screen: step?.screen ?? null,
+                anchor: step?.anchor ?? null,
+                role: step?.role ?? null,
+                flags: Array.isArray(step?.flags) ? step.flags : [],
+            });
         });
         walkthroughs.set(entry.id, steps);
     });
 
+    if (raw.app !== undefined && (!raw.app || typeof raw.app !== "object" || Array.isArray(raw.app))) {
+        shape.push("`app` is not `{ name, home }`");
+    }
+    const home = raw.app && typeof raw.app === "object" && isText(raw.app.home) ? raw.app.home : null;
+
     return {
         screens,
         walkthroughs,
+        home,
         variants: keyed("variants"),
         roles: keyed("roles"),
         flags: keyed("flags"),
@@ -434,15 +448,26 @@ export function demoFileIssues(relPath, html) {
         }
     }
 
+    if (model.home !== null && !model.screens.has(model.home)) {
+        error(`has \`app.home\` "${model.home}", which \`${DEMO_MODEL_ID}\` does not list as a screen.`);
+    }
+    // The template keeps a walkthrough only when every step resolves — its
+    // screen, anchor, role, and flags — and drops the whole of it otherwise.
     for (const [id, steps] of model.walkthroughs) {
         steps.forEach((step, index) => {
-            const { screen, anchor } = step;
+            const { screen, anchor, role, flags } = step;
             if (!screen) return;
             const at = `walkthrough "${id}" step ${index + 1}`;
             if (!model.screens.has(screen)) {
                 error(`has ${at} on screen "${screen}", which \`${DEMO_MODEL_ID}\` does not list.`);
             } else if (anchor && !modelHasAnchor(model, screen, anchor)) {
                 error(`has ${at} on anchor "${anchor}" of screen "${screen}", which \`${DEMO_MODEL_ID}\` does not list.`);
+            }
+            if (role != null && !model.roles.has(role)) {
+                error(`has ${at} playing role "${role}", which \`${DEMO_MODEL_ID}\` does not list — the template drops the walkthrough.`);
+            }
+            for (const flag of flags.filter((key) => !model.flags.has(key))) {
+                error(`has ${at} switching flag "${flag}", which \`${DEMO_MODEL_ID}\` does not list — the template drops the walkthrough.`);
             }
         });
     }

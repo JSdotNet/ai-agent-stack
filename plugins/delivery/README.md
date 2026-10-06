@@ -127,7 +127,7 @@ skill changes who runs capture, never whether it runs.
 
 ## What it never depends on
 
-- **Specialist plugins.** An architecture, QA, domain, UX, product, security, or docs
+- **Specialist plugins.** An architecture, QA, domain, UX, coding, or docs
   specialist is bound per repository as the `agent` of the phase it runs. None is
   ever declared as a dependency — one missing specialist must not demote every skill. The
   engine names no specialist and none of them is published from this marketplace. The

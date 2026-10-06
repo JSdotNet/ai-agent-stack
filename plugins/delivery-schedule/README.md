@@ -154,7 +154,7 @@ The entry points sat in `delivery` and the triggers in a plugin beside it, which
 subject across two folders and made the engine carry procedures no attended flow ever reaches.
 Together they are one thing — work that runs with nobody watching — so they are one plugin,
 stacked on the engine they call into. It is an L1 extension: it owns no flow, holds no gate,
-and adds no extension point.
+and adds no phase.
 
 It is the one plugin here whose subject is a host capability — scheduled local routines — and
 that is a divergence from the rule that nothing in this marketplace names one, taken on purpose

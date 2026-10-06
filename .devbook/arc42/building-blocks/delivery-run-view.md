@@ -26,7 +26,7 @@ record, so this block keeps the subsystem's stem and is named for what it shows.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
-| `/flows` | Command, opening the pane | A person; the pane also opens on its own the first time a run appears, never when there is none |
+| `/flows` | Command, opening the pane | A person; the pane also opens on its own once per run of this session, the first time that run appears, never for another session's run or the main checkout's |
 | `/flows-demo` | Command, a simulated `flow-code` run held in memory | A person trying the view with no run to show |
 | Pane, band, inline rows, status line | Function-hook `ui.render` handlers and `$.ui.status` | Claude Code, on every render |
 
@@ -59,7 +59,8 @@ or the run's `runContext.phases` map where the run carries one, and inferred oth
 | --- | --- | --- |
 | Nothing is written outside the plugin's own `$.state`; `/flows-demo` writes no run file | `register.tsx` | `claude plugin validate` lists the module's writes |
 | An inferred mode is drawn dimmed with a `?`, never as if recorded | `register.tsx`, `badge` | untested |
-| A worktree with no runs of its own shows the main checkout's | `register.tsx`, `loadRuns` | untested |
+| A worktree with no runs of its own shows the main checkout's | `register.tsx`, `loadRuns` | `hooks/register.test.ts` |
+| The pane opens on its own for a run of this session, once | `register.tsx`, `refresh` | `hooks/register.test.ts` |
 | A run file that does not parse is skipped, not fatal | `register.tsx`, `readRuns` | untested |
 
 ## Dependencies

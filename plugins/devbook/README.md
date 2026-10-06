@@ -582,7 +582,7 @@ as before, so it ships no migration. 24 gives a change's `proposal.md` the `appr
 `accepted` rungs for the whole change, fingerprinted over the proposal and every delta. 25 adds
 the optional `sync` direction. 26 learns the click demos: the `demo` field, every address in it
 resolved against the demo's `demo-model`, the HTML contract each `*.demo.html` keeps, and a
-demo, its managed region left out, folded into the fingerprint of the page it belongs to. Each is an added field or rule a
+demo folded into the fingerprint of the page it belongs to. Each is an added field or rule a
 corpus without it never meets, so none ships a migration. 27 changes no chapter: the
 procedures' stamp entry moves under `components.devbook`, and it ships as
 `027-procedures-in-devbook`.

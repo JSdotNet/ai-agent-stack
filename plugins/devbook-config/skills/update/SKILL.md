@@ -99,11 +99,10 @@ laptop. `blocked` means *this machine cannot reconcile it*, and skipping is the 
    say otherwise, and that is theirs to decide, once — or names a leftover
    `model-selection.md`, which `local` converts into overlay phase entries and retires.
 
-8. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
-   as the last thing in the reply, a run that changed nothing included: under *This run*,
-   each component's stamp before and after step 4, the migrations it ran, what it left
-   customized, and every skipped row with its scope; the unenabled bindings and whatever
-   is still outstanding under *Still open*.
+8. **Close on `devbook-config:report`**, a run that changed nothing included, passing step
+   6's doctor findings; for *This run*, each component's stamp before and after step 4, the
+   migrations it ran, what it left customized, and every skipped row with its scope; and
+   for *Still open*, the unenabled bindings and whatever is still outstanding.
 
 ## Do not
 

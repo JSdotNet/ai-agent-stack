@@ -431,11 +431,12 @@ because no other plugin is allowed to name every plugin.
 | `init` | The engine-owned keys of a repository's stack config, for the first time, before any component initializes itself |
 | `update` | The same keys, moved forward, after each component reconciled itself |
 | `doctor` | Nothing. It reads every component's stamp against the disk, outstanding migrations, and the AGENTS.md sections, and names the `update` that fixes each finding |
+| `report` | Nothing. It prints the setup report for the repository as it stands — versions, scopes, what is adopted and bound, procedures, routines, overlays, and what `doctor` still finds — and `init` and `update` close on it |
 | `ask` | Nothing. It reads, and every fact it states names the file behind it |
 | `adoption` | Nothing. It reports where `ai/` no longer matches what is installed and hands the write to `flow-spec` |
 | `local` | What is true of one machine, outside the repository: a stack-config [overlay](adr/configuration.md) at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md`. Never the committed config |
 
-The six take no prefix. It is named `devbook-config` for the file it writes,
+The seven take no prefix. It is named `devbook-config` for the file it writes,
 `.devbook/config.json`, and not for a plugin it needs: its `dependencies` array is empty,
 `devbook` included.
 

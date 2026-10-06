@@ -17,13 +17,14 @@ claude plugin marketplace add JSdotNet/devbook
 Then enable `devbook-config` with `/plugin`. During development, add this working copy by path
 instead of by repository.
 
-## The six skills
+## The seven skills
 
 | Skill | Does |
 | --- | --- |
 | [`init`](skills/init/SKILL.md) | Writes a repository's `.devbook/config.json` for the first time, before any component initializes itself, then runs each adopted component's `init`. Refused where the config exists. |
 | [`update`](skills/update/SKILL.md) | The whole stack, moved forward in one run: version drift, outstanding migrations, a fan-out to every adopted component's own `update`, and a re-validated config. |
 | [`doctor`](skills/doctor/SKILL.md) | Diagnoses the installation and writes nothing: every stamp against disk, outstanding migrations, a stale or customized `AGENTS.md` section, an agent or provider a phase map binds that resolves to nothing — a retired one named with its successor — a key or flow map 1.14.0 retired, a leftover `model-selection.md`, and installed against newest, each finding with the skill that fixes it. |
+| [`report`](skills/report/SKILL.md) | Prints the setup report for the repository as it stands: every plugin's version and scope, what is adopted and bound, the procedures, the routines, this machine's overlays, and what `doctor` still finds open. Writes nothing. `init` and `update` close on it; run it by hand at any time. |
 | [`ask`](skills/ask/SKILL.md) | Answers one question about the stack. Reads only. The state half comes from the report below, the concept half from walking the canon — plugin READMEs, the arc42 chapters — the kernel in chapter 8 among them — and `delivery`'s engine and surface contracts. |
 | [`adoption`](skills/adoption/SKILL.md) | Reports where `ai/` no longer matches what is installed, enabled, and wired, and hands every edit to `delivery:flow-spec`. Reads only. |
 | [`local`](skills/local/SKILL.md) | What is true of this machine: the stack-config overlay at the user or repository layer — your agent, model, and effort per phase among it — and `AGENTS.local.md`, all under your devbook config directory. It converts a retired `model-selection.md` into overlay phase entries and retires the file. The one skill here that writes outside the repository, and the one that never writes the committed config. `init` and `update` close by offering it. |
@@ -34,9 +35,10 @@ plugins, flows, and bindings a chapter's prose no longer matches, and leaves `st
 **Adopted by**, **Evidence**, and **Limits** to a person — the same boundary `devbook-config:init`,
 `devbook-config:update`, and `devbook-config:doctor` keep against a `components.<name>` stamp.
 
-Both close on the same [setup report](resources/setup-report.md): what the repository adopted,
-its procedures and routines, every plugin's version, and what that one run changed. One shape
-for both is what lets a person compare an update against the init before it.
+Both close on `report`, which fills the [setup report](resources/setup-report.md): what the
+repository adopted, its procedures and routines, every plugin's version, and what that one run
+changed. One shape for both, and for a report run by hand, is what lets a person compare an
+update against the init before it.
 
 `init` and `update` stay two skills rather than one that branches on detect. They answer
 different questions — *what should this repository use?* against *is what it uses current?* —
@@ -51,7 +53,7 @@ the CLI. `update` fans out to `devbook-openspec:update`, `doctor` reports a miss
 out-of-range CLI and an unapproved change nobody has touched in a week, and `local` binds a
 grill skill of your own.
 
-The six carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
+The seven carry no prefix. `flow-`, `phase-`, and `schedule-` each mark a procedure's
 scope against its neighbours in the same plugin; here the plugin name is the scope, and
 `devbook-config:init` says everything a prefix would have. The verbs are OpenSpec's —
 `init`, `update`, `doctor` — and so is every component's `init` and `update`.
@@ -127,12 +129,13 @@ committed and shared.
 | `skills/init/SKILL.md` | First setup of the engine keys, before any component initializes |
 | `skills/update/SKILL.md` | Version drift, migrations, re-validation |
 | `skills/doctor/SKILL.md` | The installation diagnosis: stamps, ledger, `AGENTS.md` sections, unresolved providers, versions |
+| `skills/report/SKILL.md` | The standing setup report, printed after `init` and `update` or on request |
 | `skills/ask/SKILL.md` | The question-answering procedure |
 | `skills/adoption/SKILL.md` | Adoption-record drift, handed to `flow-spec` |
 | `skills/local/SKILL.md` | The machine-scope settings: overlays and `AGENTS.local.md` |
 | `scripts/report.mjs` | The read-only report, run in place from this plugin root |
 | `scripts/model-selection.mjs` | Turns a retired `model-selection.md` into the user-overlay phase entries that replace it, and writes nothing |
-| `resources/setup-report.md` | The setup report `init` and `update` close on: what is adopted, the procedures, the routines, the versions, and what this run changed |
+| `resources/setup-report.md` | The setup report `report` fills, and `init` and `update` close on: what is adopted, the procedures, the routines, the versions, and what this run changed |
 
 ## Known gap
 

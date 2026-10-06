@@ -106,10 +106,10 @@ record work this skill did not do.
    the person running this. When none does, say that the first flow here runs at the team's
    defaults, and offer to run `local` now. Their machine, their answer.
 
-10. **Close on the setup report.** Fill [`../../resources/setup-report.md`](../../resources/setup-report.md)
-    as the last thing in the reply: every component this run initialized under *This run*,
-    with *Before* as `not adopted`, and what was deliberately left unbound, not installed and
-    therefore not offered, or failing under *Still open*.
+10. **Close on `devbook-config:report`**, passing step 8's doctor findings, every component
+    this run initialized for *This run* with *Before* as `not adopted`, and what was
+    deliberately left unbound, not installed and therefore not offered, or failing for
+    *Still open*.
 
 This skill is the empty case only. Everything about moving an already-configured repository
 forward — version drift, migrations, the fan-out across components — belongs to

@@ -23,20 +23,21 @@ which is a flow's. This block names every plugin in the marketplace and declares
 ```meta
 ```
 
-Six skills, three of which write nothing and one of which writes nothing into the repository, and
-the one script all six read through. None of them writes a key another component owns.
+Seven skills, four of which write nothing and one of which writes nothing into the repository, and
+the one script all seven read through. None of them writes a key another component owns.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
 | `init` | skill | A person adopting the stack in a repository, before any component initializes itself |
 | `update` | skill | A person moving the configured stack forward |
 | `doctor` | skill | A person asking whether the installation is current, `init` and `update` at their close, or the daily `devbook-validate` schedule where this plugin is installed |
+| `report` | skill | `init` and `update` at their close, or a person asking how the repository is set up |
 | `ask` | skill | A person with a question about this marketplace |
 | `adoption` | skill | A person checking the `ai/` adoption record against what is installed |
 | `local` | skill | A person saying what is true of their machine — after `init` or `update` offers it, or when the report says no user overlay exists |
-| `scripts/report.mjs` | script, the read-only report | The six skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
+| `scripts/report.mjs` | script, the read-only report | The seven skills, run in place from the plugin root; reads only, takes no network, and names the file behind every fact |
 | `scripts/model-selection.mjs` | script, the category converter | `local`, which merges what it prints into the user overlay; it writes nothing |
-| `resources/setup-report.md` | template, the setup report | `init` and `update` at their close; one shape for both, so a run compares against the last one |
+| `resources/setup-report.md` | template, the setup report | `report`, which `init` and `update` close on; one shape for all three, so a run compares against the last one |
 | The engine keys of `.devbook/config.json` | what it writes | `init` and `update`, and nothing else in that file |
 | The user's devbook config directory | what it writes | `local` alone: a stack-config overlay at the user or repository layer, carrying the agent, model, and effort this person sets for a phase, and `AGENTS.local.md` |
 
@@ -55,7 +56,7 @@ invoke every component's own `init` rather than reimplementing any of them. It r
 It is a conversation about intent, which is why it is not the same skill as the one that moves
 the stack forward.
 
-It closes on the setup report `update` closes on too: what is adopted, the procedures and
+It closes on [`report`](#report), as `update` does: what is adopted, the procedures and
 routines, every plugin's version, and what the run changed.
 
 Stop at the engine keys and write nothing more. Every `components.<name>` stamp stays with the
@@ -79,7 +80,7 @@ writes whether or not the engine is adopted: the lane reads it, not the engine.
 Move the whole configured stack forward in one run: version drift, outstanding migrations, a
 fan-out to every adopted component's `update`, and a re-validated config. It changes
 nothing about intent, which is what makes it safe to run when nothing has changed. It closes
-on the setup report, a run that changed nothing included, with each component's stamp before
+on [`report`](#report), a run that changed nothing included, with each component's stamp before
 and after. The service is [Update Service](#update-service); the verdicts are under
 [Update, By Scope](#update-by-scope).
 
@@ -121,6 +122,20 @@ and lists every open change whose proposal is still `proposed` and whose folder 
 committed to in seven days. Both are warnings: the CLI is a fact about this machine, like a
 plugin it lacks, and a stale proposal waits on a person, which `chapter-approve` on the folder
 settles either way.
+
+### report
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook-config.md#doctor", ".devbook/arc42/building-blocks/devbook-config.md#stack-report"]
+```
+
+Print the setup report for the repository as it stands and write nothing: every plugin's
+installed and newest version with its scope, what is adopted and what the engine binds after
+every overlay, the procedures, the routines, and what `doctor` still finds open. `init` and
+`update` close on it, handing it the rows of their own run; run by hand, that section reads
+as a standing report. It exists beside `doctor` and `ask` because neither prints the whole
+state: `doctor` lists only what is wrong and `ask` answers one question, and a setup is
+compared — after an upgrade, or by the next person — only against a report of the same shape.
 
 ### ask
 

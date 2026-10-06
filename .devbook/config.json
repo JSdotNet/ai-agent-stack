@@ -67,8 +67,8 @@
   ],
   "components": {
     "devbook": {
-      "pluginVersion": "1.13.0",
-      "contractVersion": 24,
+      "pluginVersion": "1.19.0",
+      "contractVersion": 29,
       "adopted": [
         "arc42",
         "tech",
@@ -92,13 +92,13 @@
           "managed": true
         },
         ".agents/rules/devbook-chapter-metadata.md": {
-          "from": "1.13.0",
-          "hash": "sha256:895626d76145df89b809be2385c1daae48785c6c8998305225398bace52a5c29",
+          "from": "1.19.0",
+          "hash": "sha256:18ffc079c6715eef98b7e305730b69115db7b9be8956f4e65039b5d63ea02109",
           "managed": true
         },
         ".agents/rules/devbook-design.md": {
-          "from": "1.13.0",
-          "hash": "sha256:63e7236d9e489c3f92e15cfc837954a88d1d43f13a69562724809bd317328748",
+          "from": "1.19.0",
+          "hash": "sha256:fe9bd01dd9f1c1d0d9200eb0a5b6885085d76304114ff43b536f0d5e6fcfed2c",
           "managed": true
         },
         ".agents/rules/devbook-naming.md": {
@@ -112,8 +112,8 @@
           "managed": true
         },
         ".agents/rules/devbook-writing.md": {
-          "from": "1.13.0",
-          "hash": "sha256:25ba4223bc70d1692da1bb24e304285136464961dfe4edc9891ca73d9ac2b80f",
+          "from": "1.19.0",
+          "hash": "sha256:33c6f1191ade1834190f9eb3e3b287f32b40415c9755398f683cbf54edd06f9a",
           "managed": true
         },
         ".claude/rules/devbook-ai.md": {
@@ -157,8 +157,8 @@
           "managed": true
         },
         ".devbook/_tools/devbook-meta": {
-          "from": "1.13.0",
-          "hash": "sha256:d2d89ed550eadb63415c95c4fd3382c98303a9e0b0759821c642669ba5d39849",
+          "from": "1.19.0",
+          "hash": "sha256:5fa903a45d344ac473868eb643b37cc9ce488aa51a0e390c65206102b8fde33d",
           "managed": true
         },
         ".devbook/_tools/devbook-tech": {
@@ -207,8 +207,8 @@
           "managed": true
         },
         ".github/workflows/devbook-meta.yml": {
-          "from": "1.13.0",
-          "hash": "sha256:eac3750ca8da62caf3865758d09db6f08ed2733fe3aef03c25d5212bd0d36d52",
+          "from": "1.19.0",
+          "hash": "sha256:7c2f584e561cc138e8e17602c81b2a34549a2f48c0d253b9372361f3e7929395",
           "managed": true
         },
         "AGENTS.md#devbook": {
@@ -218,6 +218,22 @@
         }
       },
       "migrations": [
+        {
+          "id": "001-start-is-run",
+          "result": "not-applicable"
+        },
+        {
+          "id": "002-debug-is-diagnose",
+          "result": "not-applicable"
+        },
+        {
+          "id": "003-show-removed",
+          "result": "not-applicable"
+        },
+        {
+          "id": "004-start-binding-is-run",
+          "result": "not-applicable"
+        },
         {
           "id": "010-terms-live-in-domain-md",
           "applied": "2026-09-17"
@@ -249,15 +265,19 @@
         {
           "id": "021-no-review-triad",
           "applied": "2026-09-29"
+        },
+        {
+          "id": "027-procedures-in-devbook",
+          "result": "not-applicable"
         }
       ]
     },
     "derived": {
-      "pluginVersion": "1.13.0",
+      "pluginVersion": "1.18.0",
       "materialized": {
         ".agents/rules/devbook-derived-artifacts.md": {
-          "from": "1.10.0",
-          "hash": "sha256:a15c2e35c144bda1ff8cd651dd46d9daa7a7a2f16d5edaab5d003b7eefef030d",
+          "from": "1.18.0",
+          "hash": "sha256:2aca9a6ebdc3a441aef8c5f5c2f38efdf5ac0b2ee9a636ce2842dbde29422a7a",
           "managed": true
         },
         ".claude/rules/devbook-derived-artifacts.md": {
@@ -296,19 +316,12 @@
       "pluginVersion": "1.18.0"
     },
     "schedule": {
-      "pluginVersion": "1.9.0",
+      "pluginVersion": "1.18.0",
       "enabled": [
         "devbook-validate",
         "tech-update",
-        "merge-review",
-        "package-update",
-        "devbook-pull-sweep"
-      ],
-      "overrides": {
-        "devbook-pull-sweep": {
-          "maxResolve": 1
-        }
-      }
+        "merge-review"
+      ]
     },
     "delivery-surface-dashboard": {
       "sessionNaming": {

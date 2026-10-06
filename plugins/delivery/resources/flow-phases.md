@@ -201,9 +201,10 @@ handoff is a procedure and repeats freely; the gate is mandatory and decides onc
 ### The review handoff
 
 **Defined in `skills/phase-personal-validation/SKILL.md`** — bringing the application up and
-confirming its health, publishing the review links as clickable URLs, writing the what-to-check
-list, and presenting the review findings, the recorded QA review, and the spec-check table with
-any chapter edits it made all live there. Open items the ready check handed over come first. It
+confirming its health, publishing the review links as clickable URLs with every demo the change
+implements listed beside them, writing the what-to-check list, and presenting the review
+findings, the recorded QA review, and the spec-check table with any chapter edits it made all
+live there. Open items the ready check handed over come first. It
 is invoked on the first handback and again on every revise round, because a revised change set
 is a new thing to look at.
 

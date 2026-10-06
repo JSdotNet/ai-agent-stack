@@ -43,7 +43,9 @@
 //   catalog       delivery-schedule's schedule catalog passes its own checker,
 //                 plugins/delivery-schedule/tools/schedule-catalog/check.mjs, run from here
 //                 so the pull-request gate covers a trigger that targets a flow
-//   vendored      .devbook/_tools/devbook-meta/ and devbook-tech/, where present, are
+//   workflows     every plugins/**/*.workflow.js checks out LF and holds no control
+//                 character but a newline, because the host's Workflow tool refuses one
+//   vendored     .devbook/_tools/devbook-meta/ and devbook-tech/, where present, are
 //                 byte-identical over LF to plugins/devbook/tools/ (see the decision
 //                 "Install")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
@@ -574,6 +576,34 @@ for (const tool of ["devbook-meta", "devbook-tech"]) {
         }
     }
     for (const f of vendored) if (!shipped.has(f)) error(`${label}/${f}: not in plugins/devbook/tools/${tool}/; the vendored copy carries nothing of its own`);
+}
+
+// ── workflow scripts ────────────────────────────────────────────────────────
+//
+// A schedule hands a *.workflow.js file to the host's Workflow tool as its script, and the
+// tool refuses one holding a control character, because the approval dialog would hide it.
+// A CRLF checkout puts a \r on every line, so .gitattributes pins the files LF and this
+// checks both the attribute and the bytes on disk.
+
+const workflows = (await walk(PLUGINS)).filter((f) => f.endsWith(".workflow.js"));
+if (workflows.length) {
+    const attr = spawnSync("git", ["check-attr", "eol", "--", ...workflows.map(rel)], { cwd: ROOT, encoding: "utf8" });
+    if (attr.status !== 0) error(`git check-attr failed: ${(attr.stderr ?? "").trim()}`);
+    const eol = new Map((attr.stdout ?? "").split(/\r?\n/).filter(Boolean).map((l) => {
+        const [file, , value] = l.split(": ");
+        return [file, value];
+    }));
+    for (const file of workflows) {
+        const where = rel(file);
+        if (attr.status === 0 && eol.get(where) !== "lf") {
+            error(`${where}: not pinned LF; .gitattributes must give *.workflow.js eol=lf`);
+        }
+        const bad = /[\x00-\x09\x0B-\x1F\x7F]/.exec(await readFile(file, "utf8"));
+        if (bad) {
+            const code = "\\x" + bad[0].charCodeAt(0).toString(16).padStart(2, "0");
+            error(`${where}: holds control character ${code}, which the Workflow tool refuses; renormalize the checkout`);
+        }
+    }
 }
 
 // ── budgets (report only) ───────────────────────────────────────────────────

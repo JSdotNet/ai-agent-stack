@@ -28,13 +28,16 @@ const fence = (body) => "```meta\n" + body + "```\n";
 const CONTEXT = ".devbook/domain/ordering";
 const DEMO = `${CONTEXT}/features.demo.html`;
 
+// The template's shape: screens carry their anchors, a panel switch is a key,
+// a walkthrough step is an object.
+const screen = (id, anchors = []) => ({ id, title: id, anchors });
+const step = (screen, anchor) => (anchor ? { screen, anchor, text: screen } : { screen, text: screen });
 const MODEL = {
-    screens: ["checkout", "declined"],
-    anchors: ["pay"],
-    walkthroughs: [{ id: "card-declined", steps: ["checkout/pay", "declined"] }],
-    roles: ["buyer"],
-    flags: ["express"],
-    viewports: ["mobile"],
+    screens: [screen("checkout", ["pay"]), screen("declined")],
+    walkthroughs: [{ id: "card-declined", title: "Card declined", steps: [step("checkout", "pay"), step("declined")] }],
+    roles: [{ key: "buyer", label: "Buyer" }],
+    flags: [{ key: "express", label: "Express" }],
+    viewports: [{ key: "mobile", label: "Mobile" }],
 };
 const BODY =
     `<section id="checkout" data-screen><h1>Checkout</h1><button data-anchor="pay">Pay</button></section>\n` +
@@ -154,7 +157,7 @@ for (const [address, needle, name] of [
 // -- A requirement's walkthrough ------------------------------------------
 
 {
-    const model = { ...MODEL, walkthroughs: [...MODEL.walkthroughs, { id: "express", steps: ["checkout"] }] };
+    const model = { ...MODEL, walkthroughs: [...MODEL.walkthroughs, { id: "express", steps: [step("checkout")] }] };
     const problems = await demoProblemsOf({
         [DEMO]: demoHtml({ model }),
         [`${CONTEXT}/requirements.md`]: requirementsMd(`${DEMO}#walkthrough/express`),
@@ -163,7 +166,7 @@ for (const [address, needle, name] of [
 }
 
 {
-    const model = { ...MODEL, walkthroughs: [{ id: "scenario-card-declined", steps: ["declined"] }] };
+    const model = { ...MODEL, walkthroughs: [{ id: "scenario-card-declined", steps: [step("declined")] }] };
     const problems = await demoProblemsOf({
         [DEMO]: demoHtml({ model }),
         [`${CONTEXT}/requirements.md`]: requirementsMd(`${DEMO}#walkthrough/scenario-card-declined`),
@@ -184,7 +187,7 @@ for (const [address, needle, name] of [
 }
 
 {
-    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ model: { ...MODEL, screens: ["checkout", "declined", "checkout"] } }) });
+    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ model: { ...MODEL, screens: [...MODEL.screens, screen("checkout")] } }) });
     check(has(problems, "error", 'lists screen "checkout" twice'), "a screen listed twice in demo-model errors", dump(problems));
 }
 
@@ -249,19 +252,19 @@ for (const [head, needle, name] of [
 {
     const body = BODY.replace(`<section id="checkout" data-screen>`, `<section id="checkout" data-screen data-variant="list">`) +
         `<section id="checkout--board" data-screen data-variant="board"></section>\n`;
-    const model = { ...MODEL, screens: [...MODEL.screens, "checkout--board"] };
+    const model = { ...MODEL, screens: [...MODEL.screens, screen("checkout--board")] };
     const problems = await demoProblemsOf({ [DEMO]: demoHtml({ body, model }) });
     check(has(problems, "error", "carries 2 variants"), "a demo under domain/ with two variants errors", dump(problems));
 }
 
 {
     const body = BODY.replace(`<section id="checkout" data-screen>`, `<section id="checkout" data-screen data-variant="list">`);
-    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ body, model: { ...MODEL, variants: ["list"] } }) });
+    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ body, model: { ...MODEL, variants: [{ key: "list", label: "List" }] } }) });
     check(!has(problems, "error", "variants"), "one variant is the agreed one", dump(problems));
 }
 
 {
-    const model = { ...MODEL, walkthroughs: [{ id: "card-declined", steps: ["checkout/pay", "receipt", { screen: "checkout", anchor: "ghost" }] }] };
+    const model = { ...MODEL, walkthroughs: [{ id: "card-declined", steps: [step("checkout", "pay"), step("receipt"), step("checkout", "ghost")] }] };
     const problems = await demoProblemsOf({ [DEMO]: demoHtml({ model }) });
     check(has(problems, "error", 'walkthrough "card-declined" step 2 on screen "receipt"'), "a walkthrough step naming a missing screen errors", dump(problems));
     check(has(problems, "error", 'walkthrough "card-declined" step 3 on anchor "ghost"'), "a walkthrough step naming a missing anchor errors", dump(problems));
@@ -271,6 +274,29 @@ for (const [head, needle, name] of [
     const html = demoHtml().replace(/<script type="application\/json" id="demo-model">.*<\/script>\n/, "");
     const problems = await demoProblemsOf({ [DEMO]: html });
     check(has(problems, "error", "has no `<script type=\"application/json\" id=\"demo-model\">`"), "a demo without demo-model errors", dump(problems));
+}
+
+{
+    // The shapes the checker once read tolerantly: the template reads none of them.
+    const model = {
+        screens: ["checkout", screen("declined")],
+        anchors: ["pay"],
+        actors: [{ key: "buyer" }],
+        flags: ["express"],
+        walkthroughs: { "card-declined": ["checkout/pay"] },
+    };
+    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ model }) });
+    const cannot = (detail) => has(problems, "error", `the template cannot read: ${detail}`);
+    check(cannot("`screens` entry 1 has no `id`"), "a screen given as a bare id errors", dump(problems));
+    check(cannot("`anchors` is not a key the template reads") && cannot("`actors` is not a key the template reads"), "a top-level anchors list and an actors list error", dump(problems));
+    check(cannot("`flags` entry 1 has no `key`"), "a panel switch given as a bare key errors", dump(problems));
+    check(cannot("`walkthroughs` is not a list"), "walkthroughs keyed by id error", dump(problems));
+}
+
+{
+    const model = { ...MODEL, walkthroughs: [{ id: "card-declined", steps: ["checkout/pay"] }] };
+    const problems = await demoProblemsOf({ [DEMO]: demoHtml({ model }) });
+    check(has(problems, "error", 'walkthrough "card-declined" step 1 is not `{ screen, anchor?, text }`'), "a walkthrough step given as an address string errors", dump(problems));
 }
 
 // -- A change's proposal.md and solution.md -------------------------------
@@ -294,7 +320,7 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
 {
     // The change lands a revised demo with an express screen; its proposal
     // addresses the screen the revision adds, which the live demo lacks.
-    const model = { ...MODEL, screens: [...MODEL.screens, "express"] };
+    const model = { ...MODEL, screens: [...MODEL.screens, screen("express")] };
     const revised = demoHtml({ model, body: BODY + `<section id="express" data-screen></section>\n` });
     const problems = await demoProblemsOf({
         [`${CHANGE}/proposal.md`]: proposalMd(`${DEMO}#express`),
@@ -316,7 +342,7 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
     const body = BODY + `<section id="checkout--board" data-screen data-variant="board"></section><div data-variant="list"></div>\n`;
     const problems = await demoProblemsOf({
         [`${CHANGE}/proposal.md`]: proposalMd(`${DEMO}#checkout`),
-        [`${CHANGE}/devbook-delta/domain/ordering/features.demo.html`]: demoHtml({ body, model: { ...MODEL, screens: [...MODEL.screens, "checkout--board"] } }),
+        [`${CHANGE}/devbook-delta/domain/ordering/features.demo.html`]: demoHtml({ body, model: { ...MODEL, screens: [...MODEL.screens, screen("checkout--board")] } }),
     });
     check(has(problems, "error", "carries 2 variants"), "a proposed demo for domain/ is held to one variant too", dump(problems));
 }
@@ -343,6 +369,11 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
 
     const { problems } = await buildGraph(await repo({ [rel]: stamped, [DEMO]: demoHtml({ body: BODY.replace("Pay", "Pay now") }) }));
     check(has(problems, "error", "content that has changed"), "the check reports it through the build", dump(problems));
+
+    // A template refresh rewrites the managed region only: the approval holds.
+    const refreshed = demoReader(await repo({ [DEMO]: demoHtml().replace("<!-- template:begin -->", "<!-- template:begin hash=sha256:feedface -->").replace("body{margin:0}", "body{margin:0;padding:0}") }));
+    const held = validateDocument(rel, stamped, { demoText: refreshed });
+    check(!held.some((i) => i.message.includes("content that has changed")), "rewriting the managed region keeps the chapter's approval", dump(held));
 }
 
 {
@@ -388,6 +419,10 @@ const solutionMd = (demo) => `# Solution\n\n${fence(`demo: [${demo}]\n`)}\nShow 
     const before = await changeFingerprint(root, "add-express");
     await writeFile(path.join(root, CHANGE, "devbook-delta/domain/ordering/features.demo.html"), demoHtml({ body: BODY.replace("Pay", "Pay now") }), "utf8");
     check((await changeFingerprint(root, "add-express")) !== before, "editing a proposed demo changes the change's fingerprint");
+
+    const edited = await changeFingerprint(root, "add-express");
+    await writeFile(path.join(root, CHANGE, "devbook-delta/domain/ordering/features.demo.html"), demoHtml({ body: BODY.replace("Pay", "Pay now") }).replace("body{margin:0}", "body{margin:1px}"), "utf8");
+    check((await changeFingerprint(root, "add-express")) === edited, "rewriting a proposed demo's managed region keeps the change's fingerprint");
 }
 
 {

@@ -19,7 +19,7 @@ file is a reading unit and places nothing — each chapter says its own stages o
 | File | Covers |
 | --- | --- |
 | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
-| [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, and the fan-out and scheduling lanes nothing here has used. |
+| [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, the fan-out lane nothing here has used, and scheduling. |
 | [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
 
 **Adoption Picture**
@@ -51,16 +51,17 @@ graph LR
   classDef candidate fill:#e6e6e6,stroke:#7a7a7a,color:#333;
   class plan,code,build,test,release,deploy,operate,monitor stage;
   class host adopted;
-  class flows trial;
-  class fanout,schedule,eval candidate;
+  class flows,schedule trial;
+  class fanout,eval candidate;
 ```
 
 **How to Read It**
 
 `status` reuses the `tech/` ladder — `candidate`, `trial`, `adopted`, `hold`, `retired` — and
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
-here has been made. One is `trial` because everything it needs has landed and nothing has
-used it. Three are `candidate` because the honest first use is somewhere else, or has not happened.
+here has been made. Two are `trial`: the flow skills because everything they need has landed
+and nothing has used them, and scheduling because its first local runs have published here.
+Two are `candidate` because the honest first use is somewhere else, or has not happened.
 Each chapter's `date` is the day its current rating was set.
 
 The picture above is the hand-drawn form of the loop a tool draws from the same fields: the

@@ -81,6 +81,17 @@ test('the shipped template carries both complete maps', () => {
     }
 });
 
+test('the shipped templates keep the fork phases forked', () => {
+    // Any of agent, model, or effort delegates a phase (resources/phase-resolution.md).
+    for (const file of ['config-template.json', 'config.local-template.json']) {
+        const { phases } = JSON.parse(readFileSync(join(HERE, '..', '..', 'resources', file), 'utf8'));
+        for (const phase of ['phase-scope', 'phase-implement', 'phase-review']) {
+            const entry = phases['flow-code'][phase];
+            assert.deepEqual(['agent', 'model', 'effort'].filter((k) => k in entry), [], `${file} › ${phase}`);
+        }
+    }
+});
+
 test('pr.base takes a git ref name and refuses prose', () => {
     assert.deepEqual(check({ policy: { 'pr.base': 'main' } }), []);
     assert.deepEqual(check({ policy: { 'pr.base': 'release/2.0' } }), []);

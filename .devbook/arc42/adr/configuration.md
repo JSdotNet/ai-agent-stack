@@ -1,7 +1,7 @@
 # Configuration
 
 ```meta
-date: 2026-10-05
+date: 2026-10-06
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/05-building-block-view.md#stack-config", ".devbook/arc42/08-crosscutting-concepts.md#stamp", ".devbook/arc42/08-crosscutting-concepts.md#phase", ".devbook/arc42/building-blocks/devbook-config.md#engine-configuration", ".devbook/arc42/adr/flow-engine.md", ".devbook/arc42/adr/install.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -32,13 +32,22 @@ The first level is the flow's skill name, the second the phase's (`phase-impleme
 qualifier is the folder in `flow-spec` or an area on `phase-implement`; there is no kind
 qualifier, because what a kind needs is `phase-implement`'s call. Each field resolves on its
 own, most specific key first, then the session, so an absent field inherits the session's
-model, effort, and inline runner, and `{}` is a complete entry. The committed file lists
+model and effort, the phase runs as the engine contract's *Runs by default* column says —
+inline, fork, or delegated — and `{}` is a complete entry. The committed file lists
 exactly the phases its flow has: a missing phase, a phase the flow lacks, or a map under an
 unknown flow is rejected by name. Nothing crosses flows, so each map reads as that flow's whole
 wiring with no second place to look. The ready check and Personal Validation take no entry, and
 a `phase-personal-validation` key is refused in any map, as `policy.gate.personalValidation`
 is. The config templates ship both maps filled in, carrying the cost profile the old model
 categories gave.
+
+**A model on a fork phase delegates it, and the templates leave the fork phases empty.** Any of
+`agent`, `model`, or `effort` makes a phase delegated, because a resolved model takes effect
+only as the `model` of an `Agent` call and a fork has no such call: it runs on its skill's own
+frontmatter. `phase-scope`, `phase-implement`, and `phase-review` fork by default, and their
+skills carry the model and effort the cost profile wants, so both templates ship them as `{}`
+and a test keeps them so. Copying a template as shipped then keeps every phase where the engine
+contract puts it, and a model written on a fork phase by hand is a deliberate choice to delegate.
 
 **Three mechanisms fold into it.** `extensions` became each phase's `skill`, `agent`, and
 `before` and `after` chores; `bindings["delivery.roles"]` became the `agent` of the phases a
@@ -131,6 +140,8 @@ makes two developers' session lists readable to each other.
 - A kind qualifier on a phase (`phase-implement:defect`): what a kind needs is the skill's call.
 - The old keys kept as deprecated aliases.
 - Model choice kept personal only: the team had no way to record the cost profile it agreed.
+- Keeping the fork when only `model` is set on a fork phase: a fork cannot take a model, so the
+  setting would be silently ignored, which is worse than the delegation it asks for.
 - Resolving the overlay from the main worktree via `git rev-parse --git-common-dir`: still
   inside a clone, so `git clean -x` and a re-clone take it.
 - A `runtime` key for the application's facts, and a per-user file for session-naming words.
@@ -144,6 +155,7 @@ makes two developers' session lists readable to each other.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | The config templates leave `phase-scope`, `phase-implement`, and `phase-review` empty: a model set there delegated the three fork phases, so copying a template as shipped changed how they ran. A model on a fork phase still delegates it. An unconfigured phase runs as the engine contract's *Runs by default* says, not inline. |
 | 2026-10-06 | `policy.validate.retryBudget` retired: nothing read it once the review and ready budgets bounded the only loops. `policy.phases.verification` and `phases.workItemUpdate` become `phases.specCheck` and `phases.reportBack`, after the phase each switches, and a gate's `unattended: skip-point` becomes `skip-phase`. Each old spelling is refused by name and rewritten by delivery's `001-phase-maps`. A `phases` map under a flow the engine does not declare is accepted only when the repository ships that `flow-*` skill, so a misspelt flow is refused rather than read as one nobody runs; `check.mjs` looks in `.claude/skills/`, `.agents/skills/`, and `.github/skills/` beside `.devbook/`. |
 | 2026-10-05 | The engine keys become `bindings`, `phases`, `policy`, `gates`, and the optional `areas`. `phases` holds one complete map per flow, keyed by skill name; `extensions`, `bindings["delivery.roles"]`, `bindings["delivery.mcp"]`, and the personal `model-selection.md` fold into it, with no aliases. Model and effort are legal in the committed file as team defaults the overlay overrides, replacing the rule that a model is personal only. Gates attach to phase ids. `policy.review.retryBudget`, `policy.ready.retryBudget`, and `policy.phases.review` join the policy enums. Per [Flow Engine](flow-engine.md). |
 | 2026-09-29 | `bindings["openspec.grill"]` names the change lane's grill skill, or `null`. The engine carries it and never reads it; `devbook-config:init` writes it with the lane's `spec` and tracker bindings, and `devbook-config:local` may bind one per machine in an overlay. |

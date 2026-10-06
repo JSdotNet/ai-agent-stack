@@ -5,6 +5,13 @@ name: Auto-merge
 # because a path-filtered workflow does not run on every pull request and a
 # check in another workflow (CodeQL) cannot be a `needs:` dependency.
 #
+# The merge is a plain `gh pr merge --merge`, never `--auto`: the wait loop has
+# already seen every check pass, and `main` has no branch protection, so when
+# the pull request is not CLEAN at that moment (the base just moved, or GitHub
+# is still recomputing mergeability) `--auto` falls back to enabling GitHub
+# auto-merge and fails with "Protected branch rules not configured". A merge
+# refused because the base branch moved is retried a few times.
+#
 # Draft pull requests are never merged: the job skips them, and marking one
 # ready for review starts it. Converting a pull request back to a draft cancels
 # a waiting run and turns off GitHub auto-merge if it was on.
@@ -78,16 +85,31 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN || github.token }}
         run: |
-          # The pull request may have become a draft or moved on while this
-          # run waited; merge only the commit that was checked.
-          state=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json isDraft,headRefOid --jq '"\(.isDraft) \(.headRefOid)"')
-          if [ "$state" != "false $SHA" ]; then
-            echo "Pull request is a draft or has a newer commit; not merging."
-            exit 0
-          fi
-          # --auto defers to the branch's own required checks when it has any
-          # and merges straight away when nothing is left to wait for.
-          gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --auto --merge --match-head-commit "$SHA"
+          # The pull request may have become a draft, moved on, or been merged
+          # while this run waited; merge only the commit that was checked.
+          # A refusal because the base branch just moved, or because
+          # mergeability is still being recomputed, is retried.
+          for attempt in 1 2 3 4 5; do
+            state=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json state,isDraft,headRefOid --jq '"\(.state) \(.isDraft) \(.headRefOid)"')
+            case "$state" in
+              "MERGED "*) echo "Pull request is already merged."; exit 0 ;;
+              "OPEN false $SHA") ;;
+              *) echo "Pull request is closed, a draft, or has a newer commit; not merging."; exit 0 ;;
+            esac
+            if out=$(gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --match-head-commit "$SHA" 2>&1); then
+              printf '%s\n' "$out"
+              exit 0
+            fi
+            printf '%s\n' "$out"
+            case "$out" in
+              *"Base branch was modified"*|*"not mergeable"*|*"mergeability"*) ;;
+              *) echo "::error::Merge failed."; exit 1 ;;
+            esac
+            echo "Merge refused on attempt $attempt; retrying."
+            sleep $((attempt * 10))
+          done
+          echo "::error::Merge still refused after $attempt attempts."
+          exit 1
 
   back-to-draft:
     name: Turn off auto-merge for a draft

@@ -33,6 +33,7 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 
 | Name | Belongs to |
 | --- | --- |
+| 2026-10-06 | The `demo` converter kind: a demo rides with its page's unit, `verify-change` compares its screens and walkthroughs with the front end and the e2e tests, `apply-change` briefs them as acceptance checks, and `capture-specs` never writes one. |
 | 2026-10-06 | A demo's managed region stands outside every fingerprint, so a template refresh lifts no approval, and `demo-model` is read only in the template's shape, in contract 29. |
 | `demo.html` | The bounded context itself, counted with `context.md`. One per context with a user interface. |
 | `<page>.demo.html` | `<page>.md`, which it sits beside and moves with when a feature is split out. |
@@ -137,7 +138,10 @@ replacing its target whole. The `prototype` seed states the rest of this record:
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
 real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
 managed region against the template, a stale one as a warning and a hand-edited one as an error,
-and `--refresh` rewrites the regions after the template changes. In contract 29 the
+and `--refresh` rewrites the regions after the template changes. `verify-change`, `apply-change`, and `capture-specs` read a demo as the `demo` kind,
+`assets/spec-kinds/demo.md`: it rides with its page's sync unit, its screens and walkthroughs
+are compared with the front end and the e2e tests, and capture never writes one, handing a
+`code-ahead` screen to `/prototype`. In contract 29 the
 fingerprint leaves the region out, and the checker reads `demo-model` only in the shape the
 template's authoring reference states.
 

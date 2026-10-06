@@ -1,17 +1,19 @@
 # Setup report template
 
-`init` and `update` close on this report, filled in and printed as the last thing in the reply.
-Fill every section from the final `scripts/report.mjs` run, `devbook-config:doctor`, and what
-this run did — never from memory. Keep the headings and their order so two runs compare line by
+`devbook-config:report` fills this report and prints it as the last thing in the reply; `init`
+and `update` close on that skill. Fill every section from `scripts/report.mjs`, the effective
+configuration, `devbook-config:doctor`, and what this run did — never from memory. Keep the headings and their order so two runs compare line by
 line; an empty section says `none`, never disappears. Drop these instructions and every
 `<…>` placeholder from the output.
 
 ```markdown
 ## Devbook setup — <config id>
 
-<init | update> by devbook-config@<version>, <YYYY-MM-DD>. Result: **<done | failing — what failed>**.
+<init | update | report> by devbook-config@<version>, <YYYY-MM-DD>. Result: **<done | failing — what failed>**.
 
 ### This run
+
+A standing report, run by hand, says `none — standing report` here and drops the table.
 
 | Component | Before | After | What happened |
 | --- | --- | --- | --- |
@@ -32,6 +34,7 @@ Plugins upgraded by the user: <plugin old → new, or none>.
 - **Committed index:** <devbook-derived stamped, or not adopted>.
 - **Change lane:** <devbook-openspec stamped and CLI version, or not adopted>.
 - **Engine:** <delivery stamped, or not adopted>. Bound: <tracker, each phase's agent, skill, and MCP servers, and gates actually set>; policy: <switches set>. Everything else takes the engine default.
+- **This machine:** <overlay layers applied — user, repository — and the keys each sets, or none: the team's defaults>.
 
 ### Procedures
 

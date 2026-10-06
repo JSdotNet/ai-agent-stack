@@ -14,9 +14,9 @@ Throughout this file and the files that load it, **capture** is what `capture-sp
 does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
-Each skill covers seven kinds — `aggregate`, `domain-service`, `feature`,
-`setting`, `actor`, `building-block`, `design-component` — and none of them restates
-this file. What
+Each skill covers eight kinds — `aggregate`, `domain-service`, `feature`,
+`setting`, `actor`, `building-block`, `design-component`, `demo` — and none of them
+restates this file. What
 is specific to a kind lives once in `assets/spec-kinds/<kind>.md`: the chapters
 and the file it covers, the `type` values, the folder rule, the spec-to-code
 mapping, and what each direction does differently there.
@@ -74,7 +74,8 @@ its units carry: each chapter is read through its own kind's file, and the run
 still ends in one table.
 
 Feature flags and settings run as the `setting` kind, user and technical actors
-as `actor`, and a shared-types unit as `aggregate`.
+as `actor`, and a shared-types unit as `aggregate`. A demo is in no unit: it is
+taken by its file, per `spec-kinds/demo.md`.
 
 **The roll-up.** A unit's verdict comes from its chapters', and a group's from
 its units':
@@ -434,6 +435,8 @@ This section owns what the carried chapters may say.
 - **A `MODIFIED` chapter keeps its `status` line as it stands.** Where its new text
   lapses an `approved-hash` or `accepted-hash`, the pull request says so.
 - **`REMOVED` is never carried.** It stays a finding for a person.
+- **Never a demo.** Only `/prototype` writes one, through a change; a `code-ahead`
+  demo row stays a finding that names it.
 - **Only the chapters the plan lists.** Nothing outside its headings, and no
   `annotation` fence.
 - **Each carried chapter with its `meta` block, written in the same edit**, per the folder

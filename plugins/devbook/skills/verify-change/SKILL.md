@@ -1,6 +1,6 @@
 ---
 name: verify-change
-description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same seven kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, actor, building-block, design-component. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and the tests each chapter names at its level — unit for an invariant, e2e or integration for a requirement; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
+description: 'Check a devbook chapter against the code that implements it and report the drift verdict — aligned, code-ahead, spec-ahead, conflict, or unresolved — per chapter, without writing a chapter or a brief. Covers the same eight kinds as capture-specs and apply-change: aggregate, domain-service, feature, setting, actor, building-block, design-component, demo. Use when: is the chapter still true, did the code drift from the spec, does the implementation match what we agreed, spec code drift, check before a review or a pull request, which side moved. Reads source and the tests each chapter names at its level — unit for an invariant, e2e or integration for a requirement; runs nothing and changes nothing. DO NOT USE FOR: writing the chapter (capture-specs) or implementing the delta (apply-change) — it names which of those the verdict calls for.'
 ---
 
 # verify-change
@@ -11,7 +11,7 @@ Read `assets/code-sync-protocol.md` first, then the kind's file under
 `assets/spec-kinds/`. Nothing in them is repeated here.
 
 **Kind.** Decided as `capture-specs` decides it: the chapter's `type`, or the
-file where the folder has none. One kind per run, however wide the scope — a
+file where the folder has none — a `*.demo.html` is `demo`. One kind per run, however wide the scope — a
 sync unit or group excepted, per **The sync unit** in the protocol.
 
 **Scope.** Any of: one chapter as `<path>#<heading-slug>` or by heading, a sync

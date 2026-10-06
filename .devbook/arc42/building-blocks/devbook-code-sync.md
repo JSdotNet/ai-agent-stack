@@ -8,7 +8,7 @@ The code-sync part of [devbook](devbook.md), a block inside it. Responsible for 
 that a chapter and the code implementing it can be brought back into agreement, in whichever
 direction is behind, without either side being guessed.
 
-Inside the block: the three converter skills over seven chapter kinds, the unit lister that
+Inside the block: the three converter skills over eight kinds, the unit lister that
 decides what one run covers, and the two directions they run in.
 
 Outside it: the chapter shape and the check, which are [devbook](devbook.md#structure)'s; the
@@ -22,8 +22,8 @@ unattended sweeps that pass a sync unit or group, which are
 related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
-Three skills, each over the seven kinds — aggregate, domain service, feature, setting, actor,
-building block, and design component — and one CLI.
+Three skills, each over the eight kinds — aggregate, domain service, feature, setting, actor,
+building block, design component, and demo — and one CLI.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -37,7 +37,7 @@ related: [".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", 
 ```
 
 Read an implementation and its tests and plan the chapter that is missing, thin, or stale,
-for any of the seven kinds. By default it writes nothing. Its result is a capture plan handed
+for any of the seven chapter kinds, and reports on a demo it never writes. By default it writes nothing. Its result is a capture plan handed
 to the person: the drafts to the folder's template, arranged as a delta against the target
 file — `ADDED`, `MODIFIED`, or `REMOVED` by heading — each claim carrying the evidence behind
 it, and the report table. Code is evidence, not agreement, so the pass that found the code
@@ -93,7 +93,7 @@ the user sees.
 related: [".devbook/arc42/building-blocks/devbook-code-sync.md#spec-converter", ".devbook/arc42/12-glossary.md#drift-verdict"]
 ```
 
-Turn an agreed but unbuilt chapter of any of the seven kinds into a change brief — outcomes,
+Turn an agreed but unbuilt chapter of any of the eight kinds into a change brief — outcomes,
 invariants, ubiquitous language, out of scope, acceptance checks — plus a change category, and
 hand it to the flow that implements a change of that category, resolved the way the spec-side
 write is: a repo-native flow first, then the engine's, and nowhere when no engine is
@@ -184,7 +184,7 @@ related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/buildin
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over seven kinds: `capture-specs` reads an
+says which one a chapter needs, as three skills over eight kinds: `capture-specs` reads an
 implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
 into a change brief for the flow that implements it, touching no source or test tree itself,
 and `verify-change` reports the drift verdict and writes nothing. Two of the names are
@@ -200,6 +200,14 @@ chapter's `type`, or the file where the folder defines none, and everything a ki
 once in its own file rather than in a skill per kind and direction. The aggregate is the unit
 rather than its parts, because a consistency boundary decided twice is a boundary decided
 differently; a domain service is the deliberate exception and is its own kind.
+
+A demo is the one kind that is not a chapter. Its screens, states, copy, and walkthroughs are
+compared with the product as it renders and with the e2e tests a requirement names beside the
+walkthrough it plays, so a user-interface change that starts in code with no demo revision is
+`code-ahead`, and a screen the product does not render is `spec-ahead`. Where it sits is its
+status — `domain/` agreed, a change's delta proposed, anywhere else a prototype nobody
+agreed. `capture-specs` never writes one, in either mode: only `/prototype` writes a demo, and
+only a change lands it, per [the demo decision](../adr/demos.md).
 
 A sync unit or a sync group is a scope as well, and the one a sweep passes. Its chapters are
 the ones `units.mjs` lists, never a set the skill works out by reading, so the scope a person
@@ -239,6 +247,7 @@ an identifier search that knows no language would be noisy and slow.
 | `capture-specs` writes a chapter only in write mode, carries only `code-ahead` entries in scope, and never writes a decision rung | the code-sync protocol | untested |
 | The aggregate is the unit rather than its parts; a domain service is the exception and is its own kind | the kind files | untested |
 | A grant in code wider than an actor's chapter is a `conflict`, never captured | the actor kind file | untested |
+| `capture-specs` never writes a demo, in either mode; a `code-ahead` demo is a finding that names `/prototype` | the demo kind file | untested |
 | No metadata field links a chapter to a code path | counterpart resolution | untested |
 | Resolution walks the chapter's `aliases`, then the building-block view, then the observed naming convention, and reports `unresolved` rather than guessing | counterpart resolution | untested |
 | `verify-change` reports every alias outside a `requirement` or `invariant` that names no identifier in the source tree as its own finding and never edits `aliases`; the checker takes no alias pass | counterpart resolution | untested |

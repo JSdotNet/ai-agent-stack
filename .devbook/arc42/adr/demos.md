@@ -2,7 +2,7 @@
 
 ```meta
 date: 2026-10-02
-related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md"]
+related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md#demo", ".devbook/arc42/building-blocks/devbook-procedures.md#goal", ".devbook/arc42/12-glossary.md#demo", ".devbook/arc42/12-glossary.md#prototype", ".devbook/arc42/12-glossary.md#prototyping", ".devbook/arc42/adr/chapter-schema.md", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/building-blocks/devbook-code-sync.md"]
 ```
 
 A demo is the agreed, clickable picture of what a person sees in a bounded context. It is one
@@ -133,7 +133,10 @@ replacing its target whole. The `prototype` seed states the rest of this record:
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
 real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
 managed region against the template, a stale one as a warning and a hand-edited one as an error,
-and `--refresh` rewrites the regions after the template changes.
+and `--refresh` rewrites the regions after the template changes. `demo` is the eighth kind of
+`capture-specs`, `apply-change`, and `verify-change`: a demo's screens, states, copy, and
+walkthroughs are compared with the product and the e2e tests beside its walkthroughs, and
+`capture-specs` reports a `code-ahead` demo and names `/prototype` rather than writing it.
 
 ## Rejected
 
@@ -164,6 +167,7 @@ and `--refresh` rewrites the regions after the template changes.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | `demo` becomes a kind of the three converters, compared with the product and its e2e tests and never written by `capture-specs`. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |

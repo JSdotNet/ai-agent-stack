@@ -1,6 +1,6 @@
 ---
 name: apply-change
-description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way capture-specs hands a chapter to the folder flow. Covers seven kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, a user or technical actor in actors.md, the building block view in arc42/, a component guideline in design/. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs), or checking drift without changing anything (verify-change).'
+description: 'Implement an agreed devbook chapter the code does not yet satisfy: derive a change brief from it — outcomes, invariants, ubiquitous language, out of scope, acceptance checks, plus one change category (new functionality, change to existing behaviour, defect) — and hand that brief to the code-side flow that covers the category, the way capture-specs hands a chapter to the folder flow. Covers eight kinds: an aggregate whole or a domain service in .devbook/domain/<context>/domain.md, a feature in features.md, a feature flag or setting in context.md, a user or technical actor in actors.md, the building block view in arc42/, a component guideline in design/, a demo in domain/ briefed with the page it belongs to. Reads code first so the brief asks only for the delta; edits no source or test tree itself, and stops with the brief when no flow engine is installed. Use when: build the aggregate we agreed, implement this chapter, the chapter says X and the code does not, apply the spec. DO NOT USE FOR: writing a chapter from code (capture-specs), or checking drift without changing anything (verify-change).'
 ---
 
 # apply-change
@@ -13,7 +13,7 @@ repeated here.
 
 **Kind.** One chapter, sync unit, or sync group per run, its kind decided as
 `capture-specs` decides it: the chapter's `type`, or the file where the folder
-has none. An aggregate is briefed whole, with everything it owns and the events
+has none — a `*.demo.html` is `demo`. An aggregate is briefed whole, with everything it owns and the events
 it raises. A chapter that does not exist is a modelling task for the folder's
 flow, or a `capture-specs` pass if the thing is already in code.
 

@@ -1,0 +1,3 @@
+# A schedule hands a workflow script to the host's Workflow tool as is, and the tool refuses
+# a script holding a control character. A CRLF checkout puts one on every line.
+*.workflow.js text eol=lf

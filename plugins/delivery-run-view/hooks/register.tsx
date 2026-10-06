@@ -1,4 +1,4 @@
-import type { Register } from 'claude-code'
+import type { EngineInterface, Register } from 'claude-code'
 
 import type { FlowMode, FlowRun, FlowStage, FlowWorker } from '../types'
 
@@ -65,7 +65,7 @@ const slugOf = (root: string) =>
   (root.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || 'project').replace(/[^a-zA-Z0-9._-]/g, '-')
 
 /** The state folders the surfaces keep for a checkout: `<slug>-<8 hex>`, the hash of the path. */
-async function stateDirs($: any, slug: string): Promise<string[]> {
+async function stateDirs($: EngineInterface, slug: string): Promise<string[]> {
   const config = await $.env.get('CLAUDE_CONFIG_DIR')
   const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME')) ?? ''
   const profile = (config || `${home}/.claude`).replace(/\\/g, '/')
@@ -76,19 +76,19 @@ async function stateDirs($: any, slug: string): Promise<string[]> {
     const base = `${profile}/${surface}`
     if (!(await $.fs.exists(base))) continue
     for (const entry of await $.fs.list(base)) {
-      if (entry.kind === 'directory' && pattern.test(entry.name)) dirs.push(`${base}/${entry.name}/runs`)
+      if (entry.kind === 'dir' && pattern.test(entry.name)) dirs.push(`${base}/${entry.name}/runs`)
     }
   }
   return dirs
 }
 
 /** This worktree's own runs; when it has none, the main checkout's, so the pane is never empty in a fresh worktree. */
-async function loadRuns($: any): Promise<FlowRun[]> {
+async function loadRuns($: EngineInterface): Promise<FlowRun[]> {
   const root = (await $.session.root()).replace(/\\/g, '/')
   const own = await readRuns($, await stateDirs($, slugOf(root)))
-  const main = root.split('/.claude/worktrees/')
-  if (own.length > 0 || main.length < 2) return own
-  return readRuns($, await stateDirs($, slugOf(main[0])))
+  const [main = root] = root.split('/.claude/worktrees/')
+  if (own.length > 0 || main === root) return own
+  return readRuns($, await stateDirs($, slugOf(main)))
 }
 
 const phaseKeys = (name: string) => {
@@ -153,20 +153,20 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
   }
 }
 
-async function readRuns($: any, dirs: string[]): Promise<FlowRun[]> {
+async function readRuns($: EngineInterface, dirs: string[]): Promise<FlowRun[]> {
   const sessionId = await $.session.id()
   const byId = new Map<string, FlowRun>()
 
   for (const dir of dirs) {
     if (!(await $.fs.exists(dir))) continue
     const files = (await $.fs.list(dir))
-      .filter((f: any) => f.kind === 'file' && f.name.endsWith('.json'))
-      .sort((a: any, b: any) => b.mtimeMs - a.mtimeMs)
+      .filter(f => f.kind === 'file' && f.name.endsWith('.json'))
+      .sort((a, b) => b.mtimeMs - a.mtimeMs)
       .slice(0, 20)
 
     for (const file of files) {
       try {
-        const raw = JSON.parse(await $.fs.read(`${dir}/${file.name}`))
+        const raw = JSON.parse(String(await $.fs.read(`${dir}/${file.name}`)))
         if (!raw?.id || !Array.isArray(raw.stages)) continue
         const run: FlowRun = {
           id: raw.id,
@@ -282,7 +282,7 @@ const signature = (list: FlowRun[]) => list.map(r => `${r.id}@${r.updatedAt}`).j
 const currentStage = (run: FlowRun) =>
   run.stages.find(s => ['active', 'waiting', 'blocked'].includes(tone(s.status)))
 
-async function refresh($: any) {
+async function refresh($: EngineInterface) {
   const loaded = await loadRuns($)
   const fresh = demoStartedAt === undefined ? loaded : [demoRun(await $.clock.now()), ...loaded].slice(0, MAX_RUNS)
   const { value: current = [] } = await $.state.get(RUNS)
@@ -292,16 +292,18 @@ async function refresh($: any) {
   const stage = mine ? currentStage(mine) : undefined
   $.ui.status(mine ? `${mine.skillId} · ${stage?.name ?? mine.status}` : undefined)
 
-  // The pane opens itself once, the first time there is a run to show; closed after that, it stays closed.
-  if (!hasOpened && fresh.length > 0) {
-    hasOpened = true
+  // The pane opens itself once per run of this session, the first time that run appears; closed
+  // after that, it stays closed. Another session's run, or the main checkout's, never opens it.
+  const unseen = fresh.find(r => r.isThisSession && !openedFor.has(r.id))
+  if (unseen) {
+    openedFor.add(unseen.id)
     void openPane($)
   }
 }
 
-let hasOpened = false
+const openedFor = new Set<string>()
 
-const openPane = ($: any) => $.ui.open({ id: PANE, title: 'Delivery flows' })
+const openPane = ($: EngineInterface) => $.ui.open({ id: PANE, title: 'Delivery flows' })
 
 const isSurfaceTool = (tool: string, op: string) => /delivery-surface-/.test(tool) && tool.endsWith(`__${op}`)
 

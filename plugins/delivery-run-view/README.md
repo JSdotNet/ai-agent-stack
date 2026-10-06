@@ -20,7 +20,7 @@ claude plugin marketplace add JSdotNet/devbook
 ```
 
 Then enable `delivery-run-view` with `/plugin`. Nothing else is required: the hook module is
-loaded by Claude Code itself, and the pane opens on its own once a run appears.
+loaded by Claude Code itself, and the pane opens on its own once a run of the session appears.
 
 ## Claude Code only
 
@@ -34,7 +34,7 @@ It is the mirror of `delivery-surface-canvas`, which is Copilot's alone.
 
 | Where | Shows |
 |---|---|
-| Pane — `/flows`, opened on its own the first time a run appears | The run top to bottom, one row per phase: its status, how it ran (`inline`, `delegate`, `fork`, `gate`), the agent, model and effort, the duration, and `↺N` when the phase ran more than once. Sub-agents the phase delegated to hang under it. The focused phase opens in place with its output, QA scenarios, links, output tokens, and tool calls. `‹ ›` steps between runs, and a phase name focuses or unfocuses it |
+| Pane — `/flows`, opened on its own the first time a run of this session appears | The run top to bottom, one row per phase: its status, how it ran (`inline`, `delegate`, `fork`, `gate`), the agent, model and effort, the duration, and `↺N` when the phase ran more than once. Sub-agents the phase delegated to hang under it. The focused phase opens in place with its output, QA scenarios, links, output tokens, and tool calls. `‹ ›` steps between runs, and a phase name focuses or unfocuses it |
 | Band above the prompt | While this session's run is open: the flow, the stage rail, and the current phase with its mode and agent |
 | Inline tool rows | A `mcp__*delivery-surface-*__start_run` or `__update_stage` call in the transcript drawn as one line — the flow and its phases, or the phase and its new status — instead of raw JSON |
 | Status line | `<skillId> · <current stage>` while this session's run is open |

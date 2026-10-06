@@ -1,8 +1,6 @@
 # Solution
 
-```meta
-demo: [<!-- .devbook/domain/<context>/<page>.demo.html#<id>, … — the screens that show the approach. Delete this block when no demo does. -->]
-```
+<!-- When the approach is shown in a demo, open with a meta block holding only demo: [<screen or walkthrough addresses>]; otherwise write none. -->
 
 ## Load first
 

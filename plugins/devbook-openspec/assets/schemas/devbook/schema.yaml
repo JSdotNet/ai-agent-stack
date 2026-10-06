@@ -11,12 +11,13 @@ artifacts:
       `type: change`, `status: proposed`, and `category` — one of `feature`,
       `behaviour-change`, `defect` — because the category picks the flow that
       applies a step. Then three sections, each without a meta block: `## Why`,
-      `## Scope`, and `## Chapters touched`, every chapter by address and every
-      demo the change lands by the path where it lands —
-      `.devbook/domain/<context>/<page>.demo.html`. When a prototype answered a
-      question for this change, `## Why` states that question and its one-line
-      answer: the verdict lives here and never in the demo. The block may carry
-      `demo`, naming the screens the change is about.
+      `## Scope`, and `## Chapters touched`, every chapter by address.
+
+      When the change carries a demo, `## Chapters touched` lists it by its path
+      below `.devbook/`, `## Why` records the prototype's verdict — the question
+      it was made to answer and the answer — and the block may name the screens
+      or walkthroughs the change is about in `demo`, per
+      devbook-chapter-metadata.md. The demo file itself never records a verdict.
 
       Read the chapters it touches and walk their `related` links first; never
       load a devbook folder whole. Skip every `annotation` fence: a review note
@@ -44,18 +45,20 @@ artifacts:
       decision the change makes is a delta too, under `devbook-delta/arc42/adr/`
       when it is architectural.
 
-      A demo is the one other file a delta folder holds. A UI prototype from
-      `/prototype` comes in copied whole to the path where it lands —
-      `devbook-delta/domain/<context>/<page>.demo.html` lands as
-      `.devbook/domain/<context>/<page>.demo.html` — and trimmed to the one
-      variant agreed. It is HTML: no meta block, no sections, and the merge
-      replaces the target whole. A logic prototype never comes in: its answer
-      is a delta to `domain.md`, `flow.md`, or an invariants subpage. Revising a
-      demo starts from a prototype of the current one, never an edit in place.
+      A demo is the one delta that is not Markdown. Copy the standalone
+      prototype `/prototype` wrote, whole, to the path where it lands —
+      `devbook-delta/domain/<context>/features.demo.html` lands as
+      `.devbook/domain/<context>/features.demo.html` — trimmed to the one
+      variant agreed, with its screen ids and anchors kept. It has no meta
+      block and no sections, and the merge replaces its target whole. A logic
+      prototype is never copied in: its answer is a delta to domain.md,
+      flow.md, or an invariants subpage. Never edit a demo here; a revision is
+      a new prototype of the current demo.
 
       A change with no prose delta still writes one: a placeholder holding only
       the opening meta block, because an empty `devbook-delta/` is unfinished
-      and a demo does not match this artifact's glob. After every edit run
+      and a demo does not match this artifact's glob.
+      After every edit run
       `node .devbook/_tools/devbook-meta/delta.mjs --check <change>`.
     requires:
       - proposal
@@ -66,13 +69,13 @@ artifacts:
     template: solution.md
     instruction: |
       Instructions for making the change, and nothing that lands in the devbook
-      on archive. First name, by address, the chapters a builder must load
+      on archive. When the approach is shown in a demo, open with a file-level
+      meta block holding only `demo`, naming the screens or walkthroughs a
+      builder follows; otherwise write no block. Then name, by address, the chapters a builder must load
       beyond the delta — an existing decision, a related feature or aggregate, a
       tech rating — and why each matters here. Then the approach: order,
       structure, the trade-offs taken. A decision the change makes is never
       written here; it is a delta. Never repeat what a delta already says.
-      When a demo shows the approach, open with a file-level meta block holding
-      `demo` — its screens, each `<path>#<id>` — and write no block otherwise.
     requires:
       - devbook-delta
 
@@ -83,9 +86,9 @@ artifacts:
     instruction: |
       `## Step N — title` blocks, one pull request each, in dependency order.
       Under each heading, a `delivers:` line naming the deltas it delivers by
-      address, a demo delta by its path alone because it lands whole; then —
-      when a person will do the step — a line reading exactly `owner: me`; then
-      the step's tasks as `- [ ]` checkboxes, each saying how it is verified.
+      address — a demo delta by its path — then — when a person will do the step — a line reading exactly
+      `owner: me`, then the step's tasks as `- [ ]` checkboxes, each saying how
+      it is verified.
     requires:
       - solution
 

@@ -52,7 +52,8 @@ A link to a process that is not listening is worse than no link.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command; never
   hand back a review the person cannot perform.
 - **Nothing to start** — a `flow-spec` run, or `phase-verify.app` set to `null` — skips the
-  startup and the links, says so in one line, and goes to Step 3 over the changed files.
+  startup and the app's links, says so in one line, publishes a demo as Step 2 says, and goes
+  to Step 3 over the changed files.
 
 ## Step 2 — Publish The Links
 
@@ -61,6 +62,10 @@ A link to a process that is not listening is worse than no link.
 - **Deep-link to what changed** — the route, page, or endpoint the change set touches, not the
   site root. **Then the supporting ones:** the runtime dashboard, the health endpoint, any second
   surface the change reaches.
+- **The demo beside the app.** When the change implements a click demo — a `*.demo.html` under
+  the change's `devbook-delta/`, or one the scoped chapters pair or name in their `demo` field
+  — publish each by path next to the app link it shows, with every address those chapters
+  name, walkthroughs included. It opens from disk, so it needs no health check.
 - **Label each one** with what it is for, in the person's terms.
 - **Publish nothing unconfirmed.** Every URL here was reachable in Step 1.
 
@@ -72,6 +77,9 @@ numbered list, each item naming **where to look, what to do, and what should hap
 - **Derive it from the scope's acceptance criteria and the change set**, not from what QA
   already drove — QA's result is presented in Step 4.
 - **Lead with what QA cannot judge** — layout, copy, spacing, tone, whether it is usable at all.
+- **Against the demo, when there is one**: per screen and walkthrough, open the demo's address
+  and the app's page side by side, and name what must match — the screens, the states, the
+  copy, the path. The demo is the agreed reference; a difference is a finding, never a taste.
 - **Name the non-obvious blast radius**: a migration that ran, a changed default, a shared
   component another screen also uses.
 - **Keep it to a few minutes.** What will not fit belongs in the automated suite.

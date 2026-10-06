@@ -15,8 +15,9 @@ does and **apply** is what `apply-change` does. The names carry the endpoints;
 these two words carry the action, and both spellings mean the same pass.
 
 Each skill covers seven kinds — `aggregate`, `domain-service`, `feature`,
-`setting`, `actor`, `building-block`, `design-component` — and none of them restates
-this file. What
+`setting`, `actor`, `building-block`, `design-component` — and `demo`, the click demo
+a page carries, which rides with that page's unit and roots none of its own. None of
+them restates this file. What
 is specific to a kind lives once in `assets/spec-kinds/<kind>.md`: the chapters
 and the file it covers, the `type` values, the folder rule, the spec-to-code
 mapping, and what each direction does differently there.
@@ -74,7 +75,8 @@ its units carry: each chapter is read through its own kind's file, and the run
 still ends in one table.
 
 Feature flags and settings run as the `setting` kind, user and technical actors
-as `actor`, and a shared-types unit as `aggregate`.
+as `actor`, and a shared-types unit as `aggregate`. A unit whose chapters pair or
+name a demo reads the demo through `demo` beside its own kind.
 
 **The roll-up.** A unit's verdict comes from its chapters', and a group's from
 its units':

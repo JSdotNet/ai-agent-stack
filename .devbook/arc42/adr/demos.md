@@ -33,6 +33,9 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 
 | Name | Belongs to |
 | --- | --- |
+| 2026-10-06 | Personal Validation publishes a demo the change implements beside the running app, at the addresses its chapters name, and the what-to-check list compares the two screen by screen. |
+| 2026-10-06 | The `demo` converter kind: a demo rides with its page's unit, `verify-change` compares its screens and walkthroughs with the front end and the e2e tests, `apply-change` briefs them as acceptance checks, and `capture-specs` never writes one. |
+| 2026-10-06 | A demo's managed region stands outside every fingerprint, so a template refresh lifts no approval, and `demo-model` is read only in the template's shape, in contract 29. |
 | `demo.html` | The bounded context itself, counted with `context.md`. One per context with a user interface. |
 | `<page>.demo.html` | `<page>.md`, which it sits beside and moves with when a feature is split out. |
 | Any other `*.demo.html` | The chapters whose `demo` field names it. |
@@ -108,7 +111,10 @@ demo opens anywhere with no toolchain.
 The managed region is the template's and not the demo's, so it is the one part of a demo that
 `/prototype` does not write. `demo-template.mjs --refresh` rewrites it in every demo when the
 template changes, and touches nothing else. A region edited by hand is an error, because the
-next refresh would discard the edit.
+next refresh would discard the edit. The region stands outside the fingerprint of the page a
+demo belongs to, and of a change carrying it, so a refresh lifts no approval: what a page's
+approval covers is the demo's own screens, model, and question, and the region answers to the
+template and the design system instead.
 
 A demo has a size target of 500 KB. `/prototype` works to stay under it with inline SVG,
 shared markup, and a split into page demos. A demo may still exceed it, and the checker
@@ -133,8 +139,13 @@ replacing its target whole. The `prototype` seed states the rest of this record:
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
 real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
 managed region against the template, a stale one as a warning and a hand-edited one as an error,
-and `--refresh` rewrites the regions after the template changes. The `devbook-openspec` schema
-and its `spec`, `status`, and `archive` skills carry a demo delta from proposal to archive.
+and `--refresh` rewrites the regions after the template changes. `verify-change`, `apply-change`, and `capture-specs` read a demo as the `demo` kind,
+`assets/spec-kinds/demo.md`: it rides with its page's sync unit, its screens and walkthroughs
+are compared with the front end and the e2e tests, and capture never writes one, handing a
+`code-ahead` screen to `/prototype`. In contract 29 the
+fingerprint leaves the region out, and the checker reads `demo-model` only in the shape the
+template's authoring reference states. The `devbook-openspec` schema and its `spec`, `status`,
+and `archive` skills carry a demo delta from proposal to archive.
 
 ## Rejected
 
@@ -165,7 +176,6 @@ and its `spec`, `status`, and `archive` skills carry a demo delta from proposal 
 
 | Date | Change |
 | --- | --- |
-| 2026-10-06 | The `devbook-openspec` schema, templates, and providers carry a demo delta: listed by path in the proposal with its verdict in `Why`, a `demo` block on `solution.md`, and a step that delivers it by path. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |

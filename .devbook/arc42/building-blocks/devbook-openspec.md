@@ -51,17 +51,14 @@ A project schema named `devbook` at `openspec/schemas/devbook/`, whose artifacts
 `init` writes it and `update` replaces it while it still hashes to what landed. Every artifact
 carries a `description`, and every `instruction` is a block scalar, because a plain YAML scalar
 cannot hold the `: ` in `` `owner: me` ``; `openspec schema validate devbook` passes on 1.13.2.
+The `devbook-delta` instruction also covers a demo: the standalone prototype copied whole to
+the path where it lands, one variant, never edited in the change. The proposal lists the demo
+under *Chapters touched* and records its verdict under *Why*, `solution.md` names its screens
+in a file-level `demo` block, and a step names it on `delivers:`, per
+[the demos decision](../adr/demos.md). `spec` hands a run a demo delta by path, never inlined.
 
-The schema carries a demo through the change as devbook's change rule describes it. The
-proposal lists a demo by the path where it lands beside the chapters it touches, and its
-`## Why` holds the verdict of the prototype the demo grew from. A demo delta is a UI prototype
-copied whole under `devbook-delta/` and trimmed to the one variant agreed, never a logic
-prototype. `solution.md` opens with a block holding `demo` when a demo shows the approach, and
-a step names a demo delta on its `delivers:` line by path alone. A demo does not match the
-artifact's `devbook-delta/**/*.md` glob, so a change whose only delta is a demo still writes
-the placeholder. `spec` names a demo delta by path and never inlines it, `status` reads its
-verdict as `n/a` because `delta.mjs --check` already holds it to the demo rules, and `archive`
-reports it as replaced rather than merged.
+A demo does not match the `devbook-delta/**/*.md` glob, so a change whose only delta is a demo
+still writes the placeholder, and `archive` reports a demo as replaced rather than merged.
 
 ### Config
 

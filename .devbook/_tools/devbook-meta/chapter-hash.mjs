@@ -31,7 +31,8 @@ blocks and \`annotation\` fences are excluded and whitespace is normalised, so
 a note or a reflowed paragraph does not change the value. Every demo the block
 belongs to is folded in: the file block of <page>.md takes <page>.demo.html, of
 context.md the context's demo.html, and any block the demos its \`demo\` field
-names — so editing a demo changes the value. Run it from the repository root.`;
+names — so editing a demo changes the value. A demo's managed region is left
+out, so a template refresh does not. Run it from the repository root.`;
 
 export async function main(argv) {
     const address = argv[0];

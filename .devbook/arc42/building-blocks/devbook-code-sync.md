@@ -23,7 +23,8 @@ related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 ```
 
 Three skills, each over the seven kinds — aggregate, domain service, feature, setting, actor,
-building block, and design component — and one CLI.
+building block, and design component — plus the click demo a page carries, read as the `demo`
+kind inside its page's unit, and one CLI.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |
@@ -184,7 +185,8 @@ related: [".devbook/arc42/12-glossary.md#drift-verdict", ".devbook/arc42/buildin
 ```
 
 The two directions between a chapter and the code that implements it, plus the check that
-says which one a chapter needs, as three skills over seven kinds: `capture-specs` reads an
+says which one a chapter needs, as three skills over seven kinds and the demo a page carries:
+`capture-specs` reads an
 implementation and plans the chapter, `apply-change` reads an agreed chapter and turns it
 into a change brief for the flow that implements it, touching no source or test tree itself,
 and `verify-change` reports the drift verdict and writes nothing. Two of the names are

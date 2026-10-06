@@ -20,7 +20,8 @@ kind, `setting`, for both levels), `user` and `technical` (one kind, `actor`; an
 `organisation` is no unit) — and the file decides it where the
 folder has no `type`: `.devbook/arc42/05-building-block-view.md` and a file under
 `.devbook/arc42/building-blocks/` are `building-block`,
-`.devbook/design/component-libraries.md` is `design-component`. Starting from code with
+`.devbook/design/component-libraries.md` is `design-component`, and a `*.demo.html` is
+`demo`, which capture reports and never writes — `/prototype` revises a demo. Starting from code with
 no chapter yet, take the kind the user names, or infer it from the code's shape
 and say so. Any other chapter is out of scope: say which flow owns it.
 

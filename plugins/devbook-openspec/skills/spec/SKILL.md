@@ -20,7 +20,9 @@ stands: derive nothing, summarise nothing, and supplement nothing. Write nothing
    Refuse too a step marked `owner: me`: a person builds that one.
 3. **Return, verbatim and in this order:** `proposal.md`; every delta the step's `delivers:`
    line names, whole — the file, not the one chapter; `solution.md`; and the step's own block
-   from `tasks.md`. Label each with its path. The chapters `solution.md` names under *Load
+   from `tasks.md`. Label each with its path. A demo delta is named by path with the addresses
+   the proposal and `solution.md` give it, never inlined: the run opens it and builds the
+   screens to match. The chapters `solution.md` names under *Load
    first* are context the run loads by address — name them, never inline them.
 4. **Say what else is open** in one line: the change's other steps and their states, so the run
    knows what it must not build.

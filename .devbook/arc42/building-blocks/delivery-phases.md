@@ -161,15 +161,10 @@ related: [".devbook/arc42/building-blocks/delivery.md#flow", ".devbook/arc42/bui
 Hand the run back to a person to look at: bring the application up, publish the review links
 as clickable URLs, say what to check by hand, and present the review findings, the spec-check
 table, and any open items. It runs again on every revise round, because a revised change set is
-a new thing to look at.
-
-**The demo beside the app.** A change that implements a demo — one its `devbook-delta/` carries,
-or one the scoped chapters name in their `demo` field — is accepted against that demo, so the
-handoff lists each one by path, opened at every address the chapters name, walkthroughs
-included, beside the app link to the same place, and leads the what-to-check list with the
-comparison. The demo is the agreed picture of what a person sees; the running app is what they
-sign for. Showing both at once is what lets the person judge the one against the other rather
-than against their memory of it. A run with nothing to start still lists them.
+a new thing to look at. When the change implements a click demo, the demo is published beside
+the app at the addresses its chapters name, and the what-to-check list compares the two screen
+by screen, per [the demos decision](../adr/demos.md): the demo is the agreed reference the
+built work is accepted against.
 
 **Present, never decide.** The phase produces the review; the approve, revise, or decline
 decision after it belongs to the flow-runner. Nothing in the handoff can approve, skip, or

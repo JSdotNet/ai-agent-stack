@@ -53,8 +53,8 @@ A link to a process that is not listening is worse than no link.
 - **Startup failure blocks the phase.** Report the actual error and the recovery command; never
   hand back a review the person cannot perform.
 - **Nothing to start** — a `flow-spec` run, or `phase-verify.app` set to `null` — skips the
-  startup and the links, says so in one line, still lists the demos of Step 2, and goes to
-  Step 3 over the changed files.
+  startup and the app's links, says so in one line, publishes a demo as Step 2 says, and goes
+  to Step 3 over the changed files.
 
 ## Step 2 — Publish The Links
 
@@ -63,25 +63,14 @@ A link to a process that is not listening is worse than no link.
 - **Deep-link to what changed** — the route, page, or endpoint the change set touches, not the
   site root. **Then the supporting ones:** the runtime dashboard, the health endpoint, any second
   surface the change reaches.
+- **The demo beside the app.** When the change implements a click demo — a `*.demo.html` under
+  the change's `devbook-delta/`, or one the scoped chapters pair or name in their `demo` field
+  — publish each by path next to the app link it shows, with every address those chapters
+  name, walkthroughs included, each a `file:` URL ending in `#<id>` — the demo opens at that
+  screen, state, or walkthrough. It opens from disk, so it needs no health check; report an
+  address whose file is missing instead of publishing it.
 - **Label each one** with what it is for, in the person's terms.
 - **Publish nothing unconfirmed.** Every URL here was reachable in Step 1.
-
-### The demo beside the app
-
-A change that implements a demo is accepted against it, so the person needs both open at once.
-
-- **Collect the demos.** Every `*.demo.html` under the change's `devbook-delta/`, per
-  `devbook-changes.md`, and every address in the `demo` field of the change's `proposal.md`
-  and `solution.md` and of each chapter the scope recorded, per `devbook-chapter-metadata.md`.
-  None found: skip this section without a line.
-- **List each demo by path**, the copy that exists in this checkout — the delta while the
-  change is open, the landed file once it merged — and under it each address the chapters name,
-  walkthroughs included, as a clickable `file:` URL ending in `#<id>`: the demo opens at that
-  screen, state, or walkthrough. Put each beside the app link to the same place, and pass the
-  demo links on the stage too.
-- **Name what each address shows** in the person's terms: the screen, the state, or the
-  scenario a walkthrough plays, from the chapter that names it.
-- **Report an address whose file is missing** instead of publishing it.
 
 ## Step 3 — Say What To Check
 
@@ -91,10 +80,9 @@ numbered list, each item naming **where to look, what to do, and what should hap
 - **Derive it from the scope's acceptance criteria and the change set**, not from what QA
   already drove — QA's result is presented in Step 4.
 - **Lead with what QA cannot judge** — layout, copy, spacing, tone, whether it is usable at all.
-- **With a demo listed, compare first.** For each address: open the demo and the app at the same
-  place, play a walkthrough's steps in both, and check the screens, fields, copy, states, and
-  outcome agree. A difference is a miss to send back or a departure the person accepts by name —
-  the demo is what they sign the built work against.
+- **Against the demo, when there is one**: per screen and walkthrough, open the demo's address
+  and the app's page side by side, and name what must match — the screens, the states, the
+  copy, the path. The demo is the agreed reference; a difference is a finding, never a taste.
 - **Name the non-obvious blast radius**: a migration that ran, a changed default, a shared
   component another screen also uses.
 - **Keep it to a few minutes.** What will not fit belongs in the automated suite.

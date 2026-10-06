@@ -20,6 +20,10 @@ rule is what they do differently from OpenSpec's defaults.
 - **A delta is checked by devbook.** `openspec validate` accepts zero deltas for this schema
   and reads nothing in `devbook-delta/`. After every edit to a delta, run
   `node .devbook/_tools/devbook-meta/delta.mjs --check <name>`.
+- **A demo is copied in, never written.** A change carries a demo as the standalone prototype
+  `/prototype` wrote, copied whole under `devbook-delta/` at the path where it lands and
+  trimmed to the agreed variant; the verdict goes in the proposal's `Why`. Never author or
+  edit the HTML inside the change — a revision is a new prototype of the current demo.
 - **A step records itself.** Under its `## Step N — title` heading, in this order: `delivers:`,
   `owner: me` when a person does it, `branch:` once work starts, `PR:` once its pull request
   opens, then the `- [ ]` tasks. `devbook-openspec:tracker` reads the state from those lines

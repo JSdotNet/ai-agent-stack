@@ -13,6 +13,12 @@ artifacts:
       applies a step. Then three sections, each without a meta block: `## Why`,
       `## Scope`, and `## Chapters touched`, every chapter by address.
 
+      When the change carries a demo, `## Chapters touched` lists it by its path
+      below `.devbook/`, `## Why` records the prototype's verdict — the question
+      it was made to answer and the answer — and the block may name the screens
+      or walkthroughs the change is about in `demo`, per
+      devbook-chapter-metadata.md. The demo file itself never records a verdict.
+
       Read the chapters it touches and walk their `related` links first; never
       load a devbook folder whole. Skip every `annotation` fence: a review note
       is not content. Never write `approved` or `accepted`: only the approve and
@@ -39,6 +45,16 @@ artifacts:
       decision the change makes is a delta too, under `devbook-delta/arc42/adr/`
       when it is architectural.
 
+      A demo is the one delta that is not Markdown. Copy the standalone
+      prototype `/prototype` wrote, whole, to the path where it lands —
+      `devbook-delta/domain/<context>/features.demo.html` lands as
+      `.devbook/domain/<context>/features.demo.html` — trimmed to the one
+      variant agreed, with its screen ids and anchors kept. It has no meta
+      block and no sections, and the merge replaces its target whole. A logic
+      prototype is never copied in: its answer is a delta to domain.md,
+      flow.md, or an invariants subpage. Never edit a demo here; a revision is
+      a new prototype of the current demo.
+
       A change with no prose delta still writes one: a placeholder holding only
       the opening meta block, because an empty `devbook-delta/` is unfinished.
       After every edit run
@@ -52,7 +68,9 @@ artifacts:
     template: solution.md
     instruction: |
       Instructions for making the change, and nothing that lands in the devbook
-      on archive. First name, by address, the chapters a builder must load
+      on archive. When the approach is shown in a demo, open with a file-level
+      meta block holding only `demo`, naming the screens or walkthroughs a
+      builder follows; otherwise write no block. Then name, by address, the chapters a builder must load
       beyond the delta — an existing decision, a related feature or aggregate, a
       tech rating — and why each matters here. Then the approach: order,
       structure, the trade-offs taken. A decision the change makes is never
@@ -67,7 +85,7 @@ artifacts:
     instruction: |
       `## Step N — title` blocks, one pull request each, in dependency order.
       Under each heading, a `delivers:` line naming the deltas it delivers by
-      address, then — when a person will do the step — a line reading exactly
+      address — a demo delta by its path — then — when a person will do the step — a line reading exactly
       `owner: me`, then the step's tasks as `- [ ]` checkboxes, each saying how
       it is verified.
     requires:

@@ -2653,9 +2653,23 @@ export function pageDemoPath(relPath) {
 }
 
 /**
+ * A demo's text as a fingerprint reads it: line endings normalised and every
+ * managed region — `template:begin` through `template:end`, both markers
+ * included — dropped. The region is the template's, checked against it by
+ * `demo-template.mjs`, so `--refresh` rewriting it lifts no approval; what a
+ * page's approval covers is the demo's own screens, model, and question.
+ */
+export function demoFingerprintText(text) {
+    return String(text)
+        .replace(/\r\n?/g, "\n")
+        .replace(/<!--\s*template:begin\b[^>]*?-->[\s\S]*?(?:<!--\s*template:end\b[^>]*?-->|$)/gi, "");
+}
+
+/**
  * The fingerprint `approved-hash` and `accepted-hash` record: `chapterHash`,
  * with every demo the block belongs to folded in, so editing a demo lifts an
- * approval of what it shows exactly as editing the prose does.
+ * approval of what it shows exactly as editing the prose does. A demo's
+ * managed region is left out, per `demoFingerprintText`.
  *
  * A block's demos are the ones its `demo` field — or the field of any chapter
  * nested in it — names by path, and for the file block also the demo named for
@@ -2685,7 +2699,7 @@ export function chapterFingerprint(relPath, markdown, line = 1, demoText = null)
     const demos = [];
     for (const demoPath of [...paths].sort()) {
         const text = demoText(demoPath);
-        if (text != null) demos.push(`${demoPath}\n${String(text).replace(/\r\n?/g, "\n")}`);
+        if (text != null) demos.push(`${demoPath}\n${demoFingerprintText(text)}`);
     }
     return demos.length ? digest([base, ...demos].join("\n")) : base;
 }
@@ -2729,12 +2743,17 @@ function hashedText(lines, from, end, dropped) {
  * fences, because in a delta they are content — the header says what kind of
  * change it is, and a `MODIFIED` block is the fields it sets — and drops only
  * its annotation fences. Each delta is keyed by the devbook file it targets,
- * so moving one to another target is an edit. `deltas` is a list of
+ * so moving one to another target is an edit. A demo delta is read as a page
+ * fingerprint reads a demo, its managed region left out. `deltas` is a list of
  * `{ target, markdown }`, in any order.
  */
 export function changeHash(proposalMarkdown, deltas) {
     const parts = [chapterHash(proposalMarkdown, parseDocument(proposalMarkdown).chapters.find((c) => c.level === 1)?.line ?? 1)];
     for (const delta of [...deltas].sort((a, b) => (a.target < b.target ? -1 : a.target > b.target ? 1 : 0))) {
+        if (isDemoPath(delta.target)) {
+            parts.push(`${delta.target}\n${demoFingerprintText(delta.markdown)}`);
+            continue;
+        }
         const lines = delta.markdown.split(/\r?\n/);
         parts.push(`${delta.target}\n${hashedText(lines, 0, lines.length, ["annotation"])}`);
     }

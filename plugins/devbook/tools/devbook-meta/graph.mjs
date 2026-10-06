@@ -210,7 +210,14 @@ export { DEVBOOK_FOLDER_NAMES, DEVBOOK_ROOT, CHANGES_ROOT };
 // `organisation` roots no unit, so `sync` on one is still refused and an
 // `actors.md` of organisations only is still warned. Additive: a corpus
 // written under 27 validates unchanged, and no migration is owed.
-export const CONTRACT_VERSION = 28;
+//
+// Version 29 leaves a demo's managed region out of every fingerprint, so
+// `demo-template.mjs --refresh` lifts no approval, and reads `demo-model` only
+// in the shape the template's authoring reference states. A corpus with no
+// demo fingerprints as under 28. A page approved over a demo under 28 reads as
+// changed once and is approved again; demos are days old and no migration is
+// owed for a value the approval gate rewrites.
+export const CONTRACT_VERSION = 29;
 
 // The oldest contract a reconcile still carries forward. A migration lives
 // for the major version it ships in: a major release raises this to the

@@ -133,7 +133,8 @@ replacing its target whole. The `prototype` seed states the rest of this record:
 `demo-meta`, the one-line answer kept out of the file, the two modes, walkthroughs by id, data at
 real density, the size target, and when not to prototype. `demo-template.mjs` checks every demo's
 managed region against the template, a stale one as a warning and a hand-edited one as an error,
-and `--refresh` rewrites the regions after the template changes.
+and `--refresh` rewrites the regions after the template changes. The `devbook-openspec` schema
+and its `spec`, `status`, and `archive` skills carry a demo delta from proposal to archive.
 
 ## Rejected
 
@@ -164,6 +165,7 @@ and `--refresh` rewrites the regions after the template changes.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-06 | The `devbook-openspec` schema, templates, and providers carry a demo delta: listed by path in the proposal with its verdict in `Why`, a `demo` block on `solution.md`, and a step that delivers it by path. |
 | 2026-10-02 | `demo-template.mjs` checks and refreshes every demo's managed region against the template, its check run by `build.mjs --check`. |
 | 2026-10-02 | The `prototype` seed states the question, the answer, the two modes, and the size target, and devbook-procedures 1.16.0 seeds the template where `design/` is adopted. |
 | 2026-10-02 | The checker enforces the demo rules and resolves every `demo` address, and the fingerprint of a page covers its demos, in contract 26. |

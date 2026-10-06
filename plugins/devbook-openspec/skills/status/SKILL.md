@@ -20,7 +20,8 @@ nothing: every edit this report points at is a person's or another skill's.
    an agreed change as pending truth. One row per delta: the verdict, and for `code-ahead`
    whether it is `covered by change <name>, step N`. A delta whose target is outside
    `verify-change`'s kinds — a decision or debt record, a prose chapter — reads
-   `n/a: no code counterpart`, and acceptance owes it no verdict. Where `verify-change` is not installed, say
+   `n/a: no code counterpart`, and acceptance owes it no verdict; so does a demo delta, which
+   `delta.mjs --check` holds to the demo rules in step 1. Where `verify-change` is not installed, say
    the column is empty and why.
 4. **Gates.** From `proposal.md`'s file block: `status`, who approved and accepted it and when,
    and whether each `-hash` still equals `node .devbook/_tools/devbook-meta/chapter-hash.mjs

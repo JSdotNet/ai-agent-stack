@@ -21,9 +21,17 @@ stands: derive nothing, summarise nothing, and supplement nothing. Write nothing
 3. **Return, verbatim and in this order:** `proposal.md`; every delta the step's `delivers:`
    line names, whole — the file, not the one chapter; `solution.md`; and the step's own block
    from `tasks.md`. Label each with its path. The chapters `solution.md` names under *Load
-   first* are context the run loads by address — name them, never inline them.
+   first* are context the run loads by address — name them, never inline them. A demo delta —
+   `devbook-delta/domain/<context>/<page>.demo.html` — is named by path the same way: the run
+   opens the file, and builds the screens the `demo` fields of the proposal and `solution.md` name.
 4. **Say what else is open** in one line: the change's other steps and their states, so the run
    knows what it must not build.
+
+A prototype reaches a run only as a demo delta: copied whole from where `/prototype` wrote it to
+the path where it lands under `devbook-delta/`, trimmed to the one variant agreed, its question
+and answer in the proposal's `## Why`. A logic prototype never does — it is code, and its answer
+is a prose delta. A prototype outside the change is not part of the spec: never hand one to a
+run, and never copy or trim one here.
 
 A revise from a gate re-runs this skill with the person's notes; the notes are for the change,
 through `/opsx:propose` or a hand edit and a fresh approval, never an edit made here.

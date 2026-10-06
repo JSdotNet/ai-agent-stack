@@ -8,7 +8,9 @@ category: feature
 
 ## Why
 
-<!-- The problem or the opportunity, and why now. -->
+<!-- The problem or the opportunity, and why now. When a prototype answered a question for
+this change, state the question it answered and the one-line answer here: the demo file
+never carries its verdict. -->
 
 ## Scope
 
@@ -16,4 +18,6 @@ category: feature
 
 ## Chapters touched
 
-<!-- One line per chapter, by address: .devbook/<folder>/<file>.md#<slug> -->
+<!-- One line per chapter, by address: .devbook/<folder>/<file>.md#<slug>
+One line per demo the change lands, by the path where it lands:
+.devbook/domain/<context>/<page>.demo.html -->

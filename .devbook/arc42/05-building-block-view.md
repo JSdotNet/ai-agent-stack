@@ -325,8 +325,9 @@ marketplace are [published from their own](adr/plugin-boundaries.md).
 | `report-back` | both | The result, sent to every origin, every linked item, and every target in `phase-report-back.targets` |
 
 `update-base`, `check-review`, `create-pr`, and `summary` take an entry like the rest, usually
-`{}`. Personal Validation and the ready check take none. An absent `agent` runs the phase inline
-with the runner, and an absent `skill` runs the phase's own `phase-<id>` skill.
+`{}`. Personal Validation and the ready check take none. An absent `agent` runs the phase as the
+engine contract's *Runs by default* column says — inline, fork, or delegated — and an absent
+`skill` runs the phase's own `phase-<id>` skill.
 
 A missing specialist costs capability, not a load. `delivery` and `devbook-flows` used to carry
 over two hundred `plugin:asset` references naming the seven. Every one became the point it was

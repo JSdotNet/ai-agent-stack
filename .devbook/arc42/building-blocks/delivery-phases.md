@@ -241,7 +241,8 @@ a phase, never what the phases are. That asymmetry keeps configuration from beco
 undocumented flow language.
 
 Every field resolves on its own, most specific key first, then the session. An absent field
-inherits the session's model, effort, and inline runner, so `{}` is a complete entry. The
+inherits the session's model and effort, and the phase runs as the engine contract's *Runs by
+default* column says — inline, fork, or delegated — so `{}` is a complete entry. The
 qualifier after a colon is the folder on `phase-drafting` in `flow-spec`, or an area on
 `phase-implement`. No qualifier names a kind, because what a kind needs is
 `phase-implement`'s call.

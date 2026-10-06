@@ -310,7 +310,7 @@ another block.
 | --- | --- | --- |
 | One item per run, and never a fan-out | flow entry | untested |
 | A run belongs to one session; a resumed run reattaches to the same run rather than opening a second | `start_run()` | untested |
-| Every flow opens with Update Base, prepended by the runner and named by no skill | phase sequencing | untested |
+| Every flow opens with Update Base, the first phase each flow skill lists | phase sequencing | untested |
 | `implement` with `review` per slice, and the ready check back to `implement` or `drafting`, are the only cycles, bounded by `policy.review.retryBudget` and `policy.ready.retryBudget` | the flow-runner | untested |
 | Every review finding cites `file:line` and a rule, a smell, or a concrete failure scenario, or it is dropped; the reviewer never edits and never delegates | `phase-review` | untested |
 | When both budgets are spent, the open items reach Personal Validation listed first, and an unattended run parks instead | `phase-ready` | untested |
@@ -712,10 +712,11 @@ flowchart TD
 - **The ready check sends missing work back rather than stopping.** It reads what review,
   Build & Test, `verify`, `spec-check`, and `scope` recorded. When the budgets are spent, the
   open items go to the gate listed first, and an unattended run parks instead.
-- **An absent field costs nothing but the specialist.** A phase with no agent runs inline on
-  the session's model and effort, and the run continues.
-- **Update Base is prepended by the runner and named by no skill.** The opening phase is
-  identical everywhere, so nothing names it.
+- **An absent field costs nothing but the specialist.** A phase with nothing configured runs
+  on the session's model and effort, inline, forked, or delegated as the engine contract's
+  *Runs by default* column says, and the run continues.
+- **Update Base opens every flow.** Each flow skill lists it first, and it runs identically
+  everywhere.
 - **Session Handoff can interrupt any box on this diagram.** The run resumes on the same stage
   in a fresh session, which is why the stage and not the diagram is the unit of resumption.
 

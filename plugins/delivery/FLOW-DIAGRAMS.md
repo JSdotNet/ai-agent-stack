@@ -28,7 +28,8 @@ flowchart TD
     P --> I
     I <-->|"per slice, within policy.review.retryBudget"| R["Review"]
     R -->|every slice clean| BT["Build & Test"]
-    BT --> V["Verify"]
+    BT -->|green| V["Verify"]
+    BT -->|"red: Verify and Spec Check skipped"| RD
     V --> SC["Spec Check"]
     SC --> RD{"Ready?"}
     RD -->|"not ready, within policy.ready.retryBudget"| I

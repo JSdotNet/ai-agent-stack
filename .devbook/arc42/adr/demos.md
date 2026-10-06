@@ -33,6 +33,7 @@ the same way `domain.order.invariants.md` belongs to `domain.order.md`.
 
 | Name | Belongs to |
 | --- | --- |
+| 2026-10-06 | Personal Validation publishes a demo the change implements beside the running app, at the addresses its chapters name, and the what-to-check list compares the two screen by screen. |
 | 2026-10-06 | The `demo` converter kind: a demo rides with its page's unit, `verify-change` compares its screens and walkthroughs with the front end and the e2e tests, `apply-change` briefs them as acceptance checks, and `capture-specs` never writes one. |
 | 2026-10-06 | A demo's managed region stands outside every fingerprint, so a template refresh lifts no approval, and `demo-model` is read only in the template's shape, in contract 29. |
 | `demo.html` | The bounded context itself, counted with `context.md`. One per context with a user interface. |

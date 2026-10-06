@@ -26,21 +26,18 @@ A change routes to the flow named for what it changes, which runs it end to end.
   change through `flow-code`.
   `.claude/settings.json` enables five plugins for every session here — `devbook`,
   `devbook-derived`, `delivery`, `delivery-schedule`, and `devbook-config` — and the stamps in
-  `.devbook/config.json` record what they materialized: `devbook` 1.9.0 over `arc42`, `tech`,
-  `design`, and `ai`; `delivery` and `schedule` 1.9.0; `devbook-derived` 1.9.0, with its
-  refresh script, its nightly and drift workflows, its rule trio, and its `AGENTS.md` section. No procedure is adopted: the
-  procedures are this marketplace's product, kept as seeds in `devbook`, and a repository
-  with no application to run has none of its own. A surface is enabled per person too: a run reports into
-  every one bound — `delivery-surface-dashboard` and `delivery-surface-backlog` where they were
-  enabled, `delivery-surface-canvas` being a Copilot canvas this marketplace does not offer — and
-  resolves its phases from `.devbook/config.json`: the GitHub tracker, `devbook:validate` before
-  `update-base`, `devbook:verify-change` as the skill of `spec-check`, `devbook:update` after
-  `summary`, and an approval gate before `create-pr`. No phase names an agent, a model, or an
-  MCP server, so every phase runs on the session's model as the engine contract's *Runs by
-  default* column says — inline, forked, or delegated. `repo-instructions`
-  resolves to `AGENTS.md`, which this repository now keeps as its host-neutral root file.
-  `stage-delegation` and `surface` still answer, being read from the live session rather than
-  bound.
+  `.devbook/config.json` record what they materialized: `devbook` 1.19.0, contract 29, over
+  `arc42`, `tech`, `design`, and `ai`; `delivery` and `schedule` 1.18.0; `devbook-derived`
+  1.18.0, with its refresh script, its nightly and drift workflows, its rule trio, and its
+  `AGENTS.md` section. No procedure is adopted: the procedures are this marketplace's product,
+  kept as seeds in `devbook`, and a repository with no application to run has none of its own.
+  A surface is enabled per person: a run reports into every one bound — `delivery-surface-backlog`
+  where it is enabled, `delivery-run-view` drawing the same run files inside Claude Code — and
+  resolves its phases from the phase maps in `.devbook/config.json`, one per flow: the GitHub
+  tracker, `devbook:validate` before `phase-update-base` in both flows, `devbook:verify-change`
+  as the skill of `flow-code`'s `phase-spec-check`, and an approval gate before `create-pr`. No
+  phase names an agent, a model, or an MCP server, so every phase runs on the session's model as
+  the engine contract's *Runs by default* column says — inline, forked, or delegated.
 - **Adopted by** — nobody yet. Every change to this repository so far was carried by hand under
   `CLAUDE.md`, including the ones that built the flows.
 - **Evidence** — none yet. A specialist is the agent a phase's entry names in the config, never
@@ -84,28 +81,32 @@ replaced `fleet`, which did the working part five sessions at a time, on 2026-09
 ## Scheduling
 
 ```meta
-status: candidate
+status: trial
 type: skill
 stage: [operate, monitor]
 related: [".devbook/arc42/08-crosscutting-concepts.md#schedule", ".devbook/arc42/adr/plugin-boundaries.md"]
-date: 2026-09-07
+date: 2026-10-06
 ```
 
 `delivery-schedule` fires an entry point, a check, or a refresh on a cadence, as a local
 routine on the maintainer's machine with nobody watching, and lands a change as a pull request and its report as the run's last message.
 
-- **Used for** — four of the thirteen schedules are enabled against this repository, per the
-  stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, `merge-review`, and
-  `package-update`. The issue sweep is not among them yet.
+- **Used for** — three of the sixteen catalog schedules are enabled against this repository,
+  per the stamp in `.devbook/config.json`: `devbook-validate`, `tech-update`, and
+  `merge-review`. `package-update` and `devbook-pull-sweep` were dropped from the selection at
+  the 1.19 update; the sync sweeps run elsewhere first, and no chapter here sets a sync
+  direction. The issue sweep is not among them yet.
 - **Adopted by** — this repository, where a draft pull request nobody asked for costs a
   glance, not a rebase.
 - **Evidence** — the fact the design first rested on came back false on 2026-09-28: a cloud
   session did not load the marketplace from the repository's committed settings, and the
   Backlog issue sweep stopped at its first rule without its skill. Every schedule has been a
-  local routine since, running with the plugins installed on the machine. Promote to `trial`
-  once a local run has run its target and published here,
-  and watch two things: whether the idempotence rule held — one open pull request per
-  schedule, updated rather than doubled — and whether a parked run's draft carried enough
+  local routine since, running with the plugins installed on the machine. The first local runs
+  of `devbook-validate` ran their target and published here: one pull request a day on
+  2026-09-30, 2026-10-01, and 2026-10-02 (#187, #199, #210), each merged the day it opened.
+  Promote to `adopted` once the other selected schedules have published here too, and keep
+  watching two things: whether the idempotence rule holds — one open pull request per
+  schedule, updated rather than doubled — and whether a parked run's draft carries enough
   brief to resume by hand.
 - **Limits** — one platform: the scheduler is resolved from the live tool list and only one
   host has one, so on the other the prompts print and a person pastes them. No schedule fires

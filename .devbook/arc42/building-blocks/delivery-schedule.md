@@ -209,6 +209,7 @@ and why a trigger can be created, disabled, and re-created without touching what
 | A trigger whose target plugin the repository has not enabled is reported and skipped, never scheduled | `init`, `update` | untested |
 | Schedules are matched by name, so a second sync updates rather than duplicates | `init`, `update` | untested |
 | No placeholder the contract does not name appears in a prompt | `check.mjs` | untested |
+| A schedule's `maxResolve` is the default its README catalog row and its target skill state | `check.mjs` | untested |
 
 The values it holds:
 

@@ -10,7 +10,8 @@
 // marketplace does not list or that omits the target's plugin, a tool list without `Skill`,
 // an empty body, a placeholder outside the five the contract names — in a body or in the
 // preamble — or a `maxResolve` that is not a whole number or that the body never uses as
-// {{maxResolve}}, the one placeholder a schedule carrying that field may add.
+// {{maxResolve}}, the one placeholder a schedule carrying that field may add, or that the
+// plugin README's catalog row or the target skill's `maxResolve` input line does not restate.
 //
 // Dependency-free ESM against node: built-ins, like everything else executable here.
 
@@ -23,6 +24,7 @@ const PLUGIN = path.resolve(HERE, "..", "..");
 const ROOT = path.resolve(PLUGIN, "..", "..");
 const CATALOG = path.join(PLUGIN, "resources", "schedules");
 const PREAMBLE = path.join(PLUGIN, "resources", "schedule-preamble.md");
+const README = path.join(PLUGIN, "README.md");
 
 const REQUIRED = ["name", "title", "cadence", "cron", "target", "requires", "tools"];
 const CADENCES = new Set(["daily", "weekdays", "weekly"]);
@@ -68,6 +70,8 @@ const plugins = new Set(marketplace.plugins.map((p) => p.name));
 if (await exists(PREAMBLE)) checkPlaceholders(PREAMBLE, await readFile(PREAMBLE, "utf8"));
 else error(PREAMBLE, "missing — every prompt starts with it");
 
+const readmeRows = (await exists(README)) ? (await readFile(README, "utf8")).split(/\r?\n/).filter((l) => l.startsWith("| `")) : [];
+
 const files = (await readdir(CATALOG)).filter((f) => f.endsWith(".schedule.md")).sort();
 if (files.length === 0) error(CATALOG, "the catalog is empty");
 
@@ -90,6 +94,7 @@ for (const name of files) {
     }
 
     let targetPlugin = null;
+    let skillText = null;
     if (typeof fields.target === "string") {
         const m = fields.target.match(/^([a-z0-9-]+):([a-z0-9-]+)$/);
         if (!m) error(file, `target ${fields.target} is not <plugin>:<skill>`);
@@ -98,7 +103,7 @@ for (const name of files) {
             if (m[2].startsWith("flow-")) error(file, `target ${fields.target} is a flow — a flow ends at a gate no unattended run can pass`);
             const skill = path.join(ROOT, "plugins", m[1], "skills", m[2], "SKILL.md");
             if (!(await exists(skill))) error(file, `target ${fields.target} has no skill folder in this marketplace`);
-            else if (frontmatter(await readFile(skill, "utf8"))?.fields["disable-model-invocation"] === "true") error(file, `target ${fields.target} sets disable-model-invocation — the scheduled session reaches it through the model, so every run would stop at step 1`);
+            else if (frontmatter(skillText = await readFile(skill, "utf8"))?.fields["disable-model-invocation"] === "true") error(file, `target ${fields.target} sets disable-model-invocation — the scheduled session reaches it through the model, so every run would stop at step 1`);
         }
     }
 
@@ -115,6 +120,14 @@ for (const name of files) {
     if ("maxResolve" in fields) {
         if (!/^\d+$/.test(fields.maxResolve)) error(file, `maxResolve ${fields.maxResolve} is not a whole number`);
         if (!body.includes("{{maxResolve}}")) error(file, "maxResolve is set but the body never says {{maxResolve}}, so an override would change nothing");
+        // The default is restated by hand where a reader meets it first; each copy must agree.
+        const want = `\`${fields.maxResolve}\``;
+        const row = readmeRows.find((l) => l.startsWith(`| \`${stem}\` |`));
+        if (!row) error(README, `the catalog table has no row for ${stem}`);
+        else if (!row.includes(`\`maxResolve ${fields.maxResolve}\``)) error(README, `the ${stem} row does not say maxResolve ${fields.maxResolve}, the schedule's default`);
+        const line = skillText?.split(/\r?\n/).find((l) => l.startsWith("- `maxResolve`:"));
+        if (skillText && !line) error(file, `target ${fields.target} has no "- \`maxResolve\`:" input line stating the default`);
+        else if (line && !line.includes(want)) error(file, `target ${fields.target} states a maxResolve default other than ${want}`);
     }
     checkPlaceholders(file, body, fields);
 }

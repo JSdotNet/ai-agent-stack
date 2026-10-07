@@ -51,7 +51,7 @@ flowchart LR
     N --> C
     C --> S["$.state rollout"]
     S --> X["Matrix: stamps, folders, procedures, retired keys"]
-    S --> P["Config map: phase chains, gates, policy, bindings"]
+    S --> P["Config map: phase chains side by side, gates, policy, bindings"]
     X -.->|"fills, never sends"| Q["prompt box"]
 ```
 

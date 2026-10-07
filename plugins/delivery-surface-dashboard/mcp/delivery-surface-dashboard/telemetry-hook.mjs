@@ -44,7 +44,7 @@
 import { open, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { readActive, writeActive, readTelemetry, writeTelemetry, runsDir } from "./state.mjs";
-import { readRun, writeRun } from "./store.mjs";
+import { readRun, writeRun, withRunFileLock } from "./store.mjs";
 import { isIdle, markIdle } from "./idle.mjs";
 import { recordDestination } from "./session-title.mjs";
 import {
@@ -334,8 +334,11 @@ async function main() {
     // adopting it; releasing the active pointer keeps a later session's tool calls from
     // landing on work that already stopped.
     if (event === "SessionEnd") {
-        markIdle(run);
-        await writeRun(baseDir, run);
+        await withRunFileLock(baseDir, run.id, async () => {
+            const fresh = (await readRun(baseDir, run.id)) || run;
+            markIdle(fresh);
+            await writeRun(baseDir, fresh);
+        });
         await writeActive({ runId: null, stage: null, updatedAt: new Date().toISOString() });
         return;
     }
@@ -413,18 +416,22 @@ async function main() {
     // The run is persisted before the warning is emitted: the latch that keeps a threshold
     // from re-announcing on every later tool call lives in the run file.
     //
-    // This hook is its own process, so the server may have written a stage update while the
-    // transcript was being folded. Re-read the run and carry over only what this hook owns —
-    // insights, token usage, the context gauge, the write destinations — so a stage the server
-    // just marked done is never reverted by a stale copy. A field the hook writes and this list
-    // omits is dropped on every call: the session title stayed null until destinations joined it.
-    const fresh = await readRun(baseDir, run.id);
-    const target = fresh || run;
-    target.insights = run.insights;
-    target.tokenUsage = run.tokenUsage;
-    target.context = run.context;
-    if (run.destinations) target.destinations = run.destinations;
-    await writeRun(baseDir, target);
+    // This hook is its own process, so the server — or another hook, for a parallel tool
+    // call — may have written the run while the transcript was being folded. Under the run's
+    // file lock, re-read it and carry over only what this hook owns — insights, token usage,
+    // the context gauge, the write destinations — so a stage the server just marked done is
+    // never reverted by a stale copy. A field the hook writes and this list omits is dropped on
+    // every call: the session title stayed null until destinations joined it. The fold above
+    // stays outside the lock: it reads the transcript, which is slow.
+    await withRunFileLock(baseDir, run.id, async () => {
+        const fresh = await readRun(baseDir, run.id);
+        const target = fresh || run;
+        target.insights = run.insights;
+        target.tokenUsage = run.tokenUsage;
+        target.context = run.context;
+        if (run.destinations) target.destinations = run.destinations;
+        await writeRun(baseDir, target);
+    });
     await writeTelemetry(sessionId, updated);
     if (pressure) emitContextPressure(pressure);
 }

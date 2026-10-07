@@ -28,7 +28,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { EventEmitter } from "node:events";
 import { createHash } from "node:crypto";
-import { ensureDir, writeRun, readRun, listRuns, newRunId } from "./store.mjs";
+import { ensureDir, writeRun, readRun, listRuns, newRunId, withRunFileLock } from "./store.mjs";
 import { renderShell } from "./render.mjs";
 import { summarizeInsights, summarizeContext } from "./insight.mjs";
 import { renderReportMarkdown, renderReportHtml } from "./report.mjs";
@@ -106,13 +106,14 @@ bus.setMaxListeners(0);
 const baseDir = runsDir();
 
 // Serializes read-modify-write access per runId so two tool calls issued back-to-back
-// cannot race each other and silently drop an update. The telemetry hook is a separate
-// process the lock cannot see; it re-reads the run before writing and carries over only
-// the fields it owns, so the worst case is a lost telemetry sample, never a lost stage.
+// cannot race each other and silently drop an update. The in-process chain queues this
+// server's own calls; the file lock inside it holds off the telemetry hook, a separate
+// process that takes the same lock for its own read-modify-write (see store.mjs).
 const runLocks = new Map();
 function withRunLock(runId, fn) {
     const prev = runLocks.get(runId) || Promise.resolve();
-    const run = prev.then(fn, fn);
+    const locked = () => withRunFileLock(baseDir, runId, fn);
+    const run = prev.then(locked, locked);
     runLocks.set(runId, run.then(() => {}, () => {}));
     return run;
 }
@@ -756,10 +757,17 @@ const tools = [
                     // `idleSince` is set, the telemetry hook drops this session's tool calls
                     // rather than attributing them to the run.
                     if (sessionAdded || existing.idleSince || isHandoffPending(existing)) {
-                        clearHandoff(existing);
-                        clearIdle(existing);
-                        existing.updatedAt = new Date().toISOString();
-                        await writeRun(baseDir, existing);
+                        // Re-read under the lock: the copy listRuns returned may already be
+                        // behind a hook that folded telemetry into it since.
+                        await withRunLock(existing.id, async () => {
+                            const fresh = (await readRun(baseDir, existing.id)) || existing;
+                            addSessionId(fresh, sessionId);
+                            clearHandoff(fresh);
+                            clearIdle(fresh);
+                            fresh.updatedAt = new Date().toISOString();
+                            await writeRun(baseDir, fresh);
+                            Object.assign(existing, fresh);
+                        });
                     }
                     await writeActive({ runId: existing.id, stage: null, updatedAt: new Date().toISOString() });
                     bus.emit("update");

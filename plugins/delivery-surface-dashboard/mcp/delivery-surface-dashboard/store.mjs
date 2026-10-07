@@ -93,25 +93,46 @@ export async function withRunFileLock(baseDir, runId, fn) {
     }
 }
 
-export async function readRun(baseDir, runId) {
-    try {
-        const raw = await readFile(fileFor(baseDir, runId), "utf8");
-        return JSON.parse(raw);
-    } catch (err) {
-        if (err && err.code === "ENOENT") return null;
-        throw err;
+// While a rename replaces the record, Windows can answer a reader ENOENT or a sharing
+// violation for a moment. Retry those a few times before believing them. ENOENT is retried
+// on Windows only: elsewhere the rename is atomic, so a missing run stays an immediate null.
+const READ_BUSY = new Set(["EPERM", "EACCES", "EBUSY"]);
+const READ_RETRY_MS = [5, 10, 20, 20];
+
+async function readRunFile(file) {
+    for (let attempt = 0; ; attempt++) {
+        try {
+            return JSON.parse(await readFile(file, "utf8"));
+        } catch (err) {
+            const code = err && err.code;
+            const transient = READ_BUSY.has(code) || (code === "ENOENT" && process.platform === "win32");
+            if (!transient || attempt >= READ_RETRY_MS.length) {
+                if (code === "ENOENT") return null;
+                throw err;
+            }
+            await sleep(READ_RETRY_MS[attempt]);
+        }
     }
+}
+
+export async function readRun(baseDir, runId) {
+    return readRunFile(fileFor(baseDir, runId));
 }
 
 export async function listRuns(baseDir) {
     await ensureDir(baseDir);
     const entries = await readdir(baseDir).catch(() => []);
-    const runs = [];
+    // A run mid-rename may show only as its temp or lock file, so those name it too.
+    const files = new Set();
     for (const entry of entries) {
-        if (!entry.endsWith(".json")) continue;
+        const match = /^(.+\.json)(\.(.+\.)?(tmp|lock))?$/.exec(entry);
+        if (match) files.add(match[1]);
+    }
+    const runs = [];
+    for (const file of files) {
         try {
-            const raw = await readFile(path.join(baseDir, entry), "utf8");
-            runs.push(JSON.parse(raw));
+            const run = await readRunFile(path.join(baseDir, file));
+            if (run) runs.push(run);
         } catch {
             // Skip unreadable/corrupt run files rather than failing the whole list.
         }

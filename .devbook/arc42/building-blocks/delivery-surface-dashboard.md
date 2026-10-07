@@ -219,6 +219,7 @@ result.
 | The declared tool surface is exactly the contract's eleven names and nothing more | server start | untested |
 | The record survives a session restart | store | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/handoff-test.mjs` |
 | The record is always whole JSON, however its writers overlap: each write lands in a temp file of its own and is renamed over the record, and every read-modify-write, the server's and the telemetry hook's alike, holds the record's cross-process lock | `writeRun()`, `withRunFileLock()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/atomic-write-test.mjs` |
+| A run that exists is always found: a read that meets the record mid-rename, as ENOENT or a sharing violation, retries a few times before answering, and `listRuns()` also names a run seen only as its temp or lock file, so a reattach never opens a duplicate. ENOENT is retried on Windows only; elsewhere the rename is atomic and a missing run is an immediate null | `readRun()`, `listRuns()` | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/atomic-write-test.mjs` |
 
 The record owns two entities and two values besides [Telemetry](#telemetry) and the
 [Handoff Marker](#handoff-marker):

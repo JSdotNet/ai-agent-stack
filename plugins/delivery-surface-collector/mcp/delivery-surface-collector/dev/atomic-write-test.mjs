@@ -1,10 +1,8 @@
-// Check that a run file is always whole JSON, however its writers overlap.
+// Check that a run file is always whole JSON and always found, however its writes overlap.
 //
-// The MCP server and the telemetry hook are separate processes, and the hook runs once per
-// tool event, so parallel tool calls give several hook processes at once. A run file once
-// came back as a complete object followed by the tail of a longer, older one: two writers had
-// truncated and filled the same temp file from offset 0, and the rename published the mix.
-// This drives writeRun and withRunFileLock from child processes the way those writers do.
+// Only the MCP server writes a collector run, but its tool calls overlap, and on Windows a
+// rename over the record can hide it from a reader for a moment. This drives writeRun from
+// child processes so the writes overlap for real.
 import { spawn } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -17,25 +15,13 @@ const SELF = fileURLToPath(import.meta.url);
 
 // A long and a short body for the same run, so an overlap that mixes them leaves a tail.
 function body(i, long) {
-    return { id: RUN_ID, writer: i, padding: long ? "x".repeat(20000) : "", counter: 0 };
+    return { id: RUN_ID, writer: i, padding: long ? "x".repeat(20000) : "" };
 }
 
-// Child modes: `write <dir> <i> <n>` rewrites the run n times, alternating long and short;
-// `increment <dir> <n>` adds one to the counter n times under the cross-process lock.
+// Child mode: `write <dir> <i> <n>` rewrites the run n times, alternating long and short.
 if (process.argv[2] === "write") {
     const [, , , dir, i, n] = process.argv;
     for (let k = 0; k < Number(n); k++) await store.writeRun(dir, body(Number(i), k % 2 === 0));
-    process.exit(0);
-}
-if (process.argv[2] === "increment") {
-    const [, , , dir, n] = process.argv;
-    for (let k = 0; k < Number(n); k++) {
-        await store.withRunFileLock(dir, RUN_ID, async () => {
-            const run = await store.readRun(dir, RUN_ID);
-            run.counter += 1;
-            await store.writeRun(dir, run);
-        });
-    }
     process.exit(0);
 }
 
@@ -69,18 +55,18 @@ const runFile = (dir) => path.join(dir, `${RUN_ID}.json`);
 
 console.log("— a shorter rewrite —");
 {
-    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "collector-atomic-"));
     await store.writeRun(dir, body(0, true));
     await store.writeRun(dir, body(1, false));
     check("the file parses after a shorter rewrite", parses(runFile(dir)), true);
     check("it holds the shorter body", (await store.readRun(dir, RUN_ID)).writer, 1);
-    check("no temp or lock file is left beside it", leftovers(dir).join(","), "");
+    check("no temp file is left beside it", leftovers(dir).join(","), "");
     rmSync(dir, { recursive: true, force: true });
 }
 
 console.log("\n— overlapping writers —");
 {
-    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "collector-atomic-"));
     await store.writeRun(dir, body(0, true));
     let torn = 0;
     let reads = 0;
@@ -101,7 +87,7 @@ console.log("\n— overlapping writers —");
     if (errors.length) console.log(errors.map((r) => (r.stderr.split("\n").find((l) => /Error/.test(l)) || r.stderr).trim()).join("\n"));
     check(`no read of ${reads} saw a torn file`, torn, 0);
     check("the file parses once they are done", parses(runFile(dir)), true);
-    check("no temp or lock file is left beside it", leftovers(dir).join(","), "");
+    check("no temp file is left beside it", leftovers(dir).join(","), "");
     rmSync(dir, { recursive: true, force: true });
 }
 
@@ -109,7 +95,7 @@ console.log("\n— a reader during overlapping writers —");
 {
     // On Windows a rename over the record can briefly hide it from a reader as ENOENT or
     // EPERM. The miss is rare — about one round in thirty — so this runs several rounds.
-    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "collector-atomic-"));
     await store.writeRun(dir, body(0, false));
     let missing = 0;
     let unlisted = 0;
@@ -138,7 +124,7 @@ console.log("\n— a record missing for a moment —");
 {
     // The rename window, made deterministic: the record lands a few milliseconds after the
     // read starts. Windows retries ENOENT and finds it; elsewhere a missing run is null at once.
-    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "collector-atomic-"));
     const lands = new Promise((r) => setTimeout(r, 8)).then(() => store.writeRun(dir, body(0, false)));
     const read = await store.readRun(dir, RUN_ID);
     await lands;
@@ -149,21 +135,6 @@ console.log("\n— a record missing for a moment —");
     await store.writeRun(dir, { ...body(0, false), id: "run-mid-rename" });
     const listed = (await lister).some((r) => r.id === "run-mid-rename");
     check("listRuns finds a run seen only as its temp file", listed, process.platform === "win32");
-    rmSync(dir, { recursive: true, force: true });
-}
-
-console.log("\n— overlapping read-modify-write —");
-{
-    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
-    await store.writeRun(dir, body(0, false));
-    if (typeof store.withRunFileLock !== "function") {
-        check("store exports withRunFileLock", typeof store.withRunFileLock, "function");
-    } else {
-        const results = await Promise.all([1, 2, 3, 4].map(() => child(["increment", dir, "25"])));
-        check("every writer finished without an error", results.filter((r) => r.code !== 0).length, 0);
-        check("no increment is lost across processes", (await store.readRun(dir, RUN_ID)).counter, 100);
-        check("no temp or lock file is left beside it", leftovers(dir).join(","), "");
-    }
     rmSync(dir, { recursive: true, force: true });
 }
 

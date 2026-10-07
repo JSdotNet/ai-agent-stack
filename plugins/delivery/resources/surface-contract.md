@@ -116,21 +116,26 @@ that surface's own `runId`:
 - **`runContext.phases` is the resolved map, one entry per stage.** Keyed
   `phases.<flow>.<phase-skill>[:<qualifier>]` — `phases["flow-code"]["phase-implement"]` —
   each entry carries the fields resolution produced, never the raw config: `mode` (`inline`,
-  `fork`, `delegate`, or `gate`), `agent` (the id the `Agent` call names, `null` inline),
-  `skill`, `model` and `effort` (an alias, `null` for the session's), `mcp`, `before`,
+  `fork`, `delegate`, or `gate`), `agent` (the agent whose instructions the phase follows —
+  the named one, or `general-purpose`; `null` inline), `runner` (`delivery:runner-<effort>`
+  when an effort runner carries that agent's body, else absent), `skill`, `model` and
+  `effort` (an alias, `null` for the session's), `mcp` (`null` for none), `before`,
   `after`, `app` for `phase-verify`, and `fallback` — the configured id that did not resolve,
-  else `null`. Personal Validation and the ready check are recorded too, as `gate` and
-  `inline`. A viewer joins a stage to its entry by name, so stage names stay the phase
-  skills' titles.
+  else `null`. Every qualified entry the flow can reach is recorded; the stage's `execution`
+  names the `qualifier` it ran under. Personal Validation and the ready check are recorded
+  too, as `gate` and `inline`. A viewer joins a stage to its entry by name, so stage names
+  stay the phase skills' titles.
 - **Before each stage**, `update_stage` with `status: "in_progress"`; **after each stage**,
   again with `done`, `blocked`, or `skipped` and an `output` summary. The stage's completion
   count increments on every transition to `done`, so repeated passes after requested changes
   stay visible.
-- **Say how the stage actually ran** with `execution` on the `in_progress` call: the same
-  fields as its `phases` entry, as observed — a fallback, a host with no effort runner, or a
-  slice run under `phase-implement:<area>` differs from what was resolved, and `runs` lists
-  one `{ agent, model, effort, slice }` per sub-agent call when a stage made several. A
-  surface stores it verbatim on the stage; one that ignores it stays conformant.
+- **Say how the stage actually ran** with `execution` on the `in_progress` call, and again
+  on the closing call once `runs` is known: the same fields as its `phases` entry, as
+  observed — a fallback, a host with no effort runner, or a slice run under
+  `phase-implement:<area>` differs from what was resolved — plus `qualifier` for a qualified
+  phase and `runs`, one `{ agent, model, effort, slice }` per sub-agent call when a stage made
+  several. A surface stores the latest verbatim on the stage; one that ignores it stays
+  conformant.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
   surface renders direct buttons instead of making the user copy commands.
 - **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends

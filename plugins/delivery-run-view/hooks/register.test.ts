@@ -191,3 +191,36 @@ test('names a phase by its bound worker, labels the revise round, and reads the 
   expect([buildTest!.agent, buildTest!.isModeRecorded, buildTest!.configured]).toEqual(['general-purpose', false, null])
   expect([implementation!.agent, implementation!.mismatch]).toEqual(['general-purpose', ['agent']])
 })
+
+test('reads an effort runner as the agent it carries, and a qualified phase by the qualifier it ran under', async ($, on) => {
+  const runs = storedRuns(on)
+  machine(on, ROOT, {
+    [at('run-r.json')]: JSON.stringify({
+      id: 'run-r',
+      skillId: 'flow-spec',
+      updatedAt: '2026-10-07T10:00:00.000Z',
+      sessionIds: [SESSION],
+      runContext: {
+        phases: {
+          'flow-spec': {
+            'phase-scope': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-xhigh', model: 'opus', effort: 'xhigh' },
+            'phase-drafting:arc42': { mode: 'delegate', agent: 'architecture:architect' },
+            'phase-drafting:design': { mode: 'delegate', agent: 'ux-design:ux-designer' },
+          },
+        },
+      },
+      stages: [
+        { name: 'Scope', status: 'done' },
+        { name: 'Drafting', status: 'done', execution: { qualifier: 'design' } },
+      ],
+      insights: [agentRan(0, 'delivery:runner-xhigh', 9000), agentRan(1, 'ux-design:ux-designer', 9000)],
+    }),
+  })
+
+  await start($, ROOT)
+  const [run] = runs()
+  const [scope, drafting] = run!.stages
+
+  expect([scope!.agent, scope!.model, scope!.effort, scope!.mismatch]).toEqual(['general-purpose', 'opus 5.5', 'xhigh', []])
+  expect([drafting!.agent, drafting!.configured?.agent, drafting!.mismatch]).toEqual(['ux-design:ux-designer', 'ux-design:ux-designer', []])
+})

@@ -110,10 +110,15 @@ const phaseKeys = (name: string) => {
 const names = (value: unknown): string[] =>
   Array.isArray(value) ? value.map(v => (typeof v === 'string' ? v : String((v as any)?.skill ?? (v as any)?.id ?? ''))).filter(Boolean) : []
 
-/** The `runContext.phases` entry for a stage: exact key first, then a qualified `phase-<id>:<q>` entry when it is the only one. */
-function resolvedEntry(raw: any, name: string): any {
+/**
+ * The `runContext.phases` entry for a stage: the qualifier it ran under first, then the bare
+ * key, then a qualified `phase-<id>:<q>` entry when it is the only one.
+ */
+function resolvedEntry(raw: any, name: string, qualifier: unknown): any {
   const flowMap = raw.runContext?.phases?.[raw.skillId] ?? raw.runContext?.phases ?? {}
   const keys = phaseKeys(name)
+  const ranUnder = typeof qualifier === 'string' ? flowMap?.[`${keys[3]}:${qualifier}`] : undefined
+  if (ranUnder) return ranUnder
   const exact = keys.map(k => flowMap?.[k]).find(Boolean)
   if (exact) return exact
   const qualified = Object.keys(flowMap ?? {}).filter(k => k.startsWith(`${keys[3]}:`))
@@ -121,10 +126,20 @@ function resolvedEntry(raw: any, name: string): any {
   return qualified.length === 1 && only ? flowMap[only] : null
 }
 
-/** The worker that did the phase's work: the bound agent when one ran, else the longest-running, so a helper such as a log monitor never names the phase. */
+/** An effort runner carries the bound agent's body at one effort: `delivery:runner-<effort>`. */
+const RUNNER = /^delivery:runner-([a-z]+)$/
+
+/**
+ * The worker that did the phase's work: the bound agent when it ran, or an effort runner
+ * carrying it, else the longest-running, so a log monitor beside the agent does not name the phase.
+ */
 const boundWorker = (workers: FlowWorker[], agent: string | null | undefined) =>
   workers.find(w => agent && w.name === agent) ??
+  workers.find(w => RUNNER.test(w.name)) ??
   [...workers].sort((a, b) => (b.durationMs ?? 0) - (a.durationMs ?? 0))[0]
+
+/** The model family, so an alias (`opus`) and the id telemetry records (`opus 5.5`) compare equal. */
+const family = (model: string) => model.split(/[\s[]/)[0]
 
 /**
  * How a stage ran. Read from the run when it says — a stage's `execution`, what actually ran,
@@ -134,8 +149,8 @@ const boundWorker = (workers: FlowWorker[], agent: string | null | undefined) =>
  */
 function stageOf(raw: any, s: any, index: number): FlowStage {
   const name = String(s.name ?? '?')
-  const resolved = resolvedEntry(raw, name)
   const ran = s.execution && typeof s.execution === 'object' ? s.execution : {}
+  const resolved = resolvedEntry(raw, name, ran.qualifier)
   const execution = { ...(resolved ?? {}), ...ran }
   const isGate = /personal validation/i.test(name) || execution.mode === 'gate'
 
@@ -170,16 +185,19 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
   // What ran comes from the stage's own record, then from the sub-agents observed, and only
   // with neither from what was resolved — so a configured agent that never ran is not shown as if it had.
   const worker = mode === 'delegate' || mode === 'fork' ? boundWorker(workers, ran.agent ?? resolved?.agent) : undefined
-  const agent = ran.agent ?? worker?.name ?? resolved?.agent ?? null
+  const runnerEffort = worker ? RUNNER.exec(worker.name)?.[1] : undefined
+  const workerAgent = runnerEffort ? (resolved?.agent ?? 'general-purpose') : worker?.name
+  const agent = ran.agent ?? workerAgent ?? resolved?.agent ?? null
   const model = shortModel(ran.model) || worker?.model || shortModel(resolved?.model) || null
+  const effort = ran.effort ?? runnerEffort ?? resolved?.effort ?? null
   const configured = resolved
     ? { agent: resolved.agent ?? null, model: shortModel(resolved.model) || null, effort: resolved.effort ?? null }
     : null
   const mismatch: string[] = []
   if (configured && !isGate && tone(String(s.status ?? '')) !== 'pending') {
     if (configured.agent && agent !== configured.agent) mismatch.push('agent')
-    if (configured.model && model && !model.startsWith(configured.model)) mismatch.push('model')
-    if (configured.effort && ran.effort && ran.effort !== configured.effort) mismatch.push('effort')
+    if (configured.model && model && family(model) !== family(configured.model)) mismatch.push('model')
+    if (configured.effort && (ran.effort ?? runnerEffort) && effort !== configured.effort) mismatch.push('effort')
   }
 
   return {
@@ -189,7 +207,7 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
     isModeRecorded: recorded !== undefined || isGate,
     agent,
     model,
-    effort: execution.effort ?? null,
+    effort,
     skill: execution.skill ?? null,
     mcp: execution.mcp === null ? [] : execution.mcp === undefined ? null : names(execution.mcp),
     before: names(execution.before),
@@ -275,11 +293,11 @@ const DEMO_STAGES: DemoStage[] = [
 const DEMO_PHASES: Record<string, { mode: FlowMode; [field: string]: unknown }> = {
   'phase-update-base': { mode: 'inline', skill: 'delivery:phase-update-base', before: ['devbook:validate'] },
   'phase-scope': { mode: 'delegate', agent: 'architecture:architect', skill: 'delivery:phase-scope', model: 'opus', mcp: ['backlog'] },
-  'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
+  'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', runner: 'delivery:runner-high', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
   'phase-review': { mode: 'fork', skill: 'delivery:phase-review' },
-  'phase-build-test': { mode: 'delegate', agent: 'general-purpose', skill: 'delivery:phase-build-test', model: 'sonnet', effort: 'low', mcp: [] },
+  'phase-build-test': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-low', skill: 'delivery:phase-build-test', model: 'sonnet', effort: 'low', mcp: [] },
   'phase-verify': { mode: 'delegate', agent: 'qa:qa', skill: 'delivery:phase-verify', mcp: ['aspire', 'playwright'] },
-  'phase-spec-check': { mode: 'delegate', agent: 'general-purpose', skill: 'devbook:verify-change', model: 'opus', effort: 'xhigh' },
+  'phase-spec-check': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-xhigh', skill: 'devbook:verify-change', model: 'opus', effort: 'xhigh' },
   'phase-ready': { mode: 'inline', skill: 'delivery:phase-ready' },
   'phase-personal-validation': { mode: 'gate', skill: 'delivery:phase-personal-validation' },
   'phase-create-pr': { mode: 'inline', skill: 'delivery:phase-create-pr', mcp: ['backlog'] },
@@ -293,11 +311,11 @@ type DemoWorker = [name: string, model: string, durationMs: number, tokens: numb
 const DEMO_WORKERS: Record<string, DemoWorker[]> = {
   Scope: [['general-purpose', 'claude-opus-5-5', 141000, 52000, 33]],
   Implement: [
-    ['csharp-coding:coding', 'claude-opus-5-5', 192000, 81000, 41],
-    ['csharp-coding:coding', 'claude-opus-5-5', 236000, 64000, 37],
+    ['delivery:runner-high', 'claude-opus-5-5', 192000, 81000, 41],
+    ['delivery:runner-high', 'claude-opus-5-5', 236000, 64000, 37],
   ],
   Review: [['general-purpose', 'claude-opus-5-5', 88000, 30000, 19]],
-  'Build & Test': [['general-purpose', 'claude-sonnet-5-5', 263000, 21000, 12]],
+  'Build & Test': [['delivery:runner-low', 'claude-sonnet-5-5', 263000, 21000, 12]],
   Verify: [
     ['qa:qa-monitor', 'claude-haiku-4-5', 398000, 18000, 22],
     ['qa:qa', 'claude-sonnet-5-5', 411000, 122000, 96],

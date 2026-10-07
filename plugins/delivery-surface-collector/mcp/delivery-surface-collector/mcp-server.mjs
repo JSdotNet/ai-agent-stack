@@ -523,7 +523,7 @@ const tools = [
                     type: "object",
                     additionalProperties: true,
                     description:
-                        "How this stage actually ran, passed on its in_progress call: mode (inline, fork, delegate, gate), agent, skill, model, effort, mcp, fallback, and runs — one { agent, model, effort, slice } per sub-agent call. Stored verbatim on the stage, replacing what an earlier call stored.",
+                        "How this stage actually ran, passed on its in_progress call and again when it closes: mode (inline, fork, delegate, gate), agent, runner, skill, model, effort, mcp, fallback, qualifier, and runs — one { agent, model, effort, slice } per sub-agent call. Stored verbatim on the stage, replacing what an earlier call stored.",
                 },
                 monitoring: {
                     type: "object",

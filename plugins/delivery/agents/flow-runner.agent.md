@@ -76,7 +76,8 @@ those contracts; it does not re-decide them per skill.
    An id that does not resolve falls back to the built-in procedure, named once in the run
    summary. Persist the resolved phases as `runContext.phases` in the shape
    `surface-contract.md` states, with the tracker, the policy values, and the gate list, in one
-   `set_run_context` call, so a resumed session reads them back instead of resolving again. Then check whether the repository has a `run` recipe at
+   `set_run_context` call, so a resumed session reads them back instead of resolving again.
+   Then check whether the repository has a `run` recipe at
    `.claude/skills/run-<name>/SKILL.md` — one per unit in a monorepo. When it does, persist the
    path and name it to `phase-verify` as the repository's declared runtime facts, unless its
    `app` option names another provider or `null`. Do not read it yourself. A missing or

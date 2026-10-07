@@ -61,7 +61,7 @@ over it, and inferred where the run records neither. Where the two differ the ro
 | --- | --- | --- |
 | Nothing is written outside the plugin's own `$.state`; `/flows-demo` writes no run file | `register.tsx` | `claude plugin validate` lists the module's writes |
 | An inferred mode is drawn dimmed with a `?`, never as if recorded | `register.tsx`, `badge` | untested |
-| A phase is named by its configured agent when it ran, else by its longest-running sub-agent, never by a helper | `register.tsx`, `boundWorker` | `hooks/register.test.ts` |
+| A phase is named by its configured agent when it ran — through an effort runner too — else by its longest-running sub-agent | `register.tsx`, `boundWorker` | `hooks/register.test.ts` |
 | A sub-agent that ran under the gate is shown as a revise round's | `register.tsx`, `stageOf` | `hooks/register.test.ts` |
 | What ran is compared with what was resolved, field by field, and a difference or a fallback is marked | `register.tsx`, `stageOf` | `hooks/register.test.ts` |
 | A worktree with no runs of its own shows the main checkout's | `register.tsx`, `loadRuns` | `hooks/register.test.ts` |

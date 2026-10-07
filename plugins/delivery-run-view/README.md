@@ -64,7 +64,8 @@ its entry by its title's slug, `Build & Test` to `phase-build-test`, `Create Pul
 them.
 
 The agent is the recorded one, else the sub-agent that did the phase's work: the configured
-agent when it ran, else the longest-running, so a helper such as `qa:qa-monitor` never names
+agent when it ran or a `delivery:runner-<effort>` carried it, else the longest-running, so a
+helper such as `qa:qa-monitor` beside the agent never names
 the phase. `≠` marks a configured agent that never ran, a model or effort other than the
 configured one, and a `fallback` — a configured id that did not resolve.
 

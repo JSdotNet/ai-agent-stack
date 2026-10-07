@@ -177,6 +177,7 @@ outlives the session — which is why lifecycle and export are answered here and
 | Idleness is derived on read and never stored | `get_run()`, `list_runs()` | untested |
 | The declared tool surface is exactly the two answered groups' names, and the render names are absent | server start | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/collector-test.mjs` |
 | The record survives a session restart and never appears in `git status` | store | untested |
+| The record and `active.json` are always whole JSON, however the servers of the sessions sharing a checkout overlap: each write lands in a temp file of its own and is renamed over the target, and every read-modify-write of a run, a reattach included, holds the run's cross-process lock | `writeRun()`, `writeActive()`, `withRunFileLock()` | `unit:node:plugins/delivery-surface-collector/mcp/delivery-surface-collector/dev/atomic-write-test.mjs` |
 
 The record owns two entities besides the [Handoff Marker](#handoff-marker):
 

@@ -567,6 +567,8 @@ Payload:
 - `stage`, `status`: which phase, and where it now stands
 - `output`, `links`: what it produced, and where the artifacts are
 - `qaScenarios`: scenarios with their status and evidence paths, where `verify` ran
+- `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
+  entry per sub-agent call — beside what the run resolved for it
 - `decision`: the gate outcome, where a gate was attached to this phase
 
 Consumers: every surface implementation. The dashboard renders it live, and the collector keeps

@@ -383,7 +383,7 @@ sequenceDiagram
     end
     C->>S: record_prompt, set_run_context
     loop each stage
-        C->>S: update_stage(status, output, links, qaScenarios, decision)
+        C->>S: update_stage(status, output, links, qaScenarios, execution, decision)
         S->>F: folded in, and a repeat is recorded as a repeat
     end
     H-->>S: tool events

@@ -2,7 +2,7 @@
 
 The unattended lane, stacked on `delivery`. Everything here runs with nobody watching: eighteen
 `schedule-*` entry points that pick their own input and run a flow, a review, a sweep, or a
-report, fifteen trigger files that fire one on a cadence, and four skills that put those
+report, sixteen trigger files that fire one on a cadence, and four skills that put those
 triggers in the host's scheduler and read them back.
 
 One capability, two host names. Claude Code calls it **Routines**; the GitHub Copilot app

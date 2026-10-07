@@ -9,11 +9,12 @@
 // `active.json` exists for the same reason it does in a surface with telemetry: the run a
 // resumed session should pick up is a fact about this project, not about a conversation.
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
+import { writeFileAtomic } from "./store.mjs";
 
 // Claude Code sets CLAUDE_PROJECT_DIR for hooks; MCP servers start in the project
 // directory. Both resolve to the same tree.
@@ -74,5 +75,5 @@ export async function readActive() {
 
 export async function writeActive(active) {
     await mkdir(stateDir(), { recursive: true });
-    await writeFile(activeFile(), JSON.stringify(active, null, 2), "utf8");
+    await writeFileAtomic(activeFile(), JSON.stringify(active, null, 2));
 }

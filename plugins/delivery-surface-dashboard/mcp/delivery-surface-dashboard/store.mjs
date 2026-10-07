@@ -24,8 +24,9 @@ export async function ensureDir(baseDir) {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Windows refuses a rename over a file another process has open, for as long as it is open.
-const RENAME_BUSY = new Set(["EPERM", "EACCES", "EBUSY"]);
+// Windows refuses a rename over a file another process has open, for as long as it is open,
+// and an exclusive create of a file another process has deleted but not yet closed.
+const BUSY = new Set(["EPERM", "EACCES", "EBUSY"]);
 
 // Write to a temp file of this write's own, in the same folder, then rename it over the
 // target. The temp name is unique per write: a shared one let two writers truncate and fill
@@ -45,7 +46,7 @@ export async function writeFileAtomic(file, text) {
             await rename(tmp, file);
             return;
         } catch (err) {
-            if (!RENAME_BUSY.has(err && err.code) || attempt >= 40) {
+            if (!BUSY.has(err && err.code) || attempt >= 40) {
                 await rm(tmp, { force: true });
                 throw err;
             }
@@ -70,6 +71,7 @@ const LOCK_STALE_MS = 15000;
 export async function withRunFileLock(baseDir, runId, fn) {
     await ensureDir(baseDir);
     const lock = `${fileFor(baseDir, runId)}.lock`;
+    const started = Date.now();
     for (let attempt = 0; ; attempt++) {
         try {
             const handle = await open(lock, "wx");
@@ -77,7 +79,8 @@ export async function withRunFileLock(baseDir, runId, fn) {
             await handle.close();
             break;
         } catch (err) {
-            if (!err || err.code !== "EEXIST") throw err;
+            const busy = err && BUSY.has(err.code) && Date.now() - started < LOCK_STALE_MS;
+            if (!err || (err.code !== "EEXIST" && !busy)) throw err;
         }
         try {
             if (Date.now() - (await stat(lock)).mtimeMs > LOCK_STALE_MS) await rm(lock, { force: true });
@@ -96,7 +99,6 @@ export async function withRunFileLock(baseDir, runId, fn) {
 // While a rename replaces the record, Windows can answer a reader ENOENT or a sharing
 // violation for a moment. Retry those a few times before believing them. ENOENT is retried
 // on Windows only: elsewhere the rename is atomic, so a missing run stays an immediate null.
-const READ_BUSY = new Set(["EPERM", "EACCES", "EBUSY"]);
 const READ_RETRY_MS = [5, 10, 20, 20];
 
 async function readRunFile(file) {
@@ -105,7 +107,7 @@ async function readRunFile(file) {
             return JSON.parse(await readFile(file, "utf8"));
         } catch (err) {
             const code = err && err.code;
-            const transient = READ_BUSY.has(code) || (code === "ENOENT" && process.platform === "win32");
+            const transient = BUSY.has(code) || (code === "ENOENT" && process.platform === "win32");
             if (!transient || attempt >= READ_RETRY_MS.length) {
                 if (code === "ENOENT") return null;
                 throw err;

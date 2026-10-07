@@ -201,6 +201,7 @@ classDiagram
         +phase
         +StageStatus status
         +output
+        +execution
         +repeats
     }
     class Gate {
@@ -318,13 +319,16 @@ another block.
 | Personal Validation is reached before `create-pr` and never inside it | gate evaluation | untested |
 | A chore contributes side effects and a report and never rewrites a stage's result | chore invocation | untested |
 | A stage repeated after a revise decision is recorded as repeated, not as one long stage | `update_stage()` | untested |
+| A revise round reports on the stage of the phase it reopens, never on Personal Validation | the flow-runner | untested |
+| A run records each phase as resolved, in `runContext.phases`, and each stage as it actually ran, in its `execution` | `set_run_context()`, `update_stage()` | untested |
 | A run whose surface is unbound still produces its file artifacts and says so once | all stages | untested |
 
 A run owns one entity, one value object, and one enum.
 
 **Stage** (also called: step) is one phase as this run executed it, with identity inside the
-run: the phase id, a status, the output it produced, the links and evidence it gathered, and
-how many times it finished. A stage is a prompt rather than a program, such as "apply TDD" or
+run: the phase id, a status, the output it produced, the links and evidence it gathered, how
+it actually ran — mode, agent, skill, model, and effort, beside what the run resolved for it —
+and how many times it finished. A stage is a prompt rather than a program, such as "apply TDD" or
 "escalate instead of continuing when the request needs a new architectural decision". That is
 why configuration can choose among phases and never define one. The repeat count is not
 bookkeeping. A stage that ran again after a revise decision reads as two attempts rather than

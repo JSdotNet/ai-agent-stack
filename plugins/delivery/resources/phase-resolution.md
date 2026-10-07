@@ -7,9 +7,10 @@ description: How the flow-runner turns a phase's entry in the phases map into th
 
 The flow-runner resolves every phase once, before `start_run`, from the effective
 configuration `tools/stack-config/check.mjs --print` returns — the overlays already merged,
-field by field, the overlay winning. Record the result with `set_run_context` (`runContext`),
-so a resumed session reads it back instead of resolving again. The map's shape is **Phases**
-in `engine-contract.md`.
+field by field, the overlay winning. Record the result with `set_run_context` as
+`runContext.phases`, one resolved entry per stage in the shape `surface-contract.md` states,
+so a resumed session reads it back instead of resolving again and a viewer shows how each
+phase runs. The configured map's shape is **Phases** in `engine-contract.md`.
 
 ## Lookup order
 

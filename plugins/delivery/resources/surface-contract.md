@@ -109,14 +109,28 @@ that surface's own `runId`:
   ignores it.
 - **Persist gating state** with `set_run_context`: the `changeKind` as soon as it is
   determined, the `approval` decision recorded at every gate, and, as its `runContext` object,
-  what the runner resolved — the model, each phase's agent, skill, and MCP servers, the
-  tracker, policy values, gate list, and `origins`, the work items the run started from —
-  so a resumed session reads it back from `get_run` instead of resolving again. A surface stores the object verbatim and merges a
+  what the runner resolved — the model, `phases`, the tracker, policy values, gate list, and
+  `origins`, the work items the run started from — so a resumed session reads it back from
+  `get_run` instead of resolving again. A surface stores the object verbatim and merges a
   later call over it key by key; a caller may pass only what changed.
+- **`runContext.phases` is the resolved map, one entry per stage.** Keyed
+  `phases.<flow>.<phase-skill>[:<qualifier>]` — `phases["flow-code"]["phase-implement"]` —
+  each entry carries the fields resolution produced, never the raw config: `mode` (`inline`,
+  `fork`, `delegate`, or `gate`), `agent` (the id the `Agent` call names, `null` inline),
+  `skill`, `model` and `effort` (an alias, `null` for the session's), `mcp`, `before`,
+  `after`, `app` for `phase-verify`, and `fallback` — the configured id that did not resolve,
+  else `null`. Personal Validation and the ready check are recorded too, as `gate` and
+  `inline`. A viewer joins a stage to its entry by name, so stage names stay the phase
+  skills' titles.
 - **Before each stage**, `update_stage` with `status: "in_progress"`; **after each stage**,
   again with `done`, `blocked`, or `skipped` and an `output` summary. The stage's completion
   count increments on every transition to `done`, so repeated passes after requested changes
   stay visible.
+- **Say how the stage actually ran** with `execution` on the `in_progress` call: the same
+  fields as its `phases` entry, as observed — a fallback, a host with no effort runner, or a
+  slice run under `phase-implement:<area>` differs from what was resolved, and `runs` lists
+  one `{ agent, model, effort, slice }` per sub-agent call when a stage made several. A
+  surface stores it verbatim on the stage; one that ignores it stays conformant.
 - **For a gate stage**, pass `links` for the started application and any review target, so the
   surface renders direct buttons instead of making the user copy commands.
 - **For Create Pull Request**, pass the pull request's URL in `links` when the stage ends
@@ -133,9 +147,10 @@ that surface's own `runId`:
 - **Keep the gate and `deliver` as separate stages.** Gate `deliver` on the approval recorded
   at Personal Validation, mark it `skipped` when there is no change set, and record all
   delivery-time changes under its stage output.
-- **On a `revise` outcome**, record the decision, move the attached point's stage back to
-  `in_progress`, and continue the same run through the repeated phases instead of starting a
-  new one. Record `approval: "pending"` before handing back.
+- **On a `revise` outcome**, record the decision, move the stage of the phase the run
+  reopens back to `in_progress` — `implement` for a code change, never the gate's own stage —
+  and continue the same run through the repeated phases, each reported on its own stage,
+  instead of starting a new one. Record `approval: "pending"` before handing back.
 - **Mark Summary** `in_progress` then `done`, and call `finish_run` with the final status.
 - **A sync sweep passes its verdicts.** `finish_run` takes an optional `verdicts`: the
   `units` rows of the run's `devbook-sync-report` block — per unit its `unit`, `kind`, `sync`,

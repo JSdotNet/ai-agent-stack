@@ -1,10 +1,15 @@
 import type { EngineInterface, Register } from 'claude-code'
 
-import type { FlowMode, FlowRun, FlowStage, FlowWorker } from '../types'
+import type { FlowLink, FlowMode, FlowRun, FlowStage, FlowWorker } from '../types'
 
 const PANE = 'delivery-run-view'
 const POLL_MS = 3000
 const MAX_RUNS = 8
+/** Another checkout's run alerts only while it moved in the last day, so a parked run does not ring forever. */
+const FRESH_MS = 24 * 60 * 60 * 1000
+const MAX_OTHER_RUNS = 40
+/** The short clip a gate plays, shipped beside the module. */
+const GATE_SOUND = 'sounds/gate.wav'
 
 /** The surfaces that write run files under the profile, in the shape the dashboard defines. */
 const SURFACES = ['delivery-surface-dashboard', 'backlog']
@@ -13,6 +18,7 @@ const RUNS = { plugin: 'delivery-run-view', key: 'runs' } as const
 const SELECTED = { plugin: 'delivery-run-view', key: 'selected' } as const
 /** The stage whose detail is open; -1 follows the run (the active stage, else the last one reached). */
 const FOCUS = { plugin: 'delivery-run-view', key: 'focus' } as const
+const SEEN = { plugin: 'delivery-run-view', key: 'seen' } as const
 
 // ── Vocabulary ───────────────────────────────────────────────────────────────
 
@@ -45,6 +51,17 @@ const MODE_COLOR: Record<FlowMode, string> = { inline: 'gray', delegate: 'cyan',
 
 const isQuiet = (t: Tone) => t === 'pending' || t === 'skipped'
 
+/**
+ * A stage's tone with the gate read in: no surface records `awaiting_approval`, so a gate stage
+ * in progress is the run waiting on its person.
+ */
+const stageTone = (s: FlowStage): Tone => {
+  const t = tone(s.status)
+  return s.mode === 'gate' && t === 'active' ? 'waiting' : t
+}
+
+const isPersonalValidation = (s: FlowStage) => /personal validation/i.test(s.name)
+
 const duration = (ms: number | null | undefined) => {
   if (!ms || ms <= 0) return ''
   const seconds = Math.round(ms / 1000)
@@ -64,32 +81,59 @@ const shortModel = (model: string | null | undefined) =>
 const slugOf = (root: string) =>
   (root.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || 'project').replace(/[^a-zA-Z0-9._-]/g, '-')
 
-/** The state folders the surfaces keep for a checkout: `<slug>-<8 hex>`, the hash of the path. */
-async function stateDirs($: EngineInterface, slug: string): Promise<string[]> {
+/** The state folder the surfaces keep for a checkout: `<slug>-<8 hex>`, the hash of the path. */
+const HASHED = /^(.+)-[0-9a-f]{8}$/
+
+type StateDir = { runs: string; slug: string }
+
+/** Every checkout's state folders, under every surface that writes run files. */
+async function stateDirs($: EngineInterface): Promise<StateDir[]> {
   const config = await $.env.get('CLAUDE_CONFIG_DIR')
   const home = (await $.env.get('USERPROFILE')) ?? (await $.env.get('HOME')) ?? ''
   const profile = (config || `${home}/.claude`).replace(/\\/g, '/')
-  const pattern = new RegExp(`^${slug.replace(/[.]/g, '\\.')}-[0-9a-f]{8}$`)
-  const dirs: string[] = []
+  const dirs: StateDir[] = []
 
   for (const surface of SURFACES) {
     const base = `${profile}/${surface}`
     if (!(await $.fs.exists(base))) continue
     for (const entry of await $.fs.list(base)) {
-      if (entry.kind === 'dir' && pattern.test(entry.name)) dirs.push(`${base}/${entry.name}/runs`)
+      const slug = entry.kind === 'dir' ? HASHED.exec(entry.name)?.[1] : undefined
+      if (slug) dirs.push({ runs: `${base}/${entry.name}/runs`, slug })
     }
   }
   return dirs
 }
 
-/** This worktree's own runs; when it has none, the main checkout's, so the pane is never empty in a fresh worktree. */
-async function loadRuns($: EngineInterface): Promise<FlowRun[]> {
+/**
+ * The runs the pane shows — this worktree's own, or the main checkout's when it has none, so
+ * the pane is never empty in a fresh worktree — and every other checkout's open runs that
+ * moved in the last day, which only the gate alert reads.
+ */
+async function loadRuns($: EngineInterface, isForced: boolean): Promise<{ shown: FlowRun[]; others: FlowRun[] }> {
   const root = (await $.session.root()).replace(/\\/g, '/')
-  const own = await readRuns($, await stateDirs($, slugOf(root)))
+  const dirs = await stateDirs($)
+  const of = (slug: string) => dirs.filter(d => d.slug === slug)
   const [main = root] = root.split('/.claude/worktrees/')
-  if (own.length > 0 || main === root) return own
-  return readRuns($, await stateDirs($, slugOf(main)))
+
+  let mine = of(slugOf(root))
+  let shown = await readRuns($, mine)
+  if (shown.length === 0 && main !== root) {
+    mine = of(slugOf(main))
+    shown = await readRuns($, mine)
+  }
+  const now = await $.clock.now()
+  if (isForced || now - othersAt >= OTHERS_MS) {
+    othersAt = now
+    const rest = dirs.filter(d => !mine.includes(d))
+    others = (await readRuns($, rest, { since: now - FRESH_MS, limit: MAX_OTHER_RUNS })).filter(r => tone(r.status) !== 'done')
+  }
+  return { shown, others }
 }
+
+/** A profile holds hundreds of checkout folders, so the other checkouts are listed on every fifth poll, or on /flows. */
+const OTHERS_MS = 5 * POLL_MS
+let othersAt = -Infinity
+let others: FlowRun[] = []
 
 /** Stage titles whose phase skill is not their slug, and the stage names an engine before 1.18.0 used. */
 const PHASE_ALIASES: Record<string, string> = {
@@ -221,45 +265,63 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
     toolCalls: insights.filter(i => i.kind === 'tool' && i.stageIndex === index).length,
     workers,
     scenarios: Array.isArray(s.scenarios) ? s.scenarios.map((c: any) => ({ name: String(c.name), status: String(c.status) })) : [],
-    links: Array.isArray(s.links) ? s.links.map((l: any) => String(l.label ?? l.url)) : [],
+    links: Array.isArray(s.links) ? s.links.map(linkOf).filter((l: FlowLink) => l.label || l.url) : [],
     output: String(s.output ?? '').slice(0, 600),
   }
 }
 
-async function readRuns($: EngineInterface, dirs: string[]): Promise<FlowRun[]> {
+const linkOf = (l: any): FlowLink =>
+  typeof l === 'string'
+    ? { label: l, url: /^[a-z][a-z0-9+.-]*:/i.test(l) ? l : '' }
+    : { label: String(l?.label ?? l?.url ?? ''), url: String(l?.url ?? '') }
+
+/** What a `Link` takes: `https:`, or `http://localhost`. Any other URL — `127.0.0.1`, a demo's `file:` — is drawn as text. */
+const isLinkable = (url: string) => /^(https:|http:\/\/localhost(?=[:/]|$))/i.test(url)
+
+const LIST_LINE =/^\s*(?:[-*•]|\d+[.)])\s+/
+
+/**
+ * The open items the Ready stage handed to the gate: the text after `Open items`, split on
+ * `(1)` numbering or on list lines, else taken whole; with no such marker, its list lines.
+ */
+function openItemsOf(output: unknown): string[] {
+  const text = String(output ?? '')
+  const listed = (body: string) => body.split('\n').filter(l => LIST_LINE.test(l)).map(l => l.replace(LIST_LINE, ''))
+  const marker = /open items?[^:]*:/i.exec(text)
+  if (!marker) return listed(text)
+  const rest = text.slice(marker.index + marker[0].length).trim()
+  const items = rest.includes('(1)')
+    ? rest.split(/\s*\(\d+\)\s*/)
+    : listed(rest).length > 0
+      ? listed(rest)
+      : [rest]
+  return items.map(item => item.trim().replace(/[;.]$/, '')).filter(Boolean)
+}
+
+/** Each run file parsed, by path, kept while its modification time holds: every checkout is polled. */
+const parsed = new Map<string, { mtimeMs: number; run: FlowRun }>()
+
+type ReadOptions = { since?: number; limit?: number }
+
+async function readRuns($: EngineInterface, dirs: StateDir[], options: ReadOptions = {}): Promise<FlowRun[]> {
   const sessionId = await $.session.id()
   const byId = new Map<string, FlowRun>()
 
-  for (const dir of dirs) {
+  for (const { runs: dir, slug } of dirs) {
     if (!(await $.fs.exists(dir))) continue
     const files = (await $.fs.list(dir))
-      .filter(f => f.kind === 'file' && f.name.endsWith('.json'))
+      .filter(f => f.kind === 'file' && f.name.endsWith('.json') && f.mtimeMs >= (options.since ?? 0))
       .sort((a, b) => b.mtimeMs - a.mtimeMs)
       .slice(0, 20)
 
     for (const file of files) {
-      try {
-        const raw = JSON.parse(String(await $.fs.read(`${dir}/${file.name}`)))
-        if (!raw?.id || !Array.isArray(raw.stages)) continue
-        const run: FlowRun = {
-          id: raw.id,
-          skillId: raw.skillId ?? 'flow',
-          title: raw.title || raw.originalPrompt || raw.id,
-          status: raw.status ?? '',
-          changeKind: raw.changeKind ?? '',
-          approval: raw.approval?.state ?? '',
-          updatedAt: raw.updatedAt ?? '',
-          startedAt: raw.startedAt ?? '',
-          isThisSession: Array.isArray(raw.sessionIds) && raw.sessionIds.includes(sessionId),
-          contextPeak: raw.context?.peakTokens ?? null,
-          contextLimit: raw.context?.tokenLimit ?? null,
-          stages: raw.stages.map((s: any, i: number) => stageOf(raw, s, i)),
-        }
-        const known = byId.get(run.id)
-        if (!known || known.updatedAt < run.updatedAt) byId.set(run.id, run)
-      } catch {
-        // A run file mid-write is read again on the next poll.
-      }
+      const path = `${dir}/${file.name}`
+      const cached = parsed.get(path)
+      const run = cached?.mtimeMs === file.mtimeMs ? cached.run : await parseRun($, path, slug, sessionId)
+      if (!run) continue
+      parsed.set(path, { mtimeMs: file.mtimeMs, run })
+      const known = byId.get(run.id)
+      if (!known || known.updatedAt < run.updatedAt) byId.set(run.id, run)
     }
   }
 
@@ -267,7 +329,34 @@ async function readRuns($: EngineInterface, dirs: string[]): Promise<FlowRun[]> 
     .sort((a, b) =>
       a.isThisSession !== b.isThisSession ? (a.isThisSession ? -1 : 1) : b.updatedAt.localeCompare(a.updatedAt),
     )
-    .slice(0, MAX_RUNS)
+    .slice(0, options.limit ?? MAX_RUNS)
+}
+
+/** One run file as the view draws it; undefined for a file that is not a run, or is mid-write and read again next poll. */
+async function parseRun($: EngineInterface, path: string, slug: string, sessionId: string): Promise<FlowRun | undefined> {
+  try {
+    const raw = JSON.parse(String(await $.fs.read(path)))
+    if (!raw?.id || !Array.isArray(raw.stages)) return undefined
+    const stages: any[] = raw.stages
+    return {
+      id: raw.id,
+      skillId: raw.skillId ?? 'flow',
+      title: raw.title || raw.originalPrompt || raw.id,
+      repo: String(raw.repo ?? '').split('/').pop() || slug,
+      status: raw.status ?? '',
+      changeKind: raw.changeKind ?? '',
+      approval: raw.approval?.state ?? '',
+      updatedAt: raw.updatedAt ?? '',
+      startedAt: raw.startedAt ?? '',
+      isThisSession: Array.isArray(raw.sessionIds) && raw.sessionIds.includes(sessionId),
+      contextPeak: raw.context?.peakTokens ?? null,
+      contextLimit: raw.context?.tokenLimit ?? null,
+      openItems: openItemsOf(stages.find(s => /^ready$/i.test(String(s?.name ?? '')))?.output),
+      stages: stages.map((s, i) => stageOf(raw, s, i)),
+    }
+  } catch {
+    return undefined
+  }
 }
 
 // ── /flows-demo: a flow-code run in memory only, in the shape the surface contract records ──
@@ -284,7 +373,7 @@ const DEMO_STAGES: DemoStage[] = [
   ['Build & Test', 'phase-build-test', 'Build green, 4,312 tests passed.'],
   ['Verify', 'phase-verify', 'Full depth with capture through Aspire; logs monitored, no errors.'],
   ['Spec Check', 'phase-spec-check', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
-  ['Ready', 'phase-ready', 'Review, build-test, verify and spec-check all recorded green.'],
+  ['Ready', 'phase-ready', 'Budget spent on round 2. Open items: (1) S3 Redo after reload is flaky; (2) features.md is code-ahead on undo history.'],
   ['Personal Validation', 'phase-personal-validation', 'Waiting for your approval. Review links published.'],
   ['Create Pull Request', 'phase-create-pr', 'Pushed and opened the pull request.'],
   ['Report Back', 'phase-report-back', 'Commented on the origin entry and ticked its steps.'],
@@ -356,6 +445,7 @@ function demoRun(now: number): FlowRun {
     id: 'demo-run',
     skillId: 'flow-code',
     title: 'Demo · Undo (Ctrl+Z) for backlog tasks',
+    repo: 'demo',
     status: at >= DEMO_STAGES.length ? 'done' : 'in_progress',
     changeKind: 'feature',
     approval: at > 8 ? 'approved' : at === 8 ? 'pending' : '',
@@ -364,6 +454,7 @@ function demoRun(now: number): FlowRun {
     isThisSession: true,
     contextPeak: 90_000 + Math.min(at, 12) * 21_000,
     contextLimit: 1_000_000,
+    openItems: at > DEMO_STAGES.findIndex(s => s[0] === 'Ready') ? openItemsOf(DEMO_STAGES.find(s => s[0] === 'Ready')?.[2]) : [],
     stages: DEMO_STAGES.map(([name, phase, output], i) => {
       const isGate = DEMO_PHASES[phase]?.mode === 'gate'
       const isReached = i <= at
@@ -381,7 +472,10 @@ function demoRun(now: number): FlowRun {
                 { name: 'S3 Redo after reload', status: 'flaky' },
               ]
             : [],
-        links: name === 'Personal Validation' && isReached ? [{ label: 'desktop-web-harness' }, { label: 'Diff' }] : [],
+        links: name === 'Personal Validation' && isReached ? [
+                { label: 'Backlog board, undo', url: 'http://localhost:5173/board?undo' },
+                { label: 'Aspire dashboard', url: 'http://localhost:18888/' },
+              ] : [],
         output: isReached ? output : '',
       }
       return { ...stageOf(raw, stage, i), toolCalls: i < at ? 3 + ((i * 13) % 40) : 0 }
@@ -421,15 +515,59 @@ const signature = (list: FlowRun[]) => list.map(r => `${r.id}@${r.updatedAt}`).j
 const currentStage = (run: FlowRun) =>
   run.stages.find(s => ['active', 'waiting', 'blocked'].includes(tone(s.status)))
 
-async function refresh($: EngineInterface) {
-  const loaded = await loadRuns($)
-  const fresh = demoStartedAt === undefined ? loaded : [demoRun(await $.clock.now()), ...loaded].slice(0, MAX_RUNS)
+type Gate = { run: FlowRun; stage: FlowStage; tone: Tone }
+
+const gateLabel = (s: FlowStage) => (isPersonalValidation(s) ? 'PV' : s.name)
+
+/**
+ * Every run's stages against the tones seen on the last poll: a stage that turned `waiting` or
+ * `blocked` since raises one toast and one sound, and the first poll of a session only takes
+ * the baseline. Returns the gates waiting now.
+ */
+async function alertGates($: EngineInterface, runs: FlowRun[]): Promise<Gate[]> {
+  const { value: before } = await $.state.get(SEEN)
+  const seen: Record<string, string> = {}
+  const waiting: Gate[] = []
+  const turned: Gate[] = []
+
+  for (const run of runs) {
+    run.stages.forEach((stage, i) => {
+      const key = `${run.id}#${i}`
+      const t = stageTone(stage)
+      seen[key] = t
+      if (t === 'waiting') waiting.push({ run, stage, tone: t })
+      if ((t === 'waiting' || t === 'blocked') && before && before[key] !== t) turned.push({ run, stage, tone: t })
+    })
+  }
+  if (JSON.stringify(seen) !== JSON.stringify(before ?? {})) await $.state.set(SEEN, seen)
+
+  for (const { run, stage, tone: t } of turned) {
+    // One short line: the mark says waiting or blocked, so the words do not repeat it.
+    $.ui.toast(`${MARK[t]} ${gateLabel(stage)} ${run.repo} · ${run.title}`, { timeoutMs: 8000 })
+  }
+  // A surface with no player plays nothing; the toast and the status line still say it.
+  if (turned.length > 0) void $.audio.play({ asset: GATE_SOUND }).catch(() => undefined)
+  return waiting
+}
+
+async function refresh($: EngineInterface, isForced = false) {
+  const { shown, others } = await loadRuns($, isForced)
+  const fresh = demoStartedAt === undefined ? shown : [demoRun(await $.clock.now()), ...shown].slice(0, MAX_RUNS)
   const { value: current = [] } = await $.state.get(RUNS)
   if (signature(fresh) !== signature(current)) await $.state.set(RUNS, fresh)
 
+  const watched = new Map([...others, ...fresh.filter(r => tone(r.status) !== 'done')].map(r => [r.id, r]))
+  const waiting = (await alertGates($, [...watched.values()])).sort((a, b) => Number(b.run.isThisSession) - Number(a.run.isThisSession))
+  const [gate] = waiting
   const mine = fresh.find(r => r.isThisSession && tone(r.status) !== 'done')
   const stage = mine ? currentStage(mine) : undefined
-  $.ui.status(mine ? `${mine.skillId} · ${stage?.name ?? mine.status}` : undefined)
+  $.ui.status(
+    gate
+      ? `${MARK.waiting} ${gateLabel(gate.stage)}: ${gate.run.repo} ${gate.run.title}${waiting.length > 1 ? ` +${waiting.length - 1}` : ''}`
+      : mine
+        ? `${mine.skillId} · ${stage?.name ?? mine.status}`
+        : undefined,
+  )
 
   // The pane opens itself once per run of this session, the first time that run appears; closed
   // after that, it stays closed. Another session's run, or the main checkout's, never opens it.
@@ -443,6 +581,23 @@ async function refresh($: EngineInterface) {
 const openedFor = new Set<string>()
 
 const openPane = ($: EngineInterface) => $.ui.open({ id: PANE, title: 'Delivery flows' })
+
+/** The gate's three answers, in the flow-runner's words: approve, revise, decline. */
+type GateReply = { key: 'approve' | 'revise' | 'reject'; label: string; text: string; glyph: string; color: string }
+const GATE_REPLIES: GateReply[] = [
+  { key: 'approve', label: 'Approve', text: 'Personal Validation: approve.', glyph: MARK.done, color: COLOR.done },
+  { key: 'revise', label: 'Revise', text: 'Personal Validation: revise.', glyph: '↺', color: 'yellow' },
+  { key: 'reject', label: 'Reject', text: 'Personal Validation: decline.', glyph: MARK.blocked, color: COLOR.blocked },
+]
+
+/** A press submits the reply as the person's own prompt; the demo's has no session to answer, so it says what it would send. */
+async function answerGate($: EngineInterface, run: FlowRun, reply: GateReply) {
+  if (run.id === 'demo-run') {
+    $.ui.toast(`Demo: would send "${reply.text}"`)
+    return
+  }
+  await $.prompt.submit({ text: reply.text, asUser: true })
+}
 
 const isSurfaceTool = (tool: string, op: string) => /delivery-surface-/.test(tool) && tool.endsWith(`__${op}`)
 
@@ -465,7 +620,7 @@ export const register: Register = on => {
   })
 
   on('command.run', { command: 'flows' }, async $ => {
-    await refresh($)
+    await refresh($, true)
     await openPane($)
 
     return { text: 'Delivery flows pane opened.' }
@@ -484,9 +639,9 @@ export const register: Register = on => {
   // The pane: the whole run, top to bottom — one row per phase, its workers hung under it,
   // and the focused phase opened in place.
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
-    const { Box, Text, Button } = $.ui.resolve(e)
+    const { Box, Text, Button, Link } = $.ui.resolve(e)
     const { value: list = [] } = await $.state.get(RUNS)
-    const index = Math.min((await $.state.get(SELECTED)).value ?? 0, Math.max(0, list.length - 1))
+    const index =Math.min((await $.state.get(SELECTED)).value ?? 0, Math.max(0, list.length - 1))
     const pinned = (await $.state.get(FOCUS)).value ?? -1
     const run = list[index]
     const columns = (e.props as any)?.bodyColumns ?? e.viewport?.columns ?? 60
@@ -509,6 +664,7 @@ export const register: Register = on => {
         : live
           ? run.stages.indexOf(live)
           : run.stages.reduce((last, s, i) => (tone(s.status) === 'pending' ? last : i), 0)
+    const gate = run.isThisSession && live && isPersonalValidation(live) && stageTone(live) === 'waiting' ? live : undefined
     const elapsed = run.startedAt && !run.id.startsWith('demo') ? Date.now() - Date.parse(run.startedAt) : null
     const context = run.contextPeak && run.contextLimit ? `${Math.round((run.contextPeak / run.contextLimit) * 100)}% context` : ''
     const facts = [run.skillId, run.changeKind, `${done}/${run.stages.length}`, duration(elapsed), context]
@@ -556,6 +712,53 @@ export const register: Register = on => {
           <Text dimColor>? = inferred</Text>
           <Text color="yellow">≠ = not as configured</Text>
         </Box>
+
+        {gate && (
+          <Box key="pv" flexDirection="column" marginBottom={1} borderStyle="round" borderColor={COLOR.waiting} paddingX={1}>
+            <Text bold color={COLOR.waiting}>
+              {MARK.waiting} {gate.name}: your review
+            </Text>
+            {gate.links.map(l =>
+              isLinkable(l.url) ? (
+                <Text wrap="truncate-end">
+                  ↗ <Link href={l.url} label={l.label || l.url} />
+                </Text>
+              ) : (
+                <Text wrap="truncate-end">
+                  ↗ {l.label}
+                  {l.label && l.url ? '  ' : ''}
+                  <Text dimColor>{l.url}</Text>
+                </Text>
+              ),
+            )}
+            {gate.links.length === 0 && <Text dimColor>No review links on the stage yet.</Text>}
+            <Text dimColor>Open items from Ready</Text>
+            {run.openItems.length > 0 ? (
+              run.openItems.map(item => (
+                <Text color="yellow" wrap="wrap">
+                  • {item}
+                </Text>
+              ))
+            ) : (
+              <Text dimColor>None recorded.</Text>
+            )}
+            <Box flexDirection="row" gap={2} marginTop={1}>
+              {GATE_REPLIES.map(reply => (
+                // Button takes no colour, so a coloured glyph in front of it carries the tone.
+                <Box key={`pv-${reply.key}-row`} flexDirection="row" gap={1}>
+                  <Text color={reply.color}>{reply.glyph}</Text>
+                  <Button
+                    key={`pv-${reply.key}`}
+                    variant={reply.key === 'approve' ? 'primary' : 'secondary'}
+                    onPress={() => answerGate($, run, reply)}
+                  >
+                    {reply.label}
+                  </Button>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+        )}
 
         {run.stages.map((s, i) => {
           const t = tone(s.status)
@@ -611,7 +814,7 @@ export const register: Register = on => {
                       {c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : '~'} {c.name}
                     </Text>
                   ))}
-                  {s.links.length > 0 && <Text color="blue">↗ {s.links.join('  ↗ ')}</Text>}
+                  {s.links.length > 0 && <Text color="blue">↗ {s.links.map(l => l.label || l.url).join('  ↗ ')}</Text>}
                   {(s.outputTokens || s.toolCalls > 0) && (
                     <Text dimColor>
                       {[s.outputTokens ? `${tokens(s.outputTokens)} output tokens` : '', s.toolCalls ? `${s.toolCalls} tool calls` : '']
@@ -649,7 +852,6 @@ export const register: Register = on => {
           <Text wrap="truncate-end">
             <Text color={COLOR[tone(live.status)]}>{live.name}</Text>
             <Text color={MODE_COLOR[live.mode]}> {MODE_LABEL[live.mode]}</Text>
-            <Text dimColor>{[live.agent, live.model].filter(Boolean).map(x => ` · ${x}`).join('')}</Text>
           </Text>
         )}
         <Button key="open" plain onPress={() => $.ui.open({ id: PANE, title: 'Delivery flows' })}>

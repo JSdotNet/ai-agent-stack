@@ -14,6 +14,8 @@ export type FlowWorker = {
 
 export type FlowScenario = { name: string; status: string }
 
+export type FlowLink = { label: string; url: string }
+
 export type FlowStage = {
   name: string
   status: string
@@ -40,7 +42,7 @@ export type FlowStage = {
   toolCalls: number
   workers: FlowWorker[]
   scenarios: FlowScenario[]
-  links: string[]
+  links: FlowLink[]
   output: string
 }
 
@@ -48,6 +50,8 @@ export type FlowRun = {
   id: string
   skillId: string
   title: string
+  /** The repository the run is in: the run's `repo`, else the checkout folder it was found under. */
+  repo: string
   status: string
   changeKind: string
   approval: string
@@ -56,11 +60,19 @@ export type FlowRun = {
   isThisSession: boolean
   contextPeak: number | null
   contextLimit: number | null
+  /** The Ready stage's open items, which Personal Validation presents first. */
+  openItems: string[]
   stages: FlowStage[]
 }
 
 declare module 'claude-code' {
   interface PluginState {
-    'delivery-run-view': { runs: FlowRun[]; selected: number; focus: number }
+    'delivery-run-view': {
+      runs: FlowRun[]
+      selected: number
+      focus: number
+      /** The last tone seen per `<run id>#<stage index>` in every checkout, so a gate alerts once per transition. */
+      seen: Record<string, string>
+    }
   }
 }

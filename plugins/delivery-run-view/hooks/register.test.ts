@@ -5,9 +5,12 @@ import type { FlowRun } from '../types'
 
 const PROFILE = 'C:/Users/dev/.claude'
 const SESSION = 'session-1'
+const NOW = Date.parse('2026-10-07T12:00:00.000Z')
 
 /** The engine hands a path over in the platform's spelling; the fake profile keys on forward slashes. */
 const slashed = (path: string) => path.replace(/\\/g, '/')
+
+const DAY = 24 * 60 * 60 * 1000
 
 const dir = (name: string): FsEntry => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: false })
 const file = (name: string, mtimeMs: number): FsEntry => ({ name, kind: 'file', size: 1, mtimeMs, isLink: false })
@@ -23,19 +26,42 @@ const runFile = (id: string, sessionIds: string[]) =>
     stages: [{ name: 'Scope', status: 'in_progress' }],
   })
 
-/** A profile holding `files` (path → content) under the surfaces' folders, a worktree at `root`. */
-function machine(on: On, root: string, files: Record<string, string>) {
+/**
+ * A profile holding `files` (path → content) under the surfaces' folders, a worktree at `root`.
+ * A file is a day old unless `mtimes` says otherwise; both may change between polls.
+ */
+function machine(on: On, root: string, files: Record<string, string>, mtimes: Record<string, number> = {}) {
   mock.env(on, { CLAUDE_CONFIG_DIR: PROFILE })
   on('session.root', () => ({ value: root }))
   on('session.id', () => ({ value: SESSION }))
+  on('clock.now', () => ({ value: NOW }))
   on('clock.every', () => ({ value: undefined }))
   on('command.register', ($, e) => ({ value: { command: e.name } }))
   on('session.start', ($, e) => ({ cwd: e.cwd }))
 
-  const seen = { read: [] as string[], opened: [] as string[], status: [] as (string | undefined)[] }
+  const seen = {
+    read: [] as string[],
+    opened: [] as string[],
+    status: [] as (string | undefined)[],
+    toasts: [] as string[],
+    sounds: [] as unknown[],
+    prompts: [] as string[],
+  }
   on('ui.status', ($, e) => {
     seen.status.push(e.text)
     return { value: undefined }
+  })
+  on('ui.toast', ($, e) => {
+    seen.toasts.push(e.text)
+    return { value: undefined }
+  })
+  on('audio.play', ($, e) => {
+    seen.sounds.push(e.clip)
+    return { value: undefined }
+  })
+  on('prompt.submit', ($, e) => {
+    seen.prompts.push(e.text)
+    return { text: e.text }
   })
 
   const paths = Object.keys(files)
@@ -49,7 +75,7 @@ function machine(on: On, root: string, files: Record<string, string>) {
     const children = new Map<string, FsEntry>()
     for (const p of paths.filter(p => p.startsWith(`${path}/`))) {
       const [name = '', ...rest] = p.slice(path.length + 1).split('/')
-      children.set(name, rest.length > 0 ? dir(name) : file(name, 1))
+      children.set(name, rest.length > 0 ? dir(name) : file(name, mtimes[p] ?? NOW - 2 * DAY))
     }
     return { value: [...children.values()] }
   })
@@ -60,6 +86,10 @@ function machine(on: On, root: string, files: Record<string, string>) {
   })
   return seen
 }
+
+/** The person typing /flows, which polls the run files once more. */
+const typedFlows = ($: Engine) => () =>
+  $.command.run({ command: 'flows', args: '', origin: { kind: 'composer' }, presentation: { isFullscreen: false, columns: 120 } })
 
 const start = ($: Engine, cwd: string) =>
   $.session.start({ cwd, surface: 'desktop', isInteractive: true })
@@ -223,4 +253,110 @@ test('reads an effort runner as the agent it carries, and a qualified phase by t
 
   expect([scope!.agent, scope!.model, scope!.effort, scope!.mismatch]).toEqual(['general-purpose', 'opus 5.5', 'xhigh', []])
   expect([drafting!.agent, drafting!.configured?.agent, drafting!.mismatch]).toEqual(['ux-design:ux-designer', 'ux-design:ux-designer', []])
+})
+
+const OTHER = `${PROFILE}/delivery-surface-dashboard/Budget-1a2b3c4d/runs/run-x.json`
+
+/** Another checkout's run at `stage`, in progress, everything before it done. */
+const otherRun = (stage: number, updatedAt: string) =>
+  JSON.stringify({
+    id: 'run-x',
+    skillId: 'flow-code',
+    title: 'Monthly totals',
+    repo: 'JSdotNet/Budget',
+    status: 'in_progress',
+    updatedAt,
+    sessionIds: ['another-session'],
+    stages: ['Ready', 'Personal Validation', 'Create Pull Request'].map((name, i) => ({
+      name,
+      status: i < stage ? 'done' : i === stage ? 'in_progress' : 'pending',
+    })),
+  })
+
+test("alerts once when another checkout's run reaches Personal Validation, and clears when it moves on", async ($, on) => {
+  const files: Record<string, string> = { [OTHER]: otherRun(1, '2026-10-07T11:00:00.000Z') }
+  const mtimes: Record<string, number> = { [OTHER]: NOW - 1000 }
+  const seen = machine(on, ROOT, files, mtimes)
+  const flows = typedFlows($)
+  const poll = (stage: number, at: number) => {
+    files[OTHER] = otherRun(stage, `2026-10-07T11:0${at}:00.000Z`)
+    mtimes[OTHER] = NOW - 1000 + at
+  }
+
+  await start($, ROOT)
+  expect(seen.toasts).toEqual([])
+  expect(seen.status.at(-1)).toBe('◆ PV: Budget Monthly totals')
+
+  poll(0, 1)
+  await flows()
+  poll(1, 2)
+  await flows()
+  await flows()
+
+  expect(seen.toasts).toEqual(['◆ Personal Validation is waiting: Budget · Monthly totals'])
+  expect(seen.sounds).toEqual([{ asset: 'sounds/gate.wav' }])
+  expect(seen.status.at(-1)).toBe('◆ PV: Budget Monthly totals')
+
+  poll(2, 3)
+  await flows()
+  expect(seen.status.at(-1)).toBeUndefined()
+  expect(seen.toasts.length).toBe(1)
+})
+
+test("ignores another checkout's run that has not moved in a day", async ($, on) => {
+  const seen = machine(on, ROOT, { [OTHER]: otherRun(1, '2026-10-05T11:00:00.000Z') })
+
+  await start($, ROOT)
+
+  expect(seen.read).toEqual([])
+  expect(seen.status.at(-1)).toBeUndefined()
+})
+
+test("draws the review card for this session's run at Personal Validation and submits the reply", async ($, on) => {
+  const seen = machine(on, ROOT, {
+    [at('run-v.json')]: JSON.stringify({
+      id: 'run-v',
+      skillId: 'flow-code',
+      title: 'Undo for tasks',
+      updatedAt: '2026-10-07T10:00:00.000Z',
+      sessionIds: [SESSION],
+      stages: [
+        { name: 'Ready', status: 'done', output: 'Budget spent. Open items: (1) Space does not preventDefault; (2) card chapter code-ahead.' },
+        {
+          name: 'Personal Validation',
+          status: 'in_progress',
+          links: [
+            { label: 'Desktop harness', url: 'http://localhost:50475/board' },
+            { label: 'Aspire dashboard', url: 'http://127.0.0.1:50480/' },
+          ],
+        },
+      ],
+    }),
+  })
+  await start($, ROOT)
+
+  for (const surface of ['terminal', 'desktop'] as const) {
+    const ui = await $.ui.mount({
+      plugin: 'delivery-run-view',
+      surface,
+      component: 'Pane',
+      requestId: 'delivery-run-view',
+      props: {
+        title: 'Delivery flows',
+        isFocused: true,
+        bodyColumns: 80,
+        placement: 'dock',
+        scroll: { offset: 0, bodyRows: 40 },
+        view: {},
+      },
+    })
+    expect((await ui.find({ type: 'Link' }))?.props.href).toBe('http://localhost:50475/board')
+    expect(await ui.find({ type: 'Text', text: '↗ Aspire dashboard  http://127.0.0.1:50480/' })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /Space does not preventDefault$/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /card chapter code-ahead$/ })).toBeDefined()
+    await ui.press({ key: 'pv-approve' })
+    await ui.unmount()
+  }
+
+  expect(seen.prompts).toEqual(['Personal Validation: approve.', 'Personal Validation: approve.'])
 })

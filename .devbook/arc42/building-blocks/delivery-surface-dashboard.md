@@ -337,8 +337,9 @@ every part of it at once.
 related: [".devbook/arc42/building-blocks/delivery-surface-dashboard.md#telemetry"]
 ```
 
-The hook that runs on tool events and folds tool calls, sub-agent use, and token usage into
-the record, and warns when the session's context gauge crosses a threshold.
+The hook that runs on tool events and folds tool calls, sub-agent use, token usage, and where
+each write landed into the record, and warns when the session's context gauge crosses a
+threshold.
 
 Event-triggered, by the host, outside any run's control flow. It is the one thing in this
 marketplace that measures a session rather than being told about it — which is also why it is
@@ -349,6 +350,7 @@ the one place this block is host-specific, structurally rather than by omission.
 | Event-triggered by the host, outside any run's control flow | hook registration | untested |
 | It folds tool calls, sub-agent use, and token usage into the record | the hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/subagent-telemetry-test.mjs` |
 | It warns when the session's context gauge crosses a threshold | the hook | untested |
+| It writes back only what it owns — insights, token usage, the context gauge, the write destinations — onto a fresh read of the record, so a stage the server wrote meanwhile is never reverted and nothing it measured is dropped | the hook | `unit:node:plugins/delivery-surface-dashboard/mcp/delivery-surface-dashboard/dev/session-title-integration-test.mjs` |
 
 ## Runtime
 

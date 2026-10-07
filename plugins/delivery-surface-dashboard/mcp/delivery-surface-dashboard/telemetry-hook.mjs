@@ -415,13 +415,15 @@ async function main() {
     //
     // This hook is its own process, so the server may have written a stage update while the
     // transcript was being folded. Re-read the run and carry over only what this hook owns —
-    // insights, token usage, the context gauge — so a stage the server just marked done is
-    // never reverted by a stale copy.
+    // insights, token usage, the context gauge, the write destinations — so a stage the server
+    // just marked done is never reverted by a stale copy. A field the hook writes and this list
+    // omits is dropped on every call: the session title stayed null until destinations joined it.
     const fresh = await readRun(baseDir, run.id);
     const target = fresh || run;
     target.insights = run.insights;
     target.tokenUsage = run.tokenUsage;
     target.context = run.context;
+    if (run.destinations) target.destinations = run.destinations;
     await writeRun(baseDir, target);
     await writeTelemetry(sessionId, updated);
     if (pressure) emitContextPressure(pressure);

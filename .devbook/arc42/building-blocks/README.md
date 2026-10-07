@@ -13,8 +13,8 @@ vocabulary every block is written in is [chapter 8](../08-crosscutting-concepts.
 one block owns are in the [glossary](../12-glossary.md).
 
 **One plugin, one block.** A plugin is the unit a host installs, versions, and can refuse to
-load, so it is already the line a model cannot cross without somebody declaring it. Thirteen
-files follow the thirteen plugin folders under `plugins/`, name for name.
+load, so it is already the line a model cannot cross without somebody declaring it. Fourteen
+files follow the fourteen plugin folders under `plugins/`, name for name.
 
 **A block that outgrows one sweep nests the next level in.** The pull sweep sets aside any
 file past forty chapters, because one agent cannot verify more against the code in one pass.
@@ -58,6 +58,7 @@ block from what the plugin ships. A block that should lead its plugin instead st
 | [delivery-surface-collector](delivery-surface-collector.md) | Surface | A run recorded to disk rather than watched, for unattended sessions |
 | [delivery-surface-backlog](delivery-surface-backlog.md) | Surface | A run shown in the Backlog desktop app, where its work item already lives |
 | [delivery-run-view](delivery-run-view.md) | Viewer | A run drawn inside Claude Code from the files the surfaces write; not a surface |
+| [devbook-config-view](devbook-config-view.md) | Viewer | Every repository on this machine, its stamps against the newest and its phase maps, drawn inside Claude Code; writes nothing |
 
 The delivery engine and devbook are the two blocks everything else serves: the engine carries
 work, and devbook is what the work is grounded in and what it writes back to. The four

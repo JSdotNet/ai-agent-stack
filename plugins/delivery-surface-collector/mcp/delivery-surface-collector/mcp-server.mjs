@@ -422,7 +422,7 @@ const tools = [
                     type: "object",
                     additionalProperties: true,
                     description:
-                        "What the runner resolved for this run and a resumed session must read back rather than resolve again: the model, each phase's agent, skill, and MCP servers, the tracker, policy values, and gate list. Stored verbatim and returned by get_run. Merged shallowly over what is already stored, so pass only the keys that changed.",
+                        "What the runner resolved for this run and a resumed session must read back rather than resolve again: the model, `phases` — phases.<flow>.<phase-skill> with each stage's resolved mode, agent, runner, skill, model, effort, mcp, before, after, app, and fallback — the tracker, policy values, and gate list. Stored verbatim and returned by get_run. Merged shallowly over what is already stored, so pass only the keys that changed.",
                 },
             },
             required: ["runId"],
@@ -519,6 +519,12 @@ const tools = [
                         required: ["name", "status"],
                     },
                 },
+                execution: {
+                    type: "object",
+                    additionalProperties: true,
+                    description:
+                        "How this stage actually ran, passed on its in_progress call and again when it closes: mode (inline, fork, delegate, gate), agent, runner, skill, model, effort, mcp, fallback, qualifier, and runs — one { agent, model, effort, slice } per sub-agent call. Stored verbatim on the stage, replacing what an earlier call stored.",
+                },
                 monitoring: {
                     type: "object",
                     description: "Runtime log/trace summary for this stage.",
@@ -543,9 +549,12 @@ const tools = [
             required: ["runId", "status"],
         },
         handler: async (input) => {
-            const { runId, stageIndex, stageName, status, output, appendOutput, links, scenarios, monitoring } = input;
+            const { runId, stageIndex, stageName, status, output, appendOutput, links, scenarios, monitoring, execution } = input;
             if (!VALID_STATUSES.includes(status)) {
                 throw new ToolError(`status must be one of ${VALID_STATUSES.join(", ")}`);
+            }
+            if (execution !== undefined && execution !== null && (typeof execution !== "object" || Array.isArray(execution))) {
+                throw new ToolError("execution must be an object");
             }
             let activeStage = undefined;
             await withRunLock(runId, async () => {
@@ -592,6 +601,7 @@ const tools = [
                 if (normalizedScenarios) stage.scenarios = normalizedScenarios;
                 const normalizedMonitoring = normalizeMonitoring(monitoring);
                 if (normalizedMonitoring) stage.monitoring = normalizedMonitoring;
+                if (execution) stage.execution = execution;
                 stage.updatedAt = nowIso;
                 run.updatedAt = nowIso;
                 clearIdle(run);

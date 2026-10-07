@@ -52,13 +52,18 @@ flowchart LR
     R --> L["Status line"]
 ```
 
-A phase's mode — `inline`, `delegate`, `fork`, or `gate` — is read from a stage's `execution`
-or the run's `runContext.phases` map where the run carries one, and inferred otherwise.
+A phase's mode, agent, skill, model, effort, MCP servers, and chores are read from the run's
+`runContext.phases` entry — what was resolved — with the stage's `execution` — what ran —
+over it, and inferred where the run records neither. Where the two differ the row carries a
+`≠` and the phase's detail names the field.
 
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Nothing is written outside the plugin's own `$.state`; `/flows-demo` writes no run file | `register.tsx` | `claude plugin validate` lists the module's writes |
 | An inferred mode is drawn dimmed with a `?`, never as if recorded | `register.tsx`, `badge` | untested |
+| A phase is named by its configured agent when it ran — through an effort runner too — else by its longest-running sub-agent | `register.tsx`, `boundWorker` | `hooks/register.test.ts` |
+| A sub-agent that ran under the gate is shown as a revise round's | `register.tsx`, `stageOf` | `hooks/register.test.ts` |
+| What ran is compared with what was resolved, field by field, and a difference or a fallback is marked | `register.tsx`, `stageOf` | `hooks/register.test.ts` |
 | A worktree with no runs of its own shows the main checkout's | `register.tsx`, `loadRuns` | `hooks/register.test.ts` |
 | The pane opens on its own for a run of this session, once | `register.tsx`, `refresh` | `hooks/register.test.ts` |
 | A run file that does not parse is skipped, not fatal | `register.tsx`, `readRuns` | untested |

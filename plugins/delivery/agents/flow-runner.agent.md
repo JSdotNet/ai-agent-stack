@@ -74,9 +74,10 @@ those contracts; it does not re-decide them per skill.
      session's effort, and the run says so once.
 
    An id that does not resolve falls back to the built-in procedure, named once in the run
-   summary. Persist the resolved phases, the tracker, the policy values, and the gate list with
-   `set_run_context`, as its `runContext` object, so a resumed session reads them back instead
-   of resolving again. Then check whether the repository has a `run` recipe at
+   summary. Persist the resolved phases as `runContext.phases` in the shape
+   `surface-contract.md` states, with the tracker, the policy values, and the gate list, in one
+   `set_run_context` call, so a resumed session reads them back instead of resolving again.
+   Then check whether the repository has a `run` recipe at
    `.claude/skills/run-<name>/SKILL.md` — one per unit in a monorepo. When it does, persist the
    path and name it to `phase-verify` as the repository's declared runtime facts, unless its
    `app` option names another provider or `null`. Do not read it yourself. A missing or
@@ -105,8 +106,10 @@ those contracts; it does not re-decide them per skill.
 6. **Update the base before the flow's first phase.** Run `skills/phase-update-base/SKILL.md`
    inline: it skips on a dirty tree, an open pull request, or no remote, blocks on a conflict,
    and **never stashes**. A block stops the run there.
-7. **Run each phase the way it resolved.** Run its `before` chores, the phase, then its
-   `after` chores, in declared order; a chore that declared `on-failure: "required"` stops the
+7. **Run each phase the way it resolved, and say how.** Pass `execution` on the stage's
+   `in_progress` call — what actually runs, which differs from its `phases` entry on a
+   fallback or a slice. Run its `before` chores, the phase, then its `after` chores, in
+   declared order; a chore that declared `on-failure: "required"` stops the
    run when it fails, and a chore never changes a phase's decision or stands in for a gate.
    The `model` on an `Agent` call is the only place a resolved model takes effect, so never
    run inline a phase that resolved to a model or an effort other than the session's — that

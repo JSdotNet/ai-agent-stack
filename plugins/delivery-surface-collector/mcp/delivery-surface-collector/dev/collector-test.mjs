@@ -112,6 +112,21 @@ try {
     check("a repeated stage stays visible as repeated", implementation.doneCount === 2, `doneCount=${implementation.doneCount}`);
     check("a finished stage carries its duration", Number.isFinite(implementation.durationMs));
 
+    const ran = { mode: "delegate", agent: "csharp-coding:coding", model: "opus", effort: null, runs: [{ agent: "csharp-coding:coding", slice: "backend" }] };
+    await call("update_stage", { runId: run.runId, stageName: "Implementation", status: "in_progress", execution: ran });
+    const executed = (await call("get_run", { runId: run.runId })).stages.find((s) => s.name === "Implementation");
+    check("how a stage ran is stored verbatim", JSON.stringify(executed.execution) === JSON.stringify(ran), JSON.stringify(executed.execution));
+    await call("update_stage", { runId: run.runId, stageName: "Implementation", status: "done" });
+    const kept = (await call("get_run", { runId: run.runId })).stages.find((s) => s.name === "Implementation");
+    check("a later call without execution keeps it", kept.execution?.agent === "csharp-coding:coding");
+    let refused = false;
+    try {
+        await call("update_stage", { runId: run.runId, stageName: "Implementation", status: "done", execution: ["inline"] });
+    } catch {
+        refused = true;
+    }
+    check("an execution that is not an object is refused", refused);
+
     await call("update_stage", {
         runId: run.runId,
         stageName: "Validation",

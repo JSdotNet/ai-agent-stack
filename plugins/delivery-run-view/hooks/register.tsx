@@ -91,21 +91,68 @@ async function loadRuns($: EngineInterface): Promise<FlowRun[]> {
   return readRuns($, await stateDirs($, slugOf(main)))
 }
 
-const phaseKeys = (name: string) => {
-  const slug = name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  return [name, slug, `phase-${slug}`]
+/** Stage titles whose phase skill is not their slug, and the stage names an engine before 1.18.0 used. */
+const PHASE_ALIASES: Record<string, string> = {
+  'create-pull-request': 'create-pr',
+  'scope-discovery': 'scope',
+  implementation: 'implement',
+  validation: 'verify',
+  verification: 'spec-check',
+  'work-item-update': 'report-back',
 }
 
+const phaseKeys = (name: string) => {
+  const slug = name.toLowerCase().replace(/&/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  const phase = PHASE_ALIASES[slug] ?? slug
+  return [name, slug, phase, `phase-${phase}`]
+}
+
+const names = (value: unknown): string[] =>
+  Array.isArray(value) ? value.map(v => (typeof v === 'string' ? v : String((v as any)?.skill ?? (v as any)?.id ?? ''))).filter(Boolean) : []
+
 /**
- * How a stage ran. Read from the run when it says — a stage's `execution`, or the resolved
- * `runContext.phases` map the per-phase config proposal adds — and otherwise inferred:
- * a stage a sub-agent worked in was delegated, Personal Validation is the gate, the rest ran inline.
+ * The `runContext.phases` entry for a stage: the qualifier it ran under first, then the bare
+ * key, then a qualified `phase-<id>:<q>` entry when it is the only one.
+ */
+function resolvedEntry(raw: any, name: string, qualifier: unknown): any {
+  const flowMap = raw.runContext?.phases?.[raw.skillId] ?? raw.runContext?.phases ?? {}
+  const keys = phaseKeys(name)
+  const ranUnder = typeof qualifier === 'string' ? flowMap?.[`${keys[3]}:${qualifier}`] : undefined
+  if (ranUnder) return ranUnder
+  const exact = keys.map(k => flowMap?.[k]).find(Boolean)
+  if (exact) return exact
+  const qualified = Object.keys(flowMap ?? {}).filter(k => k.startsWith(`${keys[3]}:`))
+  const [only] = qualified
+  return qualified.length === 1 && only ? flowMap[only] : null
+}
+
+/** An effort runner carries the bound agent's body at one effort: `delivery:runner-<effort>`. */
+const RUNNER = /^delivery:runner-([a-z]+)$/
+
+/**
+ * The worker that did the phase's work: the bound agent when it ran, or an effort runner
+ * carrying it, else the longest-running, so a log monitor beside the agent does not name the phase.
+ */
+const boundWorker = (workers: FlowWorker[], agent: string | null | undefined) =>
+  workers.find(w => agent && w.name === agent) ??
+  workers.find(w => RUNNER.test(w.name)) ??
+  [...workers].sort((a, b) => (b.durationMs ?? 0) - (a.durationMs ?? 0))[0]
+
+/** The model family, so an alias (`opus`) and the id telemetry records (`opus 5.5`) compare equal. */
+const family = (model: string) => model.split(/[\s[]/)[0]
+
+/**
+ * How a stage ran. Read from the run when it says — a stage's `execution`, what actually ran,
+ * over the resolved `runContext.phases` entry, what the config asked for — and otherwise
+ * inferred: a stage a sub-agent worked in was delegated, Personal Validation is the gate, the
+ * rest ran inline. Sub-agents that ran under the gate are a revise round's, and say so.
  */
 function stageOf(raw: any, s: any, index: number): FlowStage {
   const name = String(s.name ?? '?')
-  const flowMap = raw.runContext?.phases?.[raw.skillId] ?? raw.runContext?.phases ?? {}
-  const resolved = phaseKeys(name).map(k => flowMap?.[k]).find(Boolean) ?? {}
-  const execution = { ...resolved, ...(s.execution ?? {}) }
+  const ran = s.execution && typeof s.execution === 'object' ? s.execution : {}
+  const resolved = resolvedEntry(raw, name, ran.qualifier)
+  const execution = { ...(resolved ?? {}), ...ran }
+  const isGate = /personal validation/i.test(name) || execution.mode === 'gate'
 
   const insights: any[] = Array.isArray(raw.insights) ? raw.insights : []
   const workers: FlowWorker[] = insights
@@ -117,16 +164,17 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
       tokens: typeof i.totalTokens === 'number' ? i.totalTokens : null,
       toolCalls: typeof i.totalToolCalls === 'number' ? i.totalToolCalls : null,
       isFailed: i.status === 'failed',
+      isRevise: isGate,
     }))
   const declared: string[] = Array.isArray(s.agents) ? s.agents.map(String) : []
   for (const agent of declared) {
     if (!workers.some(w => w.name === agent)) {
-      workers.push({ name: agent, model: '', durationMs: null, tokens: null, toolCalls: null, isFailed: false })
+      workers.push({ name: agent, model: '', durationMs: null, tokens: null, toolCalls: null, isFailed: false, isRevise: isGate })
     }
   }
 
-  const recorded = execution.runs ?? execution.mode
-  const mode: FlowMode = /personal validation/i.test(name)
+  const recorded = execution.runs && !Array.isArray(execution.runs) ? execution.runs : execution.mode
+  const mode: FlowMode = isGate
     ? 'gate'
     : recorded === 'fork' || recorded === 'delegate' || recorded === 'inline'
       ? recorded
@@ -134,14 +182,39 @@ function stageOf(raw: any, s: any, index: number): FlowStage {
         ? 'delegate'
         : 'inline'
 
+  // What ran comes from the stage's own record, then from the sub-agents observed, and only
+  // with neither from what was resolved — so a configured agent that never ran is not shown as if it had.
+  const worker = mode === 'delegate' || mode === 'fork' ? boundWorker(workers, ran.agent ?? resolved?.agent) : undefined
+  const runnerEffort = worker ? RUNNER.exec(worker.name)?.[1] : undefined
+  const workerAgent = runnerEffort ? (resolved?.agent ?? 'general-purpose') : worker?.name
+  const agent = ran.agent ?? workerAgent ?? resolved?.agent ?? null
+  const model = shortModel(ran.model) || worker?.model || shortModel(resolved?.model) || null
+  const effort = ran.effort ?? runnerEffort ?? resolved?.effort ?? null
+  const configured = resolved
+    ? { agent: resolved.agent ?? null, model: shortModel(resolved.model) || null, effort: resolved.effort ?? null }
+    : null
+  const mismatch: string[] = []
+  if (configured && !isGate && tone(String(s.status ?? '')) !== 'pending') {
+    if (configured.agent && agent !== configured.agent) mismatch.push('agent')
+    if (configured.model && model && family(model) !== family(configured.model)) mismatch.push('model')
+    if (configured.effort && (ran.effort ?? runnerEffort) && effort !== configured.effort) mismatch.push('effort')
+  }
+
   return {
     name,
     status: String(s.status ?? 'pending'),
     mode,
-    isModeRecorded: recorded !== undefined || mode === 'gate',
-    agent: execution.agent ?? (mode === 'delegate' ? (workers[0]?.name ?? null) : null),
-    model: shortModel(execution.model) || null,
-    effort: execution.effort ?? null,
+    isModeRecorded: recorded !== undefined || isGate,
+    agent,
+    model,
+    effort,
+    skill: execution.skill ?? null,
+    mcp: execution.mcp === null ? [] : execution.mcp === undefined ? null : names(execution.mcp),
+    before: names(execution.before),
+    after: names(execution.after),
+    fallback: execution.fallback ?? null,
+    configured,
+    mismatch,
     passes: typeof s.doneCount === 'number' ? s.doneCount : 0,
     durationMs: typeof s.durationMs === 'number' ? s.durationMs : null,
     outputTokens: raw.tokenUsage?.byStage?.[index]?.total?.outputTokens ?? null,
@@ -197,40 +270,87 @@ async function readRuns($: EngineInterface, dirs: string[]): Promise<FlowRun[]> 
     .slice(0, MAX_RUNS)
 }
 
-// ── /flows-demo: a flow-code run in memory only, shaped like the per-phase config proposal ──
-// An agent, model, or effort on a phase delegates it; Review is left unconfigured and forks.
+// ── /flows-demo: a flow-code run in memory only, in the shape the surface contract records ──
+// It is built as a run file and read through stageOf, so the demo draws what a real run would.
+// Scope shows a fallback: the configured architect is not installed, so general-purpose ran.
 
 const DEMO_STEP_MS = 4000
-type DemoStage = [name: string, mode: FlowMode, agent: string | null, model: string | null, effort: string | null, output: string]
+type DemoStage = [name: string, phase: string, output: string]
 const DEMO_STAGES: DemoStage[] = [
-  ['Update Base', 'inline', null, null, null, 'Fast-forwarded to origin/main (bfcf9b8b).'],
-  ['Scope', 'delegate', 'architecture:architect', 'opus', null, 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
-  ['Implement', 'delegate', 'csharp-coding:coding', 'opus', 'high', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
-  ['Review', 'fork', null, null, null, 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
-  ['Build & Test', 'delegate', 'general-purpose', 'sonnet', 'low', 'Build green, 4,312 tests passed.'],
-  ['Verify', 'delegate', 'qa:qa', null, null, 'Full depth with capture through Aspire; logs monitored, no errors.'],
-  ['Spec Check', 'delegate', 'general-purpose', 'opus', 'xhigh', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
-  ['Ready', 'inline', null, null, null, 'Review, build-test, verify and spec-check all recorded green.'],
-  ['Personal Validation', 'gate', null, null, null, 'Waiting for your approval. Review links published.'],
-  ['Create Pull Request', 'inline', null, null, null, 'Pushed and opened the pull request.'],
-  ['Report Back', 'delegate', null, 'haiku', null, 'Commented on the origin entry and ticked its steps.'],
-  ['Summary', 'inline', null, null, null, 'Run summary written.'],
+  ['Update Base', 'phase-update-base', 'Fast-forwarded to origin/main (bfcf9b8b).'],
+  ['Scope', 'phase-scope', 'Kind: feature. 4 acceptance criteria, 3 seams, 5 devbook chapters selected.'],
+  ['Implement', 'phase-implement', 'Red-green at 3 seams; backend first, then the UI against its interface summary.'],
+  ['Review', 'phase-review', 'Pass 1: 1 blocker (rule: ui-components.md, Tasks/Editor.razor:88) → back to implement. Pass 2: clean, 2 advisories.'],
+  ['Build & Test', 'phase-build-test', 'Build green, 4,312 tests passed.'],
+  ['Verify', 'phase-verify', 'Full depth with capture through Aspire; logs monitored, no errors.'],
+  ['Spec Check', 'phase-spec-check', '5 chapters: 4 aligned, 1 code-ahead (reported).'],
+  ['Ready', 'phase-ready', 'Review, build-test, verify and spec-check all recorded green.'],
+  ['Personal Validation', 'phase-personal-validation', 'Waiting for your approval. Review links published.'],
+  ['Create Pull Request', 'phase-create-pr', 'Pushed and opened the pull request.'],
+  ['Report Back', 'phase-report-back', 'Commented on the origin entry and ticked its steps.'],
+  ['Summary', 'phase-summary', 'Run summary written.'],
 ]
-const DEMO_WORKERS: Record<string, FlowWorker[]> = {
+const DEMO_PHASES: Record<string, { mode: FlowMode; [field: string]: unknown }> = {
+  'phase-update-base': { mode: 'inline', skill: 'delivery:phase-update-base', before: ['devbook:validate'] },
+  'phase-scope': { mode: 'delegate', agent: 'architecture:architect', skill: 'delivery:phase-scope', model: 'opus', mcp: ['backlog'] },
+  'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
+  'phase-review': { mode: 'fork', skill: 'delivery:phase-review' },
+  'phase-build-test': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-low', skill: 'delivery:phase-build-test', model: 'sonnet', effort: 'low', mcp: [] },
+  'phase-verify': { mode: 'delegate', agent: 'qa:qa', skill: 'delivery:phase-verify', mcp: ['aspire', 'playwright'] },
+  'phase-spec-check': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-xhigh', skill: 'devbook:verify-change', model: 'opus', effort: 'xhigh' },
+  'phase-ready': { mode: 'inline', skill: 'delivery:phase-ready' },
+  'phase-personal-validation': { mode: 'gate', skill: 'delivery:phase-personal-validation' },
+  'phase-create-pr': { mode: 'inline', skill: 'delivery:phase-create-pr', mcp: ['backlog'] },
+  'phase-report-back': { mode: 'delegate', agent: 'general-purpose', skill: 'delivery:phase-report-back', model: 'haiku' },
+  'phase-summary': { mode: 'inline', skill: 'delivery:phase-summary', after: ['devbook:update'] },
+}
+const DEMO_EXECUTION: Record<string, object> = {
+  Scope: { agent: 'general-purpose', fallback: 'architecture:architect' },
+}
+type DemoWorker = [name: string, model: string, durationMs: number, tokens: number, toolCalls: number]
+const DEMO_WORKERS: Record<string, DemoWorker[]> = {
+  Scope: [['general-purpose', 'claude-opus-5-5', 141000, 52000, 33]],
   Implement: [
-    { name: 'csharp-coding:coding · backend', model: 'opus 5.5', durationMs: 192000, tokens: 81000, toolCalls: 41, isFailed: false },
-    { name: 'csharp-coding:coding · frontend', model: 'sonnet 5.5', durationMs: 236000, tokens: 64000, toolCalls: 37, isFailed: false },
+    ['csharp-coding:coding', 'claude-opus-5-5', 192000, 81000, 41],
+    ['csharp-coding:coding', 'claude-opus-5-5', 236000, 64000, 37],
   ],
+  Review: [['general-purpose', 'claude-opus-5-5', 88000, 30000, 19]],
+  'Build & Test': [['delivery:runner-low', 'claude-sonnet-5-5', 263000, 21000, 12]],
   Verify: [
-    { name: 'qa:qa', model: 'sonnet 5.5', durationMs: 411000, tokens: 122000, toolCalls: 96, isFailed: false },
-    { name: 'qa:qa-monitor', model: 'haiku 4.5', durationMs: 398000, tokens: 18000, toolCalls: 22, isFailed: false },
+    ['qa:qa-monitor', 'claude-haiku-4-5', 398000, 18000, 22],
+    ['qa:qa', 'claude-sonnet-5-5', 411000, 122000, 96],
   ],
+  'Spec Check': [['delivery:runner-xhigh', 'claude-opus-5-5', 154000, 40000, 28]],
+  'Report Back': [['general-purpose', 'claude-haiku-4-5', 31000, 6000, 5]],
 }
 let demoStartedAt: number | undefined
 
 function demoRun(now: number): FlowRun {
   const at = Math.floor((now - (demoStartedAt ?? now)) / DEMO_STEP_MS)
   const reviewAt = DEMO_STAGES.findIndex(s => s[0] === 'Review')
+  const raw = {
+    skillId: 'flow-code',
+    runContext: { phases: { 'flow-code': DEMO_PHASES } },
+    insights: DEMO_STAGES.flatMap(([name], i) =>
+      i > at
+        ? []
+        : (DEMO_WORKERS[name] ?? []).map(([agentName, model, durationMs, totalTokens, totalToolCalls]) => ({
+            kind: 'agent',
+            status: 'completed',
+            stageIndex: i,
+            agentName,
+            model,
+            durationMs,
+            totalTokens,
+            totalToolCalls,
+          })),
+    ),
+    tokenUsage: {
+      byStage: DEMO_STAGES.map(([, phase], i) => ({
+        total: { outputTokens: i < at && DEMO_PHASES[phase]?.mode !== 'inline' ? 12_000 + i * 9_000 : null },
+      })),
+    },
+  }
 
   return {
     id: 'demo-run',
@@ -244,22 +364,15 @@ function demoRun(now: number): FlowRun {
     isThisSession: true,
     contextPeak: 90_000 + Math.min(at, 12) * 21_000,
     contextLimit: 1_000_000,
-    stages: DEMO_STAGES.map(([name, mode, agent, model, effort, output], i) => {
-      const status = i < at ? 'done' : i === at ? (mode === 'gate' ? 'awaiting_approval' : 'in_progress') : 'pending'
+    stages: DEMO_STAGES.map(([name, phase, output], i) => {
+      const isGate = DEMO_PHASES[phase]?.mode === 'gate'
       const isReached = i <= at
-      return {
+      const stage = {
         name,
-        status,
-        mode,
-        isModeRecorded: true,
-        agent,
-        model,
-        effort,
-        passes: (i < at ? 1 : 0) + (name === 'Implement' && at > reviewAt ? 1 : 0) + (name === 'Review' && at > reviewAt ? 1 : 0),
+        status: i < at ? 'done' : i === at ? (isGate ? 'awaiting_approval' : 'in_progress') : 'pending',
+        doneCount: (i < at ? 1 : 0) + (name === 'Implement' && at > reviewAt ? 1 : 0) + (name === 'Review' && at > reviewAt ? 1 : 0),
         durationMs: i < at ? DEMO_STEP_MS * (4 + ((i * 37) % 60)) : null,
-        outputTokens: i < at && mode !== 'inline' ? 12_000 + i * 9_000 : null,
-        toolCalls: i < at ? 3 + ((i * 13) % 40) : 0,
-        workers: isReached ? (DEMO_WORKERS[name] ?? []) : [],
+        execution: isReached ? DEMO_EXECUTION[name] : undefined,
         scenarios:
           name === 'Verify' && i < at
             ? [
@@ -268,11 +381,37 @@ function demoRun(now: number): FlowRun {
                 { name: 'S3 Redo after reload', status: 'flaky' },
               ]
             : [],
-        links: name === 'Personal Validation' && isReached ? ['desktop-web-harness', 'Diff'] : [],
+        links: name === 'Personal Validation' && isReached ? [{ label: 'desktop-web-harness' }, { label: 'Diff' }] : [],
         output: isReached ? output : '',
       }
+      return { ...stageOf(raw, stage, i), toolCalls: i < at ? 3 + ((i * 13) % 40) : 0 }
     }),
   }
+}
+
+// ── What the detail says about how a phase ran ───────────────────────────────
+
+type HowLine = { text: string; isDrift: boolean }
+type Field = 'agent' | 'model' | 'effort'
+
+/** The phase's procedure, servers, and chores, then — where they differ — what the run resolved against what ran. */
+function how(s: FlowStage): HowLine[] {
+  const lines: HowLine[] = []
+  const mcp = s.mcp === null ? '' : s.mcp.length === 0 ? 'mcp none' : `mcp ${s.mcp.join(', ')}`
+  const facts = [s.skill ? `skill ${s.skill}` : '', mcp].filter(Boolean)
+  if (facts.length > 0) lines.push({ text: facts.join(' · '), isDrift: false })
+  const chores = [s.before.length ? `before ${s.before.join(', ')}` : '', s.after.length ? `after ${s.after.join(', ')}` : ''].filter(Boolean)
+  if (chores.length > 0) lines.push({ text: chores.join(' · '), isDrift: false })
+  if (s.fallback) lines.push({ text: `≠ ${s.fallback} did not resolve; ran ${s.agent ?? 'the built-in procedure'}`, isDrift: true })
+  const configured = s.configured
+  if (configured && s.mismatch.length > 0) {
+    const field = (f: Field) => `${f} ${configured[f] ?? 'session'} → ${s[f] ?? 'session'}`
+    lines.push({ text: `≠ configured vs ran: ${(s.mismatch as Field[]).map(field).join(' · ')}`, isDrift: true })
+  }
+  if (!configured && !s.isModeRecorded) {
+    lines.push({ text: 'This run records no resolved phases: mode and agent are inferred.', isDrift: false })
+  }
+  return lines
 }
 
 // ── Polling ──────────────────────────────────────────────────────────────────
@@ -415,6 +554,7 @@ export const register: Register = on => {
           <Text color={MODE_COLOR.fork}>fork</Text>
           <Text color={MODE_COLOR.gate}>gate</Text>
           <Text dimColor>? = inferred</Text>
+          <Text color="yellow">≠ = not as configured</Text>
         </Box>
 
         {run.stages.map((s, i) => {
@@ -432,6 +572,7 @@ export const register: Register = on => {
                   </Button>
                 </Box>
                 {badge(s)}
+                {(s.mismatch.length > 0 || s.fallback) && <Text color="yellow">≠</Text>}
                 {isWide && who(s) && (
                   <Text dimColor wrap="truncate-end">
                     {who(s)}
@@ -451,7 +592,7 @@ export const register: Register = on => {
               {s.workers.map((w, k) => (
                 <Text color={w.isFailed ? 'red' : 'cyan'} dimColor={t === 'done' && !isFocused} wrap="truncate-end">
                   {k === s.workers.length - 1 ? '╰─▶' : '├─▶'} {w.name}
-                  {[w.model, duration(w.durationMs), w.toolCalls ? `${w.toolCalls} tools` : '', tokens(w.tokens)]
+                  {[w.isRevise ? 'revise round' : '', w.model, duration(w.durationMs), w.toolCalls ? `${w.toolCalls} tools` : '', tokens(w.tokens)]
                     .filter(Boolean)
                     .map(x => ` · ${x}`)
                     .join('')}
@@ -460,6 +601,11 @@ export const register: Register = on => {
               {isFocused && !isQuiet(t) && (
                 <Box flexDirection="column" marginLeft={2} marginBottom={1} borderStyle="single" borderColor={COLOR[t]} paddingX={1}>
                   {s.output ? <Text wrap="wrap">{s.output}</Text> : <Text dimColor>No output yet.</Text>}
+                  {how(s).map(line => (
+                    <Text dimColor={!line.isDrift} color={line.isDrift ? 'yellow' : undefined} wrap="truncate-end">
+                      {line.text}
+                    </Text>
+                  ))}
                   {s.scenarios.map(c => (
                     <Text color={c.status === 'pass' ? 'green' : c.status === 'fail' ? 'red' : 'yellow'} wrap="truncate-end">
                       {c.status === 'pass' ? '✓' : c.status === 'fail' ? '✗' : '~'} {c.name}

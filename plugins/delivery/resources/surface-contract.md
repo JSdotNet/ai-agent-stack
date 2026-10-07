@@ -113,7 +113,7 @@ that surface's own `runId`:
   `origins`, the work items the run started from — so a resumed session reads it back from
   `get_run` instead of resolving again. A surface stores the object verbatim and merges a
   later call over it key by key; a caller may pass only what changed.
-- **`runContext.phases` is the resolved map, one entry per stage.** Keyed
+- **`runContext.phases` is the resolved map, one entry per phase and reachable qualifier.** Keyed
   `phases.<flow>.<phase-skill>[:<qualifier>]` — `phases["flow-code"]["phase-implement"]` —
   each entry carries the fields resolution produced, never the raw config: `mode` (`inline`,
   `fork`, `delegate`, or `gate`), `agent` (the agent whose instructions the phase follows —

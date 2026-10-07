@@ -293,7 +293,7 @@ const DEMO_STAGES: DemoStage[] = [
 const DEMO_PHASES: Record<string, { mode: FlowMode; [field: string]: unknown }> = {
   'phase-update-base': { mode: 'inline', skill: 'delivery:phase-update-base', before: ['devbook:validate'] },
   'phase-scope': { mode: 'delegate', agent: 'architecture:architect', skill: 'delivery:phase-scope', model: 'opus', mcp: ['backlog'] },
-  'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', runner: 'delivery:runner-high', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
+  'phase-implement': { mode: 'delegate', agent: 'csharp-coding:coding', skill: 'delivery:phase-implement', model: 'opus', effort: 'high' },
   'phase-review': { mode: 'fork', skill: 'delivery:phase-review' },
   'phase-build-test': { mode: 'delegate', agent: 'general-purpose', runner: 'delivery:runner-low', skill: 'delivery:phase-build-test', model: 'sonnet', effort: 'low', mcp: [] },
   'phase-verify': { mode: 'delegate', agent: 'qa:qa', skill: 'delivery:phase-verify', mcp: ['aspire', 'playwright'] },
@@ -311,8 +311,8 @@ type DemoWorker = [name: string, model: string, durationMs: number, tokens: numb
 const DEMO_WORKERS: Record<string, DemoWorker[]> = {
   Scope: [['general-purpose', 'claude-opus-5-5', 141000, 52000, 33]],
   Implement: [
-    ['delivery:runner-high', 'claude-opus-5-5', 192000, 81000, 41],
-    ['delivery:runner-high', 'claude-opus-5-5', 236000, 64000, 37],
+    ['csharp-coding:coding', 'claude-opus-5-5', 192000, 81000, 41],
+    ['csharp-coding:coding', 'claude-opus-5-5', 236000, 64000, 37],
   ],
   Review: [['general-purpose', 'claude-opus-5-5', 88000, 30000, 19]],
   'Build & Test': [['delivery:runner-low', 'claude-sonnet-5-5', 263000, 21000, 12]],

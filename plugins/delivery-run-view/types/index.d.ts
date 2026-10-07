@@ -8,6 +8,8 @@ export type FlowWorker = {
   tokens: number | null
   toolCalls: number | null
   isFailed: boolean
+  /** It ran under the gate: work a revise round reopened, reported on the gate's stage. */
+  isRevise: boolean
 }
 
 export type FlowScenario = { name: string; status: string }
@@ -21,6 +23,17 @@ export type FlowStage = {
   agent: string | null
   model: string | null
   effort: string | null
+  /** The procedure the phase followed, its MCP servers (`[]` for none, null when unrecorded), and its chores. */
+  skill: string | null
+  mcp: string[] | null
+  before: string[]
+  after: string[]
+  /** The configured id that did not resolve, so the phase fell back to its built-in procedure. */
+  fallback: string | null
+  /** What the run's resolved `runContext.phases` entry asked for; null when the run records none. */
+  configured: { agent: string | null; model: string | null; effort: string | null } | null
+  /** The fields where what ran differs from what was configured. */
+  mismatch: string[]
   passes: number
   durationMs: number | null
   outputTokens: number | null

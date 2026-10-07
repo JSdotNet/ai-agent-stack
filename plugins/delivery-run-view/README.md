@@ -34,7 +34,7 @@ It is the mirror of `delivery-surface-canvas`, which is Copilot's alone.
 
 | Where | Shows |
 |---|---|
-| Pane — `/flows`, opened on its own the first time a run of this session appears | The run top to bottom, one row per phase: its status, how it ran (`inline`, `delegate`, `fork`, `gate`), the agent, model and effort, the duration, and `↺N` when the phase ran more than once. Sub-agents the phase delegated to hang under it. The focused phase opens in place with its output, QA scenarios, links, output tokens, and tool calls. `‹ ›` steps between runs, and a phase name focuses or unfocuses it |
+| Pane — `/flows`, opened on its own the first time a run of this session appears | The run top to bottom, one row per phase: its status, how it ran (`inline`, `delegate`, `fork`, `gate`), the agent, model and effort, `≠` when it did not run as configured, the duration, and `↺N` when the phase ran more than once. Sub-agents the phase delegated to hang under it, those a revise round ran under the gate marked as such. The focused phase opens in place with its output, its skill, MCP servers, and chores, what was configured against what ran where they differ, QA scenarios, links, output tokens, and tool calls. `‹ ›` steps between runs, and a phase name focuses or unfocuses it |
 | Band above the prompt | While this session's run is open: the flow, the stage rail, and the current phase with its mode and agent |
 | Inline tool rows | A `mcp__*delivery-surface-*__start_run` or `__update_stage` call in the transcript drawn as one line — the flow and its phases, or the phase and its new status — instead of raw JSON |
 | Status line | `<skillId> · <current stage>` while this session's run is open |
@@ -54,21 +54,24 @@ The run file shape is the dashboard's, which the Backlog app writes too. It is n
 surface contract, so a surface that changes its file shape can break this view without breaking
 the contract; a run file that does not parse is skipped and read again on the next poll.
 
-## Gaps the surface contract does not cover yet
+## How a phase ran
 
-- **How a phase ran is not recorded.** A run file says what each stage did, never whether it
-  ran in the main thread, was handed to a sub-agent, or ran as a `context: fork` skill. So the
-  mode is inferred and drawn dimmed with a `?`: a phase with a delegated sub-agent in the run's
-  `insights` is `delegate`, Personal Validation is the `gate`, and every other phase is
-  `inline`. A fork is never detected.
-- **Agent, model, and effort per phase are not recorded either**, beyond the sub-agents the
-  telemetry hook captured.
+The surface contract records it twice, and this view reads both: the run's
+`runContext.phases.<flow>.<phase-skill>` — what the flow-runner resolved from the config —
+and each stage's `execution`, what actually ran, which wins where both speak. A stage joins
+its entry by its title's slug, `Build & Test` to `phase-build-test`, `Create Pull Request` to
+`phase-create-pr`, and the stage names of an engine before 1.18.0 to the phases that replaced
+them.
 
-The plugin already reads both where a run carries them, so a contract that adds them needs no
-change here: a stage's `execution { mode | runs, agent, model, effort }`, and the resolved
-`runContext.phases[<flow>][<phase-key>]` map, the phase key being the stage name, its slug, or
-`phase-<slug>`. Both are the shape of the
-[Per-Phase Delivery Config proposal](https://claude.ai/artifact/P2LmjotffCQn5PdyPGDNkh).
+The agent is the recorded one, else the sub-agent that did the phase's work: the configured
+agent when it ran, else the longest-running, so a helper such as `qa:qa-monitor` never names
+the phase. `≠` marks a configured agent that never ran, a model or effort other than the
+configured one, and a `fallback` — a configured id that did not resolve.
+
+A run that records neither — every run started before the engine recorded them — is
+inferred and drawn dimmed with a `?`: a phase with a delegated sub-agent in the run's
+`insights` is `delegate`, Personal Validation is the `gate`, and every other phase is
+`inline`. A fork is never detected that way, and nothing can be compared with the config.
 
 ## The state contract
 

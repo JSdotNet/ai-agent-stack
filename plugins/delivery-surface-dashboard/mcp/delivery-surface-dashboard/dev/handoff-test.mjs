@@ -74,7 +74,9 @@ try {
     const first = JSON.parse(readFileSync(path.join(STATE, "runs", `${runId}.json`), "utf8"));
     check("start_run records the session id", JSON.stringify(first.sessionIds) === JSON.stringify(["s1"]), JSON.stringify(first.sessionIds));
 
-    await call("update_stage", { runId, stageName: "Implementation", status: "in_progress" });
+    await call("update_stage", { runId, stageName: "Implementation", status: "in_progress", execution: { mode: "delegate", agent: "csharp-coding:coding" } });
+    const executed = (await call("get_run", { runId })).stages.find((s) => s.name === "Implementation");
+    check("update_stage stores how the stage ran", executed.execution && executed.execution.agent === "csharp-coding:coding", JSON.stringify(executed.execution));
 
     const handed = await call("set_run_context", {
         runId,

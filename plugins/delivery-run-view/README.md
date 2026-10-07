@@ -65,9 +65,9 @@ them.
 
 The agent is the recorded one, else the sub-agent that did the phase's work: the configured
 agent when it ran or a `delivery:runner-<effort>` carried it, else the longest-running, so a
-helper such as `qa:qa-monitor` beside the agent never names
-the phase. `≠` marks a configured agent that never ran, a model or effort other than the
-configured one, and a `fallback` — a configured id that did not resolve.
+helper such as `qa:qa-monitor` beside the agent never names the phase. `≠` marks a
+configured agent that never ran, a model or effort other than the configured one, and a
+`fallback` — a configured id that did not resolve.
 
 A run that records neither — every run started before the engine recorded them — is
 inferred and drawn dimmed with a `?`: a phase with a delegated sub-agent in the run's

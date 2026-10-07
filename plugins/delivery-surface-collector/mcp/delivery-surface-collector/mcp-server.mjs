@@ -19,7 +19,7 @@
 
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { ensureDir, writeRun, readRun, listRuns, newRunId } from "./store.mjs";
+import { ensureDir, writeRun, readRun, listRuns, newRunId, withRunFileLock } from "./store.mjs";
 import { runsDir, stateDir, worktreeRoot, readActive, writeActive } from "./state.mjs";
 import { isIdle, clearIdle, isHandoffPending, markHandoff, clearHandoff } from "./idle.mjs";
 import { renderReportMarkdown } from "./report.mjs";
@@ -45,11 +45,14 @@ class ToolError extends Error {}
 const baseDir = runsDir();
 
 // Serializes read-modify-write access per runId so two tool calls issued back-to-back
-// cannot race each other and silently drop an update.
+// cannot race each other and silently drop an update. The in-process chain queues this
+// server's own calls; the file lock inside it holds off the server of another session on
+// the same checkout, which shares this state directory (see store.mjs).
 const runLocks = new Map();
 function withRunLock(runId, fn) {
     const prev = runLocks.get(runId) || Promise.resolve();
-    const run = prev.then(fn, fn);
+    const locked = () => withRunFileLock(baseDir, runId, fn);
+    const run = prev.then(locked, locked);
     runLocks.set(runId, run.then(() => {}, () => {}));
     return run;
 }
@@ -314,10 +317,17 @@ const tools = [
                     // earlier ones: which sessions drove a run is history, not a slot.
                     const sessionAdded = addSessionId(existing, sessionId);
                     if (sessionAdded || existing.idleSince || isHandoffPending(existing)) {
-                        clearHandoff(existing);
-                        clearIdle(existing);
-                        existing.updatedAt = new Date().toISOString();
-                        await writeRun(baseDir, existing);
+                        // Re-read under the lock: the copy listRuns returned may already be
+                        // behind another session's server that wrote the run since.
+                        await withRunLock(existing.id, async () => {
+                            const fresh = (await readRun(baseDir, existing.id)) || existing;
+                            addSessionId(fresh, sessionId);
+                            clearHandoff(fresh);
+                            clearIdle(fresh);
+                            fresh.updatedAt = new Date().toISOString();
+                            await writeRun(baseDir, fresh);
+                            Object.assign(existing, fresh);
+                        });
                     }
                     await writeActive({ runId: existing.id, stage: null, updatedAt: new Date().toISOString() });
                     return { runId: existing.id, resumed: true, run: existing, dashboardUrl: null, sessionTitle: null };

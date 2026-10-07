@@ -105,3 +105,11 @@ node dev/collector-test.mjs
 Drives the real server over stdio the way a host does: the declared tool surface, a
 run recorded end to end, the handoff round trip a resumed session depends on, and the
 report written from what was recorded.
+
+```bash
+node dev/atomic-write-test.mjs
+```
+
+Drives the store from child processes the way the servers of several sessions on one
+checkout do: a run file and `active.json` stay whole JSON however their writers overlap, and
+no read-modify-write is lost across processes.

@@ -27,7 +27,7 @@ need parallelism, and it cannot hand a parked worktree to anyone.
 
 - GitHub repository in `owner/repo` format (required).
 - Issue filter — labels, milestone, assignee; state is always `open`.
-- `maxResolve`: issues resolved this run (default `3`; `0` runs the triage alone — no branch,
+- `maxResolve`: issues resolved this run (default `10`; `0` runs the triage alone — no branch,
   no pull request).
 - `maxTriage`: issues judged per pass (default `12`); the rest are reported untriaged.
 - `labelConfidence`: the confidence a classification needs before it is written — `high`
@@ -249,7 +249,7 @@ requests, and the brief remain the source of truth.
   separates the two: remove it from an issue to have it classified again. A proposed label
   that keeps coming back is the brief telling the maintainer the vocabulary has a gap.
 - **Match `maxResolve` to how many draft pull requests you will review the next day**, not to
-  how many issues exist. Three a night is a queue you can keep up with.
+  how many issues exist. The default of ten assumes a day of review; lower it per repository through an override.
 - **No verify phase.** The resolution checks itself with the unit suite only; a change that
   touches a runtime surface says so under *what could not be proved*, and that is what to
   check by hand before flipping the draft. For work that needs a person present from the

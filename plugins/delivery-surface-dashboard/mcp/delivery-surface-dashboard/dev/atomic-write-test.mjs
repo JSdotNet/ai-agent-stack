@@ -6,7 +6,7 @@
 // truncated and filled the same temp file from offset 0, and the rename published the mix.
 // This drives writeRun and withRunFileLock from child processes the way those writers do.
 import { spawn } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -119,6 +119,53 @@ console.log("\n— overlapping writers —");
     check(`no read of ${reads} saw a torn file`, torn, 0);
     check("the file parses once they are done", parses(runFile(dir)), true);
     check("no temp or lock file is left beside it", leftovers(dir).join(","), "");
+    rmSync(dir, { recursive: true, force: true });
+}
+
+console.log("\n— a reader during overlapping writers —");
+{
+    // On Windows a rename over the record can briefly hide it from a reader as ENOENT or
+    // EPERM. The miss is rare — about one round in thirty — so this runs several rounds.
+    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    await store.writeRun(dir, body(0, false));
+    let missing = 0;
+    let unlisted = 0;
+    let reads = 0;
+    for (let round = 0; round < 8; round++) {
+        let done = false;
+        const poll = (async () => {
+            while (!done) {
+                reads++;
+                if ((await store.readRun(dir, RUN_ID)) === null) missing++;
+                if (!(await store.listRuns(dir)).some((r) => r.id === RUN_ID)) unlisted++;
+                await new Promise((r) => setTimeout(r, 1));
+            }
+        })();
+        await Promise.all([1, 2, 3, 4].map((i) => child(["write", dir, String(i), "40"])));
+        done = true;
+        await poll;
+    }
+    check(`no readRun of ${reads} found the run missing`, missing, 0);
+    check(`no listRuns of ${reads} left the run out`, unlisted, 0);
+    check("a run that was never written reads as null", await store.readRun(dir, "run-never-written"), null);
+    rmSync(dir, { recursive: true, force: true });
+}
+
+console.log("\n— a record missing for a moment —");
+{
+    // The rename window, made deterministic: the record lands a few milliseconds after the
+    // read starts. Windows retries ENOENT and finds it; elsewhere a missing run is null at once.
+    const dir = mkdtempSync(path.join(tmpdir(), "dashboard-atomic-"));
+    const lands = new Promise((r) => setTimeout(r, 8)).then(() => store.writeRun(dir, body(0, false)));
+    const read = await store.readRun(dir, RUN_ID);
+    await lands;
+    check("readRun answers as the platform's rename allows", read === null, process.platform !== "win32");
+    writeFileSync(path.join(dir, "run-mid-rename.json.1.ab.tmp"), "{}");
+    const lister = store.listRuns(dir);
+    await new Promise((r) => setTimeout(r, 8));
+    await store.writeRun(dir, { ...body(0, false), id: "run-mid-rename" });
+    const listed = (await lister).some((r) => r.id === "run-mid-rename");
+    check("listRuns finds a run seen only as its temp file", listed, process.platform === "win32");
     rmSync(dir, { recursive: true, force: true });
 }
 

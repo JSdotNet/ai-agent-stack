@@ -542,8 +542,8 @@ async function alertGates($: EngineInterface, runs: FlowRun[]): Promise<Gate[]> 
   if (JSON.stringify(seen) !== JSON.stringify(before ?? {})) await $.state.set(SEEN, seen)
 
   for (const { run, stage, tone: t } of turned) {
-    const what = t === 'waiting' ? `${MARK.waiting} ${stage.name} is waiting` : `${MARK.blocked} ${stage.name} is blocked`
-    $.ui.toast(`${what}: ${run.repo} · ${run.title}`, { timeoutMs: 8000 })
+    // One short line: the mark says waiting or blocked, so the words do not repeat it.
+    $.ui.toast(`${MARK[t]} ${gateLabel(stage)} ${run.repo} · ${run.title}`, { timeoutMs: 8000 })
   }
   // A surface with no player plays nothing; the toast and the status line still say it.
   if (turned.length > 0) void $.audio.play({ asset: GATE_SOUND }).catch(() => undefined)
@@ -583,11 +583,11 @@ const openedFor = new Set<string>()
 const openPane = ($: EngineInterface) => $.ui.open({ id: PANE, title: 'Delivery flows' })
 
 /** The gate's three answers, in the flow-runner's words: approve, revise, decline. */
-type GateReply = { key: 'approve' | 'revise' | 'reject'; label: string; text: string }
+type GateReply = { key: 'approve' | 'revise' | 'reject'; label: string; text: string; glyph: string; color: string }
 const GATE_REPLIES: GateReply[] = [
-  { key: 'approve', label: 'Approve', text: 'Personal Validation: approve.' },
-  { key: 'revise', label: 'Revise', text: 'Personal Validation: revise.' },
-  { key: 'reject', label: 'Reject', text: 'Personal Validation: decline.' },
+  { key: 'approve', label: 'Approve', text: 'Personal Validation: approve.', glyph: MARK.done, color: COLOR.done },
+  { key: 'revise', label: 'Revise', text: 'Personal Validation: revise.', glyph: '↺', color: 'yellow' },
+  { key: 'reject', label: 'Reject', text: 'Personal Validation: decline.', glyph: MARK.blocked, color: COLOR.blocked },
 ]
 
 /** A press submits the reply as the person's own prompt; the demo's has no session to answer, so it says what it would send. */
@@ -725,7 +725,9 @@ export const register: Register = on => {
                 </Text>
               ) : (
                 <Text wrap="truncate-end">
-                  ↗ {[l.label, l.url].filter(Boolean).join('  ')}
+                  ↗ {l.label}
+                  {l.label && l.url ? '  ' : ''}
+                  <Text dimColor>{l.url}</Text>
                 </Text>
               ),
             )}
@@ -742,9 +744,17 @@ export const register: Register = on => {
             )}
             <Box flexDirection="row" gap={2} marginTop={1}>
               {GATE_REPLIES.map(reply => (
-                <Button key={`pv-${reply.key}`} onPress={() => answerGate($, run, reply)}>
-                  {reply.label}
-                </Button>
+                // Button takes no colour, so a coloured glyph in front of it carries the tone.
+                <Box key={`pv-${reply.key}-row`} flexDirection="row" gap={1}>
+                  <Text color={reply.color}>{reply.glyph}</Text>
+                  <Button
+                    key={`pv-${reply.key}`}
+                    variant={reply.key === 'approve' ? 'primary' : 'secondary'}
+                    onPress={() => answerGate($, run, reply)}
+                  >
+                    {reply.label}
+                  </Button>
+                </Box>
               ))}
             </Box>
           </Box>
@@ -842,7 +852,6 @@ export const register: Register = on => {
           <Text wrap="truncate-end">
             <Text color={COLOR[tone(live.status)]}>{live.name}</Text>
             <Text color={MODE_COLOR[live.mode]}> {MODE_LABEL[live.mode]}</Text>
-            <Text dimColor>{[live.agent, live.model].filter(Boolean).map(x => ` · ${x}`).join('')}</Text>
           </Text>
         )}
         <Button key="open" plain onPress={() => $.ui.open({ id: PANE, title: 'Delivery flows' })}>

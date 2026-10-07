@@ -293,7 +293,7 @@ test("alerts once when another checkout's run reaches Personal Validation, and c
   await flows()
   await flows()
 
-  expect(seen.toasts).toEqual(['◆ Personal Validation is waiting: Budget · Monthly totals'])
+  expect(seen.toasts).toEqual(['◆ PV Budget · Monthly totals'])
   expect(seen.sounds).toEqual([{ asset: 'sounds/gate.wav' }])
   expect(seen.status.at(-1)).toBe('◆ PV: Budget Monthly totals')
 
@@ -351,7 +351,7 @@ test("draws the review card for this session's run at Personal Validation and su
       },
     })
     expect((await ui.find({ type: 'Link' }))?.props.href).toBe('http://localhost:50475/board')
-    expect(await ui.find({ type: 'Text', text: '↗ Aspire dashboard  http://127.0.0.1:50480/' })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: 'http://127.0.0.1:50480/' })).toBeDefined()
     expect(await ui.find({ type: 'Text', text: /Space does not preventDefault$/ })).toBeDefined()
     expect(await ui.find({ type: 'Text', text: /card chapter code-ahead$/ })).toBeDefined()
     await ui.press({ key: 'pv-approve' })

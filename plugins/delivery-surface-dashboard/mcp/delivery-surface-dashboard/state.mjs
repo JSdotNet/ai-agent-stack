@@ -12,11 +12,12 @@
 //   active.json                { runId, stage: { index, name } } — the run receiving telemetry
 //   telemetry/<sessionId>.json hook bookkeeping: pending tool starts, transcript cursor
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
+import { writeFileAtomic } from "./store.mjs";
 
 // Claude Code sets CLAUDE_PROJECT_DIR for hooks; MCP servers start in the project
 // directory. Both resolve to the same tree, which is also where QA evidence paths are
@@ -80,11 +81,12 @@ export async function readActive() {
 
 export async function writeActive(active) {
     await mkdir(stateDir(), { recursive: true });
-    await writeFile(activeFile(), JSON.stringify(active, null, 2), "utf8");
+    await writeFileAtomic(activeFile(), JSON.stringify(active, null, 2));
 }
 
 // Per-session hook bookkeeping. Kept separate from run files so a corrupt or stale cursor
-// can never damage recorded run state.
+// can never damage recorded run state. Parallel tool calls run their hooks at once, so this
+// is written atomically too: a torn file reads as no cursor, which re-counts the transcript.
 export function telemetryFile(sessionId) {
     const safe = String(sessionId || "default").replace(/[^a-zA-Z0-9._-]/g, "-");
     return path.join(stateDir(), "telemetry", `${safe}.json`);
@@ -103,5 +105,5 @@ export async function readTelemetry(sessionId) {
 export async function writeTelemetry(sessionId, data) {
     const file = telemetryFile(sessionId);
     await mkdir(path.dirname(file), { recursive: true });
-    await writeFile(file, JSON.stringify(data, null, 2), "utf8");
+    await writeFileAtomic(file, JSON.stringify(data, null, 2));
 }

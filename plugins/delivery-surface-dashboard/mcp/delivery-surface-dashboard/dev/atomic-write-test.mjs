@@ -64,6 +64,23 @@ function parses(file) {
     }
 }
 
+// Whether what a reader got was torn content. Windows can refuse the open itself for the
+// instant a rename replaces the file; that is no read at all, not a torn one.
+function readsTorn(file) {
+    let text;
+    try {
+        text = readFileSync(file, "utf8");
+    } catch {
+        return false;
+    }
+    try {
+        JSON.parse(text);
+        return false;
+    } catch {
+        return true;
+    }
+}
+
 const leftovers = (dir) => readdirSync(dir).filter((f) => f !== `${RUN_ID}.json`);
 const runFile = (dir) => path.join(dir, `${RUN_ID}.json`);
 
@@ -89,7 +106,7 @@ console.log("\n— overlapping writers —");
     const poll = (async () => {
         while (!done) {
             reads++;
-            if (!parses(runFile(dir))) torn++;
+            if (readsTorn(runFile(dir))) torn++;
             await new Promise((r) => setTimeout(r, 2));
         }
     })();

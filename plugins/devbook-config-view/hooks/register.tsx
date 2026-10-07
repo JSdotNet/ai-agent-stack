@@ -103,6 +103,7 @@ function phaseLink(phase: string, entry: any): PhaseLink {
     model: typeof e.model === 'string' ? e.model : null,
     effort: typeof e.effort === 'string' ? e.effort : null,
     mcp: e.mcp === null ? [] : e.mcp === undefined ? null : list(e.mcp),
+    app: e.app === null ? 'none' : typeof e.app === 'string' ? e.app : typeof e.app?.provider === 'string' ? e.app.provider : null,
     before: list(e.before),
     after: list(e.after),
   }
@@ -247,6 +248,9 @@ const promptFor = (skill: 'doctor' | 'update', repo: RepoRow) =>
 
 const short = (phase: string) => phase.replace(/^phase-/, '')
 
+/** A stamp column is as wide as its name, never narrower than a version. */
+const widthOf = (column: string) => Math.max(10, column.length + 2)
+
 async function refresh($: EngineInterface, options: PluginOptions) {
   await $.state.set(ROLLOUT, await load($, options))
 }
@@ -320,7 +324,7 @@ export const register: Register = (on, options) => {
       </Text>
     )
 
-    if (view === 'config') return configView($, Box, Text, Button, toolbar, rollout.repos, index)
+    if (view === 'config') return configView($, Box, Text, Button, toolbar, rollout.repos, index, columns)
 
     const cols = columnsOf(rollout)
     const dots = (all: string[], have: string[]) =>
@@ -345,7 +349,7 @@ export const register: Register = (on, options) => {
             <Text bold>repository</Text>
           </Box>
           {cols.map(c => (
-            <Box width={10}>
+            <Box width={widthOf(c)}>
               <Text bold wrap="truncate-end">
                 {c}
               </Text>
@@ -361,7 +365,7 @@ export const register: Register = (on, options) => {
           const cells = cols.map(c => {
             const cell = repo.stamps[c]
             return (
-              <Box width={10}>
+              <Box width={widthOf(c)}>
                 <Text color={cell ? DISTANCE_COLOR[cell.distance] : 'gray'} dimColor={!cell}>
                   {cell?.version ?? '–'}
                 </Text>
@@ -432,11 +436,13 @@ export const register: Register = (on, options) => {
 }
 
 /** One repository's wiring: each flow's phases as a chain, with the gates where they sit, then policy and bindings. */
-function configView($: EngineInterface, Box: any, Text: any, Button: any, toolbar: unknown, repos: RepoRow[], index: number) {
+function configView($: EngineInterface, Box: any, Text: any, Button: any, toolbar: unknown, repos: RepoRow[], index: number, columns: number) {
+  // Two flows side by side once each column still fits a phase row; stacked below that.
+  const isSideBySide = columns >= 110 && (repos[index]?.flows.length ?? 0) > 1
   const repo = repos[index]!
   const step = (by: number) => $.state.set(SELECTED, (index + by + repos.length) % repos.length)
   const who = (p: PhaseLink) =>
-    [p.agent, [p.model, p.effort].filter(Boolean).join('/'), p.skill ? `skill ${p.skill}` : '', p.mcp === null ? '' : `mcp ${p.mcp.join(', ') || 'none'}`]
+    [p.agent, [p.model, p.effort].filter(Boolean).join('/'), p.skill ? `skill ${p.skill}` : '', p.mcp === null ? '' : `mcp ${p.mcp.join(', ') || 'none'}`, p.app ? `app ${p.app}` : '']
       .filter(Boolean)
       .join(' · ')
   const chores = (p: PhaseLink) =>
@@ -474,9 +480,9 @@ function configView($: EngineInterface, Box: any, Text: any, Button: any, toolba
         </Box>
       </Box>
       <Box flexDirection="row" gap={2} marginBottom={1}>
-        <Text color={MODE_COLOR.inline}>inline</Text>
-        <Text color={MODE_COLOR.delegate}>delegate</Text>
-        <Text color={MODE_COLOR.fork}>fork</Text>
+        <Text color={MODE_COLOR.inline}>○ inline</Text>
+        <Text color={MODE_COLOR.delegate}>▶ delegate</Text>
+        <Text color={MODE_COLOR.fork}>⑂ fork</Text>
         <Text color="magenta">◆ gate</Text>
         <Text dimColor>dim = the phase's default</Text>
       </Box>
@@ -486,8 +492,9 @@ function configView($: EngineInterface, Box: any, Text: any, Button: any, toolba
         </Text>
       )}
       {repo.flows.length === 0 && <Text dimColor>No phase maps: the engine is not configured here.</Text>}
+      <Box flexDirection={isSideBySide ? 'row' : 'column'} gap={isSideBySide ? 4 : 0}>
       {repo.flows.map(flow => (
-        <Box key={flow.flow} flexDirection="column" marginBottom={1}>
+        <Box key={flow.flow} flexDirection="column" marginBottom={1} flexShrink={1} width={isSideBySide ? '50%' : undefined}>
           <Text bold>{flow.flow}</Text>
           {flow.phases.map((p, i) => {
             const isLast = i === flow.phases.length - 1
@@ -523,6 +530,7 @@ function configView($: EngineInterface, Box: any, Text: any, Button: any, toolba
           })}
         </Box>
       ))}
+      </Box>
       {repo.policy.length > 0 && (
         <Box flexDirection="column" marginBottom={1}>
           <Text bold>policy</Text>

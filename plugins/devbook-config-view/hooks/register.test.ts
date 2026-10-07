@@ -21,8 +21,12 @@ const catalog = JSON.stringify({
 
 const config = (body: object) => JSON.stringify({ id: 'x', ...body })
 
-/** A machine holding `files` (path → content), this session in a worktree at ROOT; every write is recorded. */
-function machine(on: On, files: Record<string, string>) {
+/**
+ * A machine holding `files` (path → content), this session in a worktree at ROOT; every write is
+ * recorded. `$.state` is stubbed so a test can read it back, unless `isDrawn`: a drawing redraws
+ * only on the engine's own state.
+ */
+function machine(on: On, files: Record<string, string>, isDrawn = false) {
   on('env.get', ($, e) => ({ value: e.name === 'CLAUDE_CONFIG_DIR' ? PROFILE : undefined }))
   on('session.root', () => ({ value: ROOT }))
   on('command.register', ($, e) => ({ value: { command: e.name } }))
@@ -54,6 +58,7 @@ function machine(on: On, files: Record<string, string>) {
   })
 
   const state = new Map<string, unknown>()
+  if (isDrawn) return { seen, rollout: () => state.get('rollout') as Rollout }
   on('state.set', ($, e) => {
     state.set(e.key, e.value)
     return { value: { isSet: true as const, version: state.size } }
@@ -193,4 +198,39 @@ test("a row's buttons fill the prompt for that repository and never send it", as
     '/devbook-config:doctor for the repository at D:\\Repos\\spec-manager',
     '/devbook-config:update for the repository at D:\\Repos\\Backlog',
   ])
+})
+
+test("draws phase-verify's app provider, and none for an app set to null", async ($, on) => {
+  const { rollout } = machine(on, {
+    ...FILES,
+    'D:/Repos/Backlog/.devbook/config.json': config({
+      phases: { 'flow-code': { 'phase-verify': { app: { provider: 'repo:run', host: 'aspire' } } }, 'flow-spec': { 'phase-verify': { app: null } } },
+    }),
+  })
+
+  await open($)
+
+  const [code, spec] = rollout().repos.find(r => r.name === 'Backlog')!.flows
+  expect([code!.phases[0]!.app, spec!.phases[0]!.app]).toEqual(['repo:run', 'none'])
+})
+
+test('the config map draws both flows on every surface, wide and narrow', async ($, on) => {
+  machine(on, {
+    ...FILES,
+    'D:/Repos/Backlog/.devbook/config.json': config({
+      phases: { 'flow-code': { 'phase-scope': {} }, 'flow-spec': { 'phase-scope': {} } },
+    }),
+  }, true)
+
+  await open($)
+  for (const surface of ['terminal', 'desktop'] as const) {
+    for (const bodyColumns of [80, 140]) {
+      const ui = await $.ui.mount({ plugin: 'devbook-config-view', surface, component: 'Pane', requestId: 'devbook-config-view', props: { bodyColumns } as any })
+      await ui.press({ key: 'map-0' })
+      expect(await ui.find({ type: 'Text', text: /flow-code/ })).toBeDefined()
+      expect(await ui.find({ type: 'Text', text: /flow-spec/ })).toBeDefined()
+      await ui.press({ key: 'matrix' })
+      await ui.unmount()
+    }
+  }
 })

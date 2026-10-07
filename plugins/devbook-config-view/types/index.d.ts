@@ -17,6 +17,8 @@ export type PhaseLink = {
   model: string | null
   effort: string | null
   mcp: string[] | null
+  /** `phase-verify` only: the provider that starts the app, `none` for `app: null`, null when unset. */
+  app: string | null
   before: string[]
   after: string[]
 }

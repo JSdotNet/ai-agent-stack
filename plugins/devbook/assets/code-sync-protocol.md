@@ -269,7 +269,7 @@ assert.
 ### A scenario page is evidence, not a kind
 
 A `type: scenario` page has no file under `assets/spec-kinds/`, roots no sync
-unit, and gets no verdict row. It rides with the requirements whose
+unit, and gets no verdict row of its own among the five. It rides with the requirements whose
 `#### Scenario:` cases point at its parts with `Proved by:`, the way a demo rides
 with its page.
 
@@ -286,7 +286,23 @@ with its page.
   derived spec as the test to make pass. It never edits the page.
 - **Verify** reads the derived spec and the last run as the requirement's `e2e`
   evidence. A part that fails is evidence against the requirement; a part no case
-  points at is reported beside the table as an unclaimed journey.
+  points at is reported beside the table as an unclaimed journey. Two findings
+  more, for every page a requirement in scope points at:
+  - **`stale`** — the page's signature no longer matches its run: the first field
+    `.devbook/_tools/scenarios/signature.mjs <page>` prints, a read that runs
+    nothing, is not the `signature` in `<scenario folder>/<stem>/run.json`, or
+    there is no `run.json`. The scenario folder is `.devbook/scenarios/` unless
+    `playwright.config.ts` sets `scenarioFolder`; pass it as `--scenario-folder`
+    whenever it is set, because a page's data sets hash from under it. Listed after the report table, one row per page with
+    both signatures and `scenario-run` as the action, per [Report table](#report-table) — `scenario-derive` first when the
+    spec's `// signature:` differs too. `stale` qualifies a run the way `unagreed`
+    qualifies a verdict; it is not a sixth verdict.
+  - **`spec-ahead`** — a part a case points at has no proof: no spec's
+    `// scenario:` header names its page, that spec has no `part` titled as the
+    part's heading, or the current run records the part `not-run`, a step still
+    held by `test.fixme()`. The requirement's row is `spec-ahead` — agreed and not
+    proved — with `scenario-derive` as the action, or the held step to fill, then
+    `apply-change` where the behaviour is unbuilt too.
 
 ## Drift verdict
 
@@ -628,3 +644,13 @@ the same ground gets re-covered next time.
 | Chapter | Alias | Proposal |
 |---|---|---|
 | `.devbook/arc42/building-blocks/ordering.md#order` | `Bestelling` | No identifier matches; the class is now `Order`. Remove the alias, or correct it if a Dutch name is still meant to pair |
+
+Where a requirement in scope points at a scenario page, `verify-change` then lists
+each such page's run, or the line "No scenario pages." when none is pointed at:
+
+| Page | Page signature | Run signature | Run | Action |
+|---|---|---|---|---|
+| `.devbook/domain/work/set-up-and-fill-the-backlog.md` | `9c41e2a0` | `51d0b7e3` | `stale` | `scenario-run`; the spec's header still reads `51d0b7e3`, so `scenario-derive` first |
+
+**Run** is `current` when the two signatures match and `stale` otherwise, and
+**Run signature** is `none` when the page has no `run.json`.

@@ -57,6 +57,17 @@ instruction file that owns them. What remains of the coupling is the folder name
 called after and the `meta` block it expects every chapter to carry; still undeclared, still
 unchecked across the two plugins, and now one skill wide instead of five.
 
+**2026-10-08. It widens again, on purpose.** `flow-code`'s phases now carry the scenario pages
+an item references through the run: `phase-scope` reads the register devbook's checker prints,
+`phase-implement` and `phase-verify` invoke `scenario-derive` and `scenario-run` by name, and
+`phase-spec-check` runs devbook's `signature.mjs` against each run. Each is written so its
+absence records the pages as not derived or not run rather than failing the phase, which is the
+same hedge the Origin below describes — the failure in the prose, not the manifest. Four
+phases wide instead of one skill, and still undeclared. Whether this is the second
+devbook-shaped concern the split under *Remediation options* waits for is left to the owner:
+the scenario phases change behaviour inside phases every flow-code run takes, so they cannot
+move to a `delivery-devbook` plugin the way the folder flows could have.
+
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
 [the engine contract](../../../plugins/delivery/resources/engine-contract.md) says: the engine
 reads that file whether or not a single folder is adopted, and `devbook-config` owns it and
@@ -87,7 +98,9 @@ rename wave for a coupling nothing has broken yet. This record is what was writt
 ```meta
 ```
 
-`delivery`, in five skills and three tracker mentions. `devbook`, which cannot move a payload
+`delivery`, in `flow-spec`, in the four `flow-code` phases that carry scenario pages —
+`phase-scope`, `phase-implement`, `phase-verify`, `phase-spec-check` — and in
+`phase-spec-check`'s default binding of `verify-change`. `devbook`, which cannot move a payload
 path or rename a folder without a coordinated `delivery` release it has no way to require.
 `delivery-schedule` inherits the coupling through `delivery`.
 

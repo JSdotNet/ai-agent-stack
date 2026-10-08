@@ -567,6 +567,8 @@ Payload:
 - `stage`, `status`: which phase, and where it now stands
 - `output`, `links`: what it produced, and where the artifacts are
 - `qaScenarios`: scenarios with their status and evidence paths, where `verify` ran
+- `evidence`: optional; one `{ stem, part, outcome, runAt }` per part of each scenario page
+  `verify` ran, `outcome` being `passed`, `failed`, or `not-run`
 - `execution`: how the phase actually ran — mode, agent, runner, skill, model, effort, and one
   entry per sub-agent call — beside what the run resolved for it
 - `decision`: the gate outcome, where a gate was attached to this phase
@@ -580,6 +582,9 @@ Published language rules:
 
 - **Evidence is a path into the worktree, and anything resolving outside it is refused.** A
   report cites the screenshot; the screenshot stays where it was produced.
+- **Scenario evidence is additive.** `evidence` joins the lifecycle group without raising it
+  past `@1`: a run that ran no scenario page sends none, and a surface that does not read it
+  keeps everything else the stage carries.
 - **A repeat is a repeat.** A stage finishing twice is recorded twice, because a revise
   decision that reads as one long stage has erased the decision.
 - **Telemetry is never written by hand.** A surface that measures reports it, and one that does

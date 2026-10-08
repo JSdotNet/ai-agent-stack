@@ -149,6 +149,12 @@ that surface's own `runId`:
   as **unverified**; under `policy["openspec.scenarios"]: "linked"` it also marks the row as
   what refuses acceptance (`engine-contract.md`, **Policy**). A surface that ignores the key
   stays conformant.
+- **For Verify, pass the scenario pages it ran as `evidence`**: one
+  `{ stem, part, outcome, runAt }` per part, read from `<scenario folder>/<stem>/run.json` —
+  the page's stem, the part's `anchor`, its `outcome` (`passed`, `failed`, or `not-run`), and
+  the file's `ranAt`.
+  Optional and additive: the capability stays `@1`, a run that ran no page sends none, and a
+  surface that ignores the key stays conformant and loses nothing `scenarios` carries.
 - **Keep the gate and `deliver` as separate stages.** Gate `deliver` on the approval recorded
   at Personal Validation, mark it `skipped` when there is no change set, and record all
   delivery-time changes under its stage output.

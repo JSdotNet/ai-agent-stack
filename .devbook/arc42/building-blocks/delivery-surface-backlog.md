@@ -94,6 +94,7 @@ group is not a bound one, so the name appears when the operation does.
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | Only lifecycle names, and `export_report` while Backlog lists it, are listed or forwarded; any other name is refused without asking Backlog | `tools/list`, `tools/call` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
+| An argument Backlog may not know yet — `update_stage`'s scenario `evidence` — reaches it unchanged | `tools/call` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 | Backlog's answers and refusals reach the caller unchanged | `tools/call` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 | Backlog not listening makes `open_dashboard` answer `unavailable`, never an error | `open_dashboard` | `unit:node:plugins/delivery-surface-backlog/mcp/delivery-surface-backlog/dev/proxy-test.mjs` |
 

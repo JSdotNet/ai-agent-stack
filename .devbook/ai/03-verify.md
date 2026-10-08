@@ -51,8 +51,8 @@ and its run committed beside it — `devbook:scenario-write`, `scenario-derive`,
 - **Used for** — nothing here yet. This repository ships the three skills and the tools under
   them, but adopts no `domain/` folder and has no application to drive, so there is no page to
   write and nothing to run.
-- **Adopted by** — nobody. The first adopter is spec-manager, whose pilot pages are the
-  scenario-pages plan's step 14; Backlog reads the runs after it.
+- **Adopted by** — nobody. The first adopter is spec-manager, with its pilot pages; Backlog
+  reads the runs after it.
 - **Evidence** — none yet. The tools' own suites under `plugins/devbook/tools/scenarios/` prove
   the parser, the signature, the reporter, and the coverage check, not that a model derives a
   spec a person keeps.

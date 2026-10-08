@@ -16,7 +16,8 @@ setup field changed here turns the last run stale until the spec is re-derived a
 1. **Place it** beside the chapter the journey demonstrates — a feature, a requirement — at
    `.devbook/domain/<context>/<stem>.md`. The stem names the journey in kebab-case and is unique
    across every bounded context, per `../../rules/devbook-naming.md`. A revision keeps its stem;
-   a rename moves every `Proved by:`, `related`, and `scenario:` reference in the same change.
+   a rename moves every `Proved by:`, `related`, and `scenario:` reference in the same change,
+   and leaves the spec's header and the run folder to `scenario-derive` and `scenario-run`.
 2. **Write the block** under `#`: `type: scenario`, `related` to that chapter, and only the setup
    fields the journey needs, per "Scenario pages" in `../../rules/devbook-chapter-metadata.md`.
    A flag or a setting goes on the page only when this journey depends on it; one that describes
@@ -30,13 +31,14 @@ setup field changed here turns the last run stale until the spec is re-derived a
    lists and never inside one; the label is `[a-z0-9-]+` and unique in the page. Other pages
    show it as `scenario:<stem>#<label>`, so a revision keeps it or fixes every reference.
 6. **Point the requirements at it.** Each `#### Scenario:` the part proves holds the one line
-   `Proved by: <page>.md#<part>` and loses its inline Given/When/Then: behaviour is written once,
+   `Proved by: <page>.md#<part-heading-slug>` and loses its inline Given/When/Then: behaviour is written once,
    in the page, per `../../rules/devbook-domain.md`. One case, one part. Never write the
    requirement's `e2e` `tests` entry; it is derived.
 7. **Check**: `node .devbook/_tools/devbook-meta/build.mjs --check`, fixing what it reports per
-   `../validate/SKILL.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`: a new
-   page reports `page-without-spec` and an edited one `signature-mismatch`. Both are closed by
-   `scenario-derive`, so name it in the reply.
+   `../validate/SKILL.md`. Where `.devbook/_tools/scenarios/` exists, run its `check.mjs`, with
+   the flags its README lists for a non-default scenario folder or spec folder: a new page reports
+   `page-without-spec`, an edited one `signature-mismatch`, a renamed one `spec-without-page`.
+   Each is closed by `scenario-derive`, so name it in the reply.
 
 ## Do not
 

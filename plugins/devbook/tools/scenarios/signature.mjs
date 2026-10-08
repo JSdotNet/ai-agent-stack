@@ -143,10 +143,11 @@ async function main(argv) {
     const repoRoot = path.resolve(options.root);
     let failed = false;
     for (const given of options.pages) {
-        const relPath = normalizePath(path.relative(repoRoot, path.resolve(repoRoot, given)));
+        const file = path.resolve(repoRoot, given);
+        const relPath = normalizePath(path.relative(repoRoot, file));
         let page;
         try {
-            page = parseScenarioPage(await readFile(path.join(repoRoot, relPath), "utf8"), relPath);
+            page = parseScenarioPage(await readFile(file, "utf8"), relPath);
         } catch (error) {
             console.error(`${relPath}: ${error.code === "ENOENT" ? "does not exist" : error.message}`);
             failed = true;

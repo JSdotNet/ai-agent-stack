@@ -45,6 +45,16 @@ artifacts:
       decision the change makes is a delta too, under `devbook-delta/arc42/adr/`
       when it is architectural.
 
+      A scenario page is a delta under `devbook-delta/domain/<context>/` at its
+      own path. A new page is `delta: added`: its `#` title, the file-level
+      block with `type: scenario` and the setup fields, the lead, and each part
+      as an `ADDED` entry. On a page that exists, a part is replaced whole as a
+      `MODIFIED` entry, never step by step. A requirement the page proves holds
+      `Proved by: <page>.md#<part>` as the whole of its `#### Scenario:` case,
+      with no steps of its own: behaviour is written once, in the page. The
+      check resolves a pointer with every delta of the change merged, so it may
+      name a page this change adds.
+
       A demo is the one delta that is not Markdown. Copy the standalone
       prototype `/prototype` wrote, whole, to the path where it lands —
       `devbook-delta/domain/<context>/features.demo.html` lands as
@@ -86,7 +96,8 @@ artifacts:
     instruction: |
       `## Step N — title` blocks, one pull request each, in dependency order.
       Under each heading, a `delivers:` line naming the deltas it delivers by
-      address — a demo delta by its path — then — when a person will do the step — a line reading exactly
+      address — a demo delta by its path, a scenario page by its delta's path
+      or one part as `<path>#<part>` — then — when a person will do the step — a line reading exactly
       `owner: me`, then the step's tasks as `- [ ]` checkboxes, each saying how
       it is verified.
     requires:

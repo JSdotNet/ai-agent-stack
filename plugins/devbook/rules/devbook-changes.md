@@ -1,6 +1,6 @@
 ---
 name: devbook-changes
-description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records and the delta shape the merge in delta.mjs applies.
+description: The change folder under openspec/changes/ — a proposed change to the devbook as a proposal, deltas at the path of each file they change, a solution, and tasks — with the gates its proposal records, the delta shape the merge in delta.mjs applies, and how a scenario page and its Proved by pointers change through it.
 ---
 
 # The change folder
@@ -54,7 +54,22 @@ empty `devbook-delta/` as unfinished. The merge stamps `change: <name>` on every
 it touched; `change` is provenance, written by the merge and never by hand.
 
 Run `node .devbook/_tools/devbook-meta/delta.mjs --check <name>` after every edit to a delta: it
-resolves each one to its target file and heading and lints the merged result.
+resolves each one to its target file and heading, lints the merged result, and then runs the
+corpus-wide scenario rules over the devbook as the whole change would leave it.
+
+## A scenario page
+
+A scenario page is a delta like any `domain/` file, at its path:
+`devbook-delta/domain/<context>/<journey>.md`. A new page is `delta: added` — its `#` title,
+the file-level block with `type: scenario` and the setup fields, the lead, and each part as an
+`ADDED` entry. A page that exists is `delta: modified` under its `#` title: a part is replaced
+whole as a `MODIFIED` entry, never step by step, added under `ADDED`, or dropped under
+`REMOVED`; a setup field changes in the block opening `MODIFIED`. A requirement the page
+proves changes in its `requirements.md` delta, its `#### Scenario:` holding the one line
+`Proved by: <page>.md#<part>` and no steps: behaviour is written once, in the page. The check
+merges every delta of the change before it resolves a pointer, so one may name a page the same
+change adds; a pointer naming no part, a stem another page holds, or a setup field that does
+not resolve is reported against the delta that causes it.
 
 ## A demo
 
@@ -74,5 +89,6 @@ why each matters, then the approach. Nothing in it lands in the devbook: a decis
 a delta — under `devbook-delta/arc42/adr/` when it is architectural.
 
 `tasks.md` is `## Step N — title` blocks, one pull request each. Each names the deltas it
-delivers on a `delivers:` line by address, and `owner: me` when a person does it. A prototype
+delivers on a `delivers:` line by address — a scenario page by its delta's path, or one part
+of it as `<path>#<part>` — and `owner: me` when a person does it. A prototype
 is no step: it needs no change and no task, and enters one only as a demo delta.

@@ -1,6 +1,6 @@
 ---
 name: tracker
-description: 'Keep a change''s tasks.md as its work items — read a step, set its state and tick its tasks, or leave a note on it — for an engine that binds its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over the steps of openspec/changes/<name>/tasks.md, with the four step states open, in progress, in review, and done read off the step''s branch and pull request — or, under single-branch, where a step is a commit, off its ticks. Use when: a run reads or updates the step it is building, "which steps of this change are merged", "mark step 2 in review".'
+description: 'Keep a change''s tasks.md as its work items — read a step with the scenario pages it delivers, set its state and tick its tasks, or leave a note on it — for an engine that binds its tracker as { "provider": "devbook-openspec:tracker" }. Implements read_item, update_item, and comment over the steps of openspec/changes/<name>/tasks.md, with the four step states open, in progress, in review, and done read off the step''s branch and pull request — or, under single-branch, where a step is a commit, off its ticks. Use when: a run reads or updates the step it is building, "which steps of this change are merged", "mark step 2 in review".'
 ---
 
 # devbook-openspec tracker
@@ -40,6 +40,10 @@ GitHub CLI, a connector — and say so when none answers: the state is then unkn
   `close`), and `workflow`: the proposal's `Workflow:` line, else
   `components.openspec.workflow`, else `single-branch`. For a step, also its title,
   `delivers:` and `owner`, its tasks with their ticks, its state, and the proposal's status.
+  Also its `scenarios`: every scenario page `delivers:` names — a delta under
+  `devbook-delta/domain/<context>/` whose page is `type: scenario`, whole or as `#<part>` —
+  each with its run as `devbook:verify-change` reports it, `current`, `stale`, or `missing`
+  where the page has no `run.json`. A run is read, never started.
   Under `proposal-first` the proposal's state is read the same way off `change/<change>`'s
   pull request. An item that does not exist is an error, named.
 - **`update_item`** — given a state and the tasks the run completed: write `branch:` when the

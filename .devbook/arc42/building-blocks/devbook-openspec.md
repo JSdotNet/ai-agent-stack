@@ -57,6 +57,14 @@ under *Chapters touched* and records its verdict under *Why*, `solution.md` name
 in a file-level `demo` block, and a step names it on `delivers:`, per
 [the demos decision](../adr/demos.md). `spec` hands a run a demo delta by path, never inlined.
 
+The instruction covers a scenario page too: a delta under `devbook-delta/domain/<context>/`,
+a new page `delta: added` with its parts as `ADDED` entries, a part replaced whole and never
+step by step, and a requirement it proves holding only `Proved by: <page>.md#<part>` in its
+`#### Scenario:`, so behaviour is written once, in the page. `delta.mjs --check` resolves those
+pointers with every delta of the change merged, per [devbook](devbook.md#change), so one may
+name a page the same change adds. A step's `delivers:` may name the page, or one part as
+`<path>#<part>`.
+
 A demo does not match the `devbook-delta/**/*.md` glob, so a change whose only delta is a demo
 still writes the placeholder, and `archive` reports a demo as replaced rather than merged.
 
@@ -95,7 +103,10 @@ otherwise. Under `single-branch` a step is a commit with no pull request of its 
 pull request is the close's, opened after the acceptance and the archive it carries. It writes `branch:`, `PR:`, and ticks on the step's own branch, so they reach `main`
 with the merge, and never writes `done`. Its items are the proposal, each step, and the close,
 and `read_item` reports each one's `change`, `part`, and `workflow` — the proposal's
-`Workflow:` line, else the stamp's — which the engine turns into branch names.
+`Workflow:` line, else the stamp's — which the engine turns into branch names. For a step it
+also lists the scenario pages `delivers:` names, each with its run as `verify-change` reports
+it — `current`, `stale`, or `missing` — and `status` gives each a row with `scenario-run` as
+the action when the run is not current, which stands before acceptance.
 
 ### Landing a change
 

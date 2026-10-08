@@ -592,12 +592,17 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 ```
 
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
-the annotation index, and the term register for the repository and for each adopted folder.
+the annotation index, the term register, and the scenario register for the repository and for
+each adopted folder.
 The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
 other `domain/` chapter carrying `aliases` but a `requirement` or `invariant`, whose `aliases`
 are the codes a rule is cited by, each with its lede as its definition. It is built
 from the graph and the ledes the same walk kept, never a second read. It carries its own
-`schemaVersion`, because its first reader is outside this repository. It checks by default
+`schemaVersion`, because its first reader is outside this repository. The scenario register
+is the fifth: every `type: scenario` page with its stem, path, setup fields, screenshot
+labels, and parts, each part with the requirement cases whose `Proved by:` names it — built
+by the scenario pass, kept beside the nodes, with its own `schemaVersion` for the same
+reason. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
 [devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
@@ -620,6 +625,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | A prose link whose file does not exist, or whose anchor no indexed heading renders, is a warning; absolute URLs, code, and fences are not read | `graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/prose-links.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The term register lists `domain/`'s `term` and aliased chapters only, never a `requirement`, an `invariant`, or `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
+| The scenario register lists every scenario page by stem, its parts in page order with the labels under each and every requirement case pointing at it, writes an empty list outside `domain/`, and leaves `graph.json` unchanged | `scenarios-index.mjs`, `scenario.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/scenarios-index.test.mjs` |
 
 ### Fence Writer
 

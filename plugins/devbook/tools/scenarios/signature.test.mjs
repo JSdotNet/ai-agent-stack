@@ -1,9 +1,10 @@
 // The signature against the shared vector, `scenario-page.vector.json`: every
-// case's canonical text and signature, every data set's hash, and the reading
-// of a data set from disk.
+// case's canonical text and signature, every data set's hash, the reading of a
+// data set from disk, and the CLI that prints a page's signature.
 //
 // Run: `node --test signature.test.mjs`
 import { test } from "node:test";
+import { spawnSync } from "node:child_process";
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -75,4 +76,29 @@ test("a data set hashes from its folder, the same over CRLF, and reads as missin
 test("a binary data file is hashed as its bytes", () => {
     const bytes = Buffer.from([0, 13, 10, 255]);
     assert.notEqual(hashFiles({ "db.bak": bytes }), hashFiles({ "db.bak": Buffer.from([0, 10, 255]) }));
+});
+
+test("the CLI prints each page's signature and exits 1 on a path that is not a scenario page", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "scenarios-cli-"));
+    try {
+        const sample = vector.cases[0];
+        await mkdir(path.join(root, path.dirname(sample.path)), { recursive: true });
+        await writeFile(path.join(root, sample.path), sample.markdown);
+        await writeFile(path.join(root, ".devbook/domain/notes.md"), "# Notes\n");
+        const cli = (...args) => spawnSync(process.execPath, [path.join(here, "signature.mjs"), "--root", root, ...args], { encoding: "utf8" });
+
+        const expected = await pageSignature(parseScenarioPage(sample.markdown, sample.path), root, ".devbook/scenarios");
+        const one = cli(sample.path);
+        assert.equal(one.status, 0, one.stderr);
+        assert.equal(one.stdout.trim(), `${expected}  ${sample.path}`);
+
+        const mixed = cli(sample.path, ".devbook/domain/notes.md");
+        assert.equal(mixed.status, 1);
+        assert.match(mixed.stdout, new RegExp(expected));
+        assert.match(mixed.stderr, /notes\.md/);
+
+        assert.equal(cli().status, 2);
+    } finally {
+        await rm(root, { recursive: true, force: true });
+    }
 });

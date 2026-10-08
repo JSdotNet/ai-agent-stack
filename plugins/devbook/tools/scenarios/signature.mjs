@@ -20,11 +20,19 @@
 // behaviour. The signature is sha256 over the UTF-8 text, first 8 hex.
 // `scenario-page.vector.json` beside this file is the shared vector every
 // implementation — this one, spec-manager's, Backlog's — is tested against.
+//
+// As a CLI it prints the signature a derived spec's `// signature:` line takes:
+//
+//   node .devbook/_tools/scenarios/signature.mjs <page.md>… [--root <dir>] [--scenario-folder <dir>]
+//
+// One `<signature>  <path>` line per scenario page. Exits 1 when a path is not
+// a scenario page, 2 on a usage error.
 
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { collapse } from "./parse.mjs";
+import { fileURLToPath } from "node:url";
+import { collapse, normalizePath, parseScenarioPage, SCENARIO_FOLDER } from "./parse.mjs";
 
 /** What a data set hashes to when its folder does not exist. */
 export const MISSING_DATA = "missing";
@@ -117,3 +125,42 @@ export async function pageSignature(page, repoRoot, scenarioFolder) {
     }
     return signatureOf(page, (name) => hashes.get(name) ?? MISSING_DATA);
 }
+
+async function main(argv) {
+    const options = { root: process.cwd(), scenarioFolder: SCENARIO_FOLDER, pages: [] };
+    for (let i = 0; i < argv.length; i++) {
+        const arg = argv[i];
+        if (arg === "--root" && argv[i + 1]) options.root = argv[++i];
+        else if (arg === "--scenario-folder" && argv[i + 1]) options.scenarioFolder = argv[++i];
+        else if (arg.startsWith("--")) options.error = `unknown or incomplete argument: ${arg}`;
+        else options.pages.push(arg);
+    }
+    if (options.error || !options.pages.length) {
+        console.error(options.error ?? "usage: signature.mjs <page.md>… [--root <dir>] [--scenario-folder <dir>]");
+        process.exitCode = 2;
+        return;
+    }
+    const repoRoot = path.resolve(options.root);
+    let failed = false;
+    for (const given of options.pages) {
+        const file = path.resolve(repoRoot, given);
+        const relPath = normalizePath(path.relative(repoRoot, file));
+        let page;
+        try {
+            page = parseScenarioPage(await readFile(file, "utf8"), relPath);
+        } catch (error) {
+            console.error(`${relPath}: ${error.code === "ENOENT" ? "does not exist" : error.message}`);
+            failed = true;
+            continue;
+        }
+        if (!page.isScenario) {
+            console.error(`${relPath}: not a scenario page — its file-level meta block has no type: scenario`);
+            failed = true;
+            continue;
+        }
+        console.log(`${await pageSignature(page, repoRoot, options.scenarioFolder)}  ${relPath}`);
+    }
+    process.exitCode = failed ? 1 : 0;
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));

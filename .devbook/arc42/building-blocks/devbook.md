@@ -42,8 +42,9 @@ takes a `--write` flag and nothing in this block passes it.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Nine skills — six that own the convention in a repository, and three that cross the boundary
-between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries — plus the rules
+Twelve skills — six that own the convention in a repository, three that cross the boundary
+between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries, and three that
+carry a scenario page from its text to its run — plus the rules
 `init` delivers, the tools it materializes, one workflow, one hook, one contract that other
 plugins follow, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
@@ -57,6 +58,7 @@ change belongs to the engine.
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
 | `annotation-sweep` | skill | A person, on one chapter |
+| `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted: `scenario-write` from a chapter that needs a journey, `scenario-derive` when the coverage check names it, `scenario-run` to prove a page; described under [Scenario Tools](#scenario-tools) |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
@@ -67,6 +69,7 @@ change belongs to the engine.
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
 | `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
+| `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
 | `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
 | `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
@@ -681,9 +684,19 @@ hash of its folder — the part headings, the steps, and the labels, in document
 hex. Every reader recomputes it, so a stale run is computed and never stored, and
 `scenario-page.vector.json` is the one vector every implementation is tested against.
 
+Three skills carry a page through the tools, one step each, and the page is the source in
+all three: `scenario-write` writes the page and the `Proved by:` lines that point at its
+parts; `scenario-derive` brings a spec to the page — the header from `signature.mjs`, one
+test per part, one step per step, the `shot` calls — and leaves what the page cannot say to
+the implementer, never touching the setup hook; `scenario-run` runs whole pages, so the
+reporter writes, and reports each part's outcome. `scenario-derive` builds on
+`qa:playwright-e2e-authoring` by name, which is a plugin of another marketplace: where it is
+not installed, the repository's own specs are the model.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | The signature agrees with the shared vector, and a caption, the lead, or whitespace does not change it | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
+| The signature CLI prints one `<signature>  <path>` line per scenario page and exits 1 on a path that is not one | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
 | A filtered run writes nothing; a label the run did not reach keeps its file; a label the page dropped is pruned | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
 | The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
 | Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
@@ -836,6 +849,7 @@ consumer that reaches only the converters or only the procedures is listed in
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `devbook-writing.md` names the skill `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Pictures read faster than prose. Without the skill, the rule's own table of diagram kinds applies, so nothing is declared. |
+| The `qa` plugin, another marketplace | Separate Ways | `scenario-derive` names `qa:playwright-e2e-authoring` for the e2e folder, the test conventions, and how a step body is written | The skill name alone | The shape of a derived spec is this block's; how a Playwright step is written well is not. Without the skill, the repository's existing specs are the model, so nothing is declared. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper `init` writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
 | A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, the adopted procedures, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema, each procedure's `goal` | The convention only exists where it has been installed, and the stamp is the record of what landed. A procedure's body is the repository's from its first edit; only the goal is refreshed. |
 

@@ -288,18 +288,21 @@ with its page.
   evidence. A part that fails is evidence against the requirement; a part no case
   points at is reported beside the table as an unclaimed journey. Two findings
   more, for every page a requirement in scope points at:
-  - **`stale`** — the page's signature no longer matches its run: the value
+  - **`stale`** — the page's signature no longer matches its run: the first field
     `.devbook/_tools/scenarios/signature.mjs <page>` prints, a read that runs
     nothing, is not the `signature` in `<scenario folder>/<stem>/run.json`, or
-    there is no `run.json`. Listed after the report table, one row per page with
+    there is no `run.json`. The scenario folder is `.devbook/scenarios/` unless
+    `playwright.config.ts` sets `scenarioFolder`; pass it as `--scenario-folder`
+    whenever it is set, because a page's data sets hash from under it. Listed after the report table, one row per page with
     both signatures and `scenario-run` as the action, per [Report table](#report-table) — `scenario-derive` first when the
     spec's `// signature:` differs too. `stale` qualifies a run the way `unagreed`
     qualifies a verdict; it is not a sixth verdict.
-  - **`spec-ahead`** — a part a case points at has no spec: no spec's
-    `// scenario:` header names its page, or that spec has no `part` titled as the
-    part's heading. The requirement's row is `spec-ahead` — agreed and not proved
-    — with `scenario-derive` as the action, then `apply-change` where the
-    behaviour is unbuilt too.
+  - **`spec-ahead`** — a part a case points at has no proof: no spec's
+    `// scenario:` header names its page, that spec has no `part` titled as the
+    part's heading, or the current run records the part `not-run`, a step still
+    held by `test.fixme()`. The requirement's row is `spec-ahead` — agreed and not
+    proved — with `scenario-derive` as the action, or the held step to fill, then
+    `apply-change` where the behaviour is unbuilt too.
 
 ## Drift verdict
 

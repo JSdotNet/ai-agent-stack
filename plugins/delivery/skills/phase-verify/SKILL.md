@@ -191,8 +191,10 @@ the acceptance criteria:
    for a failed part the step, the message, and the `failureShot`. A failed part is a failed
    scenario; a `not-run` part is unfinished, not a defect, and is reported as such.
 4. **Pass it as `evidence`.** The flow-runner reports one `{ stem, part, outcome, runAt }` per
-   part on the stage, per `resources/surface-contract.md`, and each part also appears in
-   `scenarios` with its labels' PNGs as its evidence paths.
+   part on the stage, per `resources/surface-contract.md` — `part` is the part's `anchor`, and
+   `runAt` is the file's `ranAt`. A `passed` or `failed` part also appears in `scenarios` as
+   `pass` or `fail`, with its labels' PNGs as its evidence paths; a `not-run` part has no
+   `scenarios` status, so it appears in `evidence` and the stage output alone, named unfinished.
 5. **Leave the files.** `run.json` and the PNGs stay in the working tree as part of the change
    set; nothing here edits, deletes, or copies one.
 

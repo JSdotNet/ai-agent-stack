@@ -64,8 +64,8 @@ new work — it reads what the earlier phases recorded and decides.
 
 - The verdict — `ready`, `not ready` with the brief, or `budget spent` with the open items —
   and the round it was reached in.
-- The questions for the gate: `code-ahead` and `unresolved` rows, and on a spent budget every
-  open item.
+- The questions for the gate: `code-ahead` and `unresolved` rows, the `stale` rows for pages
+  Verify could not run at its depth, and on a spent budget every open item.
 
 ## Dashboard Reporting
 

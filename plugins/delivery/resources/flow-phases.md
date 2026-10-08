@@ -178,7 +178,8 @@ approval sees the drift.
 the edit list Personal Validation presents. What stays here is its place in the order: one
 verdict per item against the specification and the governed chapters in scope, recorded for
 the ready check, which reads `spec-ahead` and `conflict` as not ready, and a scenario page whose
-run is `stale` the same way. A rejected chapter edit reopens this phase.
+run is `stale` the same way — unless Verify could not run that page at its depth, which makes it
+a question for the gate. A rejected chapter edit reopens this phase.
 
 ## The Ready Check
 

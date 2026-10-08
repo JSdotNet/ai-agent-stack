@@ -63,19 +63,27 @@ Every item in scope gets exactly one row with the evidence that settles it:
 test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
 reports it, `linked` reports it as what will refuse acceptance.
 
-**Check every scenario page Scope listed.** Two kinds of row, whatever the bound skill, and the
-bound skill's brief names the pages so it reports them the same way:
+**Check every scenario page Scope listed.** Whatever the bound skill, this phase checks each
+listed page itself — the bound skill reports only the pages a requirement in scope points at, so
+a page referenced directly would otherwise go unchecked — and passes the list in the skill's
+brief so the two agree. The scenario folder is `.devbook/scenarios/` unless
+`playwright.config.ts` sets `scenarioFolder`; pass that folder to every tool below as
+`--scenario-folder <dir>` whenever it is set, because a page's data sets hash from under it.
 
-- **`stale`** — a page whose signature no longer matches its run: the signature
+- **`spec-ahead`** — a referenced part with no proof: no spec's `// scenario:` header names its
+  page, that spec has no `part` titled as the part's heading, or the page's current run records
+  the part `not-run` — a step still held by `test.fixme()`. For a part a requirement's case
+  points at, this is that requirement's row in the verdict table, naming the part, the missing
+  spec or the held step, and `devbook:scenario-derive` or `phase-implement` as the action; a part
+  referenced directly, with no requirement, is a row of its own.
+- **`stale`** — a page whose signature no longer matches its run: the first field
   `node .devbook/_tools/scenarios/signature.mjs <page>` prints is not the `signature` in
-  `<scenario folder>/<stem>/run.json` — `.devbook/scenarios/` unless `playwright.config.ts` sets
-  `scenarioFolder` — or there is no `run.json`. One row per page, naming both signatures and
-  `devbook:scenario-run` as the action, or `devbook:scenario-derive` first when the spec's own
-  `// signature:` differs too. A stale run is no evidence: the requirements it would prove get
-  none from it. `stale` qualifies the page's run; it is not a sixth verdict on a chapter.
-- **`spec-ahead`** — a referenced part with no spec: no spec's `// scenario:` header names its
-  page, or that spec has no `part` titled as the part's heading. One row per part, naming the
-  requirement that references it and `devbook:scenario-derive` as the action.
+  `<scenario folder>/<stem>/run.json`, or there is no `run.json`. Never in the verdict table:
+  `stale` qualifies a page's run and is not a sixth verdict. List every listed page after the
+  verdict table, one row each — page, page signature, run signature (`none` without a run),
+  `current` or `stale`, and the action: `devbook:scenario-run`, or `devbook:scenario-derive`
+  first when the spec's own `// signature:` differs too. A stale run is no evidence: the
+  requirements it would prove get none from it.
 
 ## Step 3 — Update, Only When the Skill Does
 
@@ -104,7 +112,8 @@ its brief; it is the one that edits.
 
 ## Outputs
 
-- The verdict table, with the mode and the bound skill named. Personal Validation presents
+- The verdict table, with the mode and the bound skill named, and the scenario-page table after
+  it. Personal Validation presents
   it, Create Pull Request puts it in the description, and Report Back carries it to every
   target.
 - The edit list, empty in check-only mode.

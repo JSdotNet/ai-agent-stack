@@ -33,3 +33,29 @@ date: 2026-09-02
 - **Limits** — an eval exercises a skill's trigger and output, not the load-time shape both
   hosts reject; those stay with the validator, the checker, and the review rules in
   `AGENTS.md` and `.agents/rules/`.
+
+## Scenario Pages
+
+```meta
+status: candidate
+type: practice
+stage: [test]
+related: [".devbook/arc42/building-blocks/devbook.md#scenario-tools"]
+date: 2026-10-08
+```
+
+A journey written once as a scenario page, its Playwright spec derived from the page by a skill,
+and its run committed beside it — `devbook:scenario-write`, `scenario-derive`, and
+`scenario-run`.
+
+- **Used for** — nothing here yet. This repository ships the three skills and the tools under
+  them, but adopts no `domain/` folder and has no application to drive, so there is no page to
+  write and nothing to run.
+- **Adopted by** — nobody. The first adopter is spec-manager, whose pilot pages are the
+  scenario-pages plan's step 14; Backlog reads the runs after it.
+- **Evidence** — none yet. The tools' own suites under `plugins/devbook/tools/scenarios/` prove
+  the parser, the signature, the reporter, and the coverage check, not that a model derives a
+  spec a person keeps.
+- **Limits** — a derived spec leaves every step body the page cannot say to the implementer, so
+  the skill produces a shape, not a passing test; and the page is only as good as its steps,
+  which no tool here judges.

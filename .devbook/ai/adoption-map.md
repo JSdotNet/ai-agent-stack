@@ -20,7 +20,7 @@ file is a reading unit and places nothing — each chapter says its own stages o
 | --- | --- |
 | [01-author.md](01-author.md) | Writing an asset in the host that loads it. |
 | [02-deliver.md](02-deliver.md) | Carrying a change end to end: the flow skills, the fan-out lane nothing here has used, and scheduling. |
-| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation. |
+| [03-verify.md](03-verify.md) | Checking an asset does what it says: plugin evaluation, and the scenario pages the devbook skills write, derive, and run. |
 
 **Adoption Picture**
 
@@ -43,6 +43,7 @@ graph LR
   schedule[Scheduling] --- operate
   schedule --- monitor
   eval[Plugin Evaluation] --- test
+  scenarios[Scenario Pages] --- test
   flows -. never yet .-> fanout
   schedule -. never yet .-> fanout
   classDef stage fill:#fff,stroke:#333,color:#333;
@@ -52,7 +53,7 @@ graph LR
   class plan,code,build,test,release,deploy,operate,monitor stage;
   class host adopted;
   class flows,schedule trial;
-  class fanout,eval candidate;
+  class fanout,eval,scenarios candidate;
 ```
 
 **How to Read It**
@@ -61,13 +62,14 @@ graph LR
 rates a way of working, not a tool. One chapter is `adopted` because it is how every change
 here has been made. Two are `trial`: the flow skills because everything they need has landed
 and nothing has used them, and scheduling because its first local runs have published here.
-Two are `candidate` because the honest first use is somewhere else, or has not happened.
+Three are `candidate` because the honest first use is somewhere else, or has not happened —
+scenario pages among them, since this repository adopts no `domain/` and runs no application.
 Each chapter's `date` is the day its current rating was set.
 
 The picture above is the hand-drawn form of the loop a tool draws from the same fields: the
 eight stages in loop order, and at each stage the chapters whose `stage` names it, shaded by
 rating and carrying the `tech/` chapter their `depends-on` names. Two usages rest on the
-Claude Code plugin API and one on the CLI; the other two name none, which is the normal case
+Claude Code plugin API and one on the CLI; the other three name none, which is the normal case
 for a practice.
 
 To add a practice, write its `##` chapter in the file where it reads best, with `status`,

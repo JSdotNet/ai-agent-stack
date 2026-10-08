@@ -137,10 +137,13 @@ try {
             { name: "rejects an empty range", status: "fail", notes: "500 instead of 400" },
         ],
         monitoring: { summary: "One unhandled exception.", findings: [{ level: "error", resource: "api", message: "NullReference in ExportController" }] },
+        // Additive under lifecycle@1: a surface that does not read it accepts it and loses nothing.
+        evidence: [{ stem: "export", part: "csv", outcome: "passed", runAt: "2026-10-08T09:00:00.000Z" }],
     });
     const qa = (await call("get_run", { runId: run.runId })).stages.find((s) => s.name === "Validation");
     check("QA scenarios and their evidence are recorded", qa.scenarios.length === 2 && qa.scenarios[0].evidence[0].path === ".wip/qa/export.png");
     check("monitoring findings are recorded", qa.monitoring.findings[0].level === "error");
+    check("scenario evidence it does not read is accepted without loss", qa.status === "done" && qa.output === "Two scenarios.", qa.status);
 
     const context = await call("set_run_context", { runId: run.runId, approval: "approved", approvalNote: "Ship it." });
     check("the gate decision is persisted, gate-agnostically", context.approval.state === "approved", JSON.stringify(context.approval));

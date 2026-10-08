@@ -137,6 +137,25 @@ test("keeps the session id Backlog hands out, and reads an event-stream answer",
     }
 });
 
+test("forwards update_stage's scenario evidence unchanged", async () => {
+    const backlog = await fakeBacklog();
+    const p = proxy({ ...settingsHome(null), BACKLOG_MCP_PORT: String(backlog.port) });
+    try {
+        const evidence = [
+            { stem: "checkout", part: "pay-by-card", outcome: "passed", runAt: "2026-10-08T09:00:00.000Z" },
+            { stem: "checkout", part: "declined-card", outcome: "failed", runAt: "2026-10-08T09:00:00.000Z" },
+            { stem: "checkout", part: "refund", outcome: "not-run", runAt: "2026-10-08T09:00:00.000Z" },
+        ];
+        const args = { runId: "r1", stageIndex: 6, status: "done", output: "Three parts.", evidence };
+        const res = await p.call("update_stage", args);
+        assert.deepEqual(JSON.parse(res.result.content[0].text), { echoed: "update_stage", arguments: args });
+        assert.deepEqual(calls(backlog.requests)[0].msg.params.arguments, args);
+    } finally {
+        p.stop();
+        await backlog.close();
+    }
+});
+
 test("Backlog's refusals come back as Backlog gave them", async () => {
     const backlog = await fakeBacklog();
     const p = proxy({ ...settingsHome(null), BACKLOG_MCP_PORT: String(backlog.port) });

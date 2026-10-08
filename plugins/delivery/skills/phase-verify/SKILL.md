@@ -198,6 +198,8 @@ and do not ask the user to restart the app manually as the normal path.
 - The depth that actually ran, recorded honestly: a shallower depth is reported as the depth
   it was, never as verification that did not happen.
 - Monitoring findings (Aspire log/trace/metric anomalies) when monitoring ran.
+- Per scenario page `devbook:scenario-run` ran, each part's outcome from its `run.json`, which
+  the flow-runner reports as `evidence` (`resources/surface-contract.md`).
 - These outputs feed the ready check and then Personal Validation, which presents the
   recorded QA review.
 

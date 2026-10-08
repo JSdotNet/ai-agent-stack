@@ -17,7 +17,7 @@ related: [".devbook/arc42/05-building-block-view.md#plugin-folder"]
 ```
 
 What a plugin's executable parts run on: `devbook`'s checker with its test suites and
-its `devbook-tech` package-inventory scripts, the migration scripts, `delivery`'s stack-config
+its `devbook-tech` package-inventory scripts, its scenario tools, the migration scripts, `delivery`'s stack-config
 checker and the tests behind it, `delivery-schedule`'s catalog checker, `devbook-config`'s
 read-only report script, the two MCP-backed surfaces' servers — the dashboard's with its HTTP
 viewer, telemetry hook, and `dev/` checks, the collector's headless — the two canvas extensions
@@ -26,7 +26,7 @@ and this repository's own `tools/check-assets.mjs`. All of that is ESM against `
 built-ins with no third-party dependency, which is why `npm install` is not a step anywhere in
 this repository.
 
-Two things the flat claim used to get wrong, both worth stating because they are the seams
+Three things the flat claim used to get wrong, each worth stating because they are the seams
 where the constraint is negotiated rather than held:
 
 - **Two package manifests exist**, one per surface plugin that runs a server, under
@@ -34,10 +34,15 @@ where the constraint is negotiated rather than held:
   `dependencies`** — the manifest is there to name the server and floor the runtime at
   `engines.node >= 18`, not to pull anything in. So a version *is* pinned, as a floor; what is
   absent is a lockfile and an install step.
-- **The two Copilot canvas extensions are the exception to `node:`-only.** Both import
+- **The two Copilot canvas extensions are one exception to `node:`-only.** Both import
   `@github/copilot-sdk/extension`, which their host supplies at load time — see
-  [the SDK entry](hosts.md#copilot-extension-sdk). Nothing else here imports anything it does
+  [the SDK entry](hosts.md#copilot-extension-sdk). Only the scenario tools, below, also import something they do
   not ship.
+- **The scenario tools' two Playwright files are the other exception.** `setup.ts` and `shot.ts` under
+  `plugins/devbook/tools/scenarios/` import `@playwright/test`, which the adopting repository's
+  own e2e suite supplies, and load the `.mjs` modules beside them, which needs Node 22.12 or an
+  ESM test package. Every `.mjs` there — the parser, the signature, the reporter, the coverage
+  check — stays on `node:` built-ins.
 
 The checker runs here from two paths. `plugins/devbook/tools/devbook-meta/` is where it is
 authored; `.devbook/_tools/devbook-meta/` is the copy `devbook:update` vendored, as into any

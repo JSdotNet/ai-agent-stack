@@ -450,6 +450,15 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 `--no-move` merges and leaves the folder for a caller whose own tool moves it —
 [devbook-openspec](devbook-openspec.md#landing-a-change) lets `openspec archive` do it.
 
+A scenario page changes through a delta like any `domain/` file: a new page is `delta: added`
+with its parts as `ADDED` entries, and a part of an existing one is replaced whole. The rules
+no single file can check — a stem unique across contexts, setup fields that resolve, a
+`Proved by:` that names a part — would otherwise surface only at archive, after both gates.
+So once every delta merges, `--check` lays the whole change over the corpus in memory, runs
+`scenario.mjs`'s pass over the result, and reports each problem the change introduces against
+the delta that causes it: a pointer may name a page the same change adds, and a problem the
+corpus already had is not the change's.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | `archive/` is never indexed and never a folder kind | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
@@ -463,6 +472,7 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 | A proposal's hash covers the proposal and every delta, and an open question anywhere in the change stands against its rung | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `--apply` merges only an `accepted` change, signed, over its current hash | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| `--check` resolves a `Proved by:`, a stem, and a scenario page's setup fields over the corpus with every delta of the change merged, and reports each new problem against the delta that causes it | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-scenarios.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
 ### Demo

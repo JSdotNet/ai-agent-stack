@@ -24,7 +24,9 @@ related: [".devbook/arc42/building-blocks/devbook.md#interfaces"]
 
 Three skills, each over the seven kinds — aggregate, domain service, feature, setting, actor,
 building block, and design component — plus the click demo a page carries, read as the `demo`
-kind inside its page's unit, and one CLI.
+kind inside its page's unit, and one CLI. A scenario page is not a kind. It is evidence for the
+requirements whose cases point at its parts: its derived spec and its last run prove them the
+way an `e2e` test does, and it gets no verdict row of its own.
 
 | Interface | Kind | Reached by |
 | --- | --- | --- |

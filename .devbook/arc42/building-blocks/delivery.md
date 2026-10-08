@@ -826,6 +826,12 @@ sequenceDiagram
 - **Areas are the skill's call.** `phase-implement` runs frontend and backend in order when
   one side consumes the other's new contracts or they share a file, and in parallel only when
   neither holds.
+- **A referenced scenario page travels the whole run.** `scope` lists every
+  [scenario page](devbook.md#scenario-tools) the item references, directly or through a
+  requirement whose case points at one of its parts. `implement` derives each page's spec,
+  `verify` runs exactly those pages, `spec-check` reports a page whose run no longer matches it
+  as `stale` and a referenced part with no spec as `spec-ahead`, and Personal Validation shows
+  their screenshots beside the app. The page is written before the run and never during it.
 - **Behaviour is held still on purpose in a refactor.** `scope` lists every move and the
   reference each one forces before a file is touched, so the diff stays reviewable as a move.
 - **A defect's fix has a test in front of it.** The failing test that reproduces it is

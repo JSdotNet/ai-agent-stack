@@ -11,6 +11,7 @@ Open the reply with `delivery@<version>`, `version` read from `../../.claude-plu
 
 - Starts the app through the repository's run recipe
 - Drives the scenarios at the kind's depth, captures evidence, watches the logs
+- Runs exactly the scenario pages Scope listed, through `devbook:scenario-run`
 
 **Doesn't**
 
@@ -173,6 +174,35 @@ selected, per **QA depth** in `resources/engine-contract.md`.
 - **Nothing to run** — `phase-verify.app` is `null`, or a `config` change touches nothing
   that runs → skip: mark this phase `skipped` and record why.
 
+## Scenario Pages
+
+When `scope.md` lists scenario pages, they are this run's proof of the requirements that point
+at them, and they run at the full and the targeted depth alike, beside the scenarios drawn from
+the acceptance criteria:
+
+1. **Exactly those pages.** Hand the QA sub-agent the listed pages and have it invoke
+   `devbook:scenario-run` once with all of them, against the instance this phase started. Never
+   every page in the repository, and never a part on its own: a filtered run writes no
+   `run.json`, so the run is always whole pages.
+2. **Preflight is the skill's.** A page its coverage check leaves out — the spec no longer
+   matches the page, or the profile is unknown — is reported as not run with the finding and
+   `scenario-derive` named, and records an open item for the ready check; never run it anyway.
+3. **Report what the reporter wrote.** From each page's `run.json`: per part its `outcome`, and
+   for a failed part the step, the message, and the `failureShot`. A failed part is a failed
+   scenario; a `not-run` part is unfinished, not a defect, and is reported as such.
+4. **Pass it as `evidence`.** The flow-runner reports one `{ stem, part, outcome, runAt }` per
+   part on the stage, per `resources/surface-contract.md`, and each part also appears in
+   `scenarios` with its labels' PNGs as its evidence paths.
+5. **Leave the files.** `run.json` and the PNGs stay in the working tree as part of the change
+   set; nothing here edits, deletes, or copies one.
+
+At the startup-only depth, or when the phase is `skipped`, run none: record each listed page as
+not run with the depth that ruled it out; Spec Check judges it on the run already committed,
+`stale` when there is none or its signature is not the page's. Without the skill,
+or without `.devbook/_tools/scenarios/report.mjs` among the Playwright reporters, record the
+pages as not run and name what is missing — never run the specs some other way and present the
+result as a page's run.
+
 ## Reverifying After Requested Changes
 
 When the ready check sends the run back, or the user requests changes during Personal
@@ -187,6 +217,7 @@ and do not ask the user to restart the app manually as the normal path.
 
 - The change kind the flow-runner persisted with `set_run_context`.
 - The affected scenarios or critical paths, and the scope's acceptance criteria.
+- The scenario pages `scope.md` lists, each with its stem, path, and profile.
 - The start result — base URLs, health verdict — and the path of the repository's `run`
   recipe when the flow-runner found it.
 
@@ -198,8 +229,9 @@ and do not ask the user to restart the app manually as the normal path.
 - The depth that actually ran, recorded honestly: a shallower depth is reported as the depth
   it was, never as verification that did not happen.
 - Monitoring findings (Aspire log/trace/metric anomalies) when monitoring ran.
-- Per scenario page `devbook:scenario-run` ran, each part's outcome from its `run.json`, which
-  the flow-runner reports as `evidence` (`resources/surface-contract.md`).
+- Per scenario page Scope listed, each part's outcome from the `run.json` `devbook:scenario-run`
+  wrote, which the flow-runner reports as `evidence` (`resources/surface-contract.md`), and each
+  label's PNG; or the page recorded as not run, with the reason.
 - These outputs feed the ready check and then Personal Validation, which presents the
   recorded QA review.
 

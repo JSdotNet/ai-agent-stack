@@ -29,6 +29,8 @@ Verify and before the ready check, so the approval sees the drift. Its place in 
   `phase-scope` — and its acceptance criteria.
 - **The chapter list** Scope recorded, plus every governed chapter the change set touches, in
   the adopted devbook folders. That union is **in scope**; nothing else is.
+- **The scenario pages** Scope listed, with the parts the item references, and what Verify
+  recorded for each.
 - **The change set**: the diff against the merge base, untracked files included.
 - **The bound skill**: `phases.<flow>.phase-spec-check.skill` in the effective configuration.
 
@@ -61,6 +63,20 @@ Every item in scope gets exactly one row with the evidence that settles it:
 test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
 reports it, `linked` reports it as what will refuse acceptance.
 
+**Check every scenario page Scope listed.** Two kinds of row, whatever the bound skill, and the
+bound skill's brief names the pages so it reports them the same way:
+
+- **`stale`** — a page whose signature no longer matches its run: the signature
+  `node .devbook/_tools/scenarios/signature.mjs <page>` prints is not the `signature` in
+  `<scenario folder>/<stem>/run.json` — `.devbook/scenarios/` unless `playwright.config.ts` sets
+  `scenarioFolder` — or there is no `run.json`. One row per page, naming both signatures and
+  `devbook:scenario-run` as the action, or `devbook:scenario-derive` first when the spec's own
+  `// signature:` differs too. A stale run is no evidence: the requirements it would prove get
+  none from it. `stale` qualifies the page's run; it is not a sixth verdict on a chapter.
+- **`spec-ahead`** — a referenced part with no spec: no spec's `// scenario:` header names its
+  page, or that spec has no `part` titled as the part's heading. One row per part, naming the
+  requirement that references it and `devbook:scenario-derive` as the action.
+
 ## Step 3 — Update, Only When the Skill Does
 
 Only in check-and-update mode, and only within these limits. Repeat them to the bound skill in
@@ -68,7 +84,8 @@ its brief; it is the one that edits.
 
 - **Only `code-ahead` rows, and only chapters in scope.** The code is the truth there. A
   drifted chapter outside scope is reported, not fixed in this run.
-- **`spec-ahead`, `conflict`, and `unresolved` rows are always reported, never edited.** Each
+- **`spec-ahead`, `conflict`, `unresolved`, and `stale` rows are always reported, never
+  edited.** A scenario page, its spec, and its run are never this phase's to write. Each
   needs a decision or more code, not a chapter rewrite.
 - **Follow the folder's own rules** — its instruction files and the chapter's `meta` block,
   written in the same edit — then run the repository's devbook check. A failing check marks the
@@ -91,8 +108,9 @@ its brief; it is the one that edits.
   it, Create Pull Request puts it in the description, and Report Back carries it to every
   target.
 - The edit list, empty in check-only mode.
-- The ready check reads `spec-ahead` and `conflict` rows as not ready; `code-ahead` and
-  `unresolved` rows go to the gate as questions.
+- The ready check reads `spec-ahead`, `conflict`, and `stale` rows as not ready; `code-ahead`
+  and `unresolved` rows go to the gate as questions, and so does a `stale` row for a page
+  Verify recorded as not run at its depth.
 
 ## Skip
 

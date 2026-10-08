@@ -57,6 +57,14 @@ instruction file that owns them. What remains of the coupling is the folder name
 called after and the `meta` block it expects every chapter to carry; still undeclared, still
 unchecked across the two plugins, and now one skill wide instead of five.
 
+**2026-10-08. It widens again, on purpose.** `flow-code`'s phases now carry the scenario pages
+an item references through the run: `phase-scope` reads the register devbook's checker prints,
+`phase-implement` and `phase-verify` invoke `scenario-derive` and `scenario-run` by name, and
+`phase-spec-check` runs devbook's `signature.mjs` against each run. Each is written so its
+absence records the pages as not derived or not run rather than failing the phase, which is the
+same hedge the Origin below describes — the failure in the prose, not the manifest. Four
+phases wide instead of one skill, and still undeclared.
+
 What is *not* the debt is `.devbook/config.json`. The path is a path, as
 [the engine contract](../../../plugins/delivery/resources/engine-contract.md) says: the engine
 reads that file whether or not a single folder is adopted, and `devbook-config` owns it and

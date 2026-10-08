@@ -66,6 +66,9 @@ change belongs to the engine.
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
+| `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
+| `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
+| `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
@@ -164,10 +167,10 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbo
 ```
 
 Three aggregates — the chapter, the folder, and the graph derived from a corpus of them —
-six domain services, and the two value objects the aggregates share. Two of the services, the
+seven domain services, and the two value objects the aggregates share. Two of the services, the
 Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s,
 and the Procedure, its Goal, and the Demo Template are
-[devbook-procedures](devbook-procedures.md#structure)'s; the four services left are below. The chapter is the
+[devbook-procedures](devbook-procedures.md#structure)'s; the five services left are below. The chapter is the
 consistency boundary everything else is expressed in terms of.
 
 ### Model
@@ -652,6 +655,39 @@ is visibly not. Materialized by `init` or `update` only where `tech/` is adopted
 | --- | --- | --- |
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
 | Materialized only where `tech/` is adopted | `init`, `update` | untested |
+
+### Scenario Tools
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#devbook-folder"]
+```
+
+Also called: the scenario tooling, `.devbook/_tools/scenarios/`.
+
+Connects a repository's e2e suite to its scenario pages through files, not a runtime. A
+derived spec opens with the page it implements and the page's signature; the runner it
+imports resolves the effective configuration — the profile in
+`.devbook/scenarios/profiles.json`, then the page's `flags` and `settings` — calls the
+repository's own setup hook, keeps one browser context per portal, and opens `start`; the
+reporter writes `run.json` version 2 and one screenshot per `shot:` label into
+`.devbook/scenarios/<stem>/`, in the working tree, so the run is committed with the change.
+The coverage check reads files only and reports a page with no spec, a signature mismatch,
+label drift, an image inside a step list, a duplicate stem, a dangling `scenario:`
+reference, and an unknown profile. Materialized by `init` or `update` only where `domain/`
+is adopted, because scenario pages live there.
+
+The signature is sha256 over the normalized setup fields — a data set by its name and the
+hash of its folder — the part headings, the steps, and the labels, in document order, first 8
+hex. Every reader recomputes it, so a stale run is computed and never stored, and
+`scenario-page.vector.json` is the one vector every implementation is tested against.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The signature agrees with the shared vector, and a caption, the lead, or whitespace does not change it | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
+| A filtered run writes nothing; a label the run did not reach keeps its file; a label the page dropped is pruned | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
+| Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
+| Materialized only where `domain/` is adopted | `init`, `update` | untested |
 
 ### Shared Value Objects
 

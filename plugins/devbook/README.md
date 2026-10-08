@@ -414,6 +414,18 @@ The inventory scripts emit deterministic JSON from repository manifests. Use the
 as the source of truth for package-derived `tech/` facts; use repository analysis
 for technologies that do not appear in package manifests.
 
+### Tooling: `scenarios`
+
+```bash
+node .devbook/_tools/scenarios/check.mjs          # coverage: every scenario page against its spec
+```
+
+The scenario tools connect a repository's e2e suite to its scenario pages: the parser, the
+signature and its shared vector, the setup runner and `shot` helper a derived spec imports,
+the reporter that writes `run.json` and the screenshots, and the coverage check. Materialized
+only where `domain/` is adopted. The contract and the wiring are
+[tools/scenarios/README.md](tools/scenarios/README.md).
+
 ### Assets
 
 | File | Purpose |
@@ -615,7 +627,8 @@ After running `devbook:init`, a repository that adopted everything has:
 ├── _meta/{graph.json,index.json,annotations.json}       # the rollup, devbook-derived's
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
-    └── devbook-tech/                # deterministic package inventory scripts
+    ├── devbook-tech/                # deterministic package inventory scripts
+    └── scenarios/                   # scenario page parser, signature, runner, reporter, coverage check
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .github/
 └── workflows/devbook-meta.yml       # the CI check

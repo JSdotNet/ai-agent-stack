@@ -107,6 +107,7 @@ file wrong the moment a second person opens the repository.
 |---|---|---|
 | `tools/devbook-meta/` | `.devbook/_tools/devbook-meta/` | always |
 | `tools/devbook-tech/` | `.devbook/_tools/devbook-tech/` | `tech` adopted |
+| `tools/scenarios/` | `.devbook/_tools/scenarios/` | `domain` adopted |
 | `assets/workflows/devbook-meta.yml` | `.github/workflows/devbook-meta.yml` | GitHub Actions present |
 | `assets/agents-section.md` | `AGENTS.md`, between `<!-- devbook:begin -->` and `<!-- devbook:end -->` | always |
 | `assets/root-wrappers/CLAUDE.md` | `CLAUDE.md` | absent |

@@ -135,8 +135,8 @@ rule trio failed the checker for want of `paths`. An exempt repository never exe
 install it ships, and every path a flow names — `.devbook/_tools/devbook-meta/build.mjs`
 among them — resolved everywhere but here. Both blockers are now checks rather than reasons:
 `tools/check-assets.mjs` recognizes a delivered rule or procedure by name and derives its
-wrappers from the shipping plugin, and fails when `.devbook/_tools/devbook-meta/` or
-`devbook-tech/` differs by a byte from `plugins/devbook/tools/`, so an edit to the plugin and
+wrappers from the shipping plugin, and fails when `.devbook/_tools/devbook-meta/`,
+`devbook-tech/`, or `scenarios/` differs by a byte from `plugins/devbook/tools/`, so an edit to the plugin and
 the refresh of its copy land in one commit. Hashes and that comparison are taken over
 LF-normalized text, because the working tree is CRLF and the index LF.
 
@@ -165,6 +165,7 @@ LF-normalized text, because the working tree is CRLF and the index LF.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-08 | `tools/scenarios/` materializes into `.devbook/_tools/scenarios/` where `domain` is adopted, and `check-assets` holds its vendored copy to the plugin like the other two. A path that did not exist before needs no migration: `update` creates it, and nothing stale is left behind. |
 | 2026-10-06 | `004-start-binding-is-run` hands an `app.start` with options to `repo:run`; it wrote `delivery:phase-validation`, a phase skill retired since. The id is unchanged, and delivery's `001-phase-maps` drops either retired provider wherever it finds one. |
 | 2026-10-05 | Procedures install with `devbook`: `027-procedures-in-devbook` moves the stamp entry at contract 27, and `001` to `004` join devbook's ledger under their shipped ids. |
 | 2026-10-05 | Procedures will install with `devbook`: a `devbook` migration moves `components.devbook-procedures` under `components.devbook`, keeping `adopted` and every hash, and the four `devbook-procedures` migrations move with them. Decided here; the fold lands as its own change. |

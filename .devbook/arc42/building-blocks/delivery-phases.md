@@ -55,6 +55,13 @@ to `flow-spec`. It implements nothing and writes no chapter. It reads chapters f
 the devbook checker prints from the Markdown, never from a committed `_meta/` index, and never
 a folder whole or an annotation fence.
 
+It also lists the [scenario pages](devbook.md#scenario-tools) the item references, the list
+`implement`, `verify`, and `spec-check` work from. A page comes in directly, when the request,
+its origin, or a selected chapter names the page, one of its parts, or one of its screenshots,
+or through a selected requirement whose case's `Proved by:` line names a part. It reads them
+from the scenario register in the same printed corpus. A page is listed whole, with the parts
+the item references marked, because a page only ever runs whole.
+
 ### phase-plan
 
 ```meta
@@ -81,6 +88,11 @@ move and the project bootstrap and scaffold included, is in `implement-kinds.md`
 test-first rules ported from Matt Pocock's `/tdd` are in `tdd-rules.md`. The spec is
 fixed input: a spec problem returns `revise: phase-scope` rather than a redesign inline. It never
 runs the full suite, commits, or reviews its own work.
+
+For each scenario page `scope` listed, it invokes devbook's `scenario-derive` in the first slice
+the journey crosses, before that slice's code, and fills the step bodies the change builds. It
+never edits the page, the setup hook, or the profiles: the page is the source, and a page that
+cannot be derived is a spec problem returned to `scope`.
 
 ### phase-review
 
@@ -121,6 +133,14 @@ nothing to start.
 verification that did not happen. This is the one guarantee that makes the other depths usable
 at all.
 
+**Run exactly the referenced scenario pages.** At the full and the targeted depth, the pages
+`scope` listed run through devbook's `scenario-run`, all of them in one run against the
+instance this phase started, and no other page. A page always runs whole, because a filtered
+run writes no `run.json`. Each part's outcome is reported as the stage's
+[scenario evidence](delivery.md#stage-updated), and the run file and its screenshots stay in the
+change set. A page that is not run, for its depth or because its spec no longer matches, is
+recorded with the reason rather than run some other way.
+
 **Capture evidence without a QA plugin.** The evidence rules are the engine's own contract, so
 they hold with no QA plugin, no agent bound on `verify`, and no capture skill. Capture resolves
 to the repository's `capture` skill, then the bound agent's, then this phase driving it
@@ -138,6 +158,14 @@ only reports or also updates. An updating skill touches only `code-ahead` rows i
 sets `approved`, and runs the devbook check after it, and its edits are part of what the person
 approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
 `capture-specs` does, and `verify-change`, the default binding, does not.
+
+Every scenario page `scope` listed is checked by the phase itself, whichever skill is bound, and
+never edited. A page whose signature no longer matches the signature its run recorded, or that
+has no run, is reported `stale` in a table of its own after the verdicts, because it qualifies
+the run and is not a sixth verdict. A referenced part that nothing proves — no spec implements
+it, or its run left it `not-run` behind a held step — makes the requirement pointing at it
+`spec-ahead`. The ready check reads both as not ready, except a
+`stale` page that `verify` could not run at its depth, which goes to the gate as a question.
 
 ### phase-ready
 
@@ -164,7 +192,9 @@ table, and any open items. It runs again on every revise round, because a revise
 a new thing to look at. When the change implements a click demo, the demo is published beside
 the app at the addresses its chapters name, and the what-to-check list compares the two screen
 by screen, per [the demos decision](../adr/demos.md): the demo is the agreed reference the
-built work is accepted against.
+built work is accepted against. The screenshots of every scenario page `verify` ran are listed
+the same way, part by part with each part's outcome, beside the app link of the screen each one
+shows.
 
 **Present, never decide.** The phase produces the review; the approve, revise, or decline
 decision after it belongs to the flow-runner. Nothing in the handoff can approve, skip, or
@@ -374,6 +404,7 @@ rows below are the ones that run through a phase.
 | A bound agent per phase | Binding, never a dependency | A phase entry's `agent` field | The phase's brief and the skill it follows | With no agent, the runner runs the phase inline. |
 | The consuming repository's `run` and `capture` procedures | Named by skill name | `phase-verify` starts the application and takes evidence through them, and `phase-personal-validation` brings the application up | The skill names | Absent, a phase does the work directly or records the depth it reached, never more. |
 | [devbook](devbook-code-sync.md#verify-change) | Named by skill name | `phase-spec-check` binds `verify-change` by default, or an updating skill such as `capture-specs` | The `updates: true` frontmatter key | The verdict is devbook's to give; the phase only decides when it runs and whether its edits reach the gate. |
+| [devbook](devbook.md#scenario-tools) | Named by skill name | `phase-scope` reads the scenario register from the printed corpus, `phase-implement` invokes `scenario-derive`, `phase-verify` invokes `scenario-run`, and `phase-spec-check` runs `signature.mjs` against each run | The skill names, the register's `schemaVersion`, and `run.json` version 2 | A page is devbook's to read, derive, and run; the phases only decide which pages the item needs and what their runs mean for the gate. Absent, the pages are recorded as not derived or not run, never proved some other way. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `phase-create-pr` names `pr-body`, `phase-scope` and `phase-drafting` name `research-brief`, and `phase-summary` offers `retro` | The skill name alone | Without them, the phase writes the prose itself and offers no retro. |
 
 ### Inbound

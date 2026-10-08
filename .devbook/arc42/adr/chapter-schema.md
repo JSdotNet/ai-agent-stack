@@ -1,7 +1,7 @@
 # Chapter Schema
 
 ```meta
-date: 2026-10-06
+date: 2026-10-08
 related: [".devbook/arc42/09-architecture-decisions.md", ".devbook/arc42/building-blocks/devbook.md", ".devbook/arc42/08-crosscutting-concepts.md#devbook-folder", ".devbook/arc42/adr/annotations.md", ".devbook/arc42/adr/checks-and-indexes.md", ".devbook/arc42/adr/releases.md"]
 ```
 
@@ -383,6 +383,7 @@ a kind.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-08 | The scenario page: a `domain/` file typed `scenario`, in a bounded context at any depth, is one end-to-end journey whose `##` parts owe no block and stay addressable. Its `status` is absent, `draft`, or `proposed`; it carries no `tests`, since the page is the test; its stem is unique across the corpus; its steps open with a bold Given, When, Then, or And. The six setup fields — `start`, `actor`, `data`, `profile`, `flags`, `settings` — are legal there alone and resolve against the chapters and `.devbook/scenarios/profiles.json`. A requirement's `#### Scenario:` may hold one `Proved by: <page>.md#<part>` line instead of its steps, which derives its `e2e` entry, and a part no case names is reported. `shot:` and `scenario:` images are no diagrams. Contract 30, additive, no migration. |
 | 2026-10-06 | The `actor` converter kind: a `user` or `technical` chapter roots a sync unit, paired through its `role`, the policies admitting it, and a `technical` actor's client registration, so a `sync` value on `actors.md` is inherited. An `organisation` roots no unit. A grant wider than the chapter is a `conflict`. Contract 28, additive, no migration. |
 | 2026-10-06 | `model.md`, `flow.md`, and their splits stay context: no converter kind, no sync unit, no `sync`. Every claim they draw belongs to an aggregate, domain service, feature, or skill chapter that has a kind. No contract, no migration. |
 | 2026-10-02 | A `requirement` at `status: deprecated` is no longer warned for having no `#### Scenario:`: it records a withdrawn promise, which has no case left to exercise. The level warning on the `tests` it names still applies. No contract, no migration: a warning narrows and no shape changes. |

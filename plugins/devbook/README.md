@@ -150,6 +150,24 @@ go before it does.
 **Trigger keywords:** `sweep the annotations`, `clear resolved notes`,
 `delete the answered comments`, `sweep before merging`
 
+### Skills: `scenario-write`, `scenario-derive`, `scenario-run`
+
+Three skills over a scenario page — one end-to-end journey written as a `type: scenario` page
+in a bounded context — each one step of the way from the page to its proof:
+
+| Skill | Does |
+| --- | --- |
+| `scenario-write` | Writes or revises the page beside its chapter — setup fields, English steps, screenshot labels — and the `Proved by:` line in every requirement case it proves |
+| `scenario-derive` | Writes or re-derives the spec from the page: the header and signature, the setup call, one test per part titled as its `##`, one step per step, the `shot` calls. Leaves a step body the page cannot say to the implementer, never edits the setup hook, and builds on `qa:playwright-e2e-authoring` when it is installed |
+| `scenario-run` | Runs one page or all of them, each under its own profile, so the reporter writes `run.json` and the screenshots |
+
+The page is the source throughout: a finding is fixed by bringing the spec to the page. All
+three work on the [scenario tools](#tooling-scenarios), so they need `domain/` adopted.
+
+**Trigger keywords:** `write a scenario page`, `add a journey` for `scenario-write`;
+`derive the spec`, `signature mismatch`, `page without spec` for `scenario-derive`;
+`run the scenario pages`, `refresh the scenario screenshots` for `scenario-run`
+
 ### No flows
 
 This plugin ships the shape of a devbook folder and never the procedure for changing one.
@@ -372,11 +390,12 @@ node .devbook/_tools/devbook-meta/build.mjs --print          # the documents as 
 node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
 ```
 
-The checker builds the reference graph, the reading outline, and the open-note
-index in memory and reports what does not resolve. It writes nothing unless
+The checker builds the reference graph, the reading outline, the open-note
+index, the term register, and the scenario register in memory and reports what
+does not resolve. It writes nothing unless
 asked with `--write`, and nothing in this plugin asks: the committed `_meta/`
 indexes are [`devbook-derived`](../devbook-derived)'s, and its refresh paths are
-what pass the flag. `--print` emits the same three documents per scope for a
+what pass the flag. `--print` emits the same five documents per scope for a
 viewer that cannot import `graph.mjs`, `outline.mjs`, and `annotations-index.mjs`
 in-process.
 
@@ -413,6 +432,19 @@ node .devbook/_tools/devbook-tech/frontend-packages.mjs --root .
 The inventory scripts emit deterministic JSON from repository manifests. Use them
 as the source of truth for package-derived `tech/` facts; use repository analysis
 for technologies that do not appear in package manifests.
+
+### Tooling: `scenarios`
+
+```bash
+node .devbook/_tools/scenarios/check.mjs          # coverage: every scenario page against its spec
+node .devbook/_tools/scenarios/signature.mjs <page.md>   # the signature a spec's header takes
+```
+
+The scenario tools connect a repository's e2e suite to its scenario pages: the parser, the
+signature and its shared vector, the setup runner and `shot` helper a derived spec imports,
+the reporter that writes `run.json` and the screenshots, and the coverage check. Materialized
+only where `domain/` is adopted. The contract and the wiring are
+[tools/scenarios/README.md](tools/scenarios/README.md).
 
 ### Assets
 
@@ -595,7 +627,7 @@ After running `devbook:init`, a repository that adopted everything has:
 .devbook/
 ├── config.json                      # the stack config, with devbook's stamp
 ├── arc42/
-│   ├── _meta/{graph.json,index.json,annotations.json}   # devbook-derived's, where enabled
+│   ├── _meta/{graph,index,annotations,naming,scenarios}.json   # devbook-derived's, where enabled
 │   └── <chapter>.md
 ├── domain/
 │   ├── _meta/…
@@ -612,10 +644,11 @@ After running `devbook:init`, a repository that adopted everything has:
 │   ├── adoption-map.md
 │   ├── <nn>-<part>.md
 │   └── concepts.md
-├── _meta/{graph.json,index.json,annotations.json}       # the rollup, devbook-derived's
+├── _meta/{graph,index,annotations,naming,scenarios}.json   # the rollup, devbook-derived's
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
-    └── devbook-tech/                # deterministic package inventory scripts
+    ├── devbook-tech/                # deterministic package inventory scripts
+    └── scenarios/                   # scenario page parser, signature, runner, reporter, coverage check
 AGENTS.md                            # devbook's section between markers; the rest is the repository's
 .github/
 └── workflows/devbook-meta.yml       # the CI check

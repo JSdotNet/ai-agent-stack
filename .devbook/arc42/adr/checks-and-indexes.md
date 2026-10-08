@@ -78,6 +78,18 @@ own register is empty until a `domain/` is adopted. The register carries its own
 repository and pins it; a contract bump that leaves the register alone must not break that
 reader. Adding a derived file changes no chapter schema, so no migration ships with it.
 
+**The scenario register is devbook's too, and carries what a page's parts cannot.** `build.mjs`
+writes a fifth document per scope, `_meta/scenarios.json`: every `type: scenario` page with its
+stem, path, title, and declared status, its six setup fields as written, its screenshot labels
+with the part each sits in, and its parts — title and anchor — each with the requirement cases
+whose `Proved by:` names it. A part owes no block, so it is no node in the graph, and the
+pointers at it sit in requirement prose rather than a field, so spec-manager and Backlog each
+had only the corpus to parse. It is built by the scenario pass the check already runs, kept
+beside the nodes like the ledes so `graph.json` does not change shape, and it carries its own
+`schemaVersion`, starting at 1, for the reason the term register does. Run state stays out:
+a run is a file the suite writes, and a reader compares its signature with the page's. A new
+derived file changes no chapter schema, so no migration ships and the contract stays at 30.
+
 **A rule is not a term, so the register leaves requirements and invariants out.** A
 `requirement` or `invariant` chapter's `aliases` hold the codes the rule is cited by — a
 requirement code from the document it was captured from — not surface names of a concept, and
@@ -104,6 +116,9 @@ two kinds, since a code names no identifier by design.
 - The checker and the generator in `devbook-derived` together, with `devbook` naming its path.
 - Reading the arc42 glossary into the term register by parsing its "Also called" line.
 - The register on the contract version: a consumer pinning it would break on every bump.
+- Scenario parts as graph nodes, with `proves` edges from the requirements: every node in every
+  committed `graph.json` would move for one reader's list, and a part's labels and setup fields
+  are no edge.
 - A separate field for a requirement code, or the code in the requirement's name: either moves
   every code in every adopted repository, which is a migration bought for a field name, and the
   name would put one code in several anchors.
@@ -120,6 +135,7 @@ separate call.
 
 | Date | Change |
 | --- | --- |
+| 2026-10-08 | `build.mjs` writes `_meta/scenarios.json`, the scenario register, per scope beside the other four: every scenario page with its stem, setup fields, labels, and parts, each part with the requirement cases that point at it; its own `schemaVersion: 1`, and `graph.json` unchanged. |
 | 2026-10-02 | All three converters also take a sync unit or group as scope, its chapters exactly as `units.mjs` lists them; `capture-specs` and `apply-change` widen this far and no further, because a unit is what one pull request changes and the tool, not the pass, decides what it holds. Any `conflict` stops the group, and an unattended run lands a draft pull request with added chapters at `draft`. `verify-change`'s table gains each chapter's effective `sync` and the sweep that will act. |
 | 2026-10-02 | The term register leaves `requirement` and `invariant` chapters out: their `aliases` are the codes a rule is cited by, shared by rules split from one row, and `verify-change` no longer reports one as a dead alias. Over spec-manager's devbook, 1668 terms and 859 collisions became 242 and 18. No migration: the field stays legal and no chapter changes. |
 | 2026-10-01 | `build.mjs` writes `_meta/naming.json`, the term register, per scope beside the other three, from `domain/`'s `term` and aliased chapters; `arc42/`'s glossary is not read, and the register carries its own `schemaVersion: 1`. |

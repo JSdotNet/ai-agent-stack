@@ -45,7 +45,7 @@
 //                 so the pull-request gate covers a trigger that targets a flow
 //   workflows     every plugins/**/*.workflow.js checks out LF and holds no control
 //                 character but a newline, because the host's Workflow tool refuses one
-//   vendored     .devbook/_tools/devbook-meta/ and devbook-tech/, where present, are
+//   vendored     .devbook/_tools/devbook-meta/, devbook-tech/, and scenarios/, where present, are
 //                 byte-identical over LF to plugins/devbook/tools/ (see the decision
 //                 "Install")
 //   budgets       body-line counts against the budgets in AGENTS.md — reported, never
@@ -556,12 +556,12 @@ for (const folder of await readdir(PLUGINS)) {
 
 // ── vendored tools ──────────────────────────────────────────────────────────
 //
-// devbook's init copies tools/devbook-meta/ and tools/devbook-tech/ whole into
+// devbook's init copies tools/devbook-meta/, tools/devbook-tech/, and tools/scenarios/ whole into
 // .devbook/_tools/. In the repository that authors them the copy could drift on the first
 // edit, which is why vendoring was once rejected here; this check makes drift an error
 // instead. Compared over LF, because the working tree is CRLF and the index LF.
 
-for (const tool of ["devbook-meta", "devbook-tech"]) {
+for (const tool of ["devbook-meta", "devbook-tech", "scenarios"]) {
     const copy = path.join(ROOT, ".devbook", "_tools", tool);
     if (!(await exists(copy))) continue;
     const source = path.join(PLUGINS, "devbook", "tools", tool);

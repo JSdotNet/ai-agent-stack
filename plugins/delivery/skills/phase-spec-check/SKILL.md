@@ -29,6 +29,8 @@ Verify and before the ready check, so the approval sees the drift. Its place in 
   `phase-scope` — and its acceptance criteria.
 - **The chapter list** Scope recorded, plus every governed chapter the change set touches, in
   the adopted devbook folders. That union is **in scope**; nothing else is.
+- **The scenario pages** Scope listed, with the parts the item references, and what Verify
+  recorded for each.
 - **The change set**: the diff against the merge base, untracked files included.
 - **The bound skill**: `phases.<flow>.phase-spec-check.skill` in the effective configuration.
 
@@ -61,6 +63,28 @@ Every item in scope gets exactly one row with the evidence that settles it:
 test for it is a row of its own, whatever `policy["openspec.scenarios"]` says: `advisory`
 reports it, `linked` reports it as what will refuse acceptance.
 
+**Check every scenario page Scope listed.** Whatever the bound skill, this phase checks each
+listed page itself — the bound skill reports only the pages a requirement in scope points at, so
+a page referenced directly would otherwise go unchecked — and passes the list in the skill's
+brief so the two agree. The scenario folder is `.devbook/scenarios/` unless
+`playwright.config.ts` sets `scenarioFolder`; pass that folder to every tool below as
+`--scenario-folder <dir>` whenever it is set, because a page's data sets hash from under it.
+
+- **`spec-ahead`** — a referenced part with no proof: no spec's `// scenario:` header names its
+  page, that spec has no `part` titled as the part's heading, or the page's current run records
+  the part `not-run` — a step still held by `test.fixme()`. For a part a requirement's case
+  points at, this is that requirement's row in the verdict table, naming the part, the missing
+  spec or the held step, and `devbook:scenario-derive` or `phase-implement` as the action; a part
+  referenced directly, with no requirement, is a row of its own.
+- **`stale`** — a page whose signature no longer matches its run: the first field
+  `node .devbook/_tools/scenarios/signature.mjs <page>` prints is not the `signature` in
+  `<scenario folder>/<stem>/run.json`, or there is no `run.json`. Never in the verdict table:
+  `stale` qualifies a page's run and is not a sixth verdict. List every listed page after the
+  verdict table, one row each — page, page signature, run signature (`none` without a run),
+  `current` or `stale`, and the action: `devbook:scenario-run`, or `devbook:scenario-derive`
+  first when the spec's own `// signature:` differs too. A stale run is no evidence: the
+  requirements it would prove get none from it.
+
 ## Step 3 — Update, Only When the Skill Does
 
 Only in check-and-update mode, and only within these limits. Repeat them to the bound skill in
@@ -68,7 +92,8 @@ its brief; it is the one that edits.
 
 - **Only `code-ahead` rows, and only chapters in scope.** The code is the truth there. A
   drifted chapter outside scope is reported, not fixed in this run.
-- **`spec-ahead`, `conflict`, and `unresolved` rows are always reported, never edited.** Each
+- **`spec-ahead`, `conflict`, `unresolved`, and `stale` rows are always reported, never
+  edited.** A scenario page, its spec, and its run are never this phase's to write. Each
   needs a decision or more code, not a chapter rewrite.
 - **Follow the folder's own rules** — its instruction files and the chapter's `meta` block,
   written in the same edit — then run the repository's devbook check. A failing check marks the
@@ -87,12 +112,14 @@ its brief; it is the one that edits.
 
 ## Outputs
 
-- The verdict table, with the mode and the bound skill named. Personal Validation presents
+- The verdict table, with the mode and the bound skill named, and the scenario-page table after
+  it. Personal Validation presents
   it, Create Pull Request puts it in the description, and Report Back carries it to every
   target.
 - The edit list, empty in check-only mode.
-- The ready check reads `spec-ahead` and `conflict` rows as not ready; `code-ahead` and
-  `unresolved` rows go to the gate as questions.
+- The ready check reads `spec-ahead`, `conflict`, and `stale` rows as not ready; `code-ahead`
+  and `unresolved` rows go to the gate as questions, and so does a `stale` row for a page
+  Verify recorded as not run at its depth.
 
 ## Skip
 

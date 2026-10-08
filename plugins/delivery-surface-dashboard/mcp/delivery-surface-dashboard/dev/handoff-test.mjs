@@ -78,6 +78,18 @@ try {
     const executed = (await call("get_run", { runId })).stages.find((s) => s.name === "Implementation");
     check("update_stage stores how the stage ran", executed.execution && executed.execution.agent === "csharp-coding:coding", JSON.stringify(executed.execution));
 
+    // Scenario evidence is additive under lifecycle@1: a surface that does not read it accepts it and loses nothing.
+    await call("update_stage", {
+        runId,
+        stageName: "Build & Test",
+        status: "done",
+        output: "One page.",
+        scenarios: [{ name: "pays by card", status: "pass" }],
+        evidence: [{ stem: "checkout", part: "pay-by-card", outcome: "passed", runAt: "2026-10-08T09:00:00.000Z" }],
+    });
+    const evidenced = (await call("get_run", { runId })).stages.find((s) => s.name === "Build & Test");
+    check("update_stage accepts scenario evidence without loss", evidenced.status === "done" && evidenced.scenarios.length === 1, evidenced.status);
+
     const handed = await call("set_run_context", {
         runId,
         handoff: true,

@@ -130,7 +130,7 @@ hook may be, so the event, not the intent, decides the form it takes.
 ## Devbook Folder
 
 ```meta
-date: 2026-09-07
+date: 2026-10-08
 related: [".devbook/arc42/adr/chapter-schema.md"]
 ```
 
@@ -144,6 +144,15 @@ a convention that has a name does not need one — *knowledge* was that synonym 
 that the two named one thing. Everything the plugin ships is named `devbook-` for the same
 reason: the old prefix said only which plugin used to own the folder. What `_meta/graph.json`
 derives from their `meta` blocks is the **reference graph**.
+
+A **scenario page** is one end-to-end journey written as a `domain/` page of its own, typed
+`scenario`, beside the chapter it demonstrates; its `##` headings are its **parts**. A
+**scenario case** is the `#### Scenario:` under a requirement, which may point at a part with
+`Proved by:` instead of spelling out its own steps. The two words stay apart: the page is the
+journey, the case is one thing a requirement promises. Runs, profiles, and data sets live in
+`.devbook/scenarios/`, which holds no page. The writing convention for a page lives in
+`devbook-chapter-metadata.md` under *Scenario pages*, and a page is written in English whatever
+language the other chapters use, because its steps are the test's steps.
 
 ## Flow Skill
 

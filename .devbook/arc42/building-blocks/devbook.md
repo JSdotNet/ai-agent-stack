@@ -42,8 +42,9 @@ takes a `--write` flag and nothing in this block passes it.
 related: [".devbook/arc42/building-blocks/devbook-derived.md#interfaces", ".devbook/arc42/08-crosscutting-concepts.md#plugin-rule"]
 ```
 
-Nine skills — six that own the convention in a repository, and three that cross the boundary
-between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries — plus the rules
+Twelve skills — six that own the convention in a repository, three that cross the boundary
+between a chapter and the code implementing it, each over seven chapter kinds and the demo a page carries, and three that
+carry a scenario page from its text to its run — plus the rules
 `init` delivers, the tools it materializes, one workflow, one hook, one contract that other
 plugins follow, and the one file a repository may author to change what the check accepts. None of the
 skills is a flow: this block ships the shape and the check, and the procedure for carrying a
@@ -57,14 +58,20 @@ change belongs to the engine.
 | `tech-update` | skill | A person, or the weekly `tech-update` schedule through `delivery-schedule`'s own wrapper |
 | `prose-check` | skill | A person, or a `delivery-schedule` catalog entry naming it as a target |
 | `annotation-sweep` | skill | A person, on one chapter |
+| `scenario-write`, `scenario-derive`, `scenario-run` | skills | A person, where `domain/` is adopted: `scenario-write` from a chapter that needs a journey, `scenario-derive` when the coverage check names it, `scenario-run` to prove a page; and delivery's [phases](delivery-phases.md#phase-implement), `scenario-derive` from `implement` and `scenario-run` from `verify`, for the pages a run's scope lists; described under [Scenario Tools](#scenario-tools) |
 | `capture-specs`, `apply-change`, `verify-change` | skills | A person, one skill per run over a chapter, a sync unit, or a sync group, routed there by the session-start hook when a task crosses between a chapter and its code; `verify-change` also by the weekly `devbook-verify` schedule through `delivery-schedule`'s own wrapper |
 | `devbook-chapter-metadata.md`, `devbook-annotations.md`, `devbook-naming.md`, `devbook-writing.md`, and one rule per folder | rules | Either host, on opening a matching chapter, through the wrapper `init` writes; a folder's own rule lands only where the folder is adopted |
 | `build.mjs` | checker CLI | `validate`, CI on every pull request through `devbook-meta.yml`, and `devbook-derived` with the `--write` flag |
 | `delta.mjs` | delta merge, CLI and in-process | A person with `--check` or `--apply`, a bridge's archive, and the graph build through `checkDelta` for every indexed delta |
 | `demo.mjs` | demo rules, in-process | The graph build through `demoProblems`, and `delta.mjs` through `demoFileIssues` for every demo a change carries |
+| `scenario.mjs` | scenario page rules, in-process | The graph build through `scenarioProblems`: the stem register, the setup fields resolved against chapters and `.devbook/scenarios/profiles.json`, `scenario:` images, `Proved by:` pointers and the `e2e` entries they derive, and the parts no requirement claims |
 | `units.mjs` | unit lister, CLI and in-process | A person checking what a direction covers before setting one; the sync sweeps, which select their groups from `--groups --json` |
 | `annotations.mjs` | fence writer, CLI and in-process | `annotation-sweep` and every `devbook-collaboration` skill |
 | `dotnet-packages.mjs`, `frontend-packages.mjs` | inventory scripts | `tech-update`, where `tech/` is adopted |
+| `scenarios/check.mjs` | coverage check CLI | A person or CI, where `domain/` is adopted: every scenario page against the spec that implements it |
+| `scenarios/signature.mjs` | signature CLI and in-process | `scenario-derive`, for the `// signature:` line a spec opens with; the coverage check and the reporter in-process |
+| `scenarios/setup.ts`, `scenarios/report.mjs` | scenario runner and Playwright reporter | A repository's derived specs import the runner and its `shot` helper; its Playwright config names the reporter, which writes `run.json` and the screenshots |
+| `scenarios/scenario-page.vector.json` | shared test vector | spec-manager and Backlog, which recompute a page's signature and must agree with it |
 | `emit-session-context.mjs` | SessionStart hook, declared for both hosts | The host, at session start |
 | `resources/demo-address.md` | contract, `devbook.demo.address@1` | The demo template's script, spec-manager, and Backlog, which address a demo and talk to it through it and never extend it |
 | `run`, `capture`, `diagnose`, `estimate`, `prototype` | seeds under `assets/procedures/skills/`, each with a `goal` | Materialized by `init` and `update` into `.agents/skills/<name>.md` with a wrapper per host — `run` as a `.claude/skills/run-<name>/SKILL.md` recipe with a Copilot twin; then any session, either host, by name |
@@ -163,10 +170,10 @@ related: [".devbook/arc42/building-blocks/devbook-derived.md#structure", ".devbo
 ```
 
 Three aggregates — the chapter, the folder, and the graph derived from a corpus of them —
-six domain services, and the two value objects the aggregates share. Two of the services, the
+seven domain services, and the two value objects the aggregates share. Two of the services, the
 Unit Lister and the Spec Converter, are [devbook-code-sync](devbook-code-sync.md#structure)'s,
 and the Procedure, its Goal, and the Demo Template are
-[devbook-procedures](devbook-procedures.md#structure)'s; the four services left are below. The chapter is the
+[devbook-procedures](devbook-procedures.md#structure)'s; the five services left are below. The chapter is the
 consistency boundary everything else is expressed in terms of.
 
 ### Model
@@ -299,6 +306,11 @@ top-level heading carries a block of its own describing the document as a whole.
 | `status: accepted` stands on a signed approval, and `accepted-at` is on or after `approved-at` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | Neither decision rung, nor any of its six fields, appears outside `domain/` | parse | `unit:node:plugins/devbook/tools/devbook-meta/accepted-rung.test.mjs` |
 | A `domain/` file may carry a page the convention does not name, typed by its own filename | parse | `unit:node:plugins/devbook/tools/devbook-meta/additional-page.test.mjs` |
+| A scenario page is a `domain/` file typed `scenario`, inside a bounded context at any depth; the type in another folder or on a chapter is an error, and its `##` parts owe no block and stay addressable | parse | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/structural-sections.test.mjs` |
+| A scenario page's `status` is absent, `draft`, or `proposed`; it carries no `tests`; its steps open with a bold Given, When, Then, or And; its stem is unique across the corpus | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/status-optional.test.mjs` |
+| `start`, `actor`, `data`, `profile`, `flags`, and `settings` sit on a scenario page's file-level block alone; `actor`, `flags`, and `settings` resolve to an actor, a `feature-flag`, and a `setting` chapter, and `profile` and every portal named resolve in `.devbook/scenarios/profiles.json` when it exists | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs`, `unit:node:plugins/devbook/tools/devbook-meta/field-scope.test.mjs` |
+| A `#### Scenario:` holding `Proved by: <page>.md#<part>` holds nothing else and names a part of a scenario page, whose spec derives the requirement's `e2e` entry; a part no case names is reported as an unclaimed journey | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
+| A `scenario:<stem>#<label>` image names an existing scenario page, and neither it nor a `shot:` image counts as a diagram | parse, graph build | `unit:node:plugins/devbook/tools/devbook-meta/scenario-page.test.mjs` |
 | A chapter's kind lives in `type` and never in the heading text | parse | untested |
 | Every `related` and `depends-on` entry resolves to an existing chapter or file | graph build | untested |
 | Every `tests` entry parses as `<level>:<runner>:<selector>` | parse | `unit:node:plugins/devbook/tools/devbook-meta/tests-field.test.mjs` |
@@ -438,6 +450,15 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 `--no-move` merges and leaves the folder for a caller whose own tool moves it —
 [devbook-openspec](devbook-openspec.md#landing-a-change) lets `openspec archive` do it.
 
+A scenario page changes through a delta like any `domain/` file: a new page is `delta: added`
+with its parts as `ADDED` entries, and a part of an existing one is replaced whole. The rules
+no single file can check — a stem unique across contexts, setup fields that resolve, a
+`Proved by:` that names a part — would otherwise surface only at archive, after both gates.
+So once every delta merges, `--check` lays the whole change over the corpus in memory, runs
+`scenario.mjs`'s pass over the result, and reports each problem the change introduces against
+the delta that causes it: a pointer may name a page the same change adds, and a problem the
+corpus already had is not the change's.
+
 | Invariant | Enforced at | Evidence |
 | --- | --- | --- |
 | `archive/` is never indexed and never a folder kind | layout detection | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
@@ -451,6 +472,7 @@ is pending truth to `verify-change` and `apply-change`, per `code-sync-protocol.
 | A proposal's hash covers the proposal and every delta, and an open question anywhere in the change stands against its rung | graph build | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | `--apply` merges only an `accepted` change, signed, over its current hash | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
 | A merge writes no rung onto a chapter and lifts one whose content it changed | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-folder.test.mjs` |
+| `--check` resolves a `Proved by:`, a stem, and a scenario page's setup fields over the corpus with every delta of the change merged, and reports each new problem against the delta that causes it | `delta.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/change-scenarios.test.mjs` |
 | `capture-specs` never plans over a chapter a change is open against | `code-sync-protocol.md` | untested |
 
 ### Demo
@@ -580,12 +602,17 @@ related: [".devbook/arc42/building-blocks/devbook.md#reference-graph", ".devbook
 ```
 
 Walks the corpus once and projects it per scope, building the reference graph, the outline,
-the annotation index, and the term register for the repository and for each adopted folder.
+the annotation index, the term register, and the scenario register for the repository and for
+each adopted folder.
 The register is `domain/`'s ubiquitous language as a list: every `term` chapter and every
 other `domain/` chapter carrying `aliases` but a `requirement` or `invariant`, whose `aliases`
 are the codes a rule is cited by, each with its lede as its definition. It is built
 from the graph and the ledes the same walk kept, never a second read. It carries its own
-`schemaVersion`, because its first reader is outside this repository. It checks by default
+`schemaVersion`, because its first reader is outside this repository. The scenario register
+is the fifth: every `type: scenario` page with its stem, path, setup fields, screenshot
+labels, and parts, each part with the requirement cases whose `Proved by:` names it — built
+by the scenario pass, kept beside the nodes, with its own `schemaVersion` for the same
+reason. It checks by default
 and writes only on `--write`, which nothing in this block passes — the committed `_meta/` is
 [devbook-derived](devbook-derived.md#refresh)'s to ask for. It is the only thing that decides
 whether a problem is an error or a warning: an unresolved reference fails, a heading with no
@@ -608,6 +635,7 @@ request and the daily `devbook-validate` schedule runs `validate` through its ow
 | A prose link whose file does not exist, or whose anchor no indexed heading renders, is a warning; absolute URLs, code, and fences are not read | `graph.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/prose-links.test.mjs` |
 | It is the only thing that decides whether a problem is an error or a warning | `build.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/schema-gate.test.mjs` |
 | The term register lists `domain/`'s `term` and aliased chapters only, never a `requirement`, an `invariant`, or `arc42/`'s glossary, and reports at warning severity alone | `naming.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/naming.test.mjs` |
+| The scenario register lists every scenario page by stem, its parts in page order with the labels under each and every requirement case pointing at it, writes an empty list outside `domain/`, and leaves `graph.json` unchanged | `scenarios-index.mjs`, `scenario.mjs` | `unit:node:plugins/devbook/tools/devbook-meta/scenarios-index.test.mjs` |
 
 ### Fence Writer
 
@@ -646,6 +674,49 @@ is visibly not. Materialized by `init` or `update` only where `tech/` is adopted
 | --- | --- | --- |
 | The emitted JSON is deterministic: sorted, timestamp-free, build output ignored | the inventory scripts | untested |
 | Materialized only where `tech/` is adopted | `init`, `update` | untested |
+
+### Scenario Tools
+
+```meta
+related: [".devbook/arc42/building-blocks/devbook.md#reconciler", ".devbook/arc42/building-blocks/devbook.md#devbook-folder"]
+```
+
+Also called: the scenario tooling, `.devbook/_tools/scenarios/`.
+
+Connects a repository's e2e suite to its scenario pages through files, not a runtime. A
+derived spec opens with the page it implements and the page's signature; the runner it
+imports resolves the effective configuration — the profile in
+`.devbook/scenarios/profiles.json`, then the page's `flags` and `settings` — calls the
+repository's own setup hook, keeps one browser context per portal, and opens `start`; the
+reporter writes `run.json` version 2 and one screenshot per `shot:` label into
+`.devbook/scenarios/<stem>/`, in the working tree, so the run is committed with the change.
+The coverage check reads files only and reports a page with no spec, a signature mismatch,
+label drift, an image inside a step list, a duplicate stem, a dangling `scenario:`
+reference, and an unknown profile. Materialized by `init` or `update` only where `domain/`
+is adopted, because scenario pages live there.
+
+The signature is sha256 over the normalized setup fields — a data set by its name and the
+hash of its folder — the part headings, the steps, and the labels, in document order, first 8
+hex. Every reader recomputes it, so a stale run is computed and never stored, and
+`scenario-page.vector.json` is the one vector every implementation is tested against.
+
+Three skills carry a page through the tools, one step each, and the page is the source in
+all three: `scenario-write` writes the page and the `Proved by:` lines that point at its
+parts; `scenario-derive` brings a spec to the page — the header from `signature.mjs`, one
+test per part, one step per step, the `shot` calls — and leaves what the page cannot say to
+the implementer, never touching the setup hook; `scenario-run` runs whole pages, so the
+reporter writes, and reports each part's outcome. `scenario-derive` builds on
+`qa:playwright-e2e-authoring` by name, which is a plugin of another marketplace: where it is
+not installed, the repository's own specs are the model.
+
+| Invariant | Enforced at | Evidence |
+| --- | --- | --- |
+| The signature agrees with the shared vector, and a caption, the lead, or whitespace does not change it | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
+| The signature CLI prints one `<signature>  <path>` line per scenario page and exits 1 on a path that is not one | `signature.mjs` | `unit:node:plugins/devbook/tools/scenarios/signature.test.mjs` |
+| A filtered run writes nothing; a label the run did not reach keeps its file; a label the page dropped is pruned | `report.mjs` | `unit:node:plugins/devbook/tools/scenarios/report.test.mjs` |
+| The effective configuration is the profile, then the page's flags and settings, and the hook runs tenant, data, flags, settings, then sign-in per portal | `setup.mjs` | `unit:node:plugins/devbook/tools/scenarios/setup.test.mjs` |
+| Each coverage finding is reported where it occurs, and a clean repository has none | `check.mjs` | `unit:node:plugins/devbook/tools/scenarios/check.test.mjs` |
+| Materialized only where `domain/` is adopted | `init`, `update` | untested |
 
 ### Shared Value Objects
 
@@ -794,6 +865,7 @@ consumer that reaches only the converters or only the procedures is listed in
 | [The plugin kernel](../08-crosscutting-concepts.md) | Shared Kernel | The plugin folder shape, the two manifests, the stamp, the migration folder | [Chapter 8](../08-crosscutting-concepts.md) | It is packaged as a plugin like everything else here, and the kernel is what "packaged" means. |
 | Claude Code Plugin API | Conformist | Manifest, skill discovery, `hooks/hooks.json`, and the `.claude/rules/` wrapper `init` writes | The host's own schemas | The host decides what loads; this block writes to the shape and has no say in it. |
 | [devbook-skills](devbook-skills.md#dependencies) | Separate Ways | `devbook-writing.md` names the skill `show-me` for every chapter except `domain.md` and its splits | The skill name alone | Pictures read faster than prose. Without the skill, the rule's own table of diagram kinds applies, so nothing is declared. |
+| The `qa` plugin, another marketplace | Separate Ways | `scenario-derive` names `qa:playwright-e2e-authoring` for the e2e folder, the test conventions, and how a step body is written | The skill name alone | The shape of a derived spec is this block's; how a Playwright step is written well is not. Without the skill, the repository's existing specs are the model, so nothing is declared. |
 | Copilot Plugin API | Conformist | Manifest, `hooks.json`, and the `.github/instructions/` wrapper `init` writes | The host's own schemas | Same relationship, second reader. Both hosts ignoring unknown keys is what lets one rule body serve two wrappers. |
 | A consuming repository | Customer-Supplier, this block supplying | `devbook:init` materializes rules, wrappers, the `tech/` inventory scripts, the adopted procedures, and one marker-fenced section of `AGENTS.md`; the stamp under `components.devbook` records it, and `devbook:update` keeps both current | Contract version, migration ids, the `meta` schema, each procedure's `goal` | The convention only exists where it has been installed, and the stamp is the record of what landed. A procedure's body is the repository's from its first edit; only the goal is refreshed. |
 
@@ -807,7 +879,7 @@ consumer that reaches only the converters or only the procedures is listed in
 | [devbook-derived](devbook-derived.md#dependencies) | Customer-Supplier, declared | Passes `--write` to this block's checker at `.devbook/_tools/devbook-meta/build.mjs`; its canvas loads `graph.mjs`, `outline.mjs`, and `metadata.mjs` from that folder at runtime | The checker's CLI and the three modules' exports | That the tool lands where this block's install puts it, and that the exports the canvas reads keep their names. |
 | [devbook-openspec](devbook-openspec.md#dependencies) | Customer-Supplier, declared | Configures OpenSpec to write this block's change folder; `archive` merges through `delta.mjs --apply --no-move` and lets `openspec archive` move the folder; `init` and `update` follow the reconcile protocol and stamp `components.openspec` | `devbook-changes.md`, `delta.mjs`, `chapter-hash.mjs`, and contract 24 | That a change's shape, the merge, and its gate check keep their meaning, and that `--no-move` leaves the folder where OpenSpec's archive finds it. |
 | [devbook-collaboration](devbook-collaboration.md#dependencies) | Customer-Supplier, declared | Annotation fences written through `annotations.mjs`; writes devbook's `approved` and `accepted` rungs | The annotation fence and the `status` ladder | That a fence keeps its schema and its open/resolved/gone lifecycle, and that the two rungs and their records keep their meaning. |
-| [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block | None declared, on either side | Folder names and the chapter schema — neither of which it pins. |
+| [delivery](delivery.md#dependencies) | **Undeclared** — see [debt record 4](../tdr/4-delivery-depends-on-devbook.md) | `flow-spec` is named for the folders and expects every chapter to carry this block's `meta` block; `flow-code`'s phases read the scenario register `build.mjs --print` emits, invoke `scenario-derive` and `scenario-run`, and compare `signature.mjs` with each run | None declared, on either side | Folder names, the chapter schema, and the scenario contract — none of which it pins. |
 | [delivery-schedule](delivery-schedule.md#dependencies) | Separate Ways | One catalog entry names `prose-check` as a target; three of its own `schedule-*` wrappers invoke `validate`, `verify-change`, and `tech-update` | The skill names alone | Nothing but the names. A target whose plugin the repository has not enabled is reported and skipped, never scheduled. |
 | [devbook-config](devbook-config.md#dependencies) | Conformist, read-only | Reads which folders and procedures are adopted and this block's stamp in the stack config, invokes `init` and `update` during a fan-out, answers the procedures question from the engine keys it just wrote, and runs the migrations' `--check` from `doctor` | The stack config schema, the folder layout, the two skill names, and `migrate.mjs --check` | That the layout stays detectable and the stamp keeps its shape. It writes none of it. |
 | Both hosts, at read time | Conformist, reversed | A materialized rule fires when either host opens a matching chapter | The wrapper each host reads | That the glob in the wrapper resolves in the consuming repository, which is the whole reason the rule is installed rather than shipped. |

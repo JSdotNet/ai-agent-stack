@@ -266,6 +266,28 @@ Its acceptance checks are what those entries will name once someone has written
 them, which is a reason to phrase each check as something a single test can
 assert.
 
+### A scenario page is evidence, not a kind
+
+A `type: scenario` page has no file under `assets/spec-kinds/`, roots no sync
+unit, and gets no verdict row. It rides with the requirements whose
+`#### Scenario:` cases point at its parts with `Proved by:`, the way a demo rides
+with its page.
+
+- **What it adds.** A part's steps are the case's Given/When/Then, read through
+  the pointer. The spec whose header line `// scenario: <page path>` names the page
+  is the requirement's `e2e` test, and the entry the check derives from the
+  pointer is the one to read. A part's last run under `.devbook/scenarios/<stem>/`
+  counts only when its signature matches the page: a stale run, like a disabled
+  test, is no evidence of behaviour.
+- **Capture** drafts a case as `Proved by:` when a part already proves it, and
+  inline Given/When/Then otherwise. It never drafts a scenario page and never
+  writes `tests` on a requirement whose cases all point at parts.
+- **Apply** quotes the part's steps as the case's acceptance check and names the
+  derived spec as the test to make pass. It never edits the page.
+- **Verify** reads the derived spec and the last run as the requirement's `e2e`
+  evidence. A part that fails is evidence against the requirement; a part no case
+  points at is reported beside the table as an unclaimed journey.
+
 ## Drift verdict
 
 Every run of any of the three skills ends in exactly one of five verdicts per

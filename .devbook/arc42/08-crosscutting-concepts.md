@@ -150,7 +150,9 @@ A **scenario page** is one end-to-end journey written as a `domain/` page of its
 **scenario case** is the `#### Scenario:` under a requirement, which may point at a part with
 `Proved by:` instead of spelling out its own steps. The two words stay apart: the page is the
 journey, the case is one thing a requirement promises. Runs, profiles, and data sets live in
-`.devbook/scenarios/`, which holds no page.
+`.devbook/scenarios/`, which holds no page. The writing convention for a page lives in
+`devbook-chapter-metadata.md` under *Scenario pages*, and a page is written in English whatever
+language the other chapters use, because its steps are the test's steps.
 
 ## Flow Skill
 

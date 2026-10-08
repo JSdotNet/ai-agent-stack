@@ -893,7 +893,9 @@ export async function buildGraph(repoRoot, folders = null) {
     problems.push(...(await brokenLinkIssues(repoRoot, links, anchors)));
     problems.push(...(await demoProblems(repoRoot, scanned, demoHolders)));
 
-    return { nodes: [...nodes.values()], edges, problems, ledes, syncLevels };
+    // The scenario register rides beside the nodes, like the ledes, so
+    // graph.json does not change shape; `scenarios-index.mjs` is its one reader.
+    return { nodes: [...nodes.values()], edges, problems, ledes, syncLevels, scenarios: scenarios.register };
 }
 
 /**

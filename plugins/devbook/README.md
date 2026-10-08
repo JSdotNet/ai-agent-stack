@@ -390,11 +390,12 @@ node .devbook/_tools/devbook-meta/build.mjs --print          # the documents as 
 node .devbook/_tools/devbook-meta/build.mjs --root ../other-repo --check
 ```
 
-The checker builds the reference graph, the reading outline, and the open-note
-index in memory and reports what does not resolve. It writes nothing unless
+The checker builds the reference graph, the reading outline, the open-note
+index, the term register, and the scenario register in memory and reports what
+does not resolve. It writes nothing unless
 asked with `--write`, and nothing in this plugin asks: the committed `_meta/`
 indexes are [`devbook-derived`](../devbook-derived)'s, and its refresh paths are
-what pass the flag. `--print` emits the same three documents per scope for a
+what pass the flag. `--print` emits the same five documents per scope for a
 viewer that cannot import `graph.mjs`, `outline.mjs`, and `annotations-index.mjs`
 in-process.
 
@@ -626,7 +627,7 @@ After running `devbook:init`, a repository that adopted everything has:
 .devbook/
 ├── config.json                      # the stack config, with devbook's stamp
 ├── arc42/
-│   ├── _meta/{graph.json,index.json,annotations.json}   # devbook-derived's, where enabled
+│   ├── _meta/{graph,index,annotations,naming,scenarios}.json   # devbook-derived's, where enabled
 │   └── <chapter>.md
 ├── domain/
 │   ├── _meta/…
@@ -643,7 +644,7 @@ After running `devbook:init`, a repository that adopted everything has:
 │   ├── adoption-map.md
 │   ├── <nn>-<part>.md
 │   └── concepts.md
-├── _meta/{graph.json,index.json,annotations.json}       # the rollup, devbook-derived's
+├── _meta/{graph,index,annotations,naming,scenarios}.json   # the rollup, devbook-derived's
 └── _tools/
     ├── devbook-meta/                # the checker, the fence writer, the graph modules
     ├── devbook-tech/                # deterministic package inventory scripts

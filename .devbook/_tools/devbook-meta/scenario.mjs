@@ -7,6 +7,11 @@
 // The per-document rules — where the type may sit, the status, the step
 // keywords, the field shapes — are validateDocument's, in metadata.mjs. This
 // module runs once per graph build, over documents that build already read.
+//
+// The same pass yields the register `scenarios.json` is written from: every
+// page with its parts, its screenshot labels, its setup fields, and the
+// requirement cases that point at each part — so a reader never parses the
+// corpus to find them.
 
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
@@ -18,6 +23,7 @@ import {
     provedByCases,
     scenarioStem,
     splitPortal,
+    SCENARIO_SETUP_FIELDS,
 } from "./metadata.mjs";
 
 /** Where a repository keeps the profiles its scenario pages name. */
@@ -41,8 +47,9 @@ const DERIVED_RUNNER = "playwright";
  *
  * `docs` is every indexed document as `{ relPath, raw, chapters, fileMeta }`;
  * `nodes` the graph's node map, which already holds every chapter with its
- * `kind`. Returns `{ problems, derivedTests }`, `derivedTests` a map from a
- * requirement's id to the entries derived for it.
+ * `kind`. Returns `{ problems, derivedTests, register }`, `derivedTests` a
+ * map from a requirement's id to the entries derived for it, `register` every
+ * scenario page as `scenarios.json` lists it — see `registerEntry`.
  */
 export async function scenarioProblems(repoRoot, docs, nodes) {
     const problems = [];
@@ -54,14 +61,26 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
     for (const doc of docs) {
         if (!isScenarioPage(doc.relPath, doc.fileMeta)) continue;
         const parts = new Map();
-        for (const chapter of doc.chapters) if (chapter.level === 2) parts.set(chapter.slug, chapter.text);
+        const partLines = [];
+        for (const chapter of doc.chapters) {
+            if (chapter.level !== 2 || parts.has(chapter.slug)) continue;
+            parts.set(chapter.slug, chapter.text);
+            partLines.push({ line: chapter.line, slug: chapter.slug });
+        }
+        // Each screenshot point, in page order, with the part it sits in: the
+        // nearest `##` above it, or none before the first.
         const shots = new Set();
+        const labels = [];
         for (const link of proseLinks(doc.raw)) {
             const shot = /^shot:(.+)$/i.exec(link.target);
-            if (shot) shots.add(shot[1]);
+            if (!shot) continue;
+            shots.add(shot[1]);
+            const part = partLines.filter((entry) => entry.line < link.line).pop()?.slug ?? null;
+            labels.push({ label: shot[1], part });
         }
         const stem = scenarioStem(doc.relPath);
-        pages.set(doc.relPath, { stem, parts, shots, meta: doc.fileMeta ?? {} });
+        const title = doc.chapters.find((chapter) => chapter.level === 1)?.text ?? stem;
+        pages.set(doc.relPath, { stem, title, parts, shots, labels, meta: doc.fileMeta ?? {}, provedBy: new Map() });
         byStem.set(stem, [...(byStem.get(stem) ?? []), doc.relPath]);
     }
     for (const [stem, paths] of byStem) {
@@ -170,6 +189,13 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
                     continue;
                 }
                 claimed.add(`${resolved.path}#${part}`);
+                // The case by its own name, without the `Scenario:` keyword.
+                const caseName = scenarioCase.heading.replace(/^\s*Scenario:\s*/i, "");
+                const cases = page.provedBy.get(part) ?? [];
+                if (!cases.some((entry) => entry.requirement === scenarioCase.requirement && entry.case === caseName)) {
+                    cases.push({ requirement: scenarioCase.requirement, case: caseName });
+                }
+                page.provedBy.set(part, cases);
                 specs ??= await specIndex(repoRoot);
                 const spec = specs.get(resolved.path);
                 if (spec) {
@@ -192,7 +218,43 @@ export async function scenarioProblems(repoRoot, docs, nodes) {
         }
     }
 
-    return { problems, derivedTests };
+    const register = [...pages].map(([relPath, page]) => registerEntry(relPath, page));
+    register.sort((a, b) => a.stem.localeCompare(b.stem, "en") || a.path.localeCompare(b.path, "en"));
+    return { problems, derivedTests, register };
+}
+
+/**
+ * One page as the register lists it: its stem and path, its title and the
+ * status it declares, the six setup fields as written — `start` and `profile`
+ * a string or null, the other four lists — its screenshot labels in page
+ * order with the part each sits in, and its parts in page order, each with
+ * the labels under it and every requirement case whose `Proved by:` names it.
+ */
+function registerEntry(relPath, page) {
+    const meta = page.meta;
+    const setup = {};
+    for (const field of SCENARIO_SETUP_FIELDS) {
+        const single = field === "start" || field === "profile";
+        const value = meta[field];
+        setup[field] = single ? (value == null || Array.isArray(value) ? null : String(value)) : asList(value).map(String);
+    }
+    return {
+        stem: page.stem,
+        path: relPath,
+        title: page.title,
+        status: typeof meta.status === "string" ? meta.status : null,
+        setup,
+        labels: page.labels.map((entry) => ({ ...entry })),
+        parts: [...page.parts].map(([anchor, title]) => ({
+            title,
+            anchor,
+            id: `${relPath}#${anchor}`,
+            labels: page.labels.filter((entry) => entry.part === anchor).map((entry) => entry.label),
+            provedBy: [...(page.provedBy.get(anchor) ?? [])].sort(
+                (a, b) => a.requirement.localeCompare(b.requirement, "en") || a.case.localeCompare(b.case, "en")
+            ),
+        })),
+    };
 }
 
 function asList(value) {

@@ -159,10 +159,12 @@ sets `approved`, and runs the devbook check after it, and its edits are part of 
 approves. A skill updates when its `SKILL.md` frontmatter declares `updates: true`: devbook's
 `capture-specs` does, and `verify-change`, the default binding, does not.
 
-Every scenario page `scope` listed is checked the same way whichever skill is bound, and never
-edited. A page whose signature no longer matches the signature its run recorded, or that has no
-run, is reported `stale`, which qualifies the run and is not a sixth verdict. A referenced part
-no spec implements is reported `spec-ahead`. The ready check reads both as not ready, except a
+Every scenario page `scope` listed is checked by the phase itself, whichever skill is bound, and
+never edited. A page whose signature no longer matches the signature its run recorded, or that
+has no run, is reported `stale` in a table of its own after the verdicts, because it qualifies
+the run and is not a sixth verdict. A referenced part that nothing proves — no spec implements
+it, or its run left it `not-run` behind a held step — makes the requirement pointing at it
+`spec-ahead`. The ready check reads both as not ready, except a
 `stale` page that `verify` could not run at its depth, which goes to the gate as a question.
 
 ### phase-ready
